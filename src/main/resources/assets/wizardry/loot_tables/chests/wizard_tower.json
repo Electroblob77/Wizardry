@@ -1,0 +1,77 @@
+{
+    "pools": [
+        {
+			"name": "wizardry",
+            "rolls": {
+                "min": 3,
+                "max": 7
+            },
+            "entries": [
+				{
+                    "type": "loot_table",
+                    "name": "wizardry:subsets/novice_wands",
+                    "weight": 3
+                },
+				{
+                    "type": "loot_table",
+                    "name": "wizardry:subsets/wizard_armour",
+                    "weight": 6
+                },
+				{
+                    "type": "loot_table",
+                    "name": "wizardry:subsets/arcane_tomes",
+                    "weight": 6
+                },
+				{
+                    "type": "loot_table",
+                    "name": "wizardry:subsets/wand_upgrades",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "wizardry:magic_crystal",
+                    "weight": 5,
+					"functions": [
+						{
+							"function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+						}
+					]
+                },
+                {
+                    "type": "item",
+                    "name": "wizardry:spell_book",
+                    "weight": 20,
+                    "functions": [
+                        {
+                            "function": "wizardry:random_spell"
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "wizardry:scroll",
+                    "weight": 10,
+                    "functions": [
+                        {
+                            "function": "wizardry:random_spell"
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "wizardry:armour_upgrade",
+                    "weight": 1
+                },
+                {
+                    "type": "item",
+                    "name": "wizardry:identification_scroll",
+                    "weight": 3
+                }
+            ]
+        }
+    ]
+}

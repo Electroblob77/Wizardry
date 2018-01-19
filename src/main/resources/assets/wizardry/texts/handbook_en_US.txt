@@ -1,0 +1,217 @@
+PAGEBREAK
+LINEBREAK
+
+
+
+
+The Wizard's Handbook
+
+
+
+By Electroblob
+PAGEBREAK
+Introduction
+--------------------
+
+Greetings, wizard! This book explains the many ways of the arcane and how to use them.
+
+Should you ever lose this book, you can get a new one by crafting a book with a magic crystal.
+PAGEBREAK
+Contents
+--------------------
+PAGEBREAK
+SECTION Setting up
+Setting up
+--------------------
+To get started with wizardry, you will need a few things:
+
+- A magic wand, crafted with a gold nugget, a stick, and a magic crystal.
+
+- An arcane workbench, crafted with 3 stone, 1 lapis lazuli block, 2 magic crystals, 2 gold nuggets and 1 purple carpet.
+
+- A spell book. These can be found in chests, dropped as loot, purchased from wizards, or you can make a beginner's spell, magic missile, with a book and 4 magic crystals.
+
+You will also need a bunch more magic crystals to supply your wand with mana.
+PAGEBREAK
+SECTION Mana
+Mana
+--------------------
+Mana is the arcane energy that gives wizards their powers. It manifests itself in naturally occurring crystals, which can be found embedded in rocks underground. Wands can store mana within them, and this mana is channeled into the spells that you cast. Different spells cost different amounts of mana, depending on how powerful they are and how long they last.
+
+Mouse over a wand to see how much mana is stored in it.
+IMAGE CRYSTAL
+LINEBREAK
+
+
+
+
+
+
+                    Magic
+ Crystal Ore   Crystal
+PAGEBREAK
+SECTION Wands
+Wands
+--------------------
+The wand is the implement of choice for a wizard. With it, you can cast any spell provided the wand can contain its power (see Tiers for a more in-depth explanation). Wands come in
+various different varieties but you will almost certainly start with a basic magic wand.
+
+When holding a wand, a small heads-up display will show in the corner of the screen. This indicates the spell that is currently selected along with a pictorial representation of it, and, if the spell has been cast, a cooldown bar indicating the time until that spell can be cast again.
+PAGEBREAK
+SECTION Spells
+Spells
+--------------------
+A wand is useless without spells to cast with it. Spells are recorded in two forms: in books, which are permanent, and in scrolls, which are temporary.
+
+Spell books are of little use on their own; instead they are used to bind the spell they contain to wands. Spell books can be found throughout the world and it will not take long for you to come across one. When you do find one, you can mouse over the spell book to see basic information about the spell at a glance. You can also right-click whilst holding a spell book to read more detailed information about the spell.
+
+Scrolls, on the other hand, serve a different purpose: right-clicking whilst holding one will cast the spell that is bound to it, destroying the scroll in the process. Like spell books, scrolls can be found throughout the world, but you can also make them yourself by crafting a blank scroll from a piece of paper and some string. You can then bind a spell to the scroll using the arcane workbench, but only if you have knowledge of that spell. Doing so will consume a number of magic crystals equal to the mana cost of the spell (rounded up to the nearest MANA_PER_CRYSTAL).
+
+To the untrained eye, the magical runes with which spells are written are unreadable. In order to identify a spell, you could, of course, cast it and see what happens - though doing so may cause unwanted side-effects, and many spells need certain conditions in order to work. A safer and more reliable option is to use a scroll of identification, which can be found in chests or purchased from a wizard. Right- -clicking whilst holding one will identify the first unknown spell book or scroll on your hotbar, consuming the scroll of identification.
+
+Scrolls are quite useful when you need to use a spell once or twice on a particular quest but don't want it to take up a slot on your wand. It should be noted, however, that scrolls are at best an inefficient method of casting spells.
+PAGEBREAK
+SECTION Arcane Workbench
+The Arcane Workbench
+--------------------
+The arcane workbench is a block similar in appearance to the enchantment table where you can charge, upgrade, and bind spells to your wand. Simply place it anywhere and right click, and you will see a gui appear like the one to the right.
+PAGEBREAK
+IMAGE WORKBENCH
+LINEBREAK
+
+
+
+
+
+
+
+
+
+
+
+
+
+ The Arcane Workbench
+PAGEBREAK
+SECTION Binding Spells
+Binding Spells
+--------------------
+To bind a spell to your wand, simply place your wand in the central slot of the workbench, then place the spell book in one of the surrounding slots and press apply. You can bind up to five spells to a wand at one time, though this may be increased with attunement upgrades. When holding a wand, you can switch between spells with the NEXT_SPELL_KEY and PREVIOUS_SPELL_KEY keys (these can be changed in options -> controls). You can also switch spells by scrolling the mouse wheel while sneaking.
+
+SECTION Charging Wands
+Charging your wand
+--------------------
+To charge your wand, place the wand in the central slot of the arcane workbench and place some magic crystals in the upper of the two slots on the left, and then press apply. Each crystal is worth MANA_PER_CRYSTAL mana, and the wand will only take what it needs, so you can keep a supply of crystals in the workbench for when you need them. However, bear in mind that the wand can only take a whole number of crystals so if the wand needs, for example, 30 more mana, MANA_PER_CRYSTAL_MINUS_30 mana will be lost when charging it. All wands will take an exact number of crystals to charge if they are empty, unless they have a storage upgrade applied.
+
+SECTION Upgrading Wands
+Upgrading your wand
+--------------------
+To upgrade your wand, you will need a tome of arcana of the appropriate tier (see Tiers) or a special wand upgrade. Both of these can be found as loot or purchased from a wizard. To upgrade your wand, place it in the central slot and the upgrade in the lower of the two slots on the left, then press apply.
+
+Special wand upgrades improve a particular aspect of a wand. Each type of upgrade can stack up to three times, and the total number of upgrades that a wand can take depends on its tier. Upgrades cannot be removed.
+PAGEBREAK
+SECTION Flowers and Flasks
+Flowers and Flasks
+--------------------
+You will probably come across curious glowing flowers growing in the wild from time to time. These are crystal flowers, a naturally occurring source of mana. They can be harvested and crafted to extract the mana as crystals.
+
+Need to recharge your wand on the go? No problem! Mana can now be bottled. Simply craft a mana flask with a glass bottle and eight magic crystals and take it with you. When you need to use it, simply craft it with your wand and it will restore some of the charge. This process will consume the bottle. Some mana is lost during bottling.
+PAGEBREAK
+SECTION Tiers
+Tiers
+--------------------
+Wands and spells come in four tiers: BASIC_COLOURnoviceRESET_COLOUR, APPRENTICE_COLOURapprenticeRESET_COLOUR, ADVANCED_COLOURadvanced RESET_COLOURand MASTER_COLOURmasterRESET_COLOUR. Each tier is more powerful than the last.
+
+BASIC_COLOURNovice RESET_COLOURwands are the ones that can be crafted. They hold up to BASIC_MAX_CHARGE mana, and can only cast novice spells. Novice spells are simple enough to be cast by anyone and they do not usually cost much mana. This does not necessarily mean that they are useless at higher tiers however; their low cost makes some novice spells useful even when you have access to master spells.
+
+APPRENTICE_COLOURApprentice RESET_COLOURwands are the next tier up from novice wands. They hold up to APPRENTICE_MAX_CHARGE mana and can cast novice and apprentice spells. Apprentice spells are a little more impressive than novice spells but usually cost more.
+
+ADVANCED_COLOURAdvanced RESET_COLOURwands are quite rare and are much more powerful. They can cast all spells except master spells, and hold ADVANCED_MAX_CHARGE mana. Advanced spells can grant superhuman powers such as invisibility and wreak havoc on enemies.
+
+MASTER_COLOURMaster RESET_COLOURwands are the most powerful wands in existence. They hold up to MASTER_MAX_CHARGE mana, and can cast any spell. Master spell books are very rare and the spells can cause complete devastation not only to enemies but even the world itself. Use with caution.
+PAGEBREAK
+SECTION Elements
+Elements
+--------------------
+Spells belong to different elements, which describe the nature of the spell and also have perks when used with certain wands.
+
+FIRE_COLOURFire
+Perhaps the most destructive element, fire concerns burning, lava, and explosions. A powerful pyromancer will unleash hell upon their enemies and probably set the world alight in the process. Most fire attack spells set fire to their target, causing ongoing damage over time. However, be wary that fire spells may have no effect on nether mobs.
+
+ICE_COLOURIce
+The element of ice is made of all that is cold. Frost spells often slow enemies down or freeze them completely, and are especially effective on creatures of fire. Frost magic can prove equally useful outside of combat, such as freezing water to cross a river.
+
+LIGHTNING_COLOURLightning
+This element concerns lightning, storms, and the weather. A powerful storm mage is a force to be reckoned with, and some posess the ability to call down lightning at will. Lightning spells often damage multiple enemies at once and usually seek their target, making them an effective attack against any mob... but beware of creepers.
+
+NECROMANCY_COLOURNecromancy
+Necromancy is the element of darkness, chaos and the undead. Necromancers are mysterious and often regarded as evil, though this is usually not the case. Necromancy spells are commonly used to summon creatures to fight for you or even bend the will of your enemies.
+
+EARTH_COLOUREarth
+The element of earth is focused on the natural world: animals, plants, the wind, and such like. Earth magic is diverse and takes a wide variety of forms, from poisoning enemies to unleashing the fury of the weather. Earth spells are a mixture of attack, defense and utility.
+
+SORCERY_COLOURSorcery
+Sorcery is the element of force and change. Sorcerers manipulate light, gravity and even reality itself to fit their needs. Sorcery spells can be used, among other things, to grant their caster magical powers or move objects to their will.
+
+HEALING_COLOURHealing
+The element of healing is concerned with defense and regeneration. Healers seek to protect themselves and their allies as much as possible and as such can be very difficult opponents. Though generally not used as an attack, the purifying light of some healing spells will do considerable damage to the undead. Healing spells are indispensable when in combat.
+
+The boundaries between the different elements are not always distinct, and some spells bear traits of elements other than their own.
+
+If you are lucky, you may happen upon an elemental wand. These wands will allow you to cast spells of the right element for more potency than usual.
+PAGEBREAK
+SECTION Wizard Armor
+Wizard Armor
+--------------------
+As a wizard, you will need something to protect you from the creatures you fight. No ordinary armor will do though. To make the most of your spells, you will need wizard armor: hat, robes, leggings and boots. Unlike ordinary armor, these will not break. Instead, they use arcane energy to shield the wearer. This of course means that they must be charged with magic crystals, just like wands. Fortunately, these garments do not consume much mana. Charge them as you would a wand in the arcane workbench or with a mana flask, but be careful - if they run out of mana, you will find yourself defenseless.
+
+You can obtain wizard armor by crafting it from magical silk, obtained by crafting string with a magic crystal.
+
+Those wizards who devote themselves to the practice of one element sometimes wear special garments which grant bonuses for that element. Full sets of such garments are very sought after among wizards and are not easy to find.
+
+Legend speaks of an arcane seal used by the most powerful wizards to greatly improve their armor.
+PAGEBREAK
+SECTION Wizards and Towers
+Wizards and Towers
+--------------------
+Fear not - you are not the only practicioner of magic in this world. On your travels, you may well encounter tall towers with distinctive pointed roofs. These are the residences of fellow wizards. A life of solitude can make wizards a little grumpy at times, but they are usually friendly folk who are willing to share their knowledge with you - albeit for a price. Expect to pay precious metals and gems, and in return you will recieve many a great arcane wonder.  If, however, it is a master spell you seek, you will need to speak to a specialist.
+
+Unfortunately, there are a few wizards out there who do not welcome visitors. These wizards are typically outcasts, and are hostile to anyone crossing their path. Approach these individuals with caution, and be prepared to defend yourself against powerful magic. Defeat them however, and their knowledge is yours for the taking.
+PAGEBREAK
+SECTION Crafting Recipes
+Crafting Recipes
+--------------------
+PAGEBREAK
+PAGEBREAK
+Crafting Recipes
+--------------------
+PAGEBREAK
+PAGEBREAK
+Crafting Recipes
+--------------------
+PAGEBREAK
+PAGEBREAK
+Crafting Recipes
+--------------------
+PAGEBREAK
+PAGEBREAK
+Credits
+--------------------
+Electroblob's Wizardry
+Version VERSION
+For Minecraft 1.10.2
+
+Designed, coded and textured by Electroblob
+
+Thanks to Minecraft Forge and MCP, without which this mod would not have been possible.
+
+Thanks also to the Minecraft modding community, which always has an answer to my modding problems!
+
+In addition, I'd like to thank the following individuals for their contributions to the mod:
+
+Translations:
+
+- Russian: VilagVil
+- Spanish and Mexican Spanish: MadWrist
+
+Lightning ray sound effect from OhhWowProductions

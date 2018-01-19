@@ -1,0 +1,39 @@
+{
+	"arc": {"category": "player","sounds": [
+		{"name": "wizardry:arc1","stream": false},
+		{"name": "wizardry:arc1","stream": false},
+		{"name": "wizardry:arc3","stream": false}
+		]},
+		
+	"aura": {"category": "player","sounds": [{"name": "wizardry:aura","stream": false}]},
+	"boom": {"category": "player","sounds": [{"name": "wizardry:boom","stream": false}]},
+	"crackle": {"category": "player","sounds": [{"name": "wizardry:crackle","stream": false}]},
+	
+	"darkaura": {"category": "player","sounds": [
+		{"name": "wizardry:darkaura1","stream": false},
+		{"name": "wizardry:darkaura2","stream": false}
+		]},
+		
+	"effect": {"category": "player","sounds": [
+		{"name": "wizardry:effect1","stream": false},
+		{"name": "wizardry:effect2","stream": false}
+		]},
+		
+	"electricitya": {"category": "player","sounds": [{"name": "wizardry:electricitya","stream": false}]},
+	"electricityb": {"category": "player","sounds": [{"name": "wizardry:electricityb","stream": false}]},
+	
+	"flameray": {"category": "player","sounds": [{"name": "wizardry:flameray2","stream": false}]},
+	"force": {"category": "player","sounds": [{"name": "wizardry:force","stream": false}]},
+		
+	"freeze": {"category": "player","sounds": [{"name": "wizardry:freeze","stream": false}]},
+	"frostray": {"category": "player","sounds": [{"name": "wizardry:frostray","stream": false}]},
+	"heal": {"category": "player","sounds": [{"name": "wizardry:heal","stream": false}]},
+	"ice": {"category": "player","sounds": [{"name": "wizardry:ice","stream": false}]},
+	"largeaura": {"category": "player","sounds": [{"name": "wizardry:largeaura","stream": false}]},
+	
+	"magic": {"category": "player","sounds": [{"name": "wizardry:magic1","stream": false}]},
+		
+	"sparkle": {"category": "player","sounds": [{"name": "wizardry:sparkle","stream": false}]},
+	"wind": {"category": "player","sounds": [{"name": "wizardry:wind","stream": false}]},
+	"rumble": {"category": "player","sounds": [{"name": "wizardry:rumble","stream": false}]}
+}

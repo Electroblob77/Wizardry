@@ -1,0 +1,18 @@
+[
+{
+  "modid" : "wizardry",
+  "name" : "Electroblob's Wizardry",
+  "version" : "2.1.0",
+  "url" : "https://minecraft.curseforge.com/projects/electroblobs-wizardry",
+  "credits" : "Made by Electroblob",
+  "authors" : [
+    "Electroblob"
+  ],
+  "description" : "Electroblob's Wizardry adds an rpg-style system of magic spells to Minecraft with the aim of being as playable as possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master the arcane!",
+  "logoFile" : "assets/wizardry/textures/gui/logo.png",
+  "updateUrl" : "",
+  "parent" : "",
+  "screenshots": [
+  ]
+}
+]
