@@ -12,11 +12,17 @@ TL;DR: Do what you want with this repo on Github, but ask me first if you want t
 ### 0. Used terms:
 
 'Github' - the website github.com, maintained by Github Inc.
+
 'Electroblob' - The author of the Minecraft modification Electroblob's Wizardry, also known as 'Electroblob77'
+
 'Electroblob's Wizardry', 'Wizardry', 'the mod' - The Minecraft modification Electroblob's Wizardry
+
 'Repository' - This repository on Github, containing this license, other informational files, configurations, code and assets which are part of Electroblob's Wizardry
+
 'Curseforge' - The webpage https://minecraft.curseforge.com/projects/electroblobs-wizardry
+
 'Minecraft forum' - The webpage http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2818029-electroblobs-wizardry-the-expandable-rpg-magic-mod
+
 'You' - The user of this repository, who may or may not own a Github account
 
 ### 1. Warranty and usage
@@ -44,7 +50,7 @@ You are encouraged to submit relevant pull requests for this repository. By subm
 1. The contributor's name or pseudonym will be listed under 'Contributors' in CREDITS.txt, both in this repository and in any compiled versions of the mod released on curseforge which incorporate the contributor's work.
 2. The contributor's name or pseudonym will be listed under 'Contributors' on curseforge and on minecraft forum, inside the 'Credits' spoiler.
 
-For a set of guidelines regarding coding style and submission of pull requests, see guide_for_contributing.txt.
+For a set of guidelines regarding coding style and submission of pull requests, see the [guide for contributing](guide_for_contributing.md).
 
 ### 6. Changes to this license
 
