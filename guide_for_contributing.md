@@ -1,4 +1,4 @@
-Guide for contributing to this repository
+# Guide for contributing to this repository
 
 I like my code to be tidy, so it saves me time if yours is too. Here are a few general guidelines for how to submit a good PR:
 
