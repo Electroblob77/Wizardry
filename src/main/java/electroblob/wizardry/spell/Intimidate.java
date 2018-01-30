@@ -11,6 +11,7 @@ import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,11 +25,14 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class Intimidate extends Spell {
 
-	/** The NBT tag name for storing the feared entity's UUID in the target's tag compound. Defined here in case
-	 * it changes. */
+	/** The NBT tag name for storing the feared entity's UUID in the target's tag compound. */
 	public static final String NBT_KEY = "fearedEntity";
 
 	public Intimidate() {
@@ -100,6 +104,25 @@ public class Intimidate extends Spell {
 		}
 
 		return false;
+	}
+	
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.fear) && event.getEntityLiving() instanceof EntityCreature){
+
+			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();
+			EntityCreature creature = (EntityCreature)event.getEntityLiving();
+
+			if(entityNBT != null && entityNBT.hasKey(NBT_KEY)){
+
+				Entity caster = WizardryUtilities.getEntityByUUID(creature.worldObj, entityNBT.getUniqueId(NBT_KEY));
+
+				if(caster instanceof EntityLivingBase){
+					Intimidate.runAway(creature, (EntityLivingBase)caster);
+				}
+			}
+		}
 	}
 
 }

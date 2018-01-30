@@ -97,6 +97,8 @@ import electroblob.wizardry.entity.projectile.EntitySmokeBomb;
 import electroblob.wizardry.entity.projectile.EntitySpark;
 import electroblob.wizardry.entity.projectile.EntitySparkBomb;
 import electroblob.wizardry.entity.projectile.EntityThunderbolt;
+import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
@@ -112,7 +114,6 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
 import electroblob.wizardry.tileentity.TileEntityStatue;
-import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.block.state.IBlockState;
@@ -128,6 +129,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -338,13 +340,22 @@ public class ClientProxy extends CommonProxy {
 			
 			// Duration isn't needed because it only ever affects things server-side, and anything that is
 			// seen client-side gets synced elsewhere.
-			spell.cast(world, (EntityPlayer)caster, message.hand, 0, new SpellModifiers());
-		
-			// Updates the spell discovery data client-side. Could be done by calling sync(), but that means sending
-			// another packet unnecessarily.
-			if(WizardData.get((EntityPlayer)caster) != null){
-				WizardData.get((EntityPlayer)caster).discoverSpell(spell);
+			spell.cast(world, (EntityPlayer)caster, message.hand, 0, message.modifiers);
+			
+			Source source = Source.OTHER;
+			
+			if(((EntityPlayer)caster).getHeldItem(message.hand) != null){
+				Item item = ((EntityPlayer)caster).getHeldItem(message.hand).getItem();
+				if(item instanceof ItemWand){
+					source = Source.WAND;
+				}else if(item instanceof ItemScroll){
+					source = Source.SCROLL;
+				}
 			}
+			
+			// No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
+			// The handler for this event now deals with discovery.
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post((EntityPlayer)caster, spell, message.modifiers, source));
 			
 		}else{
 			Wizardry.logger.warn("Recieved a PacketCastSpell, but the caster ID was not the ID of a player");
@@ -385,7 +396,10 @@ public class ClientProxy extends CommonProxy {
 		if(caster instanceof EntityLiving){
 			
 			if(target instanceof EntityLivingBase){
+				
 				spell.cast(world, (EntityLiving)caster, message.hand, 0, (EntityLivingBase)target, message.modifiers);
+				// Again, no need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
+				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post((EntityLiving)caster, spell, message.modifiers, Source.NPC));
 			}
 			
 			if(caster instanceof ISpellCaster){

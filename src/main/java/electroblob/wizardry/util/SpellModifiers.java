@@ -5,22 +5,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import electroblob.wizardry.event.SpellCastEvent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
- * Object that wraps any number of spell multipliers into one, allowing for expandability within the Spell#cast
+ * Object that wraps any number of spell modifiers into one, allowing for expandability within the Spell#cast
  * methods. This class is essentially a glorified {@link Map} which can be written to and read from a {@link ByteBuf}.
- * It is possible to calculate spell multipliers from wand NBT within the cast methods, but this is cumbersome and does
- * not allow the multipliers to be sent to the client, which is sometimes necessary (for example, detonate needs to know
- * about range multipliers on the client side or the particles wouldn't show outside of the base range).
+ * It is possible to calculate spell modifiers from wand NBT within the cast methods, but this is cumbersome and does
+ * not allow the modifiers to be sent to the client, which is sometimes necessary (for example, detonate needs to know
+ * about range modifiers on the client side or the particles wouldn't show outside of the base range).
  * <p>
- * Most external interaction with SpellModifiers objects will be in SpellCastEvent.Pre, where you can add additional
- * multipliers to them if desired for use with your own spells, or modify the existing ones. If you have added a wand
+ * Most external interaction with SpellModifiers objects will be in {@link SpellCastEvent.Pre}, where you can add additional
+ * modifiers to them if desired for use with your own spells, or modify the existing ones. If you have added a wand
  * upgrade, this is <b>not</b> done automatically for you; you will have to do it yourself (for the simple reason that
- * not all wand upgrades affect spells).
+ * not all wand upgrades affect spells). SpellModifiers objects are <i>mutable</i>, so you can simply change the values
+ * they contain to modify the spell.
  * <p>
  * To use a SpellModifiers object within the <code>Spell.cast</code> methods, simply retrieve the desired multiplier
  * using {@link SpellModifiers#get(Item)} for wand upgrades, or {@link SpellModifiers#get(String)} if the multiplier
@@ -29,13 +31,13 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * @since Wizardry 1.2
  * @see WandHelper
  */
-// I have made the decision that the USERS of this class must decide whether the multipliers need syncing or not, on a
+// I have made the decision that the USERS of this class must decide whether the modifiers need syncing or not, on a
 // case-by-case basis. Why? Because assigning keys to either sync or not sync would be unnecessarily restrictive, and
 // would mean they have to be registered, and part of the point of SpellModifiers is that they can be added to on the
 // fly.
 public final class SpellModifiers {
 	
-	/** Constant string identifier for the damage multiplier. All the other multipliers in Wizardry have items. */
+	/** Constant string identifier for the damage modifier. All the other modifiers in Wizardry have items. */
 	public static final String DAMAGE = "damage";
 
 	private Map<String, Float> multiplierMap;
@@ -53,7 +55,7 @@ public final class SpellModifiers {
 	 * upgrade item was registered with.
 	 * @throws IllegalArgumentException if the given item is not a registered special wand upgrade.
 	 * @param upgrade The upgrade item the multiplier corresponds to.
-	 * @param multiplier The multiplier value, with 1 being default. Usage of multipliers is up to individual spells to
+	 * @param multiplier The multiplier value, with 1 being default. Usage of modifiers is up to individual spells to
 	 * implement.
 	 * @param needsSyncing Whether this multiplier should be synchronised with the client via packets. <i>Only set this
 	 * to true if particles will be spawned which need to know the value of the multiplier.</i>
@@ -69,7 +71,7 @@ public final class SpellModifiers {
 	 * multiplier will correspond to a wand upgrade, in which case use {@link SpellModifiers#set(Item, float, boolean)}
 	 * instead.
 	 * @param key The key used to identify the multiplier.
-	 * @param multiplier The multiplier value, with 1 being default. Usage of multipliers is up to individual spells to
+	 * @param multiplier The multiplier value, with 1 being default. Usage of modifiers is up to individual spells to
 	 * implement.
 	 * @param needsSyncing Whether this multiplier should be synchronised with the client via packets. <i>Only set this
 	 * to true if particles will be spawned which depend on the multiplier.</i>

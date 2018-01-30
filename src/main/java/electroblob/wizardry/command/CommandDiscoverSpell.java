@@ -4,6 +4,7 @@ import java.util.List;
 
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.command.CommandBase;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.MinecraftForge;
 
 public class CommandDiscoverSpell extends CommandBase {
 
@@ -66,10 +68,10 @@ public class CommandDiscoverSpell extends CommandBase {
 			boolean clear = false;
 			boolean all = false;
 
-			EntityPlayerMP entityplayermp = null;
+			EntityPlayerMP player = null;
 
 			try{
-				entityplayermp = getCommandSenderAsPlayer(sender);
+				player = getCommandSenderAsPlayer(sender);
 			}catch(PlayerNotFoundException exception){
 				// Nothing here since the player specifying is done later, I just don't want it to throw an exception here.
 			}
@@ -94,32 +96,34 @@ public class CommandDiscoverSpell extends CommandBase {
 			if(i < arguments.length){
 				// If the second argument is a player and is not the player that gave the command, the spell is
 				// discovered as the given player rather than the command sender.
-				EntityPlayerMP entityplayermp1 = getPlayer(server, sender, arguments[i++]);
-				if(entityplayermp != entityplayermp1){
-					entityplayermp = entityplayermp1;
+				EntityPlayerMP entityplayermp = getPlayer(server, sender, arguments[i++]);
+				if(player != entityplayermp){
+					player = entityplayermp;
 				}
 			}
 
 			// If, after this point, the player is still null, the sender must be a command block or the console and the
 			// player must not have been specified, meaning an exception should be thrown.
-			if(entityplayermp == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
+			if(player == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
 
-			WizardData properties = WizardData.get(entityplayermp);
+			WizardData properties = WizardData.get(player);
 
 			if(properties != null){
 				if(clear){
 					properties.spellsDiscovered.clear();
-					sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.clear", entityplayermp.getName()));
+					sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.clear", player.getName()));
 				}else if(all){
 					properties.spellsDiscovered.addAll(Spell.getSpells(Spell.allSpells));
-					sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.all", entityplayermp.getName()));
+					sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.all", player.getName()));
 				}else{
 					if(properties.hasSpellBeenDiscovered(spell)){
 						properties.spellsDiscovered.remove(spell);
-						sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.removespell", spell.getNameForTranslationFormatted(), entityplayermp.getName()));
+						sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.removespell", spell.getNameForTranslationFormatted(), player.getName()));
 					}else{
-						properties.discoverSpell(spell);
-						sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.addspell", spell.getNameForTranslationFormatted(), entityplayermp.getName()));
+						if(!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(player, spell, DiscoverSpellEvent.Source.COMMAND))){
+							properties.discoverSpell(spell);
+							sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.addspell", spell.getNameForTranslationFormatted(), player.getName()));
+						}
 					}
 				}
 				properties.sync();

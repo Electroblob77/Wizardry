@@ -69,13 +69,18 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
+@Mod.EventBusSubscriber
 public class EntityWizard extends EntityVillager implements ISpellCaster, IEntityAdditionalSpawnData {
 
 	/*
@@ -778,6 +783,25 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		if(this.towerBlocks == null) return false;
 		// Uses .equals() rather than == so this will work fine.
 		return this.towerBlocks.contains(pos);
+	}
+	
+	@SubscribeEvent
+	public static void onBlockBreakEvent(BlockEvent.BreakEvent event){
+		// Makes wizards angry if a player breaks a block in their tower
+		if(!(event.getPlayer() instanceof FakePlayer)){
+
+			List<EntityWizard> wizards = WizardryUtilities.getEntitiesWithinRadius(64, event.getPos().getX(),
+					event.getPos().getY(), event.getPos().getZ(), event.getWorld(), EntityWizard.class);
+
+			if(!wizards.isEmpty()){
+				for(EntityWizard wizard : wizards){
+					if(wizard.isBlockPartOfTower(event.getPos())){
+						wizard.setRevengeTarget(event.getPlayer());
+						event.getPlayer().addStat(WizardryAchievements.anger_wizard);
+					}
+				}
+			}
+		}
 	}
 
 	// EntityVillager overrides (that don't add features)

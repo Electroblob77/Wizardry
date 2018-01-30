@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -74,7 +76,7 @@ public class RandomSpell extends LootFunction {
 	@Override
 	public ItemStack apply(ItemStack stack, Random random, LootContext context){
 		
-		if(!(stack.getItem() instanceof ItemSpellBook) || !(stack.getItem() instanceof ItemScroll))
+		if(!(stack.getItem() instanceof ItemSpellBook) && !(stack.getItem() instanceof ItemScroll))
 			Wizardry.logger.warn("Applying the random_spell loot function to an item that isn't a spell book or scroll.");
 
 		Tier tier;
@@ -96,7 +98,12 @@ public class RandomSpell extends LootFunction {
 		
 		// Elements aren't weighted
 		if(elements == null || elements.isEmpty()){
-			element = Element.values()[random.nextInt(Element.values().length)];
+			// Element can only be MAGIC if tier is BASIC
+			if(tier == Tier.BASIC){
+				element = Element.values()[random.nextInt(Element.values().length)];
+			}else{
+				element = ArrayUtils.removeElement(Element.values(), Element.MAGIC)[random.nextInt(Element.values().length)];
+			}
 		}else{
 			// In theory, swapping this line to the commented one should make absolutely no difference.
 			element = elements.get(random.nextInt(tiers.size()));

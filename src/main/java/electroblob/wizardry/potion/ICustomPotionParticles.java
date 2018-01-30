@@ -1,6 +1,10 @@
 package electroblob.wizardry.potion;
 
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Interface for potion effects that spawn custom particles instead of (or as well as) the vanilla 'swirly' particles.
@@ -8,6 +12,7 @@ import net.minecraft.world.World;
  * @since Wizardry 1.2
  */
 // TODO: Backport.
+@Mod.EventBusSubscriber
 public interface ICustomPotionParticles {
 	
 	/**
@@ -20,4 +25,21 @@ public interface ICustomPotionParticles {
 	 */
 	void spawnCustomParticle(World world, double x, double y, double z);
 
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		if(event.getEntityLiving().worldObj.isRemote){
+			// Behold the power of interfaces!
+			for(PotionEffect effect : event.getEntityLiving().getActivePotionEffects()){
+
+				if(effect.getPotion() instanceof ICustomPotionParticles && effect.doesShowParticles()){
+
+					double x = event.getEntityLiving().posX + (event.getEntityLiving().worldObj.rand.nextDouble() - 0.5)*event.getEntityLiving().width;
+					double y = event.getEntityLiving().getEntityBoundingBox().minY + event.getEntityLiving().worldObj.rand.nextDouble()*event.getEntityLiving().height;
+					double z = event.getEntityLiving().posZ + (event.getEntityLiving().worldObj.rand.nextDouble() - 0.5)*event.getEntityLiving().width;
+
+					((ICustomPotionParticles)effect.getPotion()).spawnCustomParticle(event.getEntityLiving().worldObj, x, y, z);
+				}
+			}
+		}
+	}
 }

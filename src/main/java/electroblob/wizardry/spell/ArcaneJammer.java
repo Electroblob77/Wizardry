@@ -5,6 +5,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.EntityWizard;
+import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -21,7 +22,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class ArcaneJammer extends Spell {
 
 	public ArcaneJammer() {
@@ -90,6 +94,12 @@ public class ArcaneJammer extends Spell {
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
+	}
+	
+	@SubscribeEvent
+	public static void onSpellCastPreEvent(SpellCastEvent.Pre event){
+		// Arcane jammer prevents spell casting.
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.arcane_jammer)) event.setCanceled(true);
 	}
 
 }

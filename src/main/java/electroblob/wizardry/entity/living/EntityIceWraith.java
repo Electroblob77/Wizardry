@@ -278,6 +278,7 @@ public class EntityIceWraith extends EntityBlazeMinion {
                     if(this.attackStep > 1){
                     	// Proof, if it were at all needed, of the elegance and versatility of the spell system.
                     	Spells.ice_shard.cast(this.blaze.worldObj, this.blaze, EnumHand.MAIN_HAND, 0, entitylivingbase, new SpellModifiers());
+                    	// TODO: Decide if an event should be fired here. I'm guessing no.
                     }
                 }
 

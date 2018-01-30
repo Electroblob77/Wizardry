@@ -5,11 +5,14 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketClairvoyance;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryPathFinder;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -18,6 +21,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.PathPoint;
@@ -25,7 +29,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class Clairvoyance extends Spell {
 
 	/** The number of ticks it takes each path particle to move from one path point to the next. */
@@ -122,6 +130,34 @@ public class Clairvoyance extends Spell {
 		point = path.getFinalPathPoint();
 
 		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5, 0, 0, 0, (int)(1800*durationMultiplier), 1, 1, 1);
+	}
+	
+	@SubscribeEvent
+	public static void onRightClickBlockEvent(PlayerInteractEvent.RightClickBlock event){
+
+		if(event.getEntityPlayer().isSneaking()){
+
+			// The event now has an ItemStack, which greatly simplifies hand-related stuff.
+			ItemStack wand = event.getItemStack();
+
+			if(wand != null && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
+
+				WizardData properties = WizardData.get(event.getEntityPlayer());
+
+				if(properties != null){
+					// THIS is why BlockPos is a thing - in 1.7.10 this requires a clumsy switch statement.
+					BlockPos pos = event.getPos().offset(event.getFace());
+
+					properties.setClairvoyancePoint(pos, event.getWorld().provider.getDimension());
+
+					if(!event.getWorld().isRemote){
+						event.getEntityPlayer().addChatMessage(new TextComponentTranslation("spell.clairvoyance.confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
+					}
+
+					event.setCanceled(true);
+				}
+			}
+		}
 	}
 
 }

@@ -3,11 +3,14 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,8 +18,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class LightningBolt extends Spell {
+	
+	/** The NBT key used to store the UUID of the player that summoned the lightning bolt. Used for achievements. */
+	public static final String NBT_KEY = "summoningPlayer";
 
 	public LightningBolt() {
 		super(Tier.ADVANCED, 40, Element.LIGHTNING, "lightning_bolt", SpellType.ATTACK, 80, EnumAction.NONE, false);
@@ -46,7 +56,7 @@ public class LightningBolt extends Spell {
 		            
 		            // Code for eventhandler recognition; for achievements and such like. Left in for future use.
 		            NBTTagCompound entityNBT = entitylightning.getEntityData();
-		            entityNBT.setUniqueId("summoningPlayer", caster.getUniqueID());
+		            entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
 	        	}
 	        	
 	        	caster.swingArm(hand);
@@ -86,5 +96,23 @@ public class LightningBolt extends Spell {
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
+	}
+	
+	@SubscribeEvent
+	public static void onEntityStruckByLightningEvent(EntityStruckByLightningEvent event){
+
+		if(event.getLightning().getEntityData() != null && event.getLightning().getEntityData().hasKey(NBT_KEY)){
+
+			EntityPlayer player = (EntityPlayer)WizardryUtilities.getEntityByUUID(event.getLightning().worldObj, event.getLightning().getEntityData().getUniqueId("summoningPlayer"));
+
+			if(event.getEntity() instanceof EntityCreeper){
+				player.addStat(WizardryAchievements.charge_creeper);
+			}
+
+			if(event.getEntity() instanceof EntityPig){
+				player.addStat(WizardryAchievements.frankenstein);
+			}
+		}
+
 	}
 }

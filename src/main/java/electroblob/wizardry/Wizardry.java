@@ -73,8 +73,6 @@ public class Wizardry {
 	 * a brewing stand). I have at least made it so only one gets used now, so it has no impact on the game.
 	 * - When a spell is on cooldown, you can't break blocks when holding a wand. */
 	
-	// FIXME: Wizardry enchantments appear on enchanted books in dungeon chests when they shouldn't.
-	
 	// TODO: So somehow I have managed to overlook the fact that health is actually a float. What this means is that
 	// I can make the healing spells use damage multipliers - hurrah!
 

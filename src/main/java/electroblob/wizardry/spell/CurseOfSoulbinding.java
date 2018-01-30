@@ -6,6 +6,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -17,7 +18,11 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class CurseOfSoulbinding extends Spell {
 
 	public CurseOfSoulbinding() {
@@ -52,6 +57,18 @@ public class CurseOfSoulbinding extends Spell {
 		caster.swingArm(hand);
 		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
+	}
+	
+	@SubscribeEvent
+	public static void onLivingHurtEvent(LivingHurtEvent event){
+		
+		if(!event.getEntity().worldObj.isRemote && event.getEntityLiving() instanceof EntityPlayer && !event.getSource().isUnblockable()
+				&& !(event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory())){
+			WizardData data = WizardData.get((EntityPlayer)event.getEntityLiving());
+			if(data != null){
+				data.damageAllSoulboundCreatures(event.getAmount());
+			}
+		}
 	}
 
 }

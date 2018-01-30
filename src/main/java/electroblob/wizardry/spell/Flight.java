@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class Flight extends Spell {
 
-	public Flight() {
+	public Flight(){
 		super(Tier.MASTER, 10, Element.EARTH, "flight", SpellType.UTILITY, 0, EnumAction.NONE, true);
 	}
 

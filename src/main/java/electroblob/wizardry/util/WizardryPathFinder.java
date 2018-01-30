@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Sets;
 
+import electroblob.wizardry.spell.Clairvoyance;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.Path;
@@ -14,7 +15,8 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
-/** Minecraft's pathfinder refused to play nicely, so I 'borrowed' its code and fiddled with it. */
+/** Minecraft's pathfinder refused to play nicely, so I 'borrowed' its code and fiddled with it. Currently this is only
+ * used for the {@link Clairvoyance} spell. */
 public class WizardryPathFinder {
 	
     /** The path being generated */

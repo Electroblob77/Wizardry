@@ -66,7 +66,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	protected Predicate<Entity> targetSelector;
 
 	/** Data parameter for the cooldown time for wizards healing themselves. */
-	private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityEvilWizard.class, DataSerializers.VARINT);
 	/** Data parameter for the wizard's element. */
 	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityEvilWizard.class, DataSerializers.VARINT);
 	/** The resource location for the evil wizard's loot table. */

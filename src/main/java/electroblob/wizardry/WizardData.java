@@ -13,6 +13,8 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.EntityShield;
 import electroblob.wizardry.entity.living.ISummonedCreature;
+import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastContinuousSpell;
 import electroblob.wizardry.packet.PacketPlayerSync;
 import electroblob.wizardry.packet.PacketTransportation;
@@ -40,12 +42,20 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /** Capability-based replacement for the old ExtendedPlayer class from 1.7.10. This has been reworked to leave
@@ -58,6 +68,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  * @since Wizardry 1.2
  * @author Electroblob */
 // On the plus side, having to rethink this class allowed me to clean it up a lot.
+@Mod.EventBusSubscriber
 public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	/** Static instance of what I like to refer to as the capability key. Private because, well, it's internal! */
@@ -65,6 +76,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	@CapabilityInject(WizardData.class)
 	private static final Capability<WizardData> WIZARD_DATA_CAPABILITY = null;
 
+	/** The player this WizardData instance belongs to. */
 	private final EntityPlayer player;
 
 	// This one is still necessary, because I can't override the equip animation for items that aren't from Wizardry.
@@ -329,6 +341,30 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			WizardryPacketHandler.net.sendToDimension(message, this.player.worldObj.provider.getDimension());
 		}
 	}
+	
+	/** Casts the current continuous spell, fires relevant events and updates the castingTick field. */
+	public void updateContinuousSpellCasting(){
+		
+		if(this.currentlyCasting != null && this.currentlyCasting.isContinuous){
+			
+			if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(player, currentlyCasting, spellModifiers, Source.COMMAND, castingTick))){
+				this.stopCastingContinuousSpell();
+				return;
+			}
+			
+			if(this.currentlyCasting.cast(player.worldObj, player, EnumHand.MAIN_HAND, castingTick, this.spellModifiers)
+					&& this.castingTick == 0){
+				// On the first tick casting a continuous spell via commands, SpellCastEvent.Post is fired.
+				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, currentlyCasting, spellModifiers, Source.COMMAND));
+			}
+			
+			castingTick++;
+			
+		}else{
+			// Why is this here? Surely castingTick will always be 0 if currentlyCasting is null?
+			this.castingTick = 0;
+		}
+	}
 
 	/** Returns whether this player is currently casting a continuous spell via commands. */
 	public boolean isCasting(){
@@ -341,8 +377,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		return currentlyCasting;
 	}
 
-	/** Called from the event handler each time the associated player is updated. */
-	public void update(){
+	/** Called each time the associated player is updated. */
+	private void update(){
 
 		if(this.selectedMinion != null && this.selectedMinion.get() == null) this.selectedMinion = null;
 
@@ -363,12 +399,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 				setTpCountdown(getTpCountdown() - 1);
 			}
 		}
-
-		if(this.currentlyCasting != null && this.currentlyCasting.isContinuous){
-			this.currentlyCasting.cast(player.worldObj, player, EnumHand.MAIN_HAND, castingTick++, this.spellModifiers);
-		}else{
-			this.castingTick = 0;
-		}
+		
+		updateContinuousSpellCasting();
 	}
 
 	/**
@@ -480,6 +512,52 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			this.spellsDiscovered = new HashSet<Spell>();
 			for(int id : nbt.getIntArray("discoveredSpells")){
 				spellsDiscovered.add(Spell.get(id));
+			}
+		}
+	}
+	
+	// Event handlers
+	
+	@SubscribeEvent
+	// The type parameter here has to be Entity, not EntityPlayer, or the event won't get fired.
+	public static void onCapabilityLoad(AttachCapabilitiesEvent<Entity> event){
+
+		if(event.getObject() instanceof EntityPlayer)
+			event.addCapability(new ResourceLocation(Wizardry.MODID, "WizardData"), new WizardData.Provider((EntityPlayer)event.getObject()));
+
+		// This demonstrates why capabilities are badly structured: The following code compiles, but what it does is put
+		// a player into a CapabilityDispatcher, which is in turn stored in that very same player, which makes no sense
+		// at all!
+		//event.addCapability(new ResourceLocation(Wizardry.MODID, "WizardData"), event.getObject());
+	}
+
+	@SubscribeEvent
+	public static void onPlayerCloneEvent(PlayerEvent.Clone event){
+
+		WizardData newData = WizardData.get(event.getEntityPlayer());
+		WizardData oldData = WizardData.get(event.getOriginal());
+
+		newData.copyFrom(oldData, event.isWasDeath());
+	}
+	
+	@SubscribeEvent
+	public static void onEntityJoinWorld(EntityJoinWorldEvent event){
+		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP){
+			// Synchronises wizard data after loading.
+			WizardData data = WizardData.get((EntityPlayer)event.getEntity());
+			if(data != null) data.sync();
+		}
+	}
+	
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		
+		if(event.getEntityLiving() instanceof EntityPlayer){
+			
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+	
+			if(WizardData.get(player) != null){
+				WizardData.get(player).update();
 			}
 		}
 	}

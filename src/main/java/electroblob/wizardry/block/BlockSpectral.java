@@ -3,6 +3,7 @@ package electroblob.wizardry.block;
 import java.util.Random;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.tileentity.TileEntityTimer;
 import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.block.Block;
@@ -17,11 +18,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 // For future reference - extend BlockContainer whenever possible because it has methods for removing tile entities on
 // block break.
+@Mod.EventBusSubscriber
 public class BlockSpectral extends BlockContainer {
 
 	public BlockSpectral(Material material) {
@@ -90,5 +95,13 @@ public class BlockSpectral extends BlockContainer {
 
         return block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
     }
+    
+    @SubscribeEvent
+	public static void onBlockPlaceEvent(BlockEvent.PlaceEvent event){
+		// Spectral blocks cannot be built on
+		if(event.getPlacedAgainst() == WizardryBlocks.spectral_block){
+			event.setCanceled(true);
+		}
+	}
 	
 }

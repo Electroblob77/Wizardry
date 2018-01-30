@@ -3,18 +3,24 @@ package electroblob.wizardry.block;
 import java.util.Random;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 // Extending BlockBush allows me to remove nearly everything from this class.
+@Mod.EventBusSubscriber
 public class BlockCrystalFlower extends BlockBush {
 	
     private static final AxisAlignedBB AABB = new AxisAlignedBB(0.5F - 0.2f, 0.0F, 0.5F - 0.2f, 0.5F + 0.2f, 0.2f * 3.0F, 0.5F + 0.2f);
@@ -42,5 +48,21 @@ public class BlockCrystalFlower extends BlockBush {
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
 		return EnumPlantType.Plains;
+	}
+
+	@SubscribeEvent
+	public static void onBonemealEvent(BonemealEvent event){
+		// Grows crystal flowers when bonemeal is used on grass
+		if(event.getBlock().getBlock() == Blocks.GRASS){
+
+			BlockPos pos = event.getPos().add(event.getWorld().rand.nextInt(8) - event.getWorld().rand.nextInt(8),
+					event.getWorld().rand.nextInt(4) - event.getWorld().rand.nextInt(4), 
+					event.getWorld().rand.nextInt(8) - event.getWorld().rand.nextInt(8));
+
+			if (event.getWorld().isAirBlock(new BlockPos(pos)) && (!event.getWorld().provider.getHasNoSky() || pos.getY() < 127) && WizardryBlocks.crystal_flower.canPlaceBlockAt(event.getWorld(), pos))
+			{
+				event.getWorld().setBlockState(pos, WizardryBlocks.crystal_flower.getDefaultState(), 2);
+			}
+		}
 	}
 }

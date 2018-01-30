@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class Levitation extends Spell {
 
-	public Levitation() {
+	public Levitation(){
 		super(Tier.ADVANCED, 10, Element.SORCERY, "levitation", SpellType.UTILITY, 0, EnumAction.BOW, true);
 	}
 

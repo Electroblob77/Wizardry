@@ -12,7 +12,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class EntityBubble extends EntityMagicConstruct {
 	
 	public boolean isDarkOrb;
@@ -118,6 +122,16 @@ public class EntityBubble extends EntityMagicConstruct {
 	public void readSpawnData(ByteBuf data) {
 		super.readSpawnData(data);
 		this.isDarkOrb = data.readBoolean();
+	}
+	
+	@SubscribeEvent
+	public static void onLivingAttackEvent(LivingAttackEvent event){
+		// Bursts bubble when the creature inside takes damage
+		if(event.getEntityLiving().getRidingEntity() instanceof EntityBubble &&
+				!((EntityBubble)event.getEntityLiving().getRidingEntity()).isDarkOrb){
+			event.getEntityLiving().getRidingEntity().playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1.5f, 1.0f);
+			event.getEntityLiving().getRidingEntity().setDead();
+		}
 	}
 
 }

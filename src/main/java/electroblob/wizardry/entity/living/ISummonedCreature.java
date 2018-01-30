@@ -13,6 +13,10 @@ import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryEventHandler;
 import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.util.IElementalDamage;
+import electroblob.wizardry.util.IndirectMinionDamage;
+import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.MinionDamage;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
@@ -23,10 +27,16 @@ import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-/** Interface for all summoned creatures. The code for summoned creatures has been overhauled in Wizardry 1.2, and this
+/** Interface for all summoned creatures. The code for summoned creatures has been overhauled in Wizardry 2.1, and this
  * interface allows summoned creatures to extend vanilla (or indeed modded) entity classes, so <code>EntitySummonedZombie</code> 
  * now extends <code>EntityZombie</code>, for example. This change has two major benefits:
  * <p>
@@ -59,13 +69,14 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  * <p>
  * Due to the limitations of interfaces, some methods that really ought to be protected are public. These are clearly
  * marked as 'Internal, DO NOT CALL'. <b>Don't call them, only implement them.</b>
- * @since Wizardry 1.2
+ * @since Wizardry 2.1
  * @author Electroblob */
 /*
  * Quite honestly, this is not what default methods are really for. However, this is modding, and in modding some
  * sacrifices have to be made when it comes to Java style - because adding on to a pre-existing program is not a
  * good way of doing this sort of thing anyway, but we have no choice about that!
  */
+@Mod.EventBusSubscriber
 public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 
 	// Remember that ALL fields are static and final in interfaces, even if they don't explicitly state that.
@@ -78,7 +89,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 	
 	/** Returns the lifetime of the summoned creature in ticks. Allows primarily for duration multiplier support, but
 	 * also for example the skeleton legion spell which lasts for 60 seconds instead of the usual 30. Syncing and saving
-	 * is done automatically. As of Wizardry 1.2, despawning is handled in ISummonedCreature; see
+	 * is done automatically. As of Wizardry 2.1, despawning is handled in ISummonedCreature; see
 	 * {@link ISummonedCreature#onDespawn()} for details. */
 	int getLifetime();
 	
@@ -273,6 +284,50 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 		}
 		
 		return false;
+	}
+	
+	// Damage system
+	
+	@SubscribeEvent
+	public static void onLivingAttackEvent(LivingAttackEvent event){
+
+		// Rather than bother overriding entire attack methods in ISummonedCreature implementations, it's easier (and
+		// more robust) to use LivingAttackEvent to modify the damage source.
+		if(event.getSource().getEntity() instanceof ISummonedCreature){
+
+			EntityLivingBase summoner = ((ISummonedCreature)event.getSource().getEntity()).getCaster();
+
+			if(summoner != null){
+
+				event.setCanceled(true);
+				DamageSource newSource = event.getSource();
+				// Copies over the original DamageType if appropriate.
+				DamageType type = event.getSource() instanceof IElementalDamage ? ((IElementalDamage)event.getSource()).getType() : DamageType.MAGIC;
+				// Copies over the original isRetaliatory flag if appropriate.
+				boolean isRetaliatory = event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory();
+
+				// All summoned creatures are classified as magic, so it makes sense to do it this way.
+				if(event.getSource() instanceof EntityDamageSourceIndirect){
+					newSource = new IndirectMinionDamage(event.getSource().damageType, event.getSource().getSourceOfDamage(), event.getSource().getEntity(), summoner, type, isRetaliatory);
+				}else if(event.getSource() instanceof EntityDamageSource){
+					// Name is copied over so it uses the appropriate vanilla death message
+					newSource = new MinionDamage(event.getSource().damageType, event.getSource().getEntity(), summoner, type, isRetaliatory);
+				}
+
+				// Copy over any relevant 'attributes' the original DamageSource might have had.
+				if(event.getSource().isExplosion()) newSource.setExplosion();
+				if(event.getSource().isFireDamage()) newSource.setFireDamage();
+				if(event.getSource().isProjectile()) newSource.setProjectile();
+
+				// For some reason Minecraft calculates knockback relative to DamageSource#getEntity. In vanilla this
+				// is unnoticeable, but it looks a bit weird with summoned creatures involved - so this fixes that.
+				if(WizardryUtilities.attackEntityWithoutKnockback(event.getEntity(), newSource, event.getAmount())){
+					WizardryUtilities.applyStandardKnockback(event.getSource().getEntity(), event.getEntityLiving());
+					((ISummonedCreature)event.getSource().getEntity()).onSuccessfulAttack(event.getEntityLiving());
+				}
+				
+			}
+		}
 	}
 
 }

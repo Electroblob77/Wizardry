@@ -9,6 +9,8 @@ import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.ISummonedCreature;
+import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryAchievements;
@@ -24,7 +26,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
@@ -32,10 +33,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,12 +80,12 @@ public class ItemWand extends Item {
 	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
 	}
-	
+
 	@Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item parItem, CreativeTabs parTab, List<ItemStack> parListSubItems){
-        parListSubItems.add(new ItemStack(this, 1));
-    }
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item parItem, CreativeTabs parTab, List<ItemStack> parListSubItems){
+		parListSubItems.add(new ItemStack(this, 1));
+	}
 
 	// Max damage is modifiable with upgrades.
 	@Override
@@ -95,13 +96,6 @@ public class ItemWand extends Item {
 
 	@Override
 	public void onCreated(ItemStack stack, World par2World, EntityPlayer par3EntityPlayer){
-		/* Removed because of mana flasks, which would cause a new book to be given each time a mana flask
-		 * is crafted with the wand. Handbook is now given on acquiring a crystal.
-		ExtendedPlayer properties = ExtendedPlayer.get(par3EntityPlayer);
-		if(properties != null && !properties.handbookGiven){
-			par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Wizardry.wizardHandbook));
-			properties.handbookGiven = true;
-		}*/
 		par3EntityPlayer.addStat(WizardryAchievements.arcane_initiate);
 	}
 
@@ -124,19 +118,19 @@ public class ItemWand extends Item {
 			((EntityPlayer)entity).addStat(WizardryAchievements.elemental);
 		}
 	}
-	
+
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged){
-		
+
 		// This method does some VERY strange things! Despite its name, it also seems to affect the updating of NBT...
-		
+
 		if(oldStack != null || newStack != null){
 			// We only care about the situation where we specifically want the animation NOT to play.
 			if(oldStack.getItem() == newStack.getItem() && !slotChanged
 					&& oldStack.getItem() instanceof ItemWand && newStack.getItem() instanceof ItemWand
 					&& WandHelper.getCurrentSpell(oldStack) == WandHelper.getCurrentSpell(newStack)) return false;
 		}
-		
+
 		return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
 	}
 
@@ -174,33 +168,30 @@ public class ItemWand extends Item {
 	public String getItemStackDisplayName(ItemStack stack){
 		return (this.element == null ? "" : this.element.getFormattingCode()) + super.getItemStackDisplayName(stack);
 	}
-
+	
 	// Continuous spells use the onUsingItemTick method instead of this one.
 	/* An important thing to note about this method: it is only called on the server and the client of the player
-	 * holding the item. This means if you spawn particles here they will not show up on other players' screens.
-	 * Instead, this must be done via packets. */
+	 * holding the item (I call this client-inconsistency). This means if you spawn particles here they will not show up
+	 * on other players' screens. Instead, this must be done via packets. */
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand){
-		
+
+		// Alternate right-click function; overrides spell casting.
 		if(this.selectMinionTarget(player, world)) return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
-
-		if(player.isPotionActive(WizardryPotions.arcane_jammer)) return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
-
+		
 		Spell spell = WandHelper.getCurrentSpell(stack);
-
-		// If a spell is disabled in the config, it will not work.
-		if(!spell.isEnabled()){
-			if(!world.isRemote) player.addChatMessage(new TextComponentTranslation("spell.disabled", spell.getNameForTranslationFormatted()));
+		SpellModifiers modifiers = this.calculateModifiers(stack, spell);
+		
+		// If anything stops the spell working at this point, nothing else happens.
+		if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(player, spell, modifiers, Source.WAND))){
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 		}
 
-		// This is here to start the inUse thing, otherwise the onItemUsingTick method will not fire.
-		// If the castSpell method then returns false nothing will happen (continuous spells have no EnumAction
-		// either so setting the item in use has no direct visible effect).
-		// Edit: Strictly speaking this is not true but the spells that do have an action (shield, shadow ward and levitation)
-		// will never return false.
+		// This is here to start the inUse thing, otherwise the onUsingTick method will not fire.
 		if(spell.isContinuous && !player.isHandActive()){
 			player.setActiveHand(hand);
+			// Probably ought to be here. (Does it succeed though?)
+			return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 		}
 
 		// Conditions for the spell to be attempted. The tier check is a failsafe; it should never be false unless the
@@ -211,14 +202,13 @@ public class ItemWand extends Item {
 				// Checks that the spell is not in cooldown or that the player is in creative mode
 				&& (WandHelper.getCurrentCooldown(stack) == 0 || player.capabilities.isCreativeMode)){
 
-			// = Spell modifiers =
-			SpellModifiers modifiers = this.calculateModifiers(stack, spell);
-
 			// If the spell does not require a packet, the code is run in the old client-inconsistent way, since this
 			// means that swingItem() doesn't need packets in order to work, improving performance.
 			if(!world.isRemote){
 
 				if(spell.cast(world, player, hand, 0, modifiers)){
+					
+					MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.WAND));
 
 					// = Packets =
 					if(spell.doesSpellRequirePacket()){
@@ -230,17 +220,6 @@ public class ItemWand extends Item {
 					}
 
 					player.setActiveHand(hand);
-					
-					WizardData data = WizardData.get(player);
-
-					// = Discovery =
-					if(data != null && !player.capabilities.isCreativeMode && !data.hasSpellBeenDiscovered(spell) && Wizardry.settings.discoveryMode){
-						// We are only server side here, so we need to play the sound on the server side to everyone.
-						world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_LEVELUP,
-								SoundCategory.PLAYERS, 1.25f, 1);
-						player.addChatMessage(new TextComponentTranslation("spell.discover", spell.getNameForTranslationFormatted()));
-					}
-					WizardData.get(player).discoverSpell(spell);
 
 					// = Cooldown =
 					// Spells only have a cooldown in survival
@@ -264,53 +243,42 @@ public class ItemWand extends Item {
 
 					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 				}
-				
-			// Client-inconsistent spell casting. The code inside the else if statement only runs client-side.
+
 			}else if(!spell.doesSpellRequirePacket()){
-				// This is all that needs to happen, because everything above works fine on just the server side.
-				if(spell.cast(world, player, hand, 0, new SpellModifiers())){
-					// Added in version 1.1.3 to fix the client-side spell discovery not updating for spells with the
-					// packet optimisation.
-					if(WizardData.get(player) != null){
-						WizardData.get(player).discoverSpell(spell);
-					}
-					
-					new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+				// Client-inconsistent spell casting. This code only runs client-side.
+				if(spell.cast(world, player, hand, 0, modifiers)){
+					// This is all that needs to happen, because everything above works fine on just the server side.
+					MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.WAND));
+					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 				}
 			}
 		}
-		
+
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 	}
 
 	// For continuous spells. The count argument actually decrements by 1 each tick.
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase user, int count){
-		
+
 		if(user instanceof EntityPlayer){
-	
+
 			EntityPlayer player = (EntityPlayer)user;
 			
 			Spell spell = WandHelper.getCurrentSpell(stack);
-	
-			WizardData data = WizardData.get(player);
-	
+			SpellModifiers modifiers = this.calculateModifiers(stack, spell);
+			int castingTick = stack.getMaxItemUseDuration() - count;
+			
+			if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(player, spell, modifiers, Source.WAND, castingTick))) return;
+
 			// Continuous spells (these must check if they can be cast each tick since the mana changes)
 			if(spell.isContinuous && spell.tier.level <= this.tier.level
 					&& spell.cost/5 <= (stack.getMaxDamage() - stack.getItemDamage())){
-	
-				// = Spell modifiers =
-				SpellModifiers modifiers = this.calculateModifiers(stack, spell);
-	
-				if(spell.cast(player.worldObj, player, player.getActiveHand(), stack.getMaxItemUseDuration() - count, modifiers)){
-	
-					// = Discovery =
-					if(data != null && !player.capabilities.isCreativeMode && !data.hasSpellBeenDiscovered(spell) && Wizardry.settings.discoveryMode){
-						player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
-						if(!player.worldObj.isRemote) player.addChatMessage(new TextComponentTranslation("spell.discover", spell.getNameForTranslationFormatted()));
-					}
-					data.discoverSpell(spell);
-	
+
+				if(spell.cast(player.worldObj, player, player.getActiveHand(), castingTick, modifiers)){
+
+					if(castingTick == 0) MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.WAND));
+
 					// = Mana cost =
 					// Divides the mana cost over a second appropriately; since damage is an integer it cannot
 					// just be divided by 20.
@@ -320,56 +288,31 @@ public class ItemWand extends Item {
 					// Tests if the tick counter is a multiple of 4 plus 1, i.e. is true when tickNumber = 1, 5, 9, 13 or 17.
 					// Made a slight adjustment since the counter starts on 1 and not 4.
 					if(tickNumber % 4 == 1){
-	
+
 						int armourPieces = getMatchingArmourCount(player, spell);
-	
+
 						switch(armourPieces){
-	
+
 						case 0: stack.damageItem(spell.cost/5, player);
 						break;
-	
+
 						case 1: if(tickNumber != 17) stack.damageItem(spell.cost/5, player);
 						break;
-	
+
 						case 2: if(tickNumber != 9 && tickNumber != 17) stack.damageItem(spell.cost/5, player);
 						break;
-	
+
 						case 3: if(tickNumber != 5 && tickNumber != 13 && tickNumber != 17) stack.damageItem(spell.cost/5, player);
 						break;
-	
+
 						case 4: if(tickNumber == 1) stack.damageItem(spell.cost/5, player);
 						break;
-	
+
 						}
 					}
 				}
 			}
 		}
-	}
-	
-	/** Returns a SpellModifiers object with the appropriate modifiers applied for the given ItemStack and Spell. */
-	protected SpellModifiers calculateModifiers(ItemStack stack, Spell spell){
-		
-		SpellModifiers modifiers = new SpellModifiers();
-		
-		// Now we only need to add multipliers if they are not 1.
-		int level = WandHelper.getUpgradeLevel(stack, WizardryItems.range_upgrade);
-		if(level > 0) modifiers.set(WizardryItems.range_upgrade, 1.0f + level * Constants.RANGE_INCREASE_PER_LEVEL, true);
-		
-		level = WandHelper.getUpgradeLevel(stack, WizardryItems.duration_upgrade);
-		if(level > 0) modifiers.set(WizardryItems.duration_upgrade, 1.0f + level * Constants.DURATION_INCREASE_PER_LEVEL, false);
-		
-		level = WandHelper.getUpgradeLevel(stack, WizardryItems.blast_upgrade);
-		if(level > 0) modifiers.set(WizardryItems.blast_upgrade, 1.0f + level * Constants.BLAST_RADIUS_INCREASE_PER_LEVEL, true);
-
-		// I would have liked to have made potion effects increase in strength according to the damage multiplier,
-		// but the amplifier level is too discrete to make this work. For example, wither 3 for 10 seconds will kill a
-		// normal mob on full 20 health, but wither 2 for the same duration only deals about 6 hearts of damage in total.
-		if(this.element == spell.element){
-			modifiers.set(SpellModifiers.DAMAGE, 1.0f + (this.tier.level + 1) * Constants.DAMAGE_INCREASE_PER_TIER, true);
-		}
-		
-		return modifiers;
 	}
 
 	@Override
@@ -385,36 +328,61 @@ public class ItemWand extends Item {
 
 		return false;
 	}
-	
+
+	/** Returns a SpellModifiers object with the appropriate modifiers applied for the given ItemStack and Spell. */
+	protected SpellModifiers calculateModifiers(ItemStack stack, Spell spell){
+
+		SpellModifiers modifiers = new SpellModifiers();
+
+		// Now we only need to add multipliers if they are not 1.
+		int level = WandHelper.getUpgradeLevel(stack, WizardryItems.range_upgrade);
+		if(level > 0) modifiers.set(WizardryItems.range_upgrade, 1.0f + level * Constants.RANGE_INCREASE_PER_LEVEL, true);
+
+		level = WandHelper.getUpgradeLevel(stack, WizardryItems.duration_upgrade);
+		if(level > 0) modifiers.set(WizardryItems.duration_upgrade, 1.0f + level * Constants.DURATION_INCREASE_PER_LEVEL, false);
+
+		level = WandHelper.getUpgradeLevel(stack, WizardryItems.blast_upgrade);
+		if(level > 0) modifiers.set(WizardryItems.blast_upgrade, 1.0f + level * Constants.BLAST_RADIUS_INCREASE_PER_LEVEL, true);
+
+		// I would have liked to have made potion effects increase in strength according to the damage multiplier,
+		// but the amplifier level is too discrete to make this work. For example, wither 3 for 10 seconds will kill a
+		// normal mob on full 20 health, but wither 2 for the same duration only deals about 6 hearts of damage in total.
+		if(this.element == spell.element){
+			modifiers.set(SpellModifiers.DAMAGE, 1.0f + (this.tier.level + 1) * Constants.DAMAGE_INCREASE_PER_TIER, true);
+		}
+
+		return modifiers;
+	}
+
 	/** Counts the number of armour pieces the given player is wearing that match the given spell's element. */
 	private int getMatchingArmourCount(EntityPlayer player, Spell spell){
-		
+
 		int armourPieces = 0;
 
 		for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
-			
+
 			ItemStack armour = player.getItemStackFromSlot(slot);
-			
+
 			if(armour != null && armour.getItem() instanceof ItemWizardArmour
 					&& ((ItemWizardArmour)armour.getItem()).element == spell.element) armourPieces++;
 		}
-		
+
 		return armourPieces;
 	}
-	
+
 	private boolean selectMinionTarget(EntityPlayer player, World world){
-	
+
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, player, 16);
-		
+
 		if(rayTrace != null && rayTrace.entityHit instanceof EntityLivingBase){
-			
+
 			EntityLivingBase entity = (EntityLivingBase)rayTrace.entityHit;
-			
+
 			// Sets the selected minion's target to the right-clicked entity
 			if(player.isSneaking() && WizardData.get(player) != null && WizardData.get(player).selectedMinion != null){
-				
+
 				ISummonedCreature minion = WizardData.get(player).selectedMinion.get();
-				
+
 				if(minion instanceof EntityLiving && minion != entity){
 					// There is now only the new AI! (which greatly improves things)
 					((EntityLiving)minion).setAttackTarget(entity);
@@ -424,7 +392,7 @@ public class ItemWand extends Item {
 				}
 			}
 		}
-		
+
 		return false;
 	}
 }

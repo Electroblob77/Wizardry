@@ -3,7 +3,6 @@ package electroblob.wizardry.packet;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketControlInput.Message;
 import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
-import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.util.WandHelper;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,8 +36,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					case APPLY_BUTTON:
 
-						TileEntityArcaneWorkbench tileentity = ((ContainerArcaneWorkbench)player.openContainer).tileEntityArcaneWorkbench;
-						tileentity.onApplyButtonPressed(player);
+						((ContainerArcaneWorkbench)player.openContainer).onApplyButtonPressed(player);
 						break;
 
 					case NEXT_SPELL_KEY:

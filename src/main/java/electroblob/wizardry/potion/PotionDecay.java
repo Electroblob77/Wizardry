@@ -1,8 +1,12 @@
 package electroblob.wizardry.potion;
 
+import java.util.List;
+
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.entity.construct.EntityDecay;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.potion.Potion;
@@ -32,8 +36,25 @@ public class PotionDecay extends Potion {
 	}
 	
 	@Override
-	public void performEffect(EntityLivingBase entitylivingbase, int strength) {
-		entitylivingbase.attackEntityFrom(DamageSource.wither, 1);
+	public void performEffect(EntityLivingBase target, int strength) {
+		
+		target.attackEntityFrom(DamageSource.wither, 1);
+		
+		if(target.onGround && target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0){
+
+			List<Entity> entities = target.worldObj.getEntitiesWithinAABBExcludingEntity(target, target.getEntityBoundingBox());
+
+			boolean flag = true;
+
+			for(Entity entity : entities){
+				if(entity instanceof EntityDecay) flag = false;
+			}
+
+			if(flag){
+				// The victim spreading the decay is the 'caster' here, so that it can actually wear off, otherwise it just gets infected with its own decay and the effect lasts forever.
+				target.worldObj.spawnEntityInWorld(new EntityDecay(target.worldObj, target.posX, target.posY, target.posZ, target));
+			}
+		}
     }
 	
 	@Override

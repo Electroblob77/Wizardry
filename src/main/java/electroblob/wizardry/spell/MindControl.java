@@ -6,7 +6,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.living.EntityWizard;
+import electroblob.wizardry.entity.living.EntityEvilWizard;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -26,7 +26,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class MindControl extends Spell {
 
 	/** The NBT tag name for storing the controlling entity's UUID in the target's tag compound. Defined here in case
@@ -44,10 +49,10 @@ public class MindControl extends Spell {
 
 		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
 
-			Entity target = rayTrace.entityHit;
+			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 
 			if(!world.isRemote){
-				if(target instanceof EntityPlayer || !target.isNonBoss() || target instanceof INpc){
+				if(!canControl(target)){
 					// Adds a message saying that the player/boss entity/wizard resisted mind control
 					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()));
 
@@ -87,8 +92,7 @@ public class MindControl extends Spell {
 
 		if(target != null){
 			if(!world.isRemote){
-				if(target instanceof EntityLiving && target.isNonBoss()
-						&& !(target instanceof EntityWizard)){
+				if(canControl(target)){
 
 					if(!MindControl.findMindControlTarget((EntityLiving)target, caster, world)){
 						// If no valid target was found, this just acts like mind trick.
@@ -118,10 +122,16 @@ public class MindControl extends Spell {
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
+	}
+
+	/** Returns true if the given entity can be mind controlled (i.e. is not a player, npc, evil wizard or boss). */
+	public static boolean canControl(EntityLivingBase target){
+		return target instanceof EntityLiving && target.isNonBoss() && !(target instanceof INpc)
+				&& !(target instanceof EntityEvilWizard);
 	}
 
 	/**
@@ -165,5 +175,42 @@ public class MindControl extends Spell {
 
 	}
 
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		// This was added because something got changed in the AI classes which means LivingSetAttackTargetEvent doesn't
+		// get fired when I want it to... so I'm firing it myself.
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving
+				&& ((EntityLiving)event.getEntityLiving()).getAttackTarget() != null
+				&& !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive())
+			((EntityLiving)event.getEntityLiving()).setAttackTarget(null); // Causes the event to be fired
+	}
+
+	@SubscribeEvent
+	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
+
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && MindControl.canControl(event.getEntityLiving())){
+
+			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();
+
+			if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY + "Most")){
+
+				Entity caster = WizardryUtilities.getEntityByUUID(event.getEntity().worldObj, entityNBT.getUniqueId(MindControl.NBT_KEY));
+
+				// If the target that the event tried to set is already a valid mind control target, nothing happens.
+				if(event.getTarget() != null && WizardryUtilities.isValidTarget(caster, event.getTarget())) return;
+
+				if(caster instanceof EntityLivingBase){
+
+					if(MindControl.findMindControlTarget((EntityLiving)event.getEntityLiving(), (EntityLivingBase)caster, event.getEntity().worldObj)){
+						// If it worked, skip setting the target to null.
+						return;
+					}
+				}
+			}
+			// If the caster couldn't be found or no valid target was found, this just acts like mind trick.
+			// If the target is null already, no need to set it to null, or infinite loops will occur.
+			if(event.getTarget() != null) ((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+		}
+	}
 
 }

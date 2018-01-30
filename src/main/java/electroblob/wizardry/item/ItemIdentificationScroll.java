@@ -3,6 +3,7 @@ package electroblob.wizardry.item;
 import java.util.List;
 
 import electroblob.wizardry.WizardData;
+import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
@@ -17,6 +18,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -54,15 +56,17 @@ public class ItemIdentificationScroll extends Item {
 					if((stack1.getItem() instanceof ItemSpellBook || stack1.getItem() instanceof ItemScroll)
 							&& !properties.hasSpellBeenDiscovered(spell)){
 
-						// Identification scrolls give the chat readout in creative mode, otherwise it looks like
-						// nothing happens!
-						properties.discoverSpell(spell);
-						player.addStat(WizardryAchievements.identify_spell);
-						player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
-						if(!player.capabilities.isCreativeMode) stack.stackSize--;
-						if(!world.isRemote) player.addChatMessage(new TextComponentTranslation("spell.discover", spell.getNameForTranslationFormatted()));
+						if(!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(player, spell, DiscoverSpellEvent.Source.IDENTIFICATION_SCROLL))){
+							// Identification scrolls give the chat readout in creative mode, otherwise it looks like
+							// nothing happens!
+							properties.discoverSpell(spell);
+							player.addStat(WizardryAchievements.identify_spell);
+							player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
+							if(!player.capabilities.isCreativeMode) stack.stackSize--;
+							if(!world.isRemote) player.addChatMessage(new TextComponentTranslation("spell.discover", spell.getNameForTranslationFormatted()));
 
-						return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+							return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+						}
 					}
 				}
 			}

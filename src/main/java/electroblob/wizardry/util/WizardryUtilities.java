@@ -56,6 +56,14 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** This class contains some useful static methods for use anywhere - items, entities, spells, events, blocks, etc.
+ * Broadly speaking, these fall into the following categories:
+ * <p>
+ * - In-world utilities (position calculating, retrieving entities, etc.)<br>
+ * - Raytracing<br>
+ * - Drawing utilities (client-only)<br>
+ * - NBT and data storage utilities<br>
+ * - Interaction with the ally designation system<br>
+ * - Loot and weighting utilities
  * @see CommonProxy
  * @see WandHelper
  * @since Wizardry 1.0

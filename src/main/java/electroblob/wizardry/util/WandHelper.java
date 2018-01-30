@@ -23,7 +23,9 @@ import net.minecraft.nbt.NBTTagCompound;
  * unlikely case that this is necessary.
  * <p>
  * Also note that none of the methods in this class actually check that the given ItemStack contains an ItemWand; you
- * can, for example, pass in a stack of snowballs without causing problems, but that is of course pointless!
+ * can, for example, pass in a stack of snowballs without causing problems, but that is of course pointless! However,
+ * if you have your own spell casting item (which doesn't extend ItemWand), this setup means you can still use this class
+ * to manage its NBT structure.
  * <p>
  * All <b>get</b> methods in this class return some kind of default if the passed-in wand stack has no nbt data.
  * See individual method descriptions for more details.<br>

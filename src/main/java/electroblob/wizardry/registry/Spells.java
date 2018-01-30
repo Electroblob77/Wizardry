@@ -19,7 +19,8 @@ import net.minecraftforge.fml.common.registry.RegistryBuilder;
 // stuff during the registry events (or whenever), whilst still having a final field (which is important, not only
 // because it makes the text go bold, but also because it stops anyone fiddling with your fields). "Why would I want to
 // initialise things within the registry events?", I hear you ask - well, for one, custom registries don't like it if
-// you haven't created the registry before you start calling constructors of classes extending IForgeRegistryEntry.Impl.
+// you haven't created the registry before you start calling constructors of classes extending IForgeRegistryEntry.Impl,
+// and secondly, 
 @ObjectHolder(Wizardry.MODID)
 @Mod.EventBusSubscriber
 public final class Spells {

@@ -2,6 +2,7 @@ package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,9 +11,13 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Mod.EventBusSubscriber
 public class PotionFrost extends Potion implements ICustomPotionParticles {
 	
 	private static final ResourceLocation ICON = new ResourceLocation(Wizardry.MODID, "textures/gui/frost_icon.png");
@@ -48,6 +53,14 @@ public class PotionFrost extends Potion implements ICustomPotionParticles {
 	public void renderHUDEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc, float alpha) {
 		mc.renderEngine.bindTexture(ICON);
 		WizardryUtilities.drawTexturedRect(x + 3, y + 3, 0, 0, 18, 18, 18, 18);
+	}
+
+	@SubscribeEvent
+	public static void onBreakSpeedEvent(BreakSpeed event){
+		if(event.getEntityPlayer().isPotionActive(WizardryPotions.frost)){
+			// Amplifier + 1 because it starts at 0
+			event.setNewSpeed(event.getOriginalSpeed() * (1 - Constants.FROST_FATIGUE_PER_LEVEL*(event.getEntityPlayer().getActivePotionEffect(WizardryPotions.frost).getAmplifier() + 1)));
+		}
 	}
 
 }
