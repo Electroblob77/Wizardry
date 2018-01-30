@@ -12,7 +12,7 @@ Thanks also to the Minecraft modding community, which always has an answer to my
 
 In addition, I'd like to thank the following individuals for their contributions to the mod:
 
-Translations:
+#### Translations
 
 - Russian: VilagVil
 - Spanish and Mexican Spanish: MadWrist
