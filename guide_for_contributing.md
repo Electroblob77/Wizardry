@@ -1,5 +1,11 @@
 # Guide for contributing to this repository
 
+## Submitting an issue
+
+When submitting an issue, please stick to the issue template. Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem! Most importantly, use gist or pastebin to post crash reports.
+
+## Submitting a PR
+
 I like my code to be tidy, so it saves me time if yours is too. Here are a few general guidelines for how to submit a good PR:
 
 - Use proper indentation and try to space your code out nicely. This really goes without saying - select all your code and hit ctrl-i before you submit it, and try to use my spacing if you can (for instance, don't do what the Minecraft source does and put a { on a separate line, it's a waste of space).
