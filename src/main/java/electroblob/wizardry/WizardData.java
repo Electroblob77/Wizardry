@@ -217,6 +217,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	}
 
 	/** Returns the imbuement duration associated with the given imbuement for this player, or 0 if it does not exist. */
+	@SuppressWarnings("unlikely-arg-type")
 	public int getImbuementDuration(Enchantment enchantment){
 		// Need to check that i is not null, otherwise it throws an NPE when Java auto-unboxes it.
 		// What's nice here is that the map simply accepts objects as keys, so there's no need to cast or throw exceptions.
