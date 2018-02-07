@@ -8,8 +8,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-/** <b>[Server -> Client]</b> This packet is sent when the /cast command is used with a continuous spell, in order to
- * sync the relevant variables in {@link electroblob.wizardry.WizardData WizardData}. */
+/**
+ * <b>[Server -> Client]</b> This packet is sent when the /cast command is used with a continuous spell, in order to
+ * sync the relevant variables in {@link electroblob.wizardry.WizardData WizardData}.
+ */
 public class PacketCastContinuousSpell implements IMessageHandler<Message, IMessage> {
 
 	@Override
@@ -21,7 +23,7 @@ public class PacketCastContinuousSpell implements IMessageHandler<Message, IMess
 			// methods any more than necessary.
 			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable(){
 				@Override
-				public void run() {
+				public void run(){
 					Wizardry.proxy.handleCastContinuousSpellPacket(message);
 				}
 			});
@@ -31,7 +33,7 @@ public class PacketCastContinuousSpell implements IMessageHandler<Message, IMess
 	}
 
 	public static class Message implements IMessage {
-	
+
 		// Note that range and blast multipliers are the only two that affect particle spawning, so they are the
 		// only two that need to be sent.
 
@@ -43,7 +45,8 @@ public class PacketCastContinuousSpell implements IMessageHandler<Message, IMess
 		public SpellModifiers modifiers;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
-		public Message(){}
+		public Message(){
+		}
 
 		public Message(int casterID, int spellID, SpellModifiers modifiers){
 			this.casterID = casterID;

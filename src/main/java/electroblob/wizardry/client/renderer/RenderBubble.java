@@ -18,9 +18,10 @@ import net.minecraft.util.ResourceLocation;
 public class RenderBubble extends Render<EntityBubble> {
 
 	private static final ResourceLocation particleTextures = new ResourceLocation("textures/particle/particles.png");
-	private static final ResourceLocation darkOrbTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/dark_orb.png");
+	private static final ResourceLocation darkOrbTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/dark_orb.png");
 
-	public RenderBubble(RenderManager renderManager) {
+	public RenderBubble(RenderManager renderManager){
 		super(renderManager);
 	}
 
@@ -34,7 +35,7 @@ public class RenderBubble extends Render<EntityBubble> {
 		float yOffset = 0;
 
 		if(WizardryUtilities.getRider(entity) != null){
-			yOffset = WizardryUtilities.getRider(entity).height/2;
+			yOffset = WizardryUtilities.getRider(entity).height / 2;
 		}
 
 		GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
@@ -58,20 +59,21 @@ public class RenderBubble extends Render<EntityBubble> {
 
 		// This counteracts the reverse rotation behaviour when in front f5 view.
 		// Fun fact: this is a bug with vanilla too! Look at a snowball in front f5 view, for example.
-		float yaw = Minecraft.getMinecraft().gameSettings.thirdPersonView == 2 ? this.renderManager.playerViewX : -this.renderManager.playerViewX;
+		float yaw = Minecraft.getMinecraft().gameSettings.thirdPersonView == 2 ? this.renderManager.playerViewX
+				: -this.renderManager.playerViewX;
 		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
 		float f11 = 3.0F;
 		GlStateManager.scale(f11, f11, f11);
 
-		double pixelwidth = (1.0d/128);
+		double pixelwidth = (1.0d / 128);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		VertexBuffer buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		//tessellator.setColorRGBA_I(k1, 128);
-		//buffer.normal(0.0F, 1.0F, 0.0F);
+		// tessellator.setColorRGBA_I(k1, 128);
+		// buffer.normal(0.0F, 1.0F, 0.0F);
 
 		if(((EntityBubble)entity).isDarkOrb){
 			buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.0D).tex(0, 1).endVertex();
@@ -80,8 +82,8 @@ public class RenderBubble extends Render<EntityBubble> {
 			buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.0D).tex(0, 0).endVertex();
 		}else{
 			buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.0D).tex(pixelwidth, pixelwidth * 24).endVertex();
-			buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.0D).tex(pixelwidth*8, pixelwidth * 24).endVertex();
-			buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.0D).tex(pixelwidth*8, pixelwidth * 17).endVertex();
+			buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.0D).tex(pixelwidth * 8, pixelwidth * 24).endVertex();
+			buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.0D).tex(pixelwidth * 8, pixelwidth * 17).endVertex();
 			buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.0D).tex(pixelwidth, pixelwidth * 17).endVertex();
 		}
 
@@ -97,7 +99,7 @@ public class RenderBubble extends Render<EntityBubble> {
 	}
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityBubble entity) {
+	protected ResourceLocation getEntityTexture(EntityBubble entity){
 		return null;
 	}
 

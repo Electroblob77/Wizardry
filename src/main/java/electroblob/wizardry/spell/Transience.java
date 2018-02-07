@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class Transience extends Spell {
 
-	public Transience() {
+	public Transience(){
 		super(Tier.ADVANCED, 50, Element.HEALING, "transience", SpellType.DEFENCE, 100, EnumAction.BOW, false);
 	}
 
@@ -33,12 +33,14 @@ public class Transience extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		if(!caster.isPotionActive(WizardryPotions.transience)){
 			if(!world.isRemote){
-				caster.addPotionEffect(new PotionEffect(WizardryPotions.transience, (int)(400*modifiers.get(WizardryItems.duration_upgrade)), 0));
-				caster.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, (int)(400*modifiers.get(WizardryItems.duration_upgrade)), 0, false, false));
+				caster.addPotionEffect(new PotionEffect(WizardryPotions.transience,
+						(int)(400 * modifiers.get(WizardryItems.duration_upgrade)), 0));
+				caster.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY,
+						(int)(400 * modifiers.get(WizardryItems.duration_upgrade)), 0, false, false));
 				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
 			}
 			return true;
@@ -50,7 +52,8 @@ public class Transience extends Spell {
 	public static void onLivingAttackEvent(LivingAttackEvent event){
 		if(event.getSource() != null){
 			// Prevents all blockable damage while transience is active
-			if(event.getEntityLiving().isPotionActive(WizardryPotions.transience) && !event.getSource().isUnblockable()){
+			if(event.getEntityLiving().isPotionActive(WizardryPotions.transience)
+					&& !event.getSource().isUnblockable()){
 				event.setCanceled(true);
 			}
 			// Prevents transient entities from causing any damage
@@ -60,7 +63,7 @@ public class Transience extends Spell {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onBlockPlaceEvent(BlockEvent.PlaceEvent event){
 		// Prevents transient players from placing blocks

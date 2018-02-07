@@ -42,20 +42,29 @@ import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Event handler responsible for all client-side only events, mostly rendering.
+ * 
  * @author Electroblob
  * @since Wizardry 1.0
  */
 @Mod.EventBusSubscriber(Side.CLIENT)
 public final class WizardryClientEventHandler {
 
-	private static final ResourceLocation shieldTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/shield.png");
-	private static final ResourceLocation wingTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/wing.png");
-	private static final ResourceLocation shadowWardTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/shadow_ward.png");
-	private static final ResourceLocation sixthSenseTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/sixth_sense.png");
-	private static final ResourceLocation sixthSenseOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_overlay.png");
-	private static final ResourceLocation frostOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/frost_overlay.png");
-	private static final ResourceLocation pointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/pointer.png");
-	private static final ResourceLocation targetPointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/target_pointer.png");
+	private static final ResourceLocation shieldTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/shield.png");
+	private static final ResourceLocation wingTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/wing.png");
+	private static final ResourceLocation shadowWardTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/shadow_ward.png");
+	private static final ResourceLocation sixthSenseTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/sixth_sense.png");
+	private static final ResourceLocation sixthSenseOverlayTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/gui/sixth_sense_overlay.png");
+	private static final ResourceLocation frostOverlayTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/gui/frost_overlay.png");
+	private static final ResourceLocation pointerTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/pointer.png");
+	private static final ResourceLocation targetPointerTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/target_pointer.png");
 
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
@@ -66,8 +75,8 @@ public final class WizardryClientEventHandler {
 	// Shift-scrolling to change spells
 	@SubscribeEvent
 	public static void onMouseEvent(MouseEvent event){
-		
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+
+		EntityPlayer player = Minecraft.getMinecraft().player;
 		ItemStack wand = player.getHeldItemMainhand();
 
 		if(wand == null || !(wand.getItem() instanceof ItemWand)){
@@ -75,7 +84,7 @@ public final class WizardryClientEventHandler {
 			// If the player isn't holding a wand, then nothing else needs to be done.
 			if(wand == null || !(wand.getItem() instanceof ItemWand)) return;
 		}
-		
+
 		if(Minecraft.getMinecraft().inGameHasFocus && wand != null && event.getDwheel() != 0 && player.isSneaking()
 				&& Wizardry.settings.enableShiftScrolling){
 
@@ -100,19 +109,19 @@ public final class WizardryClientEventHandler {
 		// Bow zoom. Taken directly from AbstractClientPlayer so it works exactly like vanilla.
 		if(event.getEntity().isHandActive() && event.getEntity().getActiveItemStack() != null
 				&& event.getEntity().getActiveItemStack().getItem() instanceof ItemSpectralBow){
-			
-            int maxUseTicks = event.getEntity().getItemInUseMaxCount();
-            
-            float maxUseSeconds = (float)maxUseTicks / 20.0F;
 
-            if(maxUseSeconds > 1.0F){
-                maxUseSeconds = 1.0F;
-            }else{
-                maxUseSeconds = maxUseSeconds * maxUseSeconds;
-            }
+			int maxUseTicks = event.getEntity().getItemInUseMaxCount();
 
-            event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
-        }
+			float maxUseSeconds = (float)maxUseTicks / 20.0F;
+
+			if(maxUseSeconds > 1.0F){
+				maxUseSeconds = 1.0F;
+			}else{
+				maxUseSeconds = maxUseSeconds * maxUseSeconds;
+			}
+
+			event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
+		}
 	}
 
 	// Third person
@@ -128,126 +137,101 @@ public final class WizardryClientEventHandler {
 	public static void onRenderWorldLastEvent(RenderWorldLastEvent event){
 		// Now only fires in first person.
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0){
-			renderShieldFirstPerson(Minecraft.getMinecraft().thePlayer);
-			renderShadowWardFirstPerson(Minecraft.getMinecraft().thePlayer);
+			renderShieldFirstPerson(Minecraft.getMinecraft().player);
+			renderShadowWardFirstPerson(Minecraft.getMinecraft().player);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onRenderLivingEvent(RenderLivingEvent.Post<EntityLivingBase> event){
-		/*
-		// Frost effect
-		if(event.entity.isPotionActive(Wizardry.frost)){
+		/* // Frost effect if(event.entity.isPotionActive(Wizardry.frost)){
+		 * 
+		 * GlStateManager.pushMatrix(); GL11.glDisable(GL11.GL_TEXTURE_2D); GlStateManager.enableBlend();
+		 * GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		 * 
+		 * float someScalingFactor = 0.0625f;
+		 * 
+		 * float yaw = event.entity.prevRotationYaw;
+		 * 
+		 * //int brightness = event.entity.getBrightnessForRender(0);
+		 * 
+		 * //int j = brightness % 65536; //int k = brightness / 65536;
+		 * //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
+		 * //GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		 * 
+		 * 
+		 * GlStateManager.translate(event.x, event.y, event.z);
+		 * 
+		 * GlStateManager.rotate(-yaw + 180, 0F, 1F, 0F);
+		 * 
+		 * Render render = renderManager.getEntityRenderObject(event.entity);
+		 * 
+		 * RenderLiving renderliving = event.renderer;
+		 * 
+		 * // Reflection
+		 * 
+		 * try {
+		 * 
+		 * Timer timer = ReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "timer");
+		 * 
+		 * // Chooses the appropriate zombie model, normal or villager // Fixed by moving before the model fields are
+		 * accessed if(render instanceof RenderZombie && event.entity instanceof EntityZombie){ // The second argument
+		 * is never used... ReflectionHelper.findMethod(RenderZombie.class, (RenderZombie)render, new
+		 * String[]{"func_82427_a"}, EntityZombie.class) .invoke(renderliving, (EntityZombie)event.entity); }
+		 * 
+		 * // Turns out that java automatically infers the type parameter T in this method from the type // I am
+		 * assigning the returned value to. Neat! ModelBase mainModel =
+		 * ReflectionHelper.getPrivateValue(RenderLiving.class, renderliving, "mainModel");
+		 * 
+		 * mainModel.isRiding = event.entity.isRiding(); mainModel.isChild = event.entity.isChild();
+		 * 
+		 * GlStateManager.enableRescaleNormal(); GlStateManager.scale(-1.0F, -1.0F, 1.0F);
+		 * 
+		 * // The second argument is never used... ReflectionHelper.findMethod(RenderLiving.class, renderliving, new
+		 * String[]{"preRenderCallback"}, EntityLivingBase.class, float.class) .invoke(renderliving, event.entity,
+		 * someScalingFactor);
+		 * 
+		 * // Why is this -1.5f? No idea! GlStateManager.translate(0, -1.5f, 0);
+		 * 
+		 * float f6 = event.entity.prevLimbSwingAmount + (event.entity.limbSwingAmount -
+		 * event.entity.prevLimbSwingAmount) * timer.renderPartialTicks; float f7 = event.entity.limbSwing -
+		 * event.entity.limbSwingAmount * (1.0F - timer.renderPartialTicks);
+		 * 
+		 * if (event.entity.isChild()) { f7 *= 3.0F; }
+		 * 
+		 * if (f6 > 1.0F) { f6 = 1.0F; }
+		 * 
+		 * mainModel.setLivingAnimations(event.entity, f7, f6, timer.renderPartialTicks);
+		 * 
+		 * GlStateManager.enableAlpha(); GlStateManager.color(0.5f, 0.7f, 1, 0.5f);
+		 * 
+		 * mainModel.render(event.entity, f7, f6, 0, 0, 0, someScalingFactor);
+		 * 
+		 * GL11.glDepthMask(true);
+		 * 
+		 * // 'Pokemon' exception handling... Because why not?! } catch (Exception e) {
+		 * System.err.println("Something went very wrong! Error while rendering frost effect:"); e.printStackTrace(); }
+		 * 
+		 * GlStateManager.disableAlpha(); GlStateManager.disableBlend(); GlStateManager.blendFunc(GL11.GL_SRC_ALPHA,
+		 * GL11.GL_ONE_MINUS_SRC_ALPHA); GlStateManager.disableRescaleNormal(); GL11.glEnable(GL11.GL_TEXTURE_2D);
+		 * GlStateManager.popMatrix(); } */
 
-			GlStateManager.pushMatrix();
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-			float someScalingFactor = 0.0625f;
-
-			float yaw = event.entity.prevRotationYaw;
-			
-			//int brightness = event.entity.getBrightnessForRender(0);
-
-			//int j = brightness % 65536;
-			//int k = brightness / 65536;
-			//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
-			//GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			
-			
-			GlStateManager.translate(event.x, event.y, event.z);
-
-			GlStateManager.rotate(-yaw + 180, 0F, 1F, 0F);
-
-			Render render = renderManager.getEntityRenderObject(event.entity);
-
-			RenderLiving renderliving = event.renderer;
-
-			// Reflection
-
-			try {
-				
-				Timer timer = ReflectionHelper.getPrivateValue(Minecraft.class, Minecraft.getMinecraft(), "timer");
-				
-				// Chooses the appropriate zombie model, normal or villager
-				// Fixed by moving before the model fields are accessed
-				if(render instanceof RenderZombie && event.entity instanceof EntityZombie){
-					// The second argument is never used...
-					ReflectionHelper.findMethod(RenderZombie.class, (RenderZombie)render, new String[]{"func_82427_a"}, EntityZombie.class)
-					.invoke(renderliving, (EntityZombie)event.entity);
-				}
-				
-				// Turns out that java automatically infers the type parameter T in this method from the type
-				// I am assigning the returned value to. Neat!
-				ModelBase mainModel = ReflectionHelper.getPrivateValue(RenderLiving.class, renderliving, "mainModel");
-				
-				mainModel.isRiding = event.entity.isRiding();
-				mainModel.isChild = event.entity.isChild();
-
-				GlStateManager.enableRescaleNormal();
-				GlStateManager.scale(-1.0F, -1.0F, 1.0F);
-
-				// The second argument is never used...
-				ReflectionHelper.findMethod(RenderLiving.class, renderliving, new String[]{"preRenderCallback"}, EntityLivingBase.class, float.class)
-				.invoke(renderliving, event.entity, someScalingFactor);
-
-				// Why is this -1.5f? No idea!
-				GlStateManager.translate(0, -1.5f, 0);
-				
-				float f6 = event.entity.prevLimbSwingAmount + (event.entity.limbSwingAmount - event.entity.prevLimbSwingAmount) * timer.renderPartialTicks;
-	            float f7 = event.entity.limbSwing - event.entity.limbSwingAmount * (1.0F - timer.renderPartialTicks);
-
-	            if (event.entity.isChild())
-	            {
-	                f7 *= 3.0F;
-	            }
-
-	            if (f6 > 1.0F)
-	            {
-	                f6 = 1.0F;
-	            }
-	            
-	            mainModel.setLivingAnimations(event.entity, f7, f6, timer.renderPartialTicks);
-
-				GlStateManager.enableAlpha();
-				GlStateManager.color(0.5f, 0.7f, 1, 0.5f);
-
-				mainModel.render(event.entity, f7, f6, 0, 0, 0, someScalingFactor);
-
-				GL11.glDepthMask(true);
-
-			// 'Pokemon' exception handling... Because why not?!
-			} catch (Exception e) {
-				System.err.println("Something went very wrong! Error while rendering frost effect:");
-				e.printStackTrace();
-			}
-
-			GlStateManager.disableAlpha();
-			GlStateManager.disableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.disableRescaleNormal();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GlStateManager.popMatrix();
-		}
-		*/
-		
 		Minecraft mc = Minecraft.getMinecraft();
-		WizardData properties = WizardData.get(mc.thePlayer);
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(mc.theWorld, mc.thePlayer, 16);
+		WizardData properties = WizardData.get(mc.player);
+		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(mc.world, mc.player, 16);
 		RenderManager renderManager = event.getRenderer().getRenderManager();
-		
-		ItemStack wand = mc.thePlayer.getHeldItemMainhand();
+
+		ItemStack wand = mc.player.getHeldItemMainhand();
 
 		if(wand == null || !(wand.getItem() instanceof ItemWand)){
-			wand = mc.thePlayer.getHeldItemOffhand();
+			wand = mc.player.getHeldItemOffhand();
 		}
-		
+
 		// Target selection pointer
-		if(mc.thePlayer.isSneaking() && wand != null && wand.getItem() instanceof ItemWand && rayTrace != null
+		if(mc.player.isSneaking() && wand != null && wand.getItem() instanceof ItemWand && rayTrace != null
 				&& rayTrace.entityHit instanceof EntityLivingBase && rayTrace.entityHit == event.getEntity()
 				&& properties != null && properties.selectedMinion != null){
-			
+
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
 
@@ -273,9 +257,9 @@ public final class WizardryClientEventHandler {
 			mc.renderEngine.bindTexture(targetPointerTexture);
 
 			buffer.pos(-0.2, 0.24, 0).tex(0, 0).endVertex();
-			buffer.pos(0.2, 0.24, 0).tex(9f/16f, 0).endVertex();
-			buffer.pos(0.2, -0.24, 0).tex(9f/16f, 11f/16f).endVertex();
-			buffer.pos(-0.2, -0.24, 0).tex(0, 11f/16f).endVertex();
+			buffer.pos(0.2, 0.24, 0).tex(9f / 16f, 0).endVertex();
+			buffer.pos(0.2, -0.24, 0).tex(9f / 16f, 11f / 16f).endVertex();
+			buffer.pos(-0.2, -0.24, 0).tex(0, 11f / 16f).endVertex();
 
 			tessellator.draw();
 
@@ -287,8 +271,9 @@ public final class WizardryClientEventHandler {
 		}
 
 		// Summoned creature selection pointer
-		if(properties != null && properties.selectedMinion != null && properties.selectedMinion.get() == event.getEntity()){
-			
+		if(properties != null && properties.selectedMinion != null
+				&& properties.selectedMinion.get() == event.getEntity()){
+
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
 
@@ -314,9 +299,9 @@ public final class WizardryClientEventHandler {
 			mc.renderEngine.bindTexture(pointerTexture);
 
 			buffer.pos(-0.2, 0.24, 0).tex(0, 0).endVertex();
-			buffer.pos(0.2, 0.24, 0).tex(9f/16f, 0).endVertex();
-			buffer.pos(0.2, -0.24, 0).tex(9f/16f, 11f/16f).endVertex();
-			buffer.pos(-0.2, -0.24, 0).tex(0, 11f/16f).endVertex();
+			buffer.pos(0.2, 0.24, 0).tex(9f / 16f, 0).endVertex();
+			buffer.pos(0.2, -0.24, 0).tex(9f / 16f, 11f / 16f).endVertex();
+			buffer.pos(-0.2, -0.24, 0).tex(0, 11f / 16f).endVertex();
 
 			tessellator.draw();
 
@@ -326,11 +311,13 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.popMatrix();
 		}
-		
+
 		// Sixth sense
-		if(mc.thePlayer.isPotionActive(WizardryPotions.sixth_sense) && event.getEntity() != mc.thePlayer
-				&& mc.thePlayer.getActivePotionEffect(WizardryPotions.sixth_sense) != null
-				&& event.getEntity().getDistanceToEntity(mc.thePlayer) < 20*(1+mc.thePlayer.getActivePotionEffect(WizardryPotions.sixth_sense).getAmplifier()*Constants.RANGE_INCREASE_PER_LEVEL)){
+		if(mc.player.isPotionActive(WizardryPotions.sixth_sense) && event.getEntity() != mc.player
+				&& mc.player.getActivePotionEffect(WizardryPotions.sixth_sense) != null
+				&& event.getEntity().getDistanceToEntity(mc.player) < 20
+						* (1 + mc.player.getActivePotionEffect(WizardryPotions.sixth_sense).getAmplifier()
+								* Constants.RANGE_INCREASE_PER_LEVEL)){
 
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
@@ -375,9 +362,9 @@ public final class WizardryClientEventHandler {
 
 	@SubscribeEvent
 	public static void onRenderGameOverlayEvent(RenderGameOverlayEvent.Post event){
-		
+
 		if(event.getType() == RenderGameOverlayEvent.ElementType.HELMET
-				&& Minecraft.getMinecraft().thePlayer.isPotionActive(WizardryPotions.sixth_sense)){
+				&& Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.sixth_sense)){
 
 			GlStateManager.pushMatrix();
 
@@ -387,17 +374,18 @@ public final class WizardryClientEventHandler {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.disableAlpha();
 			Minecraft.getMinecraft().renderEngine.bindTexture(sixthSenseOverlayTexture);
-			
+
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
-			
+
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(0.0D, (double)event.getResolution().getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-			buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+			buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(),
+					-90.0D).tex(1.0D, 1.0D).endVertex();
 			buffer.pos((double)event.getResolution().getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
 			buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
 			tessellator.draw();
-			
+
 			GL11.glDepthMask(true);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GlStateManager.enableAlpha();
@@ -407,7 +395,7 @@ public final class WizardryClientEventHandler {
 		}
 
 		if(event.getType() == RenderGameOverlayEvent.ElementType.HELMET
-				&& Minecraft.getMinecraft().thePlayer.isPotionActive(WizardryPotions.frost)){
+				&& Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.frost)){
 
 			GlStateManager.pushMatrix();
 
@@ -417,16 +405,17 @@ public final class WizardryClientEventHandler {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.disableAlpha();
 			Minecraft.getMinecraft().renderEngine.bindTexture(frostOverlayTexture);
-			
+
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
-			
+
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(0.0D, (double)event.getResolution().getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-			buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+			buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(),
+					-90.0D).tex(1.0D, 1.0D).endVertex();
 			buffer.pos((double)event.getResolution().getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
 			buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
-			
+
 			tessellator.draw();
 			GL11.glDepthMask(true);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -440,8 +429,10 @@ public final class WizardryClientEventHandler {
 	// FIXME: Something in here is making the first person shadow ward rather translucent.
 	private static void renderShadowWardFirstPerson(EntityPlayer entityplayer){
 		ItemStack wand = entityplayer.getActiveItemStack();
-		if(WizardData.get(entityplayer) != null && WizardData.get(entityplayer).currentlyCasting() instanceof ShadowWard || (entityplayer.isHandActive() && wand != null && wand.getItemDamage() < wand.getMaxDamage()
-				&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof ShadowWard)){
+		if(WizardData.get(entityplayer) != null && WizardData.get(entityplayer).currentlyCasting() instanceof ShadowWard
+				|| (entityplayer.isHandActive() && wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& wand.getItem() instanceof ItemWand
+						&& WandHelper.getCurrentSpell(wand) instanceof ShadowWard)){
 
 			GlStateManager.pushMatrix();
 
@@ -455,18 +446,18 @@ public final class WizardryClientEventHandler {
 			GlStateManager.translate(0, 1.2, 0);
 			GlStateManager.rotate(-entityplayer.rotationYaw, 0, 1, 0);
 			GlStateManager.rotate(entityplayer.rotationPitch, 1, 0, 0);
-			
+
 			Minecraft.getMinecraft().renderEngine.bindTexture(shadowWardTexture);
 
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0, 0, 1.2);
-			GlStateManager.rotate(entityplayer.worldObj.getWorldTime()*-2, 0, 0, 1);
+			GlStateManager.rotate(entityplayer.world.getWorldTime() * -2, 0, 0, 1);
 			GlStateManager.scale(1.1, 1.1, 1.1);
 
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
-			
+
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 			buffer.pos(-0.5, 0.5, -0.5).tex(0, 0).endVertex();
@@ -498,8 +489,9 @@ public final class WizardryClientEventHandler {
 
 	private static void renderShadowWardIfActive(EntityPlayer entityplayer){
 		ItemStack wand = entityplayer.getActiveItemStack();
-		if(WizardData.get(entityplayer).currentlyCasting() instanceof ShadowWard || (entityplayer.isHandActive() && wand != null
-				&& wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof ShadowWard)){
+		if(WizardData.get(entityplayer).currentlyCasting() instanceof ShadowWard || (entityplayer.isHandActive()
+				&& wand != null && wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand
+				&& WandHelper.getCurrentSpell(wand) instanceof ShadowWard)){
 
 			GlStateManager.pushMatrix();
 
@@ -510,14 +502,14 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.rotate(180, 0, 1, 0);
 			GlStateManager.rotate(-entityplayer.renderYawOffset, 0, 1, 0);
-			
+
 			Minecraft.getMinecraft().renderEngine.bindTexture(shadowWardTexture);
-			
+
 			Tessellator tessellator = Tessellator.getInstance();
 			VertexBuffer buffer = tessellator.getBuffer();
 
 			GlStateManager.translate(0, 1.2, 0);
-			GlStateManager.rotate(entityplayer.worldObj.getWorldTime()*-2, 0, 0, 1);
+			GlStateManager.rotate(entityplayer.world.getWorldTime() * -2, 0, 0, 1);
 			GlStateManager.scale(1.1, 1.1, 1.1);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
@@ -548,8 +540,9 @@ public final class WizardryClientEventHandler {
 
 	private static void renderWingsIfActive(EntityPlayer entityplayer, float partialTickTime){
 		ItemStack wand = entityplayer.getActiveItemStack();
-		if(WizardData.get(entityplayer).currentlyCasting() instanceof Flight || (entityplayer.isHandActive() && wand != null
-				&& wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Flight)){
+		if(WizardData.get(entityplayer).currentlyCasting() instanceof Flight
+				|| (entityplayer.isHandActive() && wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Flight)){
 
 			GlStateManager.pushMatrix();
 
@@ -558,9 +551,9 @@ public final class WizardryClientEventHandler {
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
-			//GlStateManager.rotate(-entityplayer.rotationYawHead, 0, 1, 0);
+			// GlStateManager.rotate(-entityplayer.rotationYawHead, 0, 1, 0);
 			GlStateManager.rotate(-entityplayer.renderYawOffset, 0, 1, 0);
-			//GlStateManager.rotate(180, 1, 0, 0);
+			// GlStateManager.rotate(180, 1, 0, 0);
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(wingTexture);
 			Tessellator tessellator = Tessellator.getInstance();
@@ -569,7 +562,7 @@ public final class WizardryClientEventHandler {
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0.1, 0.4, -0.15);
-			GlStateManager.rotate(20 + 20*(float)Math.sin(entityplayer.worldObj.getWorldTime()*0.3), 0, 1, 0);
+			GlStateManager.rotate(20 + 20 * (float)Math.sin(entityplayer.world.getWorldTime() * 0.3), 0, 1, 0);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
@@ -594,7 +587,7 @@ public final class WizardryClientEventHandler {
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(-0.1, 0.4, -0.15);
-			GlStateManager.rotate(-200 - 20*(float)Math.sin(entityplayer.worldObj.getWorldTime()*0.3), 0, 1, 0);
+			GlStateManager.rotate(-200 - 20 * (float)Math.sin(entityplayer.world.getWorldTime() * 0.3), 0, 1, 0);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
@@ -625,8 +618,10 @@ public final class WizardryClientEventHandler {
 
 	private static void renderShieldFirstPerson(EntityPlayer entityplayer){
 		ItemStack wand = entityplayer.getActiveItemStack();
-		if(WizardData.get(entityplayer) != null && WizardData.get(entityplayer).shield != null && (WizardData.get(entityplayer).currentlyCasting() instanceof Shield || (entityplayer.isHandActive() && wand != null
-				&& wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Shield))){
+		if(WizardData.get(entityplayer) != null && WizardData.get(entityplayer).shield != null
+				&& (WizardData.get(entityplayer).currentlyCasting() instanceof Shield || (entityplayer.isHandActive()
+						&& wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Shield))){
 
 			GlStateManager.pushMatrix();
 
@@ -649,13 +644,13 @@ public final class WizardryClientEventHandler {
 			Minecraft.getMinecraft().renderEngine.bindTexture(shieldTexture);
 
 			renderShield(tessellator);
-			
+
 			GlStateManager.enableLighting();
 
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
-			//RenderHelper.enableStandardItemLighting();
+			// RenderHelper.enableStandardItemLighting();
 
 			GlStateManager.popMatrix();
 		}
@@ -663,8 +658,10 @@ public final class WizardryClientEventHandler {
 
 	private static void renderShieldIfActive(EntityPlayer entityplayer){
 		ItemStack wand = entityplayer.getActiveItemStack();
-		if(WizardData.get(entityplayer).shield != null && (WizardData.get(entityplayer).currentlyCasting() instanceof Shield || (entityplayer.isHandActive() && wand != null
-				&& wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Shield))){
+		if(WizardData.get(entityplayer).shield != null
+				&& (WizardData.get(entityplayer).currentlyCasting() instanceof Shield || (entityplayer.isHandActive()
+						&& wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Shield))){
 
 			GlStateManager.pushMatrix();
 
@@ -679,9 +676,9 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.translate(0, 1.3, 0);
 
-			//GlStateManager.rotate(180, 0, 1, 0);
+			// GlStateManager.rotate(180, 0, 1, 0);
 			GlStateManager.rotate(-entityplayer.renderYawOffset, 0, 1, 0);
-			//GlStateManager.rotate(-entityplayer.rotationPitch, 1, 0, 0);
+			// GlStateManager.rotate(-entityplayer.rotationPitch, 1, 0, 0);
 
 			GlStateManager.translate(0, 0, 0.8);
 
@@ -696,7 +693,7 @@ public final class WizardryClientEventHandler {
 			GlStateManager.shadeModel(GL11.GL_FLAT);
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
-			//RenderHelper.enableStandardItemLighting();
+			// RenderHelper.enableStandardItemLighting();
 
 			GlStateManager.popMatrix();
 		}

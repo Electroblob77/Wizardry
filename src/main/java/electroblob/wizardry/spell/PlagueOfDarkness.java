@@ -26,47 +26,53 @@ import net.minecraft.world.World;
 
 public class PlagueOfDarkness extends Spell {
 
-	public PlagueOfDarkness() {
+	public PlagueOfDarkness(){
 		super(Tier.MASTER, 75, Element.NECROMANCY, "plague_of_darkness", SpellType.ATTACK, 200, EnumAction.BOW, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5.0d*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
+		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
+				5.0d * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+
 		for(EntityLivingBase target : targets){
-			if(WizardryUtilities.isValidTarget(caster, target) && !MagicDamage.isEntityImmune(DamageType.WITHER, target)){
-				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER), 8.0f * modifiers.get(SpellModifiers.DAMAGE));
-				target.addPotionEffect(new PotionEffect(MobEffects.WITHER, (int)(140*modifiers.get(WizardryItems.duration_upgrade)), 2));
+			if(WizardryUtilities.isValidTarget(caster, target)
+					&& !MagicDamage.isEntityImmune(DamageType.WITHER, target)){
+				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER),
+						8.0f * modifiers.get(SpellModifiers.DAMAGE));
+				target.addPotionEffect(new PotionEffect(MobEffects.WITHER,
+						(int)(140 * modifiers.get(WizardryItems.duration_upgrade)), 2));
 			}
 		}
 		if(world.isRemote){
 			double particleX, particleZ;
-			for(int i=0;i<40*modifiers.get(WizardryItems.blast_upgrade);i++){
-				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
-				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
-						particleX - caster.posX, 0, particleZ - caster.posZ, 0, 0.1f, 0.0f, 0.0f);
-				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
-				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
-						particleX - caster.posX, 0, particleZ - caster.posZ, 30, 0.1f, 0.0f, 0.05f);
-				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
-				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				
+			for(int i = 0; i < 40 * modifiers.get(WizardryItems.blast_upgrade); i++){
+				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
+				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
+				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, particleX,
+						WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0,
+						particleZ - caster.posZ, 0, 0.1f, 0.0f, 0.0f);
+				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
+				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, particleX,
+						WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0,
+						particleZ - caster.posZ, 30, 0.1f, 0.0f, 0.05f);
+				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
+				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
+
 				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
-				
+
 				if(block != null){
-					world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY, particleZ,
-							particleX - caster.posX, 0, particleZ - caster.posZ, Block.getStateId(block));
+					world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY,
+							particleZ, particleX - caster.posX, 0, particleZ - caster.posZ, Block.getStateId(block));
 				}
 			}
 		}
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_DEATH, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_DEATH, 1.0F,
+				world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
-
 
 }

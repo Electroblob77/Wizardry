@@ -4,8 +4,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelWizardArmour extends ModelBiped
-{
+public class ModelWizardArmour extends ModelBiped {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
 	ModelRenderer Shape3;
@@ -90,7 +89,7 @@ public class ModelWizardArmour extends ModelBiped
 		bipedHead.addChild(Shape6);
 		bipedHead.addChild(Shape7);
 		// Makes the robe move with the body
-		//bipedBody.addChild(robe);
+		// bipedBody.addChild(robe);
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5){

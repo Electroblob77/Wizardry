@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.EntityDamageSourceIndirect;
 
 public class IndirectMagicDamage extends EntityDamageSourceIndirect implements IElementalDamage {
-	
+
 	private final DamageType type;
 	private final boolean isRetaliatory;
 

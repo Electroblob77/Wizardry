@@ -20,30 +20,36 @@ public class Flight extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!caster.isInWater() && !caster.isElytraFlying()){
 			// The division thingy checks if the look direction is the opposite way to the velocity. If this is the
 			// case then the velocity should be added regardless of the player's current speed.
-			if((Math.abs(caster.motionX) < 0.6 || caster.motionX/caster.getLookVec().xCoord < 0)
-					&& (Math.abs(caster.motionZ) < 0.6 || caster.motionZ/caster.getLookVec().zCoord < 0)){
-				caster.addVelocity(caster.getLookVec().xCoord/20, 0, caster.getLookVec().zCoord/20);
+			if((Math.abs(caster.motionX) < 0.6 || caster.motionX / caster.getLookVec().xCoord < 0)
+					&& (Math.abs(caster.motionZ) < 0.6 || caster.motionZ / caster.getLookVec().zCoord < 0)){
+				caster.addVelocity(caster.getLookVec().xCoord / 20, 0, caster.getLookVec().zCoord / 20);
 			}
-			// y velocity is handled separately to stop the player from falling from the sky when they reach maximum horizontal speed.
-			if(Math.abs(caster.motionY) < 0.6 || caster.motionY/caster.getLookVec().yCoord < 0){
-				caster.motionY += caster.getLookVec().yCoord/20 + 0.075;
+			// y velocity is handled separately to stop the player from falling from the sky when they reach maximum
+			// horizontal speed.
+			if(Math.abs(caster.motionY) < 0.6 || caster.motionY / caster.getLookVec().yCoord < 0){
+				caster.motionY += caster.getLookVec().yCoord / 20 + 0.075;
 			}
 			caster.fallDistance = 0.0f;
 		}
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, caster.posX - 1 + world.rand.nextDouble()*2, WizardryUtilities.getPlayerEyesPos(caster) - 0.5f + world.rand.nextDouble(), caster.posZ - 1 + world.rand.nextDouble()*2, 0, -0.1F, 0, 15, 0.8f, 1.0f, 0.5f);
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, caster.posX - 1 + world.rand.nextDouble()*2, WizardryUtilities.getPlayerEyesPos(caster) - 0.5f + world.rand.nextDouble(), caster.posZ - 1 + world.rand.nextDouble()*2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
+			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+					caster.posX - 1 + world.rand.nextDouble() * 2,
+					WizardryUtilities.getPlayerEyesPos(caster) - 0.5f + world.rand.nextDouble(),
+					caster.posZ - 1 + world.rand.nextDouble() * 2, 0, -0.1F, 0, 15, 0.8f, 1.0f, 0.5f);
+			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+					caster.posX - 1 + world.rand.nextDouble() * 2,
+					WizardryUtilities.getPlayerEyesPos(caster) - 0.5f + world.rand.nextDouble(),
+					caster.posZ - 1 + world.rand.nextDouble() * 2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
 		}
 		if(ticksInUse % 24 == 0){
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERDRAGON_FLAP, 0.5F, 1.0f);
 		}
 		return true;
 	}
-
 
 }

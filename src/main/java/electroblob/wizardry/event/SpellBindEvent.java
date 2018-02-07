@@ -5,11 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
-import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
 
 /**
- * SpellBindEvent is fired when a player presses the apply button in the arcane workbench. <i>Note that this
- * event is only fired on the server side.</i><br>
+ * SpellBindEvent is fired when a player presses the apply button in the arcane workbench. <i>Note that this event is
+ * only fired on the server side.</i><br>
  * <br>
  * This event is {@link Cancelable}. If this event is canceled, no further processing takes place: spells are not bound,
  * upgrades are not applied and crystals are not consumed.<br>
@@ -24,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.Event.HasResult;
 @Cancelable
 public class SpellBindEvent extends PlayerContainerEvent {
 
-	public SpellBindEvent(EntityPlayer player, ContainerArcaneWorkbench container) {
+	public SpellBindEvent(EntityPlayer player, ContainerArcaneWorkbench container){
 		super(player, container);
 	}
 

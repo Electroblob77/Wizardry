@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class LightningSigil extends Spell {
 
-	public LightningSigil() {
+	public LightningSigil(){
 		super(Tier.APPRENTICE, 10, Element.LIGHTNING, "lightning_sigil", SpellType.ATTACK, 20, EnumAction.NONE, false);
 	}
 
@@ -27,26 +27,27 @@ public class LightningSigil extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
+		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10 * modifiers.get(WizardryItems.range_upgrade), world,
+				caster, false);
+
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK && rayTrace.sideHit == EnumFacing.UP){
-			
+
 			if(!world.isRemote){
 				double x = rayTrace.hitVec.xCoord;
 				double y = rayTrace.hitVec.yCoord;
 				double z = rayTrace.hitVec.zCoord;
-				EntityLightningSigil lightningsigil = new EntityLightningSigil(world, x, y, z, caster, modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(lightningsigil);
+				EntityLightningSigil lightningsigil = new EntityLightningSigil(world, x, y, z, caster,
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(lightningsigil);
 			}
-			
+
 			caster.swingArm(hand);
 			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F, 0.3F);
 			return true;
 		}
 		return false;
 	}
-
 
 }

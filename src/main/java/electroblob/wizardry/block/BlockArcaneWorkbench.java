@@ -22,99 +22,103 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockArcaneWorkbench extends BlockContainer {
-	
-    private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
+
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.75D, 1.0D);
 
 	public BlockArcaneWorkbench(){
-        super(Material.ROCK);
-        this.setLightLevel(0.8f);
+		super(Material.ROCK);
+		this.setLightLevel(0.8f);
 	}
-	
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-        return AABB;
-    }
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+		return AABB;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int metadata){
 		return new TileEntityArcaneWorkbench();
 	}
-	
+
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
 		return false;
 	}
-	
+
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
+	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
+
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState block, EntityPlayer player,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ){
-		
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState block, EntityPlayer player, EnumHand hand,
+			EnumFacing side, float hitX, float hitY, float hitZ){
+
 		TileEntity tileEntity = world.getTileEntity(pos);
-		
+
 		if(tileEntity == null || player.isSneaking()){
 			return false;
 		}
-		
-		player.openGui(Wizardry.instance, WizardryGuiHandler.ARCANE_WORKBENCH, world, pos.getX(), pos.getY(), pos.getZ());
+
+		player.openGui(Wizardry.instance, WizardryGuiHandler.ARCANE_WORKBENCH, world, pos.getX(), pos.getY(),
+				pos.getZ());
 		return true;
 	}
-	
+
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState block)
-    {
+	public void breakBlock(World world, BlockPos pos, IBlockState block){
+
 		Random random = new Random();
-        TileEntityArcaneWorkbench tileentityarcaneworkbench = (TileEntityArcaneWorkbench)world.getTileEntity(pos);
+		TileEntityArcaneWorkbench tileentityarcaneworkbench = (TileEntityArcaneWorkbench)world.getTileEntity(pos);
 
-        if (tileentityarcaneworkbench != null)
-        {
-            for (int j1 = 0; j1 < tileentityarcaneworkbench.getSizeInventory(); ++j1)
-            {
-                ItemStack itemstack = tileentityarcaneworkbench.getStackInSlot(j1);
+		if(tileentityarcaneworkbench != null){
 
-                if (itemstack != null)
-                {
-                    float f = random.nextFloat() * 0.8F + 0.1F;
-                    float f1 = random.nextFloat() * 0.8F + 0.1F;
-                    EntityItem entityitem;
+			for(int j1 = 0; j1 < tileentityarcaneworkbench.getSizeInventory(); ++j1){
 
-                    for (float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.stackSize > 0; world.spawnEntityInWorld(entityitem))
-                    {
-                        int k1 = random.nextInt(21) + 10;
+				ItemStack itemstack = tileentityarcaneworkbench.getStackInSlot(j1);
 
-                        if (k1 > itemstack.stackSize)
-                        {
-                            k1 = itemstack.stackSize;
-                        }
+				if(!itemstack.isEmpty()){
 
-                        itemstack.stackSize -= k1;
-                        entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
-                        float f3 = 0.05F;
-                        entityitem.motionX = (double)((float)random.nextGaussian() * f3);
-                        entityitem.motionY = (double)((float)random.nextGaussian() * f3 + 0.2F);
-                        entityitem.motionZ = (double)((float)random.nextGaussian() * f3);
+					float f = random.nextFloat() * 0.8F + 0.1F;
+					float f1 = random.nextFloat() * 0.8F + 0.1F;
+					EntityItem entityitem;
 
-                        if (itemstack.hasTagCompound())
-                        {
-                            entityitem.getEntityItem().setTagCompound(((NBTTagCompound)itemstack.getTagCompound().copy()));
-                        }
-                    }
-                }
-            }
+					for(float f2 = random.nextFloat() * 0.8F + 0.1F; itemstack.getCount() > 0; world
+							.spawnEntity(entityitem)){
 
-            //par1World.func_96440_m(par2, par3, par4, block);
-        }
-        
-        super.breakBlock(world, pos, block);
-    }
+						int k1 = random.nextInt(21) + 10;
+
+						if(k1 > itemstack.getCount()){
+							k1 = itemstack.getCount();
+						}
+
+						itemstack.shrink(k1);
+
+						entityitem = new EntityItem(world, (double)((float)pos.getX() + f),
+								(double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2),
+								new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+						float f3 = 0.05F;
+						entityitem.motionX = (double)((float)random.nextGaussian() * f3);
+						entityitem.motionY = (double)((float)random.nextGaussian() * f3 + 0.2F);
+						entityitem.motionZ = (double)((float)random.nextGaussian() * f3);
+
+						if(itemstack.hasTagCompound()){
+							entityitem.getEntityItem()
+									.setTagCompound(((NBTTagCompound)itemstack.getTagCompound().copy()));
+						}
+					}
+				}
+			}
+
+			// par1World.func_96440_m(par2, par3, par4, block);
+		}
+
+		super.breakBlock(world, pos, block);
+	}
 
 }

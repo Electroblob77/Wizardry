@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 public class SpectralPathway extends Spell {
 
-	public SpectralPathway() {
+	public SpectralPathway(){
 		super(Tier.ADVANCED, 40, Element.SORCERY, "spectral_pathway", SpellType.UTILITY, 300, EnumAction.BOW, false);
 	}
 
@@ -30,39 +30,42 @@ public class SpectralPathway extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		// Won't work if caster is airborne or if they are already on a bridge (prevents infinite bridges)
 		if(WizardryUtilities.getBlockEntityIsStandingOn(caster).getBlock() == Blocks.AIR
 				|| WizardryUtilities.getBlockEntityIsStandingOn(caster).getBlock() == WizardryBlocks.spectral_block){
 			return false;
 		}
-		
+
 		EnumFacing direction = caster.getHorizontalFacing();
-		
+
 		boolean flag = false;
 
 		if(!world.isRemote){
-			
+
 			int baseLength = 15;
-			
+
 			// Gets the coordinates of the nearest block intersection to the player's feet.
 			// Remember that a block always takes the coordinates of its northwestern corner.
-			BlockPos origin = new BlockPos(Math.round(caster.posX), (int)caster.getEntityBoundingBox().minY-1, Math.round(caster.posZ));
-			
+			BlockPos origin = new BlockPos(Math.round(caster.posX), (int)caster.getEntityBoundingBox().minY - 1,
+					Math.round(caster.posZ));
+
 			int startPoint = direction.getAxisDirection() == AxisDirection.POSITIVE ? -1 : 0;
-			
-			for(int i=0; i<(int)(baseLength*modifiers.get(WizardryItems.range_upgrade)); i++){
+
+			for(int i = 0; i < (int)(baseLength * modifiers.get(WizardryItems.range_upgrade)); i++){
 				// If either a block gets placed or one has already been placed, flag is set to true.
-				flag = placePathwayBlockIfPossible(world, origin.offset(direction, startPoint + i), modifiers.get(WizardryItems.duration_upgrade)) || flag;
+				flag = placePathwayBlockIfPossible(world, origin.offset(direction, startPoint + i),
+						modifiers.get(WizardryItems.duration_upgrade)) || flag;
 				flag = placePathwayBlockIfPossible(world, origin.offset(direction, startPoint + i)
 						// Moves the BlockPos minus one block perpendicular to direction.
-						.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, direction.rotateY().getAxis())), modifiers.get(WizardryItems.duration_upgrade)) || flag;
+						.offset(EnumFacing.getFacingFromAxis(AxisDirection.NEGATIVE, direction.rotateY().getAxis())),
+						modifiers.get(WizardryItems.duration_upgrade)) || flag;
 			}
 		}
 		// TODO: There may be some client/server discrepancies here.
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION_LARGE, 1.0f, 1.0f);
-		
+
 		return flag;
 	}
 
@@ -70,11 +73,11 @@ public class SpectralPathway extends Spell {
 		if(WizardryUtilities.canBlockBeReplacedB(world, pos)){
 			world.setBlockState(pos, WizardryBlocks.spectral_block.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityTimer){
-				((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(1200*durationMultiplier));
+				((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(1200 * durationMultiplier));
 			}
 			return true;
 		}
 		return false;
 	}
-	
+
 }

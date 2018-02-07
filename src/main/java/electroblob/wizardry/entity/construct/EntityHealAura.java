@@ -14,13 +14,14 @@ import net.minecraft.world.World;
 
 public class EntityHealAura extends EntityMagicConstruct {
 
-	public EntityHealAura(World world) {
+	public EntityHealAura(World world){
 		super(world);
 		this.height = 1.0f;
 		this.width = 5.0f;
 	}
 
-	public EntityHealAura(World world, double x, double y, double z, EntityLivingBase caster, int lifetime, float damageMultiplier) {
+	public EntityHealAura(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
+			float damageMultiplier){
 		super(world, x, y, z, caster, lifetime, damageMultiplier);
 		this.height = 1.0f;
 		this.width = 5.0f;
@@ -34,9 +35,10 @@ public class EntityHealAura extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		if(!this.worldObj.isRemote){
+		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5d, this.posX, this.posY, this.posZ, this.worldObj);
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5d, this.posX, this.posY,
+					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
 
@@ -49,9 +51,11 @@ public class EntityHealAura extends EntityMagicConstruct {
 						double velZ = target.motionZ;
 
 						if(this.getCaster() != null){
-							target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT), 1*damageMultiplier);
+							target.attackEntityFrom(
+									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT),
+									1 * damageMultiplier);
 						}else{
-							target.attackEntityFrom(DamageSource.magic, 1*damageMultiplier);
+							target.attackEntityFrom(DamageSource.MAGIC, 1 * damageMultiplier);
 						}
 
 						// Removes knockback
@@ -61,15 +65,17 @@ public class EntityHealAura extends EntityMagicConstruct {
 					}
 
 				}else if(target.getHealth() < target.getMaxHealth() && this.ticksExisted % 5 == 0){
-					target.heal(1*damageMultiplier);
+					target.heal(1 * damageMultiplier);
 				}
 			}
 		}else{
-			for(int i=1; i<3; i++){
-				float brightness = 0.5f + (rand.nextFloat()*0.5f);
-				double radius = rand.nextDouble()*2.0;
-				double angle = rand.nextDouble()*Math.PI*2;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX + radius*Math.cos(angle), this.posY, this.posZ + radius*Math.sin(angle), 0, 0.05f, 0, 48 + this.rand.nextInt(12), 1.0f, 1.0f, brightness);
+			for(int i = 1; i < 3; i++){
+				float brightness = 0.5f + (rand.nextFloat() * 0.5f);
+				double radius = rand.nextDouble() * 2.0;
+				double angle = rand.nextDouble() * Math.PI * 2;
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX + radius * Math.cos(angle),
+						this.posY, this.posZ + radius * Math.sin(angle), 0, 0.05f, 0, 48 + this.rand.nextInt(12), 1.0f,
+						1.0f, brightness);
 			}
 		}
 	}
@@ -77,8 +83,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 	/**
 	 * Return whether this entity should be rendered as on fire.
 	 */
-	public boolean canRenderOnFire()
-	{
+	public boolean canRenderOnFire(){
 		return false;
 	}
 

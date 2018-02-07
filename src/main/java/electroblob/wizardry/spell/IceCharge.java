@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class IceCharge extends Spell {
 
-	public IceCharge() {
+	public IceCharge(){
 		super(Tier.ADVANCED, 20, Element.ICE, "ice_charge", SpellType.ATTACK, 30, EnumAction.NONE, false);
 	}
 
@@ -27,37 +27,41 @@ public class IceCharge extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
-			EntityIceCharge icecharge = new EntityIceCharge(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
-			world.spawnEntityInWorld(icecharge);
+			EntityIceCharge icecharge = new EntityIceCharge(world, caster, modifiers.get(SpellModifiers.DAMAGE),
+					modifiers.get(WizardryItems.blast_upgrade));
+			world.spawnEntity(icecharge);
 		}
-		
+
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
+		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F,
+				world.rand.nextFloat() * 0.4F + 1.4F);
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-		
+
 			if(!world.isRemote){
-				EntityIceCharge icecharge = new EntityIceCharge(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
+				EntityIceCharge icecharge = new EntityIceCharge(world, caster, modifiers.get(SpellModifiers.DAMAGE),
+						modifiers.get(WizardryItems.blast_upgrade));
 				icecharge.directTowards(target, 1.5f);
-				world.spawnEntityInWorld(icecharge);
+				world.spawnEntity(icecharge);
 			}
-			
+
 			caster.swingArm(hand);
 			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

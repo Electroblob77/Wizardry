@@ -18,29 +18,32 @@ import net.minecraft.world.World;
 
 public class Agility extends Spell {
 
-	public Agility() {
+	public Agility(){
 		super(Tier.APPRENTICE, 20, Element.SORCERY, "agility", SpellType.UTILITY, 40, EnumAction.BOW, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		// 1.10 allows the particles to be completely hidden.
-		caster.addPotionEffect(new PotionEffect(MobEffects.SPEED, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
-		caster.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
-		
-		for(int i=0; i<10; i++){
-			double x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
+		caster.addPotionEffect(new PotionEffect(MobEffects.SPEED,
+				(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
+		caster.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST,
+				(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
+
+		for(int i = 0; i < 10; i++){
+			double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 			double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
-			double z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
+			double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
 			if(world.isRemote){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 0.6f, 0.6f, 1.0f);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
+						48 + world.rand.nextInt(12), 0.6f, 0.6f, 1.0f);
 			}
 		}
-		
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+
+		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
+				world.rand.nextFloat() * 0.4F + 1.0F);
 		return true;
 	}
-
 
 }

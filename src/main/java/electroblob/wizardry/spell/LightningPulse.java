@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 
 public class LightningPulse extends Spell {
 
-	public LightningPulse() {
+	public LightningPulse(){
 		super(Tier.ADVANCED, 25, Element.LIGHTNING, "lightning_pulse", SpellType.ATTACK, 75, EnumAction.NONE, false);
 	}
 
@@ -33,26 +33,28 @@ public class LightningPulse extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(caster.onGround){
-			
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(3.0d*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
-			
+
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
+					3.0d * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+
 			for(EntityLivingBase target : targets){
 				if(WizardryUtilities.isValidTarget(caster, target)){
 					// Damage is 4 hearts no matter where the target is.
-					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 8 * modifiers.get(SpellModifiers.DAMAGE));
-					
+					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
+							8 * modifiers.get(SpellModifiers.DAMAGE));
+
 					if(!world.isRemote){
-						
+
 						double dx = target.posX - caster.posX;
 						double dz = target.posZ - caster.posZ;
 						// Normalises the velocity.
-						double vectorLength = MathHelper.sqrt_double(dx*dx + dz*dz);
+						double vectorLength = MathHelper.sqrt(dx * dx + dz * dz);
 						dx /= vectorLength;
 						dz /= vectorLength;
-						
+
 						target.motionX = 0.8 * dx;
 						target.motionY = 0;
 						target.motionZ = 0.8 * dz;
@@ -65,8 +67,10 @@ public class LightningPulse extends Spell {
 				}
 			}
 			if(!world.isRemote){
-				EntityLightningPulse lightningpulse = new EntityLightningPulse(world, caster.posX, caster.getEntityBoundingBox().minY, caster.posZ, caster, 7, modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(lightningpulse);
+				EntityLightningPulse lightningpulse = new EntityLightningPulse(world, caster.posX,
+						caster.getEntityBoundingBox().minY, caster.posZ, caster, 7,
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(lightningpulse);
 			}
 			caster.swingArm(hand);
 			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0f, 1.0f);
@@ -75,6 +79,5 @@ public class LightningPulse extends Spell {
 		}
 		return false;
 	}
-
 
 }

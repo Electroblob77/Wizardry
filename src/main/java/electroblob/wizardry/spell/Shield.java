@@ -17,19 +17,19 @@ import net.minecraft.world.World;
 
 public class Shield extends Spell {
 
-	public Shield() {
+	public Shield(){
 		super(Tier.APPRENTICE, 5, Element.HEALING, "shield", SpellType.DEFENCE, 0, EnumAction.BLOCK, true);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		caster.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 10, 0, false, false));
-		
+
 		if(WizardData.get(caster).shield == null){
 			WizardData.get(caster).shield = new EntityShield(world, caster);
 			if(!world.isRemote){
-				world.spawnEntityInWorld(WizardData.get(caster).shield);
+				world.spawnEntity(WizardData.get(caster).shield);
 			}
 		}
 		if(ticksInUse == 0){
@@ -37,6 +37,5 @@ public class Shield extends Spell {
 		}
 		return true;
 	}
-
 
 }

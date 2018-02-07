@@ -8,16 +8,18 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Interface for potion effects that spawn custom particles instead of (or as well as) the vanilla 'swirly' particles.
+ * 
  * @author Electroblob
  * @since Wizardry 1.2
  */
 // TODO: Backport.
 @Mod.EventBusSubscriber
 public interface ICustomPotionParticles {
-	
+
 	/**
 	 * Called from the event handler to spawn a <b>single</b> custom potion particle. To get an instance of
 	 * <code>Random</code> inside this method, use <code>world.rand</code>.
+	 * 
 	 * @param world The world to spawn the particle in.
 	 * @param x The x coordinate of the particle, already set to a random value within the entity's bounding box.
 	 * @param y The y coordinate of the particle, already set to a random value within the entity's bounding box.
@@ -27,17 +29,21 @@ public interface ICustomPotionParticles {
 
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
-		if(event.getEntityLiving().worldObj.isRemote){
+		if(event.getEntityLiving().world.isRemote){
 			// Behold the power of interfaces!
 			for(PotionEffect effect : event.getEntityLiving().getActivePotionEffects()){
 
 				if(effect.getPotion() instanceof ICustomPotionParticles && effect.doesShowParticles()){
 
-					double x = event.getEntityLiving().posX + (event.getEntityLiving().worldObj.rand.nextDouble() - 0.5)*event.getEntityLiving().width;
-					double y = event.getEntityLiving().getEntityBoundingBox().minY + event.getEntityLiving().worldObj.rand.nextDouble()*event.getEntityLiving().height;
-					double z = event.getEntityLiving().posZ + (event.getEntityLiving().worldObj.rand.nextDouble() - 0.5)*event.getEntityLiving().width;
+					double x = event.getEntityLiving().posX
+							+ (event.getEntityLiving().world.rand.nextDouble() - 0.5) * event.getEntityLiving().width;
+					double y = event.getEntityLiving().getEntityBoundingBox().minY
+							+ event.getEntityLiving().world.rand.nextDouble() * event.getEntityLiving().height;
+					double z = event.getEntityLiving().posZ
+							+ (event.getEntityLiving().world.rand.nextDouble() - 0.5) * event.getEntityLiving().width;
 
-					((ICustomPotionParticles)effect.getPotion()).spawnCustomParticle(event.getEntityLiving().worldObj, x, y, z);
+					((ICustomPotionParticles)effect.getPotion()).spawnCustomParticle(event.getEntityLiving().world, x,
+							y, z);
 				}
 			}
 		}

@@ -12,47 +12,48 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockMagicLight extends BlockContainer {
-	
-    private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
-	public BlockMagicLight(Material par2Material) {
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+
+	public BlockMagicLight(Material par2Material){
 		super(par2Material);
 		this.setLightLevel(1.0f);
 	}
-	
+
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos){
-		// The other two bounding box methods in Block aren't nullable, so this is the only one that can return NULL_AABB.
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos){
+		// The other two bounding box methods in Block aren't nullable, so this is the
+		// only one that can return NULL_AABB.
 		return NULL_AABB;
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-        return AABB;
-    }
+		return AABB;
+	}
 
 	@Override
 	public boolean isCollidable(){
 		return false;
 	}
-	
+
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createNewTileEntity(World world, int metadata){
 		return new TileEntityMagicLight(600);
 	}
-	
+
 	@Override
-	public boolean isOpaqueCube(IBlockState state) {
+	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
-	
+
 	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
 		return false;
 	}
-	
+
 	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state) {
+	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 }

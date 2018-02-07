@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class WitherSkull extends Spell {
 
-	public WitherSkull() {
+	public WitherSkull(){
 		super(Tier.ADVANCED, 20, Element.NECROMANCY, "wither_skull", SpellType.ATTACK, 30, EnumAction.NONE, false);
 	}
 
@@ -27,46 +27,47 @@ public class WitherSkull extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		Vec3d look = caster.getLookVec();
-		
+
 		if(!world.isRemote){
 			EntityWitherSkull witherskull = new EntityWitherSkull(world, caster, 1, 1, 1);
-			witherskull.setPosition(
-					caster.posX + look.xCoord,
-					caster.posY + look.yCoord + 1.3,
+			witherskull.setPosition(caster.posX + look.xCoord, caster.posY + look.yCoord + 1.3,
 					caster.posZ + look.zCoord);
 			witherskull.accelerationX = look.xCoord * 0.1;
 			witherskull.accelerationY = look.yCoord * 0.1;
 			witherskull.accelerationZ = look.zCoord * 0.1;
-			world.spawnEntityInWorld(witherskull);
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SHOOT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+			world.spawnEntity(witherskull);
+			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SHOOT, 1.0F,
+					world.rand.nextFloat() * 0.2F + 1.0F);
 		}
 		caster.swingArm(hand);
 		return true;
 	}
-	
+
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-			
+
 			if(!world.isRemote){
-				
+
 				EntityWitherSkull witherskull = new EntityWitherSkull(world, caster, 1, 1, 1);
-				
+
 				double dx = target.posX - caster.posX;
-		        double dy = target.getEntityBoundingBox().minY + (double)(target.height / 2.0F) - (caster.posY + (double)(caster.height / 2.0F));
-		        double dz = target.posZ - caster.posZ;
-		        
-		        witherskull.accelerationX = dx/caster.getDistanceToEntity(target) * 0.1;
-		        witherskull.accelerationY = dy/caster.getDistanceToEntity(target) * 0.1;
-		        witherskull.accelerationZ = dz/caster.getDistanceToEntity(target) * 0.1;
-		        
-		        witherskull.setPosition(caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ);
-		        
-				world.spawnEntityInWorld(witherskull);
+				double dy = target.getEntityBoundingBox().minY + (double)(target.height / 2.0F)
+						- (caster.posY + (double)(caster.height / 2.0F));
+				double dz = target.posZ - caster.posZ;
+
+				witherskull.accelerationX = dx / caster.getDistanceToEntity(target) * 0.1;
+				witherskull.accelerationY = dy / caster.getDistanceToEntity(target) * 0.1;
+				witherskull.accelerationZ = dz / caster.getDistanceToEntity(target) * 0.1;
+
+				witherskull.setPosition(caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ);
+
+				world.spawnEntity(witherskull);
 				caster.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 			}
 
@@ -76,7 +77,7 @@ public class WitherSkull extends Spell {
 
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

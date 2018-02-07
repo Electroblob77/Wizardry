@@ -16,8 +16,9 @@ import net.minecraft.world.World;
 
 public class SummonStormElemental extends Spell {
 
-	public SummonStormElemental() {
-		super(Tier.MASTER, 100, Element.LIGHTNING, "summon_storm_elemental", SpellType.MINION, 400, EnumAction.BOW, false);
+	public SummonStormElemental(){
+		super(Tier.MASTER, 100, Element.LIGHTNING, "summon_storm_elemental", SpellType.MINION, 400, EnumAction.BOW,
+				false);
 	}
 
 	@Override
@@ -26,17 +27,19 @@ public class SummonStormElemental extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
 
 			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
 			if(pos == null) return false;
-			
-			EntityStormElemental stormElemental = new EntityStormElemental(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)));
-			world.spawnEntityInWorld(stormElemental);
+
+			EntityStormElemental stormElemental = new EntityStormElemental(world, pos.getX() + 0.5, pos.getY(),
+					pos.getZ() + 0.5, caster, (int)(600 * modifiers.get(WizardryItems.duration_upgrade)));
+			world.spawnEntity(stormElemental);
 		}
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F,
+				world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
 }

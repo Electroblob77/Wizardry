@@ -69,8 +69,8 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -83,14 +83,12 @@ import net.minecraftforge.oredict.OreDictionary;
 @Mod.EventBusSubscriber
 public class EntityWizard extends EntityVillager implements ISpellCaster, IEntityAdditionalSpawnData {
 
-	/*
-	 * After much debugging, the error in the compiled mod (outside of eclipse) was traced back to this class,
+	/* After much debugging, the error in the compiled mod (outside of eclipse) was traced back to this class,
 	 * specifically the methods copied in from EntityVillager when I changed this class to extend it. This figures,
-	 * since I had 1.2.1 working just fine before I did that, and it was the only thing I changed. Apparently,
-	 * methods and fields with obfuscated names like func_129090_a can cause problems when compiled. One of the
-	 * ones here was renamed and the other deleted since it was never called. Watch out for this in future (unless,
-	 * of course, they are overriding something, in which case it should be fine).
-	 */
+	 * since I had 1.2.1 working just fine before I did that, and it was the only thing I changed. Apparently, methods
+	 * and fields with obfuscated names like func_129090_a can cause problems when compiled. One of the ones here was
+	 * renamed and the other deleted since it was never called. Watch out for this in future (unless, of course, they
+	 * are overriding something, in which case it should be fine). */
 
 	// Extending EntityVillager turned out to be a pretty neat thing to do, since now zombies will attack wizards
 
@@ -109,11 +107,13 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	private boolean updateRecipes;
 
 	/** Data parameter for the cooldown time for wizards healing themselves. */
-    private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityWizard.class,
+			DataSerializers.VARINT);
 	/** Data parameter for the wizard's element. */
-	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityWizard.class,
+			DataSerializers.VARINT);
 
-    // Field implementations
+	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
 	private Spell continuousSpell;
 
@@ -126,14 +126,14 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		// For some reason this can't be in initEntityAI
 		this.tasks.addTask(3, this.spellCastingAI);
 	}
-	
+
 	@Override
 	protected void entityInit(){
 		super.entityInit();
 		this.dataManager.register(HEAL_COOLDOWN, -1);
 		this.dataManager.register(ELEMENT, 0);
 	}
-	
+
 	@Override
 	protected void initEntityAI(){
 
@@ -153,14 +153,17 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			public boolean apply(Entity entity){
 
 				// If the target is valid and not invisible...
-				if(entity != null && !entity.isInvisible() && WizardryUtilities.isValidTarget(EntityWizard.this, entity)){
+				if(entity != null && !entity.isInvisible()
+						&& WizardryUtilities.isValidTarget(EntityWizard.this, entity)){
 
-					//... and is a mob, a summoned creature ...
+					// ... and is a mob, a summoned creature ...
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
-							// ... or in the whitelist ...
-							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist).contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
+					// ... or in the whitelist ...
+							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
+									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
 							// ... and isn't in the blacklist ...
-							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist).contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
+							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
+									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
 						// ... it can be attacked.
 						return true;
 					}
@@ -172,7 +175,8 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		// By default, wizards don't attack players unless the player has attacked them.
-		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<EntityLiving>(this, EntityLiving.class, 0, false, true, this.targetSelector));
+		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<EntityLiving>(this, EntityLiving.class, 0,
+				false, true, this.targetSelector));
 	}
 
 	@Override
@@ -180,11 +184,11 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
 	}
-	
+
 	private int getHealCooldown(){
 		return this.dataManager.get(HEAL_COOLDOWN);
 	}
-	
+
 	private void setHealCooldown(int cooldown){
 		this.dataManager.set(HEAL_COOLDOWN, cooldown);
 	}
@@ -206,12 +210,12 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	public SpellModifiers getModifiers(){
 		return new SpellModifiers();
 	}
-	
+
 	@Override
 	public void setContinuousSpell(Spell spell){
 		this.continuousSpell = spell;
 	}
-	
+
 	@Override
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
@@ -229,23 +233,26 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		// affected with arcane jammer and healCooldown == 0, whilst the wizard didn't actually heal or play the sound,
 		// the particles still spawned, and since healCooldown wasn't reset they spawned every tick until the arcane
 		// jammer wore off.
-		if(healCooldown == 0 && this.getHealth() < this.getMaxHealth() && this.getHealth() > 0 && !this.isPotionActive(WizardryPotions.arcane_jammer)){
+		if(healCooldown == 0 && this.getHealth() < this.getMaxHealth() && this.getHealth() > 0
+				&& !this.isPotionActive(WizardryPotions.arcane_jammer)){
 
 			// Healer wizards use greater heal.
 			this.heal(this.getElement() == Element.HEALING ? 8 : 4);
 			this.setHealCooldown(-1);
 
-		// deathTime == 0 checks the wizard isn't currently dying
+			// deathTime == 0 checks the wizard isn't currently dying
 		}else if(healCooldown == -1 && this.deathTime == 0){
 
 			// Heal particles
-			if(worldObj.isRemote){
-				for(int i=0; i<10; i++){
-					double d0 = (double)((float)this.posX + rand.nextFloat()*2 - 1.0F);
-					// Apparently the client side spawns the particles 1 block higher than it should... hence the - 0.5F.
+			if(world.isRemote){
+				for(int i = 0; i < 10; i++){
+					double d0 = (double)((float)this.posX + rand.nextFloat() * 2 - 1.0F);
+					// Apparently the client side spawns the particles 1 block higher than it should... hence the -
+					// 0.5F.
 					double d1 = (double)((float)this.posY - 0.5F + rand.nextFloat());
-					double d2 = (double)((float)this.posZ + rand.nextFloat()*2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, d0, d1, d2, 0, 0.1F, 0, 48 + rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+					double d2 = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
+					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
+							48 + rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 				}
 			}else{
 				if(this.getHealth() < 10){
@@ -258,9 +265,9 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 				this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 			}
 		}
-		
+
 		if(healCooldown > 0){
-			this.setHealCooldown(healCooldown-1);
+			this.setHealCooldown(healCooldown - 1);
 		}
 	}
 
@@ -299,77 +306,79 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	}
 
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+	public boolean processInteract(EntityPlayer player, EnumHand hand){
+
+		ItemStack stack = player.getHeldItem(hand);
 
 		// Debugging
-		//player.addChatComponentMessage(new TextComponentTranslation("wizard.debug", Spell.get(spells[1]).getDisplayName(), Spell.get(spells[2]).getDisplayName(), Spell.get(spells[3]).getDisplayName()));
+		// player.addChatComponentMessage(new TextComponentTranslation("wizard.debug",
+		// Spell.get(spells[1]).getDisplayName(), Spell.get(spells[2]).getDisplayName(),
+		// Spell.get(spells[3]).getDisplayName()));
 
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
-		if(player.capabilities.isCreativeMode && stack != null && stack.getItem() instanceof ItemSpellBook){
+		if(player.capabilities.isCreativeMode && stack.getItem() instanceof ItemSpellBook){
 			if(this.spells.size() >= 4 && Spell.get(stack.getItemDamage()).canBeCastByNPCs()){
-				this.spells.set(rand.nextInt(3)+1, Spell.get(stack.getItemDamage()));
+				this.spells.set(rand.nextInt(3) + 1, Spell.get(stack.getItemDamage()));
 				return true;
 			}
 		}
 
 		// Won't trade with a player that has attacked them.
-		if (this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking() && this.getAttackTarget() != player)
-		{
-			if (!this.worldObj.isRemote)
-			{
+		if(this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking()
+				&& this.getAttackTarget() != player){
+			if(!this.world.isRemote){
 				this.setCustomer(player);
 				player.displayVillagerTradeGui(this);
-				//player.displayGUIMerchant(this, this.getElement().getWizardName());
+				// player.displayGUIMerchant(this, this.getElement().getWizardName());
 			}
 
 			return true;
-		}
-		else
-		{
+		}else{
 			return false;
 		}
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public ITextComponent getDisplayName(){
 		return this.getElement().getWizardName();
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt){
-		
+
 		super.writeEntityToNBT(nbt);
-		
-		if (this.trades != null){
-            nbt.setTag("trades", this.trades.getRecipiesAsTags());
-        }
+
+		if(this.trades != null){
+			nbt.setTag("trades", this.trades.getRecipiesAsTags());
+		}
 
 		nbt.setInteger("element", this.getElement().ordinal());
 		nbt.setInteger("skin", this.textureIndex);
 		nbt.setTag("spells", WizardryUtilities.listToNBT(spells, spell -> new NBTTagInt(spell.id())));
 
 		if(this.towerBlocks != null && this.towerBlocks.size() > 0){
-			nbt.setTag("towerBlocks", WizardryUtilities.listToNBT(this.towerBlocks, pos -> new NBTTagLong(pos.toLong())));
+			nbt.setTag("towerBlocks",
+					WizardryUtilities.listToNBT(this.towerBlocks, pos -> new NBTTagLong(pos.toLong())));
 		}
 	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt){
-		
+
 		super.readEntityFromNBT(nbt);
-		
+
 		if(nbt.hasKey("trades")){
-            NBTTagCompound nbttagcompound1 = nbt.getCompoundTag("trades");
-            this.trades = new MerchantRecipeList(nbttagcompound1);
-        }
+			NBTTagCompound nbttagcompound1 = nbt.getCompoundTag("trades");
+			this.trades = new MerchantRecipeList(nbttagcompound1);
+		}
 
 		this.setElement(Element.values()[nbt.getInteger("element")]);
 		this.textureIndex = nbt.getInteger("skin");
-		this.spells = (List<Spell>) WizardryUtilities.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
+		this.spells = (List<Spell>)WizardryUtilities.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
 				(NBTTagInt tag) -> Spell.get(tag.getInt()));
 
-		this.towerBlocks = new HashSet<BlockPos>(WizardryUtilities.NBTToList(nbt.getTagList("towerBlocks",
-				NBT.TAG_LONG), (NBTTagLong tag) -> BlockPos.fromLong(tag.getLong())));
+		this.towerBlocks = new HashSet<BlockPos>(WizardryUtilities.NBTToList(
+				nbt.getTagList("towerBlocks", NBT.TAG_LONG), (NBTTagLong tag) -> BlockPos.fromLong(tag.getLong())));
 	}
 
 	@Override
@@ -378,8 +387,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	}
 
 	@Override
-	public boolean isTrading()
-	{
+	public boolean isTrading(){
 		return this.getCustomer() != null;
 	}
 
@@ -391,8 +399,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		this.playSound(SoundEvents.ENTITY_VILLAGER_YES, this.getSoundVolume(), this.getSoundPitch());
 
 		// Achievements
-		if (this.getCustomer() != null)
-		{
+		if(this.getCustomer() != null){
 			this.getCustomer().addStat(WizardryAchievements.wizard_trade);
 
 			if(merchantrecipe.getItemToSell().getItem() instanceof ItemSpellBook
@@ -406,12 +413,9 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			this.timeUntilReset = 40;
 			this.updateRecipes = true;
 
-			if (this.getCustomer() != null)
-			{
+			if(this.getCustomer() != null){
 				this.getCustomer().getName();
-			}
-			else
-			{
+			}else{
 			}
 		}
 	}
@@ -447,9 +451,9 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		MerchantRecipeList merchantrecipelist;
 		merchantrecipelist = new MerchantRecipeList();
 
-		for(int i=0; i<numberOfItemsToAdd; i++){
+		for(int i = 0; i < numberOfItemsToAdd; i++){
 
-			ItemStack itemToSell = null;
+			ItemStack itemToSell = ItemStack.EMPTY;
 
 			boolean itemAlreadySold = true;
 
@@ -461,20 +465,12 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 				/* New way of getting random item, by giving a chance to increase the tier which depends on how much the
 				 * player has already traded with the wizard. The more the player has traded with the wizard, the more
-				 * likely they are to get items of a higher tier. The -4 is to ignore the original 4 trades.
-				 * For reference, the chances are as follows:
-				 * Trades done		Basic		Apprentice		Advanced		Master 
-				 * 0				50%			25%				18%				8%
-				 * 1				46%			25%				20%				9%
-				 * 2				42%			24%				22%				12%
-				 * 3				38%			24%				24%				14%
-				 * 4				34%			22%				26%				17%
-				 * 5				30%			21%				28%				21%
-				 * 6				26%			19%				30%				24%
-				 * 7				22%			17%				32%				28%
-				 * 8				18%			15%				34%				33% */
+				 * likely they are to get items of a higher tier. The -4 is to ignore the original 4 trades. For
+				 * reference, the chances are as follows: Trades done Basic Apprentice Advanced Master 0 50% 25% 18% 8%
+				 * 1 46% 25% 20% 9% 2 42% 24% 22% 12% 3 38% 24% 24% 14% 4 34% 22% 26% 17% 5 30% 21% 28% 21% 6 26% 19%
+				 * 30% 24% 7 22% 17% 32% 28% 8 18% 15% 34% 33% */
 
-				double tierIncreaseChance = 0.5 + 0.04*(Math.max(this.trades.size()-4, 0));
+				double tierIncreaseChance = 0.5 + 0.04 * (Math.max(this.trades.size() - 4, 0));
 
 				tier = Tier.BASIC;
 
@@ -482,7 +478,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 					tier = Tier.APPRENTICE;
 					if(rand.nextDouble() < tierIncreaseChance){
 						tier = Tier.ADVANCED;
-						if(rand.nextDouble() < tierIncreaseChance*0.6){
+						if(rand.nextDouble() < tierIncreaseChance * 0.6){
 							tier = Tier.MASTER;
 						}
 					}
@@ -491,46 +487,49 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 				itemToSell = this.getRandomItemOfTier(tier);
 
 				for(Object recipe : merchantrecipelist){
-					if(ItemStack.areItemStacksEqual(((MerchantRecipe)recipe).getItemToSell(), itemToSell)) itemAlreadySold = true;
+					if(ItemStack.areItemStacksEqual(((MerchantRecipe)recipe).getItemToSell(), itemToSell))
+						itemAlreadySold = true;
 				}
 
 				if(this.trades != null){
 					for(Object recipe : this.trades){
-						if(ItemStack.areItemStacksEqual(((MerchantRecipe)recipe).getItemToSell(), itemToSell)) itemAlreadySold = true;
+						if(ItemStack.areItemStacksEqual(((MerchantRecipe)recipe).getItemToSell(), itemToSell))
+							itemAlreadySold = true;
 					}
 				}
 			}
 
-			// Don't know how it can ever be null here, but saves it crashing.
-			if(itemToSell == null) return;
+			// Don't know how it can ever be empty here, but it's a failsafe.
+			if(itemToSell.isEmpty()) return;
 
-			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), new ItemStack(WizardryItems.magic_crystal, tier.ordinal()*3 + 1 + rand.nextInt(4)), itemToSell));
+			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier),
+					new ItemStack(WizardryItems.magic_crystal, tier.ordinal() * 3 + 1 + rand.nextInt(4)), itemToSell));
 		}
 
 		Collections.shuffle(merchantrecipelist);
 
-		if (this.trades == null)
-		{
+		if(this.trades == null){
 			this.trades = new MerchantRecipeList();
 		}
 
-		for (int j1 = 0; j1 < merchantrecipelist.size(); ++j1)
-		{
+		for(int j1 = 0; j1 < merchantrecipelist.size(); ++j1){
 			this.trades.add(merchantrecipelist.get(j1));
 		}
 	}
 
-	private ItemStack getRandomPrice(Tier tier) {
-		ItemStack itemstack = null;
+	// TODO: Switch all of this over to some kind of loot pool system?
+	
+	private ItemStack getRandomPrice(Tier tier){
+		ItemStack itemstack = ItemStack.EMPTY;
 		switch(this.rand.nextInt(3)){
 		case 0:
-			itemstack = new ItemStack(Items.GOLD_INGOT, (tier.ordinal()+1)*8-1 + rand.nextInt(6));
+			itemstack = new ItemStack(Items.GOLD_INGOT, (tier.ordinal() + 1) * 8 - 1 + rand.nextInt(6));
 			break;
 		case 1:
-			itemstack = new ItemStack(Items.DIAMOND, (tier.ordinal()+1)*4-2 + rand.nextInt(3));
+			itemstack = new ItemStack(Items.DIAMOND, (tier.ordinal() + 1) * 4 - 2 + rand.nextInt(3));
 			break;
 		case 2:
-			itemstack = new ItemStack(Items.EMERALD, (tier.ordinal()+1)*6-1 + rand.nextInt(3));
+			itemstack = new ItemStack(Items.EMERALD, (tier.ordinal() + 1) * 6 - 1 + rand.nextInt(3));
 			break;
 		}
 		return itemstack;
@@ -552,17 +551,21 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			randomiser = rand.nextInt(5);
 			if(randomiser < 4 && !spells.isEmpty()){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
-					// This means it is more likely for spell books sold to be of the same element as the wizard if the wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1, specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+					// This means it is more likely for spell books sold to be of the same element as the wizard if the
+					// wizard has an element.
+					return new ItemStack(WizardryItems.spell_book, 1,
+							specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
 				}else{
 					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).id());
 				}
 			}else{
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
-					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard has an element.
+					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
+					// has an element.
 					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
 				}else{
-					return new ItemStack(WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
+					return new ItemStack(
+							WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}
 
@@ -570,27 +573,34 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			randomiser = rand.nextInt(Wizardry.settings.discoveryMode ? 12 : 10);
 			if(randomiser < 5 && !spells.isEmpty()){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
-					// This means it is more likely for spell books sold to be of the same element as the wizard if the wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1, specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+					// This means it is more likely for spell books sold to be of the same element as the wizard if the
+					// wizard has an element.
+					return new ItemStack(WizardryItems.spell_book, 1,
+							specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
 				}else{
 					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).id());
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
-					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard has an element.
+					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
+					// has an element.
 					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
 				}else{
-					return new ItemStack(WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
+					return new ItemStack(
+							WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}else if(randomiser < 8){
 				return new ItemStack(WizardryItems.arcane_tome, 1, 1);
 			}else if(randomiser < 10){
-				EntityEquipmentSlot slot = WizardryUtilities.ARMOUR_SLOTS[rand.nextInt(WizardryUtilities.ARMOUR_SLOTS.length)];
+				EntityEquipmentSlot slot = WizardryUtilities.ARMOUR_SLOTS[rand
+						.nextInt(WizardryUtilities.ARMOUR_SLOTS.length)];
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
-					// This means it is more likely for armour sold to be of the same element as the wizard if the wizard has an element.
+					// This means it is more likely for armour sold to be of the same element as the wizard if the
+					// wizard has an element.
 					return new ItemStack(WizardryUtilities.getArmour(this.getElement(), slot));
 				}else{
-					return new ItemStack(WizardryUtilities.getArmour(Element.values()[rand.nextInt(Element.values().length)], slot));
+					return new ItemStack(
+							WizardryUtilities.getArmour(Element.values()[rand.nextInt(Element.values().length)], slot));
 				}
 			}else{
 				// Don't need to check for discovery mode here since it is done above
@@ -601,17 +611,21 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			randomiser = rand.nextInt(12);
 			if(randomiser < 5 && !spells.isEmpty()){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
-					// This means it is more likely for spell books sold to be of the same element as the wizard if the wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1, specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+					// This means it is more likely for spell books sold to be of the same element as the wizard if the
+					// wizard has an element.
+					return new ItemStack(WizardryItems.spell_book, 1,
+							specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
 				}else{
 					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).id());
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
-					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard has an element.
+					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
+					// has an element.
 					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
 				}else{
-					return new ItemStack(WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
+					return new ItemStack(
+							WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}else if(randomiser < 8){
 				return new ItemStack(WizardryItems.arcane_tome, 1, 2);
@@ -627,7 +641,8 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 			if(randomiser < 5 && this.getElement() != Element.MAGIC && !specialismSpells.isEmpty()){
 				// Master spells can only be sold by a specialist in that element.
-				return new ItemStack(WizardryItems.spell_book, 1, specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+				return new ItemStack(WizardryItems.spell_book, 1,
+						specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
 
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -643,9 +658,9 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		return new ItemStack(Blocks.STONE);
 	}
-	
+
 	@Override
-	public void setProfession(VillagerProfession prof) {
+	public void setProfession(VillagerProfession prof){
 		// Disables Forge's stuff.
 	}
 
@@ -670,22 +685,25 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		}
 
 		// Default chance is 0.085f, for reference.
-		for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) this.setDropChance(slot, 0.0f);
+		for(EntityEquipmentSlot slot : EntityEquipmentSlot.values())
+			this.setDropChance(slot, 0.0f);
 
 		// All wizards know magic missile, even if it is disabled.
 		spells.add(Spells.magic_missile);
-		
+
 		Tier maxTier = populateSpells(spells, element, 3, rand);
 
 		// Now done after the spells so it can take the tier into account.
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(WizardryUtilities.getWand(maxTier, element)));
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND,
+				new ItemStack(WizardryUtilities.getWand(maxTier, element)));
 
 		return livingdata;
 	}
-	
+
 	/**
 	 * Adds n random spells to the given list. The spells will be of the given element if possible. Extracted as a
 	 * separate function since it was the same in both EntityWizard and EntityEvilWizard.
+	 * 
 	 * @param spells The spell list to be populated.
 	 * @param e The element that the spells should belong to, or {@link Element#MAGIC} for a random element each time.
 	 * @param n The number of spells to add.
@@ -696,10 +714,10 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		// This is the tier of the highest tier spell added.
 		Tier maxTier = Tier.BASIC;
-		
+
 		List<Spell> npcSpells = Spell.getSpells(Spell.npcSpells);
 
-		for(int i=0; i<3; i++){
+		for(int i = 0; i < 3; i++){
 
 			Tier tier;
 			// If the wizard has no element, it picks a random one each time.
@@ -739,7 +757,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			if(!list.isEmpty()) spells.add(list.get(random.nextInt(list.size())));
 
 		}
-		
+
 		return maxTier;
 	}
 
@@ -763,9 +781,10 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		return super.attackEntityFrom(source, damage);
 	}
 
-	/** 
+	/**
 	 * Sets the list of blocks that are part of this wizard's tower. If a player breaks any of these blocks, the wizard
 	 * will get angry and attack them.
+	 * 
 	 * @param blocks A Set of BlockPos objects representing the blocks in the tower.
 	 */
 	public void setTowerBlocks(Set<BlockPos> blocks){
@@ -774,6 +793,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 	/**
 	 * Tests whether the block at the given coordinates is part of this wizard's tower.
+	 * 
 	 * @param x
 	 * @param y
 	 * @param z
@@ -784,7 +804,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		// Uses .equals() rather than == so this will work fine.
 		return this.towerBlocks.contains(pos);
 	}
-	
+
 	@SubscribeEvent
 	public static void onBlockBreakEvent(BlockEvent.BreakEvent event){
 		// Makes wizards angry if a player breaks a block in their tower
@@ -806,22 +826,46 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 	// EntityVillager overrides (that don't add features)
 
-	@Override public boolean isMating(){ return false; }
-	@Override public void setMating(boolean p_70947_1_){}
-	@Override public void setPlaying(boolean p_70939_1_){}
-	@Override public boolean isPlaying(){ return false; }
-	@Override public void setLookingForHome(){}
+	@Override
+	public boolean isMating(){
+		return false;
+	}
+
+	@Override
+	public void setMating(boolean p_70947_1_){
+	}
+
+	@Override
+	public void setPlaying(boolean p_70939_1_){
+	}
+
+	@Override
+	public boolean isPlaying(){
+		return false;
+	}
+
+	@Override
+	public void setLookingForHome(){
+	}
+
 	// Doesn't say it, but this is in fact nullable.
-	@Override public EntityVillager createChild(EntityAgeable par1EntityAgeable){ return null; }
+	@Override
+	public EntityVillager createChild(EntityAgeable par1EntityAgeable){
+		return null;
+	}
+
 	@SideOnly(Side.CLIENT)
-	@Override public void setRecipes(MerchantRecipeList par1MerchantRecipeList){}
+	@Override
+	public void setRecipes(MerchantRecipeList par1MerchantRecipeList){
+	}
+
 	@Override
 	public void onStruckByLightning(EntityLightningBolt lightningBolt){
 		// Restores the normal behaviour, replacing EntityVillager's witch conversion.
-		this.attackEntityFrom(DamageSource.lightningBolt, 5.0F);
+		this.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 5.0F);
 		// Entity's version does something strange with the private fire variable, but since I don't have access this
 		// will probably be fine.
-        this.setFire(8);
+		this.setFire(8);
 	}
 
 }

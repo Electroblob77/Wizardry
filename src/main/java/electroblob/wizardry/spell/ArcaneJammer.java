@@ -28,60 +28,70 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class ArcaneJammer extends Spell {
 
-	public ArcaneJammer() {
+	public ArcaneJammer(){
 		super(Tier.ADVANCED, 30, Element.HEALING, "arcane_jammer", SpellType.ATTACK, 50, EnumAction.NONE, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		Vec3d look = caster.getLookVec();
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 10*modifiers.get(WizardryItems.range_upgrade));
+		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
+				10 * modifiers.get(WizardryItems.range_upgrade));
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && rayTrace.entityHit instanceof EntityLivingBase){
-			
-			EntityLivingBase entity = (EntityLivingBase) rayTrace.entityHit;
+		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
+				&& rayTrace.entityHit instanceof EntityLivingBase){
+
+			EntityLivingBase entity = (EntityLivingBase)rayTrace.entityHit;
 			if(entity instanceof EntityWizard) caster.addStat(WizardryAchievements.jam_wizard);
-			
+
 			if(!world.isRemote){
-				entity.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 0));
+				entity.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer,
+						(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 0));
 			}
 		}
 		if(world.isRemote){
-			for(int i=1; i<(int)(25*modifiers.get(WizardryItems.range_upgrade)); i+=2){
-				double x1 = caster.posX + look.xCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
-				double z1 = caster.posZ + look.zCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 12 + world.rand.nextInt(8), 0.9f, 0.3f, 0.7f);
+			for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
+				double x1 = caster.posX + look.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord * i / 2
+						+ world.rand.nextFloat() / 5 - 0.1f;
+				double z1 = caster.posZ + look.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+						12 + world.rand.nextInt(8), 0.9f, 0.3f, 0.7f);
 			}
 		}
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_DEFLECTION, 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
+		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_DEFLECTION, 0.7F,
+				world.rand.nextFloat() * 0.4F + 0.8F);
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
 
 		if(target != null){
 			if(!world.isRemote){
-				target.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 0));
+				target.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer,
+						(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 0));
 			}
-			
+
 			if(world.isRemote){
 
-				double dx = (target.posX - caster.posX)/caster.getDistanceToEntity(target);
-				double dy = (target.posY - caster.posY)/caster.getDistanceToEntity(target);
-				double dz = (target.posZ - caster.posZ)/caster.getDistanceToEntity(target);
-				
-				for(int i=1; i<(int)(25*modifiers.get(WizardryItems.range_upgrade)); i+=2){
+				double dx = (target.posX - caster.posX) / caster.getDistanceToEntity(target);
+				double dy = (target.posY - caster.posY) / caster.getDistanceToEntity(target);
+				double dz = (target.posZ - caster.posZ) / caster.getDistanceToEntity(target);
 
-					double x1 = caster.posX + dx*i/2 + world.rand.nextFloat()/5 - 0.1f;
-					double y1 = caster.posY + caster.getEyeHeight() - 0.4f + dy*i/2 + world.rand.nextFloat()/5 - 0.1f;
-					double z1 = caster.posZ + dz*i/2 + world.rand.nextFloat()/5 - 0.1f;
+				for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
 
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 12 + world.rand.nextInt(8), 0.9f, 0.3f, 0.7f);
+					double x1 = caster.posX + dx * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+					double y1 = caster.posY + caster.getEyeHeight() - 0.4f + dy * i / 2 + world.rand.nextFloat() / 5
+							- 0.1f;
+					double z1 = caster.posZ + dz * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+
+					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+							12 + world.rand.nextInt(8), 0.9f, 0.3f, 0.7f);
 				}
 			}
 			caster.swingArm(hand);
@@ -95,7 +105,7 @@ public class ArcaneJammer extends Spell {
 	public boolean canBeCastByNPCs(){
 		return true;
 	}
-	
+
 	@SubscribeEvent
 	public static void onSpellCastPreEvent(SpellCastEvent.Pre event){
 		// Arcane jammer prevents spell casting.

@@ -8,16 +8,15 @@ import net.minecraft.world.World;
 
 public class ContainerPortableWorkbench extends ContainerWorkbench {
 
-	public ContainerPortableWorkbench(InventoryPlayer inventory, World world, BlockPos pos) {
-		
+	public ContainerPortableWorkbench(InventoryPlayer inventory, World world, BlockPos pos){
+
 		super(inventory, world, pos);
 	}
 
 	// Overriden to stop the crafting gui from closing when there is no crafting table.
 	@Override
-	public boolean canInteractWith(EntityPlayer player)
-    {
-        return true;
-    }
-	
+	public boolean canInteractWith(EntityPlayer player){
+		return true;
+	}
+
 }

@@ -25,11 +25,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityStormElemental extends EntitySummonedCreature implements ISpellCaster {
-	
+
 	private double AISpeed = 1.0;
-    
-    private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 30, 0);
-    
+
+	private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 30, 0);
+
 	private static final List<Spell> attack = Collections.singletonList(Spells.lightning_disc);
 
 	public EntityStormElemental(World world){
@@ -39,24 +39,24 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 	public EntityStormElemental(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
 		super(world, x, y, z, caster, lifetime);
 		// For some reason this can't be in initEntityAI
-        this.tasks.addTask(0, this.spellAttackAI);
+		this.tasks.addTask(0, this.spellAttackAI);
 	}
-	
+
 	@Override
 	protected void initEntityAI(){
 
-        this.tasks.addTask(1, new EntityAIAttackMelee(this, AISpeed, false));
+		this.tasks.addTask(1, new EntityAIAttackMelee(this, AISpeed, false));
 		this.tasks.addTask(2, new EntityAIWander(this, AISpeed));
 		this.tasks.addTask(3, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class, 
-        		0, false, true, this.getTargetSelector()));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
+				0, false, true, this.getTargetSelector()));
 
-        this.setAIMoveSpeed((float)AISpeed);
+		this.setAIMoveSpeed((float)AISpeed);
 	}
 
 	@Override
-	public boolean hasRangedAttack() {
+	public boolean hasRangedAttack(){
 		return true;
 	}
 
@@ -83,27 +83,27 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 	@Override
 	protected void applyEntityAttributes(){
 		super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
+		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(AISpeed);
 		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(16.0D);
 	}
 
-    @Override
-    protected SoundEvent getAmbientSound(){
-        return SoundEvents.ENTITY_BLAZE_AMBIENT;
-    }
+	@Override
+	protected SoundEvent getAmbientSound(){
+		return SoundEvents.ENTITY_BLAZE_AMBIENT;
+	}
 
-    @Override
-    protected SoundEvent getHurtSound(){
-        return SoundEvents.ENTITY_BLAZE_HURT;
-    }
+	@Override
+	protected SoundEvent getHurtSound(){
+		return SoundEvents.ENTITY_BLAZE_HURT;
+	}
 
-    @Override
-    protected SoundEvent getDeathSound(){
-        return SoundEvents.ENTITY_BLAZE_DEATH;
-    }
-    
+	@Override
+	protected SoundEvent getDeathSound(){
+		return SoundEvents.ENTITY_BLAZE_DEATH;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender(float partialTicks){
@@ -122,8 +122,9 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 			this.playSound(WizardrySounds.SPELL_LOOP_WIND, 1.0f, 1.0f);
 		}
 
-		if (this.rand.nextInt(24) == 0){
-			this.playSound(SoundEvents.ENTITY_BLAZE_BURN, 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F);
+		if(this.rand.nextInt(24) == 0){
+			this.playSound(SoundEvents.ENTITY_BLAZE_BURN, 1.0F + this.rand.nextFloat(),
+					this.rand.nextFloat() * 0.7F + 0.3F);
 		}
 
 		// Slow fall
@@ -131,28 +132,35 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 			this.motionY *= 0.6D;
 		}
 
-		if(worldObj.isRemote){
-			
-			for(int i=0; i<2; ++i){
-				worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0, 0, 0);
+		if(world.isRemote){
+
+			for(int i = 0; i < 2; ++i){
+				world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
+						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
+						this.posY + this.rand.nextDouble() * (double)this.height,
+						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
+						this.posY + this.rand.nextDouble() * (double)this.height,
+						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0, 0, 0);
 			}
 
-			for(int i=0; i<10; i++){
-				float brightness = rand.nextFloat()*0.2f;
+			for(int i = 0; i < 10; i++){
+				float brightness = rand.nextFloat() * 0.2f;
 				double dy = this.rand.nextDouble() * (double)this.height;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE_ROTATING, worldObj, this.posX, this.posY + dy, this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0, brightness, brightness, false, 0.2f + 0.5f*dy);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE_ROTATING, world, this.posX, this.posY + dy,
+						this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0, brightness, brightness, false, 0.2f + 0.5f * dy);
 			}
 		}
 
 		super.onLivingUpdate();
 	}
-	
+
 	@Override
 	public void fall(float distance, float damageMultiplier){
 		// Immune to fall damage.
 	}
-	
+
 	@Override
 	public void onStruckByLightning(EntityLightningBolt lightning){
 		// Immune to lightning.

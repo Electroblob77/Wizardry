@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.registry.RegistryBuilder;
 
 /**
  * Class responsible for defining, storing and registering all of wizardry's spells.
+ * 
  * @author Electroblob
  * @since Wizardry 2.1
  */
@@ -20,7 +21,7 @@ import net.minecraftforge.fml.common.registry.RegistryBuilder;
 // because it makes the text go bold, but also because it stops anyone fiddling with your fields). "Why would I want to
 // initialise things within the registry events?", I hear you ask - well, for one, custom registries don't like it if
 // you haven't created the registry before you start calling constructors of classes extending IForgeRegistryEntry.Impl,
-// and secondly, 
+// and secondly,
 @ObjectHolder(Wizardry.MODID)
 @Mod.EventBusSubscriber
 public final class Spells {
@@ -28,16 +29,16 @@ public final class Spells {
 	// This is here because this class is already an event handler.
 	@SubscribeEvent
 	public static void createRegistry(RegistryEvent.NewRegistry event){
-		
+
 		// Beats me why we need both of these. Surely the type parameter means it already knows?
 		RegistryBuilder<Spell> builder = new RegistryBuilder<Spell>();
 		builder.setType(Spell.class);
 		builder.setName(new ResourceLocation(Wizardry.MODID, "spells"));
 		builder.setIDRange(0, 5000); // Is there any penalty for using a larger number?
-		
+
 		Spell.registry = builder.create();
 	}
-	
+
 	// Wizardry 1.0 spells
 
 	public static final Spell none = null;
@@ -53,7 +54,7 @@ public final class Spells {
 	public static final Spell light = null;
 	public static final Spell telekinesis = null;
 	public static final Spell heal = null;
-	
+
 	public static final Spell fireball = null;
 	public static final Spell flame_ray = null;
 	public static final Spell firebomb = null;
@@ -160,7 +161,7 @@ public final class Spells {
 	public static final Spell smoke_bomb = null;
 	public static final Spell mind_trick = null;
 	public static final Spell leap = null;
-	
+
 	public static final Spell pocket_furnace = null;
 	public static final Spell intimidate = null;
 	public static final Spell banish = null;
@@ -171,7 +172,7 @@ public final class Spells {
 	public static final Spell imbue_weapon = null;
 	public static final Spell invigorating_presence = null;
 	public static final Spell oakflesh = null;
-	
+
 	public static final Spell greater_fireball = null;
 	public static final Spell flaming_weapon = null;
 	public static final Spell ice_lance = null;
@@ -190,12 +191,12 @@ public final class Spells {
 	public static final Spell summon_storm_elemental = null;
 	public static final Spell earthquake = null;
 	public static final Spell font_of_mana = null;
-	
+
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Spell> event){
-		
+
 		IForgeRegistry<Spell> registry = event.getRegistry();
-		
+
 		// event.getRegistry should always equal Spell.registry.
 		registry.register(new None());
 		registry.register(new MagicMissile());
@@ -210,7 +211,7 @@ public final class Spells {
 		registry.register(new Light());
 		registry.register(new Telekinesis());
 		registry.register(new Heal());
-		
+
 		registry.register(new Fireball());
 		registry.register(new FlameRay());
 		registry.register(new Firebomb());
@@ -317,7 +318,7 @@ public final class Spells {
 		registry.register(new SmokeBomb());
 		registry.register(new MindTrick());
 		registry.register(new Leap());
-		
+
 		registry.register(new PocketFurnace());
 		registry.register(new Intimidate());
 		registry.register(new Banish());
@@ -328,7 +329,7 @@ public final class Spells {
 		registry.register(new ImbueWeapon());
 		registry.register(new InvigoratingPresence());
 		registry.register(new Oakflesh());
-		
+
 		registry.register(new GreaterFireball());
 		registry.register(new FlamingWeapon());
 		registry.register(new IceLance());

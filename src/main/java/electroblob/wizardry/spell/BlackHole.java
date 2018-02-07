@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class BlackHole extends Spell {
 
-	public BlackHole() {
+	public BlackHole(){
 		super(Tier.MASTER, 150, Element.SORCERY, "black_hole", SpellType.ATTACK, 400, EnumAction.NONE, false);
 	}
 
@@ -27,33 +27,38 @@ public class BlackHole extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
+		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10 * modifiers.get(WizardryItems.range_upgrade), world,
+				caster, false);
+
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
-			
+
 			// This demonstrates beautifully the elegance of BlockPos. In 1.7.10 this required a 50-line long switch
 			// statement and a flag variable; now it only needs a few lines.
 			BlockPos pos = new BlockPos(rayTrace.hitVec).offset(rayTrace.sideHit);
-			
+
 			if(world.isAirBlock(pos)){
-				
+
 				if(!world.isRemote){
-					world.spawnEntityInWorld(new EntityBlackHole(world, pos.getX()+0.5, pos.getY()-1+0.5, pos.getZ()+0.5, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE)));
+					world.spawnEntity(new EntityBlackHole(world, pos.getX() + 0.5, pos.getY() - 1 + 0.5,
+							pos.getZ() + 0.5, caster, (int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+							modifiers.get(SpellModifiers.DAMAGE)));
 				}
-				
+
 				caster.swingArm(hand);
 				WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 2.0f, 0.7f);
 				return true;
 			}
-			
+
 		}else{
-			int x = (int) (Math.floor(caster.posX) + caster.getLookVec().xCoord*8);
-			int y = (int) (Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().yCoord*8);
-			int z = (int) (Math.floor(caster.posZ) + caster.getLookVec().zCoord*8);
+			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().xCoord * 8);
+			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().yCoord * 8);
+			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().zCoord * 8);
 			if(!world.isRemote){
-				world.spawnEntityInWorld(new EntityBlackHole(world, x, y, z, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE)));
+				world.spawnEntity(new EntityBlackHole(world, x, y, z, caster,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+						modifiers.get(SpellModifiers.DAMAGE)));
 			}
 			caster.swingArm(hand);
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 2.0f, 0.7f);
@@ -61,6 +66,5 @@ public class BlackHole extends Spell {
 		}
 		return false;
 	}
-
 
 }

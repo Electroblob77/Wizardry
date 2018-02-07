@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class RingOfFire extends Spell {
 
-	public RingOfFire() {
+	public RingOfFire(){
 		super(Tier.ADVANCED, 30, Element.FIRE, "ring_of_fire", SpellType.ATTACK, 100, EnumAction.BOW, false);
 	}
 
@@ -27,12 +27,14 @@ public class RingOfFire extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(caster.onGround){
 			if(!world.isRemote){
-				EntityFireRing firering = new EntityFireRing(world, caster.posX, caster.posY, caster.posZ, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(firering);
+				EntityFireRing firering = new EntityFireRing(world, caster.posX, caster.posY, caster.posZ, caster,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(firering);
 			}
 
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
@@ -42,13 +44,17 @@ public class RingOfFire extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-			if(caster.onGround && world.getEntitiesWithinAABB(EntityFireRing.class, caster.getEntityBoundingBox()).isEmpty()){
+			if(caster.onGround
+					&& world.getEntitiesWithinAABB(EntityFireRing.class, caster.getEntityBoundingBox()).isEmpty()){
 				if(!world.isRemote){
-					EntityFireRing firering = new EntityFireRing(world, caster.posX, caster.posY, caster.posZ, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
-					world.spawnEntityInWorld(firering);
+					EntityFireRing firering = new EntityFireRing(world, caster.posX, caster.posY, caster.posZ, caster,
+							(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+							modifiers.get(SpellModifiers.DAMAGE));
+					world.spawnEntity(firering);
 				}
 
 				caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
@@ -56,10 +62,10 @@ public class RingOfFire extends Spell {
 			}
 			return false;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class Meteor extends Spell {
 
-	public Meteor() {
+	public Meteor(){
 		super(Tier.MASTER, 100, Element.FIRE, "meteor", SpellType.ATTACK, 200, EnumAction.NONE, false);
 	}
 
@@ -27,29 +27,30 @@ public class Meteor extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(40*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
+		RayTraceResult rayTrace = WizardryUtilities.rayTrace(40 * modifiers.get(WizardryItems.range_upgrade), world,
+				caster, false);
+
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 
 			BlockPos pos = rayTrace.getBlockPos();
 
-        	// Not sure why it is +1 but it has to be to work properly.
-        	if(world.canBlockSeeSky(pos.up())){
-        		
+			// Not sure why it is +1 but it has to be to work properly.
+			if(world.canBlockSeeSky(pos.up())){
+
 				if(!world.isRemote){
-					EntityMeteor meteor = new EntityMeteor(world, pos.getX(), pos.getY() + 50, pos.getZ(), modifiers.get(WizardryItems.blast_upgrade));
-					world.spawnEntityInWorld(meteor);
+					EntityMeteor meteor = new EntityMeteor(world, pos.getX(), pos.getY() + 50, pos.getZ(),
+							modifiers.get(WizardryItems.blast_upgrade));
+					world.spawnEntity(meteor);
 				}
 
 				caster.swingArm(hand);
 				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SUMMONING, 3.0f, 1.0f);
 				return true;
-        	}
+			}
 		}
 		return false;
 	}
-
 
 }

@@ -8,8 +8,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-/** <b>[Server -> Client]</b> This packet is sent to synchronise the config settings with clients on player login.
- * @see Settings */
+/**
+ * <b>[Server -> Client]</b> This packet is sent to synchronise the config settings with clients on player login.
+ * 
+ * @see Settings
+ */
 public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 
 	@Override
@@ -29,18 +32,18 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 
 		return null;
 	}
-	
+
 	private static void copySettings(Message message){
 		Wizardry.settings.firebombIsCraftable = message.settings.firebombIsCraftable;
 		Wizardry.settings.poisonBombIsCraftable = message.settings.poisonBombIsCraftable;
 		Wizardry.settings.smokeBombIsCraftable = message.settings.smokeBombIsCraftable;
 		Wizardry.settings.useAlternateScrollRecipe = message.settings.useAlternateScrollRecipe;
 		Wizardry.settings.discoveryMode = message.settings.discoveryMode;
-//		Wizardry.settings.maxSpellCommandMultiplier = message.settings.maxSpellCommandMultiplier;
-//		Wizardry.settings.castCommandName = message.settings.castCommandName;
-//		Wizardry.settings.discoverspellCommandName = message.settings.discoverspellCommandName;
-//		Wizardry.settings.allyCommandName = message.settings.allyCommandName;
-//		Wizardry.settings.alliesCommandName = message.settings.alliesCommandName;
+		// Wizardry.settings.maxSpellCommandMultiplier = message.settings.maxSpellCommandMultiplier;
+		// Wizardry.settings.castCommandName = message.settings.castCommandName;
+		// Wizardry.settings.discoverspellCommandName = message.settings.discoverspellCommandName;
+		// Wizardry.settings.allyCommandName = message.settings.allyCommandName;
+		// Wizardry.settings.alliesCommandName = message.settings.alliesCommandName;
 	}
 
 	public static class Message implements IMessage {
@@ -49,7 +52,8 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		public Settings settings;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
-		public Message(){}
+		public Message(){
+		}
 
 		public Message(Settings settings){
 			this.settings = settings;
@@ -66,11 +70,11 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.smokeBombIsCraftable = buf.readBoolean();
 			settings.useAlternateScrollRecipe = buf.readBoolean();
 			settings.discoveryMode = buf.readBoolean();
-//			settings.maxSpellCommandMultiplier = buf.readDouble();
-//			settings.castCommandName = ByteBufUtils.readUTF8String(buf);
-//			settings.discoverspellCommandName = ByteBufUtils.readUTF8String(buf);
-//			settings.allyCommandName = ByteBufUtils.readUTF8String(buf);
-//			settings.alliesCommandName = ByteBufUtils.readUTF8String(buf);
+			// settings.maxSpellCommandMultiplier = buf.readDouble();
+			// settings.castCommandName = ByteBufUtils.readUTF8String(buf);
+			// settings.discoverspellCommandName = ByteBufUtils.readUTF8String(buf);
+			// settings.allyCommandName = ByteBufUtils.readUTF8String(buf);
+			// settings.alliesCommandName = ByteBufUtils.readUTF8String(buf);
 		}
 
 		@Override
@@ -80,11 +84,11 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeBoolean(settings.smokeBombIsCraftable);
 			buf.writeBoolean(settings.useAlternateScrollRecipe);
 			buf.writeBoolean(settings.discoveryMode);
-//			buf.writeDouble(settings.maxSpellCommandMultiplier);
-//			ByteBufUtils.writeUTF8String(buf, settings.castCommandName);
-//			ByteBufUtils.writeUTF8String(buf, settings.discoverspellCommandName);
-//			ByteBufUtils.writeUTF8String(buf, settings.allyCommandName);
-//			ByteBufUtils.writeUTF8String(buf, settings.alliesCommandName);
+			// buf.writeDouble(settings.maxSpellCommandMultiplier);
+			// ByteBufUtils.writeUTF8String(buf, settings.castCommandName);
+			// ByteBufUtils.writeUTF8String(buf, settings.discoverspellCommandName);
+			// ByteBufUtils.writeUTF8String(buf, settings.allyCommandName);
+			// ByteBufUtils.writeUTF8String(buf, settings.alliesCommandName);
 		}
 	}
 }

@@ -19,6 +19,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityArcaneWorkbench extends TileEntity implements IInventory, ITickable {
 
-	private ItemStack[] inv;
+	private NonNullList<ItemStack> inventory;
 	/** Controls the rotation of the rune. */
 	public float timer = 0;
 	/** Controls the change of yOffset. */
@@ -35,19 +36,19 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	public int yOffset = 300;
 
 	public TileEntityArcaneWorkbench(){
-		inv = new ItemStack[ContainerArcaneWorkbench.UPGRADE_SLOT + 1];
+		inventory = NonNullList.withSize(ContainerArcaneWorkbench.UPGRADE_SLOT + 1, ItemStack.EMPTY);
 	}
-	
+
 	@Override
 	public void onLoad(){
 		timer = 0;
 		yTimer = 0;
 		yOffset = 300;
 	}
-	
+
 	/** Called to manually sync the tile entity with clients. */
 	public void sync(){
-		this.worldObj.notifyBlockUpdate(pos, worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+		this.world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 
 	@Override
@@ -56,14 +57,15 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		ItemStack itemstack = this.getStackInSlot(ContainerArcaneWorkbench.WAND_SLOT);
 
 		// Decrements wand damage (increases mana) every 1.5 seconds if it has a condenser upgrade
-		if(itemstack != null && itemstack.getItem() instanceof ItemWand && !this.worldObj.isRemote && itemstack.isItemDamaged()
-				&& this.worldObj.getWorldTime() % electroblob.wizardry.constants.Constants.CONDENSER_TICK_INTERVAL == 0){
+		if(itemstack.getItem() instanceof ItemWand && !this.world.isRemote && itemstack.isItemDamaged()
+				&& this.world.getWorldTime() % electroblob.wizardry.constants.Constants.CONDENSER_TICK_INTERVAL == 0){
 			// If the upgrade level is 0, this does nothing anyway.
-			itemstack.setItemDamage(itemstack.getItemDamage() - WandHelper.getUpgradeLevel(itemstack, WizardryItems.condenser_upgrade));
+			itemstack.setItemDamage(
+					itemstack.getItemDamage() - WandHelper.getUpgradeLevel(itemstack, WizardryItems.condenser_upgrade));
 		}
 
 		// The server doesn't care what these are, and there's no need for them to be synced or saved.
-		if(this.worldObj.isRemote){
+		if(this.world.isRemote){
 			if(timer < 359){
 				timer++;
 			}else{
@@ -79,25 +81,25 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	}
 
 	@Override
-	public int getSizeInventory() {
-		return inv.length;
+	public int getSizeInventory(){
+		return inventory.size();
 	}
 
 	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return inv[slot];
+	public ItemStack getStackInSlot(int slot){
+		return inventory.get(slot);
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int amt) {
+	public ItemStack decrStackSize(int slot, int amt){
 		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			if (stack.stackSize <= amt) {
-				setInventorySlotContents(slot, null);
-			} else {
+		if(!stack.isEmpty()){
+			if(stack.getCount() <= amt){
+				setInventorySlotContents(slot, ItemStack.EMPTY);
+			}else{
 				stack = stack.splitStack(amt);
-				if (stack.stackSize == 0) {
-					setInventorySlotContents(slot, null);
+				if(stack.getCount() == 0){
+					setInventorySlotContents(slot, ItemStack.EMPTY);
 				}
 			}
 		}
@@ -105,56 +107,56 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(int slot) {
+	public ItemStack removeStackFromSlot(int slot){
 		ItemStack stack = getStackInSlot(slot);
-		if (stack != null) {
-			setInventorySlotContents(slot, null);
+		if(!stack.isEmpty()){
+			setInventorySlotContents(slot, ItemStack.EMPTY);
 		}
 		return stack;
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack) {
-		inv[slot] = stack;
-		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-			stack.stackSize = getInventoryStackLimit();
-		}               
+	public void setInventorySlotContents(int slot, ItemStack stack){
+		inventory.set(slot, stack);
+		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
+			stack.setCount(getInventoryStackLimit());
+		}
 	}
 
 	@Override
-	public String getName() {
+	public String getName(){
 		return "container.wizardry:arcane_workbench";
 	}
 
 	@Override
-	public boolean hasCustomName() {
+	public boolean hasCustomName(){
 		return false;
 	}
 
 	@Override
-	public int getInventoryStackLimit() {
+	public int getInventoryStackLimit(){
 		return 64;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer player) {
-		return worldObj.getTileEntity(pos) == this && player.getDistanceSqToCenter(pos) < 64;
+	public boolean isUsableByPlayer(EntityPlayer player){
+		return world.getTileEntity(pos) == this && player.getDistanceSqToCenter(pos) < 64;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {
-
-	}
-
-	@Override
-	public void closeInventory(EntityPlayer player) {
+	public void openInventory(EntityPlayer player){
 
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int slotNumber, ItemStack itemstack) {
+	public void closeInventory(EntityPlayer player){
 
-		if(itemstack == null) return true;
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slotNumber, ItemStack itemstack){
+
+		if(itemstack == ItemStack.EMPTY) return true;
 
 		if(slotNumber >= 0 && slotNumber < ContainerArcaneWorkbench.CRYSTAL_SLOT){
 			return itemstack.getItem() == WizardryItems.spell_book;
@@ -163,8 +165,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 			return itemstack.getItem() == WizardryItems.magic_crystal;
 
 		}else if(slotNumber == ContainerArcaneWorkbench.WAND_SLOT){
-			return itemstack != null && (itemstack.getItem() instanceof ItemWand
-					|| itemstack.getItem() instanceof ItemWizardArmour
+			return (itemstack.getItem() instanceof ItemWand || itemstack.getItem() instanceof ItemWizardArmour
 					|| itemstack.getItem() == WizardryItems.blank_scroll);
 
 		}else if(slotNumber == ContainerArcaneWorkbench.UPGRADE_SLOT){
@@ -177,49 +178,50 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		return true;
 
 	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
-		
+
 		super.readFromNBT(tagCompound);
 
 		NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
-		for(int i = 0; i < tagList.tagCount(); i++) {
-			NBTTagCompound tag = (NBTTagCompound) tagList.getCompoundTagAt(i);
+		for(int i = 0; i < tagList.tagCount(); i++){
+			NBTTagCompound tag = (NBTTagCompound)tagList.getCompoundTagAt(i);
 			byte slot = tag.getByte("Slot");
-			if (slot >= 0 && slot < inv.length) {
-				inv[slot] = ItemStack.loadItemStackFromNBT(tag);
+			if(slot >= 0 && slot < getSizeInventory()){
+				setInventorySlotContents(slot, new ItemStack(tag));
 			}
 		}
 
-//		timer = tagCompound.getFloat("timer");
-//		yTimer = tagCompound.getInteger("yTimer");
-//		yOffset = tagCompound.getInteger("yOffset");
+		// timer = tagCompound.getFloat("timer");
+		// yTimer = tagCompound.getInteger("yTimer");
+		// yOffset = tagCompound.getInteger("yOffset");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound){
 
 		super.writeToNBT(tagCompound);
 
 		NBTTagList itemList = new NBTTagList();
-		for (int i = 0; i < inv.length; i++) {
-			ItemStack stack = inv[i];
-			if (stack != null) {
+		for(int i = 0; i < getSizeInventory(); i++){
+			ItemStack stack = getStackInSlot(i);
+			if(!stack.isEmpty()){
 				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte) i);
+				tag.setByte("Slot", (byte)i);
 				stack.writeToNBT(tag);
 				itemList.appendTag(tag);
 			}
 		}
 
 		tagCompound.setTag("Inventory", itemList);
-//		tagCompound.setFloat("timer", timer);
-//		tagCompound.setInteger("yTimer", yTimer);
-//		tagCompound.setInteger("yOffset", yOffset);
+		// tagCompound.setFloat("timer", timer);
+		// tagCompound.setInteger("yTimer", yTimer);
+		// tagCompound.setInteger("yOffset", yOffset);
 
 		return tagCompound;
 	}
-	
+
 	@Override
 	public final NBTTagCompound getUpdateTag(){
 		return this.writeToNBT(new NBTTagCompound());
@@ -231,24 +233,19 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	}
 
 	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
 		readFromNBT(pkt.getNbtCompound());
 	}
 
 	@SideOnly(Side.CLIENT)
-	public AxisAlignedBB getRenderBoundingBox()
-	{
+	public AxisAlignedBB getRenderBoundingBox(){
 		AxisAlignedBB bb = INFINITE_EXTENT_AABB;
 		Block type = getBlockType();
-		if (type == WizardryBlocks.arcane_workbench)
-		{
+		if(type == WizardryBlocks.arcane_workbench){
 			bb = new AxisAlignedBB(pos, pos.add(1, 1, 1));
-		}
-		else if (type != null)
-		{
-			AxisAlignedBB cbb = this.getWorld().getBlockState(pos).getBoundingBox(worldObj, pos);
-			if (cbb != null)
-			{
+		}else if(type != null){
+			AxisAlignedBB cbb = this.getWorld().getBlockState(pos).getBoundingBox(world, pos);
+			if(cbb != null){
 				bb = cbb;
 			}
 		}
@@ -258,25 +255,35 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	// What are all these for?
 
 	@Override
-	public int getField(int id) {
+	public int getField(int id){
 		return 0;
 	}
 
 	@Override
-	public void setField(int id, int value) {
+	public void setField(int id, int value){
 
 	}
 
 	@Override
-	public int getFieldCount() {
+	public int getFieldCount(){
 		return 0;
 	}
 
 	@Override
-	public void clear() {
-		for(int i=0; i<this.inv.length; i++){
-			this.inv[i] = null;
+	public void clear(){
+		for(int i = 0; i < getSizeInventory(); i++){
+			setInventorySlotContents(i, ItemStack.EMPTY);
 		}
+	}
+
+	@Override
+	public boolean isEmpty(){
+		for(int i = 0; i < getSizeInventory(); i++){
+			if(!getStackInSlot(i).isEmpty()){
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

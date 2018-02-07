@@ -16,7 +16,6 @@ import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -35,18 +34,41 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override public int getLifetime(){ return lifetime; }
-	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
-	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
-	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
-	@Override public UUID getCasterUUID() { return casterUUID; }
-	@Override public void setCasterUUID(UUID uuid) { this.casterUUID = uuid; }
+	@Override
+	public int getLifetime(){
+		return lifetime;
+	}
+
+	@Override
+	public void setLifetime(int lifetime){
+		this.lifetime = lifetime;
+	}
+
+	@Override
+	public WeakReference<EntityLivingBase> getCasterReference(){
+		return casterReference;
+	}
+
+	@Override
+	public void setCasterReference(WeakReference<EntityLivingBase> reference){
+		casterReference = reference;
+	}
+
+	@Override
+	public UUID getCasterUUID(){
+		return casterUUID;
+	}
+
+	@Override
+	public void setCasterUUID(UUID uuid){
+		this.casterUUID = uuid;
+	}
 
 	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't
-	 * matter because the client side entity immediately gets the lifetime value copied over to it by this class
-	 * anyway. When extending this class, you must override this constructor or Minecraft won't like it, but there's
-	 * no need to do anything inside it other than call super().
+	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
+	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
+	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
+	 * anything inside it other than call super().
 	 */
 	public EntitySpiderMinion(World world){
 		super(world);
@@ -54,8 +76,8 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 	}
 
 	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when
-	 * extending this class (be sure to call super()) so that AI and other things can be added.
+	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
+	 * this class (be sure to call super()) so that AI and other things can be added.
 	 */
 	public EntitySpiderMinion(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
 		super(world);
@@ -66,12 +88,11 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 	}
 
 	// EntitySpider overrides
-	
+
 	// This particular override is pretty standard: let the superclass handle basic AI like swimming, but replace its
 	// targeting system with one that targets hostile mobs and takes the ADS into account.
 	@Override
-	protected void initEntityAI()
-	{
+	protected void initEntityAI(){
 		super.initEntityAI();
 		this.targetTasks.taskEntries.clear();
 		// Spiders use a custom AI type specific to spiders which I can't access, but it's just an extension of
@@ -81,25 +102,23 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
 				0, false, true, this.getTargetSelector()));
 	}
-	
+
 	// No spider jockeys!
 	@Override
-	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
-		
-		// Can't call super, so the code from the next level up (EntityLiving) had to be copied as well.
-		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, 1));
+	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata){
 
-        if (this.rand.nextFloat() < 0.05F)
-        {
-            this.setLeftHanded(true);
-        }
-        else
-        {
-            this.setLeftHanded(false);
-        }
-        
-        // Don't need anything from EntitySpider, since neither spider jockeys nor group data is relevant.
-        return livingdata;
+		// Can't call super, so the code from the next level up (EntityLiving) had to be copied as well.
+		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE)
+				.applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, 1));
+
+		if(this.rand.nextFloat() < 0.05F){
+			this.setLeftHanded(true);
+		}else{
+			this.setLeftHanded(false);
+		}
+
+		// Don't need anything from EntitySpider, since neither spider jockeys nor group data is relevant.
+		return livingdata;
 	}
 
 	// Implementations
@@ -124,41 +143,43 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 	public void onDespawn(){
 		this.spawnParticleEffect();
 	}
-	
+
 	private void spawnParticleEffect(){
-		if(this.worldObj.isRemote){
-			for(int i=0;i<15;i++){
-    			Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, worldObj, this.posX + this.rand.nextFloat(), this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0.0d, 0.0d, 0.0d, 0, 0.1f, 0.2f, 0.0f);
-    		}
+		if(this.world.isRemote){
+			for(int i = 0; i < 15; i++){
+				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, this.posX + this.rand.nextFloat(),
+						this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0.0d, 0.0d, 0.0d, 0, 0.1f,
+						0.2f, 0.0f);
+			}
 		}
 	}
 
 	@Override
-	public boolean hasParticleEffect() {
+	public boolean hasParticleEffect(){
 		return true;
 	}
-	
+
 	@Override
 	public void onSuccessfulAttack(EntityLivingBase target){
-		
+
 		int seconds = 0;
 
-        if(this.worldObj.getDifficulty() == EnumDifficulty.NORMAL){
-            seconds = 7;
-        }else if(this.worldObj.getDifficulty() == EnumDifficulty.HARD){
-            seconds = 15;
-        }
+		if(this.world.getDifficulty() == EnumDifficulty.NORMAL){
+			seconds = 7;
+		}else if(this.world.getDifficulty() == EnumDifficulty.HARD){
+			seconds = 15;
+		}
 
-        if(seconds > 0){
-            target.addPotionEffect(new PotionEffect(MobEffects.POISON, seconds * 20, 0));
-        }
+		if(seconds > 0){
+			target.addPotionEffect(new PotionEffect(MobEffects.POISON, seconds * 20, 0));
+		}
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+	protected boolean processInteract(EntityPlayer player, EnumHand hand){
 		// In this case, the delegate method determines whether super is called.
-		// Rather handily, we can make use of Java's 'stop as soon as you find true' method of evaluating OR statements.
-		return this.interactDelegate(player, hand, stack) || super.processInteract(player, hand, stack);
+		// Rather handily, we can make use of Java's short-circuiting method of evaluating OR statements.
+		return this.interactDelegate(player, hand) || super.processInteract(player, hand);
 	}
 
 	@Override
@@ -175,13 +196,36 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 
 	// Recommended overrides
 
-	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
-	@Override protected boolean canDropLoot(){ return false; }
-	@Override protected Item getDropItem(){ return null; }
-	@Override protected ResourceLocation getLootTable(){ return null; }
-	@Override public boolean canPickUpLoot(){ return false; }
+	@Override
+	protected int getExperiencePoints(EntityPlayer player){
+		return 0;
+	}
+
+	@Override
+	protected boolean canDropLoot(){
+		return false;
+	}
+
+	@Override
+	protected Item getDropItem(){
+		return null;
+	}
+
+	@Override
+	protected ResourceLocation getLootTable(){
+		return null;
+	}
+
+	@Override
+	public boolean canPickUpLoot(){
+		return false;
+	}
+
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override
+	protected boolean canDespawn(){
+		return false;
+	}
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -192,7 +236,7 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 	@Override
 	public ITextComponent getDisplayName(){
 		if(getCaster() != null){
-			return new TextComponentTranslation(NAMEPLATE_TRANSLATION_KEY, getCaster().getName(), 
+			return new TextComponentTranslation(NAMEPLATE_TRANSLATION_KEY, getCaster().getName(),
 					new TextComponentTranslation("entity." + this.getEntityString() + ".name"));
 		}else{
 			return super.getDisplayName();

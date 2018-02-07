@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class Tornado extends Spell {
 
-	public Tornado() {
+	public Tornado(){
 		super(Tier.ADVANCED, 35, Element.EARTH, "tornado", SpellType.ATTACK, 80, EnumAction.NONE, false);
 	}
 
@@ -27,43 +27,48 @@ public class Tornado extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
 			double x = caster.posX + caster.getLookVec().xCoord;
 			double y = caster.posY;
 			double z = caster.posZ + caster.getLookVec().zCoord;
-			
-			EntityTornado tornado = new EntityTornado(world, x, y, z, caster, (int)(200*modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord/3, caster.getLookVec().zCoord/3, modifiers.get(SpellModifiers.DAMAGE));
-			world.spawnEntityInWorld(tornado);
+
+			EntityTornado tornado = new EntityTornado(world, x, y, z, caster,
+					(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord / 3,
+					caster.getLookVec().zCoord / 3, modifiers.get(SpellModifiers.DAMAGE));
+			world.spawnEntity(tornado);
 		}
 		caster.swingArm(hand);
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
 		return true;
 	}
-	
+
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-			
+
 			if(!world.isRemote){
 				double x = caster.posX + caster.getLookVec().xCoord;
 				double y = caster.posY;
 				double z = caster.posZ + caster.getLookVec().zCoord;
-				
-				EntityTornado tornado = new EntityTornado(world, x, y, z, caster, (int)(200*modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord/3, caster.getLookVec().zCoord/3, modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(tornado);
+
+				EntityTornado tornado = new EntityTornado(world, x, y, z, caster,
+						(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord / 3,
+						caster.getLookVec().zCoord / 3, modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(tornado);
 			}
 			caster.swingArm(hand);
 			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

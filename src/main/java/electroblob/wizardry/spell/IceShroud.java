@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class IceShroud extends Spell {
 
-	public IceShroud() {
+	public IceShroud(){
 		super(Tier.ADVANCED, 40, Element.ICE, "ice_shroud", SpellType.DEFENCE, 250, EnumAction.BOW, false);
 	}
 
@@ -28,39 +28,43 @@ public class IceShroud extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		// Cannot be cast when it has already been cast
 		if(!caster.isPotionActive(WizardryPotions.ice_shroud)){
 			if(!world.isRemote){
-				caster.addPotionEffect(new PotionEffect(WizardryPotions.ice_shroud, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+				caster.addPotionEffect(new PotionEffect(WizardryPotions.ice_shroud,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 0));
 			}
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
+			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F,
+					world.rand.nextFloat() * 0.4F + 1.4F);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
 			// Cannot be cast when it has already been cast
 			if(!caster.isPotionActive(WizardryPotions.ice_shroud)){
 				if(!world.isRemote){
-					caster.addPotionEffect(new PotionEffect(WizardryPotions.ice_shroud, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					caster.addPotionEffect(new PotionEffect(WizardryPotions.ice_shroud,
+							(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 0));
 				}
 				caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 				return true;
 			}
 			return false;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
-	public boolean canBeCastByNPCs() {
+	public boolean canBeCastByNPCs(){
 		return true;
 	}
 

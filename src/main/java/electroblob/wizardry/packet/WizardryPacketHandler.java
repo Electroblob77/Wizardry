@@ -8,11 +8,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class WizardryPacketHandler {
-	
+
 	public static SimpleNetworkWrapper net;
-  
-	public static void initPackets()
-	{
+
+	public static void initPackets(){
 		net = NetworkRegistry.INSTANCE.newSimpleChannel(Wizardry.MODID.toUpperCase());
 		registerMessage(PacketControlInput.class, PacketControlInput.Message.class);
 		registerMessage(PacketCastSpell.class, PacketCastSpell.Message.class);
@@ -24,11 +23,11 @@ public class WizardryPacketHandler {
 		registerMessage(PacketSyncSettings.class, PacketSyncSettings.Message.class);
 		registerMessage(PacketNPCCastSpell.class, PacketNPCCastSpell.Message.class);
 	}
-	
+
 	private static int nextPacketId = 0;
-	
-	private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> packet, Class<REQ> message)
-	{
+
+	private static <REQ extends IMessage, REPLY extends IMessage> void registerMessage(
+			Class<? extends IMessageHandler<REQ, REPLY>> packet, Class<REQ> message){
 		net.registerMessage(packet, message, nextPacketId, Side.CLIENT);
 		net.registerMessage(packet, message, nextPacketId, Side.SERVER);
 		nextPacketId++;

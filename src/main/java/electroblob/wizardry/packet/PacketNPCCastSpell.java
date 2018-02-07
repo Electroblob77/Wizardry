@@ -10,14 +10,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-/** <b>[Server -> Client]</b> This packet is sent when an {@link ISpellCaster} casts a spell which returns true, and is
+/**
+ * <b>[Server -> Client]</b> This packet is sent when an {@link ISpellCaster} casts a spell which returns true, and is
  * sent to clients so they can spawn the particles. Unlike the player packets, this is for both continuous <b>and</b>
- * non-continuous spells. */
+ * non-continuous spells.
+ */
 public class PacketNPCCastSpell implements IMessageHandler<Message, IMessage> {
 
 	@Override
 	public IMessage onMessage(Message message, MessageContext ctx){
-	
+
 		// Just to make sure that the side is correct
 		if(ctx.side.isClient()){
 			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
@@ -47,7 +49,8 @@ public class PacketNPCCastSpell implements IMessageHandler<Message, IMessage> {
 		public EnumHand hand;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
-		public Message(){}
+		public Message(){
+		}
 
 		public Message(int casterID, int targetID, EnumHand hand, int spellID, SpellModifiers modifiers){
 			this.casterID = casterID;

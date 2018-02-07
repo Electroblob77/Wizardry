@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public class VanishingBox extends Spell {
 
-	public VanishingBox() {
+	public VanishingBox(){
 		super(Tier.ADVANCED, 45, Element.SORCERY, "vanishing_box", SpellType.UTILITY, 70, EnumAction.BOW, false);
 	}
 
@@ -24,20 +24,20 @@ public class VanishingBox extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
-			
+
 			InventoryEnderChest enderchest = caster.getInventoryEnderChest();
-			
+
 			if(enderchest != null){
 				caster.displayGUIChest(enderchest);
 			}
 		}
-		
+
 		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_ENDERCHEST_OPEN, 1, 1);
-		
+
 		return true;
 	}
-	
+
 }

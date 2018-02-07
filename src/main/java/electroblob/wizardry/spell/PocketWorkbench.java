@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class PocketWorkbench extends Spell {
 
-	public PocketWorkbench() {
+	public PocketWorkbench(){
 		super(Tier.APPRENTICE, 30, Element.SORCERY, "pocket_workbench", SpellType.UTILITY, 40, EnumAction.BOW, false);
 	}
 
@@ -25,11 +25,12 @@ public class PocketWorkbench extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		// TODO: Investigate possible item duplication bug with this spell. So far I have been unable to recreate it.
 		if(!world.isRemote){
-			caster.openGui(Wizardry.instance, WizardryGuiHandler.PORTABLE_CRAFTING, world, (int)caster.posX, (int)caster.posY, (int)caster.posZ);
+			caster.openGui(Wizardry.instance, WizardryGuiHandler.PORTABLE_CRAFTING, world, (int)caster.posX,
+					(int)caster.posY, (int)caster.posZ);
 		}
 
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1, 1);

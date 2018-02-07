@@ -24,7 +24,7 @@ public class BlockStatue extends BlockContainer {
 
 	private boolean isIce;
 
-	public BlockStatue(Material material) {
+	public BlockStatue(Material material){
 		super(material);
 		this.isIce = material == Material.ICE;
 		if(this.isIce){
@@ -32,7 +32,7 @@ public class BlockStatue extends BlockContainer {
 			this.setSoundType(SoundType.GLASS);
 		}
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos){
 		// Not a good idea to call getBlockBoundsMinX() or whatever from in here, since this method changes those!
@@ -43,49 +43,71 @@ public class BlockStatue extends BlockContainer {
 				TileEntityStatue statue = (TileEntityStatue)world.getTileEntity(pos);
 
 				if(statue.creature != null){
-					
+
 					// Block bounds are set to match the width and height of the entity, clamped to within 1 block.
-					return new AxisAlignedBB((float)Math.max(0.5 - statue.creature.width/2, 0), 0,
-							(float)Math.max(0.5 - statue.creature.width/2, 0),
-							(float)Math.min(0.5 + statue.creature.width/2, 1),
-							// This checks if the block is the top one and if so reduces its height so the top lines up with
+					return new AxisAlignedBB((float)Math.max(0.5 - statue.creature.width / 2, 0), 0,
+							(float)Math.max(0.5 - statue.creature.width / 2, 0),
+							(float)Math.min(0.5 + statue.creature.width / 2, 1),
+							// This checks if the block is the top one and if so reduces its height so the top lines up
+							// with
 							// the top of the entity model.
-							statue.position == statue.parts ? (float)Math.min(statue.creature.height - statue.parts + 1, 1) : 1,
-									(float)Math.min(0.5 + statue.creature.width/2, 1));
+							statue.position == statue.parts
+									? (float)Math.min(statue.creature.height - statue.parts + 1, 1)
+									: 1,
+							(float)Math.min(0.5 + statue.creature.width / 2, 1));
 				}
 			}
 		}
-		
+
 		return FULL_BLOCK_AABB;
 	}
-	
+
 	// getCollisionBoundingBox eventually calls getBoundingBox anyway, and since I want the collision box and the block
 	// outline to be the same here, I've removed that getCollisionBoundingBox entirely.
 
 	// The number of these methods is quite simply ridiculous. This one seems to be for placement logic and block
 	// connections (fences, glass panes, etc.)...
-	@Override public boolean isFullCube(IBlockState state) { return false; }
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
 	// ...this one isn't used much but has something to do with redstone...
-	@Override public boolean isBlockNormalCube(IBlockState state) { return false; }
+	@Override
+	public boolean isBlockNormalCube(IBlockState state){
+		return false;
+	}
+
 	// ... this one is for most other game logic...
-	@Override public boolean isNormalCube(IBlockState state) { return false; }
+	@Override
+	public boolean isNormalCube(IBlockState state){
+		return false;
+	}
+
 	// Forge version of the above method. I still need to override both though because vanilla uses the other one.
-	@Override public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) { return false; }
+	@Override
+	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
+		return false;
+	}
+
 	// ... and this one is for rendering.
-	@Override public boolean isOpaqueCube(IBlockState state){ return false; }
-	
+	@Override
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
 	@Override
 	public BlockRenderLayer getBlockLayer(){
 		return this.isIce ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return this.isIce ? EnumBlockRenderType.MODEL : EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createNewTileEntity(World world, int metadata){
 		return new TileEntityStatue(this.isIce);
 	}
 
@@ -93,14 +115,14 @@ public class BlockStatue extends BlockContainer {
 	public int quantityDropped(Random random){
 		return 0;
 	}
-	
+
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state){
-		
+
 		if(!world.isRemote){
-			
+
 			TileEntityStatue tileentity = (TileEntityStatue)world.getTileEntity(pos);
-			
+
 			if(tileentity != null){
 				if(tileentity.parts == 2){
 					if(tileentity.position == 2){
@@ -126,21 +148,22 @@ public class BlockStatue extends BlockContainer {
 			if(tileentity != null && tileentity.position == 1 && tileentity.creature != null){
 				tileentity.creature.getEntityData().removeTag(Petrify.NBT_KEY);
 				tileentity.creature.isDead = false;
-				world.spawnEntityInWorld(tileentity.creature);
+				world.spawnEntity(tileentity.creature);
 			}
 		}
-		
+
 		super.breakBlock(world, pos, state);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@SideOnly(Side.CLIENT)
 	@Override
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side){
-    
-        IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
-        Block block = iblockstate.getBlock();
+	public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos,
+			EnumFacing side){
 
-        return this.isIce && block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
-    }
+		IBlockState iblockstate = blockAccess.getBlockState(pos.offset(side));
+		Block block = iblockstate.getBlock();
+
+		return this.isIce && block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
+	}
 }

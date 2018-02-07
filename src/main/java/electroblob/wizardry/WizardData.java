@@ -49,24 +49,27 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-/** Capability-based replacement for the old ExtendedPlayer class from 1.7.10. This has been reworked to leave
- * minimum external changes (for my own sanity, mainly!). Turns out the only major difference between an internal
- * capability and an IEEP is a couple of redundant classes and a different way of registering it.
+/**
+ * Capability-based replacement for the old ExtendedPlayer class from 1.7.10. This has been reworked to leave minimum
+ * external changes (for my own sanity, mainly!). Turns out the only major difference between an internal capability and
+ * an IEEP is a couple of redundant classes and a different way of registering it.
  * <p>
- * Forge seems to have separate classes to hold the Capability<...> instance ('key') and
- * methods for getting the capability, but in my opinion there are already too many classes to deal with, so I'm not
- * adding any more than are necessary, meaning those constants and values are kept here instead.
+ * Forge seems to have separate classes to hold the Capability<...> instance ('key') and methods for getting the
+ * capability, but in my opinion there are already too many classes to deal with, so I'm not adding any more than are
+ * necessary, meaning those constants and values are kept here instead.
+ * 
  * @since Wizardry 1.2
- * @author Electroblob */
+ * @author Electroblob
+ */
 // On the plus side, having to rethink this class allowed me to clean it up a lot.
 @Mod.EventBusSubscriber
 public class WizardData implements INBTSerializable<NBTTagCompound> {
@@ -85,14 +88,20 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	public boolean hasSpiritWolf;
 	public boolean hasSpiritHorse;
 
-	/** Whether this player is currently casting a continuous spell via commands. Not saved over world reload
-	 * and reset on player death. */
+	/**
+	 * Whether this player is currently casting a continuous spell via commands. Not saved over world reload and reset
+	 * on player death.
+	 */
 	private Spell currentlyCasting;
-	/** The time for which this player has been casting a continuous spell via commands. Increments by 1 each tick.
-	 * Not saved over world reload and reset on player death. */
+	/**
+	 * The time for which this player has been casting a continuous spell via commands. Increments by 1 each tick. Not
+	 * saved over world reload and reset on player death.
+	 */
 	private int castingTick;
-	/** SpellModifiers object for the current continuous spell cast via commands. Not saved over world reload and
-	 * reset on player death. */
+	/**
+	 * SpellModifiers object for the current continuous spell cast via commands. Not saved over world reload and reset
+	 * on player death.
+	 */
 	private SpellModifiers spellModifiers;
 	/** Coordinates for the saved transportation stone circle location. Will be null if no location is saved. */
 	private BlockPos stoneCircleLocation;
@@ -110,14 +119,18 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	public WeakReference<ISummonedCreature> selectedMinion;
 
-	/** Set of this player's discovered spells. <b>Do not write to this list directly</b>, use
-	 * {@link WizardData#discoverSpell(Spell)} instead. */
+	/**
+	 * Set of this player's discovered spells. <b>Do not write to this list directly</b>, use
+	 * {@link WizardData#discoverSpell(Spell)} instead.
+	 */
 	public Set<Spell> spellsDiscovered;
 
 	private Set<UUID> allies;
-	/** List of usernames of this player's allies. May not be accurate 100% of the time. This is here so that a player
-	 * can view the usernames of their allies even when those allies are not online.
-	 * <b> Do not use this for any other purpose than displaying the names! */
+	/**
+	 * List of usernames of this player's allies. May not be accurate 100% of the time. This is here so that a player
+	 * can view the usernames of their allies even when those allies are not online. <b> Do not use this for any other
+	 * purpose than displaying the names!
+	 */
 	public Set<String> allyNames;
 
 	private Set<UUID> soulboundCreatures;
@@ -147,9 +160,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	}
 
 	/**
-	 * Adds the given spell to the list of discovered spells for this player. Automatically takes into account
-	 * whether the spell has been discovered. Use this method rather than adding directly to the list because it
-	 * handles achievements.
+	 * Adds the given spell to the list of discovered spells for this player. Automatically takes into account whether
+	 * the spell has been discovered. Use this method rather than adding directly to the list because it handles
+	 * achievements.
+	 * 
 	 * @param spell The spell to be discovered
 	 * @return True if the spell had not already been discovered; false otherwise.
 	 */
@@ -168,7 +182,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 
 		for(Element element : Element.values()){
-			if(element != Element.MAGIC && spellsDiscovered.containsAll(Spell.getSpells(new Spell.TierElementFilter(null, element)))){
+			if(element != Element.MAGIC
+					&& spellsDiscovered.containsAll(Spell.getSpells(new Spell.TierElementFilter(null, element)))){
 				this.player.addStat(WizardryAchievements.element_master);
 			}
 		}
@@ -183,13 +198,22 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	}
 
 	/** Returns the coordinates of the associated player's saved transportation stone circle. */
-	public BlockPos getStoneCircleLocation(){ return stoneCircleLocation; }
+	public BlockPos getStoneCircleLocation(){
+		return stoneCircleLocation;
+	}
+
 	/** Returns the dimension ID of the associated player's saved transportation stone circle. */
-	public int getStoneCircleDimension(){ return stoneCircleDimension; }
+	public int getStoneCircleDimension(){
+		return stoneCircleDimension;
+	}
 
-	public int getTpCountdown() { return tpCountdown; }
+	public int getTpCountdown(){
+		return tpCountdown;
+	}
 
-	public void setTpCountdown(int tpCountdown) { this.tpCountdown = tpCountdown; }
+	public void setTpCountdown(int tpCountdown){
+		this.tpCountdown = tpCountdown;
+	}
 
 	/** Sets the player's saved clairvoyance location. */
 	public void setClairvoyancePoint(BlockPos pos, int dimensionID){
@@ -198,46 +222,60 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	}
 
 	/** Returns the coordinates for the saved clairvoyance location. Will be null if no location is saved. */
-	public BlockPos getClairvoyanceLocation(){ return clairvoyanceLocation; }
+	public BlockPos getClairvoyanceLocation(){
+		return clairvoyanceLocation;
+	}
 
 	/** Returns the dimension ID for the saved clairvoyance location. Will be null if no location is saved. */
-	public int getClairvoyanceDimension(){ return clairvoyanceDimension; }
+	public int getClairvoyanceDimension(){
+		return clairvoyanceDimension;
+	}
 
-	/** Overwrites the imbuement duration associated with the given imubement for this player, or creates it if there
-	 * was none previously. 
-	 * @throws IllegalArgumentException if the given {@link Enchantment} is not an {@link Imbuement}. */
+	/**
+	 * Overwrites the imbuement duration associated with the given imubement for this player, or creates it if there was
+	 * none previously.
+	 * 
+	 * @throws IllegalArgumentException if the given {@link Enchantment} is not an {@link Imbuement}.
+	 */
 	public void setImbuementDuration(Enchantment enchantment, int duration){
-		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if non-imbuements
+		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if
+		// non-imbuements
 		// were ignored) or cause a ClassCastException later (if non-imbuements were allowed to be added).
 		if(enchantment instanceof Imbuement){
-			this.imbuementDurations.put((Imbuement) enchantment, duration);
+			this.imbuementDurations.put((Imbuement)enchantment, duration);
 		}else{
-			throw new IllegalArgumentException("Attempted to set an imbuement duration for something that isn't an Imbuement! (This exception has been thrown now to prevent a ClassCastException from occurring later.)");
+			throw new IllegalArgumentException(
+					"Attempted to set an imbuement duration for something that isn't an Imbuement! (This exception has been thrown now to prevent a ClassCastException from occurring later.)");
 		}
 	}
 
-	/** Returns the imbuement duration associated with the given imbuement for this player, or 0 if it does not exist. */
+	/**
+	 * Returns the imbuement duration associated with the given imbuement for this player, or 0 if it does not exist.
+	 */
 	@SuppressWarnings("unlikely-arg-type")
 	public int getImbuementDuration(Enchantment enchantment){
 		// Need to check that i is not null, otherwise it throws an NPE when Java auto-unboxes it.
-		// What's nice here is that the map simply accepts objects as keys, so there's no need to cast or throw exceptions.
+		// What's nice here is that the map simply accepts objects as keys, so there's no need to cast or throw
+		// exceptions.
 		Integer i = this.imbuementDurations.get(enchantment);
 		// If i is null, returns 0; otherwise returns i, auto-unboxed to an int.
 		return i == null ? 0 : i;
 	}
 
-	/** Decrements the duration for each conjured item by 1, and removes from the map any that are 0 or less or that
-	 * the player no longer has. Also deletes the item from the player's inventory if it runs out of time. */
+	/**
+	 * Decrements the duration for each conjured item by 1, and removes from the map any that are 0 or less or that the
+	 * player no longer has. Also deletes the item from the player's inventory if it runs out of time.
+	 */
 	private void updateImbuedItems(){
-		
+
 		Set<Imbuement> activeImbuements = new HashSet<Imbuement>();
 
 		// For each item in the player's inventory
 		for(ItemStack stack : player.inventory.mainInventory){
-			if(stack != null && stack.isItemEnchanted()){
-				
+			if(stack.isItemEnchanted()){
+
 				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-				
+
 				Iterator<Entry<Enchantment, Integer>> iterator = enchantments.entrySet().iterator();
 				// For each of the item's enchantments
 				while(iterator.hasNext()){
@@ -248,10 +286,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 						// If the imbuement is still active:
 						if(duration > 0){
 							// Decrements the timer
-							this.imbuementDurations.put((Imbuement)enchantment, duration-1);
+							this.imbuementDurations.put((Imbuement)enchantment, duration - 1);
 							// Adds this imbuement to the set of imbuements that need to be kept
 							activeImbuements.add((Imbuement)enchantment);
-						// Otherwise:
+							// Otherwise:
 						}else{
 							// Removes the enchantment from the enchantment map
 							iterator.remove();
@@ -266,8 +304,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		this.imbuementDurations.keySet().retainAll(activeImbuements);
 	}
 
-	/** Adds the given player to the list of allies belonging to the associated player, or removes the player if
-	 * they are already in the list of allies. Returns true if the player was added, false if they were removed. */
+	/**
+	 * Adds the given player to the list of allies belonging to the associated player, or removes the player if they are
+	 * already in the list of allies. Returns true if the player was added, false if they were removed.
+	 */
 	public boolean toggleAlly(EntityPlayer player){
 		if(this.isPlayerAlly(player)){
 			this.allies.remove(player.getUniqueID());
@@ -296,21 +336,24 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		return this.soulboundCreatures.contains(target.getUniqueID());
 	}
 
-	/** Damages all creatures soulbound to this player by the given amount, and removes from the list any that no
-	 * longer exist. */
+	/**
+	 * Damages all creatures soulbound to this player by the given amount, and removes from the list any that no longer
+	 * exist.
+	 */
 	public void damageAllSoulboundCreatures(float damage){
 
 		for(Iterator<UUID> iterator = this.soulboundCreatures.iterator(); iterator.hasNext();){
 
-			Entity entity = WizardryUtilities.getEntityByUUID(this.player.worldObj, iterator.next());
+			Entity entity = WizardryUtilities.getEntityByUUID(this.player.world, iterator.next());
 
 			if(entity == null) iterator.remove();
 
 			if(entity instanceof EntityLivingBase){
 				// Retaliatory effect
-				if(entity.attackEntityFrom(MagicDamage.causeDirectMagicDamage(this.player, DamageType.MAGIC, true), damage)){
+				if(entity.attackEntityFrom(MagicDamage.causeDirectMagicDamage(this.player, DamageType.MAGIC, true),
+						damage)){
 					// Sound only plays if the damage succeeds
-					player.playSound(SoundEvents.ENTITY_WITHER_HURT, 1.0F, player.worldObj.rand.nextFloat() * 0.2F + 1.0F);
+					player.playSound(SoundEvents.ENTITY_WITHER_HURT, 1.0F, player.world.rand.nextFloat() * 0.2F + 1.0F);
 				}
 			}
 		}
@@ -322,10 +365,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		this.currentlyCasting = spell;
 		this.spellModifiers = modifiers;
 
-		if(!this.player.worldObj.isRemote){
+		if(!this.player.world.isRemote){
 			PacketCastContinuousSpell.Message message = new PacketCastContinuousSpell.Message(this.player.getEntityId(),
 					spell.id(), this.spellModifiers);
-			WizardryPacketHandler.net.sendToDimension(message, this.player.worldObj.provider.getDimension());
+			WizardryPacketHandler.net.sendToDimension(message, this.player.world.provider.getDimension());
 		}
 	}
 
@@ -336,31 +379,33 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		this.castingTick = 0;
 		this.spellModifiers.reset();
 
-		if(!this.player.worldObj.isRemote){
+		if(!this.player.world.isRemote){
 			PacketCastContinuousSpell.Message message = new PacketCastContinuousSpell.Message(this.player.getEntityId(),
 					Spells.none.id(), this.spellModifiers);
-			WizardryPacketHandler.net.sendToDimension(message, this.player.worldObj.provider.getDimension());
+			WizardryPacketHandler.net.sendToDimension(message, this.player.world.provider.getDimension());
 		}
 	}
-	
+
 	/** Casts the current continuous spell, fires relevant events and updates the castingTick field. */
 	public void updateContinuousSpellCasting(){
-		
+
 		if(this.currentlyCasting != null && this.currentlyCasting.isContinuous){
-			
-			if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(player, currentlyCasting, spellModifiers, Source.COMMAND, castingTick))){
+
+			if(MinecraftForge.EVENT_BUS.post(
+					new SpellCastEvent.Tick(player, currentlyCasting, spellModifiers, Source.COMMAND, castingTick))){
 				this.stopCastingContinuousSpell();
 				return;
 			}
-			
-			if(this.currentlyCasting.cast(player.worldObj, player, EnumHand.MAIN_HAND, castingTick, this.spellModifiers)
+
+			if(this.currentlyCasting.cast(player.world, player, EnumHand.MAIN_HAND, castingTick, this.spellModifiers)
 					&& this.castingTick == 0){
 				// On the first tick casting a continuous spell via commands, SpellCastEvent.Post is fired.
-				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, currentlyCasting, spellModifiers, Source.COMMAND));
+				MinecraftForge.EVENT_BUS
+						.post(new SpellCastEvent.Post(player, currentlyCasting, spellModifiers, Source.COMMAND));
 			}
-			
+
 			castingTick++;
-			
+
 		}else{
 			// Why is this here? Surely castingTick will always be 0 if currentlyCasting is null?
 			this.castingTick = 0;
@@ -372,8 +417,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		return this.currentlyCasting != null && this.currentlyCasting != Spells.none;
 	}
 
-	/** Returns the continuous spell this player is currently casting via commands, or the 'none' spell if they aren't
-	 * casting anything. */
+	/**
+	 * Returns the continuous spell this player is currently casting via commands, or the 'none' spell if they aren't
+	 * casting anything.
+	 */
 	public Spell currentlyCasting(){
 		return currentlyCasting;
 	}
@@ -387,20 +434,20 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		// functions, just for different enchantments.
 		updateImbuedItems();
 
-		if(!player.worldObj.isRemote){
+		if(!player.world.isRemote){
 			if(getTpCountdown() == 1){
 				player.setPositionAndUpdate(this.stoneCircleLocation.getX() + 0.5, this.stoneCircleLocation.getY(),
 						this.stoneCircleLocation.getZ() + 0.5);
 				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50, 0));
 				IMessage msg = new PacketTransportation.Message(player.getEntityId());
-				WizardryPacketHandler.net.sendToDimension(msg, player.worldObj.provider.getDimension());
+				WizardryPacketHandler.net.sendToDimension(msg, player.world.provider.getDimension());
 			}
 
 			if(getTpCountdown() > 0){
 				setTpCountdown(getTpCountdown() - 1);
 			}
 		}
-		
+
 		updateContinuousSpellCasting();
 	}
 
@@ -411,11 +458,14 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		return player.getCapability(WIZARD_DATA_CAPABILITY, null);
 	}
 
-	/** Called from the event handler each time the associated player entity is cloned, i.e. on respawn or when
-	 * travelling to a different dimension. Used to copy over any variables that should persist over player death.
-	 * This is the inverse of the old onPlayerDeath method, which reset the variables that shouldn't persist.
+	/**
+	 * Called from the event handler each time the associated player entity is cloned, i.e. on respawn or when
+	 * travelling to a different dimension. Used to copy over any variables that should persist over player death. This
+	 * is the inverse of the old onPlayerDeath method, which reset the variables that shouldn't persist.
+	 * 
 	 * @param data The old WizardData whose variables are to be copied over.
-	 * @param respawn True if the player died and is respawning, false if they are just travelling between dimensions. */
+	 * @param respawn True if the player died and is respawning, false if they are just travelling between dimensions.
+	 */
 	public void copyFrom(WizardData data, boolean respawn){
 		// TODO: What happens with spirit wolf and spirit horse?
 		this.hasSpiritHorse = data.hasSpiritHorse;
@@ -441,14 +491,15 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	public void sync(){
 		if(this.player instanceof EntityPlayerMP){
 			int id = -1;
-			if(this.selectedMinion != null && this.selectedMinion.get() instanceof Entity) id = ((Entity)this.selectedMinion.get()).getEntityId();
+			if(this.selectedMinion != null && this.selectedMinion.get() instanceof Entity)
+				id = ((Entity)this.selectedMinion.get()).getEntityId();
 			IMessage msg = new PacketPlayerSync.Message(this.spellsDiscovered, id);
 			WizardryPacketHandler.net.sendTo(msg, (EntityPlayerMP)this.player);
 		}
 	}
 
 	@Override
-	public NBTTagCompound serializeNBT() {
+	public NBTTagCompound serializeNBT(){
 
 		NBTTagCompound properties = new NBTTagCompound();
 
@@ -459,21 +510,24 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		properties.setBoolean("hasSpiritWolf", this.hasSpiritWolf);
 		properties.setBoolean("hasSpiritHorse", this.hasSpiritHorse);
 
-		if(this.stoneCircleLocation != null) properties.setLong("stoneCircleLocation", this.stoneCircleLocation.toLong());
+		if(this.stoneCircleLocation != null)
+			properties.setLong("stoneCircleLocation", this.stoneCircleLocation.toLong());
 		properties.setInteger("stoneCircleDimension", this.stoneCircleDimension);
 		properties.setInteger("tpCountdown", this.tpCountdown);
 
-		if(this.clairvoyanceLocation != null) properties.setLong("clairvoyanceLocation", this.clairvoyanceLocation.toLong());
+		if(this.clairvoyanceLocation != null)
+			properties.setLong("clairvoyanceLocation", this.clairvoyanceLocation.toLong());
 		properties.setInteger("clairvoyanceDimension", this.getClairvoyanceDimension());
 
 		// THIS is why I wrote the list/map <-> NBT methods. Look how neat this is!
 		properties.setTag("allies", WizardryUtilities.listToNBT(this.allies, WizardryUtilities::UUIDtoTagCompound));
 		properties.setTag("allyNames", WizardryUtilities.listToNBT(this.allyNames, NBTTagString::new));
-		properties.setTag("soulboundCreatures", WizardryUtilities.listToNBT(this.soulboundCreatures, WizardryUtilities::UUIDtoTagCompound));
+		properties.setTag("soulboundCreatures",
+				WizardryUtilities.listToNBT(this.soulboundCreatures, WizardryUtilities::UUIDtoTagCompound));
 
 		// Might be worth converting this over to WizardryUtilities.listToNBT.
 		int[] spells = new int[this.spellsDiscovered.size()];
-		int i=0;
+		int i = 0;
 		for(Spell spell : this.spellsDiscovered){
 			spells[i] = spell.id();
 			i++;
@@ -484,7 +538,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	}
 
 	@Override
-	public void deserializeNBT(NBTTagCompound nbt) {
+	public void deserializeNBT(NBTTagCompound nbt){
 
 		if(nbt != null){
 
@@ -504,11 +558,11 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			this.allies = new HashSet<UUID>(WizardryUtilities.NBTToList(nbt.getTagList("allies", NBT.TAG_COMPOUND),
 					WizardryUtilities::tagCompoundToUUID));
 
-			this.allyNames = new HashSet<String>(WizardryUtilities.NBTToList(nbt.getTagList("allyNames", NBT.TAG_STRING),
-					NBTTagString::getString));
+			this.allyNames = new HashSet<String>(
+					WizardryUtilities.NBTToList(nbt.getTagList("allyNames", NBT.TAG_STRING), NBTTagString::getString));
 
-			this.soulboundCreatures = new HashSet<UUID>(WizardryUtilities.NBTToList(nbt.getTagList("soulboundCreatures", NBT.TAG_COMPOUND),
-					WizardryUtilities::tagCompoundToUUID));
+			this.soulboundCreatures = new HashSet<UUID>(WizardryUtilities.NBTToList(
+					nbt.getTagList("soulboundCreatures", NBT.TAG_COMPOUND), WizardryUtilities::tagCompoundToUUID));
 
 			this.spellsDiscovered = new HashSet<Spell>();
 			for(int id : nbt.getIntArray("discoveredSpells")){
@@ -516,20 +570,21 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			}
 		}
 	}
-	
+
 	// Event handlers
-	
+
 	@SubscribeEvent
 	// The type parameter here has to be Entity, not EntityPlayer, or the event won't get fired.
 	public static void onCapabilityLoad(AttachCapabilitiesEvent<Entity> event){
 
 		if(event.getObject() instanceof EntityPlayer)
-			event.addCapability(new ResourceLocation(Wizardry.MODID, "WizardData"), new WizardData.Provider((EntityPlayer)event.getObject()));
+			event.addCapability(new ResourceLocation(Wizardry.MODID, "WizardData"),
+					new WizardData.Provider((EntityPlayer)event.getObject()));
 
 		// This demonstrates why capabilities are badly structured: The following code compiles, but what it does is put
 		// a player into a CapabilityDispatcher, which is in turn stored in that very same player, which makes no sense
 		// at all!
-		//event.addCapability(new ResourceLocation(Wizardry.MODID, "WizardData"), event.getObject());
+		// event.addCapability(new ResourceLocation(Wizardry.MODID, "WizardData"), event.getObject());
 	}
 
 	@SubscribeEvent
@@ -540,32 +595,34 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		newData.copyFrom(oldData, event.isWasDeath());
 	}
-	
+
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event){
-		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayerMP){
+		if(!event.getEntity().world.isRemote && event.getEntity() instanceof EntityPlayerMP){
 			// Synchronises wizard data after loading.
 			WizardData data = WizardData.get((EntityPlayer)event.getEntity());
 			if(data != null) data.sync();
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
-		
+
 		if(event.getEntityLiving() instanceof EntityPlayer){
-			
+
 			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
-	
+
 			if(WizardData.get(player) != null){
 				WizardData.get(player).update();
 			}
 		}
 	}
 
-	/** This is a nested class for a few reasons: firstly, it makes sense because instances of this and WizardData go
+	/**
+	 * This is a nested class for a few reasons: firstly, it makes sense because instances of this and WizardData go
 	 * hand-in-hand; secondly, it's too short to be worth a separate file; and thirdly (and most importantly) it allows
-	 * me to access WIZARD_DATA_CAPABILITY while keeping it private. */
+	 * me to access WIZARD_DATA_CAPABILITY while keeping it private.
+	 */
 	public static class Provider implements ICapabilitySerializable<NBTTagCompound> {
 
 		private final WizardData data;
@@ -575,12 +632,12 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 
 		@Override
-		public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		public boolean hasCapability(Capability<?> capability, EnumFacing facing){
 			return capability == WIZARD_DATA_CAPABILITY;
 		}
 
 		@Override
-		public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		public <T> T getCapability(Capability<T> capability, EnumFacing facing){
 
 			if(capability == WIZARD_DATA_CAPABILITY){
 				return WIZARD_DATA_CAPABILITY.cast(data);
@@ -590,12 +647,12 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 
 		@Override
-		public NBTTagCompound serializeNBT() {
+		public NBTTagCompound serializeNBT(){
 			return data.serializeNBT();
 		}
 
 		@Override
-		public void deserializeNBT(NBTTagCompound nbt) {
+		public void deserializeNBT(NBTTagCompound nbt){
 			data.deserializeNBT(nbt);
 		}
 
@@ -611,50 +668,44 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * "...without having to directly implement many interfaces." - Forge Docs. I still can't see what's wrong with
 	 * implementing many interfaces; surely that's what Java interfaces are designed for?
 	 * 
-	 * Other things I find annoying:
-	 * - IStorage. It's completely redundant in the majority of cases, and I don't understand why we need yet another
-	 * separate class.
-	 * - Making an interface, only to implement it once and once only. This completely defeats the point of interfaces.
-	 * - The EnumFacing parameter, which is again redundant for everything that isn't a tile entity. So much for a clean,
-	 * neat system.
+	 * Other things I find annoying: - IStorage. It's completely redundant in the majority of cases, and I don't
+	 * understand why we need yet another separate class. - Making an interface, only to implement it once and once
+	 * only. This completely defeats the point of interfaces. - The EnumFacing parameter, which is again redundant for
+	 * everything that isn't a tile entity. So much for a clean, neat system.
 	 * 
 	 * What Forge has effectively done is conflated two different functions: attaching data to stuff and cross-mod
-	 * integration/soft dependencies. I think this is bad design; it would have been better to keep the two features separate.
+	 * integration/soft dependencies. I think this is bad design; it would have been better to keep the two features
+	 * separate.
 	 * 
-	 * Here's my current understanding of how the capability system works:
-	 * - You make an interface which defines the things your capability can do (this class). I will call this the TEMPLATE.
-	 * - You implement that interface with your default implementation (WizardData). This is the closest analog to your old
-	 * IEEP implementation class. THIS CLASS STORES ALL THE VARIABLES, and hence has one instance for each instance of whatever
-	 * it is attached to. I will call this the DATA.
-	 * - The DATA class implements INBTSerializable (assuming you want it to be saved, which is nearly always the case)
-	 * - Despite its name, Capability<T> does NOT represent a capability itself. Instead, it acts as a sort of identifier/key,
-	 * the idea being that you can access a particular instance of your DATA given the key (which tells forge that you want a
-	 * capability of type TEMPLATE) and the object you want the DATA for. This is what Entity.getCapability(...) does.
+	 * Here's my current understanding of how the capability system works: - You make an interface which defines the
+	 * things your capability can do (this class). I will call this the TEMPLATE. - You implement that interface with
+	 * your default implementation (WizardData). This is the closest analog to your old IEEP implementation class. THIS
+	 * CLASS STORES ALL THE VARIABLES, and hence has one instance for each instance of whatever it is attached to. I
+	 * will call this the DATA. - The DATA class implements INBTSerializable (assuming you want it to be saved, which is
+	 * nearly always the case) - Despite its name, Capability<T> does NOT represent a capability itself. Instead, it
+	 * acts as a sort of identifier/key, the idea being that you can access a particular instance of your DATA given the
+	 * key (which tells forge that you want a capability of type TEMPLATE) and the object you want the DATA for. This is
+	 * what Entity.getCapability(...) does.
 	 * 
-	 * To really understand what's going on though, you need to sift through Forge's verbose data structures and find where
-	 * capabilities are actually hooked into vanilla:
-	 * - Anything that implements ICapabilityProvider will have a private CapabilityDispatcher field. This holds other
-	 * ICapabilityProviders. (I know. This inheritance pattern DOES NOT MAKE SENSE, because these could, in theory, be OTHER
-	 * ENTITIES!)
-	 * - This field is assigned a value through Forge's event factory, which, as we are all familiar with, calls all the
-	 * methods marked with @SubscribeEvent. These methods add individual ICapabilityProviders to a Map stored in the event,
-	 * which the event factory then wraps in a CapabilityDispatcher (which is itself an ICapabilityProvider) for the object
-	 * that called it.
-	 * - In your event handler, you return a custom ICapabilityProvider which is effectively bolted on to the player, and
-	 * duplicates the ICapabilityProvider methods so you can hook into them and return an instance of your DATA class.
-	 * - Where before there was a simple collection of IEEPs stored in the player, there is now a tree of ICapabilityProviders:
+	 * To really understand what's going on though, you need to sift through Forge's verbose data structures and find
+	 * where capabilities are actually hooked into vanilla: - Anything that implements ICapabilityProvider will have a
+	 * private CapabilityDispatcher field. This holds other ICapabilityProviders. (I know. This inheritance pattern DOES
+	 * NOT MAKE SENSE, because these could, in theory, be OTHER ENTITIES!) - This field is assigned a value through
+	 * Forge's event factory, which, as we are all familiar with, calls all the methods marked with @SubscribeEvent.
+	 * These methods add individual ICapabilityProviders to a Map stored in the event, which the event factory then
+	 * wraps in a CapabilityDispatcher (which is itself an ICapabilityProvider) for the object that called it. - In your
+	 * event handler, you return a custom ICapabilityProvider which is effectively bolted on to the player, and
+	 * duplicates the ICapabilityProvider methods so you can hook into them and return an instance of your DATA class. -
+	 * Where before there was a simple collection of IEEPs stored in the player, there is now a tree of
+	 * ICapabilityProviders:
 	 * 
-	 * - Entity/TileEntity/ItemStack
-	 * 		- Vanilla ICapabilityProviders, mostly IItemHandlers, stored as fields.
-	 * 		- CapabilityDispatcher, stored as a field.
-	 * 				- Custom ICapabilityProviders
-	 * 				- Custom CapabilityDispatchers
-	 * 						- ...
+	 * - Entity/TileEntity/ItemStack - Vanilla ICapabilityProviders, mostly IItemHandlers, stored as fields. -
+	 * CapabilityDispatcher, stored as a field. - Custom ICapabilityProviders - Custom CapabilityDispatchers - ...
 	 * 
 	 * Most importantly, EACH PLAYER HOLDS THEIR OWN INSTANCE OF THIS TREE.
 	 * 
-	 * When a capability is retrieved, the following process happens: 
-	 * 1. For the Entity/TileEntity/ItemStack instance, ICapabilityProvider.getCapability(...) is called.
-	 * 2. The request propogates through the tree and finds the requested capability. */
+	 * When a capability is retrieved, the following process happens: 1. For the Entity/TileEntity/ItemStack instance,
+	 * ICapabilityProvider.getCapability(...) is called. 2. The request propogates through the tree and finds the
+	 * requested capability. */
 
 }

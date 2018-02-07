@@ -11,13 +11,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-/** <b>[Server -> Client]</b> This packet is sent each time a player joins a world to synchronise the client-side spell
- * glyph names with the server-side ones. */
+/**
+ * <b>[Server -> Client]</b> This packet is sent each time a player joins a world to synchronise the client-side spell
+ * glyph names with the server-side ones.
+ */
 public class PacketGlyphData implements IMessageHandler<Message, IMessage> {
 
 	@Override
-	public IMessage onMessage(Message message, MessageContext ctx)
-	{
+	public IMessage onMessage(Message message, MessageContext ctx){
 		// Just to make sure that the side is correct
 		if(ctx.side.isClient()){
 			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
@@ -41,10 +42,10 @@ public class PacketGlyphData implements IMessageHandler<Message, IMessage> {
 		public List<String> descriptions;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
-		public Message() {}
+		public Message(){
+		}
 
-		public Message(List<String> names, List<String> descriptions)
-		{
+		public Message(List<String> names, List<String> descriptions){
 			this.names = names;
 			this.descriptions = descriptions;
 		}
@@ -61,7 +62,7 @@ public class PacketGlyphData implements IMessageHandler<Message, IMessage> {
 
 		@Override
 		public void toBytes(ByteBuf buf){
-			for(int i=0; i<names.size(); i++){
+			for(int i = 0; i < names.size(); i++){
 				ByteBufUtils.writeUTF8String(buf, names.get(i) == null ? "error" : names.get(i));
 				ByteBufUtils.writeUTF8String(buf, descriptions.get(i) == null ? "error" : descriptions.get(i));
 			}

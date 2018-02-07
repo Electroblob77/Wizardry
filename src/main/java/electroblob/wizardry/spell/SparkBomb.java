@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class SparkBomb extends Spell {
 
-	public SparkBomb() {
+	public SparkBomb(){
 		super(Tier.APPRENTICE, 15, Element.LIGHTNING, "spark_bomb", SpellType.ATTACK, 25, EnumAction.NONE, false);
 	}
 
@@ -27,37 +27,41 @@ public class SparkBomb extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
-			EntitySparkBomb sparkBomb = new EntitySparkBomb(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
-			world.spawnEntityInWorld(sparkBomb);
+			EntitySparkBomb sparkBomb = new EntitySparkBomb(world, caster, modifiers.get(SpellModifiers.DAMAGE),
+					modifiers.get(WizardryItems.blast_upgrade));
+			world.spawnEntity(sparkBomb);
 		}
-		
+
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F,
+				0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-		
+
 			if(!world.isRemote){
-				EntitySparkBomb sparkBomb = new EntitySparkBomb(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
+				EntitySparkBomb sparkBomb = new EntitySparkBomb(world, caster, modifiers.get(SpellModifiers.DAMAGE),
+						modifiers.get(WizardryItems.blast_upgrade));
 				sparkBomb.directTowards(target, 1.5f);
-				world.spawnEntityInWorld(sparkBomb);
+				world.spawnEntity(sparkBomb);
 			}
-			
+
 			caster.swingArm(hand);
 			caster.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

@@ -15,10 +15,12 @@ public final class Constants {
 	public static final float COOLDOWN_REDUCTION_PER_LEVEL = 0.15f;
 	/** The fraction by which maximum charge is increased for each level of storage upgrade. */
 	public static final float STORAGE_INCREASE_PER_LEVEL = 0.15f;
-	/** The fraction by which damage is increased for each tier of matching wand.  */
+	/** The fraction by which damage is increased for each tier of matching wand. */
 	public static final float DAMAGE_INCREASE_PER_TIER = 0.15f;
-	/** The fraction by which costs are reduced for each piece of matching armour. Note that changing this value will not
-	 * affect continuous spells, since they are handled differently. */
+	/**
+	 * The fraction by which costs are reduced for each piece of matching armour. Note that changing this value will not
+	 * affect continuous spells, since they are handled differently.
+	 */
 	public static final float COST_REDUCTION_PER_ARMOUR = 0.2f;
 	/** The fraction by which spell duration is increased for each level of duration upgrade. */
 	public static final float DURATION_INCREASE_PER_LEVEL = 0.25f;
@@ -34,11 +36,15 @@ public final class Constants {
 	public static final float FROST_FATIGUE_PER_LEVEL = 0.45f;
 	/** The number of ticks between each mana increase for wands with the condenser upgrade. */
 	public static final int CONDENSER_TICK_INTERVAL = 50;
-	/** The amount of mana given for a kill for each level of siphon upgrade. A random amount from 0 to this number - 1
-	 * is also added. See {@link WizardryEventHandler#onLivingDeathEvent} for more details. */
+	/**
+	 * The amount of mana given for a kill for each level of siphon upgrade. A random amount from 0 to this number - 1
+	 * is also added. See {@link WizardryEventHandler#onLivingDeathEvent} for more details.
+	 */
 	public static final int SIPHON_MANA_PER_LEVEL = 3;
-	/** The number of ticks between the spawning of patches of decay when an entity has the decay effect.
-	 * Note that decay won't spawn again if something is already standing in it. */
+	/**
+	 * The number of ticks between the spawning of patches of decay when an entity has the decay effect. Note that decay
+	 * won't spawn again if something is already standing in it.
+	 */
 	public static final int DECAY_SPREAD_INTERVAL = 8;
 
 }

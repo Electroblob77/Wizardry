@@ -21,21 +21,22 @@ import net.minecraft.world.storage.loot.functions.LootFunction;
 /**
  * Loot function that allows spell books to select a random spell from the spells used by the ISpellCaster that dropped
  * them.
+ * 
  * @author Electroblob
  * @since Wizardry 1.2
  */
 public class WizardSpell extends LootFunction {
-	
+
 	protected WizardSpell(LootCondition[] conditions){
 		super(conditions);
 	}
 
 	@Override
 	public ItemStack apply(ItemStack stack, Random random, LootContext context){
-		
-		if(!(stack.getItem() instanceof ItemSpellBook))
-			Wizardry.logger.warn("Applying the wizard_spell loot function to an item that isn't a spell book or scroll.");
-		
+
+		if(!(stack.getItem() instanceof ItemSpellBook)) Wizardry.logger
+				.warn("Applying the wizard_spell loot function to an item that isn't a spell book or scroll.");
+
 		if(context.getLootedEntity() instanceof ISpellCaster){
 			List<Spell> spells = ((ISpellCaster)context.getLootedEntity()).getSpells();
 			spells.remove(Spells.magic_missile); // Can't drop magic missile
@@ -43,23 +44,24 @@ public class WizardSpell extends LootFunction {
 		}else{
 			Wizardry.logger.warn("Applying the wizard_spell loot function to an entity that isn't a spell caster.");
 		}
-		
+
 		return stack;
 	}
-	
-	public static class Serializer extends LootFunction.Serializer<WizardSpell>{
-		
-        public Serializer(){
-            super(new ResourceLocation(Wizardry.MODID, "wizard_spell"), WizardSpell.class);
-        }
 
-        public void serialize(JsonObject object, WizardSpell function, JsonSerializationContext serializationContext){
-        	
-        }
+	public static class Serializer extends LootFunction.Serializer<WizardSpell> {
 
-        public WizardSpell deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition[] conditions){
-            return new WizardSpell(conditions);
-        }
-    }
+		public Serializer(){
+			super(new ResourceLocation(Wizardry.MODID, "wizard_spell"), WizardSpell.class);
+		}
+
+		public void serialize(JsonObject object, WizardSpell function, JsonSerializationContext serializationContext){
+
+		}
+
+		public WizardSpell deserialize(JsonObject object, JsonDeserializationContext deserializationContext,
+				LootCondition[] conditions){
+			return new WizardSpell(conditions);
+		}
+	}
 
 }

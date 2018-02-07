@@ -25,56 +25,65 @@ import net.minecraft.world.World;
 
 public class LightningWeb extends Spell {
 
-	public LightningWeb() {
+	public LightningWeb(){
 		super(Tier.MASTER, 15, Element.LIGHTNING, "lightning_web", SpellType.ATTACK, 0, EnumAction.NONE, true);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 10*modifiers.get(WizardryItems.range_upgrade), 2.0f);
+		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
+				10 * modifiers.get(WizardryItems.range_upgrade), 2.0f);
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && rayTrace.entityHit instanceof EntityLivingBase){
-			
+		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
+				&& rayTrace.entityHit instanceof EntityLivingBase){
+
 			Entity target = rayTrace.entityHit;
-			
+
 			if(!world.isRemote){
-				
+
 				// This statement means the arc only spawns every other tick.
 				if(ticksInUse % 2 == 0){
 					EntityArc arc = new EntityArc(world);
 					// The look vec stuff performs a translation on the start point to line it up with the wand.
 					// EDIT: removed due to 1st/3rd person render differences.
-					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ,
-							target.posX, target.posY + target.height/2, target.posZ);
+					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ, target.posX,
+							target.posY + target.height / 2, target.posZ);
 					arc.lifetime = 1;
-					world.spawnEntityInWorld(arc);
+					world.spawnEntity(arc);
 				}
-				
+
 				if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
-					if(!world.isRemote && ticksInUse == 1) caster.addChatComponentMessage(new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()));
+					if(!world.isRemote && ticksInUse == 1)
+						caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
+								this.getNameForTranslationFormatted()));
 				}else{
 					// This motion stuff removes knockback, which is desirable for continuous spells.
 					double motionX = target.motionX;
 					double motionY = target.motionY;
 					double motionZ = target.motionZ;
-	
-					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 5.0f * modifiers.get(SpellModifiers.DAMAGE));
-	
+
+					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
+							5.0f * modifiers.get(SpellModifiers.DAMAGE));
+
 					target.motionX = motionX;
 					target.motionY = motionY;
 					target.motionZ = motionZ;
 				}
 			}else{
-				for(int i=0;i<5;i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, target.posX + world.rand.nextFloat() - 0.5, target.getEntityBoundingBox().minY + target.height/2 + world.rand.nextFloat()*2 - 1, target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+				for(int i = 0; i < 5; i++){
+					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+							target.posX + world.rand.nextFloat() - 0.5,
+							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
+							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
 				}
 			}
 
 			// Secondary chaining effect
 			double seekerRange = 5.0d;
 
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange, target.posX, target.posY + target.height/2, target.posZ, world);			
+			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
+					target.posX, target.posY + target.height / 2, target.posZ, world);
 			// This is a MUCH better way of filtering the secondary targets!
 			secondaryTargets.remove(target);
 			if(secondaryTargets.size() > 5) secondaryTargets = secondaryTargets.subList(0, 5);
@@ -87,35 +96,45 @@ public class LightningWeb extends Spell {
 						// This statement means the arc only spawns every other tick.
 						if(ticksInUse % 2 == 0){
 							EntityArc arc = new EntityArc(world);
-							arc.setEndpointCoords(target.posX, target.posY + 1.2, target.posZ,
-									secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height/2, secondaryTarget.posZ);
+							arc.setEndpointCoords(target.posX, target.posY + 1.2, target.posZ, secondaryTarget.posX,
+									secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ);
 							arc.lifetime = 1;
-							world.spawnEntityInWorld(arc);
+							world.spawnEntity(arc);
 						}
-						
+
 						if(MagicDamage.isEntityImmune(DamageType.SHOCK, secondaryTarget)){
-							if(!world.isRemote && ticksInUse == 1) caster.addChatComponentMessage(new TextComponentTranslation("spell.resist", secondaryTarget.getName(), this.getNameForTranslationFormatted()));
+							if(!world.isRemote && ticksInUse == 1)
+								caster.sendMessage(new TextComponentTranslation("spell.resist",
+										secondaryTarget.getName(), this.getNameForTranslationFormatted()));
 						}else{
 							// This motion stuff removes knockback, which is desirable for continuous spells.
 							double motionX = secondaryTarget.motionX;
 							double motionY = secondaryTarget.motionY;
 							double motionZ = secondaryTarget.motionZ;
-	
-							secondaryTarget.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 4.0f * modifiers.get(SpellModifiers.DAMAGE));
-	
+
+							secondaryTarget.attackEntityFrom(
+									MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
+									4.0f * modifiers.get(SpellModifiers.DAMAGE));
+
 							secondaryTarget.motionX = motionX;
 							secondaryTarget.motionY = motionY;
 							secondaryTarget.motionZ = motionZ;
 						}
 					}else{
-						for(int i=0;i<5;i++){
-							Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, secondaryTarget.posX + world.rand.nextFloat() - 0.5, secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height/2 + world.rand.nextFloat()*2 - 1, secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+						for(int i = 0; i < 5; i++){
+							Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+									secondaryTarget.posX + world.rand.nextFloat() - 0.5,
+									secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2
+											+ world.rand.nextFloat() * 2 - 1,
+									secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
 						}
 					}
 
 					// Tertiary chaining effect
 
-					List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange, secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height/2, secondaryTarget.posZ, world);
+					List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
+							secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height / 2,
+							secondaryTarget.posZ, world);
 					tertiaryTargets.remove(target);
 					tertiaryTargets.removeAll(secondaryTargets);
 					if(tertiaryTargets.size() > 2) tertiaryTargets = tertiaryTargets.subList(0, 2);
@@ -128,29 +147,38 @@ public class LightningWeb extends Spell {
 								// This statement means the arc only spawns every other tick.
 								if(ticksInUse % 2 == 0){
 									EntityArc arc = new EntityArc(world);
-									arc.setEndpointCoords(secondaryTarget.posX, secondaryTarget.posY + 1.2, secondaryTarget.posZ,
-											tertiaryTarget.posX, tertiaryTarget.posY + tertiaryTarget.height/2, tertiaryTarget.posZ);
+									arc.setEndpointCoords(secondaryTarget.posX, secondaryTarget.posY + 1.2,
+											secondaryTarget.posZ, tertiaryTarget.posX,
+											tertiaryTarget.posY + tertiaryTarget.height / 2, tertiaryTarget.posZ);
 									arc.lifetime = 1;
-									world.spawnEntityInWorld(arc);
+									world.spawnEntity(arc);
 								}
-								
+
 								if(MagicDamage.isEntityImmune(DamageType.SHOCK, tertiaryTarget)){
-									if(!world.isRemote && ticksInUse == 1) caster.addChatComponentMessage(new TextComponentTranslation("spell.resist", tertiaryTarget.getName(), this.getNameForTranslationFormatted()));
+									if(!world.isRemote && ticksInUse == 1)
+										caster.sendMessage(new TextComponentTranslation("spell.resist",
+												tertiaryTarget.getName(), this.getNameForTranslationFormatted()));
 								}else{
 									// This motion stuff removes knockback, which is desirable for continuous spells.
 									double motionX = tertiaryTarget.motionX;
 									double motionY = tertiaryTarget.motionY;
 									double motionZ = tertiaryTarget.motionZ;
-	
-									tertiaryTarget.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 3.0f * modifiers.get(SpellModifiers.DAMAGE));
-	
+
+									tertiaryTarget.attackEntityFrom(
+											MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
+											3.0f * modifiers.get(SpellModifiers.DAMAGE));
+
 									tertiaryTarget.motionX = motionX;
 									tertiaryTarget.motionY = motionY;
 									tertiaryTarget.motionZ = motionZ;
 								}
 							}else{
-								for(int i=0;i<5;i++){
-									Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, tertiaryTarget.posX + world.rand.nextFloat() - 0.5, tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height/2 + world.rand.nextFloat()*2 - 1, tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+								for(int i = 0; i < 5; i++){
+									Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+											tertiaryTarget.posX + world.rand.nextFloat() - 0.5,
+											tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height / 2
+													+ world.rand.nextFloat() * 2 - 1,
+											tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
 								}
 							}
 						}
@@ -163,7 +191,7 @@ public class LightningWeb extends Spell {
 			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
 				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1.0F, 1.0f);
 			}
-			
+
 			return true;
 
 		}else{
@@ -172,10 +200,12 @@ public class LightningWeb extends Spell {
 				if(ticksInUse % 2 == 0){
 					EntityArc arc = new EntityArc(world);
 					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ,
-							caster.posX + caster.getLookVec().xCoord * 8, caster.posY + caster.eyeHeight + caster.getLookVec().yCoord * 8, caster.posZ + caster.getLookVec().zCoord * 8);
+							caster.posX + caster.getLookVec().xCoord * 8,
+							caster.posY + caster.eyeHeight + caster.getLookVec().yCoord * 8,
+							caster.posZ + caster.getLookVec().zCoord * 8);
 					arc.lifetime = 1;
-					//arc.setOffset(entityplayer.getLookVec().zCoord * 0.5, entityplayer.getLookVec().xCoord * 0.5);
-					world.spawnEntityInWorld(arc);
+					// arc.setOffset(entityplayer.getLookVec().zCoord * 0.5, entityplayer.getLookVec().xCoord * 0.5);
+					world.spawnEntity(arc);
 				}
 			}
 
@@ -188,6 +218,5 @@ public class LightningWeb extends Spell {
 			return true;
 		}
 	}
-
 
 }

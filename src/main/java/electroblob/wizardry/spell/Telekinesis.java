@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 
 public class Telekinesis extends Spell {
 
-	public Telekinesis() {
+	public Telekinesis(){
 		super(Tier.BASIC, 5, Element.SORCERY, "telekinesis", SpellType.UTILITY, 5, EnumAction.NONE, false);
 	}
 
@@ -32,18 +32,19 @@ public class Telekinesis extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*modifiers.get(WizardryItems.range_upgrade), 3.0f);
+		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
+				8 * modifiers.get(WizardryItems.range_upgrade), 3.0f);
 
 		if(rayTrace != null && rayTrace.entityHit != null){
 
 			if(rayTrace.entityHit instanceof EntityItem){
 
 				Entity entityHit = rayTrace.entityHit;
-				entityHit.motionX = (caster.posX - entityHit.posX)/6;
-				entityHit.motionY = (caster.posY + caster.eyeHeight - entityHit.posY)/6;
-				entityHit.motionZ = (caster.posZ - entityHit.posZ)/6;
+				entityHit.motionX = (caster.posX - entityHit.posX) / 6;
+				entityHit.motionY = (caster.posY + caster.eyeHeight - entityHit.posY) / 6;
+				entityHit.motionZ = (caster.posZ - entityHit.posZ) / 6;
 				entityHit.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 1.0f);
 				caster.swingArm(hand);
 				return true;
@@ -57,10 +58,10 @@ public class Telekinesis extends Spell {
 					if(!world.isRemote){
 						EntityItem item = target.entityDropItem(target.getHeldItemMainhand(), 0.0f);
 						// Makes the item move towards the caster
-						item.motionX = (caster.posX - target.posX)/20;
-						item.motionZ = (caster.posZ - target.posZ)/20;
+						item.motionX = (caster.posX - target.posX) / 20;
+						item.motionZ = (caster.posZ - target.posZ) / 20;
 					}
-					
+
 					target.setHeldItem(EnumHand.MAIN_HAND, null);
 
 					target.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 1.0f);
@@ -69,12 +70,13 @@ public class Telekinesis extends Spell {
 				}
 			}
 		}
-		
+
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
-			
+
 			IBlockState blockstate = world.getBlockState(new BlockPos(rayTrace.getBlockPos()));
-			
-			if(blockstate.getBlock().onBlockActivated(world, rayTrace.getBlockPos(), blockstate, caster, hand, null, rayTrace.sideHit, 0, 0, 0)){
+
+			if(blockstate.getBlock().onBlockActivated(world, rayTrace.getBlockPos(), blockstate, caster, hand,
+					rayTrace.sideHit, 0, 0, 0)){
 				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F, 1.0f);
 				caster.swingArm(hand);
 				return true;
@@ -83,19 +85,20 @@ public class Telekinesis extends Spell {
 		return false;
 	}
 
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
 
 		if(target instanceof EntityPlayer && target.getHeldItemMainhand() != null){
 
 			// IDEA: Disarm the offhand if the mainhand is empty or otherwise harmless?
-			
+
 			if(!world.isRemote){
 				EntityItem item = target.entityDropItem(target.getHeldItemMainhand(), 0.0f);
 				// Makes the item move towards the caster
-				item.motionX = (caster.posX - target.posX)/20;
-				item.motionZ = (caster.posZ - target.posZ)/20;
+				item.motionX = (caster.posX - target.posX) / 20;
+				item.motionZ = (caster.posZ - target.posZ) / 20;
 			}
-			
+
 			target.setHeldItem(EnumHand.MAIN_HAND, null);
 
 			target.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 1.0f);

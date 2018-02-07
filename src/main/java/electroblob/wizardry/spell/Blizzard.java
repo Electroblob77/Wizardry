@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class Blizzard extends Spell {
 
-	public Blizzard() {
+	public Blizzard(){
 		super(Tier.ADVANCED, 40, Element.ICE, "blizzard", SpellType.ATTACK, 100, EnumAction.NONE, false);
 	}
 
@@ -28,17 +28,20 @@ public class Blizzard extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(20*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
+		RayTraceResult rayTrace = WizardryUtilities.rayTrace(20 * modifiers.get(WizardryItems.range_upgrade), world,
+				caster, false);
+
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 			if(!world.isRemote){
 				double x = rayTrace.hitVec.xCoord;
 				double y = rayTrace.hitVec.yCoord;
 				double z = rayTrace.hitVec.zCoord;
-				EntityBlizzard blizzard = new EntityBlizzard(world, x, y+0.5, z, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(blizzard);
+				EntityBlizzard blizzard = new EntityBlizzard(world, x, y + 0.5, z, caster,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(blizzard);
 			}
 			caster.swingArm(hand);
 			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
@@ -46,30 +49,33 @@ public class Blizzard extends Spell {
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-			
+
 			if(!world.isRemote){
 				double x = target.posX;
 				double y = target.posY;
 				double z = target.posZ;
-				EntityBlizzard blizzard = new EntityBlizzard(world, x, y+0.5, z, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(blizzard);
+				EntityBlizzard blizzard = new EntityBlizzard(world, x, y + 0.5, z, caster,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(blizzard);
 			}
 			caster.swingArm(hand);
 			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
 	}
-	
+
 }

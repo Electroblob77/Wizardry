@@ -17,49 +17,54 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntitySmokeBomb extends EntityBomb {
-	
-    public EntitySmokeBomb(World par1World)
-    {
-        super(par1World);
-    }
 
-    public EntitySmokeBomb(World par1World, EntityLivingBase par2EntityLivingBase)
-    {
-        super(par1World, par2EntityLivingBase);
-    }
-    
-    public EntitySmokeBomb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier, float blastMultiplier)
-    {
-        super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
-    }
+	public EntitySmokeBomb(World par1World){
+		super(par1World);
+	}
 
-    public EntitySmokeBomb(World par1World, double par2, double par4, double par6)
-    {
-        super(par1World, par2, par4, par6);
-    }
+	public EntitySmokeBomb(World par1World, EntityLivingBase par2EntityLivingBase){
+		super(par1World, par2EntityLivingBase);
+	}
 
-    @Override
-    protected void onImpact(RayTraceResult par1RayTraceResult){
+	public EntitySmokeBomb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
+			float blastMultiplier){
+		super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
+	}
 
-        // Particle effect
-        if(worldObj.isRemote){
-    		this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
-			for(int i=0;i<60*blastMultiplier;i++){
-				this.worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ + (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0, 0, 0);
+	public EntitySmokeBomb(World par1World, double par2, double par4, double par6){
+		super(par1World, par2, par4, par6);
+	}
+
+	@Override
+	protected void onImpact(RayTraceResult par1RayTraceResult){
+
+		// Particle effect
+		if(world.isRemote){
+			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
+			for(int i = 0; i < 60 * blastMultiplier; i++){
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
+						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
+						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
+						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0, 0, 0);
 				float brightness = rand.nextFloat() * 0.3f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, worldObj, this.posX + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ + (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0.0d, 0.0d, 0.0d, 0, brightness, brightness, brightness);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
+						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
+						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0.0d, 0.0d, 0.0d, 0, brightness,
+						brightness, brightness);
 			}
-        }
+		}
 
-        if(!this.worldObj.isRemote){
-        	
-	    	this.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 1.5F, rand.nextFloat() * 0.4F + 0.6F);
-	    	this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.2F, 1.0f);
+		if(!this.world.isRemote){
 
-	        double range = 3.0d * blastMultiplier;
-			
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(range, this.posX, this.posY, this.posZ, this.worldObj);
-			
+			this.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 1.5F, rand.nextFloat() * 0.4F + 0.6F);
+			this.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.2F, 1.0f);
+
+			double range = 3.0d * blastMultiplier;
+
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(range, this.posX, this.posY,
+					this.posZ, this.world);
+
 			for(EntityLivingBase target : targets){
 				if(target != this.getThrower()){
 					// Gives the target blindness if it is a player, mind trick otherwise (since this has the desired
@@ -69,13 +74,13 @@ public class EntitySmokeBomb extends EntityBomb {
 					}else if(target instanceof EntityLiving){
 						// New AI
 						((EntityLiving)target).setAttackTarget(null);
-						
+
 						target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick, 120, 0));
 					}
 				}
 			}
-			
-            this.setDead();
-        }
-    }
+
+			this.setDead();
+		}
+	}
 }

@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class MagicMissile extends Spell {
 
-	public MagicMissile() {
+	public MagicMissile(){
 		super(Tier.BASIC, 5, Element.MAGIC, "magic_missile", SpellType.ATTACK, 10, EnumAction.NONE, false);
 	}
 
@@ -27,41 +27,45 @@ public class MagicMissile extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
-			EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, 2*modifiers.get(WizardryItems.range_upgrade), modifiers.get(SpellModifiers.DAMAGE));
-			world.spawnEntityInWorld(magicMissile);
+			EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster,
+					2 * modifiers.get(WizardryItems.range_upgrade), modifiers.get(SpellModifiers.DAMAGE));
+			world.spawnEntity(magicMissile);
 		}
-		
+
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_MAGIC, 1.0F, world.rand.nextFloat() * 0.4F + 1.2F);
-		
+		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_MAGIC, 1.0F,
+				world.rand.nextFloat() * 0.4F + 1.2F);
+
 		return true;
 	}
-	
+
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-			
+
 			if(!world.isRemote){
-				EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, target, 2*modifiers.get(WizardryItems.range_upgrade), 4, modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(magicMissile);
+				EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, target,
+						2 * modifiers.get(WizardryItems.range_upgrade), 4, modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(magicMissile);
 			}
-			
+
 			caster.swingArm(hand);
 			caster.playSound(WizardrySounds.SPELL_MAGIC, 1.0F, world.rand.nextFloat() * 0.4F + 1.2F);
-			
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
 	}
-	
+
 }

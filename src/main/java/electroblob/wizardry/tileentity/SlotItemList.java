@@ -7,30 +7,31 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Simple extension of {@link Slot} which only accepts items from an array defined in the constructor.
+ * 
  * @author Electroblob
  * @since Wizardry 1.0
  */
 public class SlotItemList extends Slot {
-	
+
 	private Item[] items;
 	private int stackLimit;
 
-	public SlotItemList(IInventory par1iInventory, int index, int x, int y, int stackLimit, Item... allowedItems) {
+	public SlotItemList(IInventory par1iInventory, int index, int x, int y, int stackLimit, Item... allowedItems){
 		super(par1iInventory, index, x, y);
 		this.items = allowedItems;
 		this.stackLimit = stackLimit;
 	}
-	
+
 	public int getSlotStackLimit(){
-        return stackLimit;
-    }
-	
-	public boolean isItemValid(ItemStack par1ItemStack){
-		for(int i=0; i<items.length; i++){
-			if(par1ItemStack != null && (par1ItemStack.getItem() == this.items[i])){
+		return stackLimit;
+	}
+
+	public boolean isItemValid(ItemStack stack){
+		for(int i = 0; i < items.length; i++){
+			if(stack.getItem() == this.items[i]){
 				return true;
 			}
-    	}
+		}
 		return false;
-    }
+	}
 }

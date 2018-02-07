@@ -24,86 +24,88 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
 // TODO: Apparently you shouldn't extend BlockContainer. I feel like BlockArcaneWorkbench should, but what about the rest?
 public class BlockSnare extends BlockContainer {
 
-    private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 1.0f, 0.0625f, 1.0f);
+	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 1.0f, 0.0625f, 1.0f);
 
-	public BlockSnare(Material par2Material){
-		super(par2Material);
+	public BlockSnare(Material material){
+		super(material);
 		this.setSoundType(SoundType.PLANT);
 	}
-	
+
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-        return AABB;
-    }
-	
+		return AABB;
+	}
+
 	@Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos){
-        return NULL_AABB;
-    }
-	
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos){
+		return NULL_AABB;
+	}
+
 	@Override
 	public boolean hasTileEntity(IBlockState state){
 		return true;
 	}
-	
+
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity) {
-		
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity){
+
 		if(!world.isRemote && entity instanceof EntityLivingBase){
 			if(world.getTileEntity(pos) instanceof TileEntityPlayerSave){
-				
+
 				TileEntityPlayerSave tileentity = (TileEntityPlayerSave)world.getTileEntity(pos);
-				
+
 				if(WizardryUtilities.isValidTarget(tileentity.getCaster(), entity)){
-					((EntityLivingBase)entity).attackEntityFrom(MagicDamage.causeDirectMagicDamage(tileentity.getCaster(), DamageType.MAGIC), 6);
+					((EntityLivingBase)entity).attackEntityFrom(
+							MagicDamage.causeDirectMagicDamage(tileentity.getCaster(), DamageType.MAGIC), 6);
 					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100, 2));
-		        	
+
 					world.destroyBlock(pos, false);
 				}
 			}
 		}
 	}
-	
+
 	// The similarly named onNeighborChange method does NOT do the same thing.
 	@SuppressWarnings("deprecation")
 	@Override
-	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn){
-        super.neighborChanged(state, world, pos, blockIn);
-        if(!world.isSideSolid(pos.down(), EnumFacing.UP, false)){
-        	world.setBlockToAir(pos);
-        }
-    }
-	
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
+		super.neighborChanged(state, world, pos, block, fromPos);
+		if(!world.isSideSolid(pos.down(), EnumFacing.UP, false)){
+			world.setBlockToAir(pos);
+		}
+	}
+
 	@Override
 	public BlockRenderLayer getBlockLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
-	
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
-    @Override
+
+	@Override
 	public boolean isOpaqueCube(IBlockState state){
-        return false;
-    }
-    
-    @Override
-    public boolean isFullCube(IBlockState state){
-    	return false;
-    }
-	
+		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune){
 		return null;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEntity createNewTileEntity(World world, int metadata){
 		return new TileEntityPlayerSave();
 	}
 

@@ -13,22 +13,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderWizard extends RenderBiped<EntityWizard> {
 
-    static final ResourceLocation[] textures = new ResourceLocation[6];
+	static final ResourceLocation[] textures = new ResourceLocation[6];
 
-    public RenderWizard(RenderManager renderManager){
-    	
-        super(renderManager, new ModelWizard(), 0.5F);
-        
-        for(int i=0;i<6;i++){
+	public RenderWizard(RenderManager renderManager){
+
+		super(renderManager, new ModelWizard(), 0.5F);
+
+		for(int i = 0; i < 6; i++){
 			textures[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/wizard_" + i + ".png");
 		}
-        // Just using the default without overriding models, since the armour sets its own model anyway.
-        this.addLayer(new LayerBipedArmor(this));
-    }
-    
-    @Override
-    protected ResourceLocation getEntityTexture(EntityWizard wizard) {
-        return textures[wizard.textureIndex];
-    }
+		// Just using the default without overriding models, since the armour sets its own model anyway.
+		this.addLayer(new LayerBipedArmor(this));
+	}
+
+	@Override
+	protected ResourceLocation getEntityTexture(EntityWizard wizard){
+		return textures[wizard.textureIndex];
+	}
 
 }

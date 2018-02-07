@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class Fireskin extends Spell {
 
-	public Fireskin() {
+	public Fireskin(){
 		super(Tier.ADVANCED, 40, Element.FIRE, "fireskin", SpellType.DEFENCE, 250, EnumAction.BOW, false);
 	}
 
@@ -28,40 +28,43 @@ public class Fireskin extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-				
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		// Cannot be cast when it has already been cast
 		if(!caster.isPotionActive(WizardryPotions.fireskin)){
 			if(!world.isRemote){
-				caster.addPotionEffect(new PotionEffect(WizardryPotions.fireskin, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+				caster.addPotionEffect(new PotionEffect(WizardryPotions.fireskin,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 0));
 			}
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
 			// Cannot be cast when it has already been cast
 			if(!caster.isPotionActive(WizardryPotions.fireskin)){
 				if(!world.isRemote){
-					caster.addPotionEffect(new PotionEffect(WizardryPotions.fireskin, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					caster.addPotionEffect(new PotionEffect(WizardryPotions.fireskin,
+							(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 0));
 				}
 				caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
 				return true;
 			}
 			return false;
 		}
-		
+
 		return false;
 	}
 
 	@Override
-	public boolean canBeCastByNPCs() {
+	public boolean canBeCastByNPCs(){
 		return true;
 	}
-	
+
 }

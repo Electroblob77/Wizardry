@@ -17,33 +17,34 @@ import net.minecraft.world.World;
 
 public class FlamingAxe extends Spell {
 
-	public FlamingAxe() {
+	public FlamingAxe(){
 		super(Tier.ADVANCED, 45, Element.FIRE, "flaming_axe", SpellType.UTILITY, 50, EnumAction.BOW, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		ItemStack flamingaxe = new ItemStack(WizardryItems.flaming_axe);
-		
+
 		IConjuredItem.setDurationMultiplier(flamingaxe, modifiers.get(WizardryItems.duration_upgrade));
 
-		if(!WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.flaming_axe) && ConjureBow.conjureItemInInventory(caster, flamingaxe)){
+		if(!WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.flaming_axe)
+				&& ConjureBow.conjureItemInInventory(caster, flamingaxe)){
 
 			if(world.isRemote){
-				for(int i=0; i<10; i++){
-					double x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
-					double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
-					double z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
+				for(int i = 0; i < 10; i++){
+					double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
+					double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F
+							+ world.rand.nextFloat());
+					double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
 					world.spawnParticle(EnumParticleTypes.FLAME, x1, y1, z1, 0, 0, 0);
 				}
 			}
-			
+
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
 			return true;
 		}
 		return false;
 	}
-
 
 }

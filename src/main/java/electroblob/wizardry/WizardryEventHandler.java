@@ -78,6 +78,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
  * As of Wizardry 2.1, most of the code in this class has been relocated somewhere sensible, leaving only a few
  * miscellaneous things that don't make much sense anywhere else, or that are better kept together. Previously, this was
  * a gigantic class with about half of the entire mod's logic in it!
+ * 
  * @author Electroblob
  * @since Wizardry 1.0
  */
@@ -85,16 +86,10 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 public final class WizardryEventHandler {
 
 	// IDEA: Config option allowing users to specify loot locations
-	private static final String[] LOOT_INJECTION_LOCATIONS = {
-			"minecraft:chests/simple_dungeon",
-			"minecraft:chests/abandoned_mineshaft",
-			"minecraft:chests/desert_pyramid",
-			"minecraft:chests/jungle_temple",
-			"minecraft:chests/stronghold_corridor",
-			"minecraft:chests/stronghold_crossing",
-			"minecraft:chests/stronghold_library",
-			"minecraft:chests/igloo_chest"
-	};
+	private static final String[] LOOT_INJECTION_LOCATIONS = {"minecraft:chests/simple_dungeon",
+			"minecraft:chests/abandoned_mineshaft", "minecraft:chests/desert_pyramid", "minecraft:chests/jungle_temple",
+			"minecraft:chests/stronghold_corridor", "minecraft:chests/stronghold_crossing",
+			"minecraft:chests/stronghold_library", "minecraft:chests/igloo_chest"};
 
 	@SubscribeEvent
 	public static void onLootTableLoadEvent(LootTableLoadEvent event){
@@ -108,61 +103,65 @@ public final class WizardryEventHandler {
 	}
 
 	private static LootPool getAdditive(String entryName){
-		return new LootPool(new LootEntry[] { getAdditiveEntry(entryName, 1) }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), Wizardry.MODID + "_additive_pool");
+		return new LootPool(new LootEntry[]{getAdditiveEntry(entryName, 1)}, new LootCondition[0],
+				new RandomValueRange(1), new RandomValueRange(0, 1), Wizardry.MODID + "_additive_pool");
 	}
 
 	private static LootEntryTable getAdditiveEntry(String name, int weight){
-		return new LootEntryTable(new ResourceLocation(name), weight, 0, new LootCondition[0], Wizardry.MODID + "_additive_entry");
+		return new LootEntryTable(new ResourceLocation(name), weight, 0, new LootCondition[0],
+				Wizardry.MODID + "_additive_entry");
 	}
 
 	@SubscribeEvent
 	public static void onPlayerLoggedInEvent(PlayerLoggedInEvent event){
 		// When a player logs in, they are sent the glyph data and the server's settings.
 		if(event.player instanceof EntityPlayerMP){
-			SpellGlyphData.get(event.player.worldObj).sync((EntityPlayerMP)event.player);
+			SpellGlyphData.get(event.player.world).sync((EntityPlayerMP)event.player);
 			Wizardry.settings.sync((EntityPlayerMP)event.player);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onSpellCastPreEvent(SpellCastEvent.Pre event){
 		// If a spell is disabled in the config, it will not work.
 		if(!event.getSpell().isEnabled()){
-			if(!event.getEntityLiving().worldObj.isRemote)
-				event.getEntity().addChatMessage(new TextComponentTranslation("spell.disabled", event.getSpell().getNameForTranslationFormatted()));
+			if(!event.getEntityLiving().world.isRemote) event.getEntity().sendMessage(
+					new TextComponentTranslation("spell.disabled", event.getSpell().getNameForTranslationFormatted()));
 			event.setCanceled(true);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onSpellCastPostEvent(SpellCastEvent.Post event){
 
 		// Spell discovery (only players can discover spells, obviously)
 		if(event.getEntity() instanceof EntityPlayer){
-			
+
 			EntityPlayer player = (EntityPlayer)event.getEntity();
 
 			WizardData data = WizardData.get(player);
-	
+
 			if(data != null){
 				// Data is updated on both sides (This line was added client-side to fix a bug back in 1.1.3, so now
 				// it's in common code, which is nice!)
 				// Short-circuiting AND means that discoverSpell is only called if the event isn't cancelled.
-				if(!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(player, event.getSpell(),
-						DiscoverSpellEvent.Source.CASTING)) && data.discoverSpell(event.getSpell())){
-					
+				if(!MinecraftForge.EVENT_BUS
+						.post(new DiscoverSpellEvent(player, event.getSpell(), DiscoverSpellEvent.Source.CASTING))
+						&& data.discoverSpell(event.getSpell())){
+
 					// If the spell wasn't already discovered, other stuff happens:
 					if(event.getSource() == SpellCastEvent.Source.COMMAND){
-	    				// If the spell didn't send a packet itself, the extended player needs to be synced so the
-	        			// spell discovery updates on the client.
-	        			if(!event.getSpell().doesSpellRequirePacket()) data.sync();
-	        			
-					}else if(!event.getEntity().worldObj.isRemote && !player.capabilities.isCreativeMode
+						// If the spell didn't send a packet itself, the extended player needs to be synced so the
+						// spell discovery updates on the client.
+						if(!event.getSpell().doesSpellRequirePacket()) data.sync();
+
+					}else if(!event.getEntity().world.isRemote && !player.capabilities.isCreativeMode
 							&& Wizardry.settings.discoveryMode){
 						// Sound and text only happen server-side, in survival, with discovery mode on, and only when
 						// the spell wasn't cast using commands.
 						WizardryUtilities.playSoundAtPlayer(player, SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
-						player.addChatMessage(new TextComponentTranslation("spell.discover", event.getSpell().getNameForTranslationFormatted()));
+						player.sendMessage(new TextComponentTranslation("spell.discover",
+								event.getSpell().getNameForTranslationFormatted()));
 					}
 				}
 			}
@@ -172,32 +171,24 @@ public final class WizardryEventHandler {
 	/* There is a subtle but important difference between LivingAttackEvent and LivingHurtEvent - LivingAttackEvent
 	 * fires immediately when attackEntityFrom is called, whereas LivingHurtEvent only fires if the attack actually
 	 * succeeded, i.e. if the entity in question takes damage (though the event is fired before that so you can cancel
-	 * the damage). Things are processed in the following order:
-	 * * LivingAttackEvent *
-	 * - Invulnerability
-	 * - Already-dead-ness
-	 * - Fire resistance
-	 * - Helmets vs. falling things
-	 * - Hurt resistant time
-	 * - Invulnerability (again)
-	 * * LivingHurtEvent *
-	 * - Armour
-	 * - Potions
-	 * - Health is finally changed
-	 * Of course, there are no guarantees that other mods hooking into these two events will be called before or after
-	 * yours, but you can have some degree of control by choosing which event to use.
-	 * EDIT: Actually, there are. Firstly, you can set a priority in the @SubscribeEvent annotation which defines how
-	 * early (higher priority) or late (lower priority) the method is called. Methods with the same priority are sorted
-	 * alphabetically by mod id (so it's safe to assume wizardry would be fairly late on!). I wonder if there are any
-	 * conventions for what sort of things take what priority...? */
+	 * the damage). Things are processed in the following order: * LivingAttackEvent * - Invulnerability -
+	 * Already-dead-ness - Fire resistance - Helmets vs. falling things - Hurt resistant time - Invulnerability (again)
+	 * * LivingHurtEvent * - Armour - Potions - Health is finally changed Of course, there are no guarantees that other
+	 * mods hooking into these two events will be called before or after yours, but you can have some degree of control
+	 * by choosing which event to use. EDIT: Actually, there are. Firstly, you can set a priority in the @SubscribeEvent
+	 * annotation which defines how early (higher priority) or late (lower priority) the method is called. Methods with
+	 * the same priority are sorted alphabetically by mod id (so it's safe to assume wizardry would be fairly late on!).
+	 * I wonder if there are any conventions for what sort of things take what priority...? */
 
 	@SubscribeEvent
 	public static void onLivingAttackEvent(LivingAttackEvent event){
 
 		// Prevents any damage to allies from magic if friendly fire is enabled
-		if(!Wizardry.settings.friendlyFire && event.getSource() != null && event.getSource().getEntity() instanceof EntityPlayer
-				&& event.getEntity() instanceof EntityPlayer && event.getSource() instanceof IElementalDamage){
-			if(WizardryUtilities.isPlayerAlly((EntityPlayer)event.getSource().getEntity(), (EntityPlayer)event.getEntity())){
+		if(!Wizardry.settings.friendlyFire && event.getSource() != null
+				&& event.getSource().getEntity() instanceof EntityPlayer && event.getEntity() instanceof EntityPlayer
+				&& event.getSource() instanceof IElementalDamage){
+			if(WizardryUtilities.isPlayerAlly((EntityPlayer)event.getSource().getEntity(),
+					(EntityPlayer)event.getEntity())){
 				event.setCanceled(true);
 				// This needs to be here, since if the event is cancelled nothing else needs to happen.
 				return;
@@ -208,11 +199,11 @@ public final class WizardryEventHandler {
 		// These are better off here because the revenge effects are pretty similar, and I'd rather keep the (lengthy)
 		// if statement in one place.
 		if(event.getSource() != null && event.getSource().getEntity() instanceof EntityLivingBase
-				&& !event.getSource().isProjectile() && !(event.getSource() instanceof IElementalDamage &&
-						((IElementalDamage)event.getSource()).isRetaliatory())){
+				&& !event.getSource().isProjectile() && !(event.getSource() instanceof IElementalDamage
+						&& ((IElementalDamage)event.getSource()).isRetaliatory())){
 
 			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getEntity();
-			World world = event.getEntityLiving().worldObj;
+			World world = event.getEntityLiving().world;
 
 			// Fireskin
 			if(event.getEntityLiving().isPotionActive(WizardryPotions.fireskin)
@@ -220,8 +211,8 @@ public final class WizardryEventHandler {
 				attacker.setFire(5);
 
 			// Ice Shroud
-			if(event.getEntityLiving().isPotionActive(WizardryPotions.ice_shroud) &&
-					!MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
+			if(event.getEntityLiving().isPotionActive(WizardryPotions.ice_shroud)
+					&& !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
 				attacker.addPotionEffect(new PotionEffect(WizardryPotions.frost, 100, 0));
 
 			// Static Aura
@@ -229,17 +220,25 @@ public final class WizardryEventHandler {
 
 				if(!world.isRemote){
 					EntityArc arc = new EntityArc(world);
-					arc.setEndpointCoords(event.getEntityLiving().posX, event.getEntityLiving().posY + 1, event.getEntityLiving().posZ,
-							attacker.posX, attacker.posY + attacker.height/2, attacker.posZ);
-					world.spawnEntityInWorld(arc);
+					arc.setEndpointCoords(event.getEntityLiving().posX, event.getEntityLiving().posY + 1,
+							event.getEntityLiving().posZ, attacker.posX, attacker.posY + attacker.height / 2,
+							attacker.posZ);
+					world.spawnEntity(arc);
 				}else{
-					for(int i=0;i<8;i++){
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, attacker.posX + world.rand.nextFloat() - 0.5, attacker.getEntityBoundingBox().minY + attacker.height/2 + world.rand.nextFloat()*2 - 1, attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-						world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, attacker.posX + world.rand.nextFloat() - 0.5, attacker.getEntityBoundingBox().minY + attacker.height/2 + world.rand.nextFloat()*2 - 1, attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
+					for(int i = 0; i < 8; i++){
+						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+								attacker.posX + world.rand.nextFloat() - 0.5, attacker.getEntityBoundingBox().minY
+								+ attacker.height / 2 + world.rand.nextFloat() * 2 - 1,
+								attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+						world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, attacker.posX + world.rand.nextFloat() - 0.5,
+								attacker.getEntityBoundingBox().minY + attacker.height / 2 + world.rand.nextFloat() * 2
+								- 1,
+								attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
 					}
 				}
 
-				attacker.attackEntityFrom(MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.SHOCK, true), 4.0f);
+				attacker.attackEntityFrom(
+						MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.SHOCK, true), 4.0f);
 				attacker.playSound(WizardrySounds.SPELL_SPARK, 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
 			}
 		}
@@ -257,25 +256,29 @@ public final class WizardryEventHandler {
 			// Players can only ever attack with their main hand, so this is the right method to use here.
 			if(attacker.getHeldItemMainhand() != null && attacker.getHeldItemMainhand().getItem() instanceof ItemSword){
 
-				int level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.flaming_weapon, attacker.getHeldItemMainhand());
+				int level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.flaming_weapon,
+						attacker.getHeldItemMainhand());
 
 				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FIRE, event.getEntityLiving()))
-					event.getEntityLiving().setFire(level*4);
+					event.getEntityLiving().setFire(level * 4);
 
-				level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.freezing_weapon, attacker.getHeldItemMainhand());
+				level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.freezing_weapon,
+						attacker.getHeldItemMainhand());
 				// Frost lasts for longer because it doesn't do any actual damage
 				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
-					event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level*200, 0));
+					event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level * 200, 0));
 			}
 		}
 
 		// Freezing bow
-		if(event.getSource().getSourceOfDamage() instanceof EntityArrow && event.getSource().getSourceOfDamage().getEntityData() != null){
+		if(event.getSource().getSourceOfDamage() instanceof EntityArrow
+				&& event.getSource().getSourceOfDamage().getEntityData() != null){
 
-			int level = event.getSource().getSourceOfDamage().getEntityData().getInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY);
+			int level = event.getSource().getSourceOfDamage().getEntityData()
+					.getInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY);
 
 			if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
-				event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level*150, 0));
+				event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level * 150, 0));
 		}
 
 		// Damage scaling
@@ -296,31 +299,28 @@ public final class WizardryEventHandler {
 
 			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
 
-			if(player.worldObj.isRemote) hackilyFixContinuousSpellCasting(player);
+			if(player.world.isRemote) hackilyFixContinuousSpellCasting(player);
 
+			// Mana flask crafting
 			if(player.openContainer instanceof ContainerWorkbench){
-				craftingTableTick(player);
-			}
-
-			if(player.openContainer instanceof ContainerPlayer){
+				
+				IInventory craftMatrix = ((ContainerWorkbench)player.openContainer).craftMatrix;
+				ItemStack output = ((ContainerWorkbench)player.openContainer).craftResult.getStackInSlot(0);
+				processManaFlaskCrafting(craftMatrix, output);
+				
+			}else if(player.openContainer instanceof ContainerPlayer){
+				
+				IInventory craftMatrix = ((ContainerPlayer)player.openContainer).craftMatrix;
+				ItemStack output = ((ContainerPlayer)player.openContainer).craftResult.getStackInSlot(0);
 				// Unfortunately I have no choice but to call this method every tick when the player isn't using another
 				// inventory, since the only thing tracking whether the player is looking at their inventory is the GUI
 				// itself, which is client-side only.
-				playerInventoryTick(player);
-			}
-
-			testForArmourSet:{
-				for(ItemStack stack : player.getArmorInventoryList()){
-					if(stack == null || !(stack.getItem() instanceof ItemWizardArmour)){
-						break testForArmourSet;
-					}
-				}
-				player.addStat(WizardryAchievements.armour_set);
+				processManaFlaskCrafting(craftMatrix, output);
 			}
 
 		}
 
-		if(event.getEntityLiving().worldObj.isRemote){
+		if(event.getEntityLiving().world.isRemote){
 
 			// Client-side continuous spell casting for NPCs
 
@@ -330,11 +330,11 @@ public final class WizardryEventHandler {
 				SpellModifiers modifiers = ((ISpellCaster)event.getEntity()).getModifiers();
 
 				if(spell != null && spell != Spells.none){
-					
+
 					if(!MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(event.getEntityLiving(), spell, modifiers,
 							SpellCastEvent.Source.NPC, 0))){
-					
-						spell.cast(event.getEntity().worldObj, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, 0,
+
+						spell.cast(event.getEntity().world, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, 0,
 								// TODO: This implementation of modifiers relies on them being accessible client-side.
 								((EntityLiving)event.getEntity()).getAttackTarget(), modifiers);
 					}
@@ -352,8 +352,12 @@ public final class WizardryEventHandler {
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
 
-				if(stack != null && stack.getItem() instanceof ItemWand && stack.isItemDamaged() && WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) > 0){
-					int damage = stack.getItemDamage() - Constants.SIPHON_MANA_PER_LEVEL*WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) - player.worldObj.rand.nextInt(Constants.SIPHON_MANA_PER_LEVEL);
+				if(stack.getItem() instanceof ItemWand && stack.isItemDamaged()
+						&& WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) > 0){
+					int damage = stack.getItemDamage()
+							- Constants.SIPHON_MANA_PER_LEVEL
+							* WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade)
+							- player.world.rand.nextInt(Constants.SIPHON_MANA_PER_LEVEL);
 					if(damage < 0) damage = 0;
 					stack.setItemDamage(damage);
 					break;
@@ -373,17 +377,19 @@ public final class WizardryEventHandler {
 		// Evil wizards drop spell books themselves
 		if(event.getEntityLiving() instanceof IMob && !(event.getEntityLiving() instanceof EntityEvilWizard)
 				// TODO: Backport when you backport the new summoned creature system.
-				&& !(event.getEntityLiving() instanceof ISummonedCreature) && event.getSource().getEntity() instanceof EntityPlayer
-				&& Wizardry.settings.spellBookDropChance > 0){
+				&& !(event.getEntityLiving() instanceof ISummonedCreature)
+				&& event.getSource().getEntity() instanceof EntityPlayer && Wizardry.settings.spellBookDropChance > 0){
 
 			// This does exactly what the entity drop method does, but with a different random number so that the
 			// spell book doesn't always drop with other rare drops.
-			int rareDropNumber = event.getEntity().worldObj.rand.nextInt(200) - event.getLootingLevel();
+			int rareDropNumber = event.getEntity().world.rand.nextInt(200) - event.getLootingLevel();
 			if(rareDropNumber < Wizardry.settings.spellBookDropChance){
 				// Drops a spell book
-				int id = WizardryUtilities.getStandardWeightedRandomSpellId(event.getEntity().worldObj.rand);
+				int id = WizardryUtilities.getStandardWeightedRandomSpellId(event.getEntity().world.rand);
 
-				event.getDrops().add(new EntityItem(event.getEntityLiving().worldObj, event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ,
+				event.getDrops()
+				.add(new EntityItem(event.getEntityLiving().world, event.getEntityLiving().posX,
+						event.getEntityLiving().posY, event.getEntityLiving().posZ,
 						new ItemStack(WizardryItems.spell_book, 1, id)));
 			}
 		}
@@ -395,13 +401,14 @@ public final class WizardryEventHandler {
 			event.getEntityPlayer().addStat(WizardryAchievements.crystal, 1);
 		}
 	}
-	
+
 	// Private helper methods
 	// ================================================================================================================
 
 	/**
 	 * Detects inconsistencies between player.getActiveItemStack and the actual itemstack and forces them to be equal.
 	 * Fixes issue #25.
+	 * 
 	 * @param player
 	 */
 	private static void hackilyFixContinuousSpellCasting(EntityPlayer player){
@@ -414,97 +421,47 @@ public final class WizardryEventHandler {
 		}
 	}
 
-	private static void playerInventoryTick(EntityPlayer player){
+	private static void processManaFlaskCrafting(IInventory craftMatrix, ItemStack output){
 
 		// Charges wand using mana flask. It is here rather than in the crafting handler so the result displays
 		// the proper damage before it is actually crafted.
 
 		boolean flag = false;
-		ItemStack wand = null;
-		ItemStack armour = null;
-		IInventory craftMatrix = ((ContainerPlayer)player.openContainer).craftMatrix;
-		ItemStack outputItem = ((ContainerPlayer)player.openContainer).craftResult.getStackInSlot(0);
+		ItemStack wand = ItemStack.EMPTY;
+		ItemStack armour = ItemStack.EMPTY;
 
 		for(int i = 0; i < craftMatrix.getSizeInventory(); i++){
-			if(craftMatrix.getStackInSlot(i) != null){
-				ItemStack itemstack = craftMatrix.getStackInSlot(i);
+			
+			ItemStack itemstack = craftMatrix.getStackInSlot(i);
 
-				if(itemstack.getItem() == WizardryItems.mana_flask){
-					flag = true;
-				}
+			if(itemstack.getItem() == WizardryItems.mana_flask){
+				flag = true;
+			}
 
-				if(itemstack.getItem() instanceof ItemWand){
-					wand = itemstack;
-				}
+			if(itemstack.getItem() instanceof ItemWand){
+				wand = itemstack;
+			}
 
-				if(itemstack.getItem() instanceof ItemWizardArmour){
-					armour = itemstack;
-				}
+			if(itemstack.getItem() instanceof ItemWizardArmour){
+				armour = itemstack;
 			}
 		}
 
-		if(outputItem != null && outputItem.getItem() instanceof ItemWand && flag && wand != null){
-			outputItem.setTagCompound((wand.getTagCompound()));
-			if(wand.getItemDamage()-Constants.MANA_PER_FLASK < 0){
-				outputItem.setItemDamage(0);
+		if(output.getItem() instanceof ItemWand && flag && !wand.isEmpty()){
+			output.setTagCompound((wand.getTagCompound()));
+			if(wand.getItemDamage() - Constants.MANA_PER_FLASK < 0){
+				output.setItemDamage(0);
 			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
+				output.setItemDamage(wand.getItemDamage() - Constants.MANA_PER_FLASK);
 			}
 		}
 
-		if(outputItem != null && outputItem.getItem() instanceof ItemWizardArmour && flag && armour != null){
-			outputItem.setTagCompound((armour.getTagCompound()));
-			if(armour.getItemDamage()-Constants.MANA_PER_FLASK < 0){
-				outputItem.setItemDamage(0);
+		if(output.getItem() instanceof ItemWizardArmour && flag && !armour.isEmpty()){
+			output.setTagCompound((armour.getTagCompound()));
+			if(armour.getItemDamage() - Constants.MANA_PER_FLASK < 0){
+				output.setItemDamage(0);
 			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
-			}
-		}
-	}
-
-	private static void craftingTableTick(EntityPlayer player) {
-
-		// Charges wand using mana flask
-
-		boolean flag = false;
-		ItemStack wand = null;
-		ItemStack armour = null;
-		IInventory craftMatrix = ((ContainerWorkbench)player.openContainer).craftMatrix;
-		ItemStack outputItem = ((ContainerWorkbench)player.openContainer).craftResult.getStackInSlot(0);
-
-		for (int i = 0; i < craftMatrix.getSizeInventory(); i++){
-			if(craftMatrix.getStackInSlot(i) != null){
-				ItemStack itemstack = craftMatrix.getStackInSlot(i);
-
-				if(itemstack.getItem() == WizardryItems.mana_flask){
-					flag = true;
-				}
-
-				if(itemstack.getItem() instanceof ItemWand){
-					wand = itemstack;
-				}
-
-				if(itemstack.getItem() instanceof ItemWizardArmour){
-					armour = itemstack;
-				}
-			}
-		}
-
-		if(outputItem != null && outputItem.getItem() instanceof ItemWand && flag && wand != null){
-			outputItem.setTagCompound((wand.getTagCompound()));
-			if(wand.getItemDamage()-Constants.MANA_PER_FLASK < 0){
-				outputItem.setItemDamage(0);
-			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
-			}
-		}
-
-		if(outputItem != null && outputItem.getItem() instanceof ItemWizardArmour && flag && armour != null){
-			outputItem.setTagCompound((armour.getTagCompound()));
-			if(armour.getItemDamage()-Constants.MANA_PER_FLASK < 0){
-				outputItem.setItemDamage(0);
-			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
+				output.setItemDamage(wand.getItemDamage() - Constants.MANA_PER_FLASK);
 			}
 		}
 	}

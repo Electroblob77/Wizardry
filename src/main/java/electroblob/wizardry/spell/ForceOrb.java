@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class ForceOrb extends Spell {
 
-	public ForceOrb() {
+	public ForceOrb(){
 		super(Tier.ADVANCED, 20, Element.SORCERY, "force_orb", SpellType.ATTACK, 20, EnumAction.NONE, false);
 	}
 
@@ -27,37 +27,41 @@ public class ForceOrb extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
-			EntityForceOrb forceOrb = new EntityForceOrb(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
-			world.spawnEntityInWorld(forceOrb);
+			EntityForceOrb forceOrb = new EntityForceOrb(world, caster, modifiers.get(SpellModifiers.DAMAGE),
+					modifiers.get(WizardryItems.blast_upgrade));
+			world.spawnEntity(forceOrb);
 		}
-		
+
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F,
+				0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-		
+
 			if(!world.isRemote){
-				EntityForceOrb forceOrb = new EntityForceOrb(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
+				EntityForceOrb forceOrb = new EntityForceOrb(world, caster, modifiers.get(SpellModifiers.DAMAGE),
+						modifiers.get(WizardryItems.blast_upgrade));
 				forceOrb.directTowards(target, 1.5f);
-				world.spawnEntityInWorld(forceOrb);
+				world.spawnEntity(forceOrb);
 			}
-			
+
 			caster.swingArm(hand);
 			caster.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,8 +21,8 @@ public class ItemWizardHandbook extends Item {
 
 	// Yep, I hardcoded my own name into the mod. Don't want people changing it now, do I?
 	private static final String AUTHOR = "Electroblob";
-	
-	public ItemWizardHandbook() {
+
+	public ItemWizardHandbook(){
 		super();
 		this.setMaxStackSize(1);
 		this.setCreativeTab(WizardryTabs.WIZARDRY);
@@ -29,18 +30,20 @@ public class ItemWizardHandbook extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
-		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item.wizardry:wizard_handbook.desc", AUTHOR));
+		tooltip.add(
+				"\u00A77" + net.minecraft.client.resources.I18n.format("item.wizardry:wizard_handbook.desc", AUTHOR));
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand){
+	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand){
+		ItemStack stack = player.getHeldItem(hand);
 		player.openGui(Wizardry.instance, WizardryGuiHandler.WIZARD_HANDBOOK, world, 0, 0, 0);
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
-	
+
 	@Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> items){
-        items.add(new ItemStack(this, 1));
-    }
+	@SideOnly(Side.CLIENT)
+	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> items){
+		items.add(new ItemStack(this, 1));
+	}
 }

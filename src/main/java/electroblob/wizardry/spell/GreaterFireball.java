@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class GreaterFireball extends Spell {
 
-	public GreaterFireball() {
+	public GreaterFireball(){
 		super(Tier.ADVANCED, 20, Element.FIRE, "greater_fireball", SpellType.ATTACK, 30, EnumAction.NONE, false);
 	}
 
@@ -27,20 +27,17 @@ public class GreaterFireball extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		Vec3d look = caster.getLookVec();
 
 		if(!world.isRemote){
 			EntityLargeFireball fireball = new EntityLargeFireball(world, caster, 1, 1, 1);
-			fireball.setPosition(
-					caster.posX + look.xCoord,
-					caster.posY + look.yCoord + 1.3,
-					caster.posZ + look.zCoord);
+			fireball.setPosition(caster.posX + look.xCoord, caster.posY + look.yCoord + 1.3, caster.posZ + look.zCoord);
 			fireball.accelerationX = look.xCoord * 0.1;
 			fireball.accelerationY = look.yCoord * 0.1;
 			fireball.accelerationZ = look.zCoord * 0.1;
-			world.spawnEntityInWorld(fireball);
+			world.spawnEntity(fireball);
 		}
 
 		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
@@ -49,25 +46,27 @@ public class GreaterFireball extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-			
+
 			if(!world.isRemote){
-				
+
 				EntityLargeFireball fireball = new EntityLargeFireball(world, caster, 1, 1, 1);
-				
+
 				double dx = target.posX - caster.posX;
-		        double dy = target.getEntityBoundingBox().minY + (double)(target.height / 2.0F) - (caster.posY + (double)(caster.height / 2.0F));
-		        double dz = target.posZ - caster.posZ;
-		        
-		        fireball.accelerationX = dx/caster.getDistanceToEntity(target) * 0.1;
-		        fireball.accelerationY = dy/caster.getDistanceToEntity(target) * 0.1;
-		        fireball.accelerationZ = dz/caster.getDistanceToEntity(target) * 0.1;
-		        
-		        fireball.setPosition(caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ);
-		        
-				world.spawnEntityInWorld(fireball);
+				double dy = target.getEntityBoundingBox().minY + (double)(target.height / 2.0F)
+						- (caster.posY + (double)(caster.height / 2.0F));
+				double dz = target.posZ - caster.posZ;
+
+				fireball.accelerationX = dx / caster.getDistanceToEntity(target) * 0.1;
+				fireball.accelerationY = dy / caster.getDistanceToEntity(target) * 0.1;
+				fireball.accelerationZ = dz / caster.getDistanceToEntity(target) * 0.1;
+
+				fireball.setPosition(caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ);
+
+				world.spawnEntity(fireball);
 			}
 
 			caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);

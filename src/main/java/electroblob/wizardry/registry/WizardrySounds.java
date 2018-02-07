@@ -8,8 +8,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Class responsible for defining, storing and registering all of wizardry's sound events. For some reason, these
- * worked in the beta versions despite not being registered...
+ * Class responsible for defining, storing and registering all of wizardry's sound events. For some reason, these worked
+ * in the beta versions despite not being registered...
+ * 
  * @author Electroblob
  * @since Wizardry 2.1
  */
@@ -36,13 +37,13 @@ public final class WizardrySounds {
 	public static final SoundEvent SPELL_LOOP_WIND = createSound("wind");
 	public static final SoundEvent SPELL_EARTHQUAKE = createSound("rumble");
 	public static final SoundEvent SPELL_FORCE = createSound("force");
-	
+
 	/** Trick borrowed from the Twilight Forest, makes things neater. */
 	public static SoundEvent createSound(String name){
 		// All the setRegistryName methods delegate to this one, it doesn't matter which you use.
 		return new SoundEvent(new ResourceLocation(Wizardry.MODID, name)).setRegistryName(name);
 	}
-	
+
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<SoundEvent> event){
 		event.getRegistry().register(SPELL_SPARK);

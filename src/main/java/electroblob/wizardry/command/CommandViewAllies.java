@@ -21,7 +21,7 @@ import net.minecraft.util.text.TextFormatting;
 public class CommandViewAllies extends CommandBase {
 
 	@Override
-	public String getCommandName(){
+	public String getName(){
 		return Wizardry.settings.alliesCommandName;
 	}
 
@@ -30,37 +30,38 @@ public class CommandViewAllies extends CommandBase {
 		// I *think* it's something like 0 = everyone, 1 = moderator, 2 = op/admin, 3 = op/console...
 		return 0;
 	}
-	
-	@Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender p_71519_1_)
-    {
-        return true;
-    }
 
 	@Override
-	public String getCommandUsage(ICommandSender p_71518_1_){
+	public boolean checkPermission(MinecraftServer server, ICommandSender p_71519_1_){
+		return true;
+	}
+
+	@Override
+	public String getUsage(ICommandSender p_71518_1_){
 		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
 		// the custom command name will not display.
 		return "commands.wizardry:allies.usage";
-		//return I18n.format("commands.wizardry:allies.usage", Wizardry.settings.alliesCommandName);
+		// return I18n.format("commands.wizardry:allies.usage", Wizardry.settings.alliesCommandName);
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] arguments, BlockPos pos) {
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] arguments,
+			BlockPos pos){
 		switch(arguments.length){
-		case 1: return getListOfStringsMatchingLastWord(arguments, server.getAllUsernames());
+		case 1:
+			return getListOfStringsMatchingLastWord(arguments, server.getOnlinePlayerNames());
 		}
-		return super.getTabCompletionOptions(server, sender, arguments, pos);
+		return super.getTabCompletions(server, sender, arguments, pos);
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException{
 
 		EntityPlayerMP player = null;
 
 		try{
 			player = getCommandSenderAsPlayer(sender);
-		}catch(PlayerNotFoundException exception){
+		}catch (PlayerNotFoundException exception){
 			// Nothing here since the player specifying is done later, I just don't want it to throw an exception here.
 		}
 
@@ -70,12 +71,14 @@ public class CommandViewAllies extends CommandBase {
 
 			player = getPlayer(server, sender, arguments[0]);
 			// Don't want to catch the exception here either, because there can be no other first argument.
-			
-			if(player != sender && sender instanceof EntityPlayer && !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
-    			// Displays a chat message if a non-op tries to view another player's allies.
-				TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation("commands.wizardry:allies.permission");
+
+			if(player != sender && sender instanceof EntityPlayer
+					&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
+				// Displays a chat message if a non-op tries to view another player's allies.
+				TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
+						"commands.wizardry:allies.permission");
 				TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
-				player.addChatMessage(TextComponentTranslation2);
+				player.sendMessage(TextComponentTranslation2);
 				return;
 			}
 
@@ -84,7 +87,8 @@ public class CommandViewAllies extends CommandBase {
 
 		// If, after this point, player is still null, the sender must be a command block or the console and the
 		// player must not have been specified, meaning an exception should be thrown.
-		if(player == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
+		if(player == null)
+			throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
 
 		if(WizardData.get(player) != null){
 
@@ -102,9 +106,10 @@ public class CommandViewAllies extends CommandBase {
 			}
 
 			if(executeAsOtherPlayer){
-				sender.addChatMessage(new TextComponentTranslation("commands.wizardry:allies.list_other", player.getName(), string));
+				sender.sendMessage(
+						new TextComponentTranslation("commands.wizardry:allies.list_other", player.getName(), string));
 			}else{
-				sender.addChatMessage(new TextComponentTranslation("commands.wizardry:allies.list", string));
+				sender.sendMessage(new TextComponentTranslation("commands.wizardry:allies.list", string));
 			}
 		}
 	}

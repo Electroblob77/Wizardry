@@ -24,7 +24,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 			player.getServerWorld().addScheduledTask(new Runnable(){
 
-				public void run() {
+				public void run(){
 
 					ItemStack wand = player.getHeldItemMainhand();
 
@@ -62,17 +62,14 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 						break;
 					}
 				}
-			}
-					);
+			});
 		}
 
 		return null;
 	}
 
 	public static enum ControlType {
-		APPLY_BUTTON,
-		NEXT_SPELL_KEY,
-		PREVIOUS_SPELL_KEY;
+		APPLY_BUTTON, NEXT_SPELL_KEY, PREVIOUS_SPELL_KEY;
 	}
 
 	public static class Message implements IMessage {
@@ -80,7 +77,8 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 		private ControlType controlType;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
-		public Message() {}
+		public Message(){
+		}
 
 		public Message(ControlType type){
 			this.controlType = type;

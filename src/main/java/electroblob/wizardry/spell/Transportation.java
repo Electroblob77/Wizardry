@@ -28,12 +28,12 @@ public class Transportation extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		WizardData properties = WizardData.get(caster);
 		// Fixes the sound not playing in first person.
 		if(world.isRemote) WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_PORTAL_TRIGGER, 1.0f, 1.0f);
-		
+
 		// Only works when the caster is in the same dimension.
 		if(properties != null && properties.getTpCountdown() == 0){
 			if(caster.dimension == properties.getStoneCircleDimension()){
@@ -45,17 +45,19 @@ public class Transportation extends Spell {
 						properties.setTpCountdown(75);
 						return true;
 					}else{
-						if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.transportation.missing"));
+						if(!world.isRemote)
+							caster.sendMessage(new TextComponentTranslation("spell.transportation.missing"));
 					}
 				}else{
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.transportation.undefined"));
+					if(!world.isRemote)
+						caster.sendMessage(new TextComponentTranslation("spell.transportation.undefined"));
 				}
 			}else{
-				if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.transportation.wrongdimension"));
+				if(!world.isRemote)
+					caster.sendMessage(new TextComponentTranslation("spell.transportation.wrongdimension"));
 			}
 		}
 		return false;
 	}
-
 
 }

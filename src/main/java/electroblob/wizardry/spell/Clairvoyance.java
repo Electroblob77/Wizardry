@@ -49,7 +49,7 @@ public class Clairvoyance extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		WizardData properties = WizardData.get(caster);
 
@@ -57,47 +57,58 @@ public class Clairvoyance extends Spell {
 			if(caster.dimension == properties.getClairvoyanceDimension()){
 				if(properties.getClairvoyanceLocation() != null){
 
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.searching"));
+					if(!world.isRemote)
+						caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.searching"));
 
 					EntityZombie arbitraryZombie = new EntityZombie(world){
-						@Override public float getBlockPathWeight(BlockPos pos){ return 0; }
+						@Override
+						public float getBlockPathWeight(BlockPos pos){
+							return 0;
+						}
 					};
-					arbitraryZombie.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(256*modifiers.get(WizardryItems.range_upgrade));
+					arbitraryZombie.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE)
+							.setBaseValue(256 * modifiers.get(WizardryItems.range_upgrade));
 					arbitraryZombie.setPosition(caster.posX, caster.posY, caster.posZ);
 					arbitraryZombie.setPathPriority(PathNodeType.WATER, 0.0F);
 					arbitraryZombie.onGround = true;
 
 					BlockPos destination = properties.getClairvoyanceLocation();
-					
-					WizardryPathFinder pathfinder = new WizardryPathFinder(arbitraryZombie.getNavigator().getNodeProcessor());
-					
-					Path path = pathfinder.findPath(world, arbitraryZombie, destination, 256*modifiers.get(WizardryItems.range_upgrade));
-					
+
+					WizardryPathFinder pathfinder = new WizardryPathFinder(
+							arbitraryZombie.getNavigator().getNodeProcessor());
+
+					Path path = pathfinder.findPath(world, arbitraryZombie, destination,
+							256 * modifiers.get(WizardryItems.range_upgrade));
+
 					if(path != null && path.getFinalPathPoint() != null){
-						
+
 						int x = path.getFinalPathPoint().xCoord;
 						int y = path.getFinalPathPoint().xCoord;
 						int z = path.getFinalPathPoint().xCoord;
-												
+
 						if(x == destination.getX() && y == destination.getY() && z == destination.getZ()){
 
 							WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
 
 							if(!world.isRemote && caster instanceof EntityPlayerMP){
-								WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path, modifiers.get(WizardryItems.duration_upgrade)), (EntityPlayerMP)caster);
+								WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path,
+										modifiers.get(WizardryItems.duration_upgrade)), (EntityPlayerMP)caster);
 							}
 
 							return true;
 						}
 					}
-					
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.outofrange"));
-				
+
+					if(!world.isRemote)
+						caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.outofrange"));
+
 				}else{
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.undefined"));
+					if(!world.isRemote)
+						caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.undefined"));
 				}
 			}else{
-				if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.wrongdimension"));
+				if(!world.isRemote)
+					caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.wrongdimension"));
 			}
 		}
 
@@ -108,20 +119,21 @@ public class Clairvoyance extends Spell {
 	}
 
 	public static void spawnPathPaticles(World world, Path path, float durationMultiplier){
-		
+
 		PathPoint point, nextPoint;
 
 		while(!path.isFinished()){
 
 			point = path.getPathPointFromIndex(path.getCurrentPathIndex());
 			if(point == path.getFinalPathPoint()) break;
-			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint() : path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
+			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint()
+					: path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
 
-			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5,
-					(nextPoint.xCoord - point.xCoord)/(float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.yCoord - point.yCoord)/(float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.zCoord - point.zCoord)/(float)PARTICLE_MOVEMENT_INTERVAL,
-					(int)(1800*durationMultiplier), 0, 1, 0.3f);
+			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5,
+					point.zCoord + 0.5, (nextPoint.xCoord - point.xCoord) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.yCoord - point.yCoord) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.zCoord - point.zCoord) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(int)(1800 * durationMultiplier), 0, 1, 0.3f);
 
 			path.incrementPathIndex();
 			path.incrementPathIndex();
@@ -129,9 +141,10 @@ public class Clairvoyance extends Spell {
 
 		point = path.getFinalPathPoint();
 
-		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5, 0, 0, 0, (int)(1800*durationMultiplier), 1, 1, 1);
+		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5,
+				point.zCoord + 0.5, 0, 0, 0, (int)(1800 * durationMultiplier), 1, 1, 1);
 	}
-	
+
 	@SubscribeEvent
 	public static void onRightClickBlockEvent(PlayerInteractEvent.RightClickBlock event){
 
@@ -140,7 +153,8 @@ public class Clairvoyance extends Spell {
 			// The event now has an ItemStack, which greatly simplifies hand-related stuff.
 			ItemStack wand = event.getItemStack();
 
-			if(wand != null && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
+			if(wand != null && wand.getItem() instanceof ItemWand
+					&& WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
 
 				WizardData properties = WizardData.get(event.getEntityPlayer());
 
@@ -151,7 +165,8 @@ public class Clairvoyance extends Spell {
 					properties.setClairvoyancePoint(pos, event.getWorld().provider.getDimension());
 
 					if(!event.getWorld().isRemote){
-						event.getEntityPlayer().addChatMessage(new TextComponentTranslation("spell.clairvoyance.confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
+						event.getEntityPlayer().sendMessage(new TextComponentTranslation("spell.clairvoyance.confirm",
+								Spells.clairvoyance.getNameForTranslationFormatted()));
 					}
 
 					event.setCanceled(true);

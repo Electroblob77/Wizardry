@@ -8,29 +8,34 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
 public class WizardryGuiFactory implements IModGuiFactory {
-	
-    @Override
-    public void initialize(Minecraft minecraftInstance) 
-    {
- 
-    }
- 
-    @Override
-    public Class<? extends GuiScreen> mainConfigGuiClass() 
-    {
-        return GuiConfigWizardry.class;
-    }
- 
-    @Override
-    public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() 
-    {
-        return null;
-    }
- 
-    @SuppressWarnings("deprecation") // It's a bit of Forge that hasn't been tidied up, but we have to implement it.
+
 	@Override
-    public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) 
-    {
-        return null;
-    }
+	public void initialize(Minecraft minecraftInstance){
+	}
+
+	@Override
+	public Class<? extends GuiScreen> mainConfigGuiClass(){
+		return GuiConfigWizardry.class;
+	}
+
+	@Override
+	public Set<RuntimeOptionCategoryElement> runtimeGuiCategories(){
+		return null;
+	}
+
+	@SuppressWarnings("deprecation") // It's a bit of Forge that hasn't been tidied up, but we have to implement it.
+	@Override
+	public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element){
+		return null;
+	}
+
+	@Override
+	public boolean hasConfigGui(){
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(GuiScreen parentScreen){
+		return new GuiConfigWizardry(parentScreen);
+	}
 }

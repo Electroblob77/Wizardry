@@ -9,18 +9,15 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class RenderWraithMinion extends RenderLiving<EntityBlazeMinion>
-{
+public class RenderWraithMinion extends RenderLiving<EntityBlazeMinion> {
 	private ResourceLocation texture = new ResourceLocation("textures/entity/blaze.png");
 
-    public RenderWraithMinion(RenderManager renderManagerIn)
-    {
-        super(renderManagerIn, new ModelBlaze(), 0.5F);
-    }
+	public RenderWraithMinion(RenderManager renderManagerIn){
+		super(renderManagerIn, new ModelBlaze(), 0.5F);
+	}
 
-    @Override
-    protected ResourceLocation getEntityTexture(EntityBlazeMinion entity)
-    {
-        return texture;
-    }
+	@Override
+	protected ResourceLocation getEntityTexture(EntityBlazeMinion entity){
+		return texture;
+	}
 }

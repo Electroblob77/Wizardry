@@ -30,9 +30,10 @@ public class GuiSpellDisplay extends Gui {
 
 	private Minecraft mc;
 
-	private static final ResourceLocation hudTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_hud.png");
+	private static final ResourceLocation hudTexture = new ResourceLocation(Wizardry.MODID,
+			"textures/gui/spell_hud.png");
 
-	public GuiSpellDisplay(Minecraft par1Minecraft) {
+	public GuiSpellDisplay(Minecraft par1Minecraft){
 		super();
 		this.mc = par1Minecraft;
 	}
@@ -40,7 +41,7 @@ public class GuiSpellDisplay extends Gui {
 	@SubscribeEvent
 	public void draw(RenderGameOverlayEvent event){
 
-		EntityPlayer player = this.mc.thePlayer;
+		EntityPlayer player = this.mc.player;
 
 		// If the player has a wand in each hand, only displays for the one in the main hand.
 
@@ -58,7 +59,8 @@ public class GuiSpellDisplay extends Gui {
 		Spell spell = WandHelper.getCurrentSpell(wand);
 		int cooldown = WandHelper.getCurrentCooldown(wand);
 
-		float cooldownMultiplier = 1.0f - WandHelper.getUpgradeLevel(wand, WizardryItems.cooldown_upgrade)*Constants.COOLDOWN_REDUCTION_PER_LEVEL;
+		float cooldownMultiplier = 1.0f - WandHelper.getUpgradeLevel(wand, WizardryItems.cooldown_upgrade)
+				* Constants.COOLDOWN_REDUCTION_PER_LEVEL;
 
 		if(player.isPotionActive(WizardryPotions.font_of_mana)){
 			// Dividing by this rather than setting it takes upgrades and font of mana into account simultaneously
@@ -72,17 +74,17 @@ public class GuiSpellDisplay extends Gui {
 
 		if(Wizardry.settings.spellHUDPosition == GuiPosition.BOTTOM_LEFT){
 			left = 0;
-			top = height-36;
+			top = height - 36;
 		}else if(Wizardry.settings.spellHUDPosition == GuiPosition.TOP_LEFT){
 			left = 0;
 			top = 0;
 		}else if(Wizardry.settings.spellHUDPosition == GuiPosition.TOP_RIGHT){
-			left = width-128;
+			left = width - 128;
 			top = 0;
 			mirror = true;
 		}else if(Wizardry.settings.spellHUDPosition == GuiPosition.BOTTOM_RIGHT){
-			left = width-128;
-			top = height-36;
+			left = width - 128;
+			top = height - 36;
 			mirror = true;
 		}
 
@@ -95,16 +97,17 @@ public class GuiSpellDisplay extends Gui {
 		if(event.getType() == RenderGameOverlayEvent.ElementType.TEXT){
 
 			// Makes spells greyed out if they are in cooldown or if the player has the arcane jammer effect
-			String colour = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78" : spell.element.getFormattingCode();
+			String colour = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78"
+					: spell.element.getFormattingCode();
 			if(!discovered) colour = "\u00A79";
-			String spellName = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.worldObj);
+			String spellName = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
 			FontRenderer font = discovered ? this.mc.fontRendererObj : this.mc.standardGalacticFontRenderer;
 
 			int maxWidth = 90;
 
 			if(font.getStringWidth(spellName) <= maxWidth){
 				// Single line is rendered more centrally
-				font.drawStringWithShadow(colour + spellName, mirror ? left+5 : left+41, top+13, 0xffffffff);
+				font.drawStringWithShadow(colour + spellName, mirror ? left + 5 : left + 41, top + 13, 0xffffffff);
 
 			}else{
 
@@ -114,20 +117,21 @@ public class GuiSpellDisplay extends Gui {
 
 				for(Object line : lines){
 					if(line instanceof String){
-						font.drawStringWithShadow(colour + (String)line, mirror ? left+5 : left+41, top+6 + 11*lineNumber, 0xffffffff);
+						font.drawStringWithShadow(colour + (String)line, mirror ? left + 5 : left + 41,
+								top + 6 + 11 * lineNumber, 0xffffffff);
 					}
 					lineNumber++;
 				}
 			}
 
 		}else if(event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR){
-			
+
 			GlStateManager.pushAttrib();
-			
+
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1, 1, 1);
-			
+
 			this.mc.renderEngine.bindTexture(hudTexture);
 
 			// Background of spell hud
@@ -135,18 +139,18 @@ public class GuiSpellDisplay extends Gui {
 
 			// Cooldown bar
 			if(cooldown > 0){
-				this.drawTexturedModalRect(mirror ? left+5 : left+41, height-8, 128, 6, 82, 6);
+				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, height - 8, 128, 6, 82, 6);
 
 				int l = (int)(((double)(spell.cooldown * cooldownMultiplier - cooldown)
 						/ (double)(spell.cooldown * cooldownMultiplier)) * 82);
 
-				this.drawTexturedModalRect(mirror ? left+5 : left+41, height-8, 128, 0, l, 6);
+				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, height - 8, 128, 0, l, 6);
 			}
 
 			// Spell illustration
 			this.mc.renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
 
-			WizardryUtilities.drawTexturedRect(mirror ? left+94 : left+2, top+2, 0, 0, 32, 32, 32, 32);
+			WizardryUtilities.drawTexturedRect(mirror ? left + 94 : left + 2, top + 2, 0, 0, 32, 32, 32, 32);
 
 			GlStateManager.popAttrib();
 		}

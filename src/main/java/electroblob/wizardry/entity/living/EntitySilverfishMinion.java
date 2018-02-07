@@ -14,7 +14,6 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.monster.EntitySilverfish;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -30,18 +29,41 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override public int getLifetime(){ return lifetime; }
-	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
-	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
-	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
-	@Override public UUID getCasterUUID() { return casterUUID; }
-	@Override public void setCasterUUID(UUID uuid) { this.casterUUID = uuid; }
+	@Override
+	public int getLifetime(){
+		return lifetime;
+	}
+
+	@Override
+	public void setLifetime(int lifetime){
+		this.lifetime = lifetime;
+	}
+
+	@Override
+	public WeakReference<EntityLivingBase> getCasterReference(){
+		return casterReference;
+	}
+
+	@Override
+	public void setCasterReference(WeakReference<EntityLivingBase> reference){
+		casterReference = reference;
+	}
+
+	@Override
+	public UUID getCasterUUID(){
+		return casterUUID;
+	}
+
+	@Override
+	public void setCasterUUID(UUID uuid){
+		this.casterUUID = uuid;
+	}
 
 	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't
-	 * matter because the client side entity immediately gets the lifetime value copied over to it by this class
-	 * anyway. When extending this class, you must override this constructor or Minecraft won't like it, but there's
-	 * no need to do anything inside it other than call super().
+	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
+	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
+	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
+	 * anything inside it other than call super().
 	 */
 	public EntitySilverfishMinion(World world){
 		super(world);
@@ -49,8 +71,8 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	}
 
 	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when
-	 * extending this class (be sure to call super()) so that AI and other things can be added.
+	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
+	 * this class (be sure to call super()) so that AI and other things can be added.
 	 */
 	public EntitySilverfishMinion(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
 		super(world);
@@ -62,8 +84,7 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 
 	// EntitySilverfish overrides
 	@Override
-	protected void initEntityAI()
-	{
+	protected void initEntityAI(){
 		// Super not called because we don't want AISummonSilverfish or AIHideInStone
 		this.tasks.addTask(1, new EntityAISwimming(this));
 		this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0D, false));
@@ -71,7 +92,7 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
 				0, false, true, this.getTargetSelector()));
 	}
-	
+
 	// Implementations
 
 	@Override
@@ -96,13 +117,15 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	}
 
 	private void spawnParticleEffect(){
-		if(this.worldObj.isRemote){
-			for(int i=0;i<15;i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, worldObj, this.posX + this.rand.nextFloat(), this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0.0d, 0.0d, 0.0d, 0, 0.3f, 0.3f, 0.3f);
+		if(this.world.isRemote){
+			for(int i = 0; i < 15; i++){
+				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, this.posX + this.rand.nextFloat(),
+						this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0.0d, 0.0d, 0.0d, 0, 0.3f,
+						0.3f, 0.3f);
 			}
 		}
 	}
-	
+
 	@Override
 	public void onSuccessfulAttack(EntityLivingBase target){
 		if(!target.isEntityAlive()){
@@ -111,30 +134,31 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	}
 
 	@Override
-	public void onKillEntity(EntityLivingBase victim) {
+	public void onKillEntity(EntityLivingBase victim){
 		// If the silverfish has a summoner, this is actually called from Wizardry's event handler rather than by
 		// Minecraft itself, because the damagesource being changed causes it not to get called.
-		if(!this.worldObj.isRemote){
+		if(!this.world.isRemote){
 			// Summons 1-4 more silverfish
 			int alliesToSummon = rand.nextInt(4) + 1;
-	
-			for(int i=0; i<alliesToSummon; i++){
-				EntitySilverfishMinion silverfish = new EntitySilverfishMinion(this.worldObj, victim.posX, victim.posY, victim.posZ, this.getCaster(), this.lifetime);
-				this.worldObj.spawnEntityInWorld(silverfish);
+
+			for(int i = 0; i < alliesToSummon; i++){
+				EntitySilverfishMinion silverfish = new EntitySilverfishMinion(this.world, victim.posX, victim.posY,
+						victim.posZ, this.getCaster(), this.lifetime);
+				this.world.spawnEntity(silverfish);
 			}
 		}
 	}
 
 	@Override
-	public boolean hasParticleEffect() {
+	public boolean hasParticleEffect(){
 		return true;
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+	protected boolean processInteract(EntityPlayer player, EnumHand hand){
 		// In this case, the delegate method determines whether super is called.
-		// Rather handily, we can make use of Java's 'stop as soon as you find true' method of evaluating OR statements.
-		return this.interactDelegate(player, hand, stack) || super.processInteract(player, hand, stack);
+		// Rather handily, we can make use of Java's short-circuiting method of evaluating OR statements.
+		return this.interactDelegate(player, hand) || super.processInteract(player, hand);
 	}
 
 	@Override
@@ -151,13 +175,36 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 
 	// Recommended overrides
 
-	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
-	@Override protected boolean canDropLoot(){ return false; }
-	@Override protected Item getDropItem(){ return null; }
-	@Override protected ResourceLocation getLootTable(){ return null; }
-	@Override public boolean canPickUpLoot(){ return false; }
+	@Override
+	protected int getExperiencePoints(EntityPlayer player){
+		return 0;
+	}
+
+	@Override
+	protected boolean canDropLoot(){
+		return false;
+	}
+
+	@Override
+	protected Item getDropItem(){
+		return null;
+	}
+
+	@Override
+	protected ResourceLocation getLootTable(){
+		return null;
+	}
+
+	@Override
+	public boolean canPickUpLoot(){
+		return false;
+	}
+
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override
+	protected boolean canDespawn(){
+		return false;
+	}
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -168,7 +215,7 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	@Override
 	public ITextComponent getDisplayName(){
 		if(getCaster() != null){
-			return new TextComponentTranslation(NAMEPLATE_TRANSLATION_KEY, getCaster().getName(), 
+			return new TextComponentTranslation(NAMEPLATE_TRANSLATION_KEY, getCaster().getName(),
 					new TextComponentTranslation("entity." + this.getEntityString() + ".name"));
 		}else{
 			return super.getDisplayName();

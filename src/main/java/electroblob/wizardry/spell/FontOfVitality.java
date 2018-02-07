@@ -18,36 +18,40 @@ import net.minecraft.world.World;
 
 public class FontOfVitality extends Spell {
 
-	public FontOfVitality() {
+	public FontOfVitality(){
 		super(Tier.MASTER, 75, Element.HEALING, "font_of_vitality", SpellType.DEFENCE, 300, EnumAction.BOW, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		caster.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION, (int)(1200*modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
-		caster.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
+		caster.addPotionEffect(new PotionEffect(MobEffects.ABSORPTION,
+				(int)(1200 * modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
+		caster.addPotionEffect(new PotionEffect(MobEffects.REGENERATION,
+				(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
 
 		if(world.isRemote){
-			for(int i=0; i<10; i++){
-				double x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
+			for(int i = 0; i < 10; i++){
+				double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 				double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
-				double z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
+				double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
 
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 1.0f, 0.6f, 0.7f);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
+						48 + world.rand.nextInt(12), 1.0f, 0.6f, 0.7f);
 
-				x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
+				x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 				y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
-				z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
+				z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
 
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 1.0f, 0.8f, 0.3f);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
+						48 + world.rand.nextInt(12), 1.0f, 0.8f, 0.3f);
 
 			}
 		}
-		
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+
+		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
+				world.rand.nextFloat() * 0.4F + 1.0F);
 		return true;
 	}
-
 
 }

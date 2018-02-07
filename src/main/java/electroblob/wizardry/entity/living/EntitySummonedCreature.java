@@ -9,7 +9,6 @@ import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -17,12 +16,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-/** Abstract base implementation of {@link ISummonedCreature} which is the superclass to all custom summoned entities
- * (i.e. entities that don't extend vanilla/mod creatures). Also serves as an example of how to correctly implement
- * the above interface, and includes some non-critical method overrides which should be used for best results (xp, drops,
- * and such like). <i>Not to be confused with the old version of EntitySummonedCreature; that system has been replaced.</i>
+/**
+ * Abstract base implementation of {@link ISummonedCreature} which is the superclass to all custom summoned entities
+ * (i.e. entities that don't extend vanilla/mod creatures). Also serves as an example of how to correctly implement the
+ * above interface, and includes some non-critical method overrides which should be used for best results (xp, drops,
+ * and such like). <i>Not to be confused with the old version of EntitySummonedCreature; that system has been
+ * replaced.</i>
+ * 
  * @since Wizardry 1.2
- * @author Electroblob */
+ * @author Electroblob
+ */
 public abstract class EntitySummonedCreature extends EntityCreature implements ISummonedCreature {
 
 	// Field implementations
@@ -31,18 +34,41 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override public int getLifetime(){ return lifetime; }
-	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
-	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
-	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
-	@Override public UUID getCasterUUID() { return casterUUID; }
-	@Override public void setCasterUUID(UUID uuid) { this.casterUUID = uuid; }
+	@Override
+	public int getLifetime(){
+		return lifetime;
+	}
+
+	@Override
+	public void setLifetime(int lifetime){
+		this.lifetime = lifetime;
+	}
+
+	@Override
+	public WeakReference<EntityLivingBase> getCasterReference(){
+		return casterReference;
+	}
+
+	@Override
+	public void setCasterReference(WeakReference<EntityLivingBase> reference){
+		casterReference = reference;
+	}
+
+	@Override
+	public UUID getCasterUUID(){
+		return casterUUID;
+	}
+
+	@Override
+	public void setCasterUUID(UUID uuid){
+		this.casterUUID = uuid;
+	}
 
 	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't
-	 * matter because the client side entity immediately gets the lifetime value copied over to it by this class
-	 * anyway. When extending this class, you must override this constructor or Minecraft won't like it, but there's
-	 * no need to do anything inside it other than call super().
+	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
+	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
+	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
+	 * anything inside it other than call super().
 	 */
 	public EntitySummonedCreature(World world){
 		super(world);
@@ -50,8 +76,8 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 	}
 
 	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when
-	 * extending this class (be sure to call super()) so that AI and other things can be added.
+	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
+	 * this class (be sure to call super()) so that AI and other things can be added.
 	 */
 	public EntitySummonedCreature(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
 		super(world);
@@ -60,7 +86,7 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 		this.experienceValue = 0;
 		this.lifetime = lifetime;
 	}
-	
+
 	// Implementations
 
 	@Override
@@ -75,21 +101,23 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 	}
 
 	@Override
-	public void onSpawn(){}
+	public void onSpawn(){
+	}
 
 	@Override
-	public void onDespawn(){}
+	public void onDespawn(){
+	}
 
 	@Override
-	public boolean hasParticleEffect() {
+	public boolean hasParticleEffect(){
 		return false;
 	}
 
 	@Override
-	protected boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack) {
+	protected boolean processInteract(EntityPlayer player, EnumHand hand){
 		// In this case, the delegate method determines whether super is called.
 		// Rather handily, we can make use of Java's short-circuiting method of evaluating OR statements.
-		return this.interactDelegate(player, hand, stack) || super.processInteract(player, hand, stack);
+		return this.interactDelegate(player, hand) || super.processInteract(player, hand);
 	}
 
 	@Override
@@ -106,13 +134,36 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 
 	// Recommended overrides
 
-	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
-	@Override protected boolean canDropLoot(){ return false; }
-	@Override protected Item getDropItem(){ return null; }
-	@Override protected ResourceLocation getLootTable(){ return null; }
-	@Override public boolean canPickUpLoot(){ return false; }
+	@Override
+	protected int getExperiencePoints(EntityPlayer player){
+		return 0;
+	}
+
+	@Override
+	protected boolean canDropLoot(){
+		return false;
+	}
+
+	@Override
+	protected Item getDropItem(){
+		return null;
+	}
+
+	@Override
+	protected ResourceLocation getLootTable(){
+		return null;
+	}
+
+	@Override
+	public boolean canPickUpLoot(){
+		return false;
+	}
+
 	// This vanilla method has nothing to do with the custom onDespawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override
+	protected boolean canDespawn(){
+		return false;
+	}
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -124,7 +175,7 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 	@Override
 	public ITextComponent getDisplayName(){
 		if(getCaster() != null){
-			return new TextComponentTranslation(NAMEPLATE_TRANSLATION_KEY, getCaster().getName(), 
+			return new TextComponentTranslation(NAMEPLATE_TRANSLATION_KEY, getCaster().getName(),
 					new TextComponentTranslation("entity." + this.getEntityString() + ".name"));
 		}else{
 			return super.getDisplayName();

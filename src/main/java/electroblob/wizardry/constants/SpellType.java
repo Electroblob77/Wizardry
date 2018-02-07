@@ -4,14 +4,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum SpellType {
-	
-	ATTACK("attack"),
-	DEFENCE("defence"),
-	UTILITY("utility"),
-	MINION("minion");
+
+	ATTACK("attack"), DEFENCE("defence"), UTILITY("utility"), MINION("minion");
 
 	private final String unlocalisedName;
-	
+
 	SpellType(String name){
 		this.unlocalisedName = name;
 	}

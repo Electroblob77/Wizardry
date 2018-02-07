@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class FireSigil extends Spell {
 
-	public FireSigil() {
+	public FireSigil(){
 		super(Tier.APPRENTICE, 10, Element.FIRE, "fire_sigil", SpellType.ATTACK, 20, EnumAction.NONE, false);
 	}
 
@@ -27,17 +27,19 @@ public class FireSigil extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
+		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10 * modifiers.get(WizardryItems.range_upgrade), world,
+				caster, false);
+
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK && rayTrace.sideHit == EnumFacing.UP){
 			if(!world.isRemote){
 				double x = rayTrace.hitVec.xCoord;
 				double y = rayTrace.hitVec.yCoord;
 				double z = rayTrace.hitVec.zCoord;
-				EntityFireSigil firesigil = new EntityFireSigil(world, x, y, z, caster, modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(firesigil);
+				EntityFireSigil firesigil = new EntityFireSigil(world, x, y, z, caster,
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(firesigil);
 			}
 			caster.swingArm(hand);
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ITEM_FLINTANDSTEEL_USE, 1.0F, 1.0F);
@@ -45,6 +47,5 @@ public class FireSigil extends Spell {
 		}
 		return false;
 	}
-
 
 }

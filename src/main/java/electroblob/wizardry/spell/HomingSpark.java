@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class HomingSpark extends Spell {
 
-	public HomingSpark() {
+	public HomingSpark(){
 		super(Tier.APPRENTICE, 10, Element.LIGHTNING, "homing_spark", SpellType.ATTACK, 20, EnumAction.NONE, false);
 	}
 
@@ -26,35 +26,37 @@ public class HomingSpark extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
 			EntitySpark spark = new EntitySpark(world, caster, modifiers.get(SpellModifiers.DAMAGE));
-			world.spawnEntityInWorld(spark);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+			world.spawnEntity(spark);
+			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F,
+					0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		}
 		caster.swingArm(hand);
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(target != null){
-		
+
 			if(!world.isRemote){
 				EntitySpark spark = new EntitySpark(world, caster, modifiers.get(SpellModifiers.DAMAGE));
 				spark.directTowards(target, 0.5f);
-				world.spawnEntityInWorld(spark);
+				world.spawnEntity(spark);
 				caster.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 			}
 			caster.swingArm(hand);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

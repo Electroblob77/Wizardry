@@ -12,6 +12,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,52 +20,48 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 // For future reference - extend BlockContainer whenever possible because it has methods for removing tile entities on block break.
 public class BlockVanishingCobweb extends BlockContainer {
 
-	public BlockVanishingCobweb(Material material) {
+	public BlockVanishingCobweb(Material material){
 		super(material);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return BlockRenderLayer.CUTOUT;
-    }
-	
+	public BlockRenderLayer getBlockLayer(){
+		return BlockRenderLayer.CUTOUT;
+	}
+
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state){
 		return EnumBlockRenderType.MODEL;
 	}
-	
-	@Override
-	public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
 
 	@Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, World worldIn, BlockPos pos)
-    {
-        return NULL_AABB;
-    }
-	
+	public boolean isOpaqueCube(IBlockState state){
+		return false;
+	}
+
 	@Override
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
-    
-    @Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos){
+		return NULL_AABB;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int metadata){
 		return new TileEntityTimer(400);
 	}
-    
-    @Override
-    public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity){
-        entity.setInWeb();
-    }
- 
-    @Override
+
+	@Override
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity){
+		entity.setInWeb();
+	}
+
+	@Override
 	public int quantityDropped(Random par1Random){
-        return 0;
-    }
-	
+		return 0;
+	}
+
 }

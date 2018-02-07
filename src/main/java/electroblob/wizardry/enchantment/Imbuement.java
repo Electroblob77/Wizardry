@@ -22,12 +22,15 @@ import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/** Interface for temporary enchantments that last for a certain duration ('imbuements'). This interface allows
- * {@link EnchantmentMagicSword} and {@link EnchantmentTimed} to both be treated as instances of a
- * single type, rather than having to deal with each of them separately,
- * which would be inefficient and cumbersome (the former of those classes cannot extend the latter because they both
- * need to extend different subclasses of {@link net.minecraft.enchantment.Enchantment}).
- * @since Wizardry 1.2 */
+/**
+ * Interface for temporary enchantments that last for a certain duration ('imbuements'). This interface allows
+ * {@link EnchantmentMagicSword} and {@link EnchantmentTimed} to both be treated as instances of a single type, rather
+ * than having to deal with each of them separately, which would be inefficient and cumbersome (the former of those
+ * classes cannot extend the latter because they both need to extend different subclasses of
+ * {@link net.minecraft.enchantment.Enchantment}).
+ * 
+ * @since Wizardry 1.2
+ */
 @Mod.EventBusSubscriber
 public interface Imbuement {
 
@@ -46,11 +49,12 @@ public interface Imbuement {
 		// Instantly disenchants an imbued weapon if it is thrown on the ground.
 		removeImbuements(event.getEntityItem().getEntityItem());
 	}
-	
+
 	/** Removes all imbuements from the given itemstack. */
 	static void removeImbuements(ItemStack stack){
 		if(stack.isItemEnchanted()){
-			// No need to check what enchantments the item has, since remove() does nothing if the element does not exist.
+			// No need to check what enchantments the item has, since remove() does nothing if the element does not
+			// exist.
 			Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
 			// Removes the magic weapon enchantments from the enchantment map
 			enchantments.entrySet().removeIf(entry -> entry.getKey() instanceof Imbuement);
@@ -58,7 +62,7 @@ public interface Imbuement {
 			EnchantmentHelper.setEnchantments(enchantments, stack);
 		}
 	}
-	
+
 	@SubscribeEvent
 	public static void onPlayerOpenContainerEvent(PlayerContainerEvent event){
 		// Brute-force fix to stop enchanted books in dungeon chests from having imbuements on them.
@@ -74,7 +78,7 @@ public interface Imbuement {
 						// If any imbuements were removed, replaces the enchantments on the book with the new ones, or
 						// deletes the book entirely if there are none left.
 						if(enchantments.isEmpty()){
-							slot.putStack(null); // NOTE: Will need changing in 1.11
+							slot.putStack(ItemStack.EMPTY); // NOTE: Will need changing in 1.11
 							Wizardry.logger.info("Deleted enchanted book with illegal enchantments");
 						}else{
 							EnchantmentHelper.setEnchantments(enchantments, slot.getStack());
@@ -90,7 +94,7 @@ public interface Imbuement {
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event){
 		// Rather long-winded (but necessary) way of getting an arrow just after it has been fired, checking if the bow
 		// that fired it has the imbuement enchantment, and applying extra damage accordingly.
-		if(!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityArrow){
+		if(!event.getEntity().world.isRemote && event.getEntity() instanceof EntityArrow){
 
 			EntityArrow arrow = (EntityArrow)event.getEntity();
 

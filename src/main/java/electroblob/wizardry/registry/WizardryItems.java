@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.ImmutableMap;
+
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -45,6 +47,7 @@ import net.minecraftforge.fml.common.registry.IForgeRegistry;
 /**
  * Class responsible for defining, storing and registering all of wizardry's items. Also registers the ItemBlocks for
  * wizardry's blocks.
+ * 
  * @author Electroblob
  * @since Wizardry 2.1
  */
@@ -131,8 +134,10 @@ public final class WizardryItems {
 	// Also if they were sold you could buy four from the same wizard - and that's no fun at all!)
 	public static final Item armour_upgrade = new ItemArmourUpgrade();
 
-	public static final ArmorMaterial SILK = EnumHelper.addArmorMaterial("SILK", "wizardry/textures/armour/wizard_armour",
-			15, new int[]{2, 5, 4, 2}, 0, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+	public static final ArmorMaterial SILK = EnumHelper.addArmorMaterial("SILK",
+			"wizardry/textures/armour/wizard_armour", 15, new int[]{2, 5, 4, 2}, 0,
+			SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+	
 	// Saw a post somewhere that said you have to put these in the init methods rather than defining them as constants.
 	// I *think* that's because the post was for a newer Minecraft version, where custom armour has its own renderer or
 	// something, meaning it would be done a lot like the entity rendering registry in ClientProxy. This is all working
@@ -182,6 +187,10 @@ public final class WizardryItems {
 	public static final Item spectral_leggings = new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.LEGS);
 	public static final Item spectral_boots = new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.FEET);
 
+	public static final Map<EntityEquipmentSlot, Item> SPECTRAL_ARMOUR_MAP = ImmutableMap.of(
+			EntityEquipmentSlot.HEAD, spectral_helmet, EntityEquipmentSlot.CHEST, spectral_chestplate,
+			EntityEquipmentSlot.LEGS, spectral_leggings, EntityEquipmentSlot.FEET, spectral_boots);
+	
 	public static final Item smoke_bomb = new ItemSmokeBomb();
 
 	public static final Item identification_scroll = new ItemIdentificationScroll();
@@ -189,8 +198,8 @@ public final class WizardryItems {
 	public static final Map<Pair<Tier, Element>, Item> WAND_MAP = new HashMap<>();
 	public static final Map<Pair<EntityEquipmentSlot, Element>, Item> ARMOUR_MAP = new HashMap<>();
 
-	static {
-		
+	static{
+
 		WAND_MAP.put(ImmutablePair.of(Tier.BASIC, Element.MAGIC), magic_wand);
 		WAND_MAP.put(ImmutablePair.of(Tier.BASIC, Element.FIRE), basic_fire_wand);
 		WAND_MAP.put(ImmutablePair.of(Tier.BASIC, Element.ICE), basic_ice_wand);
@@ -223,7 +232,7 @@ public final class WizardryItems {
 		WAND_MAP.put(ImmutablePair.of(Tier.MASTER, Element.EARTH), master_earth_wand);
 		WAND_MAP.put(ImmutablePair.of(Tier.MASTER, Element.SORCERY), master_sorcery_wand);
 		WAND_MAP.put(ImmutablePair.of(Tier.MASTER, Element.HEALING), master_healing_wand);
-		
+
 		ARMOUR_MAP.put(ImmutablePair.of(EntityEquipmentSlot.HEAD, Element.MAGIC), wizard_hat);
 		ARMOUR_MAP.put(ImmutablePair.of(EntityEquipmentSlot.HEAD, Element.FIRE), wizard_hat_fire);
 		ARMOUR_MAP.put(ImmutablePair.of(EntityEquipmentSlot.HEAD, Element.ICE), wizard_hat_ice);
@@ -262,10 +271,11 @@ public final class WizardryItems {
 	 * Sets both the registry and unlocalised names of the given item, then registers it with the given registry. Use
 	 * this instead of {@link Item#setRegistryName(String)} and {@link Item#setUnlocalizedName(String)} during
 	 * construction, for convenience and consistency.
+	 * 
 	 * @param registry The registry to register the given item to.
 	 * @param item The item to register.
 	 * @param name The name of the item, without the mod ID or the .name stuff. The registry name will be
-	 * {@code wizardry:[name]}. The unlocalised name will be {@code item.wizardry:[name].name}.
+	 *        {@code wizardry:[name]}. The unlocalised name will be {@code item.wizardry:[name].name}.
 	 */
 	public static void registerItem(IForgeRegistry<Item> registry, Item item, String name){
 		item.setRegistryName(Wizardry.MODID, name);

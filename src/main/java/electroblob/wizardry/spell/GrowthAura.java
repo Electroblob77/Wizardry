@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class GrowthAura extends Spell {
 
-	public GrowthAura() {
+	public GrowthAura(){
 		super(Tier.APPRENTICE, 20, Element.EARTH, "growth_aura", SpellType.UTILITY, 50, EnumAction.NONE, false);
 	}
 
@@ -27,16 +27,17 @@ public class GrowthAura extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		boolean flag = false;
 
-		for(int i=-2; i<1; i++){
+		for(int i = -2; i < 1; i++){
 
-			for(int j=-1; j<2; j++){
+			for(int j = -1; j < 2; j++){
 
 				int x = (int)caster.posX + i;
-				int y = WizardryUtilities.getNearestFloorLevelC(world, new BlockPos(caster.posX + i, caster.posY, caster.posZ + j), 2) - 1;
+				int y = WizardryUtilities.getNearestFloorLevelC(world,
+						new BlockPos(caster.posX + i, caster.posY, caster.posZ + j), 2) - 1;
 				int z = (int)caster.posZ + j;
 
 				BlockPos pos = new BlockPos(x, y, z);
@@ -67,9 +68,9 @@ public class GrowthAura extends Spell {
 			}
 		}
 
-		if(flag) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+		if(flag) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
+				world.rand.nextFloat() * 0.4F + 1.0F);
 		return flag;
 	}
-
 
 }

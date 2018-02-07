@@ -9,8 +9,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
 /**
- * SpellCastEvent is the parent event class for all spell casting events. Methods which subscribe to this event
- * will receive all three child events (it is recommended that you use {@link SpellCastEvent.Pre},
+ * SpellCastEvent is the parent event class for all spell casting events. Methods which subscribe to this event will
+ * receive all three child events (it is recommended that you use {@link SpellCastEvent.Pre},
  * {@link SpellCastEvent.Post} or {@link SpellCastEvent.Tick}, depending on the application).<br>
  * <br>
  * This event is fired on the {@link MinecraftForge#EVENT_BUS}.
@@ -19,39 +19,44 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
  * @since Wizardry 2.1
  */
 public abstract class SpellCastEvent extends LivingEvent {
-	
+
 	private final Spell spell;
 	private final SpellModifiers modifiers;
 	private final Source source;
 
-	public SpellCastEvent(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source) {
+	public SpellCastEvent(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source){
 		super(caster);
 		this.spell = spell;
 		this.modifiers = modifiers;
 		this.source = source;
 	}
-	
+
 	/** Returns the spell being cast. */
 	public Spell getSpell(){
 		return spell;
 	}
-	
+
 	/** Returns the modifiers for the spell being cast. */
 	public SpellModifiers getModifiers(){
 		return modifiers;
 	}
-	
+
 	/** Returns the source of the spell being cast. */
 	public Source getSource(){
 		return source;
 	}
-	
+
 	public enum Source {
-		/** Signifies that the spell was cast using a wand. */ 					WAND,
-		/** Signifies that the spell was cast using a scroll. */ 				SCROLL,
-		/** Signifies that the spell was cast using commands. */ 				COMMAND,
-		/** Signifies that the spell was cast by an {@link ISpellCaster}. */ 	NPC,
-		/** Signifies that the spell was cast by some other means. */ 			OTHER
+		/** Signifies that the spell was cast using a wand. */
+		WAND,
+		/** Signifies that the spell was cast using a scroll. */
+		SCROLL,
+		/** Signifies that the spell was cast using commands. */
+		COMMAND,
+		/** Signifies that the spell was cast by an {@link ISpellCaster}. */
+		NPC,
+		/** Signifies that the spell was cast by some other means. */
+		OTHER
 	}
 
 	/**
@@ -75,18 +80,18 @@ public abstract class SpellCastEvent extends LivingEvent {
 	@Cancelable
 	public static class Pre extends SpellCastEvent {
 
-		public Pre(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source) {
+		public Pre(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source){
 			super(caster, spell, modifiers, source);
 		}
 
 	}
-	
+
 	/**
-	 * SpellCastEvent.Post is fired just after a spell is cast. Use this event for any processing which depends
-	 * on whether the spell succeeds, and does not affect the spell itself. For example, wizardry uses this event
-	 * to keep track of spellcasting stats. Note that although this event is fired from both sides, it is not fired from
-	 * common code; rather, both sides fire it separately, so timing is not guaranteed. Also note that this event is
-	 * only fired once for continuous spells, after the first casting tick.<br>
+	 * SpellCastEvent.Post is fired just after a spell is cast. Use this event for any processing which depends on
+	 * whether the spell succeeds, and does not affect the spell itself. For example, wizardry uses this event to keep
+	 * track of spellcasting stats. Note that although this event is fired from both sides, it is not fired from common
+	 * code; rather, both sides fire it separately, so timing is not guaranteed. Also note that this event is only fired
+	 * once for continuous spells, after the first casting tick.<br>
 	 * <br>
 	 * This event is not {@link Cancelable}.<br>
 	 * <br>
@@ -99,12 +104,12 @@ public abstract class SpellCastEvent extends LivingEvent {
 	 */
 	public static class Post extends SpellCastEvent {
 
-		public Post(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source) {
+		public Post(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source){
 			super(caster, spell, modifiers, source);
 		}
 
 	}
-	
+
 	/**
 	 * SpellCastEvent.Tick is fired each tick while a continuous spell is being cast.<br>
 	 * <br>
@@ -123,17 +128,17 @@ public abstract class SpellCastEvent extends LivingEvent {
 	public static class Tick extends SpellCastEvent {
 
 		private final int count;
-		
-		public Tick(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source, int count) {
+
+		public Tick(EntityLivingBase caster, Spell spell, SpellModifiers modifiers, Source source, int count){
 			super(caster, spell, modifiers, source);
 			this.count = count;
 		}
-		
+
 		/** Returns the number of ticks this (continuous) spell has already been cast for. */
 		public int getCount(){
 			return count;
 		}
 
 	}
-	
+
 }

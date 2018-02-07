@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class SummonPhoenix extends Spell {
 
-	public SummonPhoenix() {
+	public SummonPhoenix(){
 		super(Tier.MASTER, 150, Element.FIRE, "summon_phoenix", SpellType.MINION, 400, EnumAction.BOW, false);
 	}
 
@@ -26,21 +26,21 @@ public class SummonPhoenix extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
 
 			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
 			if(pos == null) return false;
-			
+
 			EntityPhoenix phoenix = new EntityPhoenix(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster,
-					(int)(600*modifiers.get(WizardryItems.duration_upgrade)));
-			world.spawnEntityInWorld(phoenix);
+					(int)(600 * modifiers.get(WizardryItems.duration_upgrade)));
+			world.spawnEntity(phoenix);
 		}
-		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F,
+				world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
-
 
 }

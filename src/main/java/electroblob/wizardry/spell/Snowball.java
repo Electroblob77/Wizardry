@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 public class Snowball extends Spell {
 
-	public Snowball() {
+	public Snowball(){
 		super(Tier.BASIC, 1, Element.ICE, "snowball", SpellType.ATTACK, 1, EnumAction.NONE, false);
 	}
 
@@ -24,18 +24,18 @@ public class Snowball extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-				
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
 			EntitySnowball snowball = new EntitySnowball(world, caster);
-	        snowball.setHeadingFromThrower(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 1.5f, 1.0f);
-			world.spawnEntityInWorld(snowball);
+			snowball.setHeadingFromThrower(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 1.5f, 1.0f);
+			world.spawnEntity(snowball);
 		}
-		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F,
+				0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		caster.swingArm(hand);
 		return true;
 	}
-
 
 }

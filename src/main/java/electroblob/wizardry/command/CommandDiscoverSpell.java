@@ -22,7 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class CommandDiscoverSpell extends CommandBase {
 
 	@Override
-	public String getCommandName(){
+	public String getName(){
 		return Wizardry.settings.discoverspellCommandName;
 	}
 
@@ -32,39 +32,40 @@ public class CommandDiscoverSpell extends CommandBase {
 		return 2;
 	}
 
-	/*
-	@Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender){
-		// Only ops (multiplayer) or players with cheats enabled (singleplayer/LAN) can use /discoverspell.
-        return !(sender instanceof EntityPlayer) || server.getServer().getConfigurationManager().func_152596_g(((EntityPlayer)sender).getGameProfile());
-    }
-	*/
+	/* @Override public boolean checkPermission(MinecraftServer server, ICommandSender sender){ // Only ops
+	 * (multiplayer) or players with cheats enabled (singleplayer/LAN) can use /discoverspell. return !(sender
+	 * instanceof EntityPlayer) ||
+	 * server.getServer().getConfigurationManager().func_152596_g(((EntityPlayer)sender).getGameProfile()); } */
 
 	@Override
-	public String getCommandUsage(ICommandSender p_71518_1_){
+	public String getUsage(ICommandSender sender){
 		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
 		// the custom command name will not display.
 		return "commands.wizardry:discoverspell.usage";
-		//return I18n.format("commands.wizardry:discoverspell.usage", Wizardry.settings.discoverspellCommandName);
+		// return I18n.format("commands.wizardry:discoverspell.usage", Wizardry.settings.discoverspellCommandName);
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] arguments, BlockPos pos) {
+	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] arguments,
+			BlockPos pos){
 		switch(arguments.length){
-		case 1: return getListOfStringsMatchingLastWord(arguments, Spell.getSpellNames());
-		case 2: return getListOfStringsMatchingLastWord(arguments, server.getAllUsernames());
+		case 1:
+			return getListOfStringsMatchingLastWord(arguments, Spell.getSpellNames());
+		case 2:
+			return getListOfStringsMatchingLastWord(arguments, server.getOnlinePlayerNames());
 		}
-		return super.getTabCompletionOptions(server, sender, arguments, pos);
+		return super.getTabCompletions(server, sender, arguments, pos);
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
+	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException{
 
 		if(arguments.length < 1){
-			throw new WrongUsageException("commands.wizardry:discoverspell.usage", Wizardry.settings.discoverspellCommandName);
+			throw new WrongUsageException("commands.wizardry:discoverspell.usage",
+					Wizardry.settings.discoverspellCommandName);
 		}else{
 
-			int i=0;
+			int i = 0;
 			boolean clear = false;
 			boolean all = false;
 
@@ -72,8 +73,9 @@ public class CommandDiscoverSpell extends CommandBase {
 
 			try{
 				player = getCommandSenderAsPlayer(sender);
-			}catch(PlayerNotFoundException exception){
-				// Nothing here since the player specifying is done later, I just don't want it to throw an exception here.
+			}catch (PlayerNotFoundException exception){
+				// Nothing here since the player specifying is done later, I just don't want it to throw an exception
+				// here.
 			}
 
 			Spell spell = Spells.none;
@@ -89,7 +91,8 @@ public class CommandDiscoverSpell extends CommandBase {
 				spell = Spell.get(arguments[i++]);
 
 				if(spell == null){
-					throw new NumberInvalidException("commands.wizardry:discoverspell.not_found", new Object[]{arguments[i-1]});
+					throw new NumberInvalidException("commands.wizardry:discoverspell.not_found",
+							new Object[]{arguments[i - 1]});
 				}
 			}
 
@@ -104,25 +107,31 @@ public class CommandDiscoverSpell extends CommandBase {
 
 			// If, after this point, the player is still null, the sender must be a command block or the console and the
 			// player must not have been specified, meaning an exception should be thrown.
-			if(player == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
+			if(player == null)
+				throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
 
 			WizardData properties = WizardData.get(player);
 
 			if(properties != null){
 				if(clear){
 					properties.spellsDiscovered.clear();
-					sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.clear", player.getName()));
+					sender.sendMessage(
+							new TextComponentTranslation("commands.wizardry:discoverspell.clear", player.getName()));
 				}else if(all){
 					properties.spellsDiscovered.addAll(Spell.getSpells(Spell.allSpells));
-					sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.all", player.getName()));
+					sender.sendMessage(
+							new TextComponentTranslation("commands.wizardry:discoverspell.all", player.getName()));
 				}else{
 					if(properties.hasSpellBeenDiscovered(spell)){
 						properties.spellsDiscovered.remove(spell);
-						sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.removespell", spell.getNameForTranslationFormatted(), player.getName()));
+						sender.sendMessage(new TextComponentTranslation("commands.wizardry:discoverspell.removespell",
+								spell.getNameForTranslationFormatted(), player.getName()));
 					}else{
-						if(!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(player, spell, DiscoverSpellEvent.Source.COMMAND))){
+						if(!MinecraftForge.EVENT_BUS
+								.post(new DiscoverSpellEvent(player, spell, DiscoverSpellEvent.Source.COMMAND))){
 							properties.discoverSpell(spell);
-							sender.addChatMessage(new TextComponentTranslation("commands.wizardry:discoverspell.addspell", spell.getNameForTranslationFormatted(), player.getName()));
+							sender.sendMessage(new TextComponentTranslation("commands.wizardry:discoverspell.addspell",
+									spell.getNameForTranslationFormatted(), player.getName()));
 						}
 					}
 				}

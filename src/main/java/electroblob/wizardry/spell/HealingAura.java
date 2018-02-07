@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 
 public class HealingAura extends Spell {
 
-	public HealingAura() {
+	public HealingAura(){
 		super(Tier.ADVANCED, 35, Element.HEALING, "healing_aura", SpellType.DEFENCE, 150, EnumAction.BOW, false);
 	}
 
@@ -25,37 +25,43 @@ public class HealingAura extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(caster.onGround){
 			if(!world.isRemote){
-				EntityHealAura healaura = new EntityHealAura(world, caster.posX, caster.posY, caster.posZ, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntityInWorld(healaura);
+				EntityHealAura healaura = new EntityHealAura(world, caster.posX, caster.posY, caster.posZ, caster,
+						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+						modifiers.get(SpellModifiers.DAMAGE));
+				world.spawnEntity(healaura);
 			}
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
 
 		if(target != null){
-			if(caster.onGround && world.getEntitiesWithinAABB(EntityHealAura.class, caster.getEntityBoundingBox()).isEmpty()){
+			if(caster.onGround
+					&& world.getEntitiesWithinAABB(EntityHealAura.class, caster.getEntityBoundingBox()).isEmpty()){
 				if(!world.isRemote){
-					EntityHealAura healaura = new EntityHealAura(world, caster.posX, caster.posY, caster.posZ, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
-					world.spawnEntityInWorld(healaura);
+					EntityHealAura healaura = new EntityHealAura(world, caster.posX, caster.posY, caster.posZ, caster,
+							(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
+							modifiers.get(SpellModifiers.DAMAGE));
+					world.spawnEntity(healaura);
 				}
 				return true;
 			}
 			return false;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
-	public boolean canBeCastByNPCs() {
+	public boolean canBeCastByNPCs(){
 		return true;
 	}
 

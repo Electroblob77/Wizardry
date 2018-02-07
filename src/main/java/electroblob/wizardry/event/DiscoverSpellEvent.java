@@ -23,27 +23,31 @@ public class DiscoverSpellEvent extends PlayerEvent {
 	private final Spell spell;
 	private final Source source;
 
-	public DiscoverSpellEvent(EntityPlayer player, Spell spell, Source source) {
+	public DiscoverSpellEvent(EntityPlayer player, Spell spell, Source source){
 		super(player);
 		this.spell = spell;
 		this.source = source;
 	}
-	
+
 	/** Returns the spell that is being discovered. */
 	public Spell getSpell(){
 		return spell;
 	}
-	
+
 	/** Returns the method used to discover the spell. */
 	public Source getSource(){
 		return source;
 	}
-	
+
 	public enum Source {
-		/** Signifies that the spell was discovered by trying to cast it. */ 				CASTING,
-		/** Signifies that the spell was discovered using a scroll of identification. */ 	IDENTIFICATION_SCROLL,
-		/** Signifies that the spell was discovered using commands. */ 						COMMAND,
-		/** Signifies that the spell was discovered by some other means. */ 				OTHER
+		/** Signifies that the spell was discovered by trying to cast it. */
+		CASTING,
+		/** Signifies that the spell was discovered using a scroll of identification. */
+		IDENTIFICATION_SCROLL,
+		/** Signifies that the spell was discovered using commands. */
+		COMMAND,
+		/** Signifies that the spell was discovered by some other means. */
+		OTHER
 	}
 
 }

@@ -23,78 +23,74 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
-/** Does not implement ISummonedCreature because it has different despawning rules and because EntityHorse already
- * has an owner system. */
+/**
+ * Does not implement ISummonedCreature because it has different despawning rules and because EntityHorse already has an
+ * owner system.
+ */
 @SuppressWarnings("deprecation") // It's what Entity does, so...
 public class EntitySpiritHorse extends EntityHorse {
-	
+
 	private int idleTimer = 0;
 
-	public EntitySpiritHorse(World par1World)
-	{
+	public EntitySpiritHorse(World par1World){
 		super(par1World);
 	}
 
 	@Override
-	public String getName()
-	{
-		if (this.hasCustomName())
-		{
+	public String getName(){
+		if(this.hasCustomName()){
 			return this.getCustomNameTag();
-		}
-		else
-		{
+		}else{
 			return I18n.translateToLocal("entity.wizardry.Spirit Horse.name");
 		}
 	}
 
 	@Override
-	public boolean isChested()
-	{
-		return false;
-	}
-	
-	@Override
-	public int getTotalArmorValue()
-	{
+	public int getTotalArmorValue(){
 		return 0;
 	}
-	
+
 	@Override
-    protected int getExperiencePoints(EntityPlayer p_70693_1_){
-        return 0;
-    }
-	
+	protected int getExperiencePoints(EntityPlayer p_70693_1_){
+		return 0;
+	}
+
 	@Override
 	protected Item getDropItem(){
-		
-        return null;
-    }
+
+		return null;
+	}
 
 	@Override
-	protected void dropFewItems(boolean par1, int par2){}
+	protected void dropFewItems(boolean par1, int par2){
+	}
 
 	@Override
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(24.0D);
-    }
-	
-	@Override
-	public void openGUI(EntityPlayer p_110199_1_){}
+	protected void applyEntityAttributes(){
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(24.0D);
+	}
 
 	@Override
-	public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack stack){
-		
-		ItemStack itemstack = player.inventory.getCurrentItem();
-		
-		// Allows the owner (but not other players) to dispel the spirit horse using a wand (shift-clicking, because clicking mounts the horse in this case).
-		if(itemstack != null && itemstack.getItem() instanceof ItemWand && this.getOwner() == player && player.isSneaking()){
+	public void openGUI(EntityPlayer p_110199_1_){
+	}
+
+	@Override
+	public boolean processInteract(EntityPlayer player, EnumHand hand){
+
+		ItemStack itemstack = player.getHeldItem(hand);
+
+		// Allows the owner (but not other players) to dispel the spirit horse using a wand (shift-clicking, because
+		// clicking mounts the horse in this case).
+		if(itemstack.getItem() instanceof ItemWand && this.getOwner() == player && player.isSneaking()){
 			// Prevents accidental double clicking.
 			if(this.ticksExisted > 20){
-				for(int i=0;i<15;i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX - this.width/2 + this.rand.nextFloat()*width, this.posY + this.height*this.rand.nextFloat() + 0.2f, this.posZ - this.width/2 + this.rand.nextFloat()*width, 0, 0, 0, 48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
+				for(int i = 0; i < 15; i++){
+					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+							this.posX - this.width / 2 + this.rand.nextFloat() * width,
+							this.posY + this.height * this.rand.nextFloat() + 0.2f,
+							this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0,
+							48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
 				}
 				this.setDead();
 				if(WizardData.get(player) != null){
@@ -106,15 +102,15 @@ public class EntitySpiritHorse extends EntityHorse {
 			}
 			return false;
 		}
-		
-		return super.processInteract(player, hand, itemstack);
+
+		return super.processInteract(player, hand);
 	}
-	
+
 	@Override
 	public void onDeath(DamageSource par1DamageSource){
-		
+
 		super.onDeath(par1DamageSource);
-		
+
 		// Allows player to summon another spirit horse once this one has died.
 		if(this.getOwner() instanceof EntityPlayer && WizardData.get((EntityPlayer)this.getOwner()) != null){
 			WizardData.get((EntityPlayer)this.getOwner()).hasSpiritHorse = false;
@@ -123,10 +119,10 @@ public class EntitySpiritHorse extends EntityHorse {
 
 	// I wrote this one!
 	private EntityLivingBase getOwner(){
-		
+
 		// I think the DataManager stores any objects, so it now stores the UUID instead of its string representation.
-		Entity owner = WizardryUtilities.getEntityByUUID(worldObj, this.getOwnerUniqueId());
-		
+		Entity owner = WizardryUtilities.getEntityByUUID(world, this.getOwnerUniqueId());
+
 		if(owner instanceof EntityLivingBase){
 			return (EntityLivingBase)owner;
 		}else{
@@ -136,12 +132,15 @@ public class EntitySpiritHorse extends EntityHorse {
 
 	@Override
 	public void onUpdate(){
-		
+
 		super.onUpdate();
 
 		// Adds a dust particle effect
-		if(this.worldObj.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, worldObj, this.posX - this.width/2 + this.rand.nextFloat()*width, this.posY + this.height*this.rand.nextFloat() + 0.2f, this.posZ - this.width/2 + this.rand.nextFloat()*width, 0, 0, 0, 0, 0.8f, 0.8f, 1.0f);
+		if(this.world.isRemote){
+			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, world,
+					this.posX - this.width / 2 + this.rand.nextFloat() * width,
+					this.posY + this.height * this.rand.nextFloat() + 0.2f,
+					this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0, 0, 0.8f, 0.8f, 1.0f);
 		}
 
 		// Spirit horse disappears a short time after being dismounted.
@@ -152,9 +151,13 @@ public class EntitySpiritHorse extends EntityHorse {
 		}
 
 		if(this.idleTimer > 200){
-			if(this.worldObj.isRemote){
-				for(int i=0;i<15;i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX - this.width/2 + this.rand.nextFloat()*width, this.posY + this.height*this.rand.nextFloat() + 0.2f, this.posZ - this.width/2 + this.rand.nextFloat()*width, 0, 0, 0, 48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
+			if(this.world.isRemote){
+				for(int i = 0; i < 15; i++){
+					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+							this.posX - this.width / 2 + this.rand.nextFloat() * width,
+							this.posY + this.height * this.rand.nextFloat() + 0.2f,
+							this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0,
+							48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
 				}
 			}
 			this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
@@ -170,24 +173,28 @@ public class EntitySpiritHorse extends EntityHorse {
 	public boolean canMateWith(EntityAnimal par1EntityAnimal){
 		return false;
 	}
-	
+
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData data){
-		
+
 		// Adds Particles on spawn. Due to client/server differences this cannot be done in the item.
-		if(this.worldObj.isRemote){
-			for(int i=0;i<15;i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX - this.width/2 + this.rand.nextFloat()*width, this.posY + this.height*this.rand.nextFloat() + 0.2f, this.posZ - this.width/2 + this.rand.nextFloat()*width, 0, 0, 0, 48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
+		if(this.world.isRemote){
+			for(int i = 0; i < 15; i++){
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+						this.posX - this.width / 2 + this.rand.nextFloat() * width,
+						this.posY + this.height * this.rand.nextFloat() + 0.2f,
+						this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0, 48 + this.rand.nextInt(12),
+						0.8f, 0.8f, 1.0f);
 			}
 		}
-		
+
 		return super.onInitialSpawn(difficulty, data);
 	}
-	
+
 	@Override
 	public ITextComponent getDisplayName(){
 		if(getOwner() != null){
-			return new TextComponentTranslation(ISummonedCreature.NAMEPLATE_TRANSLATION_KEY, getOwner().getName(), 
+			return new TextComponentTranslation(ISummonedCreature.NAMEPLATE_TRANSLATION_KEY, getOwner().getName(),
 					new TextComponentTranslation("entity." + this.getEntityString() + ".name"));
 		}else{
 			return super.getDisplayName();

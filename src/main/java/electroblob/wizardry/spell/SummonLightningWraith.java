@@ -18,8 +18,9 @@ import net.minecraft.world.World;
 
 public class SummonLightningWraith extends Spell {
 
-	public SummonLightningWraith() {
-		super(Tier.ADVANCED, 40, Element.LIGHTNING, "summon_lightning_wraith", SpellType.MINION, 200, EnumAction.BOW, false);
+	public SummonLightningWraith(){
+		super(Tier.ADVANCED, 40, Element.LIGHTNING, "summon_lightning_wraith", SpellType.MINION, 200, EnumAction.BOW,
+				false);
 	}
 
 	@Override
@@ -28,30 +29,34 @@ public class SummonLightningWraith extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-		
+	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+
 		if(!world.isRemote){
-			
+
 			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
 			if(pos == null) return false;
-			
-			EntityLightningWraith lightningWraith = new EntityLightningWraith(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)));
-			world.spawnEntityInWorld(lightningWraith);
+
+			EntityLightningWraith lightningWraith = new EntityLightningWraith(world, pos.getX() + 0.5, pos.getY(),
+					pos.getZ() + 0.5, caster, (int)(600 * modifiers.get(WizardryItems.duration_upgrade)));
+			world.spawnEntity(lightningWraith);
 		}
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F,
+				world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		
+	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
+			SpellModifiers modifiers){
+
 		if(!world.isRemote){
 
 			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
 			if(pos == null) return false;
-			
-			EntityLightningWraith lightningWraith = new EntityLightningWraith(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)));
-			world.spawnEntityInWorld(lightningWraith);
+
+			EntityLightningWraith lightningWraith = new EntityLightningWraith(world, pos.getX() + 0.5, pos.getY(),
+					pos.getZ() + 0.5, caster, (int)(600 * modifiers.get(WizardryItems.duration_upgrade)));
+			world.spawnEntity(lightningWraith);
 		}
 		caster.playSound(SoundEvents.ENTITY_WITHER_AMBIENT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
