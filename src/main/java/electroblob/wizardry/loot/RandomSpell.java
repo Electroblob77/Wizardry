@@ -103,8 +103,8 @@ public class RandomSpell extends LootFunction {
 			if(tier == Tier.BASIC){
 				element = Element.values()[random.nextInt(Element.values().length)];
 			}else{
-				element = ArrayUtils.removeElement(Element.values(), Element.MAGIC)[random
-						.nextInt(Element.values().length)];
+				Element[] elements = ArrayUtils.removeElement(Element.values(), Element.MAGIC);
+				element = elements[random.nextInt(elements.length)];
 			}
 		}else{
 			// In theory, swapping this line to the commented one should make absolutely no difference.
