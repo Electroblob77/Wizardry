@@ -46,7 +46,7 @@ public class Wizardry {
 	 * Wizardry 2.1, but they are for different versions of Minecraft and have separate minor versioning. 1.x.x
 	 * represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on. */
-	public static final String VERSION = "2.1.0";
+	public static final String VERSION = "2.1.2";
 	
 	// IDEA: Improve the algorithm that finds a place to summon creatures to take walls into account.
 	// IDEA: Replace all uses of Math.cos and Math.sin with MathHelper versions
