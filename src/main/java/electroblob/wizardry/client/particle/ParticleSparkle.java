@@ -81,8 +81,8 @@ public class ParticleSparkle extends ParticleCustomTexture {
 //        this.setRBGColorF(this.initialRed + (this.fadeRed - this.initialRed)*ageFraction,
 //        		this.initialGreen + (this.fadeGreen - this.initialGreen)*ageFraction,
 //        		this.initialBlue + (this.fadeBlue - this.initialBlue)*ageFraction);
-//
-//        this.setParticleTextureIndex((this.particleAge * 11)/this.particleMaxAge);
+
+		this.setParticleTextureIndex((this.particleAge * 11)/this.particleMaxAge);
     }
     
     /*
