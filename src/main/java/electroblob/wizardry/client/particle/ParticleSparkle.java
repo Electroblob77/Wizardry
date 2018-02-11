@@ -96,10 +96,10 @@ public class ParticleSparkle extends ParticleCustomTexture {
 		// Colour fading TODO Uncomment once 2.1.0 is released
 		// float ageFraction = (float)this.particleAge / (float)this.particleMaxAge;
 		// this.setRBGColorF(this.initialRed + (this.fadeRed - this.initialRed)*ageFraction,
-		// this.initialGreen + (this.fadeGreen - this.initialGreen)*ageFraction,
-		// this.initialBlue + (this.fadeBlue - this.initialBlue)*ageFraction);
-		//
-		// this.setParticleTextureIndex((this.particleAge * 11)/this.particleMaxAge);
+		// 		this.initialGreen + (this.fadeGreen - this.initialGreen)*ageFraction,
+		// 		this.initialBlue + (this.fadeBlue - this.initialBlue)*ageFraction);
+		
+		this.setParticleTextureIndex((this.particleAge * 11)/this.particleMaxAge);
 	}
 
 	/* As a side note, I see a lot of magic mods with fancy-looking particle effects that really seem to 'glow'. It's

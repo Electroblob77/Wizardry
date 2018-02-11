@@ -57,7 +57,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * {@link Spell#get(int)} gets a spell instance from its integer id, which corresponds to the metadata of its spell
  * book.<br>
  * {@link Spell#get(String)} gets a spell instance from its unlocalised name.<br>
- * {@link Spell#getSpells(Predicate)} returns a list of spell instances the match the given {@link Predicate}.<br>
+ * {@link Spell#getSpells(Predicate)} returns a list of spell instances that match the given {@link Predicate}.<br>
  * {@link Spell#getTotalSpellCount()} returns the total number of registered spells.
  * <hr>
  * Spell implements the {@link Comparable} interface, and as such, any collection of spells can be sorted. Spells are

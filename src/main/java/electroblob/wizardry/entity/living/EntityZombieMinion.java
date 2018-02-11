@@ -29,35 +29,12 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override
-	public int getLifetime(){
-		return lifetime;
-	}
-
-	@Override
-	public void setLifetime(int lifetime){
-		this.lifetime = lifetime;
-	}
-
-	@Override
-	public WeakReference<EntityLivingBase> getCasterReference(){
-		return casterReference;
-	}
-
-	@Override
-	public void setCasterReference(WeakReference<EntityLivingBase> reference){
-		casterReference = reference;
-	}
-
-	@Override
-	public UUID getCasterUUID(){
-		return casterUUID;
-	}
-
-	@Override
-	public void setCasterUUID(UUID uuid){
-		this.casterUUID = uuid;
-	}
+	@Override public int getLifetime(){ return lifetime; }
+	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
+	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
+	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
+	@Override public UUID getCasterUUID(){ return casterUUID; }
+	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
 
 	/**
 	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
@@ -92,26 +69,11 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 				0, false, true, this.getTargetSelector()));
 	}
 
-	@Override
-	public boolean isChild(){
-		return false;
-	}
-
-	@Override
-	public void setChild(boolean childZombie){
-	} // Can't be a child
-
-	@Override
-	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty){
-	} // They don't have equipment!
-
-	@Override
-	public void onKillEntity(EntityLivingBase entityLivingIn){
-	} // Turns villagers to zombies in EntityZombie
-
-	@Override
-	public void setChildSize(boolean isChild){
-	}
+	@Override public boolean isChild(){ return false; }
+	@Override public void setChild(boolean childZombie){} // Can't be a child
+	@Override protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty){} // They don't have equipment!
+	@Override public void onKillEntity(EntityLivingBase entityLivingIn){} // Turns villagers to zombies in EntityZombie
+	@Override public void setChildSize(boolean isChild){}
 
 	// Implementations
 
@@ -171,36 +133,13 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 
 	// Recommended overrides
 
-	@Override
-	protected int getExperiencePoints(EntityPlayer player){
-		return 0;
-	}
-
-	@Override
-	protected boolean canDropLoot(){
-		return false;
-	}
-
-	@Override
-	protected Item getDropItem(){
-		return null;
-	}
-
-	@Override
-	protected ResourceLocation getLootTable(){
-		return null;
-	}
-
-	@Override
-	public boolean canPickUpLoot(){
-		return false;
-	}
-
+	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
+	@Override protected boolean canDropLoot(){ return false; }
+	@Override protected Item getDropItem(){ return null; }
+	@Override protected ResourceLocation getLootTable(){ return null; }
+	@Override public boolean canPickUpLoot(){ return false; }
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override
-	protected boolean canDespawn(){
-		return false;
-	}
+	@Override protected boolean canDespawn(){ return false; }
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){

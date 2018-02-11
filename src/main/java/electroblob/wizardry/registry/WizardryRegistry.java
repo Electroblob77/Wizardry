@@ -159,116 +159,62 @@ public final class WizardryRegistry {
 
 		int id = 0; // Incrementable index for the mod specific entity id.
 
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "zombie_minion"),
-				EntityZombieMinion.class, "zombie_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "magic_missile"),
-				EntityMagicMissile.class, "magic_missile", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "zombie_minion"), EntityZombieMinion.class, "zombie_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "magic_missile"), EntityMagicMissile.class, "magic_missile", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
 		// TODO: This should be a particle
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "arc"), EntityArc.class, "arc", id++,
-				wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "skeleton_minion"),
-				EntitySkeletonMinion.class, "skeleton_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spark_bomb"), EntitySparkBomb.class,
-				"spark_bomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spirit_wolf"), EntitySpiritWolf.class,
-				"spirit_wolf", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_shard"), EntityIceShard.class,
-				"ice_shard", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "blaze_minion"), EntityBlazeMinion.class,
-				"blaze_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_wraith"), EntityIceWraith.class,
-				"ice_wraith", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_wraith"),
-				EntityLightningWraith.class, "lightning_wraith", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "black_hole"), EntityBlackHole.class,
-				"black_hole", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "shield"), EntityShield.class, "shield",
-				id++, wizardry, 128, 1, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "meteor"), EntityMeteor.class, "meteor",
-				id++, wizardry, 128, 5, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "blizzard"), EntityBlizzard.class,
-				"blizzard", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(wizardID, EntityWizard.class, "wizard", id++, wizardry, 128,
-				LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "bubble"), EntityBubble.class, "bubble",
-				id++, wizardry, 128, 3, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "tornado"), EntityTornado.class,
-				"tornado", id++, wizardry, 128, 1, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_hammer"), EntityHammer.class,
-				"lightning_hammer", id++, wizardry, 128, 1, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "firebomb"), EntityFirebomb.class,
-				"firebomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "force_orb"), EntityForceOrb.class,
-				"force_orb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "arrow_rain"), EntityArrowRain.class,
-				"arrow_rain", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spark"), EntitySpark.class, "spark",
-				id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "shadow_wraith"),
-				EntityShadowWraith.class, "shadow_wraith", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "darkness_orb"), EntityDarknessOrb.class,
-				"darkness_orb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spider_minion"),
-				EntitySpiderMinion.class, "spider_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "healing_aura"), EntityHealAura.class,
-				"healing_aura", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "fire_sigil"), EntityFireSigil.class,
-				"fire_sigil", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "frost_sigil"), EntityFrostSigil.class,
-				"frost_sigil", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_sigil"),
-				EntityLightningSigil.class, "lightning_sigil", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_arrow"),
-				EntityLightningArrow.class, "lightning_arrow", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "firebolt"), EntityFirebolt.class,
-				"firebolt", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "poison_bomb"), EntityPoisonBomb.class,
-				"poison_bomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_charge"), EntityIceCharge.class,
-				"ice_charge", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "force_arrow"), EntityForceArrow.class,
-				"force_arrow", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "dart"), EntityDart.class, "dart", id++,
-				wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "magic_slime"), EntityMagicSlime.class,
-				"magic_slime", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "forcefield"), EntityForcefield.class,
-				"forcefield", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ring_of_fire"), EntityFireRing.class,
-				"ring_of_fire", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_disc"),
-				EntityLightningDisc.class, "lightning_disc", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "thunderbolt"), EntityThunderbolt.class,
-				"thunderbolt", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_giant"), EntityIceGiant.class,
-				"ice_giant", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spirit_horse"), EntitySpiritHorse.class,
-				"spirit_horse", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "phoenix"), EntityPhoenix.class,
-				"phoenix", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "silverfish_minion"),
-				EntitySilverfishMinion.class, "silverfish_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "decay"), EntityDecay.class, "decay",
-				id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "storm_elemental"),
-				EntityStormElemental.class, "storm_elemental", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "earthquake"), EntityEarthquake.class,
-				"earthquake", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_lance"), EntityIceLance.class,
-				"ice_lance", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "hailstorm"), EntityHailstorm.class,
-				"hailstorm", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "smoke_bomb"), EntitySmokeBomb.class,
-				"smoke_bomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(evilWizardID, EntityEvilWizard.class, "evil_wizard", id++, wizardry, 128,
-				LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "decoy"), EntityDecoy.class, "decoy",
-				id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_spike"), EntityIceSpike.class,
-				"ice_spike", id++, wizardry, 128, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "arc"), EntityArc.class, "arc", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "skeleton_minion"), EntitySkeletonMinion.class, "skeleton_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spark_bomb"), EntitySparkBomb.class, "spark_bomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spirit_wolf"), EntitySpiritWolf.class, "spirit_wolf", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_shard"), EntityIceShard.class, "ice_shard", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "blaze_minion"), EntityBlazeMinion.class, "blaze_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_wraith"), EntityIceWraith.class, "ice_wraith", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_wraith"), EntityLightningWraith.class, "lightning_wraith", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "black_hole"), EntityBlackHole.class, "black_hole", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "shield"), EntityShield.class, "shield", id++, wizardry, 128, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "meteor"), EntityMeteor.class, "meteor", id++, wizardry, 128, 5, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "blizzard"), EntityBlizzard.class, "blizzard", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(wizardID, EntityWizard.class, "wizard", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "bubble"), EntityBubble.class, "bubble", id++, wizardry, 128, 3, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "tornado"), EntityTornado.class, "tornado", id++, wizardry, 128, 1, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_hammer"), EntityHammer.class, "lightning_hammer", id++, wizardry, 128, 1, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "firebomb"), EntityFirebomb.class, "firebomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "force_orb"), EntityForceOrb.class, "force_orb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "arrow_rain"), EntityArrowRain.class, "arrow_rain", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spark"), EntitySpark.class, "spark", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "shadow_wraith"), EntityShadowWraith.class, "shadow_wraith", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "darkness_orb"), EntityDarknessOrb.class, "darkness_orb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spider_minion"), EntitySpiderMinion.class, "spider_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "healing_aura"), EntityHealAura.class, "healing_aura", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "fire_sigil"), EntityFireSigil.class, "fire_sigil", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "frost_sigil"), EntityFrostSigil.class, "frost_sigil", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_sigil"), EntityLightningSigil.class, "lightning_sigil", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_arrow"), EntityLightningArrow.class, "lightning_arrow", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "firebolt"), EntityFirebolt.class, "firebolt", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "poison_bomb"), EntityPoisonBomb.class, "poison_bomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_charge"), EntityIceCharge.class, "ice_charge", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "force_arrow"), EntityForceArrow.class, "force_arrow", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "dart"), EntityDart.class, "dart", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "magic_slime"), EntityMagicSlime.class, "magic_slime", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "forcefield"), EntityForcefield.class, "forcefield", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ring_of_fire"), EntityFireRing.class, "ring_of_fire", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_disc"), EntityLightningDisc.class, "lightning_disc", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "thunderbolt"), EntityThunderbolt.class, "thunderbolt", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_giant"), EntityIceGiant.class, "ice_giant", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "spirit_horse"), EntitySpiritHorse.class, "spirit_horse", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "phoenix"), EntityPhoenix.class, "phoenix", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "silverfish_minion"), EntitySilverfishMinion.class, "silverfish_minion", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "decay"), EntityDecay.class, "decay", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "storm_elemental"), EntityStormElemental.class, "storm_elemental", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "earthquake"), EntityEarthquake.class, "earthquake", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_lance"), EntityIceLance.class, "ice_lance", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "hailstorm"), EntityHailstorm.class, "hailstorm", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "smoke_bomb"), EntitySmokeBomb.class, "smoke_bomb", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(evilWizardID, EntityEvilWizard.class, "evil_wizard", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "decoy"), EntityDecoy.class, "decoy", id++, wizardry, 128, LIVING_UPDATE_INTERVAL, true);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "ice_spike"), EntityIceSpike.class, "ice_spike", id++, wizardry, 128, 1, true);
 		// TODO: This should be a particle.
-		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_pulse"),
-				EntityLightningPulse.class, "lightning_pulse", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		EntityRegistry.registerModEntity(new ResourceLocation(Wizardry.MODID, "lightning_pulse"), EntityLightningPulse.class, "lightning_pulse", id++, wizardry, 128, PROJECTILE_UPDATE_INTERVAL, false);
 
 		EntityRegistry.registerEgg(wizardID, 0x19295e, 0xee9312);
 		EntityRegistry.registerEgg(evilWizardID, 0x290404, 0xee9312);
@@ -344,12 +290,14 @@ public final class WizardryRegistry {
 		GameRegistry.addShapelessRecipe(wizardHandbookStack, bookStack, magicCrystalStack);
 		GameRegistry.addShapelessRecipe(magicCrystalStack1, crystalFlowerStack);
 		GameRegistry.addShapelessRecipe(magicCrystalStack2, crystalBlockStack);
-		if(Wizardry.settings.firebombIsCraftable) GameRegistry.addShapelessRecipe(firebombStack, bottleStack,
-				gunpowderStack, blazePowderStack, blazePowderStack);
-		if(Wizardry.settings.poisonBombIsCraftable) GameRegistry.addShapelessRecipe(poisonBombStack, bottleStack,
-				gunpowderStack, spiderEyeStack, spiderEyeStack);
+		
+		if(Wizardry.settings.firebombIsCraftable)
+			GameRegistry.addShapelessRecipe(firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack);
+		if(Wizardry.settings.poisonBombIsCraftable)
+			GameRegistry.addShapelessRecipe(poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack);
 		if(Wizardry.settings.smokeBombIsCraftable)
 			GameRegistry.addShapelessRecipe(smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack);
+		
 		if(Wizardry.settings.useAlternateScrollRecipe){
 			GameRegistry.addShapelessRecipe(scrollStack, paperStack, stringStack, magicCrystalStack);
 		}else{
