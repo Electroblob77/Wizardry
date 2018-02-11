@@ -35,9 +35,9 @@ public class Blizzard extends Spell {
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 			if(!world.isRemote){
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
+				double x = rayTrace.hitVec.x;
+				double y = rayTrace.hitVec.y;
+				double z = rayTrace.hitVec.z;
 				EntityBlizzard blizzard = new EntityBlizzard(world, x, y + 0.5, z, caster,
 						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
 						modifiers.get(SpellModifiers.DAMAGE));

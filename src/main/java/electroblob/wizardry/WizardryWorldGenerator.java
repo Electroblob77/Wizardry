@@ -124,8 +124,8 @@ public class WizardryWorldGenerator implements IWorldGenerator {
 				int k1 = randPosZ + random.nextInt(8) - random.nextInt(8);
 
 				BlockPos pos = new BlockPos(i1, j1, k1);
-
-				if(world.isBlockLoaded(pos) && world.isAirBlock(pos) && (!world.provider.hasNoSky() || j1 < 127)
+ 
+				if(world.isBlockLoaded(pos) && world.isAirBlock(pos) && (!world.provider.isNether() || j1 < 127)
 						&& state.getBlock().canPlaceBlockOnSide(world, pos, EnumFacing.UP)){
 
 					world.setBlockState(pos, state, 2);

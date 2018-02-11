@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -53,7 +54,7 @@ public class Telekinesis extends Spell {
 
 				EntityPlayer target = (EntityPlayer)rayTrace.entityHit;
 
-				if(target.getHeldItemMainhand() != null){
+				if(!target.getHeldItemMainhand().isEmpty()){
 
 					if(!world.isRemote){
 						EntityItem item = target.entityDropItem(target.getHeldItemMainhand(), 0.0f);
@@ -62,7 +63,7 @@ public class Telekinesis extends Spell {
 						item.motionZ = (caster.posZ - target.posZ) / 20;
 					}
 
-					target.setHeldItem(EnumHand.MAIN_HAND, null);
+					target.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 
 					target.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 1.0f);
 					caster.swingArm(hand);
@@ -88,7 +89,7 @@ public class Telekinesis extends Spell {
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
 			SpellModifiers modifiers){
 
-		if(target instanceof EntityPlayer && target.getHeldItemMainhand() != null){
+		if(target instanceof EntityPlayer && !target.getHeldItemMainhand().isEmpty()){
 
 			// IDEA: Disarm the offhand if the mainhand is empty or otherwise harmless?
 
@@ -99,7 +100,7 @@ public class Telekinesis extends Spell {
 				item.motionZ = (caster.posZ - target.posZ) / 20;
 			}
 
-			target.setHeldItem(EnumHand.MAIN_HAND, null);
+			target.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 
 			target.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 1.0f);
 			caster.swingArm(hand);

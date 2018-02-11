@@ -36,8 +36,8 @@ public class MixedFontRenderer extends FontRenderer {
 				l += Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(section, x, y, colour, shadow);
 				x += Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(section);
 			}else{
-				l += Minecraft.getMinecraft().fontRendererObj.drawString(section, x, y, colour, shadow);
-				x += Minecraft.getMinecraft().fontRendererObj.getStringWidth(section);
+				l += Minecraft.getMinecraft().fontRenderer.drawString(section, x, y, colour, shadow);
+				x += Minecraft.getMinecraft().fontRenderer.getStringWidth(section);
 			}
 
 			string = string.substring(string.indexOf('#') + 1);
@@ -47,7 +47,7 @@ public class MixedFontRenderer extends FontRenderer {
 		if(sga){
 			l += Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(string, x, y, colour, shadow);
 		}else{
-			l += Minecraft.getMinecraft().fontRendererObj.drawString(string, x, y, colour, shadow);
+			l += Minecraft.getMinecraft().fontRenderer.drawString(string, x, y, colour, shadow);
 		}
 
 		return l;
@@ -67,7 +67,7 @@ public class MixedFontRenderer extends FontRenderer {
 			if(sga){
 				l += Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(section);
 			}else{
-				l += Minecraft.getMinecraft().fontRendererObj.getStringWidth(section);
+				l += Minecraft.getMinecraft().fontRenderer.getStringWidth(section);
 			}
 
 			string = string.substring(string.indexOf('#') + 1);
@@ -77,7 +77,7 @@ public class MixedFontRenderer extends FontRenderer {
 		if(sga){
 			l += Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(string);
 		}else{
-			l += Minecraft.getMinecraft().fontRendererObj.getStringWidth(string);
+			l += Minecraft.getMinecraft().fontRenderer.getStringWidth(string);
 		}
 
 		return l;
@@ -91,7 +91,7 @@ public class MixedFontRenderer extends FontRenderer {
 			Minecraft.getMinecraft().standardGalacticFontRenderer.drawSplitString(string.substring(1), x, y, width,
 					colour);
 		}else{
-			Minecraft.getMinecraft().fontRendererObj.drawSplitString(string, x, y, width, colour);
+			Minecraft.getMinecraft().fontRenderer.drawSplitString(string, x, y, width, colour);
 		}
 	}
 

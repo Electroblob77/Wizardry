@@ -77,9 +77,9 @@ public class EntityForcefield extends EntityMagicConstruct {
 
 	public boolean attackEntityFrom(DamageSource source, float par2){
 
-		if(source != null && source.getSourceOfDamage() != null){
+		if(source != null && source.getImmediateSource() != null){
 			// Now works for any source of damage.
-			source.getSourceOfDamage().playSound(WizardrySounds.SPELL_DEFLECTION, 0.3f, 1.3f);
+			source.getImmediateSource().playSound(WizardrySounds.SPELL_DEFLECTION, 0.3f, 1.3f);
 		}
 		super.attackEntityFrom(source, par2);
 		return false;

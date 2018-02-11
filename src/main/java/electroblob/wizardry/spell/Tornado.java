@@ -30,13 +30,13 @@ public class Tornado extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		if(!world.isRemote){
-			double x = caster.posX + caster.getLookVec().xCoord;
+			double x = caster.posX + caster.getLookVec().x;
 			double y = caster.posY;
-			double z = caster.posZ + caster.getLookVec().zCoord;
+			double z = caster.posZ + caster.getLookVec().z;
 
 			EntityTornado tornado = new EntityTornado(world, x, y, z, caster,
-					(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord / 3,
-					caster.getLookVec().zCoord / 3, modifiers.get(SpellModifiers.DAMAGE));
+					(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().x / 3,
+					caster.getLookVec().z / 3, modifiers.get(SpellModifiers.DAMAGE));
 			world.spawnEntity(tornado);
 		}
 		caster.swingArm(hand);
@@ -51,13 +51,13 @@ public class Tornado extends Spell {
 		if(target != null){
 
 			if(!world.isRemote){
-				double x = caster.posX + caster.getLookVec().xCoord;
+				double x = caster.posX + caster.getLookVec().x;
 				double y = caster.posY;
-				double z = caster.posZ + caster.getLookVec().zCoord;
+				double z = caster.posZ + caster.getLookVec().z;
 
 				EntityTornado tornado = new EntityTornado(world, x, y, z, caster,
-						(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord / 3,
-						caster.getLookVec().zCoord / 3, modifiers.get(SpellModifiers.DAMAGE));
+						(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().x / 3,
+						caster.getLookVec().z / 3, modifiers.get(SpellModifiers.DAMAGE));
 				world.spawnEntity(tornado);
 			}
 			caster.swingArm(hand);

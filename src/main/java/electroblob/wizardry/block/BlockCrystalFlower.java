@@ -63,7 +63,7 @@ public class BlockCrystalFlower extends BlockBush {
 					event.getWorld().rand.nextInt(8) - event.getWorld().rand.nextInt(8));
 
 			if(event.getWorld().isAirBlock(new BlockPos(pos))
-					&& (!event.getWorld().provider.hasNoSky() || pos.getY() < 127)
+					&& (!event.getWorld().provider.isNether() || pos.getY() < 127)
 					&& WizardryBlocks.crystal_flower.canPlaceBlockAt(event.getWorld(), pos)){
 				event.getWorld().setBlockState(pos, WizardryBlocks.crystal_flower.getDefaultState(), 2);
 			}

@@ -363,7 +363,7 @@ public class ClientProxy extends CommonProxy {
 
 			Source source = Source.OTHER;
 
-			if(((EntityPlayer)caster).getHeldItem(message.hand) != null){
+			if(!((EntityPlayer)caster).getHeldItem(message.hand).isEmpty()){
 				Item item = ((EntityPlayer)caster).getHeldItem(message.hand).getItem();
 				if(item instanceof ItemWand){
 					source = Source.WAND;

@@ -81,10 +81,10 @@ public class Clairvoyance extends Spell {
 							256 * modifiers.get(WizardryItems.range_upgrade));
 
 					if(path != null && path.getFinalPathPoint() != null){
-
-						int x = path.getFinalPathPoint().xCoord;
-						int y = path.getFinalPathPoint().xCoord;
-						int z = path.getFinalPathPoint().xCoord;
+						// TODO Corail : is it normal to have x in each ???
+						int x = path.getFinalPathPoint().x;
+						int y = path.getFinalPathPoint().y;
+						int z = path.getFinalPathPoint().z;
 
 						if(x == destination.getX() && y == destination.getY() && z == destination.getZ()){
 
@@ -129,10 +129,10 @@ public class Clairvoyance extends Spell {
 			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint()
 					: path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
 
-			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5,
-					point.zCoord + 0.5, (nextPoint.xCoord - point.xCoord) / (float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.yCoord - point.yCoord) / (float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.zCoord - point.zCoord) / (float)PARTICLE_MOVEMENT_INTERVAL,
+			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5,
+					point.z + 0.5, (nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL,
 					(int)(1800 * durationMultiplier), 0, 1, 0.3f);
 
 			path.incrementPathIndex();
@@ -141,8 +141,8 @@ public class Clairvoyance extends Spell {
 
 		point = path.getFinalPathPoint();
 
-		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5,
-				point.zCoord + 0.5, 0, 0, 0, (int)(1800 * durationMultiplier), 1, 1, 1);
+		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5,
+				point.z + 0.5, 0, 0, 0, (int)(1800 * durationMultiplier), 1, 1, 1);
 	}
 
 	@SubscribeEvent
@@ -153,7 +153,7 @@ public class Clairvoyance extends Spell {
 			// The event now has an ItemStack, which greatly simplifies hand-related stuff.
 			ItemStack wand = event.getItemStack();
 
-			if(wand != null && wand.getItem() instanceof ItemWand
+			if(!wand.isEmpty() && wand.getItem() instanceof ItemWand
 					&& WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
 
 				WizardData properties = WizardData.get(event.getEntityPlayer());

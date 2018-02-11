@@ -125,7 +125,7 @@ public class EntityIceWraith extends EntityBlazeMinion {
 			this.motionZ = 0.0D;
 		}
 
-		this.world.theProfiler.startSection("ai");
+		this.world.profiler.startSection("ai");
 
 		if(this.isMovementBlocked()){
 			this.isJumping = false;
@@ -133,13 +133,13 @@ public class EntityIceWraith extends EntityBlazeMinion {
 			this.moveForward = 0.0F;
 			this.randomYawVelocity = 0.0F;
 		}else if(this.isServerWorld()){
-			this.world.theProfiler.startSection("newAi");
+			this.world.profiler.startSection("newAi");
 			this.updateEntityActionState();
-			this.world.theProfiler.endSection();
+			this.world.profiler.endSection();
 		}
 
-		this.world.theProfiler.endSection();
-		this.world.theProfiler.startSection("jump");
+		this.world.profiler.endSection();
+		this.world.profiler.startSection("jump");
 
 		if(this.isJumping){
 			if(this.isInWater()){
@@ -154,16 +154,16 @@ public class EntityIceWraith extends EntityBlazeMinion {
 			this.jumpTicks = 0;
 		}
 
-		this.world.theProfiler.endSection();
-		this.world.theProfiler.startSection("travel");
+		this.world.profiler.endSection();
+		this.world.profiler.startSection("travel");
 		this.moveStrafing *= 0.98F;
 		this.moveForward *= 0.98F;
 		this.randomYawVelocity *= 0.9F;
 		this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
-		this.world.theProfiler.endSection();
-		this.world.theProfiler.startSection("push");
+		this.world.profiler.endSection();
+		this.world.profiler.startSection("push");
 		this.collideWithNearbyEntities();
-		this.world.theProfiler.endSection();
+		this.world.profiler.endSection();
 	}
 
 	@Override

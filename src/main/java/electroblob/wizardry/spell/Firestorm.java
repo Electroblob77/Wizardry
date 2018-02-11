@@ -66,18 +66,18 @@ public class Firestorm extends Spell {
 		if(world.isRemote){
 			for(int i = 0; i < 40; i++){
 				// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-				double x1 = caster.posX + look.xCoord * i / 2 + world.rand.nextFloat() * 0.6f - 0.3f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord * i / 2
+				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() * 0.6f - 0.3f;
+				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() * 0.4f - 0.2f;
-				double z1 = caster.posZ + look.zCoord * i / 2 + world.rand.nextFloat() * 0.6f - 0.3f;
+				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() * 0.6f - 0.3f;
 				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
-						look.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.zCoord * modifiers.get(WizardryItems.range_upgrade), 0, 3 + world.rand.nextFloat(), 0, 0);
+						look.x * modifiers.get(WizardryItems.range_upgrade),
+						look.y * modifiers.get(WizardryItems.range_upgrade),
+						look.z * modifiers.get(WizardryItems.range_upgrade), 0, 3 + world.rand.nextFloat(), 0, 0);
 				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
-						look.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.zCoord * modifiers.get(WizardryItems.range_upgrade), 0, 3 + world.rand.nextFloat(), 0, 0);
+						look.x * modifiers.get(WizardryItems.range_upgrade),
+						look.y * modifiers.get(WizardryItems.range_upgrade),
+						look.z * modifiers.get(WizardryItems.range_upgrade), 0, 3 + world.rand.nextFloat(), 0, 0);
 			}
 		}
 		if(ticksInUse % 16 == 0){

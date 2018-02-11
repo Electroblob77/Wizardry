@@ -52,9 +52,9 @@ public class BlackHole extends Spell {
 			}
 
 		}else{
-			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().xCoord * 8);
-			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().yCoord * 8);
-			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().zCoord * 8);
+			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().x * 8);
+			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().y * 8);
+			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().z * 8);
 			if(!world.isRemote){
 				world.spawnEntity(new EntityBlackHole(world, x, y, z, caster,
 						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),

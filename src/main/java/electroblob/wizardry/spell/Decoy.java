@@ -29,7 +29,7 @@ public class Decoy extends Spell {
 		if(!world.isRemote){
 			EntityDecoy decoy = new EntityDecoy(world, caster.posX, caster.posY, caster.posZ, caster, 600);
 			decoy.setLocationAndAngles(caster.posX, caster.posY, caster.posZ, caster.rotationYaw, caster.rotationPitch);
-			decoy.addVelocity(-caster.getLookVec().zCoord * splitSpeed, 0, caster.getLookVec().xCoord * splitSpeed);
+			decoy.addVelocity(-caster.getLookVec().z * splitSpeed, 0, caster.getLookVec().x * splitSpeed);
 			// Ignores the show names setting, since this would allow a player to easily detect a decoy
 			decoy.setCustomNameTag(caster.getName());
 			world.spawnEntity(decoy);
@@ -44,7 +44,7 @@ public class Decoy extends Spell {
 			}
 		}
 
-		caster.addVelocity(caster.getLookVec().zCoord * splitSpeed, 0, -caster.getLookVec().xCoord * splitSpeed);
+		caster.addVelocity(caster.getLookVec().z * splitSpeed, 0, -caster.getLookVec().x * splitSpeed);
 
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F,
 				0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
@@ -61,7 +61,7 @@ public class Decoy extends Spell {
 		if(!world.isRemote){
 			EntityDecoy decoy = new EntityDecoy(world, caster.posX, caster.posY, caster.posZ, caster, 600);
 			decoy.setLocationAndAngles(caster.posX, caster.posY, caster.posZ, caster.rotationYaw, caster.rotationPitch);
-			decoy.addVelocity(-caster.getLookVec().zCoord * splitSpeed, 0, caster.getLookVec().xCoord * splitSpeed);
+			decoy.addVelocity(-caster.getLookVec().z * splitSpeed, 0, caster.getLookVec().x * splitSpeed);
 			world.spawnEntity(decoy);
 
 			// Tricks any mobs that are targeting the caster into targeting the decoy instead.
@@ -73,7 +73,7 @@ public class Decoy extends Spell {
 				}
 			}
 		}
-		caster.addVelocity(caster.getLookVec().zCoord * splitSpeed, 0, -caster.getLookVec().xCoord * splitSpeed);
+		caster.addVelocity(caster.getLookVec().z * splitSpeed, 0, -caster.getLookVec().x * splitSpeed);
 
 		caster.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		return true;

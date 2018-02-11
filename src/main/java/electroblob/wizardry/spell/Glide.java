@@ -25,7 +25,7 @@ public class Glide extends Spell {
 		if(caster.motionY < -0.1 && !caster.isInWater()){
 			caster.motionY = -0.1;
 			if(Math.abs(caster.motionX) < 0.4 && Math.abs(caster.motionZ) < 0.4){
-				caster.addVelocity(caster.getLookVec().xCoord / 8, 0, caster.getLookVec().zCoord / 8);
+				caster.addVelocity(caster.getLookVec().x / 8, 0, caster.getLookVec().z / 8);
 				// entityplayer.moveEntity(entityplayer.motionX*10, 0, entityplayer.motionZ*10);
 			}
 			caster.fallDistance = 0.0f;

@@ -43,16 +43,16 @@ public class WizardryGuiHandler implements IGuiHandler {
 				return new electroblob.wizardry.client.GuiArcaneWorkbench(player.inventory,
 						(TileEntityArcaneWorkbench)tileEntity);
 			}
-		}else if(id == WIZARD_HANDBOOK && ((player.getHeldItemMainhand() != null
+		}else if(id == WIZARD_HANDBOOK && ((!player.getHeldItemMainhand().isEmpty()
 				&& player.getHeldItemMainhand().getItem() instanceof ItemWizardHandbook)
-				|| (player.getHeldItemOffhand() != null
+				|| (!player.getHeldItemOffhand().isEmpty()
 						&& player.getHeldItemOffhand().getItem() instanceof ItemWizardHandbook))){
 			return new electroblob.wizardry.client.GuiWizardHandbook();
 		}else if(id == SPELL_BOOK){
-			if(player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
+			if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
 				return new electroblob.wizardry.client.GuiSpellBook(
 						Spell.get(player.getHeldItemMainhand().getItemDamage()));
-			}else if(player.getHeldItemOffhand() != null
+			}else if(!player.getHeldItemOffhand().isEmpty()
 					&& player.getHeldItemOffhand().getItem() instanceof ItemSpellBook){
 				return new electroblob.wizardry.client.GuiSpellBook(
 						Spell.get(player.getHeldItemOffhand().getItemDamage()));

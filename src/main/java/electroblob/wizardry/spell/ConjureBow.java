@@ -49,7 +49,7 @@ public class ConjureBow extends Spell {
 	// TODO: When spells get superclassed, this method needs to be in the conjuration superclass.
 	/** Adds the given item to the given player's inventory, placing it in the main hand if the main hand is empty. */
 	public static boolean conjureItemInInventory(EntityPlayer caster, ItemStack item){
-		if(caster.getHeldItemMainhand() == null){
+		if(caster.getHeldItemMainhand().isEmpty()){
 			caster.setHeldItem(EnumHand.MAIN_HAND, item);
 			return true;
 		}else{

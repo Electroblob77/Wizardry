@@ -25,14 +25,14 @@ public class Flight extends Spell {
 		if(!caster.isInWater() && !caster.isElytraFlying()){
 			// The division thingy checks if the look direction is the opposite way to the velocity. If this is the
 			// case then the velocity should be added regardless of the player's current speed.
-			if((Math.abs(caster.motionX) < 0.6 || caster.motionX / caster.getLookVec().xCoord < 0)
-					&& (Math.abs(caster.motionZ) < 0.6 || caster.motionZ / caster.getLookVec().zCoord < 0)){
-				caster.addVelocity(caster.getLookVec().xCoord / 20, 0, caster.getLookVec().zCoord / 20);
+			if((Math.abs(caster.motionX) < 0.6 || caster.motionX / caster.getLookVec().x < 0)
+					&& (Math.abs(caster.motionZ) < 0.6 || caster.motionZ / caster.getLookVec().z < 0)){
+				caster.addVelocity(caster.getLookVec().x / 20, 0, caster.getLookVec().z / 20);
 			}
 			// y velocity is handled separately to stop the player from falling from the sky when they reach maximum
 			// horizontal speed.
-			if(Math.abs(caster.motionY) < 0.6 || caster.motionY / caster.getLookVec().yCoord < 0){
-				caster.motionY += caster.getLookVec().yCoord / 20 + 0.075;
+			if(Math.abs(caster.motionY) < 0.6 || caster.motionY / caster.getLookVec().y < 0){
+				caster.motionY += caster.getLookVec().y / 20 + 0.075;
 			}
 			caster.fallDistance = 0.0f;
 		}

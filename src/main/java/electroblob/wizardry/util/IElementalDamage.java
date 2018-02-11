@@ -42,8 +42,8 @@ public interface IElementalDamage {
 				// Charges creepers when they are hit by shock damage
 				WizardryUtilities.chargeCreeper((EntityCreeper)event.getEntityLiving());
 				// Gives the player that caused the shock damage the 'It's Gonna Blow' achievement
-				if(event.getSource().getEntity() instanceof EntityPlayer){
-					((EntityPlayer)event.getSource().getEntity()).addStat(WizardryAchievements.charge_creeper);
+				if(event.getSource().getTrueSource() instanceof EntityPlayer){
+					((EntityPlayer)event.getSource().getTrueSource()).addStat(WizardryAchievements.charge_creeper);
 				}
 			}
 		}

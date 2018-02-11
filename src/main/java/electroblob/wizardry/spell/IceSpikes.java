@@ -40,9 +40,9 @@ public class IceSpikes extends Spell {
 
 			if(!world.isRemote){
 
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
+				double x = rayTrace.hitVec.x;
+				double y = rayTrace.hitVec.y;
+				double z = rayTrace.hitVec.z;
 
 				for(int i = 0; i < (int)(18 * modifiers.get(WizardryItems.blast_upgrade)); i++){
 

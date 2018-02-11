@@ -54,18 +54,18 @@ public class FlameRay extends Spell {
 		if(world.isRemote){
 			for(int i = 0; i < 20; i++){
 				// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-				double x1 = caster.posX + look.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord * i / 2
+				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
-						look.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.zCoord * modifiers.get(WizardryItems.range_upgrade), 0);
+						look.x * modifiers.get(WizardryItems.range_upgrade),
+						look.y * modifiers.get(WizardryItems.range_upgrade),
+						look.z * modifiers.get(WizardryItems.range_upgrade), 0);
 				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
-						look.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.zCoord * modifiers.get(WizardryItems.range_upgrade), 0);
+						look.x * modifiers.get(WizardryItems.range_upgrade),
+						look.y * modifiers.get(WizardryItems.range_upgrade),
+						look.z * modifiers.get(WizardryItems.range_upgrade), 0);
 			}
 		}
 		if(ticksInUse % 16 == 0){
@@ -90,18 +90,18 @@ public class FlameRay extends Spell {
 		}
 		if(world.isRemote){
 			for(int i = 0; i < 20; i++){
-				double x1 = caster.posX + vec.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.yCoord * i / 2 + world.rand.nextFloat() / 5
+				double x1 = caster.posX + vec.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2 + world.rand.nextFloat() / 5
 						- 0.1f;
-				double z1 = caster.posZ + vec.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
-						vec.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						vec.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						vec.zCoord * modifiers.get(WizardryItems.range_upgrade), 0);
+						vec.x * modifiers.get(WizardryItems.range_upgrade),
+						vec.y * modifiers.get(WizardryItems.range_upgrade),
+						vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
 				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
-						vec.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						vec.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						vec.zCoord * modifiers.get(WizardryItems.range_upgrade), 0);
+						vec.x * modifiers.get(WizardryItems.range_upgrade),
+						vec.y * modifiers.get(WizardryItems.range_upgrade),
+						vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
 			}
 		}
 		if(ticksInUse % 16 == 0){

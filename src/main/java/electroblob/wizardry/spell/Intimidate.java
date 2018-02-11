@@ -100,12 +100,12 @@ public class Intimidate extends Spell {
 
 				if(!target.getNavigator().noPath()){
 					PathPoint point = target.getNavigator().getPath().getFinalPathPoint();
-					if(point != null) flag = caster.getDistance(point.xCoord, point.yCoord, point.zCoord) < 16;
+					if(point != null) flag = caster.getDistance(point.x, point.y, point.z) < 16;
 				}
 				// Has a built in mind trick effect because for whatever reason this makes it work with skeletons.
 				target.setAttackTarget(null);
 
-				if(flag) return target.getNavigator().tryMoveToXYZ(Vec3d.xCoord, Vec3d.yCoord, Vec3d.zCoord, 1.25);// target.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+				if(flag) return target.getNavigator().tryMoveToXYZ(Vec3d.x, Vec3d.y, Vec3d.z, 1.25);// target.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
 			}
 		}
 

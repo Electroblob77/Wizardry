@@ -74,9 +74,9 @@ public class PacketClairvoyance implements IMessageHandler<Message, IMessage> {
 
 				PathPoint point = path.getPathPointFromIndex(i);
 
-				buf.writeInt(point.xCoord);
-				buf.writeInt(point.yCoord);
-				buf.writeInt(point.zCoord);
+				buf.writeInt(point.x);
+				buf.writeInt(point.y);
+				buf.writeInt(point.z);
 			}
 		}
 	}

@@ -33,11 +33,11 @@ public class WitherSkull extends Spell {
 
 		if(!world.isRemote){
 			EntityWitherSkull witherskull = new EntityWitherSkull(world, caster, 1, 1, 1);
-			witherskull.setPosition(caster.posX + look.xCoord, caster.posY + look.yCoord + 1.3,
-					caster.posZ + look.zCoord);
-			witherskull.accelerationX = look.xCoord * 0.1;
-			witherskull.accelerationY = look.yCoord * 0.1;
-			witherskull.accelerationZ = look.zCoord * 0.1;
+			witherskull.setPosition(caster.posX + look.x, caster.posY + look.y + 1.3,
+					caster.posZ + look.z);
+			witherskull.accelerationX = look.x * 0.1;
+			witherskull.accelerationY = look.y * 0.1;
+			witherskull.accelerationZ = look.z * 0.1;
 			world.spawnEntity(witherskull);
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SHOOT, 1.0F,
 					world.rand.nextFloat() * 0.2F + 1.0F);

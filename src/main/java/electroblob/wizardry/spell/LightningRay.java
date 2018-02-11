@@ -87,9 +87,9 @@ public class LightningRay extends Spell {
 					EntityArc arc = new EntityArc(world);
 
 					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ,
-							caster.posX + caster.getLookVec().xCoord * 8,
-							caster.posY + caster.eyeHeight + caster.getLookVec().yCoord * 8,
-							caster.posZ + caster.getLookVec().zCoord * 8);
+							caster.posX + caster.getLookVec().x * 8,
+							caster.posY + caster.eyeHeight + caster.getLookVec().y * 8,
+							caster.posZ + caster.getLookVec().z * 8);
 
 					arc.lifetime = 1;
 

@@ -19,8 +19,8 @@ class GuiButtonApply extends GuiButton {
 	public void drawButton(Minecraft minecraft, int mouseX, int mouseY){
 
 		// Whether the button is highlighted
-		this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width
-				&& mouseY < this.yPosition + this.height;
+		this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width
+				&& mouseY < this.y + this.height;
 
 		int k = 36;
 		int l = 220;
@@ -36,8 +36,8 @@ class GuiButtonApply extends GuiButton {
 			colour = 10526880;
 		}
 
-		WizardryUtilities.drawTexturedRect(this.xPosition, this.yPosition, k, l, this.width, this.height, 256, 256);
-		this.drawCenteredString(minecraft.fontRendererObj, this.displayString, this.xPosition + this.width / 2,
-				this.yPosition + (this.height - 8) / 2, colour);
+		WizardryUtilities.drawTexturedRect(this.x, this.y, k, l, this.width, this.height, 256, 256);
+		this.drawCenteredString(minecraft.fontRenderer, this.displayString, this.x + this.width / 2,
+				this.y + (this.height - 8) / 2, colour);
 	}
 }

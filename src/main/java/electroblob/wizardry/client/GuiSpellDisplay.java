@@ -47,10 +47,10 @@ public class GuiSpellDisplay extends Gui {
 
 		ItemStack wand = player.getHeldItemMainhand();
 
-		if(wand == null || !(wand.getItem() instanceof ItemWand)){
+		if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)){
 			wand = player.getHeldItemOffhand();
 			// If the player isn't holding a wand, then nothing else needs to be done.
-			if(wand == null || !(wand.getItem() instanceof ItemWand)) return;
+			if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)) return;
 		}
 
 		int width = event.getResolution().getScaledWidth();
@@ -101,7 +101,7 @@ public class GuiSpellDisplay extends Gui {
 					: spell.element.getFormattingCode();
 			if(!discovered) colour = "\u00A79";
 			String spellName = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
-			FontRenderer font = discovered ? this.mc.fontRendererObj : this.mc.standardGalacticFontRenderer;
+			FontRenderer font = discovered ? this.mc.fontRenderer : this.mc.standardGalacticFontRenderer;
 
 			int maxWidth = 90;
 
