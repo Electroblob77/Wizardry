@@ -1,4 +1,4 @@
-# Wizardry
+# Wizardry &nbsp;[![Curseforge](http://cf.way2muchnoise.eu/full_electroblobs-wizardry_downloads.svg)](https://minecraft.curseforge.com/projects/electroblobs-wizardry) [![Curseforge](http://cf.way2muchnoise.eu/versions/For%20MC_electroblobs-wizardry_all.svg)](https://minecraft.curseforge.com/projects/electroblobs-wizardry)
 
 ![Image not found](https://media-elerium.cursecdn.com/attachments/203/387/banner7.png)
 
