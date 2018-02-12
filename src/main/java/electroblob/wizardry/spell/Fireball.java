@@ -34,10 +34,10 @@ public class Fireball extends Spell {
 
 		if(!world.isRemote){
 			EntitySmallFireball fireball = new EntitySmallFireball(world, caster, 1, 1, 1);
-			fireball.setPosition(caster.posX + look.xCoord, caster.posY + look.yCoord + 1.3, caster.posZ + look.zCoord);
-			fireball.accelerationX = look.xCoord * 0.1;
-			fireball.accelerationY = look.yCoord * 0.1;
-			fireball.accelerationZ = look.zCoord * 0.1;
+			fireball.setPosition(caster.posX + look.x, caster.posY + look.y + 1.3, caster.posZ + look.z);
+			fireball.accelerationX = look.x * 0.1;
+			fireball.accelerationY = look.y * 0.1;
+			fireball.accelerationZ = look.z * 0.1;
 			world.spawnEntity(fireball);
 		}
 

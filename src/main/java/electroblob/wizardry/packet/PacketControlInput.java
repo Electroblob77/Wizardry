@@ -20,7 +20,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 		// Just to make sure that the side is correct
 		if(ctx.side.isServer()){
 
-			final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+			final EntityPlayerMP player = ctx.getServerHandler().player;
 
 			player.getServerWorld().addScheduledTask(new Runnable(){
 
@@ -28,7 +28,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					ItemStack wand = player.getHeldItemMainhand();
 
-					if(wand == null || !(wand.getItem() instanceof ItemWand)){
+					if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)){
 						wand = player.getHeldItemOffhand();
 					}
 
@@ -41,7 +41,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					case NEXT_SPELL_KEY:
 
-						if(wand != null && wand.getItem() instanceof ItemWand){
+						if(!wand.isEmpty() && wand.getItem() instanceof ItemWand){
 
 							WandHelper.selectNextSpell(wand);
 							// This line fixes the bug with continuous spells casting when they shouldn't be
@@ -52,7 +52,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					case PREVIOUS_SPELL_KEY:
 
-						if(wand != null && wand.getItem() instanceof ItemWand){
+						if(!wand.isEmpty() && wand.getItem() instanceof ItemWand){
 
 							WandHelper.selectPreviousSpell(wand);
 							// This line fixes the bug with continuous spells casting when they shouldn't be

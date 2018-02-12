@@ -54,7 +54,7 @@ public class ItemIdentificationScroll extends Item {
 
 			for(ItemStack stack1 : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
 
-				if(stack1 != null){
+				if(!stack1.isEmpty()){
 					Spell spell = Spell.get(stack1.getItemDamage());
 					if((stack1.getItem() instanceof ItemSpellBook || stack1.getItem() instanceof ItemScroll)
 							&& !properties.hasSpellBeenDiscovered(spell)){

@@ -506,7 +506,7 @@ public final class WizardryUtilities {
 
 		Vec3d start = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
 		Vec3d look = entity.getLookVec();
-		Vec3d end = start.addVector(look.xCoord * range, look.yCoord * range, look.zCoord * range);
+		Vec3d end = start.addVector(look.x * range, look.y * range, look.z * range);
 		return world.rayTraceBlocks(start, end, hitLiquids);
 	}
 
@@ -521,9 +521,9 @@ public final class WizardryUtilities {
 	 */
 	@Nullable
 	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range){
-		double dx = entity.getLookVec().xCoord * range;
-		double dy = entity.getLookVec().yCoord * range;
-		double dz = entity.getLookVec().zCoord * range;
+		double dx = entity.getLookVec().x * range;
+		double dy = entity.getLookVec().y * range;
+		double dz = entity.getLookVec().z * range;
 		HashSet<Entity> hashset = new HashSet<Entity>(1);
 		hashset.add(entity);
 		return WizardryUtilities.tracePath(world, (float)entity.posX,
@@ -545,9 +545,9 @@ public final class WizardryUtilities {
 	@Nullable
 	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range,
 			float borderSize){
-		double dx = entity.getLookVec().xCoord * range;
-		double dy = entity.getLookVec().yCoord * range;
-		double dz = entity.getLookVec().zCoord * range;
+		double dx = entity.getLookVec().x * range;
+		double dy = entity.getLookVec().y * range;
+		double dz = entity.getLookVec().z * range;
 		HashSet<Entity> hashset = new HashSet<Entity>(1);
 		hashset.add(entity);
 		return WizardryUtilities.tracePath(world, (float)entity.posX,
@@ -585,7 +585,7 @@ public final class WizardryUtilities {
 		float maxX = x > tx ? x : tx;
 		float maxY = y > ty ? y : ty;
 		float maxZ = z > tz ? z : tz;
-		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).expand(borderSize, borderSize,
+		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize,
 				borderSize);
 		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);
 		RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec);
@@ -606,7 +606,7 @@ public final class WizardryUtilities {
 				float entBorder = ent.getCollisionBorderSize();
 				entityBb = ent.getEntityBoundingBox();
 				if(entityBb != null){
-					entityBb = entityBb.expand(entBorder, entBorder, entBorder);
+					entityBb = entityBb.grow(entBorder, entBorder, entBorder);
 					intercept = entityBb.calculateIntercept(startVec, endVec);
 					if(intercept != null){
 						currentHit = (float)intercept.hitVec.distanceTo(startVec);

@@ -185,9 +185,9 @@ public final class WizardryEventHandler {
 
 		// Prevents any damage to allies from magic if friendly fire is enabled
 		if(!Wizardry.settings.friendlyFire && event.getSource() != null
-				&& event.getSource().getEntity() instanceof EntityPlayer && event.getEntity() instanceof EntityPlayer
+				&& event.getSource().getTrueSource() instanceof EntityPlayer && event.getEntity() instanceof EntityPlayer
 				&& event.getSource() instanceof IElementalDamage){
-			if(WizardryUtilities.isPlayerAlly((EntityPlayer)event.getSource().getEntity(),
+			if(WizardryUtilities.isPlayerAlly((EntityPlayer)event.getSource().getTrueSource(),
 					(EntityPlayer)event.getEntity())){
 				event.setCanceled(true);
 				// This needs to be here, since if the event is cancelled nothing else needs to happen.
@@ -198,11 +198,11 @@ public final class WizardryEventHandler {
 		// Retaliatory effects
 		// These are better off here because the revenge effects are pretty similar, and I'd rather keep the (lengthy)
 		// if statement in one place.
-		if(event.getSource() != null && event.getSource().getEntity() instanceof EntityLivingBase
+		if(event.getSource() != null && event.getSource().getTrueSource() instanceof EntityLivingBase
 				&& !event.getSource().isProjectile() && !(event.getSource() instanceof IElementalDamage
 						&& ((IElementalDamage)event.getSource()).isRetaliatory())){
 
-			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getEntity();
+			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getTrueSource();
 			World world = event.getEntityLiving().world;
 
 			// Fireskin
@@ -249,12 +249,12 @@ public final class WizardryEventHandler {
 	public static void onLivingHurtEvent(LivingHurtEvent event){
 
 		// Flaming and freezing swords
-		if(event.getSource().getEntity() instanceof EntityLivingBase){
+		if(event.getSource().getTrueSource() instanceof EntityLivingBase){
 
-			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getEntity();
+			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getTrueSource();
 
 			// Players can only ever attack with their main hand, so this is the right method to use here.
-			if(attacker.getHeldItemMainhand() != null && attacker.getHeldItemMainhand().getItem() instanceof ItemSword){
+			if(!attacker.getHeldItemMainhand().isEmpty() && attacker.getHeldItemMainhand().getItem() instanceof ItemSword){
 
 				int level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.flaming_weapon,
 						attacker.getHeldItemMainhand());
@@ -271,10 +271,10 @@ public final class WizardryEventHandler {
 		}
 
 		// Freezing bow
-		if(event.getSource().getSourceOfDamage() instanceof EntityArrow
-				&& event.getSource().getSourceOfDamage().getEntityData() != null){
+		if(event.getSource().getImmediateSource() instanceof EntityArrow
+				&& event.getSource().getImmediateSource().getEntityData() != null){
 
-			int level = event.getSource().getSourceOfDamage().getEntityData()
+			int level = event.getSource().getImmediateSource().getEntityData()
 					.getInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY);
 
 			if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
@@ -284,7 +284,7 @@ public final class WizardryEventHandler {
 		// Damage scaling
 		if(event.getSource() != null && event.getSource() instanceof IElementalDamage){
 
-			if(event.getSource().getEntity() instanceof EntityPlayer){
+			if(event.getSource().getTrueSource() instanceof EntityPlayer){
 				event.setAmount((float)(event.getAmount() * Wizardry.settings.playerDamageScale));
 			}else{
 				event.setAmount((float)(event.getAmount() * Wizardry.settings.npcDamageScale));
@@ -346,9 +346,9 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onLivingDeathEvent(LivingDeathEvent event){
 
-		if(event.getSource().getEntity() instanceof EntityPlayer){
+		if(event.getSource().getTrueSource() instanceof EntityPlayer){
 
-			EntityPlayer player = (EntityPlayer)event.getSource().getEntity();
+			EntityPlayer player = (EntityPlayer)event.getSource().getTrueSource();
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
 
@@ -378,7 +378,7 @@ public final class WizardryEventHandler {
 		if(event.getEntityLiving() instanceof IMob && !(event.getEntityLiving() instanceof EntityEvilWizard)
 				// TODO: Backport when you backport the new summoned creature system.
 				&& !(event.getEntityLiving() instanceof ISummonedCreature)
-				&& event.getSource().getEntity() instanceof EntityPlayer && Wizardry.settings.spellBookDropChance > 0){
+				&& event.getSource().getTrueSource() instanceof EntityPlayer && Wizardry.settings.spellBookDropChance > 0){
 
 			// This does exactly what the entity drop method does, but with a different random number so that the
 			// spell book doesn't always drop with other rare drops.
@@ -397,7 +397,7 @@ public final class WizardryEventHandler {
 
 	@SubscribeEvent
 	public static void onItemPickupEvent(EntityItemPickupEvent event){
-		if(event.getItem().getEntityItem().getItem() == WizardryItems.magic_crystal){
+		if(event.getItem().getItem().getItem() == WizardryItems.magic_crystal){
 			event.getEntityPlayer().addStat(WizardryAchievements.crystal, 1);
 		}
 	}
@@ -412,7 +412,7 @@ public final class WizardryEventHandler {
 	 * @param player
 	 */
 	private static void hackilyFixContinuousSpellCasting(EntityPlayer player){
-		if(player.isHandActive() && player.getHeldItem(player.getActiveHand()) != null
+		if(player.isHandActive() && !player.getHeldItem(player.getActiveHand()).isEmpty()
 				&& player.getHeldItem(player.getActiveHand()).getItem() instanceof ItemWand
 				&& WandHelper.getCurrentSpell(player.getHeldItem(player.getActiveHand())).isContinuous){
 			if(player.getActiveItemStack() != player.getHeldItem(player.getActiveHand())){

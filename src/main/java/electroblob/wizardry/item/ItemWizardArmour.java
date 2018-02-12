@@ -95,7 +95,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 			ItemStack itemstackR = leftHanded ? entityLiving.getHeldItemOffhand() : entityLiving.getHeldItemMainhand();
 			ItemStack itemstackL = leftHanded ? entityLiving.getHeldItemMainhand() : entityLiving.getHeldItemOffhand();
 
-			if(itemstackR != null){
+			if(!itemstackR.isEmpty()){
 				model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
 
 				if(entityLiving.getItemInUseCount() > 0){
@@ -109,7 +109,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 				}
 			}
 
-			if(itemstackL != null){
+			if(!itemstackL.isEmpty()){
 				model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
 
 				if(entityLiving.getItemInUseCount() > 0){
@@ -232,7 +232,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
 
 			for(ItemStack stack : player.getArmorInventoryList()){
-				if(stack == null || !(stack.getItem() instanceof ItemWizardArmour)){
+				if(stack.isEmpty() || !(stack.getItem() instanceof ItemWizardArmour)){
 					return; // If any of the armour slots doesn't contain wizard armour, don't trigger the achievement.
 				}
 			}

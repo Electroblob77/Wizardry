@@ -35,9 +35,9 @@ public class Whirlwind extends Spell {
 
 			if(!world.isRemote){
 
-				target.motionX = caster.getLookVec().xCoord * 2;
-				target.motionY = caster.getLookVec().yCoord * 2 + 1;
-				target.motionZ = caster.getLookVec().zCoord * 2;
+				target.motionX = caster.getLookVec().x * 2;
+				target.motionY = caster.getLookVec().y * 2 + 1;
+				target.motionZ = caster.getLookVec().z * 2;
 
 				// Player motion is handled on that player's client so needs packets
 				if(target instanceof EntityPlayerMP){
@@ -48,13 +48,13 @@ public class Whirlwind extends Spell {
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){
 					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().xCoord * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().x * caster.getDistanceToEntity(target) * 0.5);
 					double y2 = (double)(WizardryUtilities.getPlayerEyesPos(caster) + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().yCoord * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().y * caster.getDistanceToEntity(target) * 0.5);
 					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().zCoord * caster.getDistanceToEntity(target) * 0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().xCoord,
-							caster.getLookVec().yCoord, caster.getLookVec().zCoord);
+							+ caster.getLookVec().z * caster.getDistanceToEntity(target) * 0.5);
+					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().x,
+							caster.getLookVec().y, caster.getLookVec().z);
 					// Minecraft.getMinecraft().effectRenderer.addEffect(new EntitySparkleFX(world, x2, y2, z2,
 					// entityplayer.getLookVec().xCoord, entityplayer.getLookVec().yCoord,
 					// entityplayer.getLookVec().zCoord, null, 1.0f, 1.0f, 0.8f, 10));
@@ -75,9 +75,9 @@ public class Whirlwind extends Spell {
 		if(target != null){
 
 			if(!world.isRemote){
-				target.motionX = caster.getLookVec().xCoord * 2;
-				target.motionY = caster.getLookVec().yCoord * 2 + 1;
-				target.motionZ = caster.getLookVec().zCoord * 2;
+				target.motionX = caster.getLookVec().x * 2;
+				target.motionY = caster.getLookVec().y * 2 + 1;
+				target.motionZ = caster.getLookVec().z * 2;
 
 				// Player motion is handled on that player's client so needs packets
 				if(target instanceof EntityPlayerMP){
@@ -87,13 +87,13 @@ public class Whirlwind extends Spell {
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){
 					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().xCoord * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().x * caster.getDistanceToEntity(target) * 0.5);
 					double y2 = (double)(caster.posY + caster.getEyeHeight() + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().yCoord * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().y * caster.getDistanceToEntity(target) * 0.5);
 					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().zCoord * caster.getDistanceToEntity(target) * 0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().xCoord,
-							caster.getLookVec().yCoord, caster.getLookVec().zCoord);
+							+ caster.getLookVec().z * caster.getDistanceToEntity(target) * 0.5);
+					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().x,
+							caster.getLookVec().y, caster.getLookVec().z);
 				}
 			}
 			caster.swingArm(hand);

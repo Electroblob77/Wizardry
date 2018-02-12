@@ -54,8 +54,8 @@ public class GuiSpellBook extends GuiScreen {
 		super.drawScreen(par1, par2, par3);
 
 		if(discovered){
-			this.fontRendererObj.drawString(spell.getDisplayName(), xPos + 17, yPos + 14, 0);
-			this.fontRendererObj.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 25, 0x777777);
+			this.fontRenderer.drawString(spell.getDisplayName(), xPos + 17, yPos + 14, 0);
+			this.fontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 25, 0x777777);
 		}else{
 			this.mc.standardGalacticFontRenderer.drawString(SpellGlyphData.getGlyphName(spell, player.world), xPos + 17,
 					yPos + 14, 0);
@@ -63,27 +63,27 @@ public class GuiSpellBook extends GuiScreen {
 					0x777777);
 		}
 
-		this.fontRendererObj.drawString("-------------------", xPos + 17, yPos + 34, 0);
+		this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 34, 0);
 
 		if(spell.tier == Tier.BASIC){
 			// Basic is usually white but this doesn't show up.
-			this.fontRendererObj.drawString("Tier: \u00A77" + Tier.BASIC.getDisplayName(), xPos + 17, yPos + 44, 0);
+			this.fontRenderer.drawString("Tier: \u00A77" + Tier.BASIC.getDisplayName(), xPos + 17, yPos + 44, 0);
 		}else{
-			this.fontRendererObj.drawString("Tier: " + spell.tier.getDisplayNameWithFormatting(), xPos + 17, yPos + 44,
+			this.fontRenderer.drawString("Tier: " + spell.tier.getDisplayNameWithFormatting(), xPos + 17, yPos + 44,
 					0);
 		}
 
 		String element = "Element: " + spell.element.getFormattingCode() + spell.element.getDisplayName();
 		if(!discovered) element = "Element: ?";
-		this.fontRendererObj.drawString(element, xPos + 17, yPos + 56, 0);
+		this.fontRenderer.drawString(element, xPos + 17, yPos + 56, 0);
 
 		String manaCost = "Mana Cost: " + spell.cost;
 		if(spell.isContinuous) manaCost = "Mana Cost: " + spell.cost + "/second";
 		if(!discovered) manaCost = "Mana Cost: ?";
-		this.fontRendererObj.drawString(manaCost, xPos + 17, yPos + 68, 0);
+		this.fontRenderer.drawString(manaCost, xPos + 17, yPos + 68, 0);
 
 		if(discovered){
-			this.fontRendererObj.drawSplitString(spell.getDescription(), xPos + 17, yPos + 82, 118, 0);
+			this.fontRenderer.drawSplitString(spell.getDescription(), xPos + 17, yPos + 82, 118, 0);
 		}else{
 			this.mc.standardGalacticFontRenderer.drawSplitString(
 					SpellGlyphData.getGlyphDescription(spell, player.world), xPos + 17, yPos + 82, 118, 0);

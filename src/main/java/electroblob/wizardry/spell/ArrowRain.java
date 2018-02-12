@@ -33,9 +33,9 @@ public class ArrowRain extends Spell {
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 			if(!world.isRemote){
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
+				double x = rayTrace.hitVec.x;
+				double y = rayTrace.hitVec.y;
+				double z = rayTrace.hitVec.z;
 				// Moves the entity back towards the caster a bit, so the area of effect is better centred on the
 				// position.
 				// 3.0d is the distance to move the entity back towards the caster.

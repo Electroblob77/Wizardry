@@ -97,7 +97,7 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, null);
+		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
 		// Can't damage it whilst in use because for some reason it causes the item use to constantly reset.
 		if(!(entity instanceof EntityLivingBase) || !((EntityLivingBase)entity).isHandActive()){
 			stack.setItemDamage(damage + 1);
@@ -159,7 +159,7 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 		// player.getItemInUseMaxCount() is named incorrectly; you only have to look at the method to see what it really
 		// does.
 		if(stack.getItemDamage() + player.getItemInUseMaxCount() > stack.getMaxDamage())
-			player.replaceItemInInventory(player.getActiveHand() == EnumHand.MAIN_HAND ? 98 : 99, null);
+			player.replaceItemInInventory(player.getActiveHand() == EnumHand.MAIN_HAND ? 98 : 99, ItemStack.EMPTY);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public interface IConjuredItem {
 	public static void onLivingDropsEvent(LivingDropsEvent event){
 		// Destroys conjured items if their caster dies.
 		for(EntityItem item : event.getDrops()){
-			if(item.getEntityItem().getItem() instanceof IConjuredItem){
+			if(item.getItem().getItem() instanceof IConjuredItem){
 				item.setDead();
 			}
 		}
@@ -55,9 +55,9 @@ public interface IConjuredItem {
 	@SubscribeEvent
 	public static void onItemTossEvent(ItemTossEvent event){
 		// Prevents conjured items being thrown by dragging and dropping outside the inventory.
-		if(event.getEntityItem().getEntityItem().getItem() instanceof IConjuredItem){
+		if(event.getEntityItem().getItem().getItem() instanceof IConjuredItem){
 			event.setCanceled(true);
-			event.getPlayer().inventory.addItemStackToInventory(event.getEntityItem().getEntityItem());
+			event.getPlayer().inventory.addItemStackToInventory(event.getEntityItem().getItem());
 		}
 	}
 }

@@ -30,8 +30,8 @@ public class EntityShield extends Entity {
 		this.height = 1.4f;
 		this.player = new WeakReference<EntityPlayer>(player);
 		this.noClip = true;
-		this.setPositionAndRotation(player.posX + player.getLookVec().xCoord,
-				player.posY + 1 + player.getLookVec().yCoord, player.posZ + player.getLookVec().zCoord,
+		this.setPositionAndRotation(player.posX + player.getLookVec().x,
+				player.posY + 1 + player.getLookVec().y, player.posZ + player.getLookVec().z,
 				player.rotationYawHead, player.rotationPitch);
 		this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 0.6f, this.posY - 0.7f, this.posZ - 0.6f,
 				this.posX + 0.6f, this.posY + 0.7f, this.posZ + 0.6f));
@@ -42,11 +42,11 @@ public class EntityShield extends Entity {
 		// System.out.println("Shield exists, ID: " + this.getUniqueID().toString());
 		EntityPlayer entityplayer = player != null ? player.get() : null;
 		if(entityplayer != null){
-			this.setPositionAndRotation(entityplayer.posX + entityplayer.getLookVec().xCoord * 0.3,
-					entityplayer.posY + 1 + entityplayer.getLookVec().yCoord * 0.3,
-					entityplayer.posZ + entityplayer.getLookVec().zCoord * 0.3, entityplayer.rotationYawHead,
+			this.setPositionAndRotation(entityplayer.posX + entityplayer.getLookVec().x * 0.3,
+					entityplayer.posY + 1 + entityplayer.getLookVec().y * 0.3,
+					entityplayer.posZ + entityplayer.getLookVec().z * 0.3, entityplayer.rotationYawHead,
 					entityplayer.rotationPitch);
-			if(!entityplayer.isHandActive() || entityplayer.getHeldItem(entityplayer.getActiveHand()) == null
+			if(!entityplayer.isHandActive() || entityplayer.getHeldItem(entityplayer.getActiveHand()).isEmpty()
 					|| !(entityplayer.getHeldItem(entityplayer.getActiveHand()).getItem() instanceof ItemWand)){
 				WizardData.get(entityplayer).shield = null;
 				this.setDead();
@@ -64,8 +64,8 @@ public class EntityShield extends Entity {
 	}
 
 	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2){
-		if(par1DamageSource != null && par1DamageSource.getSourceOfDamage() instanceof IProjectile){
-			par1DamageSource.getSourceOfDamage().playSound(WizardrySounds.SPELL_DEFLECTION, 0.3f, 1.3f);
+		if(par1DamageSource != null && par1DamageSource.getImmediateSource() instanceof IProjectile){
+			par1DamageSource.getImmediateSource().playSound(WizardrySounds.SPELL_DEFLECTION, 0.3f, 1.3f);
 		}
 		super.attackEntityFrom(par1DamageSource, par2);
 		return false;

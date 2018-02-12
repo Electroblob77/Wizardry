@@ -49,17 +49,17 @@ public class LifeDrain extends Spell {
 		if(world.isRemote){
 			for(int i = 5; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
 				// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-				double x1 = caster.posX + look.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord * i / 2
+				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
 				if(i % 5 == 0){
 					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 							0, 0.1f, 0.0f, 0.0f);
 				}
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, -0.05 * look.xCoord * i,
-						-0.05 * look.yCoord * i, -0.05 * look.zCoord * i, 8 + world.rand.nextInt(6), 0.5f, 0.0f, 0.0f);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, -0.05 * look.x * i,
+						-0.05 * look.y * i, -0.05 * look.z * i, 8 + world.rand.nextInt(6), 0.5f, 0.0f, 0.0f);
 			}
 		}
 		if(ticksInUse % 18 == 0){
@@ -87,17 +87,17 @@ public class LifeDrain extends Spell {
 		if(world.isRemote){
 			for(int i = 5; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
 				// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-				double x1 = caster.posX + vec.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.yCoord * i / 2 + world.rand.nextFloat() / 5
+				double x1 = caster.posX + vec.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2 + world.rand.nextFloat() / 5
 						- 0.1f;
-				double z1 = caster.posZ + vec.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
 				if(i % 5 == 0){
 					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 							0, 0.1f, 0.0f, 0.0f);
 				}
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, -0.05 * vec.xCoord * i,
-						-0.05 * vec.yCoord * i, -0.05 * vec.zCoord * i, 8 + world.rand.nextInt(6), 0.5f, 0.0f, 0.0f);
+				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, -0.05 * vec.x * i,
+						-0.05 * vec.y * i, -0.05 * vec.z * i, 8 + world.rand.nextInt(6), 0.5f, 0.0f, 0.0f);
 			}
 		}
 		if(ticksInUse % 18 == 0){

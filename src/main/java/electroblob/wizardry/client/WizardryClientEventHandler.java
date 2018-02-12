@@ -79,13 +79,13 @@ public final class WizardryClientEventHandler {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		ItemStack wand = player.getHeldItemMainhand();
 
-		if(wand == null || !(wand.getItem() instanceof ItemWand)){
+		if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)){
 			wand = player.getHeldItemOffhand();
 			// If the player isn't holding a wand, then nothing else needs to be done.
-			if(wand == null || !(wand.getItem() instanceof ItemWand)) return;
+			if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)) return;
 		}
 
-		if(Minecraft.getMinecraft().inGameHasFocus && wand != null && event.getDwheel() != 0 && player.isSneaking()
+		if(Minecraft.getMinecraft().inGameHasFocus && !wand.isEmpty() && event.getDwheel() != 0 && player.isSneaking()
 				&& Wizardry.settings.enableShiftScrolling){
 
 			event.setCanceled(true);
@@ -107,7 +107,7 @@ public final class WizardryClientEventHandler {
 	public static void onFOVUpdateEvent(FOVUpdateEvent event){
 
 		// Bow zoom. Taken directly from AbstractClientPlayer so it works exactly like vanilla.
-		if(event.getEntity().isHandActive() && event.getEntity().getActiveItemStack() != null
+		if(event.getEntity().isHandActive() && !event.getEntity().getActiveItemStack().isEmpty()
 				&& event.getEntity().getActiveItemStack().getItem() instanceof ItemSpectralBow){
 
 			int maxUseTicks = event.getEntity().getItemInUseMaxCount();
@@ -223,12 +223,12 @@ public final class WizardryClientEventHandler {
 
 		ItemStack wand = mc.player.getHeldItemMainhand();
 
-		if(wand == null || !(wand.getItem() instanceof ItemWand)){
+		if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)){
 			wand = mc.player.getHeldItemOffhand();
 		}
 
 		// Target selection pointer
-		if(mc.player.isSneaking() && wand != null && wand.getItem() instanceof ItemWand && rayTrace != null
+		if(mc.player.isSneaking() && !wand.isEmpty() && wand.getItem() instanceof ItemWand && rayTrace != null
 				&& rayTrace.entityHit instanceof EntityLivingBase && rayTrace.entityHit == event.getEntity()
 				&& properties != null && properties.selectedMinion != null){
 
@@ -430,7 +430,7 @@ public final class WizardryClientEventHandler {
 	private static void renderShadowWardFirstPerson(EntityPlayer entityplayer){
 		ItemStack wand = entityplayer.getActiveItemStack();
 		if(WizardData.get(entityplayer) != null && WizardData.get(entityplayer).currentlyCasting() instanceof ShadowWard
-				|| (entityplayer.isHandActive() && wand != null && wand.getItemDamage() < wand.getMaxDamage()
+				|| (entityplayer.isHandActive() && !wand.isEmpty() && wand.getItemDamage() < wand.getMaxDamage()
 						&& wand.getItem() instanceof ItemWand
 						&& WandHelper.getCurrentSpell(wand) instanceof ShadowWard)){
 
@@ -490,7 +490,7 @@ public final class WizardryClientEventHandler {
 	private static void renderShadowWardIfActive(EntityPlayer entityplayer){
 		ItemStack wand = entityplayer.getActiveItemStack();
 		if(WizardData.get(entityplayer).currentlyCasting() instanceof ShadowWard || (entityplayer.isHandActive()
-				&& wand != null && wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand
+				&& !wand.isEmpty() && wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand
 				&& WandHelper.getCurrentSpell(wand) instanceof ShadowWard)){
 
 			GlStateManager.pushMatrix();
@@ -541,7 +541,7 @@ public final class WizardryClientEventHandler {
 	private static void renderWingsIfActive(EntityPlayer entityplayer, float partialTickTime){
 		ItemStack wand = entityplayer.getActiveItemStack();
 		if(WizardData.get(entityplayer).currentlyCasting() instanceof Flight
-				|| (entityplayer.isHandActive() && wand != null && wand.getItemDamage() < wand.getMaxDamage()
+				|| (entityplayer.isHandActive() && !wand.isEmpty() && wand.getItemDamage() < wand.getMaxDamage()
 						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Flight)){
 
 			GlStateManager.pushMatrix();
@@ -620,7 +620,7 @@ public final class WizardryClientEventHandler {
 		ItemStack wand = entityplayer.getActiveItemStack();
 		if(WizardData.get(entityplayer) != null && WizardData.get(entityplayer).shield != null
 				&& (WizardData.get(entityplayer).currentlyCasting() instanceof Shield || (entityplayer.isHandActive()
-						&& wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& !wand.isEmpty() && wand.getItemDamage() < wand.getMaxDamage()
 						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Shield))){
 
 			GlStateManager.pushMatrix();
@@ -660,7 +660,7 @@ public final class WizardryClientEventHandler {
 		ItemStack wand = entityplayer.getActiveItemStack();
 		if(WizardData.get(entityplayer).shield != null
 				&& (WizardData.get(entityplayer).currentlyCasting() instanceof Shield || (entityplayer.isHandActive()
-						&& wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& !wand.isEmpty() && wand.getItemDamage() < wand.getMaxDamage()
 						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Shield))){
 
 			GlStateManager.pushMatrix();

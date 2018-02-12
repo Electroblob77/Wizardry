@@ -330,9 +330,9 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 
 		// Rather than bother overriding entire attack methods in ISummonedCreature implementations, it's easier (and
 		// more robust) to use LivingAttackEvent to modify the damage source.
-		if(event.getSource().getEntity() instanceof ISummonedCreature){
+		if(event.getSource().getTrueSource() instanceof ISummonedCreature){
 
-			EntityLivingBase summoner = ((ISummonedCreature)event.getSource().getEntity()).getCaster();
+			EntityLivingBase summoner = ((ISummonedCreature)event.getSource().getTrueSource()).getCaster();
 
 			if(summoner != null){
 
@@ -349,11 +349,11 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 				// All summoned creatures are classified as magic, so it makes sense to do it this way.
 				if(event.getSource() instanceof EntityDamageSourceIndirect){
 					newSource = new IndirectMinionDamage(event.getSource().damageType,
-							event.getSource().getSourceOfDamage(), event.getSource().getEntity(), summoner, type,
+							event.getSource().getImmediateSource(), event.getSource().getTrueSource(), summoner, type,
 							isRetaliatory);
 				}else if(event.getSource() instanceof EntityDamageSource){
 					// Name is copied over so it uses the appropriate vanilla death message
-					newSource = new MinionDamage(event.getSource().damageType, event.getSource().getEntity(), summoner,
+					newSource = new MinionDamage(event.getSource().damageType, event.getSource().getTrueSource(), summoner,
 							type, isRetaliatory);
 				}
 
@@ -365,8 +365,8 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 				// For some reason Minecraft calculates knockback relative to DamageSource#getEntity. In vanilla this
 				// is unnoticeable, but it looks a bit weird with summoned creatures involved - so this fixes that.
 				if(WizardryUtilities.attackEntityWithoutKnockback(event.getEntity(), newSource, event.getAmount())){
-					WizardryUtilities.applyStandardKnockback(event.getSource().getEntity(), event.getEntityLiving());
-					((ISummonedCreature)event.getSource().getEntity()).onSuccessfulAttack(event.getEntityLiving());
+					WizardryUtilities.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
+					((ISummonedCreature)event.getSource().getTrueSource()).onSuccessfulAttack(event.getEntityLiving());
 				}
 
 			}

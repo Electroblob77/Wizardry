@@ -36,23 +36,23 @@ public class Detonate extends Spell {
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 			if(!world.isRemote){
 				List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
-						3.0d * modifiers.get(WizardryItems.blast_upgrade), (rayTrace.hitVec.xCoord + 0.5),
-						(rayTrace.hitVec.yCoord + 0.5), (rayTrace.hitVec.zCoord + 0.5), world);
+						3.0d * modifiers.get(WizardryItems.blast_upgrade), (rayTrace.hitVec.x + 0.5),
+						(rayTrace.hitVec.y + 0.5), (rayTrace.hitVec.z + 0.5), world);
 				for(int i = 0; i < targets.size(); i++){
 					targets.get(i).attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.BLAST),
 							// Damage decreases with distance but cannot be less than 0, naturally.
 							Math.max(12.0f - (float)((EntityLivingBase)targets.get(i)).getDistance(
-									(rayTrace.hitVec.xCoord + 0.5), (rayTrace.hitVec.yCoord + 0.5),
-									(rayTrace.hitVec.zCoord + 0.5)) * 4, 0) * modifiers.get(SpellModifiers.DAMAGE));
+									(rayTrace.hitVec.x + 0.5), (rayTrace.hitVec.y + 0.5),
+									(rayTrace.hitVec.z + 0.5)) * 4, 0) * modifiers.get(SpellModifiers.DAMAGE));
 
 				}
 			}
 			if(world.isRemote){
-				double dx = (rayTrace.hitVec.xCoord + 0.5) - caster.posX;
-				double dy = (rayTrace.hitVec.yCoord + 0.5) - WizardryUtilities.getPlayerEyesPos(caster);
-				double dz = (rayTrace.hitVec.zCoord + 0.5) - caster.posZ;
-				world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, (rayTrace.hitVec.xCoord + 0.5),
-						(rayTrace.hitVec.yCoord + 0.5), (rayTrace.hitVec.zCoord + 0.5), 0, 0, 0);
+				double dx = (rayTrace.hitVec.x + 0.5) - caster.posX;
+				double dy = (rayTrace.hitVec.y + 0.5) - WizardryUtilities.getPlayerEyesPos(caster);
+				double dz = (rayTrace.hitVec.z + 0.5) - caster.posZ;
+				world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, (rayTrace.hitVec.x + 0.5),
+						(rayTrace.hitVec.y + 0.5), (rayTrace.hitVec.z + 0.5), 0, 0, 0);
 				for(int i = 1; i < 5; i++){
 					world.spawnParticle(EnumParticleTypes.FLAME,
 							caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
@@ -64,8 +64,8 @@ public class Detonate extends Spell {
 							caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0, 0, 0);
 				}
 			}
-			world.playSound(caster, (rayTrace.hitVec.xCoord + 0.5), (rayTrace.hitVec.yCoord + 0.5),
-					(rayTrace.hitVec.zCoord + 0.5), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F,
+			world.playSound(caster, (rayTrace.hitVec.x + 0.5), (rayTrace.hitVec.y + 0.5),
+					(rayTrace.hitVec.z + 0.5), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F,
 					(1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F);
 			caster.swingArm(hand);
 			return true;

@@ -113,7 +113,7 @@ public class MindTrick extends Spell {
 
 	@SubscribeEvent
 	public static void onLivingAttackEvent(LivingAttackEvent event){
-		if(event.getSource() != null && event.getSource().getEntity() instanceof EntityLivingBase){
+		if(event.getSource() != null && event.getSource().getTrueSource() instanceof EntityLivingBase){
 			// Cancels the mind trick effect if the creature takes damage
 			// This has been moved to within an (event.getSource().getEntity() instanceof EntityLivingBase) check so it
 			// doesn't

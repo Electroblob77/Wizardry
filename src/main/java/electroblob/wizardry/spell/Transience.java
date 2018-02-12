@@ -57,8 +57,8 @@ public class Transience extends Spell {
 				event.setCanceled(true);
 			}
 			// Prevents transient entities from causing any damage
-			if(event.getSource().getEntity() instanceof EntityLivingBase
-					&& ((EntityLivingBase)event.getSource().getEntity()).isPotionActive(WizardryPotions.transience)){
+			if(event.getSource().getTrueSource() instanceof EntityLivingBase
+					&& ((EntityLivingBase)event.getSource().getTrueSource()).isPotionActive(WizardryPotions.transience)){
 				event.setCanceled(true);
 			}
 		}

@@ -24,7 +24,7 @@ public class Leap extends Spell {
 		if(caster.onGround){
 
 			caster.motionY = 0.65 * modifiers.get(SpellModifiers.DAMAGE);
-			caster.addVelocity(caster.getLookVec().xCoord * 0.3, 0, caster.getLookVec().zCoord * 0.3);
+			caster.addVelocity(caster.getLookVec().x * 0.3, 0, caster.getLookVec().z * 0.3);
 
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){

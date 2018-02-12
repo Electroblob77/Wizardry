@@ -52,9 +52,9 @@ public class Light extends Spell {
 			}
 		}else{
 
-			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().xCoord * 4);
-			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().yCoord * 4);
-			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().zCoord * 4);
+			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().x * 4);
+			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().y * 4);
+			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().z * 4);
 
 			BlockPos pos = new BlockPos(x, y, z);
 

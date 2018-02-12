@@ -35,9 +35,9 @@ public class LightningSigil extends Spell {
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK && rayTrace.sideHit == EnumFacing.UP){
 
 			if(!world.isRemote){
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
+				double x = rayTrace.hitVec.x;
+				double y = rayTrace.hitVec.y;
+				double z = rayTrace.hitVec.z;
 				EntityLightningSigil lightningsigil = new EntityLightningSigil(world, x, y, z, caster,
 						modifiers.get(SpellModifiers.DAMAGE));
 				world.spawnEntity(lightningsigil);

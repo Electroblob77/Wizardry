@@ -774,8 +774,8 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	@Override
 	public boolean attackEntityFrom(DamageSource source, float damage){
 
-		if(source.getEntity() instanceof EntityPlayer){
-			((EntityPlayer)source.getEntity()).addStat(WizardryAchievements.anger_wizard);
+		if(source.getTrueSource() instanceof EntityPlayer){
+			((EntityPlayer)source.getTrueSource()).addStat(WizardryAchievements.anger_wizard);
 		}
 
 		return super.attackEntityFrom(source, damage);

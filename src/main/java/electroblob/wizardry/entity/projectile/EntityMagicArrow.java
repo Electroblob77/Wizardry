@@ -277,7 +277,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 			AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.world, blockpos);
 
 			if(axisalignedbb != Block.NULL_AABB
-					&& axisalignedbb.offset(blockpos).isVecInside(new Vec3d(this.posX, this.posY, this.posZ))){
+					&& axisalignedbb.offset(blockpos).contains(new Vec3d(this.posX, this.posY, this.posZ))){
 				this.inGround = true;
 			}
 		}
@@ -305,13 +305,13 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 			vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
 			if(raytraceresult != null){
-				vec3d = new Vec3d(raytraceresult.hitVec.xCoord, raytraceresult.hitVec.yCoord,
-						raytraceresult.hitVec.zCoord);
+				vec3d = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y,
+						raytraceresult.hitVec.z);
 			}
 
 			Entity entity = null;
 			List<?> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox()
-					.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+					.expand(this.motionX, this.motionY, this.motionZ).grow(1.0D, 1.0D, 1.0D));
 			double d0 = 0.0D;
 			int i;
 			float f1;
@@ -321,7 +321,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
 				if(entity1.canBeCollidedWith() && (entity1 != this.getShootingEntity() || this.ticksInAir >= 5)){
 					f1 = 0.3F;
-					AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand((double)f1, (double)f1,
+					AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().grow((double)f1, (double)f1,
 							(double)f1);
 					RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec3d1, vec3d);
 
@@ -418,9 +418,9 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 					this.blockY = raytraceresult.getBlockPos().getY();
 					this.blockZ = raytraceresult.getBlockPos().getZ();
 					this.stuckInBlock = this.world.getBlockState(raytraceresult.getBlockPos());
-					this.motionX = (double)((float)(raytraceresult.hitVec.xCoord - this.posX));
-					this.motionY = (double)((float)(raytraceresult.hitVec.yCoord - this.posY));
-					this.motionZ = (double)((float)(raytraceresult.hitVec.zCoord - this.posZ));
+					this.motionX = (double)((float)(raytraceresult.hitVec.x - this.posX));
+					this.motionY = (double)((float)(raytraceresult.hitVec.y - this.posY));
+					this.motionZ = (double)((float)(raytraceresult.hitVec.z - this.posZ));
 					// f2 = MathHelper.sqrt(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ *
 					// this.motionZ);
 					// this.posX -= this.motionX / (double)f2 * 0.05000000074505806D;

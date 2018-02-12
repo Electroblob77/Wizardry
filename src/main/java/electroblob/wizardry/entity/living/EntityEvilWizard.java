@@ -322,8 +322,8 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	public void onDeath(DamageSource source){
 
 		super.onDeath(source);
-		if(source.getEntity() instanceof EntityPlayer){
-			((EntityPlayer)source.getEntity()).addStat(WizardryAchievements.defeat_evil_wizard);
+		if(source.getTrueSource() instanceof EntityPlayer){
+			((EntityPlayer)source.getTrueSource()).addStat(WizardryAchievements.defeat_evil_wizard);
 		}
 	}
 

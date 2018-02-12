@@ -70,24 +70,24 @@ public class WallOfFrost extends Spell {
 
 			if(world.isRemote){
 
-				double x1 = caster.posX + look.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord * i / 2
+				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-						look.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.zCoord * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 0.4f,
+						look.x * modifiers.get(WizardryItems.range_upgrade),
+						look.y * modifiers.get(WizardryItems.range_upgrade),
+						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 0.4f,
 						0.6f, 1.0f);
 
-				x1 = caster.posX + look.xCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord * i / 2
+				x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
-				z1 = caster.posZ + look.zCoord * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+				z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-						look.xCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.yCoord * modifiers.get(WizardryItems.range_upgrade),
-						look.zCoord * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 1.0f,
+						look.x * modifiers.get(WizardryItems.range_upgrade),
+						look.y * modifiers.get(WizardryItems.range_upgrade),
+						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 1.0f,
 						1.0f, 1.0f);
 			}
 		}

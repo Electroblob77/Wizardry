@@ -53,10 +53,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots
 				.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
 			guiLeft = (this.width - this.xSize - tooltipWidth) / 2;
-			this.applyBtn.xPosition = (this.width - tooltipWidth) / 2 + 48;
+			this.applyBtn.x = (this.width - tooltipWidth) / 2 + 48;
 		}else{
 			guiLeft = (this.width - this.xSize) / 2;
-			this.applyBtn.xPosition = this.width / 2 + 48;
+			this.applyBtn.x = this.width / 2 + 48;
 		}
 
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack()){
@@ -130,7 +130,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					ItemStack stack = new ItemStack(item, level);
 					GlStateManager.enableDepth();
 					this.itemRender.renderItemAndEffectIntoGUI(stack, guiLeft + xSize + 6 + x, y);
-					this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, stack, guiLeft + xSize + 6 + x, y,
+					this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack, guiLeft + xSize + 6 + x, y,
 							null);
 					x += 18;
 					GlStateManager.disableDepth();
@@ -150,10 +150,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY){
 
-		this.fontRendererObj
+		this.fontRenderer
 				.drawString(this.arcaneWorkbenchInventory.hasCustomName() ? this.arcaneWorkbenchInventory.getName()
 						: I18n.format(this.arcaneWorkbenchInventory.getName()), 8, 6, 4210752);
-		this.fontRendererObj.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName()
+		this.fontRenderer.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName()
 				: I18n.format(this.playerInventory.getName()), 8, this.ySize - 96 + 2, 4210752);
 
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots
@@ -161,8 +161,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack();
 
-			this.fontRendererObj.drawStringWithShadow("\u00A7f" + wand.getDisplayName(), xSize + 6, 6, 0);
-			this.fontRendererObj.drawStringWithShadow(
+			this.fontRenderer.drawStringWithShadow("\u00A7f" + wand.getDisplayName(), xSize + 6, 6, 0);
+			this.fontRenderer.drawStringWithShadow(
 					"\u00A77" + I18n.format("container.wizardry:arcane_workbench.mana") + " "
 							+ (wand.getMaxDamage() - wand.getItemDamage()) + "/" + wand.getMaxDamage(),
 					xSize + 6, 20, 0);
@@ -180,7 +180,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				}
 
 				if(discovered){
-					this.fontRendererObj.drawStringWithShadow(spell.getDisplayNameWithFormatting(), xSize + 16, y, 0);
+					this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), xSize + 16, y, 0);
 				}else{
 					this.mc.standardGalacticFontRenderer.drawStringWithShadow(
 							"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), xSize + 16, y, 0);
@@ -190,7 +190,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			if(WandHelper.getTotalUpgrades(wand) > 0){
 
-				this.fontRendererObj.drawStringWithShadow(
+				this.fontRenderer.drawStringWithShadow(
 						"\u00A7f" + I18n.format("container.wizardry:arcane_workbench.upgrades"), xSize + 6, y + 6, 0);
 
 				int x = 0;

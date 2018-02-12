@@ -100,8 +100,8 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		}
 
-		this.fontRendererObj.drawString("" + (pageNumber * 2 + 1), xPos + xSize / 4 - 3, yPos + ySize - 20, 0);
-		this.fontRendererObj.drawString("" + (pageNumber * 2 + 2), xPos + 3 * xSize / 4 - 5, yPos + ySize - 20, 0);
+		this.fontRenderer.drawString("" + (pageNumber * 2 + 1), xPos + xSize / 4 - 3, yPos + ySize - 20, 0);
+		this.fontRenderer.drawString("" + (pageNumber * 2 + 2), xPos + 3 * xSize / 4 - 5, yPos + ySize - 20, 0);
 
 		super.drawScreen(mouseX, mouseY, par3);
 
@@ -119,11 +119,11 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		for(String paragraph : text.get(pageNumber * 2)){
 
-			this.fontRendererObj.drawSplitString(paragraph, xPos + 17,
-					yPos + 14 + lineNumber * this.fontRendererObj.FONT_HEIGHT, PAGE_WIDTH, BLACK);
+			this.fontRenderer.drawSplitString(paragraph, xPos + 17,
+					yPos + 14 + lineNumber * this.fontRenderer.FONT_HEIGHT, PAGE_WIDTH, BLACK);
 
 			List<String> list = new ArrayList<String>(
-					this.fontRendererObj.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH));
+					this.fontRenderer.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH));
 
 			lineNumber += list.size();
 		}
@@ -137,16 +137,16 @@ public class GuiWizardHandbook extends GuiScreen {
 				// First page is centred
 				if(pageNumber == 0){
 					int startX = this.width / 2 + 7 + PAGE_WIDTH / 2
-							- this.fontRendererObj.getStringWidth(paragraph) / 2;
-					this.fontRendererObj.drawSplitString(paragraph, startX,
-							yPos + 14 + lineNumber * this.fontRendererObj.FONT_HEIGHT, PAGE_WIDTH, BLACK);
+							- this.fontRenderer.getStringWidth(paragraph) / 2;
+					this.fontRenderer.drawSplitString(paragraph, startX,
+							yPos + 14 + lineNumber * this.fontRenderer.FONT_HEIGHT, PAGE_WIDTH, BLACK);
 				}else{
-					this.fontRendererObj.drawSplitString(paragraph, this.width / 2 + 7,
-							yPos + 14 + lineNumber * this.fontRendererObj.FONT_HEIGHT, PAGE_WIDTH, BLACK);
+					this.fontRenderer.drawSplitString(paragraph, this.width / 2 + 7,
+							yPos + 14 + lineNumber * this.fontRenderer.FONT_HEIGHT, PAGE_WIDTH, BLACK);
 				}
 
 				List<String> list = new ArrayList<String>(
-						this.fontRendererObj.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH));
+						this.fontRenderer.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH));
 
 				lineNumber += list.size();
 			}
@@ -502,17 +502,17 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		for(int i = 0; i < craftingGrid.length; i++){
 			for(int j = 0; j < craftingGrid[i].length; j++){
-				if(craftingGrid[i][j] != null){
+				if(!craftingGrid[i][j].isEmpty()){
 					itemRender.renderItemAndEffectIntoGUI(craftingGrid[i][j], xPos + 18 * i, yPos + 18 * j);
-					itemRender.renderItemOverlays(this.fontRendererObj, craftingGrid[i][j], xPos + 18 * i,
+					itemRender.renderItemOverlays(this.fontRenderer, craftingGrid[i][j], xPos + 18 * i,
 							yPos + 18 * j);
 				}
 			}
 		}
 
-		if(craftingResult != null){
+		if(!craftingResult.isEmpty()){
 			itemRender.renderItemAndEffectIntoGUI(craftingResult, xPos + 86, yPos + 18);
-			itemRender.renderItemOverlays(this.fontRendererObj, craftingResult, xPos + 86, yPos + 18);
+			itemRender.renderItemOverlays(this.fontRenderer, craftingResult, xPos + 86, yPos + 18);
 		}
 
 		GlStateManager.popMatrix();
@@ -538,14 +538,14 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		for(int i = 0; i < craftingGrid.length; i++){
 			for(int j = 0; j < craftingGrid[i].length; j++){
-				if(craftingGrid[i][j] != null
+				if(!craftingGrid[i][j].isEmpty()
 						&& isPointInRegion(xPos + 18 * i, yPos + 18 * j, 16, 16, mouseX + guiLeft, mouseY + guiTop)){
 					this.renderToolTip(craftingGrid[i][j], mouseX, mouseY);
 				}
 			}
 		}
 
-		if(craftingResult != null && isPointInRegion(xPos + 86, yPos + 18, 16, 16, mouseX + guiLeft, mouseY + guiTop)){
+		if(!craftingResult.isEmpty() && isPointInRegion(xPos + 86, yPos + 18, 16, 16, mouseX + guiLeft, mouseY + guiTop)){
 			this.renderToolTip(craftingResult, mouseX, mouseY);
 		}
 
@@ -641,7 +641,7 @@ public class GuiWizardHandbook extends GuiScreen {
 						sections.add(
 								new Section(paragraph.replace("SECTION ", ""), text.size() + 1, this.width / 2 + 7,
 										this.height / 2 - this.ySize / 2 + 14
-												+ (sections.size() + 2) * this.fontRendererObj.FONT_HEIGHT,
+												+ (sections.size() + 2) * this.fontRenderer.FONT_HEIGHT,
 										nextButtonId++));
 						paragraph = bufferedreader.readLine();
 
@@ -682,7 +682,7 @@ public class GuiWizardHandbook extends GuiScreen {
 						paragraph = paragraph.replaceAll("RESET_COLOUR", "\u00A70");
 						paragraph = paragraph.replaceAll("VERSION", Wizardry.VERSION);
 
-						int linesInParagraph = this.fontRendererObj
+						int linesInParagraph = this.fontRenderer
 								.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH).size();
 
 						// Ignores empty lines at the top of a page.
@@ -709,7 +709,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 							int i = 0;
 
-							List<String> strings = this.fontRendererObj.listFormattedStringToWidth(paragraph,
+							List<String> strings = this.fontRenderer.listFormattedStringToWidth(paragraph,
 									GuiWizardHandbook.PAGE_WIDTH);
 
 							for(Object s : strings){
@@ -759,7 +759,7 @@ public class GuiWizardHandbook extends GuiScreen {
 			this.y = y;
 			this.buttonId = id;
 			GuiWizardHandbook.this.buttonList.add(new GuiButtonInvisible(id, x, y, GuiWizardHandbook.PAGE_WIDTH,
-					GuiWizardHandbook.this.fontRendererObj.FONT_HEIGHT));
+					GuiWizardHandbook.this.fontRenderer.FONT_HEIGHT));
 		}
 
 		void hideButton(){
@@ -770,20 +770,20 @@ public class GuiWizardHandbook extends GuiScreen {
 
 			GuiWizardHandbook.this.buttonList.get(buttonId).visible = true;
 
-			GuiWizardHandbook.this.fontRendererObj.drawString(name, x, y,
+			GuiWizardHandbook.this.fontRenderer.drawString(name, x, y,
 					GuiWizardHandbook.this.buttonList.get(buttonId).isMouseOver() ? HIGHLIGHT_COLOUR : BLACK);
 
-			int nameWidth = GuiWizardHandbook.this.fontRendererObj.getStringWidth(name);
+			int nameWidth = GuiWizardHandbook.this.fontRenderer.getStringWidth(name);
 
 			String dotsAndNumber = " " + this.pageNumber;
 
-			while(GuiWizardHandbook.this.fontRendererObj.getStringWidth(dotsAndNumber) < GuiWizardHandbook.PAGE_WIDTH
+			while(GuiWizardHandbook.this.fontRenderer.getStringWidth(dotsAndNumber) < GuiWizardHandbook.PAGE_WIDTH
 					- nameWidth - 2){
 				dotsAndNumber = "." + dotsAndNumber;
 			}
 
-			GuiWizardHandbook.this.fontRendererObj.drawString(dotsAndNumber, x + GuiWizardHandbook.PAGE_WIDTH
-					- GuiWizardHandbook.this.fontRendererObj.getStringWidth(dotsAndNumber), y, BLACK);
+			GuiWizardHandbook.this.fontRenderer.drawString(dotsAndNumber, x + GuiWizardHandbook.PAGE_WIDTH
+					- GuiWizardHandbook.this.fontRenderer.getStringWidth(dotsAndNumber), y, BLACK);
 		}
 	}
 

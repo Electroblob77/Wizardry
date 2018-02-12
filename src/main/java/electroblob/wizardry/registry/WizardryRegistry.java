@@ -295,9 +295,10 @@ public final class WizardryRegistry {
 			GameRegistry.addShapelessRecipe(firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack);
 		if(Wizardry.settings.poisonBombIsCraftable)
 			GameRegistry.addShapelessRecipe(poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack);
+
 		if(Wizardry.settings.smokeBombIsCraftable)
 			GameRegistry.addShapelessRecipe(smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack);
-		
+
 		if(Wizardry.settings.useAlternateScrollRecipe){
 			GameRegistry.addShapelessRecipe(scrollStack, paperStack, stringStack, magicCrystalStack);
 		}else{

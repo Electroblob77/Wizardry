@@ -123,7 +123,7 @@ public class EntitySkeletonMinion extends EntitySkeleton implements ISummonedCre
 		}
 
 		// Halloween pumpkin heads! Why not?
-		if(this.getItemStackFromSlot(EntityEquipmentSlot.HEAD) == null){
+		if(this.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()){
 			Calendar calendar = this.world.getCurrentDate();
 
 			if(calendar.get(2) + 1 == 10 && calendar.get(5) == 31 && this.rand.nextFloat() < 0.25F){

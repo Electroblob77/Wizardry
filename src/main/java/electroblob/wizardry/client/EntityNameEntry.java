@@ -37,8 +37,8 @@ public class EntityNameEntry extends StringEntry {
 	public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY,
 			boolean isSelected){
 		// super.drawEntry(slotIndex, x, y, listWidth, slotHeight, tessellator, mouseX, mouseY, isSelected);
-		this.btnValue.xPosition = listWidth / 4;
-		this.btnValue.yPosition = y;
+		this.btnValue.x = listWidth / 4;
+		this.btnValue.y = y;
 
 		String trans = I18n.format(this.textFieldValue.getText());
 		if(!trans.equals(this.textFieldValue.getText()))
