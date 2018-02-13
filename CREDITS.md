@@ -1,8 +1,8 @@
 # Credits
 
 Electroblob's Wizardry  
-Version 2.1.0  
-For Minecraft 1.10.2
+Version 3.1.0  
+For Minecraft 1.11.2
 
 Designed, coded and textured by Electroblob
 
