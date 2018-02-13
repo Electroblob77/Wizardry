@@ -12,6 +12,10 @@ Thanks also to the Minecraft modding community, which always has an answer to my
 
 In addition, I'd like to thank the following individuals for their contributions to the mod:
 
+#### Code
+
+- Corail31
+
 #### Translations
 
 - Russian: VilagVil
