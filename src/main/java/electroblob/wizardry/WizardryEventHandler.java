@@ -89,7 +89,8 @@ public final class WizardryEventHandler {
 	private static final String[] LOOT_INJECTION_LOCATIONS = {"minecraft:chests/simple_dungeon",
 			"minecraft:chests/abandoned_mineshaft", "minecraft:chests/desert_pyramid", "minecraft:chests/jungle_temple",
 			"minecraft:chests/stronghold_corridor", "minecraft:chests/stronghold_crossing",
-			"minecraft:chests/stronghold_library", "minecraft:chests/igloo_chest"};
+			"minecraft:chests/stronghold_library", "minecraft:chests/igloo_chest", "minecraft:chests/woodland_mansion",
+			"minecraft:chests/end_city_treasure"};
 
 	@SubscribeEvent
 	public static void onLootTableLoadEvent(LootTableLoadEvent event){
