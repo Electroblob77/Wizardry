@@ -14,15 +14,14 @@ public enum Element {
 	/**
 	 * The 'default' element, with {@link electroblob.wizardry.spell.MagicMissile MagicMissile} being its only spell.
 	 */
-	MAGIC(new Style().setColor(TextFormatting.GRAY), "simple", Wizardry.MODID), FIRE(
-			new Style().setColor(TextFormatting.DARK_RED), "fire",
-			Wizardry.MODID), ICE(new Style().setColor(TextFormatting.AQUA), "ice", Wizardry.MODID), LIGHTNING(
-					new Style().setColor(TextFormatting.DARK_AQUA), "lightning",
-					Wizardry.MODID), NECROMANCY(new Style().setColor(TextFormatting.DARK_PURPLE), "necromancy",
-							Wizardry.MODID), EARTH(new Style().setColor(TextFormatting.DARK_GREEN), "earth",
-									Wizardry.MODID), SORCERY(new Style().setColor(TextFormatting.GREEN), "sorcery",
-											Wizardry.MODID), HEALING(new Style().setColor(TextFormatting.YELLOW),
-													"healing", Wizardry.MODID);
+	MAGIC(new Style().setColor(TextFormatting.GRAY), "simple", Wizardry.MODID),
+	FIRE(new Style().setColor(TextFormatting.DARK_RED), "fire", Wizardry.MODID),
+	ICE(new Style().setColor(TextFormatting.AQUA), "ice", Wizardry.MODID),
+	LIGHTNING(new Style().setColor(TextFormatting.DARK_AQUA), "lightning", Wizardry.MODID),
+	NECROMANCY(new Style().setColor(TextFormatting.DARK_PURPLE), "necromancy", Wizardry.MODID),
+	EARTH(new Style().setColor(TextFormatting.DARK_GREEN), "earth", Wizardry.MODID),
+	SORCERY(new Style().setColor(TextFormatting.GREEN), "sorcery", Wizardry.MODID),
+	HEALING(new Style().setColor(TextFormatting.YELLOW), "healing", Wizardry.MODID);
 
 	/** Display colour for this element */
 	private final Style colour;

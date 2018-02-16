@@ -61,19 +61,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
-// Better ways of organising event handling:
-// - Split it into several separate handlers, each with a logical area to deal with (see Astral Sorcery)
-// - Remove most of the stuff, and have individual spell, item, block, entity, etc. classes handle their own events
-// (see Botania)
-// - Keep all the methods, but delegate near-repeated behaviours to their individual spell/potion/whatever classes
-// (TGG does this, apparently)
-// Incidentally, Twilight Forest still has one big event handler class - and a comment about how it's so long...!
-
-// In the end, I decided the most pragmatic solution was to either use the second option or keep things how they were,
-// whichever will result in more readable/easily maintainable code in each case. To keep in line with the modularity
-// of the spell system, the goal is to have nothing in here which relates to a specific spell (mostly done, but a few
-// things remain).
-
 /**
  * As of Wizardry 2.1, most of the code in this class has been relocated somewhere sensible, leaving only a few
  * miscellaneous things that don't make much sense anywhere else, or that are better kept together. Previously, this was
