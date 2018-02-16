@@ -169,7 +169,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 		target.motionY += 0.2;
 		target.motionX += this.getLookVec().x * 0.2;
-		target.motionZ += this.getLookVec().x * 0.2;
+		target.motionZ += this.getLookVec().z * 0.2;
 
 		target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 300, 0));
 
