@@ -28,7 +28,7 @@ public class BlockStatue extends BlockContainer {
 		super(material);
 		this.isIce = material == Material.ICE;
 		if(this.isIce){
-			this.slipperiness = 0.98F;
+			this.setDefaultSlipperiness(0.98f);
 			this.setSoundType(SoundType.GLASS);
 		}
 	}
