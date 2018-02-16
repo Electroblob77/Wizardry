@@ -293,7 +293,7 @@ Creditos
 --------------------
 Electroblob's Wizardry
 Version VERSION
-Para Minecraft 1.10.2
+Para Minecraft MCVERSION
 
 Disenado, codificado y texturizado por Electroblob
 

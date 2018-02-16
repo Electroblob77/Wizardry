@@ -657,12 +657,9 @@ public class GuiWizardHandbook extends GuiScreen {
 
 					}else{
 
-						paragraph = paragraph.replaceAll("NEXT_SPELL_KEY",
-								Keyboard.getKeyName(ClientProxy.NEXT_SPELL.getKeyCode()));
-						paragraph = paragraph.replaceAll("PREVIOUS_SPELL_KEY",
-								Keyboard.getKeyName(ClientProxy.PREVIOUS_SPELL.getKeyCode()));
-						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL_MINUS_30",
-								"" + (Constants.MANA_PER_CRYSTAL - 30));
+						paragraph = paragraph.replaceAll("NEXT_SPELL_KEY", Keyboard.getKeyName(ClientProxy.NEXT_SPELL.getKeyCode()));
+						paragraph = paragraph.replaceAll("PREVIOUS_SPELL_KEY", Keyboard.getKeyName(ClientProxy.PREVIOUS_SPELL.getKeyCode()));
+						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL_MINUS_30", "" + (Constants.MANA_PER_CRYSTAL - 30));
 						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL", "" + Constants.MANA_PER_CRYSTAL);
 						paragraph = paragraph.replaceAll("BASIC_MAX_CHARGE", "" + Tier.BASIC.maxCharge);
 						paragraph = paragraph.replaceAll("APPRENTICE_MAX_CHARGE", "" + Tier.APPRENTICE.maxCharge);
@@ -681,6 +678,7 @@ public class GuiWizardHandbook extends GuiScreen {
 						paragraph = paragraph.replaceAll("HEALING_COLOUR", Element.HEALING.getFormattingCode());
 						paragraph = paragraph.replaceAll("RESET_COLOUR", "\u00A70");
 						paragraph = paragraph.replaceAll("VERSION", Wizardry.VERSION);
+						paragraph = paragraph.replaceAll("MCVERSION", "1.11.2");
 
 						int linesInParagraph = this.fontRenderer
 								.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH).size();
