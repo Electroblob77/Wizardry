@@ -229,8 +229,7 @@ public final class WizardryRegistry {
 		biomes.remove(Biomes.MUSHROOM_ISLAND);
 		biomes.remove(Biomes.MUSHROOM_ISLAND_SHORE);
 		// For reference: 5, 1, 1 are the parameters for the witch in vanilla.
-		EntityRegistry.addSpawn(EntityEvilWizard.class, 3, 1, 1, EnumCreatureType.MONSTER,
-				biomes.toArray(new Biome[biomes.size()]));
+		EntityRegistry.addSpawn(EntityEvilWizard.class, 3, 1, 1, EnumCreatureType.MONSTER, biomes.toArray(new Biome[biomes.size()]));
 
 	}
 
@@ -273,11 +272,9 @@ public final class WizardryRegistry {
 		ItemStack scrollStack = new ItemStack(WizardryItems.blank_scroll);
 		ItemStack paperStack = new ItemStack(Items.PAPER);
 
-		GameRegistry.addRecipe(magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z',
-				goldNuggetStack);
+		GameRegistry.addRecipe(magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z', goldNuggetStack);
 		GameRegistry.addRecipe(spellBookStack, " x ", "xyx", " x ", 'x', magicCrystalStack, 'y', bookStack);
-		GameRegistry.addRecipe(arcaneWorkbenchStack, "vwv", "xyx", "zzz", 'v', goldNuggetStack, 'w', purpleCarpetStack,
-				'x', magicCrystalStack, 'y', lapisBlockStack, 'z', stoneStack);
+		GameRegistry.addRecipe(arcaneWorkbenchStack, "vwv", "xyx", "zzz", 'v', goldNuggetStack, 'w', purpleCarpetStack, 'x', magicCrystalStack, 'y', lapisBlockStack, 'z', stoneStack);
 		GameRegistry.addRecipe(manaFlaskStack, "yyy", "yxy", "yyy", 'x', bottleStack, 'y', magicCrystalStack);
 		GameRegistry.addRecipe(transportationStoneStack, " x ", "xyx", " x ", 'x', stoneStack, 'y', magicCrystalStack);
 		GameRegistry.addRecipe(hatStack, "yyy", "y y", 'y', silkStack);
@@ -290,14 +287,10 @@ public final class WizardryRegistry {
 		GameRegistry.addShapelessRecipe(wizardHandbookStack, bookStack, magicCrystalStack);
 		GameRegistry.addShapelessRecipe(magicCrystalStack1, crystalFlowerStack);
 		GameRegistry.addShapelessRecipe(magicCrystalStack2, crystalBlockStack);
-		
-		if(Wizardry.settings.firebombIsCraftable)
-			GameRegistry.addShapelessRecipe(firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack);
-		if(Wizardry.settings.poisonBombIsCraftable)
-			GameRegistry.addShapelessRecipe(poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack);
 
-		if(Wizardry.settings.smokeBombIsCraftable)
-			GameRegistry.addShapelessRecipe(smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack);
+		if(Wizardry.settings.firebombIsCraftable) GameRegistry.addShapelessRecipe(firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack);
+		if(Wizardry.settings.poisonBombIsCraftable) GameRegistry.addShapelessRecipe(poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack);
+		if(Wizardry.settings.smokeBombIsCraftable) GameRegistry.addShapelessRecipe(smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack);
 
 		if(Wizardry.settings.useAlternateScrollRecipe){
 			GameRegistry.addShapelessRecipe(scrollStack, paperStack, stringStack, magicCrystalStack);
@@ -310,8 +303,7 @@ public final class WizardryRegistry {
 
 		for(Element element : Element.values()){
 			for(Tier tier : Tier.values()){
-				miscWandStack = new ItemStack(WizardryUtilities.getWand(tier, element), 1,
-						OreDictionary.WILDCARD_VALUE);
+				miscWandStack = new ItemStack(WizardryUtilities.getWand(tier, element), 1, OreDictionary.WILDCARD_VALUE);
 				GameRegistry.addShapelessRecipe(miscWandStack, miscWandStack, manaFlaskStack);
 			}
 		}
@@ -320,8 +312,7 @@ public final class WizardryRegistry {
 
 		for(Element element : Element.values()){
 			for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
-				miscArmourStack = new ItemStack(WizardryUtilities.getArmour(element, slot), 1,
-						OreDictionary.WILDCARD_VALUE);
+				miscArmourStack = new ItemStack(WizardryUtilities.getArmour(element, slot), 1, OreDictionary.WILDCARD_VALUE);
 				GameRegistry.addShapelessRecipe(miscArmourStack, miscArmourStack, manaFlaskStack);
 			}
 		}

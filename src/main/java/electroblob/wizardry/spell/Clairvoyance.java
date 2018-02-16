@@ -81,7 +81,7 @@ public class Clairvoyance extends Spell {
 							256 * modifiers.get(WizardryItems.range_upgrade));
 
 					if(path != null && path.getFinalPathPoint() != null){
-						// TODO Corail : is it normal to have x in each ???
+						
 						int x = path.getFinalPathPoint().x;
 						int y = path.getFinalPathPoint().y;
 						int z = path.getFinalPathPoint().z;
