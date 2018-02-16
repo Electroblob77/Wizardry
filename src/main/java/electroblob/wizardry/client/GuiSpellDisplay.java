@@ -30,8 +30,7 @@ public class GuiSpellDisplay extends Gui {
 
 	private Minecraft mc;
 
-	private static final ResourceLocation hudTexture = new ResourceLocation(Wizardry.MODID,
-			"textures/gui/spell_hud.png");
+	private static final ResourceLocation hudTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_hud.png");
 
 	public GuiSpellDisplay(Minecraft par1Minecraft){
 		super();
@@ -47,10 +46,10 @@ public class GuiSpellDisplay extends Gui {
 
 		ItemStack wand = player.getHeldItemMainhand();
 
-		if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)){
+		if(!(wand.getItem() instanceof ItemWand)){
 			wand = player.getHeldItemOffhand();
 			// If the player isn't holding a wand, then nothing else needs to be done.
-			if(wand.isEmpty() || !(wand.getItem() instanceof ItemWand)) return;
+			if(!(wand.getItem() instanceof ItemWand)) return;
 		}
 
 		int width = event.getResolution().getScaledWidth();
@@ -59,8 +58,7 @@ public class GuiSpellDisplay extends Gui {
 		Spell spell = WandHelper.getCurrentSpell(wand);
 		int cooldown = WandHelper.getCurrentCooldown(wand);
 
-		float cooldownMultiplier = 1.0f - WandHelper.getUpgradeLevel(wand, WizardryItems.cooldown_upgrade)
-				* Constants.COOLDOWN_REDUCTION_PER_LEVEL;
+		float cooldownMultiplier = 1.0f - WandHelper.getUpgradeLevel(wand, WizardryItems.cooldown_upgrade) * Constants.COOLDOWN_REDUCTION_PER_LEVEL;
 
 		if(player.isPotionActive(WizardryPotions.font_of_mana)){
 			// Dividing by this rather than setting it takes upgrades and font of mana into account simultaneously
@@ -97,8 +95,7 @@ public class GuiSpellDisplay extends Gui {
 		if(event.getType() == RenderGameOverlayEvent.ElementType.TEXT){
 
 			// Makes spells greyed out if they are in cooldown or if the player has the arcane jammer effect
-			String colour = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78"
-					: spell.element.getFormattingCode();
+			String colour = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78" : spell.element.getFormattingCode();
 			if(!discovered) colour = "\u00A79";
 			String spellName = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
 			FontRenderer font = discovered ? this.mc.fontRenderer : this.mc.standardGalacticFontRenderer;
@@ -117,8 +114,7 @@ public class GuiSpellDisplay extends Gui {
 
 				for(Object line : lines){
 					if(line instanceof String){
-						font.drawStringWithShadow(colour + (String)line, mirror ? left + 5 : left + 41,
-								top + 6 + 11 * lineNumber, 0xffffffff);
+						font.drawStringWithShadow(colour + (String)line, mirror ? left + 5 : left + 41, top + 6 + 11 * lineNumber, 0xffffffff);
 					}
 					lineNumber++;
 				}
@@ -141,8 +137,7 @@ public class GuiSpellDisplay extends Gui {
 			if(cooldown > 0){
 				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, height - 8, 128, 6, 82, 6);
 
-				int l = (int)(((double)(spell.cooldown * cooldownMultiplier - cooldown)
-						/ (double)(spell.cooldown * cooldownMultiplier)) * 82);
+				int l = (int)(((double)(spell.cooldown * cooldownMultiplier - cooldown) / (double)(spell.cooldown * cooldownMultiplier)) * 82);
 
 				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, height - 8, 128, 0, l, 6);
 			}

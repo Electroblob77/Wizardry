@@ -363,13 +363,12 @@ public class ClientProxy extends CommonProxy {
 
 			Source source = Source.OTHER;
 
-			if(!((EntityPlayer)caster).getHeldItem(message.hand).isEmpty()){
-				Item item = ((EntityPlayer)caster).getHeldItem(message.hand).getItem();
-				if(item instanceof ItemWand){
-					source = Source.WAND;
-				}else if(item instanceof ItemScroll){
-					source = Source.SCROLL;
-				}
+			Item item = ((EntityPlayer)caster).getHeldItem(message.hand).getItem();
+			
+			if(item instanceof ItemWand){
+				source = Source.WAND;
+			}else if(item instanceof ItemScroll){
+				source = Source.SCROLL;
 			}
 
 			// No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
@@ -516,10 +515,9 @@ public class ClientProxy extends CommonProxy {
 	// SECTION Rendering
 	// ===============================================================================================================
 
-	private static final ResourceLocation ICE_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/ice_wraith.png");
-	private static final ResourceLocation LIGHTNING_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/lightning_wraith.png");
+	private static final ResourceLocation ICE_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/ice_wraith.png");
+	private static final ResourceLocation LIGHTNING_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_wraith.png");
+	
 	/** Static instance of the statue renderer, used to access the block breaking texture. */
 	public static RenderStatue renderStatue;
 

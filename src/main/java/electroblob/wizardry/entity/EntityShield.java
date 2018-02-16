@@ -46,8 +46,7 @@ public class EntityShield extends Entity {
 					entityplayer.posY + 1 + entityplayer.getLookVec().y * 0.3,
 					entityplayer.posZ + entityplayer.getLookVec().z * 0.3, entityplayer.rotationYawHead,
 					entityplayer.rotationPitch);
-			if(!entityplayer.isHandActive() || entityplayer.getHeldItem(entityplayer.getActiveHand()).isEmpty()
-					|| !(entityplayer.getHeldItem(entityplayer.getActiveHand()).getItem() instanceof ItemWand)){
+			if(!entityplayer.isHandActive() || !(entityplayer.getHeldItem(entityplayer.getActiveHand()).getItem() instanceof ItemWand)){
 				WizardData.get(entityplayer).shield = null;
 				this.setDead();
 			}

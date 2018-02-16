@@ -70,7 +70,7 @@ public interface Imbuement {
 			// Still not sure if it's better to set stacks in slots or modify the itemstack list directly, but I would
 			// imagine it's the former.
 			for(Slot slot : event.getContainer().inventorySlots){
-				if(!slot.getStack().isEmpty() && slot.getStack().getItem() instanceof ItemEnchantedBook){
+				if(slot.getStack().getItem() instanceof ItemEnchantedBook){
 					// We don't care about the level of the enchantments
 					Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(slot.getStack());
 					// Removes all imbuements
@@ -104,9 +104,9 @@ public interface Imbuement {
 
 				ItemStack bow = archer.getHeldItemMainhand();
 
-				if(bow.isEmpty() || !(bow.getItem() instanceof ItemBow)){
+				if(!(bow.getItem() instanceof ItemBow)){
 					bow = archer.getHeldItemOffhand();
-					if(bow.isEmpty() || !(bow.getItem() instanceof ItemBow)) return;
+					if(!(bow.getItem() instanceof ItemBow)) return;
 				}
 
 				// Taken directly from ItemBow, so it works exactly the same as the power enchantment.

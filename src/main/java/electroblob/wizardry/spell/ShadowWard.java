@@ -36,8 +36,7 @@ public class ShadowWard extends Spell {
 			double dx = -1 + 2 * world.rand.nextFloat();
 			double dy = -1 + world.rand.nextFloat();
 			double dz = -1 + 2 * world.rand.nextFloat();
-			world.spawnParticle(EnumParticleTypes.PORTAL, caster.posX, WizardryUtilities.getPlayerEyesPos(caster),
-					caster.posZ, dx, dy, dz);
+			world.spawnParticle(EnumParticleTypes.PORTAL, caster.posX, WizardryUtilities.getPlayerEyesPos(caster), caster.posZ, dx, dy, dz);
 		}
 
 		if(ticksInUse % 50 == 0){
@@ -53,19 +52,16 @@ public class ShadowWard extends Spell {
 			// There used to be a check that the target was a player here, but I don't see any reason for it.
 			ItemStack wand = event.getEntityLiving().getActiveItemStack();
 
-			if(!wand.isEmpty() && wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand
+			if(wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand
 					&& WandHelper.getCurrentSpell(wand) instanceof ShadowWard && !event.getSource().isUnblockable()
-					&& !(event.getSource() instanceof IElementalDamage
-							&& ((IElementalDamage)event.getSource()).isRetaliatory())){
+					&& !(event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory())){
 
 				event.setCanceled(true);
 				// Now we can preserve the original daage source (sort of) as long as we make it retaliatory.
 				event.getEntityLiving().attackEntityFrom(
-						MagicDamage.causeDirectMagicDamage(event.getSource().getTrueSource(), DamageType.MAGIC, true),
-						event.getAmount() / 2);
-				((EntityLivingBase)event.getSource().getTrueSource()).attackEntityFrom(
-						MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.MAGIC, true),
-						event.getAmount() / 2);
+						MagicDamage.causeDirectMagicDamage(event.getSource().getTrueSource(), DamageType.MAGIC, true), event.getAmount() / 2);
+				((EntityLivingBase)event.getSource().getTrueSource())
+						.attackEntityFrom(MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.MAGIC, true), event.getAmount() / 2);
 			}
 		}
 	}

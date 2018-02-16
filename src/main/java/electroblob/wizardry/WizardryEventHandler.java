@@ -400,8 +400,7 @@ public final class WizardryEventHandler {
 	 * @param player
 	 */
 	private static void hackilyFixContinuousSpellCasting(EntityPlayer player){
-		if(player.isHandActive() && !player.getHeldItem(player.getActiveHand()).isEmpty()
-				&& player.getHeldItem(player.getActiveHand()).getItem() instanceof ItemWand
+		if(player.isHandActive() && player.getHeldItem(player.getActiveHand()).getItem() instanceof ItemWand
 				&& WandHelper.getCurrentSpell(player.getHeldItem(player.getActiveHand())).isContinuous){
 			if(player.getActiveItemStack() != player.getHeldItem(player.getActiveHand())){
 				player.setHeldItem(player.getActiveHand(), player.getActiveItemStack());

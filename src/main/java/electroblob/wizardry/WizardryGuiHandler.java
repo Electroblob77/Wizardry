@@ -43,19 +43,14 @@ public class WizardryGuiHandler implements IGuiHandler {
 				return new electroblob.wizardry.client.GuiArcaneWorkbench(player.inventory,
 						(TileEntityArcaneWorkbench)tileEntity);
 			}
-		}else if(id == WIZARD_HANDBOOK && ((!player.getHeldItemMainhand().isEmpty()
-				&& player.getHeldItemMainhand().getItem() instanceof ItemWizardHandbook)
-				|| (!player.getHeldItemOffhand().isEmpty()
-						&& player.getHeldItemOffhand().getItem() instanceof ItemWizardHandbook))){
+		}else if(id == WIZARD_HANDBOOK && (player.getHeldItemMainhand().getItem() instanceof ItemWizardHandbook
+				|| player.getHeldItemOffhand().getItem() instanceof ItemWizardHandbook)){
 			return new electroblob.wizardry.client.GuiWizardHandbook();
 		}else if(id == SPELL_BOOK){
-			if(!player.getHeldItemMainhand().isEmpty() && player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
-				return new electroblob.wizardry.client.GuiSpellBook(
-						Spell.get(player.getHeldItemMainhand().getItemDamage()));
-			}else if(!player.getHeldItemOffhand().isEmpty()
-					&& player.getHeldItemOffhand().getItem() instanceof ItemSpellBook){
-				return new electroblob.wizardry.client.GuiSpellBook(
-						Spell.get(player.getHeldItemOffhand().getItemDamage()));
+			if(player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
+				return new electroblob.wizardry.client.GuiSpellBook(Spell.get(player.getHeldItemMainhand().getItemDamage()));
+			}else if(player.getHeldItemOffhand().getItem() instanceof ItemSpellBook){
+				return new electroblob.wizardry.client.GuiSpellBook(Spell.get(player.getHeldItemOffhand().getItemDamage()));
 			}
 		}else if(id == PORTABLE_CRAFTING){
 			return new electroblob.wizardry.client.GuiPortableCrafting(player.inventory, world, new BlockPos(x, y, z));

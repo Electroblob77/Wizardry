@@ -57,8 +57,7 @@ public class Clairvoyance extends Spell {
 			if(caster.dimension == properties.getClairvoyanceDimension()){
 				if(properties.getClairvoyanceLocation() != null){
 
-					if(!world.isRemote)
-						caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.searching"));
+					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.searching"));
 
 					EntityZombie arbitraryZombie = new EntityZombie(world){
 						@Override
@@ -74,14 +73,12 @@ public class Clairvoyance extends Spell {
 
 					BlockPos destination = properties.getClairvoyanceLocation();
 
-					WizardryPathFinder pathfinder = new WizardryPathFinder(
-							arbitraryZombie.getNavigator().getNodeProcessor());
+					WizardryPathFinder pathfinder = new WizardryPathFinder(arbitraryZombie.getNavigator().getNodeProcessor());
 
-					Path path = pathfinder.findPath(world, arbitraryZombie, destination,
-							256 * modifiers.get(WizardryItems.range_upgrade));
+					Path path = pathfinder.findPath(world, arbitraryZombie, destination, 256 * modifiers.get(WizardryItems.range_upgrade));
 
 					if(path != null && path.getFinalPathPoint() != null){
-						
+
 						int x = path.getFinalPathPoint().x;
 						int y = path.getFinalPathPoint().y;
 						int z = path.getFinalPathPoint().z;
@@ -91,24 +88,21 @@ public class Clairvoyance extends Spell {
 							WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
 
 							if(!world.isRemote && caster instanceof EntityPlayerMP){
-								WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path,
-										modifiers.get(WizardryItems.duration_upgrade)), (EntityPlayerMP)caster);
+								WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path, modifiers.get(WizardryItems.duration_upgrade)),
+										(EntityPlayerMP)caster);
 							}
 
 							return true;
 						}
 					}
 
-					if(!world.isRemote)
-						caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.outofrange"));
+					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.outofrange"));
 
 				}else{
-					if(!world.isRemote)
-						caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.undefined"));
+					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.undefined"));
 				}
 			}else{
-				if(!world.isRemote)
-					caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.wrongdimension"));
+				if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.clairvoyance.wrongdimension"));
 			}
 		}
 
@@ -129,11 +123,9 @@ public class Clairvoyance extends Spell {
 			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint()
 					: path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
 
-			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5,
-					point.z + 0.5, (nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL,
-					(int)(1800 * durationMultiplier), 0, 1, 0.3f);
+			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5,
+					(nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL, (nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL, (int)(1800 * durationMultiplier), 0, 1, 0.3f);
 
 			path.incrementPathIndex();
 			path.incrementPathIndex();
@@ -141,8 +133,8 @@ public class Clairvoyance extends Spell {
 
 		point = path.getFinalPathPoint();
 
-		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5,
-				point.z + 0.5, 0, 0, 0, (int)(1800 * durationMultiplier), 1, 1, 1);
+		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5, 0, 0, 0,
+				(int)(1800 * durationMultiplier), 1, 1, 1);
 	}
 
 	@SubscribeEvent
@@ -153,8 +145,7 @@ public class Clairvoyance extends Spell {
 			// The event now has an ItemStack, which greatly simplifies hand-related stuff.
 			ItemStack wand = event.getItemStack();
 
-			if(!wand.isEmpty() && wand.getItem() instanceof ItemWand
-					&& WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
+			if(wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
 
 				WizardData properties = WizardData.get(event.getEntityPlayer());
 
@@ -165,8 +156,8 @@ public class Clairvoyance extends Spell {
 					properties.setClairvoyancePoint(pos, event.getWorld().provider.getDimension());
 
 					if(!event.getWorld().isRemote){
-						event.getEntityPlayer().sendMessage(new TextComponentTranslation("spell.clairvoyance.confirm",
-								Spells.clairvoyance.getNameForTranslationFormatted()));
+						event.getEntityPlayer().sendMessage(
+								new TextComponentTranslation("spell.clairvoyance.confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
 					}
 
 					event.setCanceled(true);

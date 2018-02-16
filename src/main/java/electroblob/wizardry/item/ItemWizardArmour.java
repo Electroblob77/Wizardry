@@ -232,7 +232,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
 
 			for(ItemStack stack : player.getArmorInventoryList()){
-				if(stack.isEmpty() || !(stack.getItem() instanceof ItemWizardArmour)){
+				if(!(stack.getItem() instanceof ItemWizardArmour)){
 					return; // If any of the armour slots doesn't contain wizard armour, don't trigger the achievement.
 				}
 			}
