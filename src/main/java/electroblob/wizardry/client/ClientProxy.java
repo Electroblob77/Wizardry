@@ -155,10 +155,8 @@ public class ClientProxy extends CommonProxy {
 	public static MixedFontRenderer mixedFontRenderer;
 
 	// Key Bindings
-	public static final KeyBinding NEXT_SPELL = new KeyBinding("key.wizardry:next_spell", Keyboard.KEY_N,
-			"key.categories.wizardry");
-	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key.wizardry:previous_spell", Keyboard.KEY_B,
-			"key.categories.wizardry");
+	public static final KeyBinding NEXT_SPELL = new KeyBinding("key.wizardry:next_spell", Keyboard.KEY_N, "key.categories.wizardry");
+	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key.wizardry:previous_spell", Keyboard.KEY_B, "key.categories.wizardry");
 
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
@@ -184,8 +182,8 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void initMixedFontRenderer(){
-		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings,
-				new ResourceLocation("textures/font/ascii.png"), Minecraft.getMinecraft().renderEngine, false);
+		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"),
+				Minecraft.getMinecraft().renderEngine, false);
 	}
 
 	// SECTION Misc
@@ -203,8 +201,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void playMovingSound(Entity entity, SoundEvent sound, float volume, float pitch, boolean repeat){
-		Minecraft.getMinecraft().getSoundHandler()
-				.playSound(new MovingSoundEntity(entity, sound, volume, pitch, repeat));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, sound, volume, pitch, repeat));
 	}
 
 	// SECTION Items
@@ -221,8 +218,7 @@ public class ClientProxy extends CommonProxy {
 			spell = Spell.get(stack.getItemDamage());
 		}
 
-		if(Minecraft.getMinecraft().player != null && Wizardry.settings.discoveryMode
-				&& WizardData.get(Minecraft.getMinecraft().player) != null
+		if(Minecraft.getMinecraft().player != null && Wizardry.settings.discoveryMode && WizardData.get(Minecraft.getMinecraft().player) != null
 				&& !Minecraft.getMinecraft().player.capabilities.isCreativeMode
 				&& !WizardData.get(Minecraft.getMinecraft().player).hasSpellBeenDiscovered(spell)){
 			return mixedFontRenderer;
@@ -243,16 +239,15 @@ public class ClientProxy extends CommonProxy {
 		boolean discovered = true;
 		// It seems that this method is called when the world is loading, before thePlayer has been initialised.
 		// If the player is null, the spell is assumed to be discovered.
-		if(player != null && Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode
-				&& WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+		if(player != null && Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode && WizardData.get(player) != null
+				&& !WizardData.get(player).hasSpellBeenDiscovered(spell)){
 			discovered = false;
 		}
 
 		if(discovered){
 			return I18n.format("item.wizardry:scroll.name", spell.getDisplayName()).trim();
 		}else{
-			return I18n.format("item.wizardry:scroll.undiscovered.name",
-					"#" + SpellGlyphData.getGlyphName(spell, player.world) + "#").trim();
+			return I18n.format("item.wizardry:scroll.undiscovered.name", "#" + SpellGlyphData.getGlyphName(spell, player.world) + "#").trim();
 		}
 	}
 
@@ -269,8 +264,8 @@ public class ClientProxy extends CommonProxy {
 	// ===============================================================================================================
 
 	@Override
-	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX,
-			double velY, double velZ, int maxAge, float r, float g, float b, boolean doGravity, double radius){
+	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge,
+			float r, float g, float b, boolean doGravity, double radius){
 
 		// Colour values are now automatically clamped to between 0 and 1, as values outside this range seem to
 		// cause strange effects in 1.10 (or more specifically, particles that are bright pink!)
@@ -285,36 +280,28 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBlizzard(world, maxAge, x, z, radius, y));
 			break;
 		case BRIGHT_DUST:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, false));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, false));
 			break;
 		case DARK_MAGIC:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleDarkMagic(world, x, y, z, velX, velY, velZ, r, g, b));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDarkMagic(world, x, y, z, velX, velY, velZ, r, g, b));
 			break;
 		case DUST:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, true));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, true));
 			break;
 		case ICE:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleIce(world, x, y, z, velX, velY, velZ, maxAge));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleIce(world, x, y, z, velX, velY, velZ, maxAge));
 			break;
 		case LEAF:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleLeaf(world, x, y, z, velX, velY, velZ, maxAge));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleLeaf(world, x, y, z, velX, velY, velZ, maxAge));
 			break;
 		case MAGIC_BUBBLE:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleGiantBubble(world, x, y, z, velX, velY, velZ));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGiantBubble(world, x, y, z, velX, velY, velZ));
 			break;
 		case MAGIC_FIRE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleMagicFlame(world, x, y, z, velX, velY, velZ,
-					maxAge, r == 0 ? 1 + world.rand.nextFloat() : r));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleMagicFlame(world, x, y, z, velX, velY, velZ, maxAge, r == 0 ? 1 + world.rand.nextFloat() : r));
 			break;
 		case PATH:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticlePath(world, x, y, z, velX, velY, velZ, r, g, b, maxAge));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticlePath(world, x, y, z, velX, velY, velZ, r, g, b, maxAge));
 			break;
 		case SNOW:
 			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSnow(world, x, y, z, velX, velY, velZ));
@@ -323,12 +310,10 @@ public class ClientProxy extends CommonProxy {
 			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSpark(world, x, y, z, velX, velY, velZ));
 			break;
 		case SPARKLE:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleSparkle(world, x, y, z, velX, velY, velZ, r, g, b, maxAge, doGravity));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSparkle(world, x, y, z, velX, velY, velZ, r, g, b, maxAge, doGravity));
 			break;
 		case SPARKLE_ROTATING:
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleRotatingSparkle(world, maxAge, x, z, radius, y, r, g, b));
+			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleRotatingSparkle(world, maxAge, x, z, radius, y, r, g, b));
 			break;
 		default:
 			break;
@@ -336,11 +321,10 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
-			int maxAge, IBlockState block, BlockPos pos){
-		Minecraft.getMinecraft().effectRenderer
-				.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// ,
-																													// world.rand.nextInt(6)));
+	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius, int maxAge,
+			IBlockState block, BlockPos pos){
+		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// ,
+																																					// world.rand.nextInt(6)));
 	}
 
 	// SECTION Packet Handlers
@@ -364,7 +348,7 @@ public class ClientProxy extends CommonProxy {
 			Source source = Source.OTHER;
 
 			Item item = ((EntityPlayer)caster).getHeldItem(message.hand).getItem();
-			
+
 			if(item instanceof ItemWand){
 				source = Source.WAND;
 			}else if(item instanceof ItemScroll){
@@ -373,8 +357,7 @@ public class ClientProxy extends CommonProxy {
 
 			// No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
 			// The handler for this event now deals with discovery.
-			MinecraftForge.EVENT_BUS
-					.post(new SpellCastEvent.Post((EntityPlayer)caster, spell, message.modifiers, source));
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post((EntityPlayer)caster, spell, message.modifiers, source));
 
 		}else{
 			Wizardry.logger.warn("Recieved a PacketCastSpell, but the caster ID was not the ID of a player");
@@ -419,8 +402,7 @@ public class ClientProxy extends CommonProxy {
 				spell.cast(world, (EntityLiving)caster, message.hand, 0, (EntityLivingBase)target, message.modifiers);
 				// Again, no need to check if the spell succeeded, because the packet is only ever sent when it
 				// succeeds.
-				MinecraftForge.EVENT_BUS
-						.post(new SpellCastEvent.Post((EntityLiving)caster, spell, message.modifiers, Source.NPC));
+				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post((EntityLiving)caster, spell, message.modifiers, Source.NPC));
 			}
 
 			if(caster instanceof ISpellCaster){
@@ -448,8 +430,8 @@ public class ClientProxy extends CommonProxy {
 			double x = caster.posX + radius * Math.cos(angle);
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
 			double z = caster.posZ + radius * Math.sin(angle);
-			Minecraft.getMinecraft().effectRenderer.addEffect(
-					new ParticleSparkle(world, x, y, z, 0, 0.02, 0, 0.6f, 1.0f, 0.6f, 80 + world.rand.nextInt(10)));
+			Minecraft.getMinecraft().effectRenderer
+					.addEffect(new ParticleSparkle(world, x, y, z, 0, 0.02, 0, 0.6f, 1.0f, 0.6f, 80 + world.rand.nextInt(10)));
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
@@ -517,7 +499,7 @@ public class ClientProxy extends CommonProxy {
 
 	private static final ResourceLocation ICE_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/ice_wraith.png");
 	private static final ResourceLocation LIGHTNING_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_wraith.png");
-	
+
 	/** Static instance of the statue renderer, used to access the block breaking texture. */
 	public static RenderStatue renderStatue;
 
@@ -534,13 +516,12 @@ public class ClientProxy extends CommonProxy {
 		// just want the vanilla one for the mob you're extending.
 
 		// An anonymous class in a lambda expression! No point writing a separate class really, is there?
-		RenderingRegistry.registerEntityRenderingHandler(EntityLightningWraith.class,
-				manager -> new RenderBlaze(manager){
-					@Override
-					protected ResourceLocation getEntityTexture(EntityBlaze entity){
-						return LIGHTNING_WRAITH_TEXTURE;
-					}
-				});
+		RenderingRegistry.registerEntityRenderingHandler(EntityLightningWraith.class, manager -> new RenderBlaze(manager){
+			@Override
+			protected ResourceLocation getEntityTexture(EntityBlaze entity){
+				return LIGHTNING_WRAITH_TEXTURE;
+			}
+		});
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceWraith.class, manager -> new RenderBlaze(manager){
 			@Override
@@ -553,16 +534,12 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityPhoenix.class, RenderPhoenix::new);
 
 		// Projectiles
-		RenderingRegistry.registerEntityRenderingHandler(EntityMagicMissile.class,
-				manager -> new RenderMagicArrow(manager,
-						new ResourceLocation(Wizardry.MODID, "textures/entity/magic_missile.png"), false, 8.0, 4.0, 16,
-						9, false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityMagicMissile.class, manager -> new RenderMagicArrow(manager,
+				new ResourceLocation(Wizardry.MODID, "textures/entity/magic_missile.png"), false, 8.0, 4.0, 16, 9, false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceShard.class, manager -> new RenderMagicArrow(manager,
 				new ResourceLocation(Wizardry.MODID, "textures/entity/ice_shard.png"), false, 8.0, 2.0, 16, 5, false));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLightningArrow.class,
-				manager -> new RenderMagicArrow(manager,
-						new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_arrow.png"), true, 8.0, 2.0, 16,
-						5, false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLightningArrow.class, manager -> new RenderMagicArrow(manager,
+				new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_arrow.png"), true, 8.0, 2.0, 16, 5, false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDart.class, manager -> new RenderMagicArrow(manager,
 				new ResourceLocation(Wizardry.MODID, "textures/entity/dart.png"), false, 8.0, 2.0, 16, 5, true));
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceLance.class, manager -> new RenderMagicArrow(manager,
@@ -571,38 +548,33 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityForceArrow.class, RenderForceArrow::new);
 
 		// Creatures
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritWolf.class,
-				manager -> new RenderSpiritWolf(manager));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritHorse.class,
-				manager -> new RenderSpiritHorse(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritWolf.class, manager -> new RenderSpiritWolf(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritHorse.class, manager -> new RenderSpiritHorse(manager));
 		RenderingRegistry.registerEntityRenderingHandler(EntityWizard.class, RenderWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEvilWizard.class, RenderEvilWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecoy.class, RenderDecoy::new);
 
 		// Throwables
-		RenderingRegistry.registerEntityRenderingHandler(EntitySparkBomb.class, manager -> new RenderProjectile(manager,
-				0.6f, new ResourceLocation(Wizardry.MODID, "textures/entity/spark_bomb.png"), false));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFirebomb.class, manager -> new RenderProjectile(manager,
-				0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/firebomb.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySparkBomb.class,
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/entity/spark_bomb.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFirebomb.class,
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/firebomb.png"), false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPoisonBomb.class,
-				manager -> new RenderProjectile(manager, 0.6f,
-						new ResourceLocation(Wizardry.MODID, "textures/items/poison_bomb.png"), false));
-		RenderingRegistry.registerEntityRenderingHandler(EntityIceCharge.class, manager -> new RenderProjectile(manager,
-				0.6f, new ResourceLocation(Wizardry.MODID, "textures/entity/ice_charge.png"), false));
-		RenderingRegistry.registerEntityRenderingHandler(EntityForceOrb.class, manager -> new RenderProjectile(manager,
-				0.7f, new ResourceLocation(Wizardry.MODID, "textures/entity/force_orb.png"), true));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpark.class, manager -> new RenderProjectile(manager,
-				0.4f, new ResourceLocation(Wizardry.MODID, "textures/entity/spark.png"), true));
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/poison_bomb.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityIceCharge.class,
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/entity/ice_charge.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityForceOrb.class,
+				manager -> new RenderProjectile(manager, 0.7f, new ResourceLocation(Wizardry.MODID, "textures/entity/force_orb.png"), true));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpark.class,
+				manager -> new RenderProjectile(manager, 0.4f, new ResourceLocation(Wizardry.MODID, "textures/entity/spark.png"), true));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDarknessOrb.class,
-				manager -> new RenderProjectile(manager, 0.6f,
-						new ResourceLocation(Wizardry.MODID, "textures/entity/darkness_orb.png"), true));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFirebolt.class, manager -> new RenderProjectile(manager,
-				0.2f, new ResourceLocation(Wizardry.MODID, "textures/entity/firebolt.png"), false));
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/entity/darkness_orb.png"), true));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFirebolt.class,
+				manager -> new RenderProjectile(manager, 0.2f, new ResourceLocation(Wizardry.MODID, "textures/entity/firebolt.png"), false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLightningDisc.class,
-				manager -> new RenderLightningDisc(manager,
-						new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 2.0f));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeBomb.class, manager -> new RenderProjectile(manager,
-				0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/smoke_bomb.png"), false));
+				manager -> new RenderLightningDisc(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 2.0f));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeBomb.class,
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/smoke_bomb.png"), false));
 
 		// Effects and constructs
 		RenderingRegistry.registerEntityRenderingHandler(EntityArc.class, RenderArc::new);
@@ -624,19 +596,18 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityHailstorm.class, RenderBlank::new);
 
 		// Runes on ground
-		RenderingRegistry.registerEntityRenderingHandler(EntityHealAura.class, manager -> new RenderSigil(manager,
-				new ResourceLocation(Wizardry.MODID, "textures/entity/healing_aura.png"), 5.0f, false));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFireSigil.class, manager -> new RenderSigil(manager,
-				new ResourceLocation(Wizardry.MODID, "textures/entity/fire_sigil.png"), 2.0f, true));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFrostSigil.class, manager -> new RenderSigil(manager,
-				new ResourceLocation(Wizardry.MODID, "textures/entity/frost_sigil.png"), 2.0f, true));
-		RenderingRegistry.registerEntityRenderingHandler(EntityLightningSigil.class, manager -> new RenderSigil(manager,
-				new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 2.0f, true));
-		RenderingRegistry.registerEntityRenderingHandler(EntityFireRing.class, manager -> new RenderFireRing(manager,
-				new ResourceLocation(Wizardry.MODID, "textures/entity/ring_of_fire.png"), 5.0f));
+		RenderingRegistry.registerEntityRenderingHandler(EntityHealAura.class,
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/healing_aura.png"), 5.0f, false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireSigil.class,
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/fire_sigil.png"), 2.0f, true));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFrostSigil.class,
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/frost_sigil.png"), 2.0f, true));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLightningSigil.class,
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 2.0f, true));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireRing.class,
+				manager -> new RenderFireRing(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/ring_of_fire.png"), 5.0f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecay.class, RenderDecay::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLightningPulse.class,
-				manager -> new RenderLightningPulse(manager, 8.0f));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLightningPulse.class, manager -> new RenderLightningPulse(manager, 8.0f));
 
 		// TESRs
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArcaneWorkbench.class, new RenderArcaneWorkbench());

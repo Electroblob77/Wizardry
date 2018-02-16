@@ -228,126 +228,46 @@ public class Wizardry {
 
 				switch(mapping.resourceLocation.getResourcePath()){
 
-				case "wand_basic":
-					replacement = WizardryItems.magic_wand;
-					break;
-				case "wand_basic_fire":
-					replacement = WizardryItems.basic_fire_wand;
-					break;
-				case "wand_basic_ice":
-					replacement = WizardryItems.basic_ice_wand;
-					break;
-				case "wand_basic_lightning":
-					replacement = WizardryItems.basic_lightning_wand;
-					break;
-				case "wand_basic_necromancy":
-					replacement = WizardryItems.basic_necromancy_wand;
-					break;
-				case "wand_basic_earth":
-					replacement = WizardryItems.basic_earth_wand;
-					break;
-				case "wand_basic_sorcery":
-					replacement = WizardryItems.basic_sorcery_wand;
-					break;
-				case "wand_basic_healing":
-					replacement = WizardryItems.basic_healing_wand;
-					break;
-				case "wand_apprentice":
-					replacement = WizardryItems.apprentice_wand;
-					break;
-				case "wand_apprentice_fire":
-					replacement = WizardryItems.apprentice_fire_wand;
-					break;
-				case "wand_apprentice_ice":
-					replacement = WizardryItems.apprentice_ice_wand;
-					break;
-				case "wand_apprentice_lightning":
-					replacement = WizardryItems.apprentice_lightning_wand;
-					break;
-				case "wand_apprentice_necromancy":
-					replacement = WizardryItems.apprentice_necromancy_wand;
-					break;
-				case "wand_apprentice_earth":
-					replacement = WizardryItems.apprentice_earth_wand;
-					break;
-				case "wand_apprentice_sorcery":
-					replacement = WizardryItems.apprentice_sorcery_wand;
-					break;
-				case "wand_apprentice_healing":
-					replacement = WizardryItems.apprentice_healing_wand;
-					break;
-				case "wand_advanced":
-					replacement = WizardryItems.advanced_wand;
-					break;
-				case "wand_advanced_fire":
-					replacement = WizardryItems.advanced_fire_wand;
-					break;
-				case "wand_advanced_ice":
-					replacement = WizardryItems.advanced_ice_wand;
-					break;
-				case "wand_advanced_lightning":
-					replacement = WizardryItems.advanced_lightning_wand;
-					break;
-				case "wand_advanced_necromancy":
-					replacement = WizardryItems.advanced_necromancy_wand;
-					break;
-				case "wand_advanced_earth":
-					replacement = WizardryItems.advanced_earth_wand;
-					break;
-				case "wand_advanced_sorcery":
-					replacement = WizardryItems.advanced_sorcery_wand;
-					break;
-				case "wand_advanced_healing":
-					replacement = WizardryItems.advanced_healing_wand;
-					break;
-				case "wand_master":
-					replacement = WizardryItems.master_wand;
-					break;
-				case "wand_master_fire":
-					replacement = WizardryItems.master_fire_wand;
-					break;
-				case "wand_master_ice":
-					replacement = WizardryItems.master_ice_wand;
-					break;
-				case "wand_master_lightning":
-					replacement = WizardryItems.master_lightning_wand;
-					break;
-				case "wand_master_necromancy":
-					replacement = WizardryItems.master_necromancy_wand;
-					break;
-				case "wand_master_earth":
-					replacement = WizardryItems.master_earth_wand;
-					break;
-				case "wand_master_sorcery":
-					replacement = WizardryItems.master_sorcery_wand;
-					break;
-				case "wand_master_healing":
-					replacement = WizardryItems.master_healing_wand;
-					break;
-				case "upgrade_storage":
-					replacement = WizardryItems.storage_upgrade;
-					break;
-				case "upgrade_siphon":
-					replacement = WizardryItems.siphon_upgrade;
-					break;
-				case "upgrade_condenser":
-					replacement = WizardryItems.condenser_upgrade;
-					break;
-				case "upgrade_range":
-					replacement = WizardryItems.range_upgrade;
-					break;
-				case "upgrade_duration":
-					replacement = WizardryItems.duration_upgrade;
-					break;
-				case "upgrade_cooldown":
-					replacement = WizardryItems.cooldown_upgrade;
-					break;
-				case "upgrade_blast":
-					replacement = WizardryItems.blast_upgrade;
-					break;
-				case "upgrade_attunement":
-					replacement = WizardryItems.attunement_upgrade;
-					break;
+				case "wand_basic": replacement = WizardryItems.magic_wand; break;
+				case "wand_basic_fire": replacement = WizardryItems.basic_fire_wand; break;
+				case "wand_basic_ice": replacement = WizardryItems.basic_ice_wand; break;
+				case "wand_basic_lightning": replacement = WizardryItems.basic_lightning_wand; break;
+				case "wand_basic_necromancy": replacement = WizardryItems.basic_necromancy_wand; break;
+				case "wand_basic_earth": replacement = WizardryItems.basic_earth_wand; break;
+				case "wand_basic_sorcery": replacement = WizardryItems.basic_sorcery_wand; break;
+				case "wand_basic_healing": replacement = WizardryItems.basic_healing_wand; break;
+				case "wand_apprentice": replacement = WizardryItems.apprentice_wand; break;
+				case "wand_apprentice_fire": replacement = WizardryItems.apprentice_fire_wand; break;
+				case "wand_apprentice_ice": replacement = WizardryItems.apprentice_ice_wand; break;
+				case "wand_apprentice_lightning": replacement = WizardryItems.apprentice_lightning_wand; break;
+				case "wand_apprentice_necromancy": replacement = WizardryItems.apprentice_necromancy_wand; break;
+				case "wand_apprentice_earth": replacement = WizardryItems.apprentice_earth_wand; break;
+				case "wand_apprentice_sorcery": replacement = WizardryItems.apprentice_sorcery_wand; break;
+				case "wand_apprentice_healing": replacement = WizardryItems.apprentice_healing_wand; break;
+				case "wand_advanced": replacement = WizardryItems.advanced_wand; break;
+				case "wand_advanced_fire": replacement = WizardryItems.advanced_fire_wand; break;
+				case "wand_advanced_ice": replacement = WizardryItems.advanced_ice_wand; break;
+				case "wand_advanced_lightning": replacement = WizardryItems.advanced_lightning_wand; break;
+				case "wand_advanced_necromancy": replacement = WizardryItems.advanced_necromancy_wand; break;
+				case "wand_advanced_earth": replacement = WizardryItems.advanced_earth_wand; break;
+				case "wand_advanced_sorcery": replacement = WizardryItems.advanced_sorcery_wand; break;
+				case "wand_advanced_healing": replacement = WizardryItems.advanced_healing_wand; break;
+				case "wand_master": replacement = WizardryItems.master_wand; break;
+				case "wand_master_fire": replacement = WizardryItems.master_fire_wand; break;
+				case "wand_master_ice": replacement = WizardryItems.master_ice_wand; break;
+				case "wand_master_lightning": replacement = WizardryItems.master_lightning_wand; break;
+				case "wand_master_necromancy": replacement = WizardryItems.master_necromancy_wand; break;
+				case "wand_master_earth": replacement = WizardryItems.master_earth_wand; break;
+				case "wand_master_sorcery": replacement = WizardryItems.master_sorcery_wand; break;
+				case "wand_master_healing": replacement = WizardryItems.master_healing_wand; break;
+				case "upgrade_storage": replacement = WizardryItems.storage_upgrade; break;
+				case "upgrade_siphon": replacement = WizardryItems.siphon_upgrade; break;
+				case "upgrade_condenser": replacement = WizardryItems.condenser_upgrade; break;
+				case "upgrade_range": replacement = WizardryItems.range_upgrade; break;
+				case "upgrade_duration": replacement = WizardryItems.duration_upgrade; break;
+				case "upgrade_cooldown": replacement = WizardryItems.cooldown_upgrade; break;
+				case "upgrade_blast": replacement = WizardryItems.blast_upgrade; break;
+				case "upgrade_attunement": replacement = WizardryItems.attunement_upgrade; break;
 				// If it didn't match any of the ones that changed, do nothing.
 				default:
 					return;
