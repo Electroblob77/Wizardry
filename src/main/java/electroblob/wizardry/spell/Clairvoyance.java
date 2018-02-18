@@ -76,8 +76,8 @@ public class Clairvoyance extends Spell {
 					if(path != null && path.getFinalPathPoint() != null){
 						
 						int x = path.getFinalPathPoint().xCoord;
-						int y = path.getFinalPathPoint().xCoord;
-						int z = path.getFinalPathPoint().xCoord;
+						int y = path.getFinalPathPoint().yCoord;
+						int z = path.getFinalPathPoint().zCoord;
 												
 						if(x == destination.getX() && y == destination.getY() && z == destination.getZ()){
 
