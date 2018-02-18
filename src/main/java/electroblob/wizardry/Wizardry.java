@@ -56,21 +56,7 @@ public class Wizardry {
 
 	// IDEA: Improve the algorithm that finds a place to summon creatures to take walls into account.
 	// IDEA: Replace all uses of Math.cos and Math.sin with MathHelper versions
-	// IDEA: API feature that automatically injects custom wand upgrades into wizardry's loot tables
-	// IDEA: Support for the @e selector in the /cast command (the methods already exist, just plug them in)
-	// IDEA: Dispensers shooting spells from scrolls! Imagine the possibilities!
-	// == Rendering overhaul! ==
-	// IDEA: Make spirit animals fade away when dispelled
-	// IDEA: Use your newfound knowledge of OpenGL to render animated boxes around entities being buffed, similar to
-	// creeper charge
-	// IDEA: Redo RenderArc so it looks like lightning (it's literally a load of translucent boxes inside each other)
-	// IDEA: The arcane workbench could use a few particles
-	// IDEA: Add a box to the wizard armour model so that the robes bend when the wearer is sneaking
-	// IDEA: Flash particle (I think it exists in vanilla somewhere) on spell impact
-	// IDEA: Dust particles spray out from projectiles as they move
-	// IDEA: Colour fading for particles
-	// IDEA: Make lightning and other effects particles. There's no reason why you can't pass in a player argument and
-	// have the particles move with them!
+	// IDEA: Triggering of inbuilt Forge events in relevant places?
 
 	/* Minor bugs that need fixing at some point:
 	 * - Player skin hat layer shows through wizard hats - Wizard armour breaks rather than just running out of mana (I
@@ -84,14 +70,10 @@ public class Wizardry {
 	// I can make the healing spells use damage multipliers - hurrah!
 
 	// TODO: Switch from IInventory to IItemHandler (Or don't. It's only useful for automation really.)
-	// TODO: Triggering of inbuilt Forge events in relevant places?
 	// TODO: Rearrange the config gui and file
 
 	// Updating:
 	// TODO: Make sure all obf reflection names are still correct
-	// ItemStacks can no longer be null, only empty, so:
-	// TODO: Replace all instances of stack = null with stack = ItemStack.EMPTY
-	// TODO: For each check, either replace with stack.isEmpty or simply remove it, depending on the use
 	// TODO: Go through each of the summoned creatures and check there are no extra vanilla methods to override
 	// TODO: Check whether Minecraft has added some methods that do the same job as my utilities, particularly in
 	// relation to itemstacks, hotbar, armour slots and inventory slots.
@@ -152,7 +134,7 @@ public class Wizardry {
 
 		WizardryRegistry.registerTileEntities();
 
-		WizardryRegistry.registerEntities(this);
+		WizardryRegistry.registerEntities();
 		// The check for the generateLoot setting is now done within this method.
 		WizardryRegistry.registerLoot();
 

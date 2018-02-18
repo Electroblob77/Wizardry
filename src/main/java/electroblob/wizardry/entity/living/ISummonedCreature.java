@@ -85,7 +85,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 
 	// Remember that ALL fields are static and final in interfaces, even if they don't explicitly state that.
-	String NAMEPLATE_TRANSLATION_KEY = "entity.wizardry.summonedcreature.nameplate";
+	String NAMEPLATE_TRANSLATION_KEY = "entity.wizardry:summonedcreature.nameplate";
 
 	// Setters and getters. The subclass fields that these access should be private.
 
