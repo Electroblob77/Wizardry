@@ -616,8 +616,8 @@ enchantment.wizardry:freezing_weapon=Frost Imbuement
 
 key.categories.wizardry=Wizardry
 
-key.wizardry:next_spell=Next Spell
-key.wizardry:previous_spell=Previous Spell
+key.wizardry.next_spell=Next Spell
+key.wizardry.previous_spell=Previous Spell
 
 death.attack.wizardry_magic=%1$s was killed by %2$s using magic
 death.attack.indirect_wizardry_magic=%1$s was killed by %2$s using magic

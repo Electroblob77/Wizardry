@@ -137,6 +137,8 @@ public class Wizardry {
 		
 		// Moved to preInit, because apparently it has to be here now.
 		proxy.registerRenderers();
+		// It seems this also has to be here
+		proxy.registerKeyBindings();
 
 	}
 
@@ -144,8 +146,6 @@ public class Wizardry {
 	public void init(FMLInitializationEvent event){
 
 		settings.initConfigExtras();
-
-		proxy.registerKeyBindings();
 
 		// Event Handlers
 		GameRegistry.registerWorldGenerator(generator, 0);
