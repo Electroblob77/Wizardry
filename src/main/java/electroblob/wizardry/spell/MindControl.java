@@ -187,6 +187,8 @@ public class MindControl extends Spell {
 
 	@SubscribeEvent
 	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
+		
+		if(event.getTarget() == null) return; // Prevents infinite loops with mind trick
 
 		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && MindControl.canControl(event.getEntityLiving())){
 
@@ -197,7 +199,7 @@ public class MindControl extends Spell {
 				Entity caster = WizardryUtilities.getEntityByUUID(event.getEntity().worldObj, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
 				// If the target that the event tried to set is already a valid mind control target, nothing happens.
-				if(event.getTarget() != null && WizardryUtilities.isValidTarget(caster, event.getTarget())) return;
+				if(WizardryUtilities.isValidTarget(caster, event.getTarget())) return;
 
 				if(caster instanceof EntityLivingBase){
 
@@ -208,8 +210,7 @@ public class MindControl extends Spell {
 				}
 			}
 			// If the caster couldn't be found or no valid target was found, this just acts like mind trick.
-			// If the target is null already, no need to set it to null, or infinite loops will occur.
-			if(event.getTarget() != null) ((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+			((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
 		}
 	}
 
