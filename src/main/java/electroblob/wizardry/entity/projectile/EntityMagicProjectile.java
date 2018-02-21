@@ -1,5 +1,7 @@
 package electroblob.wizardry.entity.projectile;
 
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -42,8 +44,8 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 		this.damageMultiplier = damageMultiplier;
 	}
 
-	public EntityMagicProjectile(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
+	public EntityMagicProjectile(World world, double x, double y, double z){
+		super(world, x, y, z);
 	}
 
 	/** This got removed at some point since 1.7.10, but I liked it so I thought I'd add it back in again. */
@@ -62,6 +64,33 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 		this.motionX = dx / this.getDistanceToEntity(target) * velocity;
 		this.motionY = dy / this.getDistanceToEntity(target) * velocity;
 		this.motionZ = dz / this.getDistanceToEntity(target) * velocity;
+	}
+	
+	@Override
+	public void onUpdate(){
+		// This fixes the client-side projectile-hitting-thrower bug. Comparing with 1.10.2, this was caused by a change
+		// to the line EntityThrowable:215, where a thrower != null check was added. Since the thrower field is not synced,
+		// this fails and the ignoreEntity field is never set, causing the projectile to hit its thrower client-side.
+		// The 'proper' way to fix this is to use IEntityAdditionalSpawnData to sync the thrower field, but I don't really
+		// want to waste packets like that, so, since things worked just fine in 1.10.2 without the thrower != null check,
+		// it makes sense to just duplicate that block of code and remove the offending check.
+		// The only side-effect (and probably why the change was made to vanilla) is that if this entity is summoned
+		// inside a mob using commands, it wouldn't hit that mob. This is so minor that it's not worth sending a packet
+		// for, though it may become more noticeable if spells firing from blocks are added.
+		// TODO: Investigate whether this is still necessary in 1.12
+		if(this.world.isRemote){
+			
+			List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
+	        
+			for(Entity entity : list){ // Why does vanilla still not use a for-each loop?
+	            if(entity.canBeCollidedWith() && this.ticksExisted < 2 && this.ignoreEntity == null){
+	            	this.ignoreEntity = entity;
+	            }
+	        }
+			// Pretty sure EntityThrowable handles the rest.
+		}
+		
+		super.onUpdate();
 	}
 
 	@Override

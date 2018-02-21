@@ -38,6 +38,7 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 	 * Called when this EntityThrowable hits a block or entity.
 	 */
 	protected void onImpact(RayTraceResult par1RayTraceResult){
+		
 		Entity entityHit = par1RayTraceResult.entityHit;
 
 		if(entityHit != null){
