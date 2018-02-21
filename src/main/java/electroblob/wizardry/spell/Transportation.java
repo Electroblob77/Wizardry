@@ -46,15 +46,15 @@ public class Transportation extends Spell {
 						return true;
 					}else{
 						if(!world.isRemote)
-							caster.sendMessage(new TextComponentTranslation("spell.transportation.missing"));
+							caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".missing"));
 					}
 				}else{
 					if(!world.isRemote)
-						caster.sendMessage(new TextComponentTranslation("spell.transportation.undefined"));
+						caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".undefined"));
 				}
 			}else{
 				if(!world.isRemote)
-					caster.sendMessage(new TextComponentTranslation("spell.transportation.wrongdimension"));
+					caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".wrongdimension"));
 			}
 		}
 		return false;
