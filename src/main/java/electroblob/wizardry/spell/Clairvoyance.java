@@ -57,7 +57,7 @@ public class Clairvoyance extends Spell {
 			if(caster.dimension == properties.getClairvoyanceDimension()){
 				if(properties.getClairvoyanceLocation() != null){
 
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".searching"));
+					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".searching"));
 
 					EntityZombie arbitraryZombie = new EntityZombie(world){
 						@Override
@@ -96,13 +96,13 @@ public class Clairvoyance extends Spell {
 						}
 					}
 
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".outofrange"));
+					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".outofrange"));
 
 				}else{
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".undefined"));
+					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".undefined"));
 				}
 			}else{
-				if(!world.isRemote) caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".wrongdimension"));
+				if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".wrongdimension"));
 			}
 		}
 
@@ -157,7 +157,7 @@ public class Clairvoyance extends Spell {
 
 					if(!event.getWorld().isRemote){
 						event.getEntityPlayer().sendMessage(
-								new TextComponentTranslation(Spells.clairvoyance.getUnlocalisedName() + ".confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
+								new TextComponentTranslation("spell." + Spells.clairvoyance.getUnlocalisedName() + ".confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
 					}
 
 					event.setCanceled(true);

@@ -31,14 +31,14 @@ public class InvokeWeather extends Spell {
 				// TODO: Backport these changes.
 				int standardWeatherTime = (300 + (new Random()).nextInt(600)) * 20;
 				if(world.isRaining()){
-					caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".sun"));
+					caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".sun"));
 					world.getWorldInfo().setCleanWeatherTime(standardWeatherTime);
 					world.getWorldInfo().setRainTime(0);
 					world.getWorldInfo().setThunderTime(0);
 					world.getWorldInfo().setRaining(false);
 					world.getWorldInfo().setThundering(false);
 				}else{
-					caster.sendMessage(new TextComponentTranslation(this.getUnlocalisedName() + ".rain"));
+					caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".rain"));
 					world.getWorldInfo().setCleanWeatherTime(0);
 					world.getWorldInfo().setRainTime(standardWeatherTime);
 					world.getWorldInfo().setThunderTime(standardWeatherTime);
