@@ -40,7 +40,7 @@ public class PocketFurnace extends Spell {
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.getCount(), result.getItemDamage());
 						if(WizardryUtilities.doesPlayerHaveItem(caster, result.getItem())){
 							caster.inventory.addItemStackToInventory(stack2);
-							caster.inventory.setInventorySlotContents(i, null);
+							caster.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 						}else{
 							caster.inventory.setInventorySlotContents(i, stack2);
 						}
