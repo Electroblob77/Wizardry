@@ -103,7 +103,7 @@ public class LightningBolt extends Spell {
 	@SubscribeEvent
 	public static void onEntityStruckByLightningEvent(EntityStruckByLightningEvent event){
 
-		if(event.getLightning().getEntityData() != null && event.getLightning().getEntityData().hasKey(NBT_KEY)){
+		if(event.getLightning().getEntityData() != null && event.getLightning().getEntityData().hasUniqueId(NBT_KEY)){
 
 			EntityPlayer player = (EntityPlayer)WizardryUtilities.getEntityByUUID(event.getLightning().world,
 					event.getLightning().getEntityData().getUniqueId("summoningPlayer"));

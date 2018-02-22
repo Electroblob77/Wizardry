@@ -206,7 +206,7 @@ public class MindControl extends Spell {
 
 			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();
 
-			if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY + "Most")){
+			if(entityNBT != null && entityNBT.hasUniqueId(MindControl.NBT_KEY)){
 
 				Entity caster = WizardryUtilities.getEntityByUUID(event.getEntity().world,
 						entityNBT.getUniqueId(MindControl.NBT_KEY));

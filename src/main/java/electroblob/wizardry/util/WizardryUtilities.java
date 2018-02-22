@@ -948,7 +948,7 @@ public final class WizardryUtilities {
 
 			NBTTagCompound entityNBT = target.getEntityData();
 
-			if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY)){
+			if(entityNBT != null && entityNBT.hasUniqueId(MindControl.NBT_KEY)){
 				if(attacker == WizardryUtilities.getEntityByUUID(target.world,
 						entityNBT.getUniqueId(MindControl.NBT_KEY))){
 					return false;

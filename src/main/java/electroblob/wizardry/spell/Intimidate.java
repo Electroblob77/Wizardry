@@ -121,12 +121,12 @@ public class Intimidate extends Spell {
 			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();
 			EntityCreature creature = (EntityCreature)event.getEntityLiving();
 
-			if(entityNBT != null && entityNBT.hasKey(NBT_KEY)){
+			if(entityNBT != null && entityNBT.hasUniqueId(NBT_KEY)){
 
 				Entity caster = WizardryUtilities.getEntityByUUID(creature.world, entityNBT.getUniqueId(NBT_KEY));
 
 				if(caster instanceof EntityLivingBase){
-					Intimidate.runAway(creature, (EntityLivingBase)caster);
+					runAway(creature, (EntityLivingBase)caster);
 				}
 			}
 		}
