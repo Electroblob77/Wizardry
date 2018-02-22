@@ -35,7 +35,7 @@ public class PocketFurnace extends Spell {
 
 				result = FurnaceRecipes.instance().getSmeltingResult(stack);
 
-				if(result != null){
+				if(!result.isEmpty()){
 					if(stack.getCount() <= usesLeft){
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.getCount(), result.getItemDamage());
 						if(WizardryUtilities.doesPlayerHaveItem(caster, result.getItem())){
