@@ -1079,6 +1079,7 @@ public final class WizardryUtilities {
 	 */
 	public static Item getWand(Tier tier, Element element){
 		if(tier == null) throw new NullPointerException("The given tier cannot be null.");
+		if(element == null) element = Element.MAGIC;
 		return WizardryItems.WAND_MAP.get(ImmutablePair.of(tier, element));
 	}
 }

@@ -615,8 +615,8 @@ enchantment.wizardry:freezing_weapon=Impregnacion de Fuego
 
 key.categories.wizardry=Wizardry
 
-key.wizardry:next_spell=Hechizo siguiente
-key.wizardry:previous_spell=Hechizo anterior
+key.wizardry.next_spell=Hechizo siguiente
+key.wizardry.previous_spell=Hechizo anterior
 
 death.attack.wizardry_magic=%1$s fue matado por %2$s usando magia
 death.attack.indirect_wizardry_magic=%1$s fue matado por %2$s usando magia

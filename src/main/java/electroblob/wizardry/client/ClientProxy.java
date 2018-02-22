@@ -155,8 +155,8 @@ public class ClientProxy extends CommonProxy {
 	public static MixedFontRenderer mixedFontRenderer;
 
 	// Key Bindings
-	public static final KeyBinding NEXT_SPELL = new KeyBinding("key.wizardry:next_spell", Keyboard.KEY_N, "key.categories.wizardry");
-	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key.wizardry:previous_spell", Keyboard.KEY_B, "key.categories.wizardry");
+	public static final KeyBinding NEXT_SPELL = new KeyBinding("key.wizardry.next_spell", Keyboard.KEY_N, "key.categories.wizardry");
+	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key.wizardry.previous_spell", Keyboard.KEY_B, "key.categories.wizardry");
 
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
