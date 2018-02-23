@@ -30,6 +30,7 @@ public class Whirlwind extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				10 * modifiers.get(WizardryItems.range_upgrade));
 
+		// Left as EntityLivingBase because why not be able to move armour stands around?
 		if(rayTrace != null && rayTrace.entityHit instanceof EntityLivingBase){
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 

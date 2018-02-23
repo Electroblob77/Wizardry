@@ -11,7 +11,6 @@ import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCaveSpider;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntityPigZombie;
@@ -45,7 +44,7 @@ public class Metamorphosis extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				10 * modifiers.get(WizardryItems.range_upgrade));
 
-		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			Entity entityHit = rayTrace.entityHit;
 			double xPos = entityHit.posX;

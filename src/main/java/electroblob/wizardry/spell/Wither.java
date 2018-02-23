@@ -37,8 +37,7 @@ public class Wither extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				10 * modifiers.get(WizardryItems.range_upgrade));
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
-				&& rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 

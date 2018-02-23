@@ -35,8 +35,8 @@ public class Ignite extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				10 * modifiers.get(WizardryItems.range_upgrade));
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
-				&& rayTrace.entityHit instanceof EntityLivingBase){
+		// Fire can damage armour stands
+		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && rayTrace.entityHit instanceof EntityLivingBase){
 
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 

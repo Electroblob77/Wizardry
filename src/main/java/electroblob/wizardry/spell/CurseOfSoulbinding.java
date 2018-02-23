@@ -39,7 +39,7 @@ public class CurseOfSoulbinding extends Spell {
 				10 * modifiers.get(WizardryItems.range_upgrade));
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
-				&& rayTrace.entityHit instanceof EntityLivingBase && WizardData.get(caster) != null){
+				&& WizardryUtilities.isLiving(rayTrace.entityHit) && WizardData.get(caster) != null){
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 			if(!WizardData.get(caster).soulbind(target)) return false;
 		}

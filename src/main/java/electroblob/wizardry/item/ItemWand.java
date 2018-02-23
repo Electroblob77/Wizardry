@@ -413,7 +413,7 @@ public class ItemWand extends Item {
 
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, player, 16);
 
-		if(rayTrace != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase entity = (EntityLivingBase)rayTrace.entityHit;
 

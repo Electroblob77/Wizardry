@@ -34,8 +34,7 @@ public class LightningRay extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				10 * modifiers.get(WizardryItems.range_upgrade), 2.0f);
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
-				&& rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && WizardryUtilities.isLiving(rayTrace.entityHit)){
 			Entity target = rayTrace.entityHit;
 			if(!world.isRemote){
 				// This statement means the arc only spawns every other tick.

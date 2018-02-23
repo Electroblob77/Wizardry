@@ -37,7 +37,7 @@ public class Arc extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				8 * modifiers.get(WizardryItems.range_upgrade), 4.0f);
 
-		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			Entity target = rayTrace.entityHit;
 

@@ -30,6 +30,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -484,6 +485,19 @@ public final class WizardryUtilities {
 	 */
 	public static boolean isPlayerOp(EntityPlayer player, MinecraftServer server){
 		return server.getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+	}
+	
+	/**
+	 * Returns true if the given entity is an EntityLivingBase and not an armour stand; makes the code a bit neater.
+	 * This was added because armour stands are a subclass of EntityLivingBase, but shouldn't necessarily be treated
+	 * as living entities - this depends on the situation. <i>The given entity can safely be cast to EntityLivingBase
+	 * if this method returns true.</i>
+	 */
+	// In my opinion, it's a bad design choice to have armour stands extend EntityLivingBase directly - it would be
+	// better to make a parent class which is extended by both armour stands and EntityLivingBase and contains only
+	// the code required by both.
+	public static boolean isLiving(Entity entity){
+		return entity instanceof EntityLivingBase && !(entity instanceof EntityArmorStand);
 	}
 
 	/**

@@ -18,6 +18,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,7 +51,7 @@ public class MindControl extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				8 * modifiers.get(WizardryItems.range_upgrade));
 
-		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 
@@ -165,6 +166,7 @@ public class MindControl extends Spell {
 				target.posX, target.posY, target.posZ, world);
 
 		possibleTargets.remove(target);
+		possibleTargets.removeIf(e -> e instanceof EntityArmorStand);
 
 		EntityLivingBase newAITarget = null;
 

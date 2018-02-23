@@ -16,6 +16,7 @@ import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
@@ -43,7 +44,7 @@ public class ChainLightning extends Spell {
 
 		// Anything can be attacked with the initial arc, because the player has control over where it goes. If they
 		// hit a minion or an ally, it's their problem!
-		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			Entity target = rayTrace.entityHit;
 
@@ -79,6 +80,8 @@ public class ChainLightning extends Spell {
 
 			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
 					target.posX, target.posY + target.height / 2, target.posZ, world);
+			
+			secondaryTargets.removeIf(e -> e instanceof EntityArmorStand);
 
 			for(int i = 0; i < Math.min(secondaryTargets.size(), 5); i++){
 
@@ -122,6 +125,8 @@ public class ChainLightning extends Spell {
 					List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
 							secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height / 2,
 							secondaryTarget.posZ, world);
+					
+					tertiaryTargets.removeIf(e -> e instanceof EntityArmorStand);
 
 					for(int j = 0; j < Math.min(tertiaryTargets.size(), 2); j++){
 

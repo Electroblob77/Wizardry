@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -219,7 +220,7 @@ public final class WizardryClientEventHandler {
 		}
 
 		// Target selection pointer
-		if(mc.player.isSneaking() && wand.getItem() instanceof ItemWand && rayTrace != null && rayTrace.entityHit instanceof EntityLivingBase
+		if(mc.player.isSneaking() && wand.getItem() instanceof ItemWand && rayTrace != null && !(event.getEntity() instanceof EntityArmorStand)
 				&& rayTrace.entityHit == event.getEntity() && properties != null && properties.selectedMinion != null){
 
 			Tessellator tessellator = Tessellator.getInstance();
@@ -302,7 +303,7 @@ public final class WizardryClientEventHandler {
 		}
 
 		// Sixth sense
-		if(mc.player.isPotionActive(WizardryPotions.sixth_sense) && event.getEntity() != mc.player
+		if(mc.player.isPotionActive(WizardryPotions.sixth_sense) && !(event.getEntity() instanceof EntityArmorStand) && event.getEntity() != mc.player
 				&& mc.player.getActivePotionEffect(WizardryPotions.sixth_sense) != null && event.getEntity().getDistanceToEntity(mc.player) < 20
 						* (1 + mc.player.getActivePotionEffect(WizardryPotions.sixth_sense).getAmplifier() * Constants.RANGE_INCREASE_PER_LEVEL)){
 

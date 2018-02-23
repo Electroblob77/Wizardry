@@ -28,7 +28,7 @@ public class HealAlly extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				10 * modifiers.get(WizardryItems.range_upgrade), 8.0f);
 
-		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 			if(target.getHealth() < target.getMaxHealth()){
 				target.heal((int)(5 * modifiers.get(SpellModifiers.DAMAGE)));

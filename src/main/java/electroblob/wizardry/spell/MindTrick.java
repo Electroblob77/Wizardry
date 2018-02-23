@@ -37,7 +37,7 @@ public class MindTrick extends Spell {
 		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
 				8 * modifiers.get(WizardryItems.range_upgrade));
 
-		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
+		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 
