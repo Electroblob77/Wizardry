@@ -193,11 +193,14 @@ public class MindControl extends Spell {
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 		// This was added because something got changed in the AI classes which means LivingSetAttackTargetEvent doesn't
 		// get fired when I want it to... so I'm firing it myself.
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control)
-				&& event.getEntityLiving() instanceof EntityLiving
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving
+				// Detects when the mind controlled entity has just killed its previous target
 				&& ((EntityLiving)event.getEntityLiving()).getAttackTarget() != null
-				&& !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive())
-			((EntityLiving)event.getEntityLiving()).setAttackTarget(null); // Causes the event to be fired
+				&& !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive()){
+			// Causes the event to be fired (I know it makes no sense to target itself, but that bypasses the null
+			// check that was added at the start of the method below, and the target is instantly reassigned anyway)
+			((EntityLiving)event.getEntityLiving()).setAttackTarget(event.getEntityLiving());
+		}
 	}
 
 	@SubscribeEvent
