@@ -188,51 +188,59 @@ public class MindControl extends Spell {
 		return false;
 
 	}
-
-	@SubscribeEvent
-	public static void onLivingUpdateEvent(LivingUpdateEvent event){
-		// This was added because something got changed in the AI classes which means LivingSetAttackTargetEvent doesn't
-		// get fired when I want it to... so I'm firing it myself.
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving
-				// Detects when the mind controlled entity has just killed its previous target
-				&& ((EntityLiving)event.getEntityLiving()).getAttackTarget() != null
-				&& !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive()){
-			// Causes the event to be fired (I know it makes no sense to target itself, but that bypasses the null
-			// check that was added at the start of the method below, and the target is instantly reassigned anyway)
-			((EntityLiving)event.getEntityLiving()).setAttackTarget(event.getEntityLiving());
-		}
-	}
-
-	@SubscribeEvent
-	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
+	
+	/** Retrieves the given entity's controller and decides whether it needs to search for a target. */
+	private static void processTargeting(World world, EntityLiving entity, EntityLivingBase currentTarget){
 		
-		if(event.getTarget() == null) return; // Prevents infinite loops with mind trick
+		if(entity.isPotionActive(WizardryPotions.mind_control) && MindControl.canControl(entity)){
 
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control)
-				&& MindControl.canControl(event.getEntityLiving())){
-
-			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();
+			NBTTagCompound entityNBT = entity.getEntityData();
 
 			if(entityNBT != null && entityNBT.hasUniqueId(MindControl.NBT_KEY)){
 
-				Entity caster = WizardryUtilities.getEntityByUUID(event.getEntity().world,
-						entityNBT.getUniqueId(MindControl.NBT_KEY));
+				Entity caster = WizardryUtilities.getEntityByUUID(world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
-				// If the target that the event tried to set is already a valid mind control target, nothing happens.
-				if(WizardryUtilities.isValidTarget(caster, event.getTarget())) return;
+				// If the current target is already a valid mind control target, nothing happens.
+				if(WizardryUtilities.isValidTarget(caster, currentTarget)) return;
 
 				if(caster instanceof EntityLivingBase){
 
-					if(MindControl.findMindControlTarget((EntityLiving)event.getEntityLiving(),
-							(EntityLivingBase)caster, event.getEntity().world)){
+					if(MindControl.findMindControlTarget(entity, (EntityLivingBase)caster, world)){
 						// If it worked, skip setting the target to null.
 						return;
 					}
 				}
 			}
 			// If the caster couldn't be found or no valid target was found, this just acts like mind trick.
-			((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+			entity.setAttackTarget(null);
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		// Tries to find a new target for mind-controlled creatures that do not currently have one
+		// When the mind-controlled creature does have a target, LivingSetAttackTargetEvent is used instead since it is
+		// more efficient (because it only fires when the entity tries to set a target)
+		// Of course, in survival this code is unlikely to be used much because the entity will always try to target the
+		// player and hence will rarely have no target.
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving){
+			
+			EntityLiving entity = (EntityLiving)event.getEntityLiving();
+			
+			// Processes targeting if the current target is null or has died
+			if(((EntityLiving)event.getEntityLiving()).getAttackTarget() == null
+				|| !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive()){
+			
+				processTargeting(entity.world, entity, entity.getAttackTarget());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
+		// The != null check prevents infinite loops with mind trick
+		if(event.getTarget() != null && event.getEntityLiving() instanceof EntityLiving)
+			processTargeting(event.getEntity().world, (EntityLiving)event.getEntityLiving(), event.getTarget());
 	}
 
 }
