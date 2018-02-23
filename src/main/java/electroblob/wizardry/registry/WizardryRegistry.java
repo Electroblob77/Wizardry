@@ -41,6 +41,7 @@ import electroblob.wizardry.entity.living.EntitySpiderMinion;
 import electroblob.wizardry.entity.living.EntitySpiritHorse;
 import electroblob.wizardry.entity.living.EntitySpiritWolf;
 import electroblob.wizardry.entity.living.EntityStormElemental;
+import electroblob.wizardry.entity.living.EntityWitherSkeletonMinion;
 import electroblob.wizardry.entity.living.EntityWizard;
 import electroblob.wizardry.entity.living.EntityZombieMinion;
 import electroblob.wizardry.entity.projectile.EntityDarknessOrb;
@@ -213,6 +214,7 @@ public final class WizardryRegistry {
 		registerEntity(EntityIceSpike.class, "ice_spike", id++, 128, 1, true);
 		// TODO: This should be a particle.
 		registerEntity(EntityLightningPulse.class, "lightning_pulse", id++, 128, PROJECTILE_UPDATE_INTERVAL, false);
+		registerEntity(EntityWitherSkeletonMinion.class, "wither_skeleton_minion", id++, 128, LIVING_UPDATE_INTERVAL, true);
 
 		// TODO: May need fixing
 		List<Biome> biomes = new ArrayList<Biome>();
