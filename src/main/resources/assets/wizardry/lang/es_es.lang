@@ -154,6 +154,7 @@ entity.wizardry:zombie_minion.name=Zombi
 entity.wizardry:skeleton_minion.name=Esqueleto
 entity.wizardry:spider_minion.name=Arana
 entity.wizardry:blaze_minion.name=Blaze
+entity.wizardry:wither_skeleton_minion.name=Esqueleto del Wither
 entity.wizardry:ice_wraith.name=Espectro de Hielo
 entity.wizardry:lightning_wraith.name=Espectro de Relampago
 entity.wizardry:shadow_wraith.name=Espectro de las Sombras

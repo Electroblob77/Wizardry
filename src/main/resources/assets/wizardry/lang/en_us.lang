@@ -155,6 +155,7 @@ entity.wizardry:zombie_minion.name=Zombie
 entity.wizardry:skeleton_minion.name=Skeleton
 entity.wizardry:spider_minion.name=Spider
 entity.wizardry:blaze_minion.name=Blaze
+entity.wizardry:wither_skeleton_minion.name=Wither Skeleton
 entity.wizardry:ice_wraith.name=Ice Wraith
 entity.wizardry:lightning_wraith.name=Lightning Wraith
 entity.wizardry:shadow_wraith.name=Shadow Wraith
