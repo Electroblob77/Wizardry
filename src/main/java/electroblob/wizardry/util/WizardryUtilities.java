@@ -981,24 +981,20 @@ public final class WizardryUtilities {
 
 			}else if(target instanceof ISummonedCreature){
 				// Tests whether the target is a creature that was summoned by an ally of the attacker
-				if(((ISummonedCreature)target).getCaster() instanceof EntityPlayer
-						&& WizardData.get((EntityPlayer)attacker)
+				if(((ISummonedCreature)target).getCaster() instanceof EntityPlayer && WizardData.get((EntityPlayer)attacker)
 								.isPlayerAlly((EntityPlayer)((ISummonedCreature)target).getCaster())){
 					return false;
 				}
 
-			}else if(target instanceof EntityLiving
-					&& ((EntityLivingBase)target).isPotionActive(WizardryPotions.mind_control)){
+			}else if(target instanceof EntityLiving && ((EntityLivingBase)target).isPotionActive(WizardryPotions.mind_control)){
 				// Tests whether the target is a creature that was mind controlled by an ally of the attacker
 				NBTTagCompound entityNBT = target.getEntityData();
 
 				if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY)){
 
-					Entity controller = WizardryUtilities.getEntityByUUID(target.world,
-							entityNBT.getUniqueId(MindControl.NBT_KEY));
+					Entity controller = WizardryUtilities.getEntityByUUID(target.world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
-					if(controller instanceof EntityPlayer
-							&& WizardData.get((EntityPlayer)attacker).isPlayerAlly((EntityPlayer)controller)){
+					if(controller instanceof EntityPlayer && WizardData.get((EntityPlayer)attacker).isPlayerAlly((EntityPlayer)controller)){
 						return false;
 					}
 				}

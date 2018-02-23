@@ -80,6 +80,8 @@ public class Wizardry {
 	// TODO: Add wizard towers to the /locate command
 	// TODO: Fix cascading worldgen lag and backport (offset area into loaded chunks, possibly use WorldGenMinable)
 	// TODO: Change evil wizard sounds again to use illager sounds?
+	// TODO: Chnage all instanceof checks on split entity variant classes (zombie, skeleton, etc.) to their abstract
+	// base classes where appropriate
 
 	// TODO: Have particles obey Minecraft's particle setting where appropriate
 	// (see https://github.com/RootsTeam/Embers/blob/master/src/main/java/teamroots/embers/particle/ParticleUtil.java)
