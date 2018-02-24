@@ -58,8 +58,8 @@ public class MindControl extends Spell {
 			if(!world.isRemote){
 				if(!canControl(target)){
 					// Adds a message saying that the player/boss entity/wizard resisted mind control
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.resist",
-							target.getName(), this.getNameForTranslationFormatted()));
+					caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
+							this.getNameForTranslationFormatted()));
 
 				}else if(target instanceof EntityLiving){
 

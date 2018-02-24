@@ -57,11 +57,11 @@ public class ShadowWard extends Spell {
 					&& !(event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory())){
 
 				event.setCanceled(true);
-				// Now we can preserve the original daage source (sort of) as long as we make it retaliatory.
+				// Now we can preserve the original damage source (sort of) as long as we make it retaliatory.
 				event.getEntityLiving().attackEntityFrom(
-						MagicDamage.causeDirectMagicDamage(event.getSource().getTrueSource(), DamageType.MAGIC, true), event.getAmount() / 2);
-				((EntityLivingBase)event.getSource().getTrueSource())
-						.attackEntityFrom(MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.MAGIC, true), event.getAmount() / 2);
+						MagicDamage.causeDirectMagicDamage(event.getSource().getTrueSource(), DamageType.MAGIC, true), event.getAmount() * 0.5f);
+				((EntityLivingBase)event.getSource().getTrueSource()).attackEntityFrom(
+						MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.MAGIC, true), event.getAmount() * 0.5f);
 			}
 		}
 	}

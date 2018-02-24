@@ -81,10 +81,9 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	public enum DamageType {
 		/** Generic magic damage from the wizardry mod. Like vanilla magic damage, except it doesn't bypass armour. */
 		MAGIC,
-		/**
-		 * Fire damage from the wizardry mod. Counts as fire damage in the vanilla system, so is blocked by any mobs
-		 * that are immune to fire and entities with the fire resistance effect.
-		 */
+		/** Fire damage from the wizardry mod. Counts as fire damage in the vanilla system, so is blocked by any mobs
+		 * that are immune to fire and entities with the fire resistance effect, and is affected by the fire protection
+		 * enchantment. */
 		FIRE,
 		/** Frost (ice) damage from the wizardry mod. Snow golems, ice wraiths and ice giants are immune. */
 		FROST,
@@ -94,13 +93,11 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 		WITHER,
 		/** Poison damage from the wizardry mod. Spiders, cave spiders and undead mobs are immune. */
 		POISON,
-		/**
-		 * [NYI] Force damage from the wizardry mod. Insubstantial creatures (ghast, shadow wraith, etc.) are immune.
-		 */
+		/** Force damage from the wizardry mod. */ // Insubstantial creatures (ghast, shadow wraith, etc.) are immune?
 		FORCE,
 		/** Blast damage from the wizardry mod. Affected by the blast protection enchantment. */
 		BLAST,
-		/** [NYI] Radiant damage from the wizardry mod. */
+		/** Radiant damage from the wizardry mod. */
 		RADIANT;
 	}
 
