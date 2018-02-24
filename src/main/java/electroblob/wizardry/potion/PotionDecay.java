@@ -5,6 +5,7 @@ import java.util.List;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.entity.construct.EntityDecay;
+import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,9 +14,13 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+@Mod.EventBusSubscriber
 public class PotionDecay extends Potion {
 
 	private static final ResourceLocation ICON = new ResourceLocation(Wizardry.MODID, "textures/gui/decay_icon.png");
@@ -38,26 +43,7 @@ public class PotionDecay extends Potion {
 
 	@Override
 	public void performEffect(EntityLivingBase target, int strength){
-
 		target.attackEntityFrom(DamageSource.WITHER, 1);
-
-		if(target.onGround && target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0){
-
-			List<Entity> entities = target.world.getEntitiesWithinAABBExcludingEntity(target,
-					target.getEntityBoundingBox());
-
-			boolean flag = true;
-
-			for(Entity entity : entities){
-				if(entity instanceof EntityDecay) flag = false;
-			}
-
-			if(flag){
-				// The victim spreading the decay is the 'caster' here, so that it can actually wear off, otherwise it
-				// just gets infected with its own decay and the effect lasts forever.
-				target.world.spawnEntity(new EntityDecay(target.world, target.posX, target.posY, target.posZ, target));
-			}
-		}
 	}
 
 	@Override
@@ -72,6 +58,30 @@ public class PotionDecay extends Potion {
 	public void renderHUDEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc, float alpha){
 		mc.renderEngine.bindTexture(ICON);
 		WizardryUtilities.drawTexturedRect(x + 3, y + 3, 0, 0, 18, 18, 18, 18);
+	}
+	
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		
+		// This can't be in performEffect because that method is called at a certain frequency which depends on the
+		// amplifier of the potion effect, and is too slow for this purpose.
+		
+		EntityLivingBase target = event.getEntityLiving();
+		
+		if(target.isPotionActive(WizardryPotions.decay) && target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0
+				 && target.onGround){
+
+			List<Entity> entities = target.world.getEntitiesWithinAABBExcludingEntity(target,
+					target.getEntityBoundingBox());
+			
+			for(Entity entity : entities){
+				if(entity instanceof EntityDecay) return; // Don't spawn another decay if there's already one there
+			}
+			
+			// The victim spreading the decay is the 'caster' here, so that it can actually wear off, otherwise it
+			// just gets infected with its own decay and the effect lasts forever.
+			target.world.spawnEntity(new EntityDecay(target.world, target.posX, target.posY, target.posZ, target));
+		}
 	}
 
 }
