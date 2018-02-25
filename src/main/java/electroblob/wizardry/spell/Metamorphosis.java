@@ -33,6 +33,7 @@ import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -101,7 +102,9 @@ public class Metamorphosis extends Spell {
 			if(!world.isRemote){
 				// Transfers attributes from the old entity to the new one.
 				newEntity.setHealth(((EntityLivingBase)entityHit).getHealth());
-				newEntity.readFromNBT(entityHit.getEntityData());
+				NBTTagCompound tag = new NBTTagCompound();
+				entityHit.writeToNBT(tag);
+				newEntity.readFromNBT(tag);
 
 				entityHit.setDead();
 				newEntity.setPosition(xPos, yPos, zPos);
