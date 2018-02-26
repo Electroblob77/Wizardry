@@ -344,8 +344,7 @@ public final class WizardryUtilities {
 	 * defaults to {@link SoundCategory#PLAYERS}.
 	 */
 	public static void playSoundAtPlayer(EntityPlayer player, SoundEvent sound, float volume, float pitch){
-		player.world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, volume,
-				pitch);
+		player.world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, volume, pitch);
 	}
 
 	/**

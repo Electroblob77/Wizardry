@@ -119,8 +119,7 @@ public class Petrify extends Spell {
 			}
 		}
 		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 1.0F,
-				world.rand.nextFloat() * 0.2F + 1.0F);
+		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
 

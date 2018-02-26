@@ -36,9 +36,7 @@ public class PhaseStep extends Spell {
 
 			// The maximum wall thickness as determined by the range multiplier. The + 0.5f is so that
 			// weird float processing doesn't incorrectly round it down.
-			int maxThickness = 1
-					+ (int)((modifiers.get(WizardryItems.range_upgrade) - 1) / Constants.RANGE_INCREASE_PER_LEVEL
-							+ 0.5f);
+			int maxThickness = 1 + (int)((modifiers.get(WizardryItems.range_upgrade) - 1) / Constants.RANGE_INCREASE_PER_LEVEL + 0.5f);
 
 			if(rayTrace.sideHit.getAxis().isHorizontal()){
 
@@ -49,8 +47,7 @@ public class PhaseStep extends Spell {
 
 					// Prevents the player from teleporting through unbreakable blocks, so they cannot cheat in other
 					// mods' mazes and dungeons.
-					if((WizardryUtilities.isBlockUnbreakable(world, pos1)
-							|| WizardryUtilities.isBlockUnbreakable(world, pos1.up()))
+					if((WizardryUtilities.isBlockUnbreakable(world, pos1) || WizardryUtilities.isBlockUnbreakable(world, pos1.up()))
 							&& !Wizardry.settings.teleportThroughUnbreakableBlocks)
 						return false;
 

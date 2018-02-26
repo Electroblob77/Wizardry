@@ -33,8 +33,8 @@ import net.minecraft.util.EntityDamageSource;
 
 // A note on the use of the vanilla damagesources:
 // When using indirect damage sources, the SECOND argument is the original entity (i.e. the caster), and the
-// FIRST argument is the actual projectile or whatever that does the damage. getEntity() will return
-// the original entity, and getSourceOfDamage() will return the projectile.
+// FIRST argument is the actual projectile or whatever that does the damage. getTrueSource() will return
+// the original entity, and getImmediateSource() will return the projectile.
 
 // The vanilla approach to damage types is inconsistent, to say the least. Poison is simply 'magic', and relies on
 // EntityLivingBase.isPotionApplicable to determine whether an entity is affected or not. Wither, on the other hand, is

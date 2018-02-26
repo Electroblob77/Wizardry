@@ -20,8 +20,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public interface IElementalDamage {
 
+	/** Returns the type of this damage, which determines how it interacts with different entities. */
 	DamageType getType();
-
+	/** Returns true is this damage is from a retaliatory effect (i.e. in response to other damage). Used to avoid
+	 * infinite loops with retaliatory effects. */
 	boolean isRetaliatory();
 
 	@SubscribeEvent

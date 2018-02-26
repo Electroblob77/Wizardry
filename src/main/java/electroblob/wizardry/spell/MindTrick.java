@@ -116,9 +116,9 @@ public class MindTrick extends Spell {
 		if(event.getSource() != null && event.getSource().getTrueSource() instanceof EntityLivingBase){
 			// Cancels the mind trick effect if the creature takes damage
 			// This has been moved to within an (event.getSource().getEntity() instanceof EntityLivingBase) check so it
-			// doesn't
-			// crash the game with a ConcurrentModificationException. If you think about it, mind trick only ought to be
-			// cancelled if something attacks the entity since potions, drowning, cacti etc. don't affect the targeting.
+			// doesn't crash the game with a ConcurrentModificationException. If you think about it, mind trick only
+			// ought to be cancelled if something attacks the entity since potions, drowning, cacti etc. don't affect the
+			// targeting.
 			if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_trick)){
 				event.getEntityLiving().removePotionEffect(WizardryPotions.mind_trick);
 			}

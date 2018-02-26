@@ -171,7 +171,7 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onLivingAttackEvent(LivingAttackEvent event){
 
-		// Prevents any damage to allies from magic if friendly fire is enabled
+		// Prevents any damage to allies from magic if friendly fire is disabled
 		if(!Wizardry.settings.friendlyFire && event.getSource() != null
 				&& event.getSource().getTrueSource() instanceof EntityPlayer && event.getEntity() instanceof EntityPlayer
 				&& event.getSource() instanceof IElementalDamage){
