@@ -887,6 +887,13 @@ public final class WizardryUtilities {
 		return list;
 
 	}
+	
+	/** Removes the UUID with the given key from the given NBT tag, if any. Why this doesn't exist in vanilla I have
+	 * no idea. */
+	public static void removeUniqueId(NBTTagCompound tag, String key){
+		tag.removeTag(key + "Most");
+		tag.removeTag(key + "Least");
+	}
 
 	// TODO: Backport: It has recently become apparent that storing UUIDs as strings is not good practice, so backport
 	// these two
