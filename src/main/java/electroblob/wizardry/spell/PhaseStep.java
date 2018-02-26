@@ -62,6 +62,7 @@ public class PhaseStep extends Spell {
 						}
 
 						caster.swingArm(hand);
+						WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0f);
 						return true;
 					}
 				}
@@ -78,7 +79,6 @@ public class PhaseStep extends Spell {
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 			}
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0f);
 		}
 
 		return false;
