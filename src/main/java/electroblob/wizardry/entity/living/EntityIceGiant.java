@@ -199,7 +199,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
 		super.readEntityFromNBT(nbttagcompound);
-		this.writeNBTDelegate(nbttagcompound);
+		this.readNBTDelegate(nbttagcompound);
 	}
 
 	// Recommended overrides

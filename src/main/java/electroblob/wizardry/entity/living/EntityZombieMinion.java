@@ -128,7 +128,7 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
 		super.readEntityFromNBT(nbttagcompound);
-		this.writeNBTDelegate(nbttagcompound);
+		this.readNBTDelegate(nbttagcompound);
 	}
 
 	// Recommended overrides

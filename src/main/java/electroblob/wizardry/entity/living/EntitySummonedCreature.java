@@ -129,7 +129,7 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
 		super.readEntityFromNBT(nbttagcompound);
-		this.writeNBTDelegate(nbttagcompound);
+		this.readNBTDelegate(nbttagcompound);
 	}
 
 	// Recommended overrides

@@ -170,7 +170,7 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
 		super.readEntityFromNBT(nbttagcompound);
-		this.writeNBTDelegate(nbttagcompound);
+		this.readNBTDelegate(nbttagcompound);
 	}
 
 	// Recommended overrides

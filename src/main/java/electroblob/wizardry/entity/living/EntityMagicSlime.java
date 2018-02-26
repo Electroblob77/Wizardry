@@ -192,7 +192,7 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
 		super.readEntityFromNBT(nbttagcompound);
-		this.writeNBTDelegate(nbttagcompound);
+		this.readNBTDelegate(nbttagcompound);
 	}
 
 	// Recommended overrides
