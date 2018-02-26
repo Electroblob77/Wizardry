@@ -104,6 +104,8 @@ public class Metamorphosis extends Spell {
 				newEntity.setHealth(((EntityLivingBase)entityHit).getHealth());
 				NBTTagCompound tag = new NBTTagCompound();
 				entityHit.writeToNBT(tag);
+				// Remove the UUID because keeping it the same causes the entity to disappear
+				WizardryUtilities.removeUniqueId(tag, "UUID");
 				newEntity.readFromNBT(tag);
 
 				entityHit.setDead();
