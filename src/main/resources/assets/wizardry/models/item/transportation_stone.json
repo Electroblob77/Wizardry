@@ -1,3 +1,6 @@
 {
-    "parent": "wizardry:block/transportation_stone"
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "wizardry:items/transportation_stone"
+    }
 }
