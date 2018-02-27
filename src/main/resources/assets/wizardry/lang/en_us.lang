@@ -226,7 +226,7 @@ achievement.all_spells.desc=Cast every single spell in the game
 achievement.wizard_trade=Magic Dealing
 achievement.wizard_trade.desc=Purchase an item from a wizard
 achievement.buy_master_spell=Knowledge is Power
-achievement.buy_master_spell.wizardry:desc=Purchase a master spell from a wizard
+achievement.buy_master_spell.desc=Purchase a master spell from a wizard
 achievement.freeze_blaze=Not So Hot Now
 achievement.freeze_blaze.desc=Freeze a blaze solid
 achievement.charge_creeper=It's Gonna Blow
@@ -260,7 +260,7 @@ achievement.max_out_wand.desc=Apply the maximum number of upgrades to a master w
 achievement.element_master=Element Mastery
 achievement.element_master.desc=Cast all the spells of any element
 achievement.identify_spell=Arcane Appraisal
-achievement.identify_spell.wizardry:desc=Use a scroll of identification to identify a spell book or scroll
+achievement.identify_spell.desc=Use a scroll of identification to identify a spell book or scroll
 
 tile.wizardry:transportation_stone.confirm=You will now be returned here upon casting %1$s
 tile.wizardry:transportation_stone.invalid=You must make a circle with 8 stones of transportation first!

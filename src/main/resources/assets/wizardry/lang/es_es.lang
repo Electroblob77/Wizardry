@@ -225,7 +225,7 @@ achievement.all_spells.desc=Lanza todos los hechizos disponibles
 achievement.wizard_trade=Comercio Magico
 achievement.wizard_trade.desc=Compra un objeto a un mago
 achievement.buy_master_spell=El Conocimiento es Poder
-achievement.buy_master_spell.wizardry:desc=Compra un hechizo maestro a un mago
+achievement.buy_master_spell.desc=Compra un hechizo maestro a un mago
 achievement.freeze_blaze=Ya No Estas Tan Caliente
 achievement.freeze_blaze.desc=Congela a un blaze
 achievement.charge_creeper=Va a Explotar!!
@@ -259,7 +259,7 @@ achievement.max_out_wand.desc=Aplica el maximo numero de mejoras a una varita ma
 achievement.element_master=Maestria Elemental
 achievement.element_master.desc=Lanza todos los hechizos de cualquier elemento
 achievement.identify_spell=Apreciacion Arcana
-achievement.identify_spell.wizardry:desc=Usa un pergamino de la identificacion para identificar un libro de hechizos o pergamino
+achievement.identify_spell.desc=Usa un pergamino de la identificacion para identificar un libro de hechizos o pergamino
 
 tile.wizardry:transportation_stone.confirm=A partir de ahora retornaras a este lugar cuando lances %1$s
 tile.wizardry:transportation_stone.invalid=Primero debes hacer un circulo con 8 piedras de transportacion!
