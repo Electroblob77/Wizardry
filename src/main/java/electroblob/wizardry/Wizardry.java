@@ -169,7 +169,7 @@ public class Wizardry {
 		// Recipes
 		WizardryRegistry.registerRecipes();
 
-		proxy.initMixedFontRenderer();
+		proxy.initGuiBits();
 	}
 
 	@EventHandler

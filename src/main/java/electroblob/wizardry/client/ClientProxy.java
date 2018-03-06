@@ -181,9 +181,10 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void initMixedFontRenderer(){
+	public void initGuiBits(){
 		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"),
 				Minecraft.getMinecraft().renderEngine, false);
+		GuiWizardHandbook.initDisplayRecipes();
 	}
 
 	// SECTION Misc

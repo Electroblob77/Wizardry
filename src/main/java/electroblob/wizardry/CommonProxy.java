@@ -45,15 +45,13 @@ public class CommonProxy {
 	public void registerKeyBindings(){
 	}
 
-	public void registerSpellHUD(){
-	}
+	public void registerSpellHUD(){}
 
 	public net.minecraft.client.model.ModelBiped getWizardArmourModel(){
 		return null;
 	}
 
-	public void initMixedFontRenderer(){
-	}
+	public void initGuiBits(){}
 
 	// SECTION Particles
 	// ===============================================================================================================

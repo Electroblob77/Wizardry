@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.Charsets;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
@@ -28,6 +30,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiWizardHandbook extends GuiScreen {
@@ -53,8 +56,10 @@ public class GuiWizardHandbook extends GuiScreen {
 	public static final ResourceLocation craftingGrids = new ResourceLocation(Wizardry.MODID,
 			"textures/gui/handbook_recipes.png");
 
-	private ArrayList<ArrayList<String>> text;
-	private ArrayList<Section> sections;
+	private List<ArrayList<String>> text;
+	private List<Section> sections;
+	
+	private static final List<Pair<ItemStack, NonNullList<NonNullList<ItemStack>>>> RECIPES = new ArrayList<>();
 
 	private int guiPage, imagePage;
 
@@ -63,7 +68,7 @@ public class GuiWizardHandbook extends GuiScreen {
 		xSize = 288;
 		ySize = 180;
 	}
-
+	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float par3){
 
@@ -152,344 +157,29 @@ public class GuiWizardHandbook extends GuiScreen {
 			}
 		}
 
-		ItemStack[][] craftingGrid;
-		ItemStack craftingResult;
+		// Which page of the recipes this is
+		int recipePage = pageNumber - (sections.get(sections.size() - 1).pageNumber - 1) / 2;
+		
+		if(recipePage >= 0 && recipePage < 4){
+			// 4 recipes per page, hence the recipePage*4
+			this.renderCraftingRecipe(xPos + 23, yPos + 39, mouseX, mouseY, RECIPES.get(recipePage*4).getRight(), RECIPES.get(recipePage*4).getLeft());
+			this.renderCraftingRecipe(xPos + 23, yPos + 98, mouseX, mouseY, RECIPES.get(recipePage*4+1).getRight(), RECIPES.get(recipePage*4+1).getLeft());
+			this.renderCraftingRecipe(xPos + 156, yPos + 39, mouseX, mouseY, RECIPES.get(recipePage*4+2).getRight(), RECIPES.get(recipePage*4+2).getLeft());
+			this.renderCraftingRecipe(xPos + 156, yPos + 98, mouseX, mouseY, RECIPES.get(recipePage*4+3).getRight(), RECIPES.get(recipePage*4+3).getLeft());
 
-		// Tooltips are rendered after recipes to prevent tooltips on the left appearing behind items on the right.
-		if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2){
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(Items.GOLD_NUGGET);
-			craftingGrid[1][0] = new ItemStack(Blocks.CARPET, 1, 10);
-			craftingGrid[2][0] = new ItemStack(Items.GOLD_NUGGET);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Blocks.LAPIS_BLOCK);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][2] = new ItemStack(Blocks.STONE);
-			craftingGrid[1][2] = new ItemStack(Blocks.STONE);
-			craftingGrid[2][2] = new ItemStack(Blocks.STONE);
-			craftingResult = new ItemStack(WizardryBlocks.arcane_workbench);
-			this.renderCraftingRecipe(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Items.STICK);
-			craftingGrid[0][2] = new ItemStack(Items.GOLD_NUGGET);
-			craftingResult = new ItemStack(WizardryItems.magic_wand);
-			this.renderCraftingRecipe(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Items.BOOK);
-			craftingGrid[1][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingResult = new ItemStack(WizardryItems.spell_book, 1, 1);
-			this.renderCraftingRecipe(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(Items.BOOK);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingResult = new ItemStack(WizardryItems.wizard_handbook);
-			this.renderCraftingRecipe(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-		}else if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2 + 1){
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryBlocks.crystal_flower);
-			craftingResult = new ItemStack(WizardryItems.magic_crystal, 2);
-			this.renderCraftingRecipe(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Items.GLASS_BOTTLE);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[2][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingResult = new ItemStack(WizardryItems.mana_flask);
-			this.renderCraftingRecipe(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[1][0] = new ItemStack(Blocks.STONE);
-			craftingGrid[0][1] = new ItemStack(Blocks.STONE);
-			craftingGrid[1][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][2] = new ItemStack(Blocks.STONE);
-			craftingGrid[2][1] = new ItemStack(Blocks.STONE);
-			craftingResult = new ItemStack(WizardryBlocks.transportation_stone, 2);
-			this.renderCraftingRecipe(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[1][0] = new ItemStack(Items.STRING);
-			craftingGrid[0][1] = new ItemStack(Items.STRING);
-			craftingGrid[1][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][2] = new ItemStack(Items.STRING);
-			craftingGrid[2][1] = new ItemStack(Items.STRING);
-			craftingResult = new ItemStack(WizardryItems.magic_silk, 2);
-			this.renderCraftingRecipe(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-		}else if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2 + 2){
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_hat);
-			this.renderCraftingRecipe(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_robe);
-			this.renderCraftingRecipe(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_leggings);
-			this.renderCraftingRecipe(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_boots);
-			this.renderCraftingRecipe(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-		}else if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2 + 3){
-
-			if(Wizardry.settings.useAlternateScrollRecipe){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.PAPER);
-				craftingGrid[1][0] = new ItemStack(Items.STRING);
-				craftingGrid[2][0] = new ItemStack(WizardryItems.magic_crystal);
-				craftingResult = new ItemStack(WizardryItems.blank_scroll);
-				this.renderCraftingRecipe(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-			}else{
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.PAPER);
-				craftingGrid[1][0] = new ItemStack(Items.STRING);
-				craftingResult = new ItemStack(WizardryItems.blank_scroll);
-				this.renderCraftingRecipe(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-			if(Wizardry.settings.firebombIsCraftable){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.BLAZE_POWDER);
-				craftingGrid[1][0] = new ItemStack(Items.BLAZE_POWDER);
-				craftingGrid[0][1] = new ItemStack(Items.GLASS_BOTTLE);
-				craftingGrid[1][1] = new ItemStack(Items.GUNPOWDER);
-				craftingResult = new ItemStack(WizardryItems.firebomb, 3);
-				this.renderCraftingRecipe(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-			if(Wizardry.settings.poisonBombIsCraftable){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.SPIDER_EYE);
-				craftingGrid[1][0] = new ItemStack(Items.SPIDER_EYE);
-				craftingGrid[0][1] = new ItemStack(Items.GLASS_BOTTLE);
-				craftingGrid[1][1] = new ItemStack(Items.GUNPOWDER);
-				craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
-				this.renderCraftingRecipe(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-			if(Wizardry.settings.smokeBombIsCraftable){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.COAL);
-				craftingGrid[1][0] = new ItemStack(Items.COAL);
-				craftingGrid[0][1] = new ItemStack(Items.GLASS_BOTTLE);
-				craftingGrid[1][1] = new ItemStack(Items.GUNPOWDER);
-				craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
-				this.renderCraftingRecipe(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
+			// Tooltips are rendered after recipes to prevent tooltips on the left appearing behind items on the right.
+			this.renderCraftingTooltips(xPos + 23, yPos + 39, mouseX, mouseY, RECIPES.get(recipePage*4).getRight(), RECIPES.get(recipePage*4).getLeft());
+			this.renderCraftingTooltips(xPos + 23, yPos + 98, mouseX, mouseY, RECIPES.get(recipePage*4+1).getRight(), RECIPES.get(recipePage*4+1).getLeft());
+			this.renderCraftingTooltips(xPos + 156, yPos + 39, mouseX, mouseY, RECIPES.get(recipePage*4+2).getRight(), RECIPES.get(recipePage*4+2).getLeft());
+			this.renderCraftingTooltips(xPos + 156, yPos + 98, mouseX, mouseY, RECIPES.get(recipePage*4+3).getRight(), RECIPES.get(recipePage*4+3).getLeft());
 		}
 
-		if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2){
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(Items.GOLD_NUGGET);
-			craftingGrid[1][0] = new ItemStack(Blocks.CARPET, 1, 10);
-			craftingGrid[2][0] = new ItemStack(Items.GOLD_NUGGET);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Blocks.LAPIS_BLOCK);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][2] = new ItemStack(Blocks.STONE);
-			craftingGrid[1][2] = new ItemStack(Blocks.STONE);
-			craftingGrid[2][2] = new ItemStack(Blocks.STONE);
-			craftingResult = new ItemStack(WizardryBlocks.arcane_workbench);
-			this.renderCraftingTooltips(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Items.STICK);
-			craftingGrid[0][2] = new ItemStack(Items.GOLD_NUGGET);
-			craftingResult = new ItemStack(WizardryItems.magic_wand);
-			this.renderCraftingTooltips(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Items.BOOK);
-			craftingGrid[1][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingResult = new ItemStack(WizardryItems.spell_book, 1, 1);
-			this.renderCraftingTooltips(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(Items.BOOK);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingResult = new ItemStack(WizardryItems.wizard_handbook);
-			this.renderCraftingTooltips(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-		}else if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2 + 1){
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryBlocks.crystal_flower);
-			craftingResult = new ItemStack(WizardryItems.magic_crystal, 2);
-			this.renderCraftingTooltips(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][1] = new ItemStack(Items.GLASS_BOTTLE);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[0][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[2][2] = new ItemStack(WizardryItems.magic_crystal);
-			craftingResult = new ItemStack(WizardryItems.mana_flask);
-			this.renderCraftingTooltips(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[1][0] = new ItemStack(Blocks.STONE);
-			craftingGrid[0][1] = new ItemStack(Blocks.STONE);
-			craftingGrid[1][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][2] = new ItemStack(Blocks.STONE);
-			craftingGrid[2][1] = new ItemStack(Blocks.STONE);
-			craftingResult = new ItemStack(WizardryBlocks.transportation_stone, 2);
-			this.renderCraftingTooltips(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[1][0] = new ItemStack(Items.STRING);
-			craftingGrid[0][1] = new ItemStack(Items.STRING);
-			craftingGrid[1][1] = new ItemStack(WizardryItems.magic_crystal);
-			craftingGrid[1][2] = new ItemStack(Items.STRING);
-			craftingGrid[2][1] = new ItemStack(Items.STRING);
-			craftingResult = new ItemStack(WizardryItems.magic_silk, 2);
-			this.renderCraftingTooltips(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-		}else if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2 + 2){
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_hat);
-			this.renderCraftingTooltips(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_robe);
-			this.renderCraftingTooltips(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[1][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][2] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_leggings);
-			this.renderCraftingTooltips(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-
-			craftingGrid = new ItemStack[3][3];
-			craftingGrid[0][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][0] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[0][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingGrid[2][1] = new ItemStack(WizardryItems.magic_silk);
-			craftingResult = new ItemStack(WizardryItems.wizard_boots);
-			this.renderCraftingTooltips(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-
-		}else if(pageNumber == (sections.get(sections.size() - 1).pageNumber - 1) / 2 + 3){
-
-			if(Wizardry.settings.useAlternateScrollRecipe){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.PAPER);
-				craftingGrid[1][0] = new ItemStack(Items.STRING);
-				craftingGrid[2][0] = new ItemStack(WizardryItems.magic_crystal);
-				craftingResult = new ItemStack(WizardryItems.blank_scroll);
-				this.renderCraftingTooltips(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-			}else{
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.PAPER);
-				craftingGrid[1][0] = new ItemStack(Items.STRING);
-				craftingResult = new ItemStack(WizardryItems.blank_scroll);
-				this.renderCraftingTooltips(xPos + 23, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-			if(Wizardry.settings.firebombIsCraftable){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.BLAZE_POWDER);
-				craftingGrid[1][0] = new ItemStack(Items.BLAZE_POWDER);
-				craftingGrid[0][1] = new ItemStack(Items.GLASS_BOTTLE);
-				craftingGrid[1][1] = new ItemStack(Items.GUNPOWDER);
-				craftingResult = new ItemStack(WizardryItems.firebomb, 3);
-				this.renderCraftingTooltips(xPos + 23, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-			if(Wizardry.settings.poisonBombIsCraftable){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.SPIDER_EYE);
-				craftingGrid[1][0] = new ItemStack(Items.SPIDER_EYE);
-				craftingGrid[0][1] = new ItemStack(Items.GLASS_BOTTLE);
-				craftingGrid[1][1] = new ItemStack(Items.GUNPOWDER);
-				craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
-				this.renderCraftingTooltips(xPos + 156, yPos + 39, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-			if(Wizardry.settings.smokeBombIsCraftable){
-				craftingGrid = new ItemStack[3][3];
-				craftingGrid[0][0] = new ItemStack(Items.COAL);
-				craftingGrid[1][0] = new ItemStack(Items.COAL);
-				craftingGrid[0][1] = new ItemStack(Items.GLASS_BOTTLE);
-				craftingGrid[1][1] = new ItemStack(Items.GUNPOWDER);
-				craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
-				this.renderCraftingTooltips(xPos + 156, yPos + 98, mouseX, mouseY, craftingGrid, craftingResult);
-			}
-
-		}
 	}
+	
+	// TODO: In 1.12, this all needs redoing nicely. With the crafting system halfway through changing in 1.11.2, this
+	// isn't worth doing until then.
 
-	private void renderCraftingRecipe(int xPos, int yPos, int mouseX, int mouseY, ItemStack[][] craftingGrid,
+	private void renderCraftingRecipe(int xPos, int yPos, int mouseX, int mouseY, NonNullList<NonNullList<ItemStack>> craftingGrid,
 			ItemStack craftingResult){
 
 		GlStateManager.pushMatrix();
@@ -500,11 +190,12 @@ public class GuiWizardHandbook extends GuiScreen {
 		GlStateManager.enableLighting();
 		itemRender.zLevel = 100.0F;
 
-		for(int i = 0; i < craftingGrid.length; i++){
-			for(int j = 0; j < craftingGrid[i].length; j++){
-				if(!craftingGrid[i][j].isEmpty()){
-					itemRender.renderItemAndEffectIntoGUI(craftingGrid[i][j], xPos + 18 * i, yPos + 18 * j);
-					itemRender.renderItemOverlays(this.fontRenderer, craftingGrid[i][j], xPos + 18 * i,
+		for(int i = 0; i < craftingGrid.size(); i++){
+			for(int j = 0; j < craftingGrid.get(i).size(); j++){
+				ItemStack stack = craftingGrid.get(i).get(j);
+				if(!stack.isEmpty()){
+					itemRender.renderItemAndEffectIntoGUI(stack, xPos + 18 * i, yPos + 18 * j);
+					itemRender.renderItemOverlays(this.fontRenderer, stack, xPos + 18 * i,
 							yPos + 18 * j);
 				}
 			}
@@ -522,7 +213,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 	}
 
-	private void renderCraftingTooltips(int xPos, int yPos, int mouseX, int mouseY, ItemStack[][] craftingGrid,
+	private void renderCraftingTooltips(int xPos, int yPos, int mouseX, int mouseY, NonNullList<NonNullList<ItemStack>> craftingGrid,
 			ItemStack craftingResult){
 
 		int guiLeft = this.width / 2 - xSize / 2;
@@ -536,11 +227,12 @@ public class GuiWizardHandbook extends GuiScreen {
 		itemRender.zLevel = 0.0F;
 		GlStateManager.disableLighting();
 
-		for(int i = 0; i < craftingGrid.length; i++){
-			for(int j = 0; j < craftingGrid[i].length; j++){
-				if(!craftingGrid[i][j].isEmpty()
+		for(int i = 0; i < craftingGrid.size(); i++){
+			for(int j = 0; j < craftingGrid.get(i).size(); j++){
+				ItemStack stack = craftingGrid.get(i).get(j);
+				if(!stack.isEmpty()
 						&& isPointInRegion(xPos + 18 * i, yPos + 18 * j, 16, 16, mouseX + guiLeft, mouseY + guiTop)){
-					this.renderToolTip(craftingGrid[i][j], mouseX, mouseY);
+					this.renderToolTip(stack, mouseX, mouseY);
 				}
 			}
 		}
@@ -591,13 +283,13 @@ public class GuiWizardHandbook extends GuiScreen {
 
 			textFilepath = "wizardry:texts/handbook_en_US.txt";
 
-			try{
+			try {
 
 				bufferedreader = new BufferedReader(new InputStreamReader(
 						this.mc.getResourceManager().getResource(new ResourceLocation(textFilepath)).getInputStream(),
 						Charsets.UTF_8));
 
-			}catch (IOException x){
+			} catch (IOException x){
 				Wizardry.logger.error("Couldn't find file: wizardry:assets/texts/handbook_en_US.txt. The file may be"
 						+ "missing; please try re-downloading and reinstalling Wizardry.", x);
 			}
@@ -845,6 +537,177 @@ public class GuiWizardHandbook extends GuiScreen {
 		buffer.pos(x + finalWidth, (y), 0).tex(u + width, v).endVertex();
 		buffer.pos((x), (y), 0).tex(u, v).endVertex();
 		tessellator.draw();
+	}
+	
+	private static NonNullList<NonNullList<ItemStack>> createGrid(){
+		NonNullList<NonNullList<ItemStack>> grid = NonNullList.withSize(3, NonNullList.create());
+		for(int i=0; i<3; i++){
+			grid.set(i, NonNullList.withSize(3, ItemStack.EMPTY));
+		}
+		return grid;
+	}
+	
+	/** Called from init() in the main mod class to initialise the recipes for display in the handbook. */
+	public static void initDisplayRecipes(){
+		
+		NonNullList<NonNullList<ItemStack>> craftingGrid;
+		ItemStack craftingResult;
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.GOLD_NUGGET));
+		craftingGrid.get(1).set(0, new ItemStack(Blocks.CARPET, 1, 10));
+		craftingGrid.get(2).set(0, new ItemStack(Items.GOLD_NUGGET));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(1, new ItemStack(Blocks.LAPIS_BLOCK));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(0).set(2, new ItemStack(Blocks.STONE));
+		craftingGrid.get(1).set(2, new ItemStack(Blocks.STONE));
+		craftingGrid.get(2).set(2, new ItemStack(Blocks.STONE));
+		craftingResult = new ItemStack(WizardryBlocks.arcane_workbench);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(1, new ItemStack(Items.STICK));
+		craftingGrid.get(0).set(2, new ItemStack(Items.GOLD_NUGGET));
+		craftingResult = new ItemStack(WizardryItems.magic_wand);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(1).set(0, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(1, new ItemStack(Items.BOOK));
+		craftingGrid.get(1).set(2, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingResult = new ItemStack(WizardryItems.spell_book, 1, 1);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.BOOK));
+		craftingGrid.get(1).set(0, new ItemStack(WizardryItems.magic_crystal));
+		craftingResult = new ItemStack(WizardryItems.wizard_handbook);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(WizardryBlocks.crystal_flower));
+		craftingResult = new ItemStack(WizardryItems.magic_crystal, 2);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(0, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(0).set(2, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(2, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(2).set(2, new ItemStack(WizardryItems.magic_crystal));
+		craftingResult = new ItemStack(WizardryItems.mana_flask);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(1).set(0, new ItemStack(Blocks.STONE));
+		craftingGrid.get(0).set(1, new ItemStack(Blocks.STONE));
+		craftingGrid.get(1).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(2, new ItemStack(Blocks.STONE));
+		craftingGrid.get(2).set(1, new ItemStack(Blocks.STONE));
+		craftingResult = new ItemStack(WizardryBlocks.transportation_stone, 2);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
+		craftingGrid.get(0).set(1, new ItemStack(Items.STRING));
+		craftingGrid.get(1).set(1, new ItemStack(WizardryItems.magic_crystal));
+		craftingGrid.get(1).set(2, new ItemStack(Items.STRING));
+		craftingGrid.get(2).set(1, new ItemStack(Items.STRING));
+		craftingResult = new ItemStack(WizardryItems.magic_silk, 2);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(1).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingResult = new ItemStack(WizardryItems.wizard_hat);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(1).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(0).set(2, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(1).set(2, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(2, new ItemStack(WizardryItems.magic_silk));
+		craftingResult = new ItemStack(WizardryItems.wizard_robe);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(1).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(0).set(2, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(2, new ItemStack(WizardryItems.magic_silk));
+		craftingResult = new ItemStack(WizardryItems.wizard_leggings);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(0).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_silk));
+		craftingResult = new ItemStack(WizardryItems.wizard_boots);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+
+		if(Wizardry.settings.useAlternateScrollRecipe){
+			craftingGrid = createGrid();
+			craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
+			craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
+			craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_crystal));
+			craftingResult = new ItemStack(WizardryItems.blank_scroll);
+			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		}else{
+			craftingGrid = createGrid();
+			craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
+			craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
+			craftingResult = new ItemStack(WizardryItems.blank_scroll);
+			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		}
+
+		if(Wizardry.settings.firebombIsCraftable){
+			craftingGrid = createGrid();
+			craftingGrid.get(0).set(0, new ItemStack(Items.BLAZE_POWDER));
+			craftingGrid.get(1).set(0, new ItemStack(Items.BLAZE_POWDER));
+			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+			craftingResult = new ItemStack(WizardryItems.firebomb, 3);
+			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		}
+
+		if(Wizardry.settings.poisonBombIsCraftable){
+			craftingGrid = createGrid();
+			craftingGrid.get(0).set(0, new ItemStack(Items.SPIDER_EYE));
+			craftingGrid.get(1).set(0, new ItemStack(Items.SPIDER_EYE));
+			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+			craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
+			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		}
+
+		if(Wizardry.settings.smokeBombIsCraftable){
+			craftingGrid = createGrid();
+			craftingGrid.get(0).set(0, new ItemStack(Items.COAL));
+			craftingGrid.get(1).set(0, new ItemStack(Items.COAL));
+			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+			craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
+			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		}
 	}
 
 }
