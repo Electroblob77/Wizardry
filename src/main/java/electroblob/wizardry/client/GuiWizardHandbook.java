@@ -369,8 +369,8 @@ public class GuiWizardHandbook extends GuiScreen {
 						paragraph = paragraph.replaceAll("SORCERY_COLOUR", Element.SORCERY.getFormattingCode());
 						paragraph = paragraph.replaceAll("HEALING_COLOUR", Element.HEALING.getFormattingCode());
 						paragraph = paragraph.replaceAll("RESET_COLOUR", "\u00A70");
-						paragraph = paragraph.replaceAll("VERSION", Wizardry.VERSION);
 						paragraph = paragraph.replaceAll("MCVERSION", "1.11.2");
+						paragraph = paragraph.replaceAll("VERSION", Wizardry.VERSION);
 
 						int linesInParagraph = this.fontRenderer
 								.listFormattedStringToWidth(paragraph, GuiWizardHandbook.PAGE_WIDTH).size();
