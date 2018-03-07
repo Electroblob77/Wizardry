@@ -302,14 +302,14 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	@Override
 	public final int compareTo(Spell spell){
 		
-		if(this.tier.ordinal() > spell.tier.ordinal()){
+		if(this.element.ordinal() > spell.element.ordinal()){
 			return 1;
-		}else if(this.tier.ordinal() < spell.tier.ordinal()){
+		}else if(this.element.ordinal() < spell.element.ordinal()){
 			return -1;
 		}else{
-			if(this.element.ordinal() > spell.element.ordinal()){
+			if(this.tier.ordinal() > spell.tier.ordinal()){
 				return 1;
-			}else if(this.element.ordinal() < spell.element.ordinal()){
+			}else if(this.tier.ordinal() < spell.tier.ordinal()){
 				return -1;
 			}else{
 				return 0;
