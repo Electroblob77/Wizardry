@@ -1,5 +1,7 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
@@ -10,7 +12,6 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -353,7 +354,7 @@ public final class WizardryEventHandler {
 			}
 
 			if(event.getEntityLiving() == player && event.getSource() instanceof IElementalDamage){
-				player.addStat(WizardryAchievements.self_destruct);
+				AdvancementHelper.grantAdvancement(player, EnumAdvancement.self_destruct);
 			}
 		}
 	}
@@ -386,7 +387,7 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onItemPickupEvent(EntityItemPickupEvent event){
 		if(event.getItem().getItem().getItem() == WizardryItems.magic_crystal){
-			event.getEntityPlayer().addStat(WizardryAchievements.crystal, 1);
+			AdvancementHelper.grantAdvancement(event.getEntityPlayer(), EnumAdvancement.crystal);
 		}
 	}
 

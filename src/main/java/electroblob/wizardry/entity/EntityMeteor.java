@@ -106,12 +106,12 @@ public class EntityMeteor extends EntityFallingBlock {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public int getBrightnessForRender(float partialTicks){
+	public int getBrightnessForRender(){
 		return 15728880;
 	}
 
 	@Override
-	public float getBrightness(float partialTicks){
+	public float getBrightness(){
 		return 1.0F;
 	}
 

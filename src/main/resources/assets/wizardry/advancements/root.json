@@ -1,0 +1,22 @@
+{
+	"display": {
+		"icon": {
+			"item": "wizardry:wizard_handbook"
+		},
+		"title": {
+			"translate": "achievement.root"
+		},
+		"description": {
+			"translate": "achievement.root.desc"
+		},
+		"background": "minecraft:textures/blocks/stone.png",
+		"show_toast": false,
+		"announce_to_chat": false,
+		"frame": "challenge"
+	},
+	"criteria": {
+		"auto": {
+			"trigger": "location"
+		}
+	}
+}

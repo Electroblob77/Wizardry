@@ -189,6 +189,8 @@ entity.wizardry:ring_of_fire.name=Кольцо Огня
 item_group.wizardry=Волшебство
 item_group.wizardryspells=Волшебные Заклинания
 
+achievement.root=Wizardry
+achievement.root.desc=достижения
 achievement.crystal=Любопытный Кристалл...
 achievement.crystal.desc=Добудьте Магический Кристалл
 achievement.arcane_initiate=Посвящение В Магию

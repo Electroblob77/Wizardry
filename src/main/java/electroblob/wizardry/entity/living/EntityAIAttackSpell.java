@@ -136,7 +136,7 @@ public class EntityAIAttackSpell extends EntityAIBase {
 		}
 
 		if(distanceSq <= (double)this.maxAttackDistance && this.seeTime >= 20){
-			this.attacker.getNavigator().clearPathEntity();
+			this.attacker.getNavigator().clearPath();
 		}else{
 			this.attacker.getNavigator().tryMoveToEntityLiving(this.target, this.speed);
 		}

@@ -82,7 +82,7 @@ public class Intimidate extends Spell {
 	 */
 	public static boolean runAway(EntityCreature target, EntityLivingBase caster){
 
-		if(target.getDistanceToEntity(caster) < 16){
+		if(target.getDistance(caster) < 16){
 
 			Vec3d Vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(target, 16, 7,
 					new Vec3d(caster.posX, caster.posY, caster.posZ));

@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "wizardry:magic_crystal"
+		},
+		"title": {
+			"translate": "achievement.crystal"
+		},
+		"description": {
+			"translate": "achievement.crystal.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:root",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

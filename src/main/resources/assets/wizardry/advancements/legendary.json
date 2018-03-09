@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "wizardry:armour_upgrade"
+		},
+		"title": {
+			"translate": "achievement.legendary"
+		},
+		"description": {
+			"translate": "achievement.legendary.desc"
+		},
+		"frame": "goal",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:armour_set",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

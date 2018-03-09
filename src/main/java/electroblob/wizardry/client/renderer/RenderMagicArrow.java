@@ -3,10 +3,10 @@ package electroblob.wizardry.client.renderer;
 import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.entity.projectile.EntityMagicArrow;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -55,7 +55,7 @@ public class RenderMagicArrow extends Render<EntityMagicArrow> {
 		GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * par9, 0.0F,
 				0.0F, 1.0F);
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		float f2 = 0.0F;
 		float f3 = pixelsLong / 32.0F;
 		float f4 = 0.0F;

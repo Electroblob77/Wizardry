@@ -88,9 +88,9 @@ public class Poison extends Spell {
 
 			if(world.isRemote){
 
-				double dx = (target.posX - caster.posX) / caster.getDistanceToEntity(target);
-				double dy = (target.posY - caster.posY) / caster.getDistanceToEntity(target);
-				double dz = (target.posZ - caster.posZ) / caster.getDistanceToEntity(target);
+				double dx = (target.posX - caster.posX) / caster.getDistance(target);
+				double dy = (target.posY - caster.posY) / caster.getDistance(target);
+				double dz = (target.posZ - caster.posZ) / caster.getDistance(target);
 
 				for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
 

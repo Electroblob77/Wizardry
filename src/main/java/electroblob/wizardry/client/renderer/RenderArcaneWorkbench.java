@@ -6,10 +6,10 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -25,9 +25,9 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntityArcaneWorkbench tileentity, double x, double y, double z,
-			float partialTicks, int destroyStage){
-
+	public void render(TileEntityArcaneWorkbench tileentity, double x, double y, double z,
+			float partialTicks, int destroyStage, float alpha){
+		
 		GlStateManager.pushMatrix();
 		// This line makes stuff render in the same place relative to the world wherever the player is.
 		GlStateManager.translate((float)x + 0.5F, (float)y + 1.5F, (float)z + 0.5F);
@@ -59,7 +59,7 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 			GlStateManager.rotate(tileentity.timer, 0.0f, 1.0f, 0.0f);
 			GlStateManager.translate(0.0f, 0.65f, 0.0f);
 			Tessellator tessellator = Tessellator.getInstance();
-			VertexBuffer buffer = tessellator.getBuffer();
+			BufferBuilder buffer = tessellator.getBuffer();
 			bindTexture(runeTexture);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "wizardry:spell_book"
+		},
+		"title": {
+			"translate": "achievement.buy_master_spell"
+		},
+		"description": {
+			"translate": "achievement.buy_master_spell.desc"
+		},
+		"frame": "goal",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:wizard_trade",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

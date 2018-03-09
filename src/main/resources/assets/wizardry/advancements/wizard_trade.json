@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:emerald"
+		},
+		"title": {
+			"translate": "achievement.wizard_trade"
+		},
+		"description": {
+			"translate": "achievement.wizard_trade.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:arcane_initiate",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

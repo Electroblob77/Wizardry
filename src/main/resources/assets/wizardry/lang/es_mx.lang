@@ -212,6 +212,8 @@ entity.wizardry:lightning_pulse.name=Pulso de Relampago
 item_group.wizardry=Wizardry
 item_group.wizardryspells=Hechizos de Wizardry
 
+achievement.root=Wizardry
+achievement.root.desc=Avances
 achievement.crystal=Un Cristral Curioso...
 achievement.crystal.desc=Pica un Cristal Magico
 achievement.arcane_initiate=Inicio Arcano

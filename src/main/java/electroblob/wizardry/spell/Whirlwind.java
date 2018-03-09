@@ -49,11 +49,11 @@ public class Whirlwind extends Spell {
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){
 					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().x * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().x * caster.getDistance(target) * 0.5);
 					double y2 = (double)(WizardryUtilities.getPlayerEyesPos(caster) + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().y * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().y * caster.getDistance(target) * 0.5);
 					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().z * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().z * caster.getDistance(target) * 0.5);
 					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().x,
 							caster.getLookVec().y, caster.getLookVec().z);
 					// Minecraft.getMinecraft().effectRenderer.addEffect(new EntitySparkleFX(world, x2, y2, z2,
@@ -88,11 +88,11 @@ public class Whirlwind extends Spell {
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){
 					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().x * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().x * caster.getDistance(target) * 0.5);
 					double y2 = (double)(caster.posY + caster.getEyeHeight() + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().y * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().y * caster.getDistance(target) * 0.5);
 					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().z * caster.getDistanceToEntity(target) * 0.5);
+							+ caster.getLookVec().z * caster.getDistance(target) * 0.5);
 					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().x,
 							caster.getLookVec().y, caster.getLookVec().z);
 				}

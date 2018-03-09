@@ -1,11 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.EntityMagicSlime;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
@@ -48,7 +49,7 @@ public class Slime extends Spell {
 						this.getNameForTranslationFormatted()));
 			}else if(!(target instanceof EntityMagicSlime)){
 
-				if(target instanceof EntitySkeleton) caster.addStat(WizardryAchievements.slime_skeleton);
+				if(target instanceof EntitySkeleton) { AdvancementHelper.grantAdvancement(caster, EnumAdvancement.slime_skeleton); }
 
 				if(!world.isRemote){
 					EntityMagicSlime slime = new EntityMagicSlime(world, caster, target,
@@ -91,9 +92,9 @@ public class Slime extends Spell {
 
 			if(world.isRemote){
 
-				double dx = (target.posX - caster.posX) / caster.getDistanceToEntity(target);
-				double dy = (target.posY - caster.posY) / caster.getDistanceToEntity(target);
-				double dz = (target.posZ - caster.posZ) / caster.getDistanceToEntity(target);
+				double dx = (target.posX - caster.posX) / caster.getDistance(target);
+				double dy = (target.posY - caster.posY) / caster.getDistance(target);
+				double dz = (target.posZ - caster.posZ) / caster.getDistance(target);
 
 				for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
 

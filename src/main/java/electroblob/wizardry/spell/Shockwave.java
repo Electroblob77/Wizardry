@@ -39,7 +39,7 @@ public class Shockwave extends Spell {
 		for(EntityLivingBase target : targets){
 			if(WizardryUtilities.isValidTarget(caster, target)){
 				// Damage increases closer to player up to a maximum of 4 hearts (at 1 block distance).
-				float damage = Math.min(8.0f / target.getDistanceToEntity(caster), 8.0f);
+				float damage = Math.min(8.0f / target.getDistance(caster), 8.0f);
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.BLAST),
 						damage * modifiers.get(SpellModifiers.DAMAGE));
 
@@ -48,7 +48,7 @@ public class Shockwave extends Spell {
 					// Entity speed increases closer to the player to a maximum of 3 (at 1 block distance).
 					// This is the entity's speed compared to its distance from the player. Used for a similar triangles
 					// based x, y and z speed calculation.
-					double velocityFactor = Math.min(5 / target.getDistanceSqToEntity(caster), 3.0d);
+					double velocityFactor = Math.min(5 / target.getDistanceSq(caster), 3.0d);
 
 					double dx = target.posX - caster.posX;
 					double dy = target.posY + 1 - caster.posY;

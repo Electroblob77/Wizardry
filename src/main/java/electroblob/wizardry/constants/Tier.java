@@ -2,6 +2,7 @@ package electroblob.wizardry.constants;
 
 import java.util.Random;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,12 +40,12 @@ public enum Tier {
 
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("tier." + unlocalisedName);
+		return I18n.format("tier." + unlocalisedName);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.getFormattingCode() + net.minecraft.client.resources.I18n.format("tier." + unlocalisedName);
+		return this.getFormattingCode() + I18n.format("tier." + unlocalisedName);
 	}
 
 	public String getUnlocalisedName(){

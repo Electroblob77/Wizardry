@@ -27,6 +27,7 @@ import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.MindControl;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -667,7 +668,7 @@ public final class WizardryUtilities {
 		// Essentially the same as getting the tessellator. For most code, you'll want the tessellator AND the
 		// vertexbuffer
 		// stored in local variables.
-		net.minecraft.client.renderer.VertexBuffer buffer = net.minecraft.client.renderer.Tessellator.getInstance()
+		BufferBuilder buffer = net.minecraft.client.renderer.Tessellator.getInstance()
 				.getBuffer();
 		// Equivalent of tessellator.startDrawingQuads()
 		buffer.begin(org.lwjgl.opengl.GL11.GL_QUADS,

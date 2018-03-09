@@ -1,7 +1,7 @@
 package electroblob.wizardry.client.particle;
 
 import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -28,7 +28,7 @@ public class ParticleDarkMagic extends Particle {
 	}
 
 	@Override
-	public void renderParticle(VertexBuffer buffer, Entity entity, float partialTicks, float rotationX, float rotationZ,
+	public void renderParticle(BufferBuilder buffer, Entity entity, float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ){
 		float f6 = ((float)this.particleAge + partialTicks) / (float)this.particleMaxAge * 32.0F;
 

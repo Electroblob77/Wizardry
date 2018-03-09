@@ -1,6 +1,7 @@
 package electroblob.wizardry.util;
 
-import electroblob.wizardry.registry.WizardryAchievements;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +46,7 @@ public interface IElementalDamage {
 				WizardryUtilities.chargeCreeper((EntityCreeper)event.getEntityLiving());
 				// Gives the player that caused the shock damage the 'It's Gonna Blow' achievement
 				if(event.getSource().getTrueSource() instanceof EntityPlayer){
-					((EntityPlayer)event.getSource().getTrueSource()).addStat(WizardryAchievements.charge_creeper);
+					AdvancementHelper.grantAdvancement((EntityPlayer)event.getSource().getTrueSource(), EnumAdvancement.charge_creeper);
 				}
 			}
 		}

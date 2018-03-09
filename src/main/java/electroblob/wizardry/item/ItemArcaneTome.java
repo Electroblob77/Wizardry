@@ -4,12 +4,14 @@ import java.util.List;
 
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryTabs;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,16 +19,17 @@ public class ItemArcaneTome extends Item {
 
 	public ItemArcaneTome(){
 		super();
-		this.setHasSubtypes(true);
-		this.setMaxStackSize(1);
-		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		setHasSubtypes(true);
+		setMaxStackSize(1);
+		setCreativeTab(WizardryTabs.WIZARDRY);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list){
-		for(int i = 1; i < Tier.values().length; i++){
-			list.add(new ItemStack(item, 1, i));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+		if (isInCreativeTab(tab)) {
+			for(int i = 1; i < Tier.values().length; i++){
+				list.add(new ItemStack(this, 1, i));
+			}
 		}
 	}
 
@@ -51,14 +54,12 @@ public class ItemArcaneTome extends Item {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean showAdvanced){
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag showAdvanced){
 		Tier tier = Tier.values()[stack.getItemDamage()];
 		Tier tier2 = Tier.values()[stack.getItemDamage() - 1];
 		tooltip.add(tier.getDisplayNameWithFormatting());
-		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item.wizardry:arcane_tome.desc1",
-				tier2.getDisplayNameWithFormatting()));
-		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item.wizardry:arcane_tome.desc2",
-				tier.getDisplayNameWithFormatting() + "\u00A77"));
+		tooltip.add("\u00A77" + I18n.format("item.wizardry:arcane_tome.desc1", tier2.getDisplayNameWithFormatting()));
+		tooltip.add("\u00A77" + I18n.format("item.wizardry:arcane_tome.desc2", tier.getDisplayNameWithFormatting() + "\u00A77"));
 	}
 
 }

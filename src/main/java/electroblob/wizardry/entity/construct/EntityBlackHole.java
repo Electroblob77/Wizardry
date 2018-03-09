@@ -121,7 +121,7 @@ public class EntityBlackHole extends EntityMagicConstruct {
 						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
 					}
 
-					if(this.getDistanceToEntity(target) <= 2){
+					if(this.getDistance(target) <= 2){
 						// Damages the target if it is close enough
 						if(this.getCaster() != null){
 							target.attackEntityFrom(

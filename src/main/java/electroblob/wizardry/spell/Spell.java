@@ -1,10 +1,10 @@
 package electroblob.wizardry.spell;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
@@ -13,6 +13,7 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.EntityWizard;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,10 +24,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
 /**
  * Generic spell class which is the superclass to all spells in wizardry. When extending this class, you must do the
@@ -258,7 +260,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	// This is final so nothing can override it, because that would cause all kinds of problems!
 	public final int id(){
-		return registry.getValues().indexOf(this);
+		return ((ForgeRegistry<Spell>)registry).getID(this);
 	}
 
 	/**
@@ -295,7 +297,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
+		return I18n.format("spell." + unlocalisedName);
 	}
 
 	/**
@@ -312,8 +314,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.element.getFormattingCode()
-				+ net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
+		return this.element.getFormattingCode()	+ I18n.format("spell." + unlocalisedName);
 	}
 
 	/**
@@ -330,7 +331,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDescription(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName + ".desc");
+		return I18n.format("spell." + unlocalisedName + ".desc");
 	}
 
 	/** Returns whether the spell is enabled in the config. */
@@ -371,7 +372,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * returned by Spell.getSpells(Spell.allSpells).size(), but this method is more efficient.
 	 */
 	public static int getTotalSpellCount(){
-		return registry.getValues().size() - 1;
+		return registry.getValuesCollection().size() - 1;
 	}
 
 	/**
@@ -383,10 +384,10 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * better way; see </i>{@link Spell#getSpells(Predicate)}.
 	 */
 	public static Spell get(int id){
-		if(id < 0 || id >= registry.getValues().size()){
+		if(id < 0 || id >= registry.getValuesCollection().size()){
 			return Spells.none;
 		}
-		Spell spell = registry.getValues().get(id);
+		Spell spell = ((ForgeRegistry<Spell>)registry).getValue(id);
 		return spell == null ? Spells.none : spell;
 	}
 
@@ -399,7 +400,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public static Spell get(String name){
 		ResourceLocation key = new ResourceLocation(name);
 		if(key.getResourceDomain().equals("minecraft")) key = new ResourceLocation(Wizardry.MODID, name);
-		return registry.getValue(key);
+		return ((ForgeRegistry<Spell>)registry).getValue(key);
 	}
 
 	/** Returns a list of all registered spells' registry names, excluding the 'none' spell. Used in commands. */
@@ -430,14 +431,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 *         empty.</i>
 	 */
 	public static List<Spell> getSpells(Predicate<Spell> filter){
-
-		ArrayList<Spell> spells = new ArrayList<Spell>(1);
-
-		for(Spell spell : registry.getValues()){
-			if(filter.test(spell) && spell != Spells.none) spells.add(spell);
-		}
-
-		return spells;
+		return registry.getValuesCollection().stream().filter(filter.and(p -> p != Spells.none)).collect(Collectors.toList());
 	}
 
 	/** Predicate which allows all spells. */

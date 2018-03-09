@@ -9,6 +9,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableMap;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.item.ItemArcaneTome;
@@ -42,7 +44,7 @@ import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * Class responsible for defining, storing and registering all of wizardry's items. Also registers the ItemBlocks for
@@ -103,8 +105,8 @@ public final class WizardryItems {
 
 	public static final Item mana_flask = new Item(){
 		@Override
-		public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer entityplayer){
-			entityplayer.addStat(WizardryAchievements.craft_flask);
+		public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer player){
+			AdvancementHelper.grantAdvancement(player, EnumAdvancement.craft_flask);
 		}
 	}.setCreativeTab(WizardryTabs.WIZARDRY);
 
@@ -291,7 +293,6 @@ public final class WizardryItems {
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event){
-
 		IForgeRegistry<Item> registry = event.getRegistry();
 
 		// ItemBlocks

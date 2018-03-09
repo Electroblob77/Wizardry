@@ -172,7 +172,7 @@ public class MindControl extends Spell {
 
 		for(EntityLivingBase possibleTarget : possibleTargets){
 			if(WizardryUtilities.isValidTarget(caster, possibleTarget) && (newAITarget == null
-					|| target.getDistanceToEntity(possibleTarget) < target.getDistanceToEntity(newAITarget))){
+					|| target.getDistance(possibleTarget) < target.getDistance(newAITarget))){
 				newAITarget = possibleTarget;
 			}
 		}

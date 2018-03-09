@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:slime_ball"
+		},
+		"title": {
+			"translate": "achievement.slime_skeleton"
+		},
+		"description": {
+			"translate": "achievement.slime_skeleton.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:apprentice",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

@@ -3,15 +3,12 @@ package electroblob.wizardry.item;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,9 +17,9 @@ public class ItemFrostAxe extends ItemAxe implements IConjuredItem {
 
 	public ItemFrostAxe(ToolMaterial material){
 		super(material, 8, -3);
-		this.setMaxDamage(getBaseDuration());
-		this.setNoRepair();
-		this.setCreativeTab(null);
+		setMaxDamage(getBaseDuration());
+		setNoRepair();
+		setCreativeTab(null);
 	}
 
 	@Override
@@ -82,12 +79,6 @@ public class ItemFrostAxe extends ItemAxe implements IConjuredItem {
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player){
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item parItem, CreativeTabs parTab, NonNullList<ItemStack> parListSubItems){
-		parListSubItems.add(new ItemStack(this, 1));
 	}
 
 }

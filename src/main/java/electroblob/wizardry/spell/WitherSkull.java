@@ -61,9 +61,9 @@ public class WitherSkull extends Spell {
 						- (caster.posY + (double)(caster.height / 2.0F));
 				double dz = target.posZ - caster.posZ;
 
-				witherskull.accelerationX = dx / caster.getDistanceToEntity(target) * 0.1;
-				witherskull.accelerationY = dy / caster.getDistanceToEntity(target) * 0.1;
-				witherskull.accelerationZ = dz / caster.getDistanceToEntity(target) * 0.1;
+				witherskull.accelerationX = dx / caster.getDistance(target) * 0.1;
+				witherskull.accelerationY = dy / caster.getDistance(target) * 0.1;
+				witherskull.accelerationZ = dz / caster.getDistance(target) * 0.1;
 
 				witherskull.setPosition(caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ);
 

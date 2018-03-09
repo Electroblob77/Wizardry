@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.EntityShield;
@@ -20,7 +22,6 @@ import electroblob.wizardry.packet.PacketPlayerSync;
 import electroblob.wizardry.packet.PacketTransportation;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.spell.None;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
@@ -178,13 +179,13 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		if(!spellsDiscovered.add(spell)) return false;
 		// If the spell had not already been discovered, achievements can be triggered and the method returns true
 		if(spellsDiscovered.containsAll(Spell.getSpells(Spell::isEnabled))){
-			this.player.addStat(WizardryAchievements.all_spells);
+			AdvancementHelper.grantAdvancement(player, EnumAdvancement.all_spells);
 		}
 
 		for(Element element : Element.values()){
 			if(element != Element.MAGIC
 					&& spellsDiscovered.containsAll(Spell.getSpells(new Spell.TierElementFilter(null, element)))){
-				this.player.addStat(WizardryAchievements.element_master);
+				AdvancementHelper.grantAdvancement(player, EnumAdvancement.element_master);
 			}
 		}
 

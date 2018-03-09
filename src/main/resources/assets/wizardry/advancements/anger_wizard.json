@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "minecraft:iron_sword"
+		},
+		"title": {
+			"translate": "achievement.anger_wizard"
+		},
+		"description": {
+			"translate": "achievement.anger_wizard.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:wizard_trade",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

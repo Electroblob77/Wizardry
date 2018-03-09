@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import electroblob.wizardry.Wizardry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +13,6 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.IItemPropertyGetter;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
@@ -22,7 +20,6 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
@@ -33,9 +30,9 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 
 	public ItemSpectralBow(){
 		super();
-		this.setMaxDamage(getBaseDuration());
-		this.setNoRepair();
-		this.setCreativeTab(null);
+		setMaxDamage(getBaseDuration());
+		setNoRepair();
+		setCreativeTab(null);
 		this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter(){
 			@SideOnly(Side.CLIENT)
 			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn){
@@ -183,7 +180,7 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 
 					ItemArrow itemarrow = (ItemArrow)Items.ARROW;
 					EntityArrow entityarrow = itemarrow.createArrow(world, new ItemStack(itemarrow), entityplayer);
-					entityarrow.setAim(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F,
+					entityarrow.shoot(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F,
 							f * 3.0F, 1.0F);
 
 					if(f == 1.0F){
@@ -218,12 +215,6 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 				entityplayer.addStat(StatList.getObjectUseStats(this));
 			}
 		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-		subItems.add(new ItemStack(this, 1));
 	}
 
 }

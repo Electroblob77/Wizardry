@@ -8,6 +8,10 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,19 +29,21 @@ public class ItemSpellBook extends Item {
 
 	public ItemSpellBook(){
 		super();
-		this.setHasSubtypes(true);
-		this.setMaxStackSize(1);
-		this.setCreativeTab(WizardryTabs.SPELLS);
+		setHasSubtypes(true);
+		setMaxStackSize(1);
+		setCreativeTab(WizardryTabs.SPELLS);
 	}
 
 	@Override
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list){
-		// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
-		// is not required, only the id.
-		for(int i = 0; i < Spell.getTotalSpellCount(); i++){
-			// i+1 is used so that the metadata ties up with the id() method. In other words, the none spell has id
-			// 0 and since this is not used as a spell book the metadata starts at 1.
-			list.add(new ItemStack(item, 1, i + 1));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+		if (isInCreativeTab(tab)) {
+			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
+			// is not required, only the id.
+			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
+				// i+1 is used so that the metadata ties up with the id() method. In other words, the none spell has id
+				// 0 and since this is not used as a spell book the metadata starts at 1.
+				list.add(new ItemStack(this, 1, i + 1));
+			}
 		}
 	}
 
@@ -50,10 +56,12 @@ public class ItemSpellBook extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack itemstack, World world, List<String> tooltip, ITooltipFlag advanced){
 		// Tooltip is left blank for wizards buying generic spell books.
 		if(itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
-
+			EntityPlayerSP player = Minecraft.getMinecraft().player;
+			if (player == null) { return; }
+			
 			Spell spell = Spell.get(itemstack.getItemDamage());
 
 			boolean discovered = true;
@@ -74,7 +82,7 @@ public class ItemSpellBook extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
+	public FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
 	}
 

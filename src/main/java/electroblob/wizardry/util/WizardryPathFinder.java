@@ -41,7 +41,7 @@ public class WizardryPathFinder {
 	@Nullable
 	private Path findPath(IBlockAccess world, EntityLiving entity, double x, double y, double z, float range){
 		this.path.clearPath();
-		this.nodeProcessor.initProcessor(world, entity);
+		this.nodeProcessor.init(world, entity);
 		PathPoint pathpoint = this.nodeProcessor.getStart();
 		PathPoint pathpoint1 = this.nodeProcessor.getPathPointToCoords(x, y, z);
 		Path path = this.findPath(pathpoint, pathpoint1, range);

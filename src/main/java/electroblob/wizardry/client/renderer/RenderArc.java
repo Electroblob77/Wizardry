@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.EntityArc;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -38,7 +38,7 @@ public class RenderArc extends Render<EntityArc> {
 		// System.out.println("doRender parameters: " + d0 + ", " + d1 + ", " + d2 + ", " + fa + ", " + fb);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 
 		bindTexture(textures[arc.textureIndex]); // This MUST be after the tessellator declaration and the gl stuff
 
