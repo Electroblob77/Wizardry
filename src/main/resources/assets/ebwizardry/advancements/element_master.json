@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:master_ice_wand"
-		},
-		"title": {
-			"translate": "achievement.element_master"
-		},
-		"description": {
-			"translate": "achievement.element_master.desc"
-		},
-		"frame": "goal",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:elemental",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.element_master"
+        },
+        "description": {
+            "translate": "achievement.element_master.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:master_ice_wand"
+        }
+    },
+    "parent": "ebwizardry:elemental",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_element_master"
+        }
+    }
 }

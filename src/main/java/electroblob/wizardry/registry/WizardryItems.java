@@ -103,12 +103,7 @@ public final class WizardryItems {
 	public static final Item spectral_pickaxe = new ItemSpectralPickaxe(ToolMaterial.IRON);
 	public static final Item spectral_bow = new ItemSpectralBow();
 
-	public static final Item mana_flask = new Item(){
-		@Override
-		public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer player){
-			AdvancementHelper.grantAdvancement(player, EnumAdvancement.craft_flask);
-		}
-	}.setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Item mana_flask = new Item().setCreativeTab(WizardryTabs.WIZARDRY);
 
 	public static final Item storage_upgrade = new Item().setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Item siphon_upgrade = new Item().setCreativeTab(WizardryTabs.WIZARDRY);

@@ -1,22 +1,27 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:wizard_handbook"
-		},
-		"title": {
-			"translate": "achievement.root"
-		},
-		"description": {
-			"translate": "achievement.root.desc"
-		},
-		"background": "minecraft:textures/blocks/stone.png",
-		"show_toast": false,
-		"announce_to_chat": false,
-		"frame": "challenge"
-	},
-	"criteria": {
-		"auto": {
-			"trigger": "location"
-		}
-	}
+    "display": {
+        "title": {
+            "translate": "itemGroup.wizardry"
+        },
+        "description": {
+            "translate": "itemGroup.wizardry"
+        },
+        "show_toast": false,
+        "announce_to_chat": false,
+        "icon": {
+            "item": "ebwizardry:wizard_handbook"
+        }
+    },
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal"
+                    }
+                ]
+            }
+        }
+    }
 }

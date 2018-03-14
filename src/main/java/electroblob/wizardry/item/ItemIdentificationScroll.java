@@ -1,11 +1,10 @@
 package electroblob.wizardry.item;
 
-import java.util.List;
-
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.advancement.AdvancementHelper;
 import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.event.DiscoverSpellEvent;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -23,6 +22,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemIdentificationScroll extends Item {
 
@@ -65,7 +67,7 @@ public class ItemIdentificationScroll extends Item {
 							// Identification scrolls give the chat readout in creative mode, otherwise it looks like
 							// nothing happens!
 							properties.discoverSpell(spell);
-							AdvancementHelper.grantAdvancement(player, EnumAdvancement.identify_spell);
+							WizardryAdvancementTriggers.identify_spell.triggerFor(player);
 							player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
 							if(!player.capabilities.isCreativeMode) stack.shrink(1);
 							if(!world.isRemote) player.sendMessage(new TextComponentTranslation("spell.discover",
@@ -83,5 +85,5 @@ public class ItemIdentificationScroll extends Item {
 
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 	}
-	
+
 }

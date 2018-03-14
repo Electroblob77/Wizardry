@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:identification_scroll"
-		},
-		"title": {
-			"translate": "achievement.identify_spell"
-		},
-		"description": {
-			"translate": "achievement.identify_spell.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:arcane_initiate",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.identify_spell"
+        },
+        "description": {
+            "translate": "achievement.identify_spell.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:identification_scroll"
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_identify_spell"
+        }
+    }
 }

@@ -1,21 +1,26 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:mana_flask"
-		},
-		"title": {
-			"translate": "achievement.craft_flask"
-		},
-		"description": {
-			"translate": "achievement.craft_flask.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:arcane_initiate",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.craft_flask"
+        },
+        "description": {
+            "translate": "achievement.craft_flask.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:mana_flask"
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:mana_flask"
+                    }
+                ]
+            }
+        }
+    }
 }

@@ -6,6 +6,7 @@ import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -53,7 +54,7 @@ public class IceStatue extends Spell {
 			// Stops the entity looking red while frozen and the resulting z-fighting
 			target.hurtTime = 0;
 
-			if(target instanceof EntityBlaze) { AdvancementHelper.grantAdvancement(caster, EnumAdvancement.freeze_blaze); }
+			if(target instanceof EntityBlaze) WizardryAdvancementTriggers.freeze_blaze.triggerFor(caster);
 
 			// Short mobs such as spiders and pigs
 			if((target.height < 1.2 || target.isChild()) && WizardryUtilities.canBlockBeReplaced(world, pos)){

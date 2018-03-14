@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "minecraft:gunpowder"
-		},
-		"title": {
-			"translate": "achievement.charge_creeper"
-		},
-		"description": {
-			"translate": "achievement.charge_creeper.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:arcane_initiate",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.charge_creeper"
+        },
+        "description": {
+            "translate": "achievement.charge_creeper.desc"
+        },
+        "icon": {
+            "item": "minecraft:gunpowder"
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_charge_creeper"
+        }
+    }
 }

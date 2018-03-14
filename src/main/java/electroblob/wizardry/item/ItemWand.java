@@ -1,7 +1,5 @@
 package electroblob.wizardry.item;
 
-import java.util.List;
-
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
@@ -15,6 +13,7 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardryTabs;
@@ -45,6 +44,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This class is (literally) where the magic happens! All wand types are single instances of this class. There's a lot
@@ -98,11 +100,6 @@ public class ItemWand extends Item {
 	}
 
 	@Override
-	public void onCreated(ItemStack stack, World par2World, EntityPlayer player){
-		AdvancementHelper.grantAdvancement(player, EnumAdvancement.arcane_initiate);
-	}
-
-	@Override
 	public void onUpdate(ItemStack itemstack, World world, Entity entity, int slot, boolean isHeld){
 
 		WandHelper.decrementCooldowns(itemstack);
@@ -118,10 +115,8 @@ public class ItemWand extends Item {
 		if(entity instanceof EntityPlayer && this.element != null && this.element != Element.MAGIC){
 			// As it stands, this will trigger every tick. Not ideal, but I can't find a way to detect if a player
 			// has a certain achievement.
-			// EDIT: There is a way to check, using StatFileWriter#hasAchievementUnlocked, but this ends up calling the
-			// same
-			// thing as addStat anyway, meaning there's no point and it's probably not much of a problem anyway.
-			AdvancementHelper.grantAdvancement((EntityPlayer)entity, EnumAdvancement.elemental);
+			// TODO: check if this is somehow triggerable via JSON conditions.
+			WizardryAdvancementTriggers.element_master.triggerFor((EntityPlayer)entity);
 		}
 	}
 

@@ -1,21 +1,26 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:magic_crystal"
-		},
-		"title": {
-			"translate": "achievement.crystal"
-		},
-		"description": {
-			"translate": "achievement.crystal.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:root",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.crystal"
+        },
+        "description": {
+            "translate": "achievement.crystal.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:magic_crystal"
+        }
+    },
+    "parent": "ebwizardry:root",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal"
+                    }
+                ]
+            }
+        }
+    }
 }

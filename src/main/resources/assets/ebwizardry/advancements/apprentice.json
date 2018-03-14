@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:apprentice_wand"
-		},
-		"title": {
-			"translate": "achievement.apprentice"
-		},
-		"description": {
-			"translate": "achievement.apprentice.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:arcane_initiate",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "icon": {
+            "item": "ebwizardry:apprentice_wand"
+        },
+        "title": {
+            "translate": "achievement.apprentice"
+        },
+        "description": {
+            "translate": "achievement.apprentice.desc"
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_apprentice"
+        }
+    }
 }

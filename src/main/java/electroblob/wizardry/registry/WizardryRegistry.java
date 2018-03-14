@@ -13,6 +13,7 @@ import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import electroblob.wizardry.tileentity.*;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
@@ -49,6 +50,29 @@ import java.util.List;
 public final class WizardryRegistry {
 
 	// NOTE: In 1.12, recipes have a registry (they can still stay here though since we don't keep references to them)
+
+	public static void registerAdvancementTriggers(){
+		CriteriaTriggers.register(WizardryAdvancementTriggers.armour_set);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.jam_wizard);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.self_destruct);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.all_spells);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.element_master);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.identify_spell);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.elemental);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.legendary);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.max_out_wand);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.special_upgrade);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.pig_tornado);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.master);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.apprentice);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.anger_wizard);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.buy_master_spell);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.wizard_trade);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.slime_skeleton);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.freeze_blaze);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.frankenstein);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.charge_creeper);
+	}
 
 	/** Called from the preInit method in the main mod class to register the custom dungeon loot. */
 	public static void registerLoot(){

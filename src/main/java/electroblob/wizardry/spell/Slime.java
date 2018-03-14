@@ -7,6 +7,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.EntityMagicSlime;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
@@ -49,7 +50,7 @@ public class Slime extends Spell {
 						this.getNameForTranslationFormatted()));
 			}else if(!(target instanceof EntityMagicSlime)){
 
-				if(target instanceof EntitySkeleton) { AdvancementHelper.grantAdvancement(caster, EnumAdvancement.slime_skeleton); }
+				if(target instanceof EntitySkeleton) WizardryAdvancementTriggers.slime_skeleton.triggerFor(caster);
 
 				if(!world.isRemote){
 					EntityMagicSlime slime = new EntityMagicSlime(world, caster, target,

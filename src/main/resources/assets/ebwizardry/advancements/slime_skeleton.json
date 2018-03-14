@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "minecraft:slime_ball"
-		},
-		"title": {
-			"translate": "achievement.slime_skeleton"
-		},
-		"description": {
-			"translate": "achievement.slime_skeleton.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:apprentice",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.slime_skeleton"
+        },
+        "description": {
+            "translate": "achievement.slime_skeleton.desc"
+        },
+        "icon": {
+            "item": "minecraft:slime_ball"
+        }
+    },
+    "parent": "ebwizardry:apprentice",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_slime_skeleton"
+        }
+    }
 }

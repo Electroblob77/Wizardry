@@ -1,21 +1,22 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:wizard_boots_necromancy"
-		},
-		"title": {
-			"translate": "achievement.defeat_evil_wizard"
-		},
-		"description": {
-			"translate": "achievement.defeat_evil_wizard.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:wizard_trade",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.defeat_evil_wizard"
+        },
+        "description": {
+            "translate": "achievement.defeat_evil_wizard.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:wizard_boots_necromancy"
+        }
+    },
+    "parent": "ebwizardry:wizard_trade",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": { "type": "ebwizardry:evil_wizard" }
+            }
+        }
+    }
 }

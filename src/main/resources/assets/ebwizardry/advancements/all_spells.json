@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:wizard_handbook"
-		},
-		"title": {
-			"translate": "achievement.all_spells"
-		},
-		"description": {
-			"translate": "achievement.all_spells.desc"
-		},
-		"frame": "goal",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:master",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "icon": {
+            "item": "ebwizardry:wizard_handbook"
+        },
+        "title": {
+            "translate": "achievement.all_spells"
+        },
+        "description": {
+            "translate": "achievement.all_spells.desc"
+        }
+    },
+    "parent": "ebwizardry:master",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_all_spells"
+        }
+    }
 }

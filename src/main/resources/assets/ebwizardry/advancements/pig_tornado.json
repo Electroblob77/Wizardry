@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "minecraft:saddle"
-		},
-		"title": {
-			"translate": "achievement.pig_tornado"
-		},
-		"description": {
-			"translate": "achievement.pig_tornado.desc"
-		},
-		"frame": "goal",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:apprentice",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.pig_tornado"
+        },
+        "description": {
+            "translate": "achievement.pig_tornado.desc"
+        },
+        "icon": {
+            "item": "minecraft:saddle"
+        }
+    },
+    "parent": "ebwizardry:apprentice",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_pig_tornado"
+        }
+    }
 }

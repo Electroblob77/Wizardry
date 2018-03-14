@@ -1,21 +1,26 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:magic_wand"
-		},
-		"title": {
-			"translate": "achievement.arcane_initiate"
-		},
-		"description": {
-			"translate": "achievement.arcane_initiate.desc"
-		},
-		"frame": "task",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:crystal",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.arcane_initiate"
+        },
+        "description": {
+            "translate": "achievement.arcane_initiate.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:magic_wand"
+        }
+    },
+    "parent": "ebwizardry:crystal",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_wand"
+                    }
+                ]
+            }
+        }
+    }
 }

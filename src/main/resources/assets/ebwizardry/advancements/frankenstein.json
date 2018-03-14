@@ -1,21 +1,19 @@
 {
-	"display": {
-		"icon": {
-			"item": "wizardry:advanced_lightning_wand"
-		},
-		"title": {
-			"translate": "achievement.frankenstein"
-		},
-		"description": {
-			"translate": "achievement.frankenstein.desc"
-		},
-		"frame": "goal",
-		"announce_to_chat": false
-	},
-	"parent": "wizardry:charge_creeper",
-	"criteria": {
-      "coded_trigger": {
-        "trigger": "minecraft:impossible"
-      }
-	}
+    "display": {
+        "title": {
+            "translate": "achievement.frankenstein"
+        },
+        "description": {
+            "translate": "achievement.frankenstein.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:advanced_lightning_wand"
+        }
+    },
+    "parent": "ebwizardry:charge_creeper",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_frankenstein"
+        }
+    }
 }
