@@ -267,7 +267,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		BufferedReader bufferedreader = null;
 
-		String textFilepath = "wizardry:texts/handbook_"
+		String textFilepath = "ebwizardry:texts/handbook_"
 				+ Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode() + ".txt";
 
 		try{
@@ -281,7 +281,7 @@ public class GuiWizardHandbook extends GuiScreen {
 			Wizardry.logger.info(
 					"Wizard handbook text file missing for the current language. Using default (English - US) instead.");
 
-			textFilepath = "wizardry:texts/handbook_en_US.txt";
+			textFilepath = "ebwizardry:texts/handbook_en_US.txt";
 
 			try {
 

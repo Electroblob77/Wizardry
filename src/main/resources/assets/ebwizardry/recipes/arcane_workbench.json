@@ -1,0 +1,30 @@
+{
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "vwv",
+        "xyx",
+        "zzz"
+    ],
+    "key": {
+        "v": {
+            "item": "minecraft:gold_nugget"
+        },
+        "w": {
+            "item": "minecraft:carpet",
+            "meta": 10
+        },
+        "x": {
+            "item": "ebwizardry:magic_crystal"
+        },
+        "y": {
+            "item": "minecraft:lapis_block"
+        },
+        "z": {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        }
+    },
+    "result": {
+        "item": "ebwizardry:arcane_workbench"
+    }
+}

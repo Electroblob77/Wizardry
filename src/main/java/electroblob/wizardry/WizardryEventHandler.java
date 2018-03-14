@@ -85,7 +85,7 @@ public final class WizardryEventHandler {
 		if(Wizardry.settings.generateLoot){
 			for(String location : LOOT_INJECTION_LOCATIONS){
 				if(event.getName().toString().matches(location)){
-					event.getTable().addPool(getAdditive("wizardry:chests/dungeon_additions"));
+					event.getTable().addPool(getAdditive("ebwizardry:chests/dungeon_additions"));
 				}
 			}
 		}

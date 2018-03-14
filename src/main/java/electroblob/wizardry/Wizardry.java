@@ -160,6 +160,7 @@ public class Wizardry {
 
 		// NOTE: Will need to be moved to init for 1.12, as will anything that needs to be after the registry events.
 		WizardryTabs.sort();
+
 		proxy.initGuiBits();
 	}
 
@@ -172,6 +173,7 @@ public class Wizardry {
 		 * '|'; } } // Cuts off the last '|' entityNames = entityNames.substring(0, entityNames.length()-1);
 		 * entityNamePattern = Pattern.compile(entityNames); */
 		proxy.initialiseLayers();
+		WizardryTabs.sort();
 	}
 
 	@EventHandler

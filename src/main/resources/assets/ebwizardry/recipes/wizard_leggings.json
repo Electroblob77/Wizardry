@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "yyy",
+        "y y",
+        "y y"
+    ],
+    "key": {
+        "y": {
+            "item": "ebwizardry:magic_silk"
+        }
+    },
+    "result": {
+        "item": "ebwizardry:wizard_leggings"
+    }
+}

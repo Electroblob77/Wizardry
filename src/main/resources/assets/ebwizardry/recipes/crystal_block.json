@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "zzz",
+        "zzz",
+        "zzz"
+    ],
+    "key": {
+        "z": {
+            "item": "ebwizardry:magic_crystal"
+        }
+    },
+    "result": {
+        "item": "ebwizardry:crystal_block"
+    }
+}

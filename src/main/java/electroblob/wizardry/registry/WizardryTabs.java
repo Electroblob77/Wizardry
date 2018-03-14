@@ -104,33 +104,25 @@ public final class WizardryTabs {
 				WizardryItems.wizard_boots_sorcery, WizardryItems.wizard_hat_healing, WizardryItems.wizard_robe_healing,
 				WizardryItems.wizard_leggings_healing, WizardryItems.wizard_boots_healing);
 
-		itemSorter = Ordering.explicit(orderedItemList).onResultOf(new Function<ItemStack, Item>(){
-			@Override
-			public Item apply(ItemStack input){
-				return input.getItem();
-			}
-		});
+		itemSorter = Ordering.explicit(orderedItemList).onResultOf(ItemStack::getItem);
 
-		spellItemSorter = new Comparator<ItemStack>(){
-			@Override
-			public int compare(ItemStack stack1, ItemStack stack2){
+		spellItemSorter = (stack1, stack2) -> {
 
-				if((stack1.getItem() instanceof ItemSpellBook && stack2.getItem() instanceof ItemSpellBook)
-						|| (stack1.getItem() instanceof ItemScroll && stack2.getItem() instanceof ItemScroll)){
+            if((stack1.getItem() instanceof ItemSpellBook && stack2.getItem() instanceof ItemSpellBook)
+                    || (stack1.getItem() instanceof ItemScroll && stack2.getItem() instanceof ItemScroll)){
 
-					Spell spell1 = Spell.get(stack1.getItemDamage());
-					Spell spell2 = Spell.get(stack2.getItemDamage());
+                Spell spell1 = Spell.get(stack1.getItemDamage());
+                Spell spell2 = Spell.get(stack2.getItemDamage());
 
-					return spell1.compareTo(spell2);
+                return spell1.compareTo(spell2);
 
-				}else if(stack1.getItem() instanceof ItemScroll){
-					return 1;
-				}else if(stack2.getItem() instanceof ItemScroll){
-					return -1;
-				}
-				return 0;
-			}
-		};
+            }else if(stack1.getItem() instanceof ItemScroll){
+                return 1;
+            }else if(stack2.getItem() instanceof ItemScroll){
+                return -1;
+            }
+            return 0;
+        };
 	}
 
 }
