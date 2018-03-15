@@ -1,5 +1,5 @@
 {
-    "type": "forge:ore_shaped",
+    "type": "minecraft:crafting_shaped",
     "pattern": [
         " x ",
         "xyx",
@@ -16,6 +16,6 @@
     },
     "result": {
         "item": "ebwizardry:transportation_stone",
-        "amount": 2
+        "count": 2
     }
 }

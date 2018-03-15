@@ -1,5 +1,5 @@
 {
-    "type": "forge:ore_shaped",
+    "type": "minecraft:crafting_shaped",
     "pattern": [
         "vwv",
         "xyx",
@@ -11,7 +11,7 @@
         },
         "w": {
             "item": "minecraft:carpet",
-            "meta": 10
+            "data": 10
         },
         "x": {
             "item": "ebwizardry:magic_crystal"
