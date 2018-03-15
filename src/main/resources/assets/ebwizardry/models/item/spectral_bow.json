@@ -1,7 +1,7 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "wizardry:items/spectral_bow_standby"
+        "layer0": "ebwizardry:items/spectral_bow_standby"
     },
     "display": {
         "thirdperson_righthand": {
@@ -30,21 +30,21 @@
             "predicate": {
                 "pulling": 1
             },
-            "model": "wizardry:item/spectral_bow_pulling_0"
+            "model": "ebwizardry:item/spectral_bow_pulling_0"
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.65
             },
-            "model": "wizardry:item/spectral_bow_pulling_1"
+            "model": "ebwizardry:item/spectral_bow_pulling_1"
         },
         {
             "predicate": {
                 "pulling": 1,
                 "pull": 0.9
             },
-            "model": "wizardry:item/spectral_bow_pulling_2"
+            "model": "ebwizardry:item/spectral_bow_pulling_2"
         }
     ]
 }

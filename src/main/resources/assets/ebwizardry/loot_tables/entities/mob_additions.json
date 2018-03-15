@@ -15,11 +15,11 @@
             "entries": [
                 {
                     "type": "item",
-                    "name": "wizardry:spell_book",
+                    "name": "ebwizardry:spell_book",
                     "weight": 1,
                     "functions": [
                         {
-                            "function": "wizardry:random_spell"
+                            "function": "ebwizardry:random_spell"
                         }
                     ]
                 }

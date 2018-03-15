@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "wizardry:items/arcane_tome"
+        "layer0": "ebwizardry:items/arcane_tome"
     }
 }

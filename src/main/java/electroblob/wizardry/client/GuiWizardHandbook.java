@@ -290,7 +290,7 @@ public class GuiWizardHandbook extends GuiScreen {
 						Charsets.UTF_8));
 
 			} catch (IOException x){
-				Wizardry.logger.error("Couldn't find file: wizardry:assets/texts/handbook_en_US.txt. The file may be"
+				Wizardry.logger.error("Couldn't find file: " + Wizardry.MODID + ":assets/texts/handbook_en_US.txt. The file may be"
 						+ "missing; please try re-downloading and reinstalling Wizardry.", x);
 			}
 		}

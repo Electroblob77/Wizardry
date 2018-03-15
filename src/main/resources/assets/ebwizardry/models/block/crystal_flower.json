@@ -1,6 +1,6 @@
 {
     "parent": "block/cross",
     "textures": {
-        "cross": "wizardry:blocks/crystal_flower"
+        "cross": "ebwizardry:blocks/crystal_flower"
     }
 }

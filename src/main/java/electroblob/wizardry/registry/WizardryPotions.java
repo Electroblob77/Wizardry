@@ -88,7 +88,7 @@ public final class WizardryPotions {
 	 * @param registry The registry to register the given potion to.
 	 * @param potion The potion to register.
 	 * @param name The name of the potion, without the mod ID or the .name stuff. The registry name will be
-	 *        {@code wizardry:[name]}. The unlocalised name will be {@code potion.wizardry:[name].name}.
+	 *        {@code ebwizardry:[name]}. The unlocalised name will be {@code potion.ebwizardry:[name].name}.
 	 */
 	public static void registerPotion(IForgeRegistry<Potion> registry, Potion potion, String name){
 		potion.setRegistryName(Wizardry.MODID, name);

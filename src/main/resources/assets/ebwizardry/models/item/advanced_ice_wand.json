@@ -1,6 +1,6 @@
 {
     "parent": "item/handheld",
     "textures": {
-        "layer0": "wizardry:items/wand_advanced_ice"
+        "layer0": "ebwizardry:items/wand_advanced_ice"
     }
 }

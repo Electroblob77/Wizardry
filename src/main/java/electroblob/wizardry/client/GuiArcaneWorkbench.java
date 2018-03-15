@@ -1,7 +1,5 @@
 package electroblob.wizardry.client;
 
-import org.lwjgl.input.Keyboard;
-
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
@@ -26,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import org.lwjgl.input.Keyboard;
 
 public class GuiArcaneWorkbench extends GuiContainer {
 
@@ -163,7 +162,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			this.fontRenderer.drawStringWithShadow("\u00A7f" + wand.getDisplayName(), xSize + 6, 6, 0);
 			this.fontRenderer.drawStringWithShadow(
-					"\u00A77" + I18n.format("container.wizardry:arcane_workbench.mana") + " "
+					"\u00A77" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.mana") + " "
 							+ (wand.getMaxDamage() - wand.getItemDamage()) + "/" + wand.getMaxDamage(),
 					xSize + 6, 20, 0);
 
@@ -191,7 +190,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			if(WandHelper.getTotalUpgrades(wand) > 0){
 
 				this.fontRenderer.drawStringWithShadow(
-						"\u00A7f" + I18n.format("container.wizardry:arcane_workbench.upgrades"), xSize + 6, y + 6, 0);
+						"\u00A7f" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.upgrades"), xSize + 6, y + 6, 0);
 
 				int x = 0;
 				y = 50 + spells.length * 10;

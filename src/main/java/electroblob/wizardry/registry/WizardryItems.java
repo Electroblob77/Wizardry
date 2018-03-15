@@ -272,7 +272,7 @@ public final class WizardryItems {
 	 * @param registry The registry to register the given item to.
 	 * @param item The item to register.
 	 * @param name The name of the item, without the mod ID or the .name stuff. The registry name will be
-	 *        {@code wizardry:[name]}. The unlocalised name will be {@code item.wizardry:[name].name}.
+	 *        {@code ebwizardry:[name]}. The unlocalised name will be {@code item.ebwizardry:[name].name}.
 	 */
 	public static void registerItem(IForgeRegistry<Item> registry, Item item, String name){
 		item.setRegistryName(Wizardry.MODID, name);

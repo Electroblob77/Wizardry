@@ -19,13 +19,13 @@ public class GuiConfigWizardry extends GuiConfig {
 
 	public GuiConfigWizardry(GuiScreen parent){
 		super(parent, getConfigEntries(), Wizardry.MODID, false, false,
-				Wizardry.NAME + " - " + I18n.format("config.wizardry.title.general"));
+				Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title.general"));
 		// this.titleLine2 = "File location: " + Wizardry.config.getConfigFile().getAbsolutePath();
 	}
 
 	private static List<IConfigElement> getConfigEntries(){
 		List<IConfigElement> configList = new ArrayList<IConfigElement>(1);
-		configList.add(new DummyCategoryElement("spellsConfig", "config.wizardry.category." + Settings.SPELLS_CATEGORY,
+		configList.add(new DummyCategoryElement("spellsConfig", "config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY,
 				SpellsCategory.class));
 		configList.add(new DummyCategoryElement("resistancesConfig",
 				"config.wizardry.category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
@@ -48,9 +48,9 @@ public class GuiConfigWizardry extends GuiConfig {
 					(new ConfigElement(Wizardry.settings.getConfigCategory(Settings.SPELLS_CATEGORY)))
 							.getChildElements(),
 					this.owningScreen.modID, Settings.SPELLS_CATEGORY, false, false,
-					Wizardry.NAME + " - " + I18n.format("config.wizardry.title." + Settings.SPELLS_CATEGORY));
+					Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title." + Settings.SPELLS_CATEGORY));
 
-			spellsMenu.titleLine2 = I18n.format("config.wizardry.subtitle." + Settings.SPELLS_CATEGORY);
+			spellsMenu.titleLine2 = I18n.format("config." + Wizardry.MODID + ".subtitle." + Settings.SPELLS_CATEGORY);
 
 			return spellsMenu;
 		}
@@ -70,9 +70,9 @@ public class GuiConfigWizardry extends GuiConfig {
 					(new ConfigElement(Wizardry.settings.getConfigCategory(Settings.RESISTANCES_CATEGORY)))
 							.getChildElements(),
 					this.owningScreen.modID, Settings.RESISTANCES_CATEGORY, false, false,
-					Wizardry.NAME + " - " + I18n.format("config.wizardry.title." + Settings.RESISTANCES_CATEGORY));
+					Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title." + Settings.RESISTANCES_CATEGORY));
 
-			idsMenu.titleLine2 = I18n.format("config.wizardry.subtitle." + Settings.RESISTANCES_CATEGORY);
+			idsMenu.titleLine2 = I18n.format("config." + Wizardry.MODID + ".subtitle." + Settings.RESISTANCES_CATEGORY);
 
 			return idsMenu;
 		}

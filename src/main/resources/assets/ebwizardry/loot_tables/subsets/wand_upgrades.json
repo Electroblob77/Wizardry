@@ -6,42 +6,42 @@
 			"entries": [
 				{
                     "type": "item",
-                    "name": "wizardry:condenser_upgrade",
+                    "name": "ebwizardry:condenser_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:siphon_upgrade",
+                    "name": "ebwizardry:siphon_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:storage_upgrade",
+                    "name": "ebwizardry:storage_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:range_upgrade",
+                    "name": "ebwizardry:range_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:duration_upgrade",
+                    "name": "ebwizardry:duration_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:cooldown_upgrade",
+                    "name": "ebwizardry:cooldown_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:blast_upgrade",
+                    "name": "ebwizardry:blast_upgrade",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:attunement_upgrade",
+                    "name": "ebwizardry:attunement_upgrade",
                     "weight": 1
                 }
 			]

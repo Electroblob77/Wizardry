@@ -298,7 +298,7 @@ public final class Settings {
 		property = config.get(Configuration.CATEGORY_GENERAL, "towerRarity", 8,
 				"Rarity of wizard towers. Higher numbers are rarer. Set to 0 to disable wizard towers completely.", 0,
 				50);
-		property.setLanguageKey("config.wizardry.tower_rarity");
+		property.setLanguageKey("config." + Wizardry.MODID + ".tower_rarity");
 		property.setRequiresWorldRestart(true);
 		Wizardry.proxy.setToNumberSliderEntry(property);
 		towerRarity = property.getInt();
@@ -307,108 +307,108 @@ public final class Settings {
 		property = config.get(Configuration.CATEGORY_GENERAL, "spellBookDropChance", 3,
 				"The chance for mobs to drop a spell book when killed. The greater this number, the more often they will drop. Set to 0 to disable spell book drops. Set to 200 for guaranteed drops.",
 				0, 200);
-		property.setLanguageKey("config.wizardry.spell_book_drop_chance");
+		property.setLanguageKey("config." + Wizardry.MODID + ".spell_book_drop_chance");
 		Wizardry.proxy.setToNumberSliderEntry(property);
 		spellBookDropChance = property.getInt();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "oreDimensions", new int[]{0},
 				"List of dimension ids in which crystal ore will generate. Note that removing the overworld (id 0) from this list will make the mod VERY difficult to play!");
-		property.setLanguageKey("config.wizardry.ore_dimensions");
+		property.setLanguageKey("config." + Wizardry.MODID + ".ore_dimensions");
 		property.setRequiresWorldRestart(true);
 		oreDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "flowerDimensions", new int[]{0},
 				"List of dimension ids in which crystal flowers will generate.");
-		property.setLanguageKey("config.wizardry.flower_dimensions");
+		property.setLanguageKey("config." + Wizardry.MODID + ".flower_dimensions");
 		property.setRequiresWorldRestart(true);
 		flowerDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "towerDimensions", new int[]{0},
 				"List of dimension ids in which wizard towers will generate.");
-		property.setLanguageKey("config.wizardry.tower_dimensions");
+		property.setLanguageKey("config." + Wizardry.MODID + ".tower_dimensions");
 		property.setRequiresWorldRestart(true);
 		towerDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "generateLoot", true,
 				"Whether to generate wizardry loot in dungeon chests.");
-		property.setLanguageKey("config.wizardry.generate_loot");
+		property.setLanguageKey("config." + Wizardry.MODID + ".generate_loot");
 		property.setRequiresWorldRestart(true);
 		generateLoot = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "firebombIsCraftable", true,
 				"Whether firebombs can be crafted or not.");
-		property.setLanguageKey("config.wizardry.firebomb_is_craftable");
+		property.setLanguageKey("config." + Wizardry.MODID + ".firebomb_is_craftable");
 		property.setRequiresMcRestart(true);
 		firebombIsCraftable = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "poisonBombIsCraftable", true,
 				"Whether poison bombs can be crafted or not.");
-		property.setLanguageKey("config.wizardry.poison_bomb_is_craftable");
+		property.setLanguageKey("config." + Wizardry.MODID + ".poison_bomb_is_craftable");
 		property.setRequiresMcRestart(true);
 		poisonBombIsCraftable = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "smokeBombIsCraftable", true,
 				"Whether smoke bombs can be crafted or not.");
-		property.setLanguageKey("config.wizardry.smoke_bomb_is_craftable");
+		property.setLanguageKey("config." + Wizardry.MODID + ".smoke_bomb_is_craftable");
 		property.setRequiresMcRestart(true);
 		smokeBombIsCraftable = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "useAlternateScrollRecipe", false,
 				"Whether to require a magic crystal in the shapeless crafting recipe for blank scrolls. Set to true if another mod adds a conflicting recipe.");
-		property.setLanguageKey("config.wizardry.use_alternate_scroll_recipe");
+		property.setLanguageKey("config." + Wizardry.MODID + ".use_alternate_scroll_recipe");
 		property.setRequiresMcRestart(true);
 		useAlternateScrollRecipe = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "teleportThroughUnbreakableBlocks", false,
 				"Whether players are allowed to teleport through unbreakable blocks (e.g. bedrock) using the phase step spell.");
-		property.setLanguageKey("config.wizardry.teleport_through_unbreakable_blocks");
+		property.setLanguageKey("config." + Wizardry.MODID + ".teleport_through_unbreakable_blocks");
 		teleportThroughUnbreakableBlocks = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "showSummonedCreatureNames", true,
 				"Whether to show summoned creatures' names and owners above their heads.");
-		property.setLanguageKey("config.wizardry.show_summoned_creature_names");
+		property.setLanguageKey("config." + Wizardry.MODID + ".show_summoned_creature_names");
 		showSummonedCreatureNames = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "friendlyFire", true,
 				"Whether to allow players to damage their designated allies using magic.");
-		property.setLanguageKey("config.wizardry.friendly_fire");
+		property.setLanguageKey("config." + Wizardry.MODID + ".friendly_fire");
 		friendlyFire = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "telekineticDisarmament", true,
 				"Whether to allow players to disarm other players using the telekinesis spell. Set to false to prevent stealing of items.");
-		property.setLanguageKey("config.wizardry.telekinetic_disarmament");
+		property.setLanguageKey("config." + Wizardry.MODID + ".telekinetic_disarmament");
 		telekineticDisarmament = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "discoveryMode", true,
 				"For those who like a sense of mystery! When set to true, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is false.");
-		property.setLanguageKey("config.wizardry.discovery_mode");
+		property.setLanguageKey("config." + Wizardry.MODID + ".discovery_mode");
 		property.setRequiresWorldRestart(true);
 		discoveryMode = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "enableShiftScrolling", true,
 				"Whether you can switch between spells on a wand by scrolling with the mouse wheel while sneaking. Note that this will only affect you; other players connected to the same server obey their own settings.");
-		property.setLanguageKey("config.wizardry.enable_shift_scrolling");
+		property.setLanguageKey("config." + Wizardry.MODID + ".enable_shift_scrolling");
 		property.setRequiresWorldRestart(false);
 		enableShiftScrolling = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "minionRevengeTargeting", true,
 				"Whether summoned creatures can revenge attack their owner if their owner attacks them.");
-		property.setLanguageKey("config.wizardry.minion_revenge_targeting");
+		property.setLanguageKey("config." + Wizardry.MODID + ".minion_revenge_targeting");
 		property.setRequiresWorldRestart(false);
 		minionRevengeTargeting = property.getBoolean();
 		propOrder.add(property.getName());
@@ -419,13 +419,13 @@ public final class Settings {
 		// it doesn't give fine enough control for values less than 1.
 		property = config.get(Configuration.CATEGORY_GENERAL, "playerDamageScaling", 1.0,
 				"Global damage scaling factor for the damage dealt by players casting spells, relative to 1.", 0, 20);
-		property.setLanguageKey("config.wizardry.player_damage_scaling");
+		property.setLanguageKey("config." + Wizardry.MODID + ".player_damage_scaling");
 		playerDamageScale = property.getDouble();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "npcDamageScaling", 1.0,
 				"Global damage scaling factor for the damage dealt by NPCs casting spells, relative to 1.", 0, 20);
-		property.setLanguageKey("config.wizardry.npc_damage_scaling");
+		property.setLanguageKey("config." + Wizardry.MODID + ".npc_damage_scaling");
 		npcDamageScale = property.getDouble();
 		propOrder.add(property.getName());
 
@@ -434,13 +434,13 @@ public final class Settings {
 		property = config.get(Configuration.CATEGORY_GENERAL, "castCommandMultiplierLimit", 20.0,
 				"Upper limit for the multipliers passed into the /cast command. This is here to stop players from accidentally breaking a world/server. Large blast mutipliers can cause extreme lag - you have been warned!",
 				1, 255);
-		property.setLanguageKey("config.wizardry.cast_command_multiplier_limit");
+		property.setLanguageKey("config." + Wizardry.MODID + ".cast_command_multiplier_limit");
 		maxSpellCommandMultiplier = property.getDouble();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "summonedCreatureTargetsWhitelist", new String[0],
-				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.summoned_creature_targets_whitelist");
+				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_whitelist");
 		property.setRequiresWorldRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		summonedCreatureTargetsWhitelist = property.getStringList();
@@ -452,8 +452,8 @@ public final class Settings {
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "summonedCreatureTargetsBlacklist",
 				new String[]{"creeper"},
-				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.summoned_creature_targets_blacklist");
+				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_blacklist");
 		property.setRequiresWorldRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		summonedCreatureTargetsBlacklist = property.getStringList();
@@ -465,34 +465,34 @@ public final class Settings {
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name,
 				"The position of the spell HUD.", GuiPosition.names);
-		property.setLanguageKey("config.wizardry.spell_hud_position");
+		property.setLanguageKey("config." + Wizardry.MODID + ".spell_hud_position");
 		spellHUDPosition = GuiPosition.fromName(property.getString());
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "castCommandName", "cast",
 				"The name of the /cast command. This is what you type directly after the /; for example if this was set to 'magic' then instead of typing /cast you would type /magic instead.");
-		property.setLanguageKey("config.wizardry.cast_command_name");
+		property.setLanguageKey("config." + Wizardry.MODID + ".cast_command_name");
 		property.setRequiresWorldRestart(true);
 		castCommandName = property.getString();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "discoverspellCommandName", "discoverspell",
 				"The name of the /discoverspell command. This is what you type directly after the /; for example if this was set to 'magic' then instead of typing /discoverspell you would type /magic instead.");
-		property.setLanguageKey("config.wizardry.discoverspell_command_name");
+		property.setLanguageKey("config." + Wizardry.MODID + ".discoverspell_command_name");
 		property.setRequiresWorldRestart(true);
 		discoverspellCommandName = property.getString();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "allyCommandName", "ally",
 				"The name of the /ally command. This is what you type directly after the /; for example if this was set to 'magic' then instead of typing /ally you would type /magic instead.");
-		property.setLanguageKey("config.wizardry.ally_command_name");
+		property.setLanguageKey("config." + Wizardry.MODID + ".ally_command_name");
 		property.setRequiresWorldRestart(true);
 		allyCommandName = property.getString();
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "alliesCommandName", "allies",
 				"The name of the /allies command. This is what you type directly after the /; for example if this was set to 'magic' then instead of typing /allies you would type /magic instead.");
-		property.setLanguageKey("config.wizardry.allies_command_name");
+		property.setLanguageKey("config." + Wizardry.MODID + ".allies_command_name");
 		property.setRequiresWorldRestart(true);
 		alliesCommandName = property.getString();
 		propOrder.add(property.getName());
@@ -507,8 +507,8 @@ public final class Settings {
 				"Settings which allow entities to be made immune to certain types of magic. In multiplayer, the server/LAN host settings will apply.");
 
 		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToFire", new String[]{},
-				"List of names of entities that are immune to fire, in addition to the defaults. Add mod creatures to this list if you want them to be immune to fire magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.mobs_immune_to_fire");
+				"List of names of entities that are immune to fire, in addition to the defaults. Add mod creatures to this list if you want them to be immune to fire magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_fire");
 		property.setRequiresMcRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
@@ -520,8 +520,8 @@ public final class Settings {
 		propOrder1.add(property.getName());
 
 		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToIce", new String[]{},
-				"List of names of entities that are immune to ice, in addition to the defaults. Add mod creatures to this list if you want them to be immune to ice magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.mobs_immune_to_ice");
+				"List of names of entities that are immune to ice, in addition to the defaults. Add mod creatures to this list if you want them to be immune to ice magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_ice");
 		property.setRequiresMcRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
@@ -533,8 +533,8 @@ public final class Settings {
 		propOrder1.add(property.getName());
 
 		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToLightning", new String[]{},
-				"List of names of entities that are immune to lightning, in addition to the defaults. Add mod creatures to this list if you want them to be immune to lightning magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.mobs_immune_to_lightning");
+				"List of names of entities that are immune to lightning, in addition to the defaults. Add mod creatures to this list if you want them to be immune to lightning magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_lightning");
 		property.setRequiresMcRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
@@ -546,8 +546,8 @@ public final class Settings {
 		propOrder1.add(property.getName());
 
 		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToWither", new String[]{},
-				"List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.mobs_immune_to_wither");
+				"List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_wither");
 		property.setRequiresMcRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
@@ -559,8 +559,8 @@ public final class Settings {
 		propOrder1.add(property.getName());
 
 		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToPoison", new String[]{},
-				"List of names of entities that are immune to poison, in addition to the defaults. Add mod creatures to this list if you want them to be immune to poison magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. wizardry:Wizard).");
-		property.setLanguageKey("config.wizardry.mobs_immune_to_poison");
+				"List of names of entities that are immune to poison, in addition to the defaults. Add mod creatures to this list if you want them to be immune to poison magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_poison");
 		property.setRequiresMcRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
 		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "wizardry:items/wizard_hat_ice"
+        "layer0": "ebwizardry:items/wizard_hat_ice"
     }
 }

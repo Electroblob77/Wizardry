@@ -1,8 +1,8 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "wizardry:blocks/snare",
-        "texture": "wizardry:blocks/snare"
+        "particle": "ebwizardry:blocks/snare",
+        "texture": "ebwizardry:blocks/snare"
     },
     "elements": [
         {   "from": [ 0, 0.25, 0 ],

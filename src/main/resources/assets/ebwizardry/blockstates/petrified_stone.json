@@ -1,6 +1,6 @@
 {
 	"forge_marker": 1,
     "variants": {
-        "normal": { "model": "wizardry:petrified_stone" }
+        "normal": { "model": "ebwizardry:petrified_stone" }
     }
 }

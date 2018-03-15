@@ -30,7 +30,7 @@ public final class WizardryTabs {
 	private static Comparator<ItemStack> spellItemSorter;
 
 	// Creative Tabs
-	public static final CreativeTabs WIZARDRY = new CreativeTabs("wizardry"){
+	public static final CreativeTabs WIZARDRY = new CreativeTabs("ebwizardry"){
 
 		@Override
 		@SideOnly(Side.CLIENT)
@@ -45,7 +45,7 @@ public final class WizardryTabs {
 			Collections.sort(items, itemSorter);
 		}
 	};
-	public static final CreativeTabs SPELLS = new CreativeTabs("wizardryspells"){
+	public static final CreativeTabs SPELLS = new CreativeTabs("ebwizardryspells"){
 
 		@Override
 		@SideOnly(Side.CLIENT)

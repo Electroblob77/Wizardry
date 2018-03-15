@@ -29,7 +29,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob." + Wizardry.MODID + ".WizardryGuiFactory")
+@Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob.wizardry.WizardryGuiFactory")
 public class Wizardry {
 
 	/** Wizardry's mod ID. */

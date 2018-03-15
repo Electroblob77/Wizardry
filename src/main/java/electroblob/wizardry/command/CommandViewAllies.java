@@ -40,8 +40,8 @@ public class CommandViewAllies extends CommandBase {
 	public String getUsage(ICommandSender p_71518_1_){
 		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
 		// the custom command name will not display.
-		return "commands.wizardry:allies.usage";
-		// return I18n.format("commands.wizardry:allies.usage", Wizardry.settings.alliesCommandName);
+		return "commands." + Wizardry.MODID + ":allies.usage";
+		// return I18n.format("commands." + Wizardry.MODID + ":allies.usage", Wizardry.settings.alliesCommandName);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class CommandViewAllies extends CommandBase {
 					&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
 				// Displays a chat message if a non-op tries to view another player's allies.
 				TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
-						"commands.wizardry:allies.permission");
+						"commands." + Wizardry.MODID + ":allies.permission");
 				TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
 				player.sendMessage(TextComponentTranslation2);
 				return;
@@ -102,14 +102,14 @@ public class CommandViewAllies extends CommandBase {
 				// Cuts the last " ," off of the string.
 				string = string.substring(0, string.length() - 2);
 			}else{
-				string = I18n.format("commands.wizardry:allies.none");
+				string = I18n.format("commands." + Wizardry.MODID + ":allies.none");
 			}
 
 			if(executeAsOtherPlayer){
 				sender.sendMessage(
-						new TextComponentTranslation("commands.wizardry:allies.list_other", player.getName(), string));
+						new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list_other", player.getName(), string));
 			}else{
-				sender.sendMessage(new TextComponentTranslation("commands.wizardry:allies.list", string));
+				sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list", string));
 			}
 		}
 	}

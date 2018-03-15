@@ -1,13 +1,14 @@
 {
     "display": {
         "title": {
-            "translate": "itemGroup.wizardry"
+            "translate": "itemGroup.ebwizardry"
         },
         "description": {
-            "translate": "itemGroup.wizardry"
+            "translate": "itemGroup.ebwizardry"
         },
         "show_toast": false,
         "announce_to_chat": false,
+        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
         "icon": {
             "item": "ebwizardry:wizard_handbook"
         }

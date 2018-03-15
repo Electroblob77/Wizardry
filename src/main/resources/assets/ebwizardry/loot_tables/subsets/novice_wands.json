@@ -6,42 +6,42 @@
 			"entries": [
 				{
                     "type": "item",
-                    "name": "wizardry:magic_wand",
+                    "name": "ebwizardry:magic_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_fire_wand",
+                    "name": "ebwizardry:basic_fire_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_ice_wand",
+                    "name": "ebwizardry:basic_ice_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_lightning_wand",
+                    "name": "ebwizardry:basic_lightning_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_necromancy_wand",
+                    "name": "ebwizardry:basic_necromancy_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_earth_wand",
+                    "name": "ebwizardry:basic_earth_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_sorcery_wand",
+                    "name": "ebwizardry:basic_sorcery_wand",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:basic_healing_wand",
+                    "name": "ebwizardry:basic_healing_wand",
                     "weight": 1
                 }
 			]

@@ -152,7 +152,7 @@ public class ItemWand extends Item {
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 		if (player == null) { return; }
 		// +0.5f is necessary due to the error in the way floats are calculated.
-		if(element != null) text.add("\u00A78" + I18n.format("item.wizardry:wand.buff",
+		if(element != null) text.add("\u00A78" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.buff",
 				(int)((tier.level + 1) * Constants.DAMAGE_INCREASE_PER_TIER * 100 + 0.5f) + "%",
 				element.getDisplayName()));
 
@@ -164,11 +164,11 @@ public class ItemWand extends Item {
 			discovered = false;
 		}
 
-		text.add("\u00A77" + I18n.format("item.wizardry:wand.spell",
+		text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.spell",
 				discovered ? "\u00A77" + spell.getDisplayNameWithFormatting()
 						: "#\u00A79" + SpellGlyphData.getGlyphName(spell, player.world)));
 
-		text.add("\u00A79" + I18n.format("item.wizardry:wand.mana",
+		text.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.mana",
 				(this.getMaxDamage(itemstack) - this.getDamage(itemstack)), this.getMaxDamage(itemstack)));
 	}
 
@@ -347,8 +347,8 @@ public class ItemWand extends Item {
 		if(player.isSneaking() && entity instanceof EntityPlayer && WizardData.get(player) != null){
 			// This is one of those "the method doing the work looks as if it's just returning a value" situations.
 			// ... I know, right?! I feel very programmer-y. But it's not too confusing here, and it looks neat.
-			String string = WizardData.get(player).toggleAlly((EntityPlayer)entity) ? "item.wizardry:wand.addally"
-					: "item.wizardry:wand.removeally";
+			String string = WizardData.get(player).toggleAlly((EntityPlayer)entity) ? "item." + Wizardry.MODID + ":wand.addally"
+					: "item." + Wizardry.MODID + ":wand.removeally";
 			if(!player.world.isRemote) player.sendMessage(new TextComponentTranslation(string, entity.getName()));
 			return true;
 		}

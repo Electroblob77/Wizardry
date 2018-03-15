@@ -7,7 +7,7 @@
 				{
                     "type": "item",
 					"entryName": "apprentice_tome",
-                    "name": "wizardry:arcane_tome",
+                    "name": "ebwizardry:arcane_tome",
                     "weight": 3,
                     "functions": [
                         {
@@ -19,7 +19,7 @@
                 {
                     "type": "item",
 					"entryName": "advanced_tome",
-                    "name": "wizardry:arcane_tome",
+                    "name": "ebwizardry:arcane_tome",
                     "weight": 2,
                     "functions": [
                         {
@@ -31,7 +31,7 @@
                 {
                     "type": "item",
 					"entryName": "master_tome",
-                    "name": "wizardry:arcane_tome",
+                    "name": "ebwizardry:arcane_tome",
                     "weight": 1,
                     "functions": [
                         {

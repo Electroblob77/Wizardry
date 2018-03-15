@@ -1,5 +1,6 @@
 package electroblob.wizardry.client;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -12,7 +13,7 @@ class GuiButtonApply extends GuiButton {
 
 	public GuiButtonApply(int id, int x, int y){
 
-		super(id, x, y, 32, 16, I18n.format("container.wizardry:arcane_workbench.apply"));
+		super(id, x, y, 32, 16, I18n.format("container." + Wizardry.MODID + ":arcane_workbench.apply"));
 	}
 
 	@Override

@@ -9,27 +9,27 @@
             "entries": [
 				{
                     "type": "loot_table",
-                    "name": "wizardry:subsets/novice_wands",
+                    "name": "ebwizardry:subsets/novice_wands",
                     "weight": 3
                 },
 				{
                     "type": "loot_table",
-                    "name": "wizardry:subsets/wizard_armour",
+                    "name": "ebwizardry:subsets/wizard_armour",
                     "weight": 6
                 },
 				{
                     "type": "loot_table",
-                    "name": "wizardry:subsets/arcane_tomes",
+                    "name": "ebwizardry:subsets/arcane_tomes",
                     "weight": 6
                 },
 				{
                     "type": "loot_table",
-                    "name": "wizardry:subsets/wand_upgrades",
+                    "name": "ebwizardry:subsets/wand_upgrades",
                     "weight": 2
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:magic_crystal",
+                    "name": "ebwizardry:magic_crystal",
                     "weight": 5,
 					"functions": [
 						{
@@ -43,47 +43,47 @@
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:spell_book",
+                    "name": "ebwizardry:spell_book",
                     "weight": 20,
                     "functions": [
                         {
-                            "function": "wizardry:random_spell"
+                            "function": "ebwizardry:random_spell"
                         }
                     ]
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:scroll",
+                    "name": "ebwizardry:scroll",
                     "weight": 10,
                     "functions": [
                         {
-                            "function": "wizardry:random_spell"
+                            "function": "ebwizardry:random_spell"
                         }
                     ]
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:armour_upgrade",
+                    "name": "ebwizardry:armour_upgrade",
                     "weight": 1
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:identification_scroll",
+                    "name": "ebwizardry:identification_scroll",
                     "weight": 3
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:firebomb",
+                    "name": "ebwizardry:firebomb",
                     "weight": 4
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:poison_bomb",
+                    "name": "ebwizardry:poison_bomb",
                     "weight": 4
                 },
                 {
                     "type": "item",
-                    "name": "wizardry:smoke_bomb",
+                    "name": "ebwizardry:smoke_bomb",
                     "weight": 4
                 }
             ]

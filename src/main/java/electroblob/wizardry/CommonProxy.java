@@ -150,7 +150,7 @@ public class CommonProxy {
 		Spell spell = Spell.get(scroll.getItemDamage());
 		if(spell.isContinuous) spell = Spells.none;
 
-		return I18n.translateToLocalFormatted("item.wizardry:wizardry:scroll.name",
+		return I18n.translateToLocalFormatted("item." + Wizardry.MODID + ":scroll.name",
 				I18n.translateToLocal("spell." + spell.getUnlocalisedName())).trim();
 	}
 

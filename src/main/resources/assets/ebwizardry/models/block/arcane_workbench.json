@@ -1,9 +1,9 @@
 {   "parent": "block/block",
     "textures": {
-        "particle": "wizardry:blocks/arcane_workbench_bottom",
-        "bottom": "wizardry:blocks/arcane_workbench_bottom",
-        "top": "wizardry:blocks/arcane_workbench_top",
-        "side": "wizardry:blocks/arcane_workbench_side"
+        "particle": "ebwizardry:blocks/arcane_workbench_bottom",
+        "bottom": "ebwizardry:blocks/arcane_workbench_bottom",
+        "top": "ebwizardry:blocks/arcane_workbench_top",
+        "side": "ebwizardry:blocks/arcane_workbench_side"
     },
     "elements": [
         {   "from": [ 0, 0, 0 ],

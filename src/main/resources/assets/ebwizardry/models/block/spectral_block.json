@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "wizardry:blocks/spectral_block"
+        "all": "ebwizardry:blocks/spectral_block"
     }
 }

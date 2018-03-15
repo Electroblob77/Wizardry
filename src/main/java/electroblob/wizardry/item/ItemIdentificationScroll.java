@@ -1,8 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.WizardData;
-import electroblob.wizardry.advancement.AdvancementHelper;
-import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryTabs;
@@ -41,9 +40,9 @@ public class ItemIdentificationScroll extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag par4){
-		tooltip.add(I18n.format("item.wizardry:identification_scroll.desc1", "\u00A77"));
-		tooltip.add(I18n.format("item.wizardry:identification_scroll.desc2", "\u00A77"));
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		tooltip.add(net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":identification_scroll.desc1", "\u00A77"));
+		tooltip.add(net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":identification_scroll.desc2", "\u00A77"));
 	}
 
 	@Override
@@ -80,7 +79,7 @@ public class ItemIdentificationScroll extends Item {
 			}
 			// If it found nothing to identify, it says so!
 			if(!world.isRemote) player.sendMessage(
-					new TextComponentTranslation("item.wizardry:identification_scroll.nothing_to_identify"));
+					new TextComponentTranslation("item." + Wizardry.MODID + ":identification_scroll.nothing_to_identify"));
 		}
 
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);

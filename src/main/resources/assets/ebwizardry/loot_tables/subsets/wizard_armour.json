@@ -6,162 +6,162 @@
             "entries": [
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat",
+                    "name": "ebwizardry:wizard_hat",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_fire",
+                    "name": "ebwizardry:wizard_hat_fire",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_ice",
+                    "name": "ebwizardry:wizard_hat_ice",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_lightning",
+                    "name": "ebwizardry:wizard_hat_lightning",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_necromancy",
+                    "name": "ebwizardry:wizard_hat_necromancy",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_earth",
+                    "name": "ebwizardry:wizard_hat_earth",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_sorcery",
+                    "name": "ebwizardry:wizard_hat_sorcery",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_hat_healing",
+                    "name": "ebwizardry:wizard_hat_healing",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe",
+                    "name": "ebwizardry:wizard_robe",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_fire",
+                    "name": "ebwizardry:wizard_robe_fire",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_ice",
+                    "name": "ebwizardry:wizard_robe_ice",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_lightning",
+                    "name": "ebwizardry:wizard_robe_lightning",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_necromancy",
+                    "name": "ebwizardry:wizard_robe_necromancy",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_earth",
+                    "name": "ebwizardry:wizard_robe_earth",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_sorcery",
+                    "name": "ebwizardry:wizard_robe_sorcery",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_robe_healing",
+                    "name": "ebwizardry:wizard_robe_healing",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings",
+                    "name": "ebwizardry:wizard_leggings",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_fire",
+                    "name": "ebwizardry:wizard_leggings_fire",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_ice",
+                    "name": "ebwizardry:wizard_leggings_ice",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_lightning",
+                    "name": "ebwizardry:wizard_leggings_lightning",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_necromancy",
+                    "name": "ebwizardry:wizard_leggings_necromancy",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_earth",
+                    "name": "ebwizardry:wizard_leggings_earth",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_sorcery",
+                    "name": "ebwizardry:wizard_leggings_sorcery",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_leggings_healing",
+                    "name": "ebwizardry:wizard_leggings_healing",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots",
+                    "name": "ebwizardry:wizard_boots",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_fire",
+                    "name": "ebwizardry:wizard_boots_fire",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_ice",
+                    "name": "ebwizardry:wizard_boots_ice",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_lightning",
+                    "name": "ebwizardry:wizard_boots_lightning",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_necromancy",
+                    "name": "ebwizardry:wizard_boots_necromancy",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_earth",
+                    "name": "ebwizardry:wizard_boots_earth",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_sorcery",
+                    "name": "ebwizardry:wizard_boots_sorcery",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "wizardry:wizard_boots_healing",
+                    "name": "ebwizardry:wizard_boots_healing",
                     "weight": 1
                 }
             ]

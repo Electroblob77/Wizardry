@@ -1,6 +1,6 @@
 {
 	"forge_marker": 1,
     "variants": {
-        "normal": { "model": "wizardry:arcane_workbench" }
+        "normal": { "model": "ebwizardry:arcane_workbench" }
     }
 }

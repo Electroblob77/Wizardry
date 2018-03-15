@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "wizardry:items/poison_bomb"
+        "layer0": "ebwizardry:items/poison_bomb"
     }
 }

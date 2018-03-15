@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "wizardry:items/transportation_stone"
+        "layer0": "ebwizardry:items/transportation_stone"
     }
 }

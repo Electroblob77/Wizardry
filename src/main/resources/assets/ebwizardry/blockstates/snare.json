@@ -1,6 +1,6 @@
 {
 	"forge_marker": 1,
     "variants": {
-        "normal": { "model": "wizardry:snare" }
+        "normal": { "model": "ebwizardry:snare" }
     }
 }

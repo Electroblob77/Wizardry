@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "wizardry:items/magic_silk"
+        "layer0": "ebwizardry:items/magic_silk"
     }
 }

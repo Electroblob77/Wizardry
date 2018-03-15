@@ -1,23 +1,18 @@
 package electroblob.wizardry.command;
 
-import java.util.List;
-
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.NumberInvalidException;
-import net.minecraft.command.PlayerNotFoundException;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.List;
 
 public class CommandDiscoverSpell extends CommandBase {
 
@@ -41,8 +36,8 @@ public class CommandDiscoverSpell extends CommandBase {
 	public String getUsage(ICommandSender sender){
 		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
 		// the custom command name will not display.
-		return "commands.wizardry:discoverspell.usage";
-		// return I18n.format("commands.wizardry:discoverspell.usage", Wizardry.settings.discoverspellCommandName);
+		return "commands." + Wizardry.MODID + ":discoverspell.usage";
+		// return I18n.format("commands." + Wizardry.MODID + ":discoverspell.usage", Wizardry.settings.discoverspellCommandName);
 	}
 
 	@Override
@@ -61,7 +56,7 @@ public class CommandDiscoverSpell extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException{
 
 		if(arguments.length < 1){
-			throw new WrongUsageException("commands.wizardry:discoverspell.usage",
+			throw new WrongUsageException("commands." + Wizardry.MODID + ":discoverspell.usage",
 					Wizardry.settings.discoverspellCommandName);
 		}else{
 
@@ -91,7 +86,7 @@ public class CommandDiscoverSpell extends CommandBase {
 				spell = Spell.get(arguments[i++]);
 
 				if(spell == null){
-					throw new NumberInvalidException("commands.wizardry:discoverspell.not_found",
+					throw new NumberInvalidException("commands." + Wizardry.MODID + ":discoverspell.not_found",
 							new Object[]{arguments[i - 1]});
 				}
 			}
@@ -116,21 +111,21 @@ public class CommandDiscoverSpell extends CommandBase {
 				if(clear){
 					properties.spellsDiscovered.clear();
 					sender.sendMessage(
-							new TextComponentTranslation("commands.wizardry:discoverspell.clear", player.getName()));
+							new TextComponentTranslation("commands." + Wizardry.MODID + ":discoverspell.clear", player.getName()));
 				}else if(all){
 					properties.spellsDiscovered.addAll(Spell.getSpells(Spell.allSpells));
 					sender.sendMessage(
-							new TextComponentTranslation("commands.wizardry:discoverspell.all", player.getName()));
+							new TextComponentTranslation("commands." + Wizardry.MODID + ":discoverspell.all", player.getName()));
 				}else{
 					if(properties.hasSpellBeenDiscovered(spell)){
 						properties.spellsDiscovered.remove(spell);
-						sender.sendMessage(new TextComponentTranslation("commands.wizardry:discoverspell.removespell",
+						sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":discoverspell.removespell",
 								spell.getNameForTranslationFormatted(), player.getName()));
 					}else{
 						if(!MinecraftForge.EVENT_BUS
 								.post(new DiscoverSpellEvent(player, spell, DiscoverSpellEvent.Source.COMMAND))){
 							properties.discoverSpell(spell);
-							sender.sendMessage(new TextComponentTranslation("commands.wizardry:discoverspell.addspell",
+							sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":discoverspell.addspell",
 									spell.getNameForTranslationFormatted(), player.getName()));
 						}
 					}
