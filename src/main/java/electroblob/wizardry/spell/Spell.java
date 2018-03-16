@@ -1,11 +1,5 @@
 package electroblob.wizardry.spell;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
@@ -29,6 +23,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Generic spell class which is the superclass to all spells in wizardry. When extending this class, you must do the

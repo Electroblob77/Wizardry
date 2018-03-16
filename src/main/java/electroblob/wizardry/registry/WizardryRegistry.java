@@ -1,5 +1,6 @@
 package electroblob.wizardry.registry;
 
+import com.google.common.collect.Lists;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -20,6 +21,7 @@ import net.minecraft.init.Biomes;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -36,7 +38,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

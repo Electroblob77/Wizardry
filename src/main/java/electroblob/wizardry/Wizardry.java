@@ -158,11 +158,6 @@ public class Wizardry {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new WizardryGuiHandler());
 		WizardryPacketHandler.initPackets();
 
-		// Recipes
-		WizardryRegistry.registerRecipes();
-
-		WizardryTabs.sort();
-
 		proxy.initGuiBits();
 	}
 
@@ -200,7 +195,7 @@ public class Wizardry {
 	@EventHandler
 	public static void onMissingMappingEvent(RegistryEvent.MissingMappings<Item> event){
 		// Just get, not getAll, since the mod id didn't change!
-		for(MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
+		for(RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
 			if(mapping.key.getResourceDomain().equals(Wizardry.MODID)){
 
 				Item replacement = null;

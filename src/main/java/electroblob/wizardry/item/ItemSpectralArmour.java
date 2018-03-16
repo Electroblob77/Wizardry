@@ -82,9 +82,9 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
 
-		if(slot == EntityEquipmentSlot.LEGS) return "wizardry:textures/armour/spectral_armour_legs.png";
+		if(slot == EntityEquipmentSlot.LEGS) return "ebwizardry:textures/armour/spectral_armour_legs.png";
 
-		return "wizardry:textures/armour/spectral_armour.png";
+		return "ebwizardry:textures/armour/spectral_armour.png";
 	}
 
 	@Override

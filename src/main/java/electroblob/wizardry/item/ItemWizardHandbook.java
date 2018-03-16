@@ -15,6 +15,8 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class ItemWizardHandbook extends Item {
 
 	// Yep, I hardcoded my own name into the mod. Don't want people changing it now, do I?
