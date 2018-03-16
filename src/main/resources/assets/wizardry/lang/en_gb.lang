@@ -213,6 +213,8 @@ entity.wizardry:lightning_pulse.name=Lightning Pulse
 item_group.wizardry=Wizardry
 item_group.wizardryspells=Spells
 
+achievement.root=Wizardry
+achievement.root.desc=Advancements
 achievement.crystal=A Curious Crystal...
 achievement.crystal.desc=Mine a magic crystal
 achievement.arcane_initiate=Arcane Initiate

@@ -174,7 +174,7 @@ public final class WizardryItemModels {
 
 		if(item.getHasSubtypes()){
 			NonNullList<ItemStack> items = NonNullList.create();
-			item.getSubItems(item, null, items); // Client-only method, but we're client-side so this is OK.
+			item.getSubItems(item.getCreativeTab(), items); // Client-only method, but we're client-side so this is OK.
 			for(ItemStack stack : items){
 				ModelLoader.setCustomModelResourceLocation(item, stack.getMetadata(),
 						new ModelResourceLocation(item.getRegistryName(), "inventory"));

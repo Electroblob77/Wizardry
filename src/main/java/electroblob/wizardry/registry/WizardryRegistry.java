@@ -1,7 +1,8 @@
 package electroblob.wizardry.registry;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
@@ -76,13 +77,21 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * Class responsible for registering all the things that don't have (or need) instances: entities, loot tables, recipes,
@@ -91,6 +100,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * @author Electroblob
  * @since Wizardry 1.0
  */
+@Mod.EventBusSubscriber
 public final class WizardryRegistry {
 
 	// NOTE: In 1.12, recipes have a registry (they can still stay here though since we don't keep references to them)
@@ -217,11 +227,9 @@ public final class WizardryRegistry {
 		registerEntity(EntityWitherSkeletonMinion.class, "wither_skeleton_minion", id++, 128, LIVING_UPDATE_INTERVAL, true);
 
 		// TODO: May need fixing
-		List<Biome> biomes = new ArrayList<Biome>();
-		for(Biome biome : Biome.EXPLORATION_BIOMES_LIST){
-			if(biome != null){
-				biomes.add(biome);
-			}
+		List<Biome> biomes = Lists.newArrayList();
+		for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
+			biomes.add(biome);
 		}
 		biomes.remove(Biomes.MUSHROOM_ISLAND);
 		biomes.remove(Biomes.MUSHROOM_ISLAND_SHORE);
@@ -246,7 +254,9 @@ public final class WizardryRegistry {
 	}
 
 	/** Called from the init method in the main mod class to register all the recipes. */
-	public static void registerRecipes(){
+	@SubscribeEvent
+	public static void registerRecipes(RegistryEvent.Register<IRecipe> event){
+		IForgeRegistry<IRecipe> registry = event.getRegistry();
 
 		ItemStack magicCrystalStack = new ItemStack(WizardryItems.magic_crystal);
 		ItemStack magicWandStack = new ItemStack(WizardryItems.magic_wand, 1, Tier.BASIC.maxCharge);
@@ -284,30 +294,30 @@ public final class WizardryRegistry {
 		ItemStack scrollStack = new ItemStack(WizardryItems.blank_scroll);
 		ItemStack paperStack = new ItemStack(Items.PAPER);
 
-		GameRegistry.addRecipe(magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z', goldNuggetStack);
-		GameRegistry.addRecipe(spellBookStack, " x ", "xyx", " x ", 'x', magicCrystalStack, 'y', bookStack);
-		GameRegistry.addRecipe(arcaneWorkbenchStack, "vwv", "xyx", "zzz", 'v', goldNuggetStack, 'w', purpleCarpetStack, 'x', magicCrystalStack, 'y', lapisBlockStack, 'z', stoneStack);
-		GameRegistry.addRecipe(manaFlaskStack, "yyy", "yxy", "yyy", 'x', bottleStack, 'y', magicCrystalStack);
-		GameRegistry.addRecipe(transportationStoneStack, " x ", "xyx", " x ", 'x', stoneStack, 'y', magicCrystalStack);
-		GameRegistry.addRecipe(hatStack, "yyy", "y y", 'y', silkStack);
-		GameRegistry.addRecipe(robeStack, "y y", "yyy", "yyy", 'y', silkStack);
-		GameRegistry.addRecipe(leggingsStack, "yyy", "y y", "y y", 'y', silkStack);
-		GameRegistry.addRecipe(bootsStack, "y y", "y y", 'y', silkStack);
-		GameRegistry.addRecipe(silkStack1, " x ", "xyx", " x ", 'x', stringStack, 'y', magicCrystalStack);
-		GameRegistry.addRecipe(crystalBlockStack, "zzz", "zzz", "zzz", 'z', magicCrystalStack);
+		registry.register(new ShapedOreRecipe(null, magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z', goldNuggetStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "magic_wand")));
+		registry.register(new ShapedOreRecipe(null, spellBookStack, " x ", "xyx", " x ", 'x', magicCrystalStack, 'y', bookStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "spellbook")));
+		registry.register(new ShapedOreRecipe(null, arcaneWorkbenchStack, "vwv", "xyx", "zzz", 'v', goldNuggetStack, 'w', purpleCarpetStack, 'x', magicCrystalStack, 'y', lapisBlockStack, 'z', stoneStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "arcane_workbench")));
+		registry.register(new ShapedOreRecipe(null, manaFlaskStack, "yyy", "yxy", "yyy", 'x', bottleStack, 'y', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "mana_flask")));
+		registry.register(new ShapedOreRecipe(null, transportationStoneStack, " x ", "xyx", " x ", 'x', stoneStack, 'y', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "transportation_stone")));
+		registry.register(new ShapedOreRecipe(null, hatStack, "yyy", "y y", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "hat")));
+		registry.register(new ShapedOreRecipe(null, robeStack, "y y", "yyy", "yyy", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "robe")));
+		registry.register(new ShapedOreRecipe(null, leggingsStack, "yyy", "y y", "y y", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "leggings")));
+		registry.register(new ShapedOreRecipe(null, bootsStack, "y y", "y y", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "boots")));
+		registry.register(new ShapedOreRecipe(null, silkStack1, " x ", "xyx", " x ", 'x', stringStack, 'y', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "silk")));
+		registry.register(new ShapedOreRecipe(null, crystalBlockStack, "zzz", "zzz", "zzz", 'z', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "crystal_block")));
 
-		GameRegistry.addShapelessRecipe(wizardHandbookStack, bookStack, magicCrystalStack);
-		GameRegistry.addShapelessRecipe(magicCrystalStack1, crystalFlowerStack);
-		GameRegistry.addShapelessRecipe(magicCrystalStack2, crystalBlockStack);
+		registry.register(new ShapelessOreRecipe(null, wizardHandbookStack, bookStack, magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "wizard_handbook")));
+		registry.register(new ShapelessOreRecipe(null, magicCrystalStack1, crystalFlowerStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "magic_crystal_1")));
+		registry.register(new ShapelessOreRecipe(null, magicCrystalStack2, crystalBlockStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "magic_crystal_2")));
 
-		if(Wizardry.settings.firebombIsCraftable) GameRegistry.addShapelessRecipe(firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack);
-		if(Wizardry.settings.poisonBombIsCraftable) GameRegistry.addShapelessRecipe(poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack);
-		if(Wizardry.settings.smokeBombIsCraftable) GameRegistry.addShapelessRecipe(smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack);
+		if(Wizardry.settings.firebombIsCraftable) registry.register(new ShapelessOreRecipe(null, firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "fire_bomb")));
+		if(Wizardry.settings.poisonBombIsCraftable) registry.register(new ShapelessOreRecipe(null, poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "poison_bomb")));
+		if(Wizardry.settings.smokeBombIsCraftable) registry.register(new ShapelessOreRecipe(null, smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "smoke_bomb")));
 
 		if(Wizardry.settings.useAlternateScrollRecipe){
-			GameRegistry.addShapelessRecipe(scrollStack, paperStack, stringStack, magicCrystalStack);
+			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack, magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "scroll_1")));
 		}else{
-			GameRegistry.addShapelessRecipe(scrollStack, paperStack, stringStack);
+			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "scroll_2")));
 		}
 
 		// Mana flask recipes
@@ -316,7 +326,7 @@ public final class WizardryRegistry {
 		for(Element element : Element.values()){
 			for(Tier tier : Tier.values()){
 				miscWandStack = new ItemStack(WizardryUtilities.getWand(tier, element), 1, OreDictionary.WILDCARD_VALUE);
-				GameRegistry.addShapelessRecipe(miscWandStack, miscWandStack, manaFlaskStack);
+				registry.register(new ShapelessOreRecipe(null, miscWandStack, miscWandStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "misc_wand")));
 			}
 		}
 
@@ -325,7 +335,7 @@ public final class WizardryRegistry {
 		for(Element element : Element.values()){
 			for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
 				miscArmourStack = new ItemStack(WizardryUtilities.getArmour(element, slot), 1, OreDictionary.WILDCARD_VALUE);
-				GameRegistry.addShapelessRecipe(miscArmourStack, miscArmourStack, manaFlaskStack);
+				registry.register(new ShapelessOreRecipe(null, miscArmourStack, miscArmourStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "misc_armour")));
 			}
 		}
 	}

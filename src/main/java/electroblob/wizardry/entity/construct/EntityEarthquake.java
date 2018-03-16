@@ -74,7 +74,7 @@ public class EntityEarthquake extends EntityMagicConstruct {
 			for(EntityLivingBase target : targets){
 
 				// Searches in a 1 wide ring.
-				if(this.getDistanceToEntity(target) > (this.ticksExisted * speed) + 0.5 && target.posY < this.posY + 1
+				if(this.getDistance(target) > (this.ticksExisted * speed) + 0.5 && target.posY < this.posY + 1
 						&& target.posY > this.posY - 1){
 
 					// Knockback must be removed in this instance, or the target will fall into the floor.

@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityIceSpike;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -32,7 +32,7 @@ public class RenderIceSpike extends Render<EntityIceSpike> {
 		// with setLightmapTextureCoords.
 		GlStateManager.disableLighting();
 
-		int j = entity.getBrightnessForRender(partialTickTime);
+		int j = entity.getBrightnessForRender();
 		int k = j % 65536;
 		int l = j / 65536;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k / 1.0F, (float)l / 1.0F);
@@ -40,7 +40,7 @@ public class RenderIceSpike extends Render<EntityIceSpike> {
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 
 		bindTexture(texture);
 

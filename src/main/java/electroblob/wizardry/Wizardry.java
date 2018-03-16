@@ -7,31 +7,29 @@ import electroblob.wizardry.command.CommandDiscoverSpell;
 import electroblob.wizardry.command.CommandSetAlly;
 import electroblob.wizardry.command.CommandViewAllies;
 import electroblob.wizardry.packet.WizardryPacketHandler;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryRegistry;
 import electroblob.wizardry.registry.WizardryTabs;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.AchievementPage;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.RegistryEvent.MissingMappings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.Type;
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob." + Wizardry.MODID + ".WizardryGuiFactory")
 public class Wizardry {
@@ -140,9 +138,6 @@ public class Wizardry {
 		// The check for the generateLoot setting is now done within this method.
 		WizardryRegistry.registerLoot();
 
-		// NOTE: Will need to be moved to init for 1.12, as will anything that needs to be after the registry events.
-		WizardryTabs.sort();
-
 		// Moved to preInit, because apparently it has to be here now.
 		proxy.registerRenderers();
 		// It seems this also has to be here
@@ -163,12 +158,8 @@ public class Wizardry {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new WizardryGuiHandler());
 		WizardryPacketHandler.initPackets();
 
-		// Achievements
-		AchievementPage.registerAchievementPage(WizardryAchievements.WIZARDRY_ACHIEVEMENT_PAGE);
-
-		// Recipes
-		WizardryRegistry.registerRecipes();
-
+		// NOTE: Will need to be moved to init for 1.12, as will anything that needs to be after the registry events.
+		WizardryTabs.sort();
 		proxy.initGuiBits();
 	}
 
@@ -203,14 +194,14 @@ public class Wizardry {
 	// NOTE: Needs changing to RegistryEvent.MissingMapping in 1.12, or just removing since nobody updates minecraft
 	// versions when using mods.
 	@EventHandler
-	public static void onMissingMappingEvent(FMLMissingMappingsEvent event){
+	public static void onMissingMappingEvent(RegistryEvent.MissingMappings<Item> event){
 		// Just get, not getAll, since the mod id didn't change!
-		for(FMLMissingMappingsEvent.MissingMapping mapping : event.get()){
-			if(mapping.type == Type.ITEM && mapping.resourceLocation.getResourceDomain().equals(Wizardry.MODID)){
+		for(MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
+			if(mapping.key.getResourceDomain().equals(Wizardry.MODID)){
 
 				Item replacement = null;
 
-				switch(mapping.resourceLocation.getResourcePath()){
+				switch(mapping.key.getResourcePath()){
 
 				case "wand_basic": replacement = WizardryItems.magic_wand; break;
 				case "wand_basic_fire": replacement = WizardryItems.basic_fire_wand; break;

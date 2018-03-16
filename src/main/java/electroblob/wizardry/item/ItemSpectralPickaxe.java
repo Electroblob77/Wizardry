@@ -1,12 +1,9 @@
 package electroblob.wizardry.item;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,9 +12,9 @@ public class ItemSpectralPickaxe extends ItemPickaxe implements IConjuredItem {
 
 	public ItemSpectralPickaxe(ToolMaterial material){
 		super(material);
-		this.setMaxDamage(getBaseDuration());
-		this.setNoRepair();
-		this.setCreativeTab(null);
+		setMaxDamage(getBaseDuration());
+		setNoRepair();
+		setCreativeTab(null);
 	}
 
 	@Override
@@ -70,12 +67,6 @@ public class ItemSpectralPickaxe extends ItemPickaxe implements IConjuredItem {
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player){
 		return false;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-		subItems.add(new ItemStack(this, 1));
 	}
 
 }

@@ -1,0 +1,21 @@
+{
+	"display": {
+		"icon": {
+			"item": "wizardry:wizard_hat"
+		},
+		"title": {
+			"translate": "achievement.armour_set"
+		},
+		"description": {
+			"translate": "achievement.armour_set.desc"
+		},
+		"frame": "task",
+		"announce_to_chat": false
+	},
+	"parent": "wizardry:arcane_initiate",
+	"criteria": {
+      "coded_trigger": {
+        "trigger": "minecraft:impossible"
+      }
+	}
+}

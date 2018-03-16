@@ -1,6 +1,7 @@
 package electroblob.wizardry.constants;
 
 import electroblob.wizardry.Wizardry;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -39,7 +40,7 @@ public enum Element {
 	/** Returns the translated display name of this element, without formatting. */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("element." + getUnlocalisedName());
+		return I18n.format("element." + getUnlocalisedName());
 	}
 
 	/** Returns the {@link Style} object representing the colour of this element. */

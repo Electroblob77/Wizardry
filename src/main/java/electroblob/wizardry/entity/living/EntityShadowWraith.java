@@ -18,6 +18,7 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -102,7 +103,7 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(){
+	protected SoundEvent getHurtSound(DamageSource source){
 		return SoundEvents.ENTITY_BLAZE_HURT;
 	}
 
@@ -113,12 +114,12 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float partialTicks){
+	public int getBrightnessForRender(){
 		return 15728880;
 	}
 
 	@Override
-	public float getBrightness(float partialTicks){
+	public float getBrightness(){
 		return 1.0F;
 	}
 

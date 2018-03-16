@@ -12,11 +12,12 @@ import java.util.Set;
 import com.google.common.base.Predicate;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -400,11 +401,11 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		// Achievements
 		if(this.getCustomer() != null){
-			this.getCustomer().addStat(WizardryAchievements.wizard_trade);
+			AdvancementHelper.grantAdvancement(getCustomer(), EnumAdvancement.wizard_trade);
 
 			if(merchantrecipe.getItemToSell().getItem() instanceof ItemSpellBook
 					&& Spell.get(merchantrecipe.getItemToSell().getItemDamage()).tier == Tier.MASTER){
-				this.getCustomer().addStat(WizardryAchievements.buy_master_spell);
+				AdvancementHelper.grantAdvancement(getCustomer(), EnumAdvancement.buy_master_spell);
 			}
 		}
 
@@ -775,7 +776,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	public boolean attackEntityFrom(DamageSource source, float damage){
 
 		if(source.getTrueSource() instanceof EntityPlayer){
-			((EntityPlayer)source.getTrueSource()).addStat(WizardryAchievements.anger_wizard);
+			AdvancementHelper.grantAdvancement((EntityPlayer)source.getTrueSource(), EnumAdvancement.anger_wizard);
 		}
 
 		return super.attackEntityFrom(source, damage);
@@ -817,7 +818,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 				for(EntityWizard wizard : wizards){
 					if(wizard.isBlockPartOfTower(event.getPos())){
 						wizard.setRevengeTarget(event.getPlayer());
-						event.getPlayer().addStat(WizardryAchievements.anger_wizard);
+						AdvancementHelper.grantAdvancement(event.getPlayer(), EnumAdvancement.anger_wizard);
 					}
 				}
 			}

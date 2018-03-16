@@ -14,6 +14,7 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -103,7 +104,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(){
+	protected SoundEvent getHurtSound(DamageSource source){
 		return SoundEvents.ENTITY_BLAZE_HURT;
 	}
 
@@ -114,12 +115,12 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float par1){
+	public int getBrightnessForRender(){
 		return 15728880;
 	}
 
 	@Override
-	public float getBrightness(float par1){
+	public float getBrightness(){
 		return 1.0F;
 	}
 

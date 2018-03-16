@@ -1,15 +1,14 @@
 package electroblob.wizardry.item;
 
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -17,11 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 
 	public ItemSpectralArmour(ArmorMaterial material, int renderIndex, EntityEquipmentSlot armourType){
-
 		super(material, renderIndex, armourType);
-
-		this.setCreativeTab(null);
-		this.setMaxDamage(getBaseDuration());
+		setCreativeTab(null);
+		setMaxDamage(getBaseDuration());
 	}
 
 	@Override
@@ -92,21 +89,16 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
-			EntityEquipmentSlot armorSlot, net.minecraft.client.model.ModelBiped _default){
-		net.minecraft.client.renderer.GlStateManager.enableBlend();
-		net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate(
-				net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA,
-				net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-				net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE,
-				net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO);
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
+			EntityEquipmentSlot armorSlot, ModelBiped _default){
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(
+			GlStateManager.SourceFactor.SRC_ALPHA,
+			GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+			GlStateManager.SourceFactor.ONE,
+			GlStateManager.DestFactor.ZERO
+		);
 		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item parItem, CreativeTabs parTab, NonNullList<ItemStack> parListSubItems){
-		parListSubItems.add(new ItemStack(this, 1));
 	}
 
 }

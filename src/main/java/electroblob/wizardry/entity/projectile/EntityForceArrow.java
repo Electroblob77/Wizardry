@@ -83,7 +83,7 @@ public class EntityForceArrow extends EntityMagicArrow {
 
 	@Override
 	protected void entityInit(){
-
+		// auto generated
 	}
 
 }

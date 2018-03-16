@@ -1,9 +1,10 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
@@ -109,11 +110,11 @@ public class LightningBolt extends Spell {
 					event.getLightning().getEntityData().getUniqueId("summoningPlayer"));
 
 			if(event.getEntity() instanceof EntityCreeper){
-				player.addStat(WizardryAchievements.charge_creeper);
+				AdvancementHelper.grantAdvancement(player, EnumAdvancement.charge_creeper);
 			}
 
 			if(event.getEntity() instanceof EntityPig){
-				player.addStat(WizardryAchievements.frankenstein);
+				AdvancementHelper.grantAdvancement(player, EnumAdvancement.frankenstein);
 			}
 		}
 

@@ -3,12 +3,14 @@ package electroblob.wizardry.item;
 import java.util.List;
 
 import electroblob.wizardry.WizardData;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.event.DiscoverSpellEvent;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -16,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,7 +28,7 @@ public class ItemIdentificationScroll extends Item {
 
 	public ItemIdentificationScroll(){
 		super();
-		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		setCreativeTab(WizardryTabs.WIZARDRY);
 	}
 
 	@Override
@@ -38,9 +39,9 @@ public class ItemIdentificationScroll extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean par4){
-		tooltip.add(net.minecraft.client.resources.I18n.format("item.wizardry:identification_scroll.desc1", "\u00A77"));
-		tooltip.add(net.minecraft.client.resources.I18n.format("item.wizardry:identification_scroll.desc2", "\u00A77"));
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag par4){
+		tooltip.add(I18n.format("item.wizardry:identification_scroll.desc1", "\u00A77"));
+		tooltip.add(I18n.format("item.wizardry:identification_scroll.desc2", "\u00A77"));
 	}
 
 	@Override
@@ -64,7 +65,7 @@ public class ItemIdentificationScroll extends Item {
 							// Identification scrolls give the chat readout in creative mode, otherwise it looks like
 							// nothing happens!
 							properties.discoverSpell(spell);
-							player.addStat(WizardryAchievements.identify_spell);
+							AdvancementHelper.grantAdvancement(player, EnumAdvancement.identify_spell);
 							player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
 							if(!player.capabilities.isCreativeMode) stack.shrink(1);
 							if(!world.isRemote) player.sendMessage(new TextComponentTranslation("spell.discover",
@@ -82,10 +83,5 @@ public class ItemIdentificationScroll extends Item {
 
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item parItem, CreativeTabs parTab, NonNullList<ItemStack> parListSubItems){
-		parListSubItems.add(new ItemStack(this, 1));
-	}
+	
 }

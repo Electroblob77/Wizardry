@@ -4,11 +4,11 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -139,9 +139,9 @@ public abstract class ParticleCustomTexture extends Particle {
 	// Overridden to bind the new texture. I think this can be done with TextureAtlasSprite, but this works as it is
 	// so I'm not changing it for the time being.
 	@Override
-	public void renderParticle(VertexBuffer buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ,
+	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ){
-
+		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
 

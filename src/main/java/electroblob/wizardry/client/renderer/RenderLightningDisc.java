@@ -3,10 +3,10 @@ package electroblob.wizardry.client.renderer;
 import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.entity.projectile.EntityLightningDisc;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -48,7 +48,7 @@ public class RenderLightningDisc extends Render<EntityLightningDisc> {
 		GlStateManager.scale(scale, scale, scale);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		// tessellator.setColorRGBA_I(k1, 128);
 		// buffer.normal(0.0F, 1.0F, 0.0F);

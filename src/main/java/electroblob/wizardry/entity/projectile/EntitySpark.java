@@ -68,7 +68,7 @@ public class EntitySpark extends EntityMagicProjectile {
 
 		super.onUpdate();
 
-		if(!this.isCollided && !world.isRemote){
+		if(!this.collided && !world.isRemote){
 
 			double seekingRange = 5.0d;
 
@@ -78,7 +78,7 @@ public class EntitySpark extends EntityMagicProjectile {
 
 			for(Entity possibleTarget : entities){
 				// Decides if current entity should be replaced.
-				if(target == null || this.getDistanceToEntity(target) > this.getDistanceToEntity(possibleTarget)){
+				if(target == null || this.getDistance(target) > this.getDistance(possibleTarget)){
 					// Decides if new entity is a valid target.
 					if(WizardryUtilities.isValidTarget(this.getThrower(), possibleTarget)){
 						target = possibleTarget;

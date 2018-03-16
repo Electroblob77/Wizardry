@@ -60,9 +60,9 @@ public class GreaterFireball extends Spell {
 						- (caster.posY + (double)(caster.height / 2.0F));
 				double dz = target.posZ - caster.posZ;
 
-				fireball.accelerationX = dx / caster.getDistanceToEntity(target) * 0.1;
-				fireball.accelerationY = dy / caster.getDistanceToEntity(target) * 0.1;
-				fireball.accelerationZ = dz / caster.getDistanceToEntity(target) * 0.1;
+				fireball.accelerationX = dx / caster.getDistance(target) * 0.1;
+				fireball.accelerationY = dy / caster.getDistance(target) * 0.1;
+				fireball.accelerationZ = dz / caster.getDistance(target) * 0.1;
 
 				fireball.setPosition(caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ);
 

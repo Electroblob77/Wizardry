@@ -40,7 +40,7 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 	public EntityMagicProjectile(World world, EntityLivingBase thrower, float damageMultiplier){
 		super(world, thrower);
 		// This is the standard set of parameters for this method, used by snowballs and ender pearls amongst others.
-		this.setHeadingFromThrower(thrower, thrower.rotationPitch, thrower.rotationYaw, 0.0f, this.getSpeed(), 1.0f);
+		this.shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0.0f, this.getSpeed(), 1.0f);
 		this.damageMultiplier = damageMultiplier;
 	}
 
@@ -61,9 +61,9 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 				- (this.posY + (double)(this.height / 2.0F));
 		double dz = target.posZ - this.posZ;
 
-		this.motionX = dx / this.getDistanceToEntity(target) * velocity;
-		this.motionY = dy / this.getDistanceToEntity(target) * velocity;
-		this.motionZ = dz / this.getDistanceToEntity(target) * velocity;
+		this.motionX = dx / this.getDistance(target) * velocity;
+		this.motionY = dy / this.getDistance(target) * velocity;
+		this.motionZ = dz / this.getDistance(target) * velocity;
 	}
 	
 	@Override

@@ -3,24 +3,26 @@ package electroblob.wizardry.item;
 import java.util.List;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Petrify;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHandSide;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,19 +38,19 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 	public ItemWizardArmour(ArmorMaterial material, int renderIndex, EntityEquipmentSlot armourType, Element element){
 		super(material, renderIndex, armourType);
 		this.element = element;
-		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		setCreativeTab(WizardryTabs.WIZARDRY);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced){
 
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) tooltip
-		.add("\u00A7d" + net.minecraft.client.resources.I18n.format("item.wizardry:wizard_armour.legendary"));
+		.add("\u00A7d" + I18n.format("item.wizardry:wizard_armour.legendary"));
 		if(element != null)
-			tooltip.add("\u00A78" + net.minecraft.client.resources.I18n.format("item.wizardry:wizard_armour.buff",
+			tooltip.add("\u00A78" + I18n.format("item.wizardry:wizard_armour.buff",
 					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100) + "%", element.getDisplayName()));
-		tooltip.add("\u00A79" + net.minecraft.client.resources.I18n.format("item.wizardry:wizard_armour.mana",
+		tooltip.add("\u00A79" + I18n.format("item.wizardry:wizard_armour.mana",
 				(this.getMaxDamage(stack) - this.getDamage(stack)), this.getMaxDamage(stack)));
 	}
 
@@ -65,10 +67,10 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
-			EntityEquipmentSlot armourSlot, net.minecraft.client.model.ModelBiped _default){
+	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
+			EntityEquipmentSlot armourSlot, ModelBiped _default){
 
-		net.minecraft.client.model.ModelBiped model = Wizardry.proxy.getWizardArmourModel();
+		ModelBiped model = Wizardry.proxy.getWizardArmourModel();
 
 		// Legs use modelBiped
 		if(armourSlot == EntityEquipmentSlot.LEGS) return null;
@@ -96,29 +98,29 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 			ItemStack itemstackL = leftHanded ? entityLiving.getHeldItemMainhand() : entityLiving.getHeldItemOffhand();
 
 			if(!itemstackR.isEmpty()){
-				model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
+				model.rightArmPose = ModelBiped.ArmPose.ITEM;
 
 				if(entityLiving.getItemInUseCount() > 0){
 					EnumAction enumaction = itemstackR.getItemUseAction();
 
 					if(enumaction == EnumAction.BLOCK){
-						model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BLOCK;
+						model.rightArmPose = ModelBiped.ArmPose.BLOCK;
 					}else if(enumaction == EnumAction.BOW){
-						model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BOW_AND_ARROW;
+						model.rightArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
 					}
 				}
 			}
 
 			if(!itemstackL.isEmpty()){
-				model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
+				model.leftArmPose = ModelBiped.ArmPose.ITEM;
 
 				if(entityLiving.getItemInUseCount() > 0){
 					EnumAction enumaction1 = itemstackL.getItemUseAction();
 
 					if(enumaction1 == EnumAction.BLOCK){
-						model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BLOCK;
+						model.leftArmPose = ModelBiped.ArmPose.BLOCK;
 					}else if(enumaction1 == EnumAction.BOW){
-						model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BOW_AND_ARROW;
+						model.leftArmPose = ModelBiped.ArmPose.BOW_AND_ARROW;
 					}
 				}
 			}
@@ -200,12 +202,6 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 		}
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> subItems){
-		subItems.add(new ItemStack(this, 1));
-	}
-
 	/**
 	 * Returns the EntityEquipmentSlot for which index() returns an integer equal to the passed in slotIndex and which
 	 * is an armour slot (not a hand slot). This only exists because the 1.10.2/1.11.2 versions of Forge still uses an 
@@ -237,7 +233,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 				}
 			}
 			// If it gets this far, then all slots must be wizard armour, so trigger the achievement.
-			player.addStat(WizardryAchievements.armour_set);
+			AdvancementHelper.grantAdvancement(player, EnumAdvancement.armour_set);
 		}
 	}
 

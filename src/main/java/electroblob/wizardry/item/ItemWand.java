@@ -5,6 +5,8 @@ import java.util.List;
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -13,7 +15,6 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardryTabs;
@@ -21,7 +22,11 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,7 +38,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -70,7 +74,7 @@ public class ItemWand extends Item {
 		}
 		this.tier = tier;
 		this.element = element;
-		this.setMaxDamage(this.tier.maxCharge);
+		setMaxDamage(this.tier.maxCharge);
 	}
 
 	@Override
@@ -81,14 +85,8 @@ public class ItemWand extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
+	public FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item parItem, CreativeTabs parTab, NonNullList<ItemStack> parListSubItems){
-		parListSubItems.add(new ItemStack(this, 1));
 	}
 
 	// Max damage is modifiable with upgrades.
@@ -100,8 +98,8 @@ public class ItemWand extends Item {
 	}
 
 	@Override
-	public void onCreated(ItemStack stack, World par2World, EntityPlayer par3EntityPlayer){
-		par3EntityPlayer.addStat(WizardryAchievements.arcane_initiate);
+	public void onCreated(ItemStack stack, World par2World, EntityPlayer player){
+		AdvancementHelper.grantAdvancement(player, EnumAdvancement.arcane_initiate);
 	}
 
 	@Override
@@ -123,7 +121,7 @@ public class ItemWand extends Item {
 			// EDIT: There is a way to check, using StatFileWriter#hasAchievementUnlocked, but this ends up calling the
 			// same
 			// thing as addStat anyway, meaning there's no point and it's probably not much of a problem anyway.
-			((EntityPlayer)entity).addStat(WizardryAchievements.elemental);
+			AdvancementHelper.grantAdvancement((EntityPlayer)entity, EnumAdvancement.elemental);
 		}
 	}
 
@@ -155,10 +153,11 @@ public class ItemWand extends Item {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack itemstack, EntityPlayer player, List<String> text, boolean advanced){
-
+	public void addInformation(ItemStack itemstack, World world, List<String> text, ITooltipFlag advanced){
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		if (player == null) { return; }
 		// +0.5f is necessary due to the error in the way floats are calculated.
-		if(element != null) text.add("\u00A78" + net.minecraft.client.resources.I18n.format("item.wizardry:wand.buff",
+		if(element != null) text.add("\u00A78" + I18n.format("item.wizardry:wand.buff",
 				(int)((tier.level + 1) * Constants.DAMAGE_INCREASE_PER_TIER * 100 + 0.5f) + "%",
 				element.getDisplayName()));
 
@@ -170,11 +169,11 @@ public class ItemWand extends Item {
 			discovered = false;
 		}
 
-		text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item.wizardry:wand.spell",
+		text.add("\u00A77" + I18n.format("item.wizardry:wand.spell",
 				discovered ? "\u00A77" + spell.getDisplayNameWithFormatting()
 						: "#\u00A79" + SpellGlyphData.getGlyphName(spell, player.world)));
 
-		text.add("\u00A79" + net.minecraft.client.resources.I18n.format("item.wizardry:wand.mana",
+		text.add("\u00A79" + I18n.format("item.wizardry:wand.mana",
 				(this.getMaxDamage(itemstack) - this.getDamage(itemstack)), this.getMaxDamage(itemstack)));
 	}
 

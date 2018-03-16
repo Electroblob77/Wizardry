@@ -1,12 +1,13 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.EntityWizard;
 import electroblob.wizardry.event.SpellCastEvent;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -43,7 +44,7 @@ public class ArcaneJammer extends Spell {
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && WizardryUtilities.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase entity = (EntityLivingBase)rayTrace.entityHit;
-			if(entity instanceof EntityWizard) caster.addStat(WizardryAchievements.jam_wizard);
+			if(entity instanceof EntityWizard) { AdvancementHelper.grantAdvancement(caster, EnumAdvancement.jam_wizard); }
 
 			if(!world.isRemote){
 				entity.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer,
@@ -78,9 +79,9 @@ public class ArcaneJammer extends Spell {
 
 			if(world.isRemote){
 
-				double dx = (target.posX - caster.posX) / caster.getDistanceToEntity(target);
-				double dy = (target.posY - caster.posY) / caster.getDistanceToEntity(target);
-				double dz = (target.posZ - caster.posZ) / caster.getDistanceToEntity(target);
+				double dx = (target.posX - caster.posX) / caster.getDistance(target);
+				double dy = (target.posY - caster.posY) / caster.getDistance(target);
+				double dz = (target.posZ - caster.posZ) / caster.getDistance(target);
 
 				for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
 

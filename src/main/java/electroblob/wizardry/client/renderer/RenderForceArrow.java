@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.projectile.EntityForceArrow;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -44,7 +44,7 @@ public class RenderForceArrow extends Render<EntityForceArrow> {
 				0.0F, 1.0F);
 		GlStateManager.rotate(180, 0, 1, 0);
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 		float pixel = 1.0f / 32.0f;
 		float u1 = 0.0f;
 		float u2 = pixel * 14;

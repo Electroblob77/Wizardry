@@ -8,11 +8,12 @@ import java.util.Locale;
 import com.google.common.base.Predicate;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.advancement.AdvancementHelper;
+import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryAchievements;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -285,7 +286,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(){
+	protected SoundEvent getHurtSound(DamageSource source){
 		return SoundEvents.ENTITY_WITCH_HURT;
 	}
 
@@ -323,7 +324,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 
 		super.onDeath(source);
 		if(source.getTrueSource() instanceof EntityPlayer){
-			((EntityPlayer)source.getTrueSource()).addStat(WizardryAchievements.defeat_evil_wizard);
+			AdvancementHelper.grantAdvancement((EntityPlayer)source.getTrueSource(), EnumAdvancement.defeat_evil_wizard);
 		}
 	}
 

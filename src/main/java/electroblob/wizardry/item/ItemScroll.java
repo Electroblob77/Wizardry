@@ -8,6 +8,7 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -26,16 +27,17 @@ public class ItemScroll extends Item {
 
 	public ItemScroll(){
 		super();
-		this.setHasSubtypes(true);
-		this.setMaxStackSize(1);
-		this.setCreativeTab(WizardryTabs.SPELLS);
+		setHasSubtypes(true);
+		setMaxStackSize(1);
+		setCreativeTab(WizardryTabs.SPELLS);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs par2CreativeTabs, NonNullList<ItemStack> list){
-		for(Spell spell : Spell.getSpells(Spell.nonContinuousSpells)){
-			list.add(new ItemStack(item, 1, spell.id()));
+	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+		if (isInCreativeTab(tab)) {
+			for(Spell spell : Spell.getSpells(Spell.nonContinuousSpells)){
+				list.add(new ItemStack(this, 1, spell.id()));
+			}
 		}
 	}
 
@@ -114,7 +116,7 @@ public class ItemScroll extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
+	public FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
 	}
 }

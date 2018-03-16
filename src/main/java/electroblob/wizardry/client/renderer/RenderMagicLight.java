@@ -5,11 +5,11 @@ import org.lwjgl.opengl.GL11;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
@@ -22,8 +22,8 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 			"textures/entity/light_aura.png");
 
 	@Override
-	public void renderTileEntityAt(TileEntityMagicLight tileentity, double x, double y, double z, float f,
-			int destroyStage){
+	public void render(TileEntityMagicLight tileentity, double x, double y, double z, float f,
+			int destroyStage, float alpha){
 
 		GlStateManager.pushMatrix();
 
@@ -49,7 +49,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 		// Renders the aura effect
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 
 		GlStateManager.pushMatrix();
 

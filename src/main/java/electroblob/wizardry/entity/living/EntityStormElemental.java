@@ -18,6 +18,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -95,7 +96,7 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 	}
 
 	@Override
-	protected SoundEvent getHurtSound(){
+	protected SoundEvent getHurtSound(DamageSource source){
 		return SoundEvents.ENTITY_BLAZE_HURT;
 	}
 
@@ -106,12 +107,12 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(float partialTicks){
+	public int getBrightnessForRender(){
 		return 15728880;
 	}
 
 	@Override
-	public float getBrightness(float partialTicks){
+	public float getBrightness(){
 		return 1.0F;
 	}
 

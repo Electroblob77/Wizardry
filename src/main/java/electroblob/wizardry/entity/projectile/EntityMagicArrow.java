@@ -122,7 +122,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 			// f4 depends on the horizontal distance between the two entities and accounts for bullet drop,
 			// but of course if gravity is ignored this should be 0.
 			float bulletDropCompensation = this.doGravity() ? (float)d3 * 0.2F : 0;
-			this.setThrowableHeading(d0, d1 + (double)bulletDropCompensation, d2, speed, aimingError);
+			this.shoot(d0, d1 + (double)bulletDropCompensation, d2, speed, aimingError);
 		}
 	}
 
@@ -148,7 +148,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI)
 				* MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
 		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, speed * 1.5F, 1.0F);
+		this.shoot(this.motionX, this.motionY, this.motionZ, speed * 1.5F, 1.0F);
 	}
 
 	/** Subclasses must override this to set their own base damage. */
@@ -183,7 +183,8 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	/**
 	 * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
 	 */
-	public void setThrowableHeading(double x, double y, double z, float speed, float randomness){
+	@Override
+	public void shoot(double x, double y, double z, float speed, float randomness){
 		float f2 = MathHelper.sqrt(x * x + y * y + z * z);
 		x /= (double)f2;
 		y /= (double)f2;
@@ -578,5 +579,10 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
 	public void setShootingEntity(EntityLivingBase entity){
 		shootingEntity = new WeakReference<EntityLivingBase>(entity);
+	}
+
+	@Override
+	protected void entityInit() {
+		// TODO Auto-generated method stub
 	}
 }

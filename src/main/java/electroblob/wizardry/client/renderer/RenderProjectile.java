@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.entity.projectile.EntityMagicProjectile;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -48,7 +48,7 @@ public class RenderProjectile extends Render<EntityMagicProjectile> {
 		GlStateManager.scale(f2 / 1.0F, f2 / 1.0F, f2 / 1.0F);
 
 		Tessellator tessellator = Tessellator.getInstance();
-		VertexBuffer buffer = tessellator.getBuffer();
+		BufferBuilder buffer = tessellator.getBuffer();
 
 		float f3 = 0.0f;
 		float f4 = 1.0f;
