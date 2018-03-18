@@ -1,0 +1,19 @@
+{
+    "display": {
+        "title": {
+            "translate": "achievement.max_out_wand"
+        },
+        "description": {
+            "translate": "achievement.max_out_wand.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:arcane_tome"
+        }
+    },
+    "parent": "ebwizardry:special_upgrade",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_max_out_wand"
+        }
+    }
+}

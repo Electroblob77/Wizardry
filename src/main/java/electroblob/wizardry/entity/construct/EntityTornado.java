@@ -1,10 +1,7 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.advancement.AdvancementHelper;
-import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -23,6 +20,8 @@ import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityTornado extends EntityMagicConstruct {
 
@@ -104,7 +103,7 @@ public class EntityTornado extends EntityMagicConstruct {
 
 					// The 'Not Again...' achievement
 					if(target instanceof EntityPig && WizardryUtilities.getRider(target) instanceof EntityPlayer){
-						AdvancementHelper.grantAdvancement((EntityPlayer)WizardryUtilities.getRider(target), EnumAdvancement.pig_tornado);
+						WizardryAdvancementTriggers.pig_tornado.triggerFor((EntityPlayer)WizardryUtilities.getRider(target));
 					}
 				}
 			}

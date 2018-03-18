@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        " x ",
+        "xyx",
+        " x "
+    ],
+    "key": {
+        "x": {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        },
+        "y": {
+            "item": "ebwizardry:magic_crystal"
+        }
+    },
+    "result": {
+        "item": "ebwizardry:transportation_stone",
+        "count": 2
+    }
+}

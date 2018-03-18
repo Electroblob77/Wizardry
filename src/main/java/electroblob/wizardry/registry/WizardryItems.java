@@ -103,12 +103,7 @@ public final class WizardryItems {
 	public static final Item spectral_pickaxe = new ItemSpectralPickaxe(ToolMaterial.IRON);
 	public static final Item spectral_bow = new ItemSpectralBow();
 
-	public static final Item mana_flask = new Item(){
-		@Override
-		public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer player){
-			AdvancementHelper.grantAdvancement(player, EnumAdvancement.craft_flask);
-		}
-	}.setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Item mana_flask = new Item().setCreativeTab(WizardryTabs.WIZARDRY);
 
 	public static final Item storage_upgrade = new Item().setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Item siphon_upgrade = new Item().setCreativeTab(WizardryTabs.WIZARDRY);
@@ -277,7 +272,7 @@ public final class WizardryItems {
 	 * @param registry The registry to register the given item to.
 	 * @param item The item to register.
 	 * @param name The name of the item, without the mod ID or the .name stuff. The registry name will be
-	 *        {@code wizardry:[name]}. The unlocalised name will be {@code item.wizardry:[name].name}.
+	 *        {@code ebwizardry:[name]}. The unlocalised name will be {@code item.ebwizardry:[name].name}.
 	 */
 	public static void registerItem(IForgeRegistry<Item> registry, Item item, String name){
 		item.setRegistryName(Wizardry.MODID, name);

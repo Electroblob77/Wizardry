@@ -73,7 +73,7 @@ public final class WizardryBlocks {
 	 * @param registry The registry to register the given block to.
 	 * @param item The block to register.
 	 * @param name The name of the block, without the mod ID or the .name stuff. The registry name will be
-	 *        {@code wizardry:[name]}. The unlocalised name will be {@code tile.wizardry:[name].name}.
+	 *        {@code ebwizardry:[name]}. The unlocalised name will be {@code tile.ebwizardry:[name].name}.
 	 */
 	public static void registerBlock(IForgeRegistry<Block> registry, Block block, String name){
 		block.setRegistryName(Wizardry.MODID, name);

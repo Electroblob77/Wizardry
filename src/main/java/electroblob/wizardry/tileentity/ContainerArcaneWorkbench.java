@@ -1,8 +1,5 @@
 package electroblob.wizardry.tileentity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.advancement.AdvancementHelper;
@@ -10,12 +7,9 @@ import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.event.SpellBindEvent;
-import electroblob.wizardry.item.ItemArcaneTome;
-import electroblob.wizardry.item.ItemArmourUpgrade;
-import electroblob.wizardry.item.ItemSpellBook;
-import electroblob.wizardry.item.ItemWand;
-import electroblob.wizardry.item.ItemWizardArmour;
+import electroblob.wizardry.item.*;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WandHelper;
@@ -29,6 +23,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ContainerArcaneWorkbench extends Container {
 
@@ -298,7 +295,7 @@ public class ContainerArcaneWorkbench extends Container {
 						newWand.setItemDamage(newWand.getMaxDamage() - (wand.getMaxDamage() - wand.getItemDamage()));
 						this.putStackInSlot(WAND_SLOT, newWand);
 						this.putStackInSlot(UPGRADE_SLOT, ItemStack.EMPTY);
-						AdvancementHelper.grantAdvancement(player, EnumAdvancement.apprentice);
+						WizardryAdvancementTriggers.apprentice.triggerFor(player);
 					}
 					break;
 
@@ -321,7 +318,7 @@ public class ContainerArcaneWorkbench extends Container {
 						newWand.setItemDamage(newWand.getMaxDamage() - (wand.getMaxDamage() - wand.getItemDamage()));
 						this.putStackInSlot(WAND_SLOT, newWand);
 						this.putStackInSlot(UPGRADE_SLOT, ItemStack.EMPTY);
-						AdvancementHelper.grantAdvancement(player, EnumAdvancement.master);
+						WizardryAdvancementTriggers.master.triggerFor(player);
 					}
 					break;
 
@@ -375,10 +372,10 @@ public class ContainerArcaneWorkbench extends Container {
 					}
 
 					this.getSlot(UPGRADE_SLOT).decrStackSize(1);
-					AdvancementHelper.grantAdvancement(player, EnumAdvancement.special_upgrade);
+					WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
 
 					if(WandHelper.getTotalUpgrades(wand) == Tier.MASTER.upgradeLimit){
-						AdvancementHelper.grantAdvancement(player, EnumAdvancement.max_out_wand);
+						WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
 					}
 				}
 			}
@@ -429,7 +426,7 @@ public class ContainerArcaneWorkbench extends Container {
 				if(!wand.getTagCompound().hasKey("legendary")){
 					wand.getTagCompound().setBoolean("legendary", true);
 					this.putStackInSlot(UPGRADE_SLOT, ItemStack.EMPTY);
-					AdvancementHelper.grantAdvancement(player, EnumAdvancement.legendary);
+					WizardryAdvancementTriggers.legendary.triggerFor(player);
 				}
 			}
 			// Charges armour by appropriate amount

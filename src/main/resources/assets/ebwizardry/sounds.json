@@ -1,0 +1,39 @@
+{
+	"arc": {"category": "player","sounds": [
+		{"name": "ebwizardry:arc1","stream": false},
+		{"name": "ebwizardry:arc1","stream": false},
+		{"name": "ebwizardry:arc3","stream": false}
+		]},
+		
+	"aura": {"category": "player","sounds": [{"name": "ebwizardry:aura","stream": false}]},
+	"boom": {"category": "player","sounds": [{"name": "ebwizardry:boom","stream": false}]},
+	"crackle": {"category": "player","sounds": [{"name": "ebwizardry:crackle","stream": false}]},
+	
+	"darkaura": {"category": "player","sounds": [
+		{"name": "ebwizardry:darkaura1","stream": false},
+		{"name": "ebwizardry:darkaura2","stream": false}
+		]},
+		
+	"effect": {"category": "player","sounds": [
+		{"name": "ebwizardry:effect1","stream": false},
+		{"name": "ebwizardry:effect2","stream": false}
+		]},
+		
+	"electricitya": {"category": "player","sounds": [{"name": "ebwizardry:electricitya","stream": false}]},
+	"electricityb": {"category": "player","sounds": [{"name": "ebwizardry:electricityb","stream": false}]},
+	
+	"flameray": {"category": "player","sounds": [{"name": "ebwizardry:flameray2","stream": false}]},
+	"force": {"category": "player","sounds": [{"name": "ebwizardry:force","stream": false}]},
+		
+	"freeze": {"category": "player","sounds": [{"name": "ebwizardry:freeze","stream": false}]},
+	"frostray": {"category": "player","sounds": [{"name": "ebwizardry:frostray","stream": false}]},
+	"heal": {"category": "player","sounds": [{"name": "ebwizardry:heal","stream": false}]},
+	"ice": {"category": "player","sounds": [{"name": "ebwizardry:ice","stream": false}]},
+	"largeaura": {"category": "player","sounds": [{"name": "ebwizardry:largeaura","stream": false}]},
+	
+	"magic": {"category": "player","sounds": [{"name": "ebwizardry:magic1","stream": false}]},
+		
+	"sparkle": {"category": "player","sounds": [{"name": "ebwizardry:sparkle","stream": false}]},
+	"wind": {"category": "player","sounds": [{"name": "ebwizardry:wind","stream": false}]},
+	"rumble": {"category": "player","sounds": [{"name": "ebwizardry:rumble","stream": false}]}
+}

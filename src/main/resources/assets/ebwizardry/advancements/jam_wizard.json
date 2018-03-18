@@ -1,0 +1,19 @@
+{
+    "display": {
+        "title": {
+            "translate": "achievement.jam_wizard"
+        },
+        "description": {
+            "translate": "achievement.jam_wizard.desc"
+        },
+        "icon": {
+            "item": "minecraft:web"
+        }
+    },
+    "parent": "ebwizardry:apprentice",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_jam_wizard"
+        }
+    }
+}

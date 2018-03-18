@@ -1,0 +1,26 @@
+{
+    "display": {
+        "title": {
+            "translate": "achievement.arcane_initiate"
+        },
+        "description": {
+            "translate": "achievement.arcane_initiate.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:magic_wand"
+        }
+    },
+    "parent": "ebwizardry:crystal",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_wand"
+                    }
+                ]
+            }
+        }
+    }
+}

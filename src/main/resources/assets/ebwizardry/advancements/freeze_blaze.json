@@ -1,0 +1,19 @@
+{
+    "display": {
+        "title": {
+            "translate": "achievement.freeze_blaze"
+        },
+        "description": {
+            "translate": "achievement.freeze_blaze.desc"
+        },
+        "icon": {
+            "item": "minecraft:ice"
+        }
+    },
+    "parent": "ebwizardry:apprentice",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_freeze_blaze"
+        }
+    }
+}

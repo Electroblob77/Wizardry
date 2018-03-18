@@ -1,7 +1,5 @@
 package electroblob.wizardry;
 
-import org.apache.logging.log4j.Logger;
-
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
 import electroblob.wizardry.command.CommandSetAlly;
@@ -18,7 +16,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.RegistryEvent.MissingMappings;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -30,14 +27,15 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.Logger;
 
-@Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob." + Wizardry.MODID + ".WizardryGuiFactory")
+@Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob.wizardry.WizardryGuiFactory")
 public class Wizardry {
 
 	/** Wizardry's mod ID. */
 	// This is going to have to change for 1.12 or it'll conflict with the other wizardry mod.
 	// They were there first, it's only fair... although I wonder if that will have unintended side-effects?
-	public static final String MODID = "wizardry"; // How about 'ebwizardry', to keep it short?
+	public static final String MODID = "ebwizardry";
 	/** Wizardry's mod name, in readable form. */
 	public static final String NAME = "Electroblob's Wizardry";
 	/**
@@ -50,7 +48,7 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "3.1.0";
+	public static final String VERSION = "4.0.0";
 
 	// IDEA: Improve the algorithm that finds a place to summon creatures to take walls into account.
 	// IDEA: Replace all uses of Math.cos and Math.sin with MathHelper versions
@@ -138,6 +136,8 @@ public class Wizardry {
 		// The check for the generateLoot setting is now done within this method.
 		WizardryRegistry.registerLoot();
 
+		WizardryRegistry.registerAdvancementTriggers();
+
 		// Moved to preInit, because apparently it has to be here now.
 		proxy.registerRenderers();
 		// It seems this also has to be here
@@ -158,8 +158,6 @@ public class Wizardry {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new WizardryGuiHandler());
 		WizardryPacketHandler.initPackets();
 
-		// NOTE: Will need to be moved to init for 1.12, as will anything that needs to be after the registry events.
-		WizardryTabs.sort();
 		proxy.initGuiBits();
 	}
 
@@ -172,6 +170,7 @@ public class Wizardry {
 		 * '|'; } } // Cuts off the last '|' entityNames = entityNames.substring(0, entityNames.length()-1);
 		 * entityNamePattern = Pattern.compile(entityNames); */
 		proxy.initialiseLayers();
+		WizardryTabs.sort();
 	}
 
 	@EventHandler
@@ -196,7 +195,7 @@ public class Wizardry {
 	@EventHandler
 	public static void onMissingMappingEvent(RegistryEvent.MissingMappings<Item> event){
 		// Just get, not getAll, since the mod id didn't change!
-		for(MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
+		for(RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
 			if(mapping.key.getResourceDomain().equals(Wizardry.MODID)){
 
 				Item replacement = null;

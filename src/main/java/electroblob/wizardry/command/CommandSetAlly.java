@@ -40,8 +40,8 @@ public class CommandSetAlly extends CommandBase {
 	public String getUsage(ICommandSender p_71518_1_){
 		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
 		// the custom command name will not display.
-		return "commands.wizardry:ally.usage";
-		// return I18n.format("commands.wizardry:ally.usage", Wizardry.settings.allyCommandName);
+		return "commands." + Wizardry.MODID + ":ally.usage";
+		// return I18n.format("commands." + Wizardry.MODID + ":ally.usage", Wizardry.settings.allyCommandName);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class CommandSetAlly extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException{
 
 		if(arguments.length < 1){
-			throw new WrongUsageException("commands.wizardry:ally.usage", Wizardry.settings.allyCommandName);
+			throw new WrongUsageException("commands." + Wizardry.MODID + ":ally.usage", Wizardry.settings.allyCommandName);
 		}else{
 
 			EntityPlayerMP allyOf = null;
@@ -86,7 +86,7 @@ public class CommandSetAlly extends CommandBase {
 						&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
 					// Displays a chat message if a non-op tries to modify another player's allies.
 					TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
-							"commands.wizardry:ally.permission");
+							"commands." + Wizardry.MODID + ":ally.permission");
 					TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
 					allyOf.sendMessage(TextComponentTranslation2);
 					return;
@@ -100,12 +100,12 @@ public class CommandSetAlly extends CommandBase {
 			if(allyOf == null)
 				throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
 
-			if(allyOf == ally) throw new NumberInvalidException("commands.wizardry:ally.self");
+			if(allyOf == ally) throw new NumberInvalidException("commands." + Wizardry.MODID + ":ally.self");
 
 			if(WizardData.get(allyOf) != null){
 				String string = WizardData.get(allyOf).toggleAlly(ally) ? "add" : "remove";
 				if(executeAsOtherPlayer){
-					sender.sendMessage(new TextComponentTranslation("commands.wizardry:ally." + string + "ally",
+					sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":ally." + string + "ally",
 							ally.getName(), allyOf.getName()));
 					// In this case, the player whose allies have been modified is also notified.
 					allyOf.sendMessage(new TextComponentTranslation("item.wand." + string + "ally", ally.getName()));

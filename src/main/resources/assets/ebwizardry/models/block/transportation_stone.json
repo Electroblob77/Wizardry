@@ -1,0 +1,20 @@
+{
+    "parent": "block/block",
+	"textures": {
+        "all": "ebwizardry:blocks/transportation_stone",
+        "particle": "ebwizardry:blocks/transportation_stone"
+    },
+    "elements": [
+        {   "from": [ 5, 0, 5 ],
+            "to": [ 11, 6, 11 ],
+            "faces": {
+                "down":  { "texture": "#all", "cullface": "down" },
+                "up":    { "texture": "#all"},
+                "north": { "texture": "#all"},
+                "south": { "texture": "#all"},
+                "west":  { "texture": "#all"},
+                "east":  { "texture": "#all"}
+            }
+        }
+    ]
+}

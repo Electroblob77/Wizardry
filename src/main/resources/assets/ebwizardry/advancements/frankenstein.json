@@ -1,0 +1,19 @@
+{
+    "display": {
+        "title": {
+            "translate": "achievement.frankenstein"
+        },
+        "description": {
+            "translate": "achievement.frankenstein.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:advanced_lightning_wand"
+        }
+    },
+    "parent": "ebwizardry:charge_creeper",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_frankenstein"
+        }
+    }
+}

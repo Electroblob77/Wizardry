@@ -1,0 +1,28 @@
+{
+    "display": {
+        "title": {
+            "translate": "itemGroup.ebwizardry"
+        },
+        "description": {
+            "translate": "itemGroup.ebwizardry"
+        },
+        "show_toast": false,
+        "announce_to_chat": false,
+        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+        "icon": {
+            "item": "ebwizardry:wizard_handbook"
+        }
+    },
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal"
+                    }
+                ]
+            }
+        }
+    }
+}

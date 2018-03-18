@@ -3,6 +3,7 @@ package electroblob.wizardry.tileentity;
 import java.util.HashSet;
 import java.util.Set;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.WizardryBlocks;
@@ -125,7 +126,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public String getName(){
-		return "container.wizardry:arcane_workbench";
+		return "container." + Wizardry.MODID + ":arcane_workbench";
 	}
 
 	@Override

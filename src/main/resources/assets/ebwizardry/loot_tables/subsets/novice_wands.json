@@ -1,0 +1,50 @@
+{
+	"pools": [
+		{
+			"name": "wands",
+			"rolls": 1,
+			"entries": [
+				{
+                    "type": "item",
+                    "name": "ebwizardry:magic_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_fire_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_ice_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_lightning_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_necromancy_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_earth_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_sorcery_wand",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:basic_healing_wand",
+                    "weight": 1
+                }
+			]
+		}
+	]
+}

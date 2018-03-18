@@ -1,0 +1,50 @@
+{
+	"pools": [
+		{
+			"name": "upgrades",
+			"rolls": 1,
+			"entries": [
+				{
+                    "type": "item",
+                    "name": "ebwizardry:condenser_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:siphon_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:storage_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:range_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:duration_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:cooldown_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:blast_upgrade",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:attunement_upgrade",
+                    "weight": 1
+                }
+			]
+		}
+	]
+}

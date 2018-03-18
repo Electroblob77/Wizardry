@@ -1,0 +1,14 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "minecraft:book"
+        },
+        {
+            "item": "ebwizardry:magic_crystal"
+        }
+    ],
+    "result": {
+        "item": "ebwizardry:wizard_handbook"
+    }
+}

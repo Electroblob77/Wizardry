@@ -1,7 +1,5 @@
 package electroblob.wizardry.client;
 
-import org.lwjgl.input.Keyboard;
-
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
@@ -26,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import org.lwjgl.input.Keyboard;
 
 public class GuiArcaneWorkbench extends GuiContainer {
 
@@ -38,11 +37,15 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 	private final int tooltipWidth = 164;
 
+	// We report the actual size of the GUI to Minecraft when a wand is in so JEI doesn't overdraw it.
+	// For calculations, we use the size without the tooltip.
+	private final int xSizeNoTip = 176;
+
 	public GuiArcaneWorkbench(InventoryPlayer invPlayer, TileEntityArcaneWorkbench entity){
 		super(new ContainerArcaneWorkbench(invPlayer, entity));
 		this.playerInventory = invPlayer;
 		this.arcaneWorkbenchInventory = entity;
-		xSize = 176;
+		xSize = xSizeNoTip;
 		ySize = 220;
 	}
 
@@ -52,9 +55,11 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		// Tests if there is a wand in the workbench and edits the positioning accordingly
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots
 				.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
-			guiLeft = (this.width - this.xSize - tooltipWidth) / 2;
+			xSize = xSizeNoTip + tooltipWidth;
+			guiLeft = (this.width - this.xSize) / 2;
 			this.applyBtn.x = (this.width - tooltipWidth) / 2 + 48;
 		}else{
+			xSize = xSizeNoTip;
 			guiLeft = (this.width - this.xSize) / 2;
 			this.applyBtn.x = this.width / 2 + 48;
 		}
@@ -66,6 +71,9 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 
 		super.drawScreen(p_73863_1_, p_73863_2_, p_73863_3_);
+
+		// Required now, or item mouseover tooltips won't render.
+		this.renderHoveredToolTip(p_73863_1_, p_73863_2_);
 	}
 
 	@Override
@@ -77,7 +85,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		// Main inventory
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSizeNoTip, ySize);
 
 		// Changing slots
 		for(int i = 0; i < ContainerArcaneWorkbench.CRYSTAL_SLOT; i++){
@@ -91,10 +99,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
 
 			// Tooltip box
-			drawTexturedModalRect(guiLeft + xSize, guiTop, xSize, 0, 256 - xSize - 4, ySize);
-			drawTexturedModalRect(guiLeft + 252, guiTop, xSize + 4, 0, tooltipWidth - 2 * (256 - xSize - 4), ySize);
-			drawTexturedModalRect(guiLeft + xSize + tooltipWidth - (256 - xSize - 4), guiTop, xSize + 4, 0,
-					256 - xSize - 4, ySize);
+			drawTexturedModalRect(guiLeft + xSizeNoTip, guiTop, xSizeNoTip, 0, 256 - xSizeNoTip - 4, ySize);
+			drawTexturedModalRect(guiLeft + 252, guiTop, xSizeNoTip + 4, 0, tooltipWidth - 2 * (256 - xSizeNoTip - 4), ySize);
+			drawTexturedModalRect(guiLeft + xSize - (256 - xSizeNoTip - 4), guiTop, xSizeNoTip + 4, 0,
+					256 - xSizeNoTip - 4, ySize);
 
 			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack();
 
@@ -115,7 +123,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						.bindTexture(discovered ? spell.element.getIcon() : Element.MAGIC.getIcon());
 
 				// Renders the little element icon
-				WizardryUtilities.drawTexturedRect(guiLeft + xSize + 5, guiTop + 34 + 10 * i++, 8, 8);
+				WizardryUtilities.drawTexturedRect(guiLeft + xSizeNoTip + 5, guiTop + 34 + 10 * i++, 8, 8);
 			}
 
 			int x = 0;
@@ -129,8 +137,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				if(level > 0){
 					ItemStack stack = new ItemStack(item, level);
 					GlStateManager.enableDepth();
-					this.itemRender.renderItemAndEffectIntoGUI(stack, guiLeft + xSize + 6 + x, y);
-					this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack, guiLeft + xSize + 6 + x, y,
+					this.itemRender.renderItemAndEffectIntoGUI(stack, guiLeft + xSizeNoTip + 6 + x, y);
+					this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack, guiLeft + xSizeNoTip + 6 + x, y,
 							null);
 					x += 18;
 					GlStateManager.disableDepth();
@@ -161,11 +169,11 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack();
 
-			this.fontRenderer.drawStringWithShadow("\u00A7f" + wand.getDisplayName(), xSize + 6, 6, 0);
+			this.fontRenderer.drawStringWithShadow("\u00A7f" + wand.getDisplayName(), xSizeNoTip + 6, 6, 0);
 			this.fontRenderer.drawStringWithShadow(
-					"\u00A77" + I18n.format("container.wizardry:arcane_workbench.mana") + " "
+					"\u00A77" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.mana") + " "
 							+ (wand.getMaxDamage() - wand.getItemDamage()) + "/" + wand.getMaxDamage(),
-					xSize + 6, 20, 0);
+					xSizeNoTip + 6, 20, 0);
 
 			Spell[] spells = WandHelper.getSpells(wand);
 
@@ -180,10 +188,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				}
 
 				if(discovered){
-					this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), xSize + 16, y, 0);
+					this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), xSizeNoTip + 16, y, 0);
 				}else{
 					this.mc.standardGalacticFontRenderer.drawStringWithShadow(
-							"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), xSize + 16, y, 0);
+							"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), xSizeNoTip + 16, y, 0);
 				}
 				y += 10;
 			}
@@ -191,7 +199,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			if(WandHelper.getTotalUpgrades(wand) > 0){
 
 				this.fontRenderer.drawStringWithShadow(
-						"\u00A7f" + I18n.format("container.wizardry:arcane_workbench.upgrades"), xSize + 6, y + 6, 0);
+						"\u00A7f" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.upgrades"), xSizeNoTip + 6, y + 6, 0);
 
 				int x = 0;
 				y = 50 + spells.length * 10;
@@ -203,7 +211,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					if(level > 0){
 						// The javadoc for isPointInRegion is ambiguous; what it means is that the REGION is
 						// relative to the GUI but the POINT isn't.
-						if(isPointInRegion(xSize + 6 + x, y, 16, 16, mouseX, mouseY)){
+						if(isPointInRegion(xSizeNoTip + 6 + x, y, 16, 16, mouseX, mouseY)){
 							ItemStack stack = new ItemStack(item, level);
 							this.renderToolTip(stack, mouseX - guiLeft, mouseY - guiTop);
 						}

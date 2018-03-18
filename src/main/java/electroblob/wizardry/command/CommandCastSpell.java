@@ -1,7 +1,5 @@
 package electroblob.wizardry.command;
 
-import java.util.List;
-
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.SpellCastEvent;
@@ -10,12 +8,7 @@ import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.NumberInvalidException;
-import net.minecraft.command.PlayerNotFoundException;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.JsonToNBT;
@@ -28,6 +21,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+
+import java.util.List;
 
 public class CommandCastSpell extends CommandBase {
 
@@ -46,8 +41,8 @@ public class CommandCastSpell extends CommandBase {
 	public String getUsage(ICommandSender sender){
 		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
 		// the custom command name will not display.
-		return "commands.wizardry:cast.usage";
-		// return I18n.format("commands.wizardry:cast.usage", Wizardry.settings.castCommandName);
+		return "commands." + Wizardry.MODID + ":cast.usage";
+		// return I18n.format("commands." + Wizardry.MODID + ":cast.usage", Wizardry.settings.castCommandName);
 	}
 
 	@Override
@@ -66,7 +61,7 @@ public class CommandCastSpell extends CommandBase {
 	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException{
 
 		if(arguments.length < 1){
-			throw new WrongUsageException("commands.wizardry:cast.usage", Wizardry.settings.castCommandName);
+			throw new WrongUsageException("commands." + Wizardry.MODID + ":cast.usage", Wizardry.settings.castCommandName);
 		}else{
 
 			// ===== Parameter retrieval =====
@@ -85,7 +80,7 @@ public class CommandCastSpell extends CommandBase {
 			Spell spell = Spell.get(arguments[i++]);
 
 			if(spell == null){
-				throw new NumberInvalidException("commands.wizardry:cast.not_found", new Object[]{arguments[i - 1]});
+				throw new NumberInvalidException("commands." + Wizardry.MODID + ":cast.not_found", new Object[]{arguments[i - 1]});
 			}
 
 			boolean castAsOtherPlayer = false;
@@ -120,7 +115,7 @@ public class CommandCastSpell extends CommandBase {
 				try{
 					modifiers = SpellModifiers.fromNBT(JsonToNBT.getTagFromJson(nbt));
 				}catch (NBTException nbtexception){
-					throw new CommandException("commands.wizardry:cast.tag_error", nbtexception.getMessage());
+					throw new CommandException("commands." + Wizardry.MODID + ":cast.tag_error", nbtexception.getMessage());
 				}
 
 				for(float multiplier : modifiers.getModifiers().values()){
@@ -157,10 +152,10 @@ public class CommandCastSpell extends CommandBase {
 
 						if(castAsOtherPlayer){
 							sender.sendMessage(
-									new TextComponentTranslation("commands.wizardry:cast.success_remote_continuous",
+									new TextComponentTranslation("commands." + Wizardry.MODID + ":cast.success_remote_continuous",
 											spell.getNameForTranslationFormatted(), caster.getName()));
 						}else{
-							sender.sendMessage(new TextComponentTranslation("commands.wizardry:cast.success_continuous",
+							sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":cast.success_continuous",
 									spell.getNameForTranslationFormatted()));
 						}
 					}
@@ -183,10 +178,10 @@ public class CommandCastSpell extends CommandBase {
 					}
 
 					if(castAsOtherPlayer){
-						sender.sendMessage(new TextComponentTranslation("commands.wizardry:cast.success_remote",
+						sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":cast.success_remote",
 								spell.getNameForTranslationFormatted(), caster.getName()));
 					}else{
-						sender.sendMessage(new TextComponentTranslation("commands.wizardry:cast.success",
+						sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":cast.success",
 								spell.getNameForTranslationFormatted()));
 					}
 					return;
@@ -199,7 +194,7 @@ public class CommandCastSpell extends CommandBase {
 
 	/** Displays the "Unable to cast [spell]" message in the chat. */
 	private void displayFailMessage(ICommandSender sender, Spell spell){
-		ITextComponent message = new TextComponentTranslation("commands.wizardry:cast.fail",
+		ITextComponent message = new TextComponentTranslation("commands." + Wizardry.MODID + ":cast.fail",
 				spell.getNameForTranslationFormatted());
 		message.getStyle().setColor(TextFormatting.RED);
 		sender.sendMessage(message);

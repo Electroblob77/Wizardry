@@ -1,0 +1,170 @@
+{
+    "pools": [
+        {
+			"name": "armour",
+            "rolls": 1,
+            "entries": [
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_fire",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_ice",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_lightning",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_necromancy",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_earth",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_sorcery",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_hat_healing",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_fire",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_ice",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_lightning",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_necromancy",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_earth",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_sorcery",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_robe_healing",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_fire",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_ice",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_lightning",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_necromancy",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_earth",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_sorcery",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_leggings_healing",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_fire",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_ice",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_lightning",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_necromancy",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_earth",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_sorcery",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:wizard_boots_healing",
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}

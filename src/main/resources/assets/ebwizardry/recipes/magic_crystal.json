@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "ebwizardry:crystal_block"
+        }
+    ],
+    "result": {
+        "item": "ebwizardry:magic_crystal",
+        "amount": 9
+    }
+}

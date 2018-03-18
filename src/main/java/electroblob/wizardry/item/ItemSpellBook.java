@@ -25,6 +25,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
+import javax.annotation.Nullable;
+
 public class ItemSpellBook extends Item {
 
 	public ItemSpellBook(){
@@ -60,12 +62,11 @@ public class ItemSpellBook extends Item {
 		// Tooltip is left blank for wizards buying generic spell books.
 		if(itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
 			EntityPlayerSP player = Minecraft.getMinecraft().player;
-			if (player == null) { return; }
-			
+
 			Spell spell = Spell.get(itemstack.getItemDamage());
 
 			boolean discovered = true;
-			if(Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode && WizardData.get(player) != null
+			if(player != null && Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode && WizardData.get(player) != null
 					&& !WizardData.get(player).hasSpellBeenDiscovered(spell)){
 				discovered = false;
 			}

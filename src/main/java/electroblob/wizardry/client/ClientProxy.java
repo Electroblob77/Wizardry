@@ -155,8 +155,8 @@ public class ClientProxy extends CommonProxy {
 	public static MixedFontRenderer mixedFontRenderer;
 
 	// Key Bindings
-	public static final KeyBinding NEXT_SPELL = new KeyBinding("key.wizardry.next_spell", Keyboard.KEY_N, "key.categories.wizardry");
-	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key.wizardry.previous_spell", Keyboard.KEY_B, "key.categories.wizardry");
+	public static final KeyBinding NEXT_SPELL = new KeyBinding("key." + Wizardry.MODID + ".next_spell", Keyboard.KEY_N, "key.categories." + Wizardry.MODID);
+	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key." + Wizardry.MODID + ".previous_spell", Keyboard.KEY_B, "key.categories." + Wizardry.MODID);
 
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
@@ -246,9 +246,9 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		if(discovered){
-			return I18n.format("item.wizardry:scroll.name", spell.getDisplayName()).trim();
+			return I18n.format("item." + Wizardry.MODID + ":scroll.name", spell.getDisplayName()).trim();
 		}else{
-			return I18n.format("item.wizardry:scroll.undiscovered.name", "#" + SpellGlyphData.getGlyphName(spell, player.world) + "#").trim();
+			return I18n.format("item." + Wizardry.MODID + ":scroll.undiscovered.name", "#" + SpellGlyphData.getGlyphName(spell, player.world) + "#").trim();
 		}
 	}
 

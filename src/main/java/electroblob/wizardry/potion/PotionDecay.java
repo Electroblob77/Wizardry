@@ -28,7 +28,7 @@ public class PotionDecay extends Potion {
 	public PotionDecay(boolean isBadEffect, int liquidColour){
 		super(isBadEffect, liquidColour);
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
-		this.setPotionName("potion.wizardry:decay");
+		this.setPotionName("potion." + Wizardry.MODID + ":decay");
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED,
 				"85602e0b-4801-4a87-94f3-bf617c97014e", -Constants.DECAY_SLOWNESS_PER_LEVEL, 2);
 	}

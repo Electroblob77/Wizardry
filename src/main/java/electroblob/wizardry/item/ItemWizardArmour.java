@@ -1,17 +1,16 @@
 package electroblob.wizardry.item;
 
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.advancement.AdvancementHelper;
 import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.resources.I18n;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Petrify;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,6 +29,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 @Mod.EventBusSubscriber
 public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 
@@ -46,11 +48,11 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag advanced){
 
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) tooltip
-		.add("\u00A7d" + I18n.format("item.wizardry:wizard_armour.legendary"));
+		.add("\u00A7d" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.legendary"));
 		if(element != null)
-			tooltip.add("\u00A78" + I18n.format("item.wizardry:wizard_armour.buff",
+			tooltip.add("\u00A78" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.buff",
 					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100) + "%", element.getDisplayName()));
-		tooltip.add("\u00A79" + I18n.format("item.wizardry:wizard_armour.mana",
+		tooltip.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.mana",
 				(this.getMaxDamage(stack) - this.getDamage(stack)), this.getMaxDamage(stack)));
 	}
 
@@ -137,14 +139,14 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 		// Do note however that a texture pack could override this.
 		if(entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isInvisible()
 				&& !entity.getEntityData().getBoolean(Petrify.NBT_KEY))
-			return "wizardry:textures/armour/invisible_armour.png";
+			return "ebwizardry:textures/armour/invisible_armour.png";
 
 		if(slot == EntityEquipmentSlot.LEGS)
-			return this.element == null ? "wizardry:textures/armour/wizard_armour_legs.png"
-					: "wizardry:textures/armour/wizard_armour_" + this.element.getUnlocalisedName() + "_legs.png";
+			return this.element == null ? "ebwizardry:textures/armour/wizard_armour_legs.png"
+					: "ebwizardry:textures/armour/wizard_armour_" + this.element.getUnlocalisedName() + "_legs.png";
 
-		return this.element == null ? "wizardry:textures/armour/wizard_armour.png"
-				: "wizardry:textures/armour/wizard_armour_" + this.element.getUnlocalisedName() + ".png";
+		return this.element == null ? "ebwizardry:textures/armour/wizard_armour.png"
+				: "ebwizardry:textures/armour/wizard_armour_" + this.element.getUnlocalisedName() + ".png";
 	}
 
 	@Override
@@ -233,7 +235,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 				}
 			}
 			// If it gets this far, then all slots must be wizard armour, so trigger the achievement.
-			AdvancementHelper.grantAdvancement(player, EnumAdvancement.armour_set);
+			WizardryAdvancementTriggers.armour_set.triggerFor(player);
 		}
 	}
 

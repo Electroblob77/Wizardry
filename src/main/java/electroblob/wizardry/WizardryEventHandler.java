@@ -11,20 +11,11 @@ import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryEnchantments;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.FreezingWeapon;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,7 +48,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -85,7 +75,7 @@ public final class WizardryEventHandler {
 		if(Wizardry.settings.generateLoot){
 			for(String location : LOOT_INJECTION_LOCATIONS){
 				if(event.getName().toString().matches(location)){
-					event.getTable().addPool(getAdditive("wizardry:chests/dungeon_additions"));
+					event.getTable().addPool(getAdditive("ebwizardry:chests/dungeon_additions"));
 				}
 			}
 		}
@@ -354,7 +344,7 @@ public final class WizardryEventHandler {
 			}
 
 			if(event.getEntityLiving() == player && event.getSource() instanceof IElementalDamage){
-				AdvancementHelper.grantAdvancement(player, EnumAdvancement.self_destruct);
+				WizardryAdvancementTriggers.self_destruct.triggerFor(player);
 			}
 		}
 	}
@@ -381,13 +371,6 @@ public final class WizardryEventHandler {
 						event.getEntityLiving().posY, event.getEntityLiving().posZ,
 						new ItemStack(WizardryItems.spell_book, 1, id)));
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onItemPickupEvent(EntityItemPickupEvent event){
-		if(event.getItem().getItem().getItem() == WizardryItems.magic_crystal){
-			AdvancementHelper.grantAdvancement(event.getEntityPlayer(), EnumAdvancement.crystal);
 		}
 	}
 

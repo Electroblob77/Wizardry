@@ -1,83 +1,28 @@
 package electroblob.wizardry.registry;
 
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.entity.EntityMeteor;
 import electroblob.wizardry.entity.EntityShield;
-import electroblob.wizardry.entity.construct.EntityArrowRain;
-import electroblob.wizardry.entity.construct.EntityBlackHole;
-import electroblob.wizardry.entity.construct.EntityBlizzard;
-import electroblob.wizardry.entity.construct.EntityBubble;
-import electroblob.wizardry.entity.construct.EntityDecay;
-import electroblob.wizardry.entity.construct.EntityEarthquake;
-import electroblob.wizardry.entity.construct.EntityFireRing;
-import electroblob.wizardry.entity.construct.EntityFireSigil;
-import electroblob.wizardry.entity.construct.EntityForcefield;
-import electroblob.wizardry.entity.construct.EntityFrostSigil;
-import electroblob.wizardry.entity.construct.EntityHailstorm;
-import electroblob.wizardry.entity.construct.EntityHammer;
-import electroblob.wizardry.entity.construct.EntityHealAura;
-import electroblob.wizardry.entity.construct.EntityIceSpike;
-import electroblob.wizardry.entity.construct.EntityLightningPulse;
-import electroblob.wizardry.entity.construct.EntityLightningSigil;
-import electroblob.wizardry.entity.construct.EntityTornado;
-import electroblob.wizardry.entity.living.EntityBlazeMinion;
-import electroblob.wizardry.entity.living.EntityDecoy;
-import electroblob.wizardry.entity.living.EntityEvilWizard;
-import electroblob.wizardry.entity.living.EntityIceGiant;
-import electroblob.wizardry.entity.living.EntityIceWraith;
-import electroblob.wizardry.entity.living.EntityLightningWraith;
-import electroblob.wizardry.entity.living.EntityMagicSlime;
-import electroblob.wizardry.entity.living.EntityPhoenix;
-import electroblob.wizardry.entity.living.EntityShadowWraith;
-import electroblob.wizardry.entity.living.EntitySilverfishMinion;
-import electroblob.wizardry.entity.living.EntitySkeletonMinion;
-import electroblob.wizardry.entity.living.EntitySpiderMinion;
-import electroblob.wizardry.entity.living.EntitySpiritHorse;
-import electroblob.wizardry.entity.living.EntitySpiritWolf;
-import electroblob.wizardry.entity.living.EntityStormElemental;
-import electroblob.wizardry.entity.living.EntityWitherSkeletonMinion;
-import electroblob.wizardry.entity.living.EntityWizard;
-import electroblob.wizardry.entity.living.EntityZombieMinion;
-import electroblob.wizardry.entity.projectile.EntityDarknessOrb;
-import electroblob.wizardry.entity.projectile.EntityDart;
-import electroblob.wizardry.entity.projectile.EntityFirebolt;
-import electroblob.wizardry.entity.projectile.EntityFirebomb;
-import electroblob.wizardry.entity.projectile.EntityForceArrow;
-import electroblob.wizardry.entity.projectile.EntityForceOrb;
-import electroblob.wizardry.entity.projectile.EntityIceCharge;
-import electroblob.wizardry.entity.projectile.EntityIceLance;
-import electroblob.wizardry.entity.projectile.EntityIceShard;
-import electroblob.wizardry.entity.projectile.EntityLightningArrow;
-import electroblob.wizardry.entity.projectile.EntityLightningDisc;
-import electroblob.wizardry.entity.projectile.EntityMagicMissile;
-import electroblob.wizardry.entity.projectile.EntityPoisonBomb;
-import electroblob.wizardry.entity.projectile.EntitySmokeBomb;
-import electroblob.wizardry.entity.projectile.EntitySpark;
-import electroblob.wizardry.entity.projectile.EntitySparkBomb;
-import electroblob.wizardry.entity.projectile.EntityThunderbolt;
+import electroblob.wizardry.entity.construct.*;
+import electroblob.wizardry.entity.living.*;
+import electroblob.wizardry.entity.projectile.*;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
-import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
-import electroblob.wizardry.tileentity.TileEntityMagicLight;
-import electroblob.wizardry.tileentity.TileEntityPlayerSave;
-import electroblob.wizardry.tileentity.TileEntityStatue;
-import electroblob.wizardry.tileentity.TileEntityTimer;
+import electroblob.wizardry.tileentity.*;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -93,6 +38,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.List;
+
 /**
  * Class responsible for registering all the things that don't have (or need) instances: entities, loot tables, recipes,
  * etc.
@@ -104,6 +51,29 @@ import net.minecraftforge.registries.IForgeRegistry;
 public final class WizardryRegistry {
 
 	// NOTE: In 1.12, recipes have a registry (they can still stay here though since we don't keep references to them)
+
+	public static void registerAdvancementTriggers(){
+		CriteriaTriggers.register(WizardryAdvancementTriggers.armour_set);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.jam_wizard);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.self_destruct);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.all_spells);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.element_master);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.identify_spell);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.elemental);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.legendary);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.max_out_wand);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.special_upgrade);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.pig_tornado);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.master);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.apprentice);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.anger_wizard);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.buy_master_spell);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.wizard_trade);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.slime_skeleton);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.freeze_blaze);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.frankenstein);
+		CriteriaTriggers.register(WizardryAdvancementTriggers.charge_creeper);
+	}
 
 	/** Called from the preInit method in the main mod class to register the custom dungeon loot. */
 	public static void registerLoot(){
@@ -263,61 +233,39 @@ public final class WizardryRegistry {
 		ItemStack goldNuggetStack = new ItemStack(Items.GOLD_NUGGET);
 		ItemStack stickStack = new ItemStack(Items.STICK);
 		ItemStack bookStack = new ItemStack(Items.BOOK);
-		ItemStack stringStack = new ItemStack(Items.STRING);
 		ItemStack spellBookStack = new ItemStack(WizardryItems.spell_book, 1, Spells.magic_missile.id());
-		ItemStack arcaneWorkbenchStack = new ItemStack(WizardryBlocks.arcane_workbench);
-		ItemStack stoneStack = new ItemStack(Blocks.STONE);
-		ItemStack lapisBlockStack = new ItemStack(Blocks.LAPIS_BLOCK);
-		ItemStack purpleCarpetStack = new ItemStack(Blocks.CARPET, 1, 10);
-		ItemStack wizardHandbookStack = new ItemStack(WizardryItems.wizard_handbook);
-		ItemStack crystalFlowerStack = new ItemStack(WizardryBlocks.crystal_flower);
+		Ingredient crystalFlowerStack = Ingredient.fromStacks(new ItemStack(WizardryBlocks.crystal_flower));
 		ItemStack magicCrystalStack1 = new ItemStack(WizardryItems.magic_crystal, 2);
 		ItemStack magicCrystalStack2 = new ItemStack(WizardryItems.magic_crystal, 9);
-		ItemStack crystalBlockStack = new ItemStack(WizardryBlocks.crystal_block);
+		Ingredient crystalBlockStack = Ingredient.fromStacks(new ItemStack(WizardryBlocks.crystal_block));
 		ItemStack manaFlaskStack = new ItemStack(WizardryItems.mana_flask);
-		ItemStack bottleStack = new ItemStack(Items.GLASS_BOTTLE);
-		ItemStack gunpowderStack = new ItemStack(Items.GUNPOWDER);
-		ItemStack blazePowderStack = new ItemStack(Items.BLAZE_POWDER);
-		ItemStack spiderEyeStack = new ItemStack(Items.SPIDER_EYE);
+		Ingredient bottleStack = Ingredient.fromStacks(new ItemStack(Items.GLASS_BOTTLE));
+		Ingredient gunpowderStack = Ingredient.fromStacks(new ItemStack(Items.GUNPOWDER));
+		Ingredient blazePowderStack = Ingredient.fromStacks(new ItemStack(Items.BLAZE_POWDER));
+		Ingredient spiderEyeStack = Ingredient.fromStacks(new ItemStack(Items.SPIDER_EYE));
 		// Coal or charcoal is equally fine, hence the wildcard value
-		ItemStack coalStack = new ItemStack(Items.COAL, 1, OreDictionary.WILDCARD_VALUE);
+		Ingredient coalStack = Ingredient.fromStacks(new ItemStack(Items.COAL, 1, OreDictionary.WILDCARD_VALUE));
 		ItemStack firebombStack = new ItemStack(WizardryItems.firebomb, 3);
 		ItemStack poisonBombStack = new ItemStack(WizardryItems.poison_bomb, 3);
 		ItemStack smokeBombStack = new ItemStack(WizardryItems.smoke_bomb, 3);
-		ItemStack transportationStoneStack = new ItemStack(WizardryBlocks.transportation_stone, 2);
-		ItemStack silkStack = new ItemStack(WizardryItems.magic_silk);
-		ItemStack silkStack1 = new ItemStack(WizardryItems.magic_silk, 2);
-		ItemStack hatStack = new ItemStack(WizardryItems.wizard_hat);
-		ItemStack robeStack = new ItemStack(WizardryItems.wizard_robe);
-		ItemStack leggingsStack = new ItemStack(WizardryItems.wizard_leggings);
-		ItemStack bootsStack = new ItemStack(WizardryItems.wizard_boots);
 		ItemStack scrollStack = new ItemStack(WizardryItems.blank_scroll);
-		ItemStack paperStack = new ItemStack(Items.PAPER);
+		Ingredient paperStack = Ingredient.fromStacks(new ItemStack(Items.PAPER));
+		Ingredient stringStack = Ingredient.fromStacks(new ItemStack(Items.STRING));
 
-		registry.register(new ShapedOreRecipe(null, magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z', goldNuggetStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "magic_wand")));
-		registry.register(new ShapedOreRecipe(null, spellBookStack, " x ", "xyx", " x ", 'x', magicCrystalStack, 'y', bookStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "spellbook")));
-		registry.register(new ShapedOreRecipe(null, arcaneWorkbenchStack, "vwv", "xyx", "zzz", 'v', goldNuggetStack, 'w', purpleCarpetStack, 'x', magicCrystalStack, 'y', lapisBlockStack, 'z', stoneStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "arcane_workbench")));
-		registry.register(new ShapedOreRecipe(null, manaFlaskStack, "yyy", "yxy", "yyy", 'x', bottleStack, 'y', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "mana_flask")));
-		registry.register(new ShapedOreRecipe(null, transportationStoneStack, " x ", "xyx", " x ", 'x', stoneStack, 'y', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "transportation_stone")));
-		registry.register(new ShapedOreRecipe(null, hatStack, "yyy", "y y", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "hat")));
-		registry.register(new ShapedOreRecipe(null, robeStack, "y y", "yyy", "yyy", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "robe")));
-		registry.register(new ShapedOreRecipe(null, leggingsStack, "yyy", "y y", "y y", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "leggings")));
-		registry.register(new ShapedOreRecipe(null, bootsStack, "y y", "y y", 'y', silkStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "boots")));
-		registry.register(new ShapedOreRecipe(null, silkStack1, " x ", "xyx", " x ", 'x', stringStack, 'y', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "silk")));
-		registry.register(new ShapedOreRecipe(null, crystalBlockStack, "zzz", "zzz", "zzz", 'z', magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "crystal_block")));
+		registry.register(new ShapedOreRecipe(null, magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z', goldNuggetStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/magic_wand")));
+		registry.register(new ShapedOreRecipe(null, spellBookStack, " x ", "xyx", " x ", 'x', magicCrystalStack, 'y', bookStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/spellbook")));
 
-		registry.register(new ShapelessOreRecipe(null, wizardHandbookStack, bookStack, magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "wizard_handbook")));
-		registry.register(new ShapelessOreRecipe(null, magicCrystalStack1, crystalFlowerStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "magic_crystal_1")));
-		registry.register(new ShapelessOreRecipe(null, magicCrystalStack2, crystalBlockStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "magic_crystal_2")));
+		registry.register(new ShapelessOreRecipe(null, magicCrystalStack1, crystalFlowerStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/magic_crystal_1")));
+		registry.register(new ShapelessOreRecipe(null, magicCrystalStack2, crystalBlockStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/magic_crystal_2")));
 
-		if(Wizardry.settings.firebombIsCraftable) registry.register(new ShapelessOreRecipe(null, firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "fire_bomb")));
-		if(Wizardry.settings.poisonBombIsCraftable) registry.register(new ShapelessOreRecipe(null, poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "poison_bomb")));
-		if(Wizardry.settings.smokeBombIsCraftable) registry.register(new ShapelessOreRecipe(null, smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "smoke_bomb")));
+		if(Wizardry.settings.firebombIsCraftable) registry.register(new ShapelessOreRecipe(null, firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/fire_bomb")));
+		if(Wizardry.settings.poisonBombIsCraftable) registry.register(new ShapelessOreRecipe(null, poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/poison_bomb")));
+		if(Wizardry.settings.smokeBombIsCraftable) registry.register(new ShapelessOreRecipe(null, smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/smoke_bomb")));
 
 		if(Wizardry.settings.useAlternateScrollRecipe){
-			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack, magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "scroll_1")));
+			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack, magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/blank_scroll")));
 		}else{
-			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "scroll_2")));
+			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/blank_scroll")));
 		}
 
 		// Mana flask recipes
@@ -326,16 +274,17 @@ public final class WizardryRegistry {
 		for(Element element : Element.values()){
 			for(Tier tier : Tier.values()){
 				miscWandStack = new ItemStack(WizardryUtilities.getWand(tier, element), 1, OreDictionary.WILDCARD_VALUE);
-				registry.register(new ShapelessOreRecipe(null, miscWandStack, miscWandStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "misc_wand")));
+				registry.register(new ShapelessOreRecipe(null, miscWandStack, miscWandStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_wand_" + element.getUnlocalisedName() + "_" + tier.getUnlocalisedName())));
 			}
 		}
+
 
 		ItemStack miscArmourStack;
 
 		for(Element element : Element.values()){
 			for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
 				miscArmourStack = new ItemStack(WizardryUtilities.getArmour(element, slot), 1, OreDictionary.WILDCARD_VALUE);
-				registry.register(new ShapelessOreRecipe(null, miscArmourStack, miscArmourStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "misc_armour")));
+				registry.register(new ShapelessOreRecipe(null, miscArmourStack, miscArmourStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_armour_" + element.getUnlocalisedName() + "_" + slot.getName())));
 			}
 		}
 	}
