@@ -128,7 +128,7 @@ public class Wizardry {
 			@Override
 			public void readNBT(Capability<WizardData> capability, WizardData instance, EnumFacing side, NBTBase nbt){
 			}
-		}, WizardData.class);
+		}, WizardData::new);
 
 		WizardryRegistry.registerTileEntities();
 

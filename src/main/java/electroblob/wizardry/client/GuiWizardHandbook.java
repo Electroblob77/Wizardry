@@ -3,10 +3,10 @@ package electroblob.wizardry.client;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
@@ -274,7 +274,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 			bufferedreader = new BufferedReader(new InputStreamReader(
 					this.mc.getResourceManager().getResource(new ResourceLocation(textFilepath)).getInputStream(),
-					Charsets.UTF_8));
+					StandardCharsets.UTF_8));
 
 		}catch (IOException e){
 
@@ -287,7 +287,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 				bufferedreader = new BufferedReader(new InputStreamReader(
 						this.mc.getResourceManager().getResource(new ResourceLocation(textFilepath)).getInputStream(),
-						Charsets.UTF_8));
+						StandardCharsets.UTF_8));
 
 			} catch (IOException x){
 				Wizardry.logger.error("Couldn't find file: " + Wizardry.MODID + ":assets/texts/handbook_en_US.txt. The file may be"

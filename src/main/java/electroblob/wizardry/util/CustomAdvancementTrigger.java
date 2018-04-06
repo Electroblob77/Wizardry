@@ -4,7 +4,9 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
+
 import electroblob.wizardry.Wizardry;
+import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
@@ -24,7 +26,7 @@ import net.minecraft.util.ResourceLocation;
 public class CustomAdvancementTrigger implements ICriterionTrigger<CustomAdvancementTrigger.Instance> {
 
     private final ResourceLocation id;
-    private final SetMultimap<PlayerAdvancements, Listener> listeners = HashMultimap.create();
+    private final SetMultimap<PlayerAdvancements, Listener<? extends ICriterionInstance>> listeners = HashMultimap.create();
 
     /**
      * This is a dummy criterion instance that does nothing on its own (but it is bound to this

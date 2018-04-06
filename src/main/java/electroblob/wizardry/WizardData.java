@@ -129,6 +129,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	public Set<String> allyNames;
 
 	private Set<UUID> soulboundCreatures;
+	
+	public WizardData(){
+		this(null); // Nullary constructor for the registration method factory parameter
+	}
 
 	public WizardData(EntityPlayer player){
 		this.player = player;

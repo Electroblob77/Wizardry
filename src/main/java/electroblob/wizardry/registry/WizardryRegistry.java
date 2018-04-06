@@ -198,7 +198,7 @@ public final class WizardryRegistry {
 
 		// TODO: May need fixing
 		List<Biome> biomes = Lists.newArrayList();
-		for (Biome biome : ForgeRegistries.BIOMES.getValues()) {
+		for (Biome biome : ForgeRegistries.BIOMES.getValuesCollection()) {
 			biomes.add(biome);
 		}
 		biomes.remove(Biomes.MUSHROOM_ISLAND);
