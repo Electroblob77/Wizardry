@@ -9,8 +9,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.common.collect.ImmutableMap;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.advancement.AdvancementHelper;
-import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.item.ItemArcaneTome;
@@ -31,15 +29,12 @@ import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.item.ItemWizardHandbook;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -195,7 +190,7 @@ public final class WizardryItems {
 	public static final Map<Pair<Tier, Element>, Item> WAND_MAP = new HashMap<>();
 	public static final Map<Pair<EntityEquipmentSlot, Element>, Item> ARMOUR_MAP = new HashMap<>();
 
-	static{
+	static {
 
 		WAND_MAP.put(ImmutablePair.of(Tier.BASIC, Element.MAGIC), magic_wand);
 		WAND_MAP.put(ImmutablePair.of(Tier.BASIC, Element.FIRE), basic_fire_wand);

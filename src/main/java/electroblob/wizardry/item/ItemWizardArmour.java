@@ -1,16 +1,15 @@
 package electroblob.wizardry.item;
 
+import java.util.List;
+
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.advancement.AdvancementHelper;
-import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.resources.I18n;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Petrify;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,9 +27,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {

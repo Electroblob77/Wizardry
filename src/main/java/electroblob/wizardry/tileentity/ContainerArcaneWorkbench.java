@@ -1,13 +1,18 @@
 package electroblob.wizardry.tileentity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.advancement.AdvancementHelper;
-import electroblob.wizardry.advancement.AdvancementHelper.EnumAdvancement;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.event.SpellBindEvent;
-import electroblob.wizardry.item.*;
+import electroblob.wizardry.item.ItemArcaneTome;
+import electroblob.wizardry.item.ItemArmourUpgrade;
+import electroblob.wizardry.item.ItemSpellBook;
+import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
@@ -23,9 +28,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class ContainerArcaneWorkbench extends Container {
 

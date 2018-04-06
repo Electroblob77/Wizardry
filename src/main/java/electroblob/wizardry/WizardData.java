@@ -1,5 +1,14 @@
 package electroblob.wizardry;
 
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.UUID;
+
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.EntityShield;
@@ -49,10 +58,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-import java.lang.ref.WeakReference;
-import java.util.*;
-import java.util.Map.Entry;
-
 /**
  * Capability-based replacement for the old ExtendedPlayer class from 1.7.10. This has been reworked to leave minimum
  * external changes (for my own sanity, mainly!). Turns out the only major difference between an internal capability and
@@ -62,7 +67,7 @@ import java.util.Map.Entry;
  * capability, but in my opinion there are already too many classes to deal with, so I'm not adding any more than are
  * necessary, meaning those constants and values are kept here instead.
  * 
- * @since Wizardry 1.2
+ * @since Wizardry 2.1
  * @author Electroblob
  */
 // On the plus side, having to rethink this class allowed me to clean it up a lot.

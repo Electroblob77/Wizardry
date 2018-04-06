@@ -1,10 +1,13 @@
 package electroblob.wizardry;
 
+import org.apache.logging.log4j.Logger;
+
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
 import electroblob.wizardry.command.CommandSetAlly;
 import electroblob.wizardry.command.CommandViewAllies;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryRegistry;
 import electroblob.wizardry.registry.WizardryTabs;
@@ -27,7 +30,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob.wizardry.WizardryGuiFactory")
 public class Wizardry {
@@ -136,7 +138,7 @@ public class Wizardry {
 		// The check for the generateLoot setting is now done within this method.
 		WizardryRegistry.registerLoot();
 
-		WizardryRegistry.registerAdvancementTriggers();
+		WizardryAdvancementTriggers.register();
 
 		// Moved to preInit, because apparently it has to be here now.
 		proxy.registerRenderers();

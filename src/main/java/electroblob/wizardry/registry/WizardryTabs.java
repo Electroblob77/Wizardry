@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 
 import electroblob.wizardry.item.ItemScroll;

@@ -1,6 +1,7 @@
 package electroblob.wizardry.registry;
 
 import electroblob.wizardry.util.CustomAdvancementTrigger;
+import net.minecraft.advancements.CriteriaTriggers;
 
 /**
  * This class stores a collection of custom advancement triggers, for advancements that cannot be triggered
@@ -10,6 +11,7 @@ import electroblob.wizardry.util.CustomAdvancementTrigger;
  * @since Wizardry 4.1.0
  */
 public final class WizardryAdvancementTriggers {
+	
     public static final CustomAdvancementTrigger armour_set = new CustomAdvancementTrigger("trigger_armour_set");
     public static final CustomAdvancementTrigger jam_wizard = new CustomAdvancementTrigger("trigger_jam_wizard");
     public static final CustomAdvancementTrigger self_destruct = new CustomAdvancementTrigger("trigger_self_destruct");
@@ -30,4 +32,28 @@ public final class WizardryAdvancementTriggers {
     public static final CustomAdvancementTrigger freeze_blaze = new CustomAdvancementTrigger("trigger_freeze_blaze");
     public static final CustomAdvancementTrigger frankenstein = new CustomAdvancementTrigger("trigger_frankenstein");
     public static final CustomAdvancementTrigger charge_creeper = new CustomAdvancementTrigger("trigger_charge_creeper");
+
+	public static void register(){
+		
+		CriteriaTriggers.register(armour_set);
+		CriteriaTriggers.register(jam_wizard);
+		CriteriaTriggers.register(self_destruct);
+		CriteriaTriggers.register(all_spells);
+		CriteriaTriggers.register(element_master);
+		CriteriaTriggers.register(identify_spell);
+		CriteriaTriggers.register(elemental);
+		CriteriaTriggers.register(legendary);
+		CriteriaTriggers.register(max_out_wand);
+		CriteriaTriggers.register(special_upgrade);
+		CriteriaTriggers.register(pig_tornado);
+		CriteriaTriggers.register(master);
+		CriteriaTriggers.register(apprentice);
+		CriteriaTriggers.register(anger_wizard);
+		CriteriaTriggers.register(buy_master_spell);
+		CriteriaTriggers.register(wizard_trade);
+		CriteriaTriggers.register(slime_skeleton);
+		CriteriaTriggers.register(freeze_blaze);
+		CriteriaTriggers.register(frankenstein);
+		CriteriaTriggers.register(charge_creeper);
+	}
 }

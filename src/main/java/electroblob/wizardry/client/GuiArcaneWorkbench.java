@@ -1,5 +1,7 @@
 package electroblob.wizardry.client;
 
+import org.lwjgl.input.Keyboard;
+
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
@@ -24,7 +26,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import org.lwjgl.input.Keyboard;
 
 public class GuiArcaneWorkbench extends GuiContainer {
 

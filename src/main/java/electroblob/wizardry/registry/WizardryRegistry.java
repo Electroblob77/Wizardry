@@ -1,20 +1,75 @@
 package electroblob.wizardry.registry;
 
+import java.util.List;
+
 import com.google.common.collect.Lists;
+
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.entity.EntityMeteor;
 import electroblob.wizardry.entity.EntityShield;
-import electroblob.wizardry.entity.construct.*;
-import electroblob.wizardry.entity.living.*;
-import electroblob.wizardry.entity.projectile.*;
+import electroblob.wizardry.entity.construct.EntityArrowRain;
+import electroblob.wizardry.entity.construct.EntityBlackHole;
+import electroblob.wizardry.entity.construct.EntityBlizzard;
+import electroblob.wizardry.entity.construct.EntityBubble;
+import electroblob.wizardry.entity.construct.EntityDecay;
+import electroblob.wizardry.entity.construct.EntityEarthquake;
+import electroblob.wizardry.entity.construct.EntityFireRing;
+import electroblob.wizardry.entity.construct.EntityFireSigil;
+import electroblob.wizardry.entity.construct.EntityForcefield;
+import electroblob.wizardry.entity.construct.EntityFrostSigil;
+import electroblob.wizardry.entity.construct.EntityHailstorm;
+import electroblob.wizardry.entity.construct.EntityHammer;
+import electroblob.wizardry.entity.construct.EntityHealAura;
+import electroblob.wizardry.entity.construct.EntityIceSpike;
+import electroblob.wizardry.entity.construct.EntityLightningPulse;
+import electroblob.wizardry.entity.construct.EntityLightningSigil;
+import electroblob.wizardry.entity.construct.EntityTornado;
+import electroblob.wizardry.entity.living.EntityBlazeMinion;
+import electroblob.wizardry.entity.living.EntityDecoy;
+import electroblob.wizardry.entity.living.EntityEvilWizard;
+import electroblob.wizardry.entity.living.EntityIceGiant;
+import electroblob.wizardry.entity.living.EntityIceWraith;
+import electroblob.wizardry.entity.living.EntityLightningWraith;
+import electroblob.wizardry.entity.living.EntityMagicSlime;
+import electroblob.wizardry.entity.living.EntityPhoenix;
+import electroblob.wizardry.entity.living.EntityShadowWraith;
+import electroblob.wizardry.entity.living.EntitySilverfishMinion;
+import electroblob.wizardry.entity.living.EntitySkeletonMinion;
+import electroblob.wizardry.entity.living.EntitySpiderMinion;
+import electroblob.wizardry.entity.living.EntitySpiritHorse;
+import electroblob.wizardry.entity.living.EntitySpiritWolf;
+import electroblob.wizardry.entity.living.EntityStormElemental;
+import electroblob.wizardry.entity.living.EntityWitherSkeletonMinion;
+import electroblob.wizardry.entity.living.EntityWizard;
+import electroblob.wizardry.entity.living.EntityZombieMinion;
+import electroblob.wizardry.entity.projectile.EntityDarknessOrb;
+import electroblob.wizardry.entity.projectile.EntityDart;
+import electroblob.wizardry.entity.projectile.EntityFirebolt;
+import electroblob.wizardry.entity.projectile.EntityFirebomb;
+import electroblob.wizardry.entity.projectile.EntityForceArrow;
+import electroblob.wizardry.entity.projectile.EntityForceOrb;
+import electroblob.wizardry.entity.projectile.EntityIceCharge;
+import electroblob.wizardry.entity.projectile.EntityIceLance;
+import electroblob.wizardry.entity.projectile.EntityIceShard;
+import electroblob.wizardry.entity.projectile.EntityLightningArrow;
+import electroblob.wizardry.entity.projectile.EntityLightningDisc;
+import electroblob.wizardry.entity.projectile.EntityMagicMissile;
+import electroblob.wizardry.entity.projectile.EntityPoisonBomb;
+import electroblob.wizardry.entity.projectile.EntitySmokeBomb;
+import electroblob.wizardry.entity.projectile.EntitySpark;
+import electroblob.wizardry.entity.projectile.EntitySparkBomb;
+import electroblob.wizardry.entity.projectile.EntityThunderbolt;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
-import electroblob.wizardry.tileentity.*;
+import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
+import electroblob.wizardry.tileentity.TileEntityMagicLight;
+import electroblob.wizardry.tileentity.TileEntityPlayerSave;
+import electroblob.wizardry.tileentity.TileEntityStatue;
+import electroblob.wizardry.tileentity.TileEntityTimer;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
@@ -38,8 +93,6 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.List;
-
 /**
  * Class responsible for registering all the things that don't have (or need) instances: entities, loot tables, recipes,
  * etc.
@@ -51,29 +104,6 @@ import java.util.List;
 public final class WizardryRegistry {
 
 	// NOTE: In 1.12, recipes have a registry (they can still stay here though since we don't keep references to them)
-
-	public static void registerAdvancementTriggers(){
-		CriteriaTriggers.register(WizardryAdvancementTriggers.armour_set);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.jam_wizard);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.self_destruct);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.all_spells);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.element_master);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.identify_spell);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.elemental);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.legendary);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.max_out_wand);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.special_upgrade);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.pig_tornado);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.master);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.apprentice);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.anger_wizard);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.buy_master_spell);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.wizard_trade);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.slime_skeleton);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.freeze_blaze);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.frankenstein);
-		CriteriaTriggers.register(WizardryAdvancementTriggers.charge_creeper);
-	}
 
 	/** Called from the preInit method in the main mod class to register the custom dungeon loot. */
 	public static void registerLoot(){

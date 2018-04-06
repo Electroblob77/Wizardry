@@ -1,5 +1,7 @@
 package electroblob.wizardry.spell;
 
+import java.util.List;
+
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
@@ -20,8 +22,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class IceAge extends Spell {
 
