@@ -304,7 +304,9 @@ public final class WizardryRegistry {
 		for(Element element : Element.values()){
 			for(Tier tier : Tier.values()){
 				miscWandStack = new ItemStack(WizardryUtilities.getWand(tier, element), 1, OreDictionary.WILDCARD_VALUE);
-				registry.register(new ShapelessOreRecipe(null, miscWandStack, miscWandStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_wand_" + element.getUnlocalisedName() + "_" + tier.getUnlocalisedName())));
+				registry.register(new ShapelessOreRecipe(null, miscWandStack, miscWandStack, manaFlaskStack){
+					@Override public boolean isDynamic(){ return true; } // Stops it appearing in the recipe book
+				}.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_wand_" + element.getUnlocalisedName() + "_" + tier.getUnlocalisedName())));
 			}
 		}
 
@@ -314,7 +316,9 @@ public final class WizardryRegistry {
 		for(Element element : Element.values()){
 			for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
 				miscArmourStack = new ItemStack(WizardryUtilities.getArmour(element, slot), 1, OreDictionary.WILDCARD_VALUE);
-				registry.register(new ShapelessOreRecipe(null, miscArmourStack, miscArmourStack, manaFlaskStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_armour_" + element.getUnlocalisedName() + "_" + slot.getName())));
+				registry.register(new ShapelessOreRecipe(null, miscArmourStack, miscArmourStack, manaFlaskStack){
+					@Override public boolean isDynamic(){ return true; } // Stops it appearing in the recipe book
+				}.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_armour_" + element.getUnlocalisedName() + "_" + slot.getName())));
 			}
 		}
 	}
