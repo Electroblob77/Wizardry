@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.jam_wizard"
+            "translate": "advancement.wizardry:jam_wizard"
         },
         "description": {
-            "translate": "achievement.jam_wizard.desc"
+            "translate": "advancement.wizardry:jam_wizard.desc"
         },
         "icon": {
             "item": "minecraft:web"

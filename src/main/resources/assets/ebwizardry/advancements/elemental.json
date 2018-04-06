@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.elemental"
+            "translate": "advancement.wizardry:elemental"
         },
         "description": {
-            "translate": "achievement.elemental.desc"
+            "translate": "advancement.wizardry:elemental.desc"
         },
         "icon": {
             "item": "ebwizardry:basic_fire_wand"

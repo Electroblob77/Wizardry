@@ -4,10 +4,10 @@
             "item": "ebwizardry:apprentice_wand"
         },
         "title": {
-            "translate": "achievement.apprentice"
+            "translate": "advancement.wizardry:apprentice"
         },
         "description": {
-            "translate": "achievement.apprentice.desc"
+            "translate": "advancement.wizardry:apprentice.desc"
         }
     },
     "parent": "ebwizardry:arcane_initiate",

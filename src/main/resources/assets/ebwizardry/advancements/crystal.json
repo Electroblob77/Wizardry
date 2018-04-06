@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.crystal"
+            "translate": "advancement.wizardry:crystal"
         },
         "description": {
-            "translate": "achievement.crystal.desc"
+            "translate": "advancement.wizardry:crystal.desc"
         },
         "icon": {
             "item": "ebwizardry:magic_crystal"

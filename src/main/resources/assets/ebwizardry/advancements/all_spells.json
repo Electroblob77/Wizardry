@@ -4,10 +4,10 @@
             "item": "ebwizardry:wizard_handbook"
         },
         "title": {
-            "translate": "achievement.all_spells"
+            "translate": "advancement.wizardry:all_spells"
         },
         "description": {
-            "translate": "achievement.all_spells.desc"
+            "translate": "advancement.wizardry:all_spells.desc"
         }
     },
     "parent": "ebwizardry:master",

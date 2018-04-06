@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.pig_tornado"
+            "translate": "advancement.wizardry:pig_tornado"
         },
         "description": {
-            "translate": "achievement.pig_tornado.desc"
+            "translate": "advancement.wizardry:pig_tornado.desc"
         },
         "icon": {
             "item": "minecraft:saddle"

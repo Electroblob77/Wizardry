@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.special_upgrade"
+            "translate": "advancement.wizardry:special_upgrade"
         },
         "description": {
-            "translate": "achievement.special_upgrade.desc"
+            "translate": "advancement.wizardry:special_upgrade.desc"
         },
         "icon": {
             "item": "ebwizardry:condenser_upgrade"

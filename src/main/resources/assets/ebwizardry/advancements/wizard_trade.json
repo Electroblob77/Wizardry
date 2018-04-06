@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.wizard_trade"
+            "translate": "advancement.wizardry:wizard_trade"
         },
         "description": {
-            "translate": "achievement.wizard_trade.desc"
+            "translate": "advancement.wizardry:wizard_trade.desc"
         },
         "icon": {
             "item": "minecraft:emerald"

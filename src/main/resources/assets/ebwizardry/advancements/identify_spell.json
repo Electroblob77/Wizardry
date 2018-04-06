@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.identify_spell"
+            "translate": "advancement.wizardry:identify_spell"
         },
         "description": {
-            "translate": "achievement.identify_spell.desc"
+            "translate": "advancement.wizardry:identify_spell.desc"
         },
         "icon": {
             "item": "ebwizardry:identification_scroll"

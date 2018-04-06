@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.freeze_blaze"
+            "translate": "advancement.wizardry:freeze_blaze"
         },
         "description": {
-            "translate": "achievement.freeze_blaze.desc"
+            "translate": "advancement.wizardry:freeze_blaze.desc"
         },
         "icon": {
             "item": "minecraft:ice"

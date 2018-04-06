@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.buy_master_spell"
+            "translate": "advancement.wizardry:buy_master_spell"
         },
         "description": {
-            "translate": "achievement.buy_master_spell.desc"
+            "translate": "advancement.wizardry:buy_master_spell.desc"
         },
         "icon": {
             "item": "ebwizardry:spell_book"

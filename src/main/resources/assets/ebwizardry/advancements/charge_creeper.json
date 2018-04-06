@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.charge_creeper"
+            "translate": "advancement.wizardry:charge_creeper"
         },
         "description": {
-            "translate": "achievement.charge_creeper.desc"
+            "translate": "advancement.wizardry:charge_creeper.desc"
         },
         "icon": {
             "item": "minecraft:gunpowder"

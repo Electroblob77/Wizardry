@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.armour_set"
+            "translate": "advancement.wizardry:armour_set"
         },
         "description": {
-            "translate": "achievement.armour_set.desc"
+            "translate": "advancement.wizardry:armour_set.desc"
         },
         "icon": {
             "item": "ebwizardry:wizard_hat"

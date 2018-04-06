@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.self_destruct"
+            "translate": "advancement.wizardry:self_destruct"
         },
         "description": {
-            "translate": "achievement.self_destruct.desc"
+            "translate": "advancement.wizardry:self_destruct.desc"
         },
         "icon": {
             "item": "minecraft:pumpkin"

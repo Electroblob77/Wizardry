@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.slime_skeleton"
+            "translate": "advancement.wizardry:slime_skeleton"
         },
         "description": {
-            "translate": "achievement.slime_skeleton.desc"
+            "translate": "advancement.wizardry:slime_skeleton.desc"
         },
         "icon": {
             "item": "minecraft:slime_ball"

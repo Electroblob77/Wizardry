@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.master"
+            "translate": "advancement.wizardry:master"
         },
         "description": {
-            "translate": "achievement.master.desc"
+            "translate": "advancement.wizardry:master.desc"
         },
         "icon": {
             "item": "ebwizardry:master_wand"

@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.max_out_wand"
+            "translate": "advancement.wizardry:max_out_wand"
         },
         "description": {
-            "translate": "achievement.max_out_wand.desc"
+            "translate": "advancement.wizardry:max_out_wand.desc"
         },
         "icon": {
             "item": "ebwizardry:arcane_tome"

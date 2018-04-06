@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.craft_flask"
+            "translate": "advancement.wizardry:craft_flask"
         },
         "description": {
-            "translate": "achievement.craft_flask.desc"
+            "translate": "advancement.wizardry:craft_flask.desc"
         },
         "icon": {
             "item": "ebwizardry:mana_flask"

@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.defeat_evil_wizard"
+            "translate": "advancement.wizardry:defeat_evil_wizard"
         },
         "description": {
-            "translate": "achievement.defeat_evil_wizard.desc"
+            "translate": "advancement.wizardry:defeat_evil_wizard.desc"
         },
         "icon": {
             "item": "ebwizardry:wizard_boots_necromancy"

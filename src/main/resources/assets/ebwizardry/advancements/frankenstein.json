@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "achievement.frankenstein"
+            "translate": "advancement.wizardry:frankenstein"
         },
         "description": {
-            "translate": "achievement.frankenstein.desc"
+            "translate": "advancement.wizardry:frankenstein.desc"
         },
         "icon": {
             "item": "ebwizardry:advanced_lightning_wand"
