@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
  * should be triggered by JSON descriptions and vanilla advancement triggers.
  *
  * @author 12foo
- * @since 3.1.0
+ * @since 4.1.0
  */
 public class CustomAdvancementTrigger implements ICriterionTrigger<CustomAdvancementTrigger.Instance> {
 

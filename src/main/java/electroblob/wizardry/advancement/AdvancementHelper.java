@@ -12,6 +12,8 @@ import net.minecraft.util.ResourceLocation;
  * This is a provisory class for the transition to 1.12
  * It contains an enum with all the advancements of this mod
  * and an helper to grant advancements on the server side only (like the command)
+ * @author Corail31
+ * @since Wizardry 4.1
  */
 public class AdvancementHelper {
 	public enum EnumAdvancement {

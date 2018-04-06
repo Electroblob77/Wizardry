@@ -7,7 +7,7 @@ import electroblob.wizardry.util.CustomAdvancementTrigger;
  * from plain vanilla JSON definitions. It replaces the old WizardryAchievements class.
  *
  * @author 12foo
- * @since Wizardry 3.1.0
+ * @since Wizardry 4.1.0
  */
 public final class WizardryAdvancementTriggers {
     public static final CustomAdvancementTrigger armour_set = new CustomAdvancementTrigger("trigger_armour_set");
