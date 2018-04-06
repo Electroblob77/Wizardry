@@ -256,6 +256,7 @@ public final class WizardryRegistry {
 	/** Called from the init method in the main mod class to register all the recipes. */
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event){
+		
 		IForgeRegistry<IRecipe> registry = event.getRegistry();
 
 		ItemStack magicCrystalStack = new ItemStack(WizardryItems.magic_crystal);

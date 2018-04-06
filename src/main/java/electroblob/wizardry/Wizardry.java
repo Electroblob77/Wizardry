@@ -110,9 +110,6 @@ public class Wizardry {
 
 		logger = event.getModLog();
 
-		// The array in question no longer exists, so I'm pretty sure this isn't necessary any more.
-		// expandPotionTypesArray();
-
 		settings.initConfig(event);
 
 		// Yes - by the looks of it, having an interface is completely unnecessary in this case.
@@ -192,8 +189,7 @@ public class Wizardry {
 	}
 
 	// 2.1 changed some item ids, so this fixes them for existing worlds
-	// NOTE: Needs changing to RegistryEvent.MissingMapping in 1.12, or just removing since nobody updates minecraft
-	// versions when using mods.
+	// Nobody updates minecraft versions when using mods, but I may as well leave this here just in case.
 	@EventHandler
 	public static void onMissingMappingEvent(RegistryEvent.MissingMappings<Item> event){
 		// Just get, not getAll, since the mod id didn't change!
