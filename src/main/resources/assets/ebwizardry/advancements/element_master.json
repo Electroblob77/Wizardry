@@ -8,7 +8,8 @@
         },
         "icon": {
             "item": "ebwizardry:master_ice_wand"
-        }
+        },
+		"frame": "challenge"
     },
     "parent": "ebwizardry:elemental",
     "criteria": {

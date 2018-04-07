@@ -8,7 +8,7 @@
         },
         "show_toast": false,
         "announce_to_chat": false,
-        "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+        "background": "ebwizardry:textures/gui/advancement_background.png",
         "icon": {
             "item": "ebwizardry:wizard_handbook"
         }

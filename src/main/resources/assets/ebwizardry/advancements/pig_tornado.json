@@ -8,7 +8,8 @@
         },
         "icon": {
             "item": "minecraft:saddle"
-        }
+        },
+		"frame": "challenge"
     },
     "parent": "ebwizardry:apprentice",
     "criteria": {

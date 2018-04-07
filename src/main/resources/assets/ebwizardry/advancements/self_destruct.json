@@ -8,7 +8,8 @@
         },
         "icon": {
             "item": "minecraft:pumpkin"
-        }
+        },
+		"frame": "challenge"
     },
     "parent": "ebwizardry:arcane_initiate",
     "criteria": {

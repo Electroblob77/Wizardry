@@ -8,7 +8,8 @@
         },
         "icon": {
             "item": "ebwizardry:arcane_tome"
-        }
+        },
+		"frame": "goal"
     },
     "parent": "ebwizardry:special_upgrade",
     "criteria": {

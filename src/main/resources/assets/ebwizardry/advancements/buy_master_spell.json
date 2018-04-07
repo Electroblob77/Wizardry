@@ -8,7 +8,8 @@
         },
         "icon": {
             "item": "ebwizardry:spell_book"
-        }
+        },
+		"frame": "goal"
     },
     "parent": "ebwizardry:wizard_trade",
     "criteria": {
