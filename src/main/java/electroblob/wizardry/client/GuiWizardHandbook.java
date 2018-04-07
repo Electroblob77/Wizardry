@@ -267,7 +267,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		BufferedReader bufferedreader = null;
 
-		String textFilepath = "ebwizardry:texts/handbook_"
+		String textFilepath = Wizardry.MODID + ":texts/handbook_"
 				+ Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode() + ".txt";
 
 		try{
@@ -281,7 +281,7 @@ public class GuiWizardHandbook extends GuiScreen {
 			Wizardry.logger.info(
 					"Wizard handbook text file missing for the current language. Using default (English - US) instead.");
 
-			textFilepath = "ebwizardry:texts/handbook_en_US.txt";
+			textFilepath = Wizardry.MODID + ":texts/handbook_en_us.txt";
 
 			try {
 
@@ -290,7 +290,7 @@ public class GuiWizardHandbook extends GuiScreen {
 						StandardCharsets.UTF_8));
 
 			} catch (IOException x){
-				Wizardry.logger.error("Couldn't find file: " + Wizardry.MODID + ":assets/texts/handbook_en_US.txt. The file may be"
+				Wizardry.logger.error("Couldn't find file: " + Wizardry.MODID + "/assets/texts/handbook_en_us.txt. The file may be"
 						+ "missing; please try re-downloading and reinstalling Wizardry.", x);
 			}
 		}
@@ -427,7 +427,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 			}catch (IOException e){
 				Wizardry.logger.error("Something went wrong reading file: " + textFilepath
-						+ ". The file may be damaged;" + "please try re-downloading and reinstalling wizardry.", e);
+						+ ". The file may be damaged; please try re-downloading and reinstalling wizardry.", e);
 			}
 		}
 	}
