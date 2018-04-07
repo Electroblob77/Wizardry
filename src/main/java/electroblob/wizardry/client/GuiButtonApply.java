@@ -12,7 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 class GuiButtonApply extends GuiButton {
 
 	public GuiButtonApply(int id, int x, int y){
-
 		super(id, x, y, 32, 16, I18n.format("container." + Wizardry.MODID + ":arcane_workbench.apply"));
 	}
 
@@ -20,8 +19,7 @@ class GuiButtonApply extends GuiButton {
 	public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
 		
 		// Whether the button is highlighted
-		this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width
-				&& mouseY < this.y + this.height;
+		this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
 		int k = 36;
 		int l = 220;

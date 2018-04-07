@@ -46,15 +46,11 @@ public class GuiWizardHandbook extends GuiScreen {
 	// I think this is actually ever-so-slightly lighter than pure black, but the difference is unnoticeable.
 	private static final int BLACK = 1;
 
-	public static final ResourceLocation regularHandbook = new ResourceLocation(Wizardry.MODID,
-			"textures/gui/handbook.png");
+	public static final ResourceLocation regularHandbook = new ResourceLocation(Wizardry.MODID, "textures/gui/handbook.png");
 	public static final ResourceLocation ore = new ResourceLocation(Wizardry.MODID, "textures/gui/ore_picture.png");
-	public static final ResourceLocation crystal = new ResourceLocation(Wizardry.MODID,
-			"textures/items/magic_crystal.png");
-	public static final ResourceLocation workbenchGui = new ResourceLocation(Wizardry.MODID,
-			"textures/gui/arcane_workbench.png");
-	public static final ResourceLocation craftingGrids = new ResourceLocation(Wizardry.MODID,
-			"textures/gui/handbook_recipes.png");
+	public static final ResourceLocation crystal = new ResourceLocation(Wizardry.MODID, "textures/items/magic_crystal.png");
+	public static final ResourceLocation workbenchGui = new ResourceLocation(Wizardry.MODID, "textures/gui/arcane_workbench.png");
+	public static final ResourceLocation craftingGrids = new ResourceLocation(Wizardry.MODID, "textures/gui/handbook_recipes.png");
 
 	private List<ArrayList<String>> text;
 	private List<Section> sections;

@@ -18,15 +18,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityArcaneWorkbench> {
 
-	private static final ResourceLocation runeTexture = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/rune.png");
+	private static final ResourceLocation runeTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/rune.png");
 
-	public RenderArcaneWorkbench(){
-	}
+	public RenderArcaneWorkbench(){}
 
 	@Override
-	public void render(TileEntityArcaneWorkbench tileentity, double x, double y, double z,
-			float partialTicks, int destroyStage, float alpha){
+	public void render(TileEntityArcaneWorkbench tileentity, double x, double y, double z, float partialTicks, int destroyStage, float alpha){
 		
 		GlStateManager.pushMatrix();
 		// This line makes stuff render in the same place relative to the world wherever the player is.
@@ -54,8 +51,7 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); // This line fixes the weird
-																						// brightness bug.
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); // This line fixes the weird brightness bug.
 			GlStateManager.rotate(tileentity.timer, 0.0f, 1.0f, 0.0f);
 			GlStateManager.translate(0.0f, 0.65f, 0.0f);
 			Tessellator tessellator = Tessellator.getInstance();

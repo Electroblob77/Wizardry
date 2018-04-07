@@ -122,16 +122,8 @@ public final class WizardryRegistry {
 		 * random stack size, and that's before you take functions into account.
 		 * 
 		 * ...oh, and entries can be entire loot tables in themselves, allowing for potentially infinite levels of
-		 * randomness. Yeah.
-		 * 
-		 * Translating to the new system: ChestGenHooks.SOME_NAME -> loot table json file ??? -> loot pool (I don't
-		 * think it was split up like this before) ChestGenHooks.addItem() -> entry in a loot pool Stack sizes in
-		 * WeightedRandomChestContent -> set_count function for entries Weight in WeightedRandomChestContent -> weight
-		 * of entries Custom WeightedRandomChestContent implementations -> custom loot functions, but only for
-		 * complex/dynamic stuff - things that serve to allow the chance for a category of items (like armour) to be
-		 * specified but still have a random chance for which exact item you get should be done with nested loot
-		 * tables. */
-
+		 * randomness. Yeah. */
+ 
 		// Always registers the loot tables, but only injects the additions into vanilla if the appropriate option is
 		// enabled in the config (see WizardryEventHandler).
 		LootFunctionManager.registerFunction(new RandomSpell.Serializer());
