@@ -28,7 +28,7 @@ public class GuiConfigWizardry extends GuiConfig {
 		configList.add(new DummyCategoryElement("spellsConfig", "config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY,
 				SpellsCategory.class));
 		configList.add(new DummyCategoryElement("resistancesConfig",
-				"config.wizardry.category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
+				"config." + Wizardry.MODID + ".category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
 		configList.addAll(new ConfigElement(Wizardry.settings.getConfigCategory(Configuration.CATEGORY_GENERAL))
 				.getChildElements());
 		return configList;
