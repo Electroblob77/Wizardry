@@ -86,14 +86,13 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 		if(!stack.isEmpty()){
 
 			GlStateManager.pushMatrix();
-			GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+			//GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
 			GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
 
 			GlStateManager.rotate(180, 0, 1, 0);
-			// View angle is negated because of the 180 flip.
-			GlStateManager.rotate((float)(-viewAngle - 90f), 0, 0, 1);
+			GlStateManager.rotate((float)(viewAngle - 90f), 0, 0, 1);
 			// Does the floaty thing
-			GlStateManager.translate(0.0F, 0.0F, (float)tileentity.yOffset / 5000.0F - 0.55f);
+			GlStateManager.translate(0.0F, 0.0F, (float)tileentity.yOffset / 5000.0F + 0.55f);
 			GlStateManager.scale(0.75F, 0.75F, 0.75F);
 			// This is what the item frame uses so it's definitely what we want.
 			Minecraft.getMinecraft().getRenderItem().renderItem(stack, TransformType.FIXED);
