@@ -159,7 +159,7 @@ public class EntityIceWraith extends EntityBlazeMinion {
 		this.moveStrafing *= 0.98F;
 		this.moveForward *= 0.98F;
 		this.randomYawVelocity *= 0.9F;
-		this.moveRelative(moveStrafing, 0f, moveForward, 0f);
+		this.travel(this.moveStrafing, this.moveVertical, this.moveForward);
 		this.world.profiler.endSection();
 		this.world.profiler.startSection("push");
 		this.collideWithNearbyEntities();
