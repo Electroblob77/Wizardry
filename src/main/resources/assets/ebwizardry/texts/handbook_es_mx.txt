@@ -303,6 +303,11 @@ Gracias tambien a la comunidad de Minecraft que crea mods, la cual siempre tiene
 
 In addition, I'd like to thank the following individuals for their contributions to the mod:
 
+Code:
+
+- Corail31
+- 12foo
+
 Translations:
 
 - Russian: VilagVil
