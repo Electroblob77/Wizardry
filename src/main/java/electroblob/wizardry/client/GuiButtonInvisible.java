@@ -9,16 +9,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 class GuiButtonInvisible extends GuiButton {
 
 	public GuiButtonInvisible(int id, int x, int y, int width, int height){
-
 		super(id, x, y, width, height, "");
 	}
 
-	/**
-	 * Draws this button to the screen.
-	 */
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3){
-		this.hovered = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width
-				&& par3 < this.y + this.height;
+	@Override
+	public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
+		this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 	}
 
 }

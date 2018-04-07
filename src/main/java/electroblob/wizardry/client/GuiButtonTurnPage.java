@@ -22,15 +22,14 @@ class GuiButtonTurnPage extends GuiButton {
 		this.nextPage = isNextPage;
 	}
 
-	/**
-	 * Draws this button to the screen.
-	 */
-	public void drawButton(Minecraft par1Minecraft, int par2, int par3){
+	@Override
+	public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
+		
 		if(this.visible){
-			boolean flag = par2 >= this.x && par3 >= this.y && par2 < this.x + this.width
-					&& par3 < this.y + this.height;
+			
+			boolean flag = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			par1Minecraft.getTextureManager().bindTexture(texture);
+			minecraft.getTextureManager().bindTexture(texture);
 			int k = 0;
 			int l = 192;
 
