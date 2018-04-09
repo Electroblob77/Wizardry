@@ -1,5 +1,7 @@
 package electroblob.wizardry.client;
 
+import java.lang.reflect.Field;
+
 import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.WizardData;
@@ -9,6 +11,7 @@ import electroblob.wizardry.item.ItemSpectralBow;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Flight;
 import electroblob.wizardry.spell.ShadowWard;
@@ -17,19 +20,27 @@ import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
 import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMerchant;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.village.MerchantRecipe;
 import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -39,6 +50,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 
 /**
@@ -59,6 +71,12 @@ public final class WizardryClientEventHandler {
 	private static final ResourceLocation pointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/pointer.png");
 	private static final ResourceLocation targetPointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/target_pointer.png");
 
+	private static final Field ITEM_RENDERER;
+
+	static {
+		ITEM_RENDERER = ReflectionHelper.findField(GuiScreen.class, "itemRender", "");
+	}
+	
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
 		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_CRYSTAL);
@@ -113,6 +131,66 @@ public final class WizardryClientEventHandler {
 			}
 
 			event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
+		}
+	}
+	
+	// Brute-force fix for crystals not showing up when a wizard is given a spell book in the trade GUI.
+	@SubscribeEvent
+	public static void onGuiDrawForegroundEvent(GuiContainerEvent.DrawForeground event){
+		
+		if(event.getGuiContainer() instanceof GuiMerchant){
+			
+			GuiMerchant gui = (GuiMerchant)event.getGuiContainer();
+			// Note that gui.getMerchant() returns an NpcMerchant, not an EntityWizard.
+			
+			// Using == the specific item rather than instanceof because that's how trades do it.
+			if(gui.inventorySlots.getSlot(0).getStack().getItem() == WizardryItems.spell_book
+					|| gui.inventorySlots.getSlot(1).getStack().getItem() == WizardryItems.spell_book){
+				
+				for(MerchantRecipe trade : gui.getMerchant().getRecipes(Minecraft.getMinecraft().player)){
+					if(trade.getItemToBuy().getItem() == WizardryItems.spell_book && trade.getSecondItemToBuy().isEmpty()){
+						Slot slot = gui.inventorySlots.getSlot(2);
+						// Uses reflection to draw the itemstack
+						// It still doesn't look quite right because the slot highlight is behind the item, but it'll do
+						// until/unless I find a better solution.
+						renderItemAndTooltip(gui, trade.getItemToSell(), slot.xPos, slot.yPos, event.getMouseX(), event.getMouseY(),
+								gui.getSlotUnderMouse() == slot);
+					}
+				}
+			}
+		}
+	}
+	
+	private static void renderItemAndTooltip(GuiContainer gui, ItemStack stack, int x, int y, int mouseX, int mouseY, boolean tooltip){
+		
+		try {
+			
+			RenderItem renderItem = (RenderItem)ITEM_RENDERER.get(gui);
+			GlStateManager.pushMatrix();
+			RenderHelper.enableGUIStandardItemLighting();
+			GlStateManager.disableLighting();
+			GlStateManager.enableRescaleNormal();
+			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+			GlStateManager.enableLighting();
+			renderItem.zLevel = 100.0F;
+			
+			if(!stack.isEmpty()){
+				renderItem.renderItemAndEffectIntoGUI(stack, x, y);
+				renderItem.renderItemOverlays(Minecraft.getMinecraft().fontRenderer, stack, x, y);
+				
+				if(tooltip){
+					gui.drawHoveringText(gui.getItemToolTip(stack), mouseX + gui.getXSize()/2 - gui.width/2,
+							mouseY + gui.getYSize()/2 - gui.height/2);
+				}
+			}
+
+			GlStateManager.popMatrix();
+			GlStateManager.enableLighting();
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			RenderHelper.enableStandardItemLighting();
+			
+		} catch (Exception e){
+			e.printStackTrace();
 		}
 	}
 

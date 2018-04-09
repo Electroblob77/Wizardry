@@ -23,6 +23,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
+import electroblob.wizardry.util.WildcardTradeList;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
@@ -91,6 +92,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	 * are overriding something, in which case it should be fine). */
 
 	// Extending EntityVillager turned out to be a pretty neat thing to do, since now zombies will attack wizards
+	// TODO: Perhaps we should be implementing IMerchant now instead?
 
 	private EntityAIAttackSpell spellCastingAI = new EntityAIAttackSpell(this, 0.5D, 14.0F, 30, 50);
 
@@ -369,7 +371,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		if(nbt.hasKey("trades")){
 			NBTTagCompound nbttagcompound1 = nbt.getCompoundTag("trades");
-			this.trades = new MerchantRecipeList(nbttagcompound1);
+			this.trades = new WildcardTradeList(nbttagcompound1);
 		}
 
 		this.setElement(Element.values()[nbt.getInteger("element")]);
@@ -428,7 +430,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		if(this.trades == null){
 
-			this.trades = new MerchantRecipeList();
+			this.trades = new WildcardTradeList();
 
 			// All wizards will buy spell books
 			ItemStack anySpellBook = new ItemStack(WizardryItems.spell_book, 1, OreDictionary.WILDCARD_VALUE);
@@ -509,7 +511,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		Collections.shuffle(merchantrecipelist);
 
 		if(this.trades == null){
-			this.trades = new MerchantRecipeList();
+			this.trades = new WildcardTradeList();
 		}
 
 		for(int j1 = 0; j1 < merchantrecipelist.size(); ++j1){
