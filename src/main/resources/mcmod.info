@@ -9,7 +9,7 @@
     "Electroblob"
   ],
   "description" : "Electroblob's Wizardry adds an rpg-style system of magic spells to Minecraft with the aim of being as playable as possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master the arcane!",
-  "logoFile" : "assets/wizardry/textures/gui/logo.png",
+  "logoFile" : "assets/ebwizardry/textures/gui/logo.png",
   "updateUrl" : "",
   "parent" : "",
   "screenshots": [
