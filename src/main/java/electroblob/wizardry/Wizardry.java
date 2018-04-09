@@ -35,8 +35,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class Wizardry {
 
 	/** Wizardry's mod ID. */
-	// This is going to have to change for 1.12 or it'll conflict with the other wizardry mod.
-	// They were there first, it's only fair... although I wonder if that will have unintended side-effects?
 	public static final String MODID = "ebwizardry";
 	/** Wizardry's mod name, in readable form. */
 	public static final String NAME = "Electroblob's Wizardry";
