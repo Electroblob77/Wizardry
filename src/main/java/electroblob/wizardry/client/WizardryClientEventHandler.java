@@ -74,7 +74,7 @@ public final class WizardryClientEventHandler {
 	private static final Field ITEM_RENDERER;
 
 	static {
-		ITEM_RENDERER = ReflectionHelper.findField(GuiScreen.class, "itemRender", "");
+		ITEM_RENDERER = ReflectionHelper.findField(GuiScreen.class, "itemRender", "field_146296_j");
 	}
 	
 	@SubscribeEvent
