@@ -8,15 +8,18 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityArc extends Entity implements IEntityAdditionalSpawnData {
 
-	public int textureIndex = 0;
 	public double x1, y1, z1, x2, y2, z2;
-	// The number of ticks the arc lasts for before disappearing
+	/** The number of ticks the arc lasts for before disappearing. */
 	public int lifetime = 3;
-	public double offsetX, offsetZ;
+	/** False if the arc is locked to an entity, true otherwise. False by default. */
+	public boolean freeEnd = false;
+	/** A random long value used by the renderer as a seed to generate its vertices from, ensuring they remain the same
+	 * across multiple frames. Not synced. */
+	public final long seed;
 
 	public EntityArc(World par1World){
 		super(par1World);
-		textureIndex = this.rand.nextInt(16);
+		seed = this.rand.nextLong();
 		this.ignoreFrustumCheck = true;
 	}
 
@@ -61,6 +64,7 @@ public class EntityArc extends Entity implements IEntityAdditionalSpawnData {
 		data.writeDouble(this.x1);
 		data.writeDouble(this.y1);
 		data.writeDouble(this.z1);
+        data.writeBoolean(freeEnd);
 	}
 
 	@Override
@@ -68,6 +72,7 @@ public class EntityArc extends Entity implements IEntityAdditionalSpawnData {
 		this.x1 = data.readDouble();
 		this.y1 = data.readDouble();
 		this.z1 = data.readDouble();
+		this.freeEnd = data.readBoolean();
 	}
 
 }

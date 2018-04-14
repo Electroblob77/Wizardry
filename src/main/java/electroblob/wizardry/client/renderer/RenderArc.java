@@ -1,8 +1,9 @@
 package electroblob.wizardry.client.renderer;
 
+import java.util.Random;
+
 import org.lwjgl.opengl.GL11;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.EntityArc;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,119 +16,172 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderArc extends Render<EntityArc> {
 
-	private static final ResourceLocation[] textures = new ResourceLocation[16];
-
 	public RenderArc(RenderManager renderManager){
 		super(renderManager);
-		for(int i = 0; i < 16; i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/arc_" + i + ".png");
-		}
 	}
 
 	@Override
-	public void doRender(EntityArc arc, double d0, double d1, double d2, float fa, float fb){
+	public void doRender(EntityArc arc, double x, double y, double z, float viewPitch, float viewYaw) {
+
 		GlStateManager.pushMatrix();
-		GlStateManager.translate((float)d0, (float)d1, (float)d2);
+		GlStateManager.translate(x, y, z);
 		GlStateManager.disableLighting();
 		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA); // This line fixes the weird
-																					// brightness bug.
+		GlStateManager.disableTexture2D();
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
-		// System.out.println("Entity coords: " + entity.posX + ", " + entity.posY + ", " + entity.posZ);
-		// System.out.println("doRender parameters: " + d0 + ", " + d1 + ", " + d2 + ", " + fa + ", " + fb);
-
 		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder buffer = tessellator.getBuffer();
 
-		bindTexture(textures[arc.textureIndex]); // This MUST be after the tessellator declaration and the gl stuff
-
-		/**
-		 * Note: A lot of the maths here works on similar triangles and the ratios between them, avoiding too much
+		/* Note: A lot of the maths here works on similar triangles and the ratios between them, avoiding too much
 		 * pythagoras and eliminating the need for any trig. Ratios are used for the positioning of the arc endpoints.
-		 * Ratios are usually used swapping x and z because the triangles are rotated through 90 degrees.
-		 */
+		 * Ratios are usually used swapping x and z because the triangles are rotated through 90 degrees. */
 
-		double dx = -d0;
-		double dy = -d1;
-		double dz = -d2;
+		double dx = -x;
+		double dy = -y;
+		double dz = -z;
 
 		if(arc.x1 != 0){
-			dx = arc.x1 - arc.posX;// - d2/lengthOffsetRatio;
-			dy = arc.y1 - arc.posY + 0.3;
-			dz = arc.z1 - arc.posZ;// + d0/lengthOffsetRatio;
 
-			// The distance from caster to target
-			double arcLength = Math.sqrt(dz * dz + dx * dx);
+			dx = arc.x1 - arc.posX;
+			dy = arc.y1 - arc.posY;
+			dz = arc.z1 - arc.posZ;
 
-			// The ratio between the length of the arc and the offset of the start point from the player's centre (which
-			// is always 0.3).
-			// double lengthOffsetRatio = arcLength/0.3;
+			// The distance from origin to endpoint
+			double arcLength = Math.sqrt(dx*dx+dy*dy+dz*dz);
 
-			// EntityClientPlayerMP player = Minecraft.getMinecraft().player;
+			GL11.glTranslated(dx, dy, dz);
 
-			// double xViewDist = player.posX - d0;
-			// double yViewDist = player.posY + player.eyeHeight - d1;
-			// double zViewDist = player.posZ - d2;
+			// Math.atan2 computes within -180 to +180, rather than -90 to +90.
+			float yaw = (float)(180d/Math.PI * Math.atan2(-dx, -dz));
+			float pitch = (float)(180f/(float)Math.PI * Math.atan(dy/Math.sqrt(dz*dz+dx*dx)));
 
-			// double xzViewDist = Math.sqrt(xViewDist * xViewDist + zViewDist * zViewDist);
+			GL11.glRotatef(yaw, 0, 1, 0);
+			GL11.glRotatef(pitch, 1, 0, 0);
 
-			// The angle above the horizontal that this particular player is viewing the arc from
-			// double viewAngle = Math.atan(yViewDist/xzViewDist);
+			// The direction of the arc drawn by the tessellator is always along the z axis and is rotated to the
+			// correct orientation, that way there isn't a ton of trigonometry and the code is way neater.
 
-			// Half the width of the arc
-			double arcWidth = 0.3d;
+			boolean freeEnd = arc.freeEnd;
 
-			// Right hand side of vertical plane
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			// Target end
-			buffer.pos(0, -0.5, 0).tex(1, 1).endVertex();
-			buffer.pos(0, 0.5, 0).tex(1, 0).endVertex();
-			// Caster end
-			buffer.pos(dx, dy, dz).tex(0, 0).endVertex();
-			buffer.pos(dx, dy - 1, dz).tex(0, 1).endVertex();
-			tessellator.draw();
+			// == To be extracted as constants later ==
+			float thickness = 0.04f; // Half the width of the outermost layer
+			double maxSegmentLength = 0.6; // Max length of a segment, obviously
+			double minSegmentLength = 0.2; // Min length of a segment
+			double vertexDither = 0.15; // Max deviation in x or y axis from the centreline
+			int maxForkSegments = 3; // Max number of segments a fork can have
+			float forkChance = 0.3f; // Chance (as a fraction) that a vertex will have a fork
+			int updateTime = 1; // Number of ticks to wait before the arc changes shape again
 
-			// Left
-			buffer.begin(GL11.GL_QUADS, net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
-			// Target end
-			buffer.pos(0, -0.5, 0).tex(1, 1).endVertex();
-			// Caster end
-			buffer.pos(dx, dy - 1, dz).tex(0, 1).endVertex();
-			buffer.pos(dx, dy, dz).tex(0, 0).endVertex();
-			// Target end
-			buffer.pos(0, 0.5, 0).tex(1, 0).endVertex();
-			tessellator.draw();
+			int numberOfSegments = (int)Math.round(arcLength/maxSegmentLength); // Number of segments
 
-			// Bottom of horizontal plane
-			buffer.begin(GL11.GL_QUADS, net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
-			buffer.pos((arcWidth / arcLength) * dz, 0, (-arcWidth / arcLength) * dx).tex(1, 1).endVertex();
-			buffer.pos(dx + (arcWidth / arcLength) * dz, dy - 0.5, dz - (arcWidth / arcLength) * dx).tex(0, 1)
-					.endVertex();
-			buffer.pos(dx - (arcWidth / arcLength) * dz, dy - 0.5, dz + (arcWidth / arcLength) * dx).tex(0, 0)
-					.endVertex();
-			buffer.pos((-arcWidth / arcLength) * dz, 0, (arcWidth / arcLength) * dx).tex(1, 0).endVertex();
-			tessellator.draw();
+			for(int layer=0; layer<3; layer++){
 
-			// Top
-			buffer.begin(GL11.GL_QUADS, net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
-			buffer.pos((arcWidth / arcLength) * dz, 0, (-arcWidth / arcLength) * dx).tex(1, 1).endVertex();
-			buffer.pos((-arcWidth / arcLength) * dz, 0, (arcWidth / arcLength) * dx).tex(1, 0).endVertex();
-			buffer.pos(dx - (arcWidth / arcLength) * dz, dy - 0.5, dz + (arcWidth / arcLength) * dx).tex(0, 0)
-					.endVertex();
-			buffer.pos(dx + (arcWidth / arcLength) * dz, dy - 0.5, dz - (arcWidth / arcLength) * dx).tex(0, 1)
-					.endVertex();
-			tessellator.draw();
+				double px=0, py=0, pz=0;
+				// Creates a random from the arc's seed field + the number of ticks it has existed/the update period.
+				// By using a seed, we can ensure the vertex positions and forks are identical a) for each layer, even
+				// though they are rendered sequentially, and b) across many frames (and ticks, if updateTime > 1).
+				Random random = new Random(arc.seed + arc.ticksExisted/updateTime);
+
+				// numberOfSegments-1 because the last segment is handled separately.
+				for(int i=0; i<numberOfSegments-1; i++){
+
+					double px2 = (random.nextDouble()*2-1)*vertexDither; // Maybe use Gaussians?
+					double py2 = (random.nextDouble()*2-1)*vertexDither;
+					double pz2 = pz + arcLength/(double)numberOfSegments; // For now they are all the same length
+
+					drawSegment(tessellator, layer, px, py, pz, px2, py2, pz2, thickness);
+
+					// Forks
+					if(random.nextFloat() < forkChance){
+
+						double px3=px, py3=py, pz3=pz;
+
+						for(int j=0; j<random.nextInt(maxForkSegments-1)+1; j++){
+							// Forks set their centreline to the x/y coordinates of the vertex they originate from
+							double px4 = px3 + (random.nextDouble()*2-1)*vertexDither;
+							double py4 = py3 + (random.nextDouble()*2-1)*vertexDither;
+							double pz4 = pz3 + minSegmentLength + random.nextDouble()*(maxSegmentLength - minSegmentLength);
+
+							drawSegment(tessellator, layer, px3, py3, pz3, px4, py4, pz4, thickness*0.8f);
+
+							// Forks of forks
+							if(random.nextFloat() < forkChance){
+
+								double px5 = px3 + (random.nextDouble()*2-1)*vertexDither;
+								double py5 = py3 + (random.nextDouble()*2-1)*vertexDither;
+								double pz5 = pz3 + minSegmentLength + random.nextDouble()*(maxSegmentLength - minSegmentLength);
+
+								drawSegment(tessellator, layer, px3, py3, pz3, px5, py5, pz5, thickness*0.6f);
+							}
+
+							px3 = px4;
+							py3 = py4;
+							pz3 = pz4;
+						}
+					}
+
+					px = px2;
+					py = py2;
+					pz = pz2;
+				}
+
+				// Last segment has a specific end position and cannot fork.
+				double px2 = freeEnd ? (random.nextDouble()*2-1)*vertexDither : 0;
+				double py2 = freeEnd ? (random.nextDouble()*2-1)*vertexDither : 0;
+				drawSegment(tessellator, layer, px, py, pz, px2, py2, arcLength, thickness);
+
+			}
 		}
 
+		GlStateManager.enableTexture2D();
 		GlStateManager.enableLighting();
 		GlStateManager.disableBlend();
 		GlStateManager.popMatrix();
 	}
 
+	/** Draws the given layer of a segment of the arc, from the point (x1, y1, z1) to the point (x2, y2, z2), with the given thickness. */
+	private void drawSegment(Tessellator tessellator, int layer, double x1, double y1, double z1, double x2, double y2, double z2, float thickness){
+
+		BufferBuilder buffer = tessellator.getBuffer();
+		buffer.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+		
+		switch(layer){
+		case 0:
+			// TODO: Extract these colours as constants
+			drawShearedBox(buffer, x1, y1, z1, x2, y2, z2, 0.25f*thickness, 255, 255, 255, 255);
+			break;
+
+		case 1:
+			drawShearedBox(buffer, x1, y1, z1, x2, y2, z2, 0.6f*thickness, 200, 255, 255, 165);
+			break;
+
+		case 2:
+			drawShearedBox(buffer, x1, y1, z1, x2, y2, z2, thickness, 50, 150, 255, 75);
+			break;
+		}
+		
+		tessellator.draw();
+	}
+	
+	/** Draws a single box for one segment of the arc, from the point (x1, y1, z1) to the point (x2, y2, z2), with given width and colour. */
+	private void drawShearedBox(BufferBuilder buffer, double x1, double y1, double z1, double x2, double y2, double z2, float width, int r, int g, int b, int a){
+		
+		buffer.pos(x1-width, y1-width, z1).color(r, g, b, a).endVertex();
+		buffer.pos(x2-width, y2-width, z2).color(r, g, b, a).endVertex();
+		buffer.pos(x1-width, y1+width, z1).color(r, g, b, a).endVertex();
+		buffer.pos(x2-width, y2+width, z2).color(r, g, b, a).endVertex();
+		buffer.pos(x1+width, y1+width, z1).color(r, g, b, a).endVertex();
+		buffer.pos(x2+width, y2+width, z2).color(r, g, b, a).endVertex();
+		buffer.pos(x1+width, y1-width, z1).color(r, g, b, a).endVertex();
+		buffer.pos(x2+width, y2-width, z2).color(r, g, b, a).endVertex();
+		buffer.pos(x1-width, y1-width, z1).color(r, g, b, a).endVertex();
+		buffer.pos(x2-width, y2-width, z2).color(r, g, b, a).endVertex();
+	}
+
 	@Override
 	protected ResourceLocation getEntityTexture(EntityArc entity){
-		return textures[entity.textureIndex];
+		return null;
 	}
 
 }
