@@ -362,11 +362,18 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 				if(event.getSource().isFireDamage()) newSource.setFireDamage();
 				if(event.getSource().isProjectile()) newSource.setProjectile();
 
-				// For some reason Minecraft calculates knockback relative to DamageSource#getEntity. In vanilla this
+				// For some reason Minecraft calculates knockback relative to DamageSource#getTrueSource. In vanilla this
 				// is unnoticeable, but it looks a bit weird with summoned creatures involved - so this fixes that.
 				if(WizardryUtilities.attackEntityWithoutKnockback(event.getEntity(), newSource, event.getAmount())){
+					// Using event.getSource().getTrueSource() as this means the target is knocked back from the minion
 					WizardryUtilities.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
 					((ISummonedCreature)event.getSource().getTrueSource()).onSuccessfulAttack(event.getEntityLiving());
+					// If the target revenge-targeted the summoner, make it revenge-target the minion instead
+					// (if it didn't revenge-target, do nothing)
+					if(event.getEntityLiving().getRevengeTarget() == summoner
+							&& event.getSource().getTrueSource() instanceof EntityLivingBase){
+						event.getEntityLiving().setRevengeTarget((EntityLivingBase)event.getSource().getTrueSource());
+					}
 				}
 
 			}
