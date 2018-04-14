@@ -135,11 +135,11 @@ public class GuiSpellDisplay extends Gui {
 
 			// Cooldown bar
 			if(cooldown > 0){
-				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, height - 8, 128, 6, 82, 6);
+				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, top + 28, 128, 6, 82, 6);
 
 				int l = (int)(((double)(spell.cooldown * cooldownMultiplier - cooldown) / (double)(spell.cooldown * cooldownMultiplier)) * 82);
 
-				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, height - 8, 128, 0, l, 6);
+				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, top + 28, 128, 0, l, 6);
 			}
 
 			// Spell illustration
