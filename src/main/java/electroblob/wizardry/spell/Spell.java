@@ -364,8 +364,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		}
 	}
 
-	// ================================================ Static methods
-	// ==================================================
+	// ================================================ Static methods ==================================================
 
 	/**
 	 * Returns the total number of registered spells, excluding the 'None' spell. Returns the same number that would be
