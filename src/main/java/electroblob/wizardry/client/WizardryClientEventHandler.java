@@ -52,6 +52,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Event handler responsible for all client-side only events, mostly rendering.
@@ -59,6 +60,7 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author Electroblob
  * @since Wizardry 1.0
  */
+@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public final class WizardryClientEventHandler {
 
