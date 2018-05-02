@@ -50,7 +50,7 @@ public final class WizardryBlocks {
 	public static final Block crystal_flower = new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F)
 			.setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Block snare = new BlockSnare(Material.PLANTS).setHardness(0.0F);
-	public static final Block transportation_stone = new BlockTransportationStone(Material.ROCK).setHardness(0.0F)
+	public static final Block transportation_stone = new BlockTransportationStone(Material.ROCK).setHardness(0.3F)
 			.setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Block spectral_block = new BlockSpectral(Material.GLASS).setLightLevel(0.7f).setLightOpacity(0)
 			.setBlockUnbreakable().setResistance(6000000.0F);
