@@ -188,7 +188,7 @@ public class Wizardry {
 
 	// 2.1 changed some item ids, so this fixes them for existing worlds
 	// Nobody updates minecraft versions when using mods, but I may as well leave this here just in case.
-	@EventHandler
+	@SubscribeEvent
 	public static void onMissingMappingEvent(RegistryEvent.MissingMappings<Item> event){
 		// Just get, not getAll, since the mod id didn't change!
 		for(RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
