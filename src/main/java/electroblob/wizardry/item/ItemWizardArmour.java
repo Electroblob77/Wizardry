@@ -180,29 +180,29 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 		}
 	}
 
+	/*
+	 * Doesn't actually need to do anything, all values are handled in getAttibuteModifiers below.  
+	 * Returning > 0 in this method will cause it to be added to the defense value below.
+	 */
 	@Override
 	public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slotIndex){
-
-		EntityEquipmentSlot slot = getArmorSlotFromIndex(slotIndex);
-
-		if(armor.getItemDamage() < armor.getMaxDamage()){
-			if(armor.hasTagCompound() && armor.getTagCompound().getBoolean("legendary")){
-				// Legendary armour gives full 10 shields, like diamond.
-				return ArmorMaterial.DIAMOND.getDamageReductionAmount(slot);
-			}else{
-				return reductions[slotIndex];
-			}
-		}else{
-			return 0;
-		}
+		return 0;
 	}
 	
+	/*
+	 * Properly handles the defense value of the armor.  This method is responisble for the tooltip on top of
+	 * the armor value.  It is also what handles armor toughness, but the wizard armor had a value of 0 for that.
+	 */
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
 		Multimap<String, AttributeModifier> map = HashMultimap.create();
-		if(stack.getItemDamage() < stack.getMaxDamage() && this.armorType == slot) 
+		if(stack.getItemDamage() < stack.getMaxDamage() && this.armorType == slot) {
+			int defense = reductions[slot.getIndex()];
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) 
+				defense = ArmorMaterial.DIAMOND.getDamageReductionAmount(slot);
 			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
-					"Armor modifier", reductions[slot.getIndex()], 0));
+					"Armor modifier", defense, 0));
+		}
 		return map;
 	}
 
