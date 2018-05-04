@@ -189,15 +189,14 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 
 	@Override
 	public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot){
-		if(stack.getItemDamage() < stack.getMaxDamage()){
-			if(stack.getItemDamage() + damage > stack.getMaxDamage()){
-				// Note for reference: this is the method to use, despite how it sounds attemptDamageItem() is called
-				// by this one, not the other way round.
-				stack.damageItem(stack.getMaxDamage() - stack.getItemDamage(), entity);
-			}else{
-				stack.damageItem(damage, entity);
-			}
-		}
+		stack.damageItem(damage, entity);
+	}
+
+	// Fixes wizard armor breaking by disallowing setting damage above the max, since damageArmor is not always called.
+	@Override
+	public void setDamage(ItemStack stack, int damage) {
+		if(damage <= stack.getMaxDamage()) super.setDamage(stack, damage);
+		else super.setDamage(stack, stack.getMaxDamage());
 	}
 
 	/**
