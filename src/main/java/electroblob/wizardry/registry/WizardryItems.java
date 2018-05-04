@@ -127,7 +127,7 @@ public final class WizardryItems {
 	public static final Item armour_upgrade = new ItemArmourUpgrade();
 
 	public static final ArmorMaterial SILK = EnumHelper.addArmorMaterial("SILK",
-			"wizardry/textures/armour/wizard_armour", 15, new int[]{2, 5, 4, 2}, 0,
+			"wizardry/textures/armour/wizard_armour", 15, new int[]{0, 0, 0, 0}, 0,
 			SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
 	
 	// Saw a post somewhere that said you have to put these in the init methods rather than defining them as constants.

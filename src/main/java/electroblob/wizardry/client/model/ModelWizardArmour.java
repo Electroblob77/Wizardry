@@ -1,10 +1,9 @@
 package electroblob.wizardry.client.model;
 
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelWizardArmour extends ModelBiped {
+public class ModelWizardArmour extends ModelWtfMojang {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
 	ModelRenderer Shape3;

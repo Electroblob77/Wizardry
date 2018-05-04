@@ -1,7 +1,5 @@
 package electroblob.wizardry.client;
 
-import java.lang.reflect.Field;
-
 import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.WizardData;
@@ -21,7 +19,6 @@ import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMerchant;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -50,7 +47,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -73,12 +69,6 @@ public final class WizardryClientEventHandler {
 	private static final ResourceLocation pointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/pointer.png");
 	private static final ResourceLocation targetPointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/target_pointer.png");
 
-	private static final Field ITEM_RENDERER;
-
-	static {
-		ITEM_RENDERER = ReflectionHelper.findField(GuiScreen.class, "itemRender", "field_146296_j");
-	}
-	
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
 		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_CRYSTAL);
@@ -164,36 +154,30 @@ public final class WizardryClientEventHandler {
 	}
 	
 	private static void renderItemAndTooltip(GuiContainer gui, ItemStack stack, int x, int y, int mouseX, int mouseY, boolean tooltip){
-		
-		try {
-			
-			RenderItem renderItem = (RenderItem)ITEM_RENDERER.get(gui);
-			GlStateManager.pushMatrix();
-			RenderHelper.enableGUIStandardItemLighting();
-			GlStateManager.disableLighting();
-			GlStateManager.enableRescaleNormal();
-			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-			GlStateManager.enableLighting();
-			renderItem.zLevel = 100.0F;
-			
-			if(!stack.isEmpty()){
-				renderItem.renderItemAndEffectIntoGUI(stack, x, y);
-				renderItem.renderItemOverlays(Minecraft.getMinecraft().fontRenderer, stack, x, y);
-				
-				if(tooltip){
-					gui.drawHoveringText(gui.getItemToolTip(stack), mouseX + gui.getXSize()/2 - gui.width/2,
-							mouseY + gui.getYSize()/2 - gui.height/2);
-				}
-			}
 
-			GlStateManager.popMatrix();
-			GlStateManager.enableLighting();
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			RenderHelper.enableStandardItemLighting();
-			
-		} catch (Exception e){
-			e.printStackTrace();
+		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+		GlStateManager.pushMatrix();
+		RenderHelper.enableGUIStandardItemLighting();
+		GlStateManager.disableLighting();
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.enableColorMaterial();
+		GlStateManager.enableLighting();
+		renderItem.zLevel = 100.0F;
+
+		if(!stack.isEmpty()){
+			renderItem.renderItemAndEffectIntoGUI(stack, x, y);
+			renderItem.renderItemOverlays(Minecraft.getMinecraft().fontRenderer, stack, x, y);
+
+			if(tooltip){
+				gui.drawHoveringText(gui.getItemToolTip(stack), mouseX + gui.getXSize()/2 - gui.width/2,
+						mouseY + gui.getYSize()/2 - gui.height/2);
+			}
 		}
+
+		GlStateManager.popMatrix();
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		RenderHelper.enableStandardItemLighting();
 	}
 
 	// Third person
@@ -241,7 +225,7 @@ public final class WizardryClientEventHandler {
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 			// Disabling depth test allows it to be seen through everything.
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GlStateManager.disableDepth();
 			GlStateManager.color(1, 1, 1, 1);
 
 			GlStateManager.translate(event.getX(), event.getY() + event.getEntity().height + 0.5, event.getZ());
@@ -265,7 +249,7 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.enableDepth();
 
 			GlStateManager.popMatrix();
 		}
@@ -282,7 +266,7 @@ public final class WizardryClientEventHandler {
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 			// Disabling depth test allows it to be seen through everything.
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GlStateManager.disableDepth();
 			GlStateManager.color(1, 1, 1, 1);
 
 			GlStateManager.translate(event.getX(), event.getY() + event.getEntity().height + 0.5, event.getZ());
@@ -306,7 +290,7 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.enableCull();
 			GlStateManager.enableLighting();
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.enableDepth();
 
 			GlStateManager.popMatrix();
 		}
@@ -327,7 +311,7 @@ public final class WizardryClientEventHandler {
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			// Disabling depth test allows it to be seen through everything.
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GlStateManager.disableDepth();
 
 			GlStateManager.translate(event.getX(), event.getY() + event.getEntity().height * 0.6, event.getZ());
 
@@ -351,7 +335,7 @@ public final class WizardryClientEventHandler {
 			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.enableDepth();
 
 			GlStateManager.popMatrix();
 		}
@@ -365,8 +349,8 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.pushMatrix();
 
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			GL11.glDepthMask(false);
+			GlStateManager.disableDepth();
+			GlStateManager.depthMask(false);
 			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.disableAlpha();
@@ -383,8 +367,8 @@ public final class WizardryClientEventHandler {
 			buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
 			tessellator.draw();
 
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.depthMask(true);
+			GlStateManager.enableDepth();
 			GlStateManager.enableAlpha();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -395,8 +379,8 @@ public final class WizardryClientEventHandler {
 
 			GlStateManager.pushMatrix();
 
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			GL11.glDepthMask(false);
+			GlStateManager.disableDepth();
+			GlStateManager.depthMask(false);
 			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.disableAlpha();
@@ -413,8 +397,8 @@ public final class WizardryClientEventHandler {
 			buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
 
 			tessellator.draw();
-			GL11.glDepthMask(true);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GlStateManager.depthMask(true);
+			GlStateManager.enableDepth();
 			GlStateManager.enableAlpha();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 

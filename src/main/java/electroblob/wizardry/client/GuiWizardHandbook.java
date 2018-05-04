@@ -182,7 +182,7 @@ public class GuiWizardHandbook extends GuiScreen {
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.disableLighting();
 		GlStateManager.enableRescaleNormal();
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.enableColorMaterial();
 		GlStateManager.enableLighting();
 		itemRender.zLevel = 100.0F;
 
@@ -204,7 +204,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
 
 	}
@@ -219,7 +219,7 @@ public class GuiWizardHandbook extends GuiScreen {
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.disableLighting();
 		GlStateManager.enableRescaleNormal();
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.enableColorMaterial();
 		itemRender.zLevel = 0.0F;
 		GlStateManager.disableLighting();
 
@@ -239,7 +239,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
 
 	}
