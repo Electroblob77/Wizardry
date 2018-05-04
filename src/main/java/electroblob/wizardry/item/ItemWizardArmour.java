@@ -3,6 +3,7 @@ package electroblob.wizardry.item;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import electroblob.wizardry.Wizardry;
@@ -198,7 +199,7 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 	
 	@Override
 	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
-		Multimap<String, AttributeModifier> map = super.getAttributeModifiers(slot, stack);
+		Multimap<String, AttributeModifier> map = HashMultimap.create();
 		if(stack.getItemDamage() < stack.getMaxDamage() && this.armorType == slot) 
 			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
 					"Armor modifier", reductions[slot.getIndex()], 0));
