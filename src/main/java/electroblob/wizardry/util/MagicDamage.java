@@ -64,9 +64,9 @@ import net.minecraft.util.EntityDamageSource;
 public class MagicDamage extends EntityDamageSource implements IElementalDamage {
 
 	/** The name of the damagesource for direct magic damage from the wizardry mod. */
-	public static final String DIRECT_MAGIC_DAMAGE = "wizardryMagic";
+	public static final String DIRECT_MAGIC_DAMAGE = "wizardry_magic";
 	/** The name of the damagesource for indirect magic damage from the wizardry mod. */
-	public static final String INDIRECT_MAGIC_DAMAGE = "indirectWizardryMagic";
+	public static final String INDIRECT_MAGIC_DAMAGE = "indirect_wizardry_magic";
 	// Technically, I don't need to specify that the classes in this map must extend entity, but it's good practice to.
 	private static final Map<Class<? extends Entity>, DamageType[]> immunityMapping = new HashMap<Class<? extends Entity>, DamageType[]>();
 
@@ -169,7 +169,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	}
 
 	/**
-	 * Returns a DamageSource called "wizardryMagic" with the given entity as the caster. Use in preference to vanilla
+	 * Returns a DamageSource called "wizardry_magic" with the given entity as the caster. Use in preference to vanilla
 	 * types to allow things to distinguish between magic and regular melee/swords. Unlike DamageSource.MAGIC, it does
 	 * not bypass armour and has a player as the source (rather than nothing). It is still classed as magic damage (for
 	 * the record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
@@ -190,7 +190,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	}
 
 	/**
-	 * Returns a DamageSource called "wizardryMagic" with the given entity as the caster. Use in preference to vanilla
+	 * Returns a DamageSource called "wizardry_magic" with the given entity as the caster. Use in preference to vanilla
 	 * types to allow things to distinguish between magic and regular melee/swords. Unlike DamageSource.MAGIC, it does
 	 * not bypass armour and has a player as the source (rather than nothing). It is still classed as magic damage (for
 	 * the record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
@@ -212,7 +212,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	}
 
 	/**
-	 * Returns a DamageSource called "indirectWizardryMagic" with the player as the caster. Use in preference to vanilla
+	 * Returns a DamageSource called "indirect_wizardry_magic" with the player as the caster. Use in preference to vanilla
 	 * types to allow things to distinguish between magic and regular arrows/throwables. Unlike
 	 * DamageSource.causeIndirectMagicDamage, it does not bypass armour. It is still classed as magic damage (for the
 	 * record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
@@ -234,7 +234,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	}
 
 	/**
-	 * Returns a DamageSource called "indirectWizardryMagic" with the player as the caster. Use in preference to vanilla
+	 * Returns a DamageSource called "indirect_wizardry_magic" with the player as the caster. Use in preference to vanilla
 	 * types to allow things to distinguish between magic and regular arrows/throwables. Unlike
 	 * DamageSource.causeIndirectMagicDamage, it does not bypass armour. It is still classed as magic damage (for the
 	 * record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
