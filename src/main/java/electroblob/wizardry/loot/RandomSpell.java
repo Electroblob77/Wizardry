@@ -108,7 +108,7 @@ public class RandomSpell extends LootFunction {
 			}
 		}else{
 			// In theory, swapping this line to the commented one should make absolutely no difference.
-			element = elements.get(random.nextInt(tiers.size()));
+			element = elements.get(random.nextInt(elements.size()));
 			// element = null;
 		}
 
