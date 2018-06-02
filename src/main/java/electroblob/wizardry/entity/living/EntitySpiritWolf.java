@@ -24,6 +24,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
@@ -68,11 +69,6 @@ public class EntitySpiritWolf extends EntityWolf {
 		}
 
 		super.onDeath(source);
-	}
-
-	@Override
-	protected int getExperiencePoints(EntityPlayer p_70693_1_){
-		return 0;
 	}
 
 	@Override
@@ -148,7 +144,22 @@ public class EntitySpiritWolf extends EntityWolf {
 	}
 
 	@Override
+	protected int getExperiencePoints(EntityPlayer player){
+		return 0;
+	}
+
+	@Override
+	protected boolean canDropLoot(){
+		return false;
+	}
+
+	@Override
 	protected Item getDropItem(){
+		return null;
+	}
+
+	@Override
+	protected ResourceLocation getLootTable(){
 		return null;
 	}
 
