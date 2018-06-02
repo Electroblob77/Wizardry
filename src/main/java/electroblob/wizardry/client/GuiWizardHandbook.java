@@ -345,8 +345,8 @@ public class GuiWizardHandbook extends GuiScreen {
 
 					}else{
 
-						paragraph = paragraph.replaceAll("NEXT_SPELL_KEY", Keyboard.getKeyName(ClientProxy.NEXT_SPELL.getKeyCode()));
-						paragraph = paragraph.replaceAll("PREVIOUS_SPELL_KEY", Keyboard.getKeyName(ClientProxy.PREVIOUS_SPELL.getKeyCode()));
+						paragraph = paragraph.replaceAll("NEXT_SPELL_KEY", ClientProxy.NEXT_SPELL.getDisplayName());
+						paragraph = paragraph.replaceAll("PREVIOUS_SPELL_KEY", ClientProxy.PREVIOUS_SPELL.getDisplayName());
 						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL_MINUS_30", "" + (Constants.MANA_PER_CRYSTAL - 30));
 						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL", "" + Constants.MANA_PER_CRYSTAL);
 						paragraph = paragraph.replaceAll("BASIC_MAX_CHARGE", "" + Tier.BASIC.maxCharge);
