@@ -20,10 +20,17 @@ public class BlockCrystalOre extends Block {
 
 	@Override
 	public int quantityDropped(IBlockState state, int fortune, Random random){
+		// This now works the same way as vanilla ores
 		if(fortune > 0){
-			return random.nextInt(2) + 1 + random.nextInt(fortune);
+			
+			int i = random.nextInt(fortune + 2) - 1;
+			
+            if(i < 0) i = 0;
+            
+			return (random.nextInt(3) + 1) * (i + 1);
+			
 		}else{
-			return random.nextInt(2) + 1;
+			return random.nextInt(3) + 1;
 		}
 	}
 
