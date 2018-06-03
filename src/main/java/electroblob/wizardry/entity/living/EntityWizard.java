@@ -162,10 +162,10 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
 					// ... or in the whitelist ...
 							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
+									.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT)))
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
+									.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT))){
 						// ... it can be attacked.
 						return true;
 					}
