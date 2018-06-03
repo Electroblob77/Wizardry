@@ -3,7 +3,6 @@ package electroblob.wizardry.entity.living;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import com.google.common.base.Predicate;
 
@@ -118,10 +117,10 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 							|| (entity instanceof ISummonedCreature || entity instanceof EntityWizard
 					// ... or in the whitelist ...
 									|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-											.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT)))
+											.contains(EntityList.getKey(entity.getClass())))
 									// ... and isn't in the blacklist ...
 									&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-											.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT))){
+											.contains(EntityList.getKey(entity.getClass()))){
 						// ... it can be attacked.
 						return true;
 					}

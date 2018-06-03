@@ -2,7 +2,6 @@ package electroblob.wizardry.entity.living;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -190,10 +189,10 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 							|| (entity instanceof EntityWizard && !(getCaster() instanceof EntityWizard))
 					// ... or in the whitelist ...
 							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-									.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT)))
+									.contains(EntityList.getKey(entity.getClass())))
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-									.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT))){
+									.contains(EntityList.getKey(entity.getClass()))){
 						// ... it can be attacked.
 						return true;
 					}

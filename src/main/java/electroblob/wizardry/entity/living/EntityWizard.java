@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
@@ -162,10 +161,10 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
 					// ... or in the whitelist ...
 							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-									.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT)))
+									.contains(EntityList.getKey(entity.getClass())))
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-									.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT))){
+									.contains(EntityList.getKey(entity.getClass()))){
 						// ... it can be attacked.
 						return true;
 					}

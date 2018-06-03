@@ -1,6 +1,7 @@
 package electroblob.wizardry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,20 +103,20 @@ public final class Settings {
 	/** <b>[Server-only]</b> Whether summoned creatures can revenge attack their caster if their caster attacks them. */
 	public boolean minionRevengeTargeting = true;
 	/**
-	 * <b>[Server-only]</b> List of names of entities which summoned creatures are allowed to attack, in addition to the
-	 * defaults.
+	 * <b>[Server-only]</b> List of registry names of entities which summoned creatures are allowed to attack, in addition
+	 * to the defaults.
 	 */
-	public String[] summonedCreatureTargetsWhitelist = {};
+	public ResourceLocation[] summonedCreatureTargetsWhitelist = {};
 	/**
-	 * <b>[Server-only]</b> List of names of entities which summoned creatures are specifically not allowed to attack,
-	 * overriding the defaults and the whitelist.
+	 * <b>[Server-only]</b> List of registry names of entities which summoned creatures are specifically not allowed to
+	 * attack, overriding the defaults and the whitelist.
 	 */
-	public String[] summonedCreatureTargetsBlacklist = {"creeper"};
+	public ResourceLocation[] summonedCreatureTargetsBlacklist = {new ResourceLocation("creeper")};
 	/**
-	 * <b>[Server-only]</b> List of names of entities which are immune to the mind control spell, in addition to the
-	 * defaults.
+	 * <b>[Server-only]</b> List of registry names of entities which are immune to the mind control spell, in addition to
+	 * the defaults.
 	 */
-	public String[] mindControlTargetsBlacklist = {};
+	public ResourceLocation[] mindControlTargetsBlacklist = {};
 	/** <b>[Server-only]</b> Global damage scaling factor for all player magic damage. */
 	public double playerDamageScale = 1.0f;
 	/** <b>[Server-only]</b> Global damage scaling factor for all npc magic damage. */
@@ -451,12 +452,8 @@ public final class Settings {
 				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_whitelist");
 		property.setRequiresWorldRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		summonedCreatureTargetsWhitelist = property.getStringList();
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < summonedCreatureTargetsWhitelist.length; i++){
-			summonedCreatureTargetsWhitelist[i] = summonedCreatureTargetsWhitelist[i].toLowerCase(Locale.ROOT).trim();
-		}
+		// Converts all strings in the list to a ResourceLocation.
+		summonedCreatureTargetsWhitelist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "summonedCreatureTargetsBlacklist",
@@ -464,12 +461,8 @@ public final class Settings {
 				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_blacklist");
 		property.setRequiresWorldRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		summonedCreatureTargetsBlacklist = property.getStringList();
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < summonedCreatureTargetsBlacklist.length; i++){
-			summonedCreatureTargetsBlacklist[i] = summonedCreatureTargetsBlacklist[i].toLowerCase(Locale.ROOT).trim();
-		}
+		// Converts all strings in the list to a ResourceLocation.
+		summonedCreatureTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name,
@@ -510,12 +503,9 @@ public final class Settings {
 				"List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".mind_control_targets_blacklist");
 		property.setRequiresWorldRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		mindControlTargetsBlacklist = property.getStringList();
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < mindControlTargetsBlacklist.length; i++){
-			mindControlTargetsBlacklist[i] = mindControlTargetsBlacklist[i].toLowerCase(Locale.ROOT).trim();
-		}
+		// Converts all strings in the list to a ResourceLocation.
+		mindControlTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
+		propOrder.add(property.getName());
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
