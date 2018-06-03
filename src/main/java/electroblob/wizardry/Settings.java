@@ -223,7 +223,7 @@ public final class Settings {
 	/**
 	 * Called from preInit to initialise the config file. The first part of the config file has to be done here (as is
 	 * conventional) so that the various registries can change what they do accordingly. The spell part of the config
-	 * has to be done in the init method.
+	 * and the resistance part of the config have to be done in the init method since they depend on the registry events.
 	 */
 	void initConfig(FMLPreInitializationEvent event){
 
@@ -238,15 +238,19 @@ public final class Settings {
 	}
 
 	/**
-	 * Called from init to initialise the parts of the config file that depend on other mods. For example, the spell
-	 * config is done here and not in preInit because all spells must be registered before it is added, including those
-	 * in other mods.
+	 * Called from init to initialise the parts of the config file that have to be done after registry events are fired.
+	 * For example, the spell config is done here and not in preInit because all spells must be registered before it is
+	 * added, including those in other mods.
 	 */
 	void initConfigExtras(){
 
 		Wizardry.logger.info("Setting up spells config for " + Spell.getTotalSpellCount() + " spells");
 
 		setupSpellsConfig();
+		
+		Wizardry.logger.info("Setting up resistances config");
+		
+		setupResistancesConfig();
 
 		config.save();
 	}
@@ -258,6 +262,7 @@ public final class Settings {
 
 		setupGeneralConfig();
 		setupSpellsConfig();
+		setupResistancesConfig();
 
 		config.save();
 	}
@@ -420,8 +425,7 @@ public final class Settings {
 
 		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
 		// scaling factor means that 0.5 is as big a change as 2.0, so whilst a slider is fine for increasing the
-		// damage,
-		// it doesn't give fine enough control for values less than 1.
+		// damage, it doesn't give fine enough control for values less than 1.
 		property = config.get(Configuration.CATEGORY_GENERAL, "playerDamageScaling", 1.0,
 				"Global damage scaling factor for the damage dealt by players casting spells, relative to 1.", 0, 20);
 		property.setLanguageKey("config." + Wizardry.MODID + ".player_damage_scaling");
@@ -444,7 +448,7 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "summonedCreatureTargetsWhitelist", new String[0],
-				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_whitelist");
 		property.setRequiresWorldRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
@@ -457,7 +461,7 @@ public final class Settings {
 
 		property = config.get(Configuration.CATEGORY_GENERAL, "summonedCreatureTargetsBlacklist",
 				new String[]{"creeper"},
-				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
+				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_blacklist");
 		property.setRequiresWorldRestart(true);
 		// Wizardry.proxy.setToEntityNameEntry(property);
@@ -516,80 +520,6 @@ public final class Settings {
 
 		config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
 
-		// Resistances
-
-		List<String> propOrder1 = new ArrayList<String>();
-
-		config.addCustomCategoryComment(RESISTANCES_CATEGORY,
-				"Settings which allow entities to be made immune to certain types of magic. In multiplayer, the server/LAN host settings will apply.");
-
-		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToFire", new String[]{},
-				"List of names of entities that are immune to fire, in addition to the defaults. Add mod creatures to this list if you want them to be immune to fire magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_fire");
-		property.setRequiresMcRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < property.getStringList().length; i++){
-			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
-			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
-					DamageType.FIRE);
-		}
-		propOrder1.add(property.getName());
-
-		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToIce", new String[]{},
-				"List of names of entities that are immune to ice, in addition to the defaults. Add mod creatures to this list if you want them to be immune to ice magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_ice");
-		property.setRequiresMcRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < property.getStringList().length; i++){
-			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
-			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
-					DamageType.FROST);
-		}
-		propOrder1.add(property.getName());
-
-		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToLightning", new String[]{},
-				"List of names of entities that are immune to lightning, in addition to the defaults. Add mod creatures to this list if you want them to be immune to lightning magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_lightning");
-		property.setRequiresMcRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < property.getStringList().length; i++){
-			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
-			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
-					DamageType.SHOCK);
-		}
-		propOrder1.add(property.getName());
-
-		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToWither", new String[]{},
-				"List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_wither");
-		property.setRequiresMcRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < property.getStringList().length; i++){
-			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
-			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
-					DamageType.WITHER);
-		}
-		propOrder1.add(property.getName());
-
-		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToPoison", new String[]{},
-				"List of names of entities that are immune to poison, in addition to the defaults. Add mod creatures to this list if you want them to be immune to poison magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":Wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_poison");
-		property.setRequiresMcRestart(true);
-		// Wizardry.proxy.setToEntityNameEntry(property);
-		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
-		for(int i = 0; i < property.getStringList().length; i++){
-			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
-			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
-					DamageType.POISON);
-		}
-		propOrder1.add(property.getName());
-
-		config.setCategoryPropertyOrder(RESISTANCES_CATEGORY, propOrder1);
-
 		// config.addCustomCategoryComment(CLIENT_CATEGORY, "Client-side settings that only affect the local minecraft
 		// game. They have no effect on a server; each player obeys their own settings.");
 		// config.addCustomCategoryComment(COMMANDS_CATEGORY, "Settings for the commands added by Wizardry. In
@@ -599,6 +529,83 @@ public final class Settings {
 		// config.addCustomCategoryComment(GLOBAL_CATEGORY, "Global settings that affect game mechanics. In multiplayer,
 		// the server/LAN host settings will apply.");
 
+	}
+
+	private void setupResistancesConfig(){
+
+		Property property;
+
+		List<String> propOrder = new ArrayList<String>();
+
+		config.addCustomCategoryComment(RESISTANCES_CATEGORY,
+				"Settings which allow entities to be made immune to certain types of magic. In multiplayer, the server/LAN host settings will apply.");
+
+		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToFire", new String[]{},
+				"List of names of entities that are immune to fire, in addition to the defaults. Add mod creatures to this list if you want them to be immune to fire magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_fire");
+		property.setRequiresMcRestart(true);
+		// Wizardry.proxy.setToEntityNameEntry(property);
+		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
+		for(int i = 0; i < property.getStringList().length; i++){
+			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
+			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
+					DamageType.FIRE);
+		}
+		propOrder.add(property.getName());
+
+		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToIce", new String[]{},
+				"List of names of entities that are immune to ice, in addition to the defaults. Add mod creatures to this list if you want them to be immune to ice magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_ice");
+		property.setRequiresMcRestart(true);
+		// Wizardry.proxy.setToEntityNameEntry(property);
+		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
+		for(int i = 0; i < property.getStringList().length; i++){
+			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
+			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
+					DamageType.FROST);
+		}
+		propOrder.add(property.getName());
+
+		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToLightning", new String[]{},
+				"List of names of entities that are immune to lightning, in addition to the defaults. Add mod creatures to this list if you want them to be immune to lightning magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_lightning");
+		property.setRequiresMcRestart(true);
+		// Wizardry.proxy.setToEntityNameEntry(property);
+		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
+		for(int i = 0; i < property.getStringList().length; i++){
+			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
+			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
+					DamageType.SHOCK);
+		}
+		propOrder.add(property.getName());
+
+		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToWither", new String[]{},
+				"List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_wither");
+		property.setRequiresMcRestart(true);
+		// Wizardry.proxy.setToEntityNameEntry(property);
+		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
+		for(int i = 0; i < property.getStringList().length; i++){
+			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
+			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
+					DamageType.WITHER);
+		}
+		propOrder.add(property.getName());
+
+		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToPoison", new String[]{},
+				"List of names of entities that are immune to poison, in addition to the defaults. Add mod creatures to this list if you want them to be immune to poison magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_poison");
+		property.setRequiresMcRestart(true);
+		// Wizardry.proxy.setToEntityNameEntry(property);
+		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
+		for(int i = 0; i < property.getStringList().length; i++){
+			property.getStringList()[i] = property.getStringList()[i].toLowerCase(Locale.ROOT).trim();
+			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
+					DamageType.POISON);
+		}
+		propOrder.add(property.getName());
+
+		config.setCategoryPropertyOrder(RESISTANCES_CATEGORY, propOrder);
 	}
 
 }
