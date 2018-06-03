@@ -121,6 +121,8 @@ public final class Settings {
 	public double playerDamageScale = 1.0f;
 	/** <b>[Server-only]</b> Global damage scaling factor for all npc magic damage. */
 	public double npcDamageScale = 1.0f;
+	/** <b>[Server-only]</b> List of dimension ids in which evil wizards can spawn. */
+	public int[] evilWizardDimensions = {0};
 
 	// Commands (these don't need synchronising since typing a command always queries the server).
 	/**
@@ -506,6 +508,12 @@ public final class Settings {
 		// Converts all strings in the list to a ResourceLocation.
 		mindControlTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 		propOrder.add(property.getName());
+
+		property = config.get(Configuration.CATEGORY_GENERAL, "evilWizardDimensions", new int[]{0},
+				"List of dimension ids in which evil wizards can spawn.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_dimensions");
+		property.setRequiresMcRestart(true);
+		evilWizardDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);

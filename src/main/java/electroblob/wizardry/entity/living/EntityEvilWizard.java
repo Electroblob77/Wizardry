@@ -265,6 +265,21 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 				(NBTTagInt tag) -> Spell.get(tag.getInt()));
 		this.hasTower = nbt.getBoolean("hasTower");
 	}
+	
+	@Override
+	public int getMaxSpawnedInChunk(){
+		return 1;
+	}
+	
+	@Override
+	public boolean getCanSpawnHere(){
+		// Evil wizards can only spawn in the specified dimensions
+		for(int id : Wizardry.settings.evilWizardDimensions){
+			if(this.dimension == id) return super.getCanSpawnHere();
+		}
+		
+		return false;
+	}
 
 	@Override
 	protected boolean canDespawn(){
