@@ -143,7 +143,6 @@ public abstract class ParticleCustomTexture extends Particle {
 			float rotationYZ, float rotationXY, float rotationXZ){
 		
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
 
 		this.applyGLStateChanges();
 
@@ -193,7 +192,6 @@ public abstract class ParticleCustomTexture extends Particle {
 
 		this.undoGLStateChanges();
 
-		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
 
 	}

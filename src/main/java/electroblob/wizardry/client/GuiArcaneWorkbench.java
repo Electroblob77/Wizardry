@@ -80,8 +80,6 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	@Override
 	public void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY){
 
-		GlStateManager.pushAttrib();
-
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
@@ -152,8 +150,6 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		// Fixes the bug that caused the slot hightlight to render opaque. I don't know why it works, it just works!
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
-
-		GlStateManager.popAttrib();
 	}
 
 	@Override

@@ -122,8 +122,6 @@ public class GuiSpellDisplay extends Gui {
 
 		}else if(event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR){
 
-			GlStateManager.pushAttrib();
-
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1, 1, 1);
@@ -146,8 +144,8 @@ public class GuiSpellDisplay extends Gui {
 			this.mc.renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
 
 			WizardryUtilities.drawTexturedRect(mirror ? left + 94 : left + 2, top + 2, 0, 0, 32, 32, 32, 32);
-
-			GlStateManager.popAttrib();
+			
+			// Blend needs to be left enabled here because otherwise the hotbar becomes opaque
 		}
 	}
 
