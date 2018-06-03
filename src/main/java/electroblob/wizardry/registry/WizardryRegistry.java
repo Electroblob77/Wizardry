@@ -76,6 +76,7 @@ import net.minecraft.init.Biomes;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -290,7 +291,9 @@ public final class WizardryRegistry {
 		}else{
 			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/blank_scroll")));
 		}
-
+		
+		FurnaceRecipes.instance().addSmeltingRecipeForBlock(WizardryBlocks.crystal_ore, new ItemStack(WizardryItems.magic_crystal), 0.5f);
+		
 		// Mana flask recipes
 		ItemStack miscWandStack;
 
