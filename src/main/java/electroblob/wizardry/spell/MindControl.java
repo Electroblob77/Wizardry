@@ -1,6 +1,8 @@
 package electroblob.wizardry.spell;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
@@ -14,6 +16,7 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;
@@ -143,7 +146,8 @@ public class MindControl extends Spell {
 	/** Returns true if the given entity can be mind controlled (i.e. is not a player, npc, evil wizard or boss). */
 	public static boolean canControl(EntityLivingBase target){
 		return target instanceof EntityLiving && target.isNonBoss() && !(target instanceof INpc)
-				&& !(target instanceof EntityEvilWizard);
+				&& !(target instanceof EntityEvilWizard) && !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
+				.contains(EntityList.getKey(entity.getClass()).toString().toLowerCase(Locale.ROOT));
 	}
 
 	/**

@@ -111,6 +111,11 @@ public final class Settings {
 	 * overriding the defaults and the whitelist.
 	 */
 	public String[] summonedCreatureTargetsBlacklist = {"creeper"};
+	/**
+	 * <b>[Server-only]</b> List of names of entities which are immune to the mind control spell, in addition to the
+	 * defaults.
+	 */
+	public String[] mindControlTargetsBlacklist = {};
 	/** <b>[Server-only]</b> Global damage scaling factor for all player magic damage. */
 	public double playerDamageScale = 1.0f;
 	/** <b>[Server-only]</b> Global damage scaling factor for all npc magic damage. */
@@ -495,6 +500,18 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".allies_command_name");
 		property.setRequiresWorldRestart(true);
 		alliesCommandName = property.getString();
+		propOrder.add(property.getName());
+
+		property = config.get(Configuration.CATEGORY_GENERAL, "mindControlTargetsBlacklist", new String[]{},
+				"List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mind_control_targets_blacklist");
+		property.setRequiresWorldRestart(true);
+		// Wizardry.proxy.setToEntityNameEntry(property);
+		mindControlTargetsBlacklist = property.getStringList();
+		// Converts all strings in the list to lower case, to ignore case sensitivity, and trims them.
+		for(int i = 0; i < mindControlTargetsBlacklist.length; i++){
+			mindControlTargetsBlacklist[i] = mindControlTargetsBlacklist[i].toLowerCase(Locale.ROOT).trim();
+		}
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(Configuration.CATEGORY_GENERAL, propOrder);
