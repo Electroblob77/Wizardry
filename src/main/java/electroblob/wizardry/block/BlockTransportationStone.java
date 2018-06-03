@@ -66,14 +66,15 @@ public class BlockTransportationStone extends Block {
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor){
+	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos){
 
-		super.onNeighborChange(world, pos, neighbor);
+		super.neighborChanged(state, world, pos, block, fromPos);
 
-		if(!world.isSideSolid(pos.down(), EnumFacing.UP, false) && world instanceof World){
-			this.dropBlockAsItem((World)world, pos, world.getBlockState(pos), 0);
-			((World)world).setBlockToAir(pos);
+		if(!world.isSideSolid(pos.down(), EnumFacing.UP, false)){
+			this.dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
+			world.setBlockToAir(pos);
 		}
 	}
 
