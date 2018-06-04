@@ -23,10 +23,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -34,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
-public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
+public class ItemWizardArmour extends ItemArmor {
 
 	//VanillaCopy, ItemArmor has this set to private for some reason.
     public static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
@@ -159,35 +157,6 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 	public boolean getIsRepairable(ItemStack stack, ItemStack par2ItemStack){
 		return false;
 	}
-
-	@Override
-	public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage,
-			int slotIndex){
-
-		EntityEquipmentSlot slot = getArmorSlotFromIndex(slotIndex);
-
-		if(!source.isUnblockable() && armor.getItemDamage() < armor.getMaxDamage()){
-			if(armor.hasTagCompound() && armor.getTagCompound().getBoolean("legendary")){
-				// Legendary armour gives full 10 shields, like diamond.
-				return new ArmorProperties(0, ArmorMaterial.DIAMOND.getDamageReductionAmount(slot) / 25D,
-						armor.getMaxDamage() + 1 - armor.getItemDamage());
-			}else{
-				return new ArmorProperties(0, reductions[slotIndex] / 25D,
-						armor.getMaxDamage() + 1 - armor.getItemDamage());
-			}
-		}else{
-			return new ArmorProperties(0, 0, 0);
-		}
-	}
-
-	/*
-	 * Doesn't actually need to do anything, all values are handled in getAttibuteModifiers below.  
-	 * Returning > 0 in this method will cause it to be added to the defense value below.
-	 */
-	@Override
-	public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slotIndex){
-		return 0;
-	}
 	
 	/*
 	 * Properly handles the defense value of the armor.  This method is responisble for the tooltip on top of
@@ -206,26 +175,12 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 		return map;
 	}
 
-	@Override
-	public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot){
-		stack.damageItem(damage, entity);
-	}
-
 	// Fixes wizard armor breaking by disallowing setting damage above the max, since damageArmor is not always called.
+	// Since ISpecialArmor has been removed from this class, this may no longer be necessary, but keeping it won't hurt.
 	@Override
 	public void setDamage(ItemStack stack, int damage) {
 		if(damage <= stack.getMaxDamage()) super.setDamage(stack, damage);
 		else super.setDamage(stack, stack.getMaxDamage());
-	}
-
-	/**
-	 * Returns the EntityEquipmentSlot for which index() returns an integer equal to the passed in slotIndex and which
-	 * is an armour slot (not a hand slot). This only exists because the 1.10.2/1.11.2 versions of Forge still uses an 
-	 * integer slot index in ISpecialArmor instead of an EntityEquipmentSlot.
-	 */
-	// NOTE: Remove in 1.12.2
-	private static EntityEquipmentSlot getArmorSlotFromIndex(int index){
-		return EntityEquipmentSlot.values()[index + 2];
 	}
 
 	@SubscribeEvent
