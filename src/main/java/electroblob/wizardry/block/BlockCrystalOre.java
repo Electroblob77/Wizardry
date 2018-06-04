@@ -8,6 +8,10 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 public class BlockCrystalOre extends Block {
 
@@ -37,5 +41,17 @@ public class BlockCrystalOre extends Block {
 	@Override
 	public Item getItemDropped(IBlockState state, Random random, int fortune){
 		return WizardryItems.magic_crystal;
+	}
+	
+	@Override
+	public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune){
+		
+		Random rand = world instanceof World ? ((World)world).rand : RANDOM;
+		
+        if(this.getItemDropped(state, rand, fortune) != Item.getItemFromBlock(this)){
+            return MathHelper.getInt(rand, 1, 4);
+        }
+        
+        return 0;
 	}
 }
