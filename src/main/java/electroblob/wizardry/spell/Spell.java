@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -403,12 +404,11 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/** Returns a list of all registered spells' registry names, excluding the 'none' spell. Used in commands. */
-	public static String[] getSpellNames(){
+	public static Collection<ResourceLocation> getSpellNames(){
 		// Maybe it would be better to store all of this statically?
 		Set<ResourceLocation> keys = new HashSet<ResourceLocation>(registry.getKeys());
 		keys.remove(registry.getKey(Spells.none));
-		// Streams!
-		return keys.stream().map(ResourceLocation::toString).toArray(String[]::new);
+		return keys;
 	}
 
 	/**
