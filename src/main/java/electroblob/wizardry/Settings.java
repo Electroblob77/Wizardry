@@ -311,6 +311,19 @@ public final class Settings {
 		Property property;
 
 		config.addCustomCategoryComment(GAMEPLAY_CATEGORY, "Global settings that affect game mechanics. In multiplayer, the server/LAN host settings will apply. Please note that changing some of these settings may make the mod very difficult to play.");
+
+		property = config.get(GAMEPLAY_CATEGORY, "discoveryMode", true,
+				"For those who like a sense of mystery! When set to true, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is false.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".discovery_mode");
+		property.setRequiresWorldRestart(true);
+		discoveryMode = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "friendlyFire", true,
+				"Whether to allow players to damage their designated allies using magic.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".friendly_fire");
+		friendlyFire = property.getBoolean();
+		propOrder.add(property.getName());
 		
 		property = config.get(GAMEPLAY_CATEGORY, "spellBookDropChance", 3,
 				"The chance for mobs to drop a spell book when killed. The greater this number, the more often they will drop. Set to 0 to disable spell book drops. Set to 200 for guaranteed drops.",
@@ -318,6 +331,72 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".spell_book_drop_chance");
 		Wizardry.proxy.setToNumberSliderEntry(property);
 		spellBookDropChance = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "evilWizardDimensions", new int[]{0},
+				"List of dimension ids in which evil wizards can spawn.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_dimensions");
+		property.setRequiresMcRestart(true);
+		evilWizardDimensions = property.getIntList();
+		propOrder.add(property.getName());
+
+		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
+		// scaling factor means that 0.5 is as big a change as 2.0, so whilst a slider is fine for increasing the
+		// damage, it doesn't give fine enough control for values less than 1.
+		property = config.get(GAMEPLAY_CATEGORY, "playerDamageScaling", 1.0,
+				"Global damage scaling factor for the damage dealt by players casting spells, relative to 1.", 0, 20);
+		property.setLanguageKey("config." + Wizardry.MODID + ".player_damage_scaling");
+		playerDamageScale = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "npcDamageScaling", 1.0,
+				"Global damage scaling factor for the damage dealt by NPCs casting spells, relative to 1.", 0, 20);
+		property.setLanguageKey("config." + Wizardry.MODID + ".npc_damage_scaling");
+		npcDamageScale = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "minionRevengeTargeting", true,
+				"Whether summoned creatures can revenge attack their owner if their owner attacks them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".minion_revenge_targeting");
+		property.setRequiresWorldRestart(false);
+		minionRevengeTargeting = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "summonedCreatureTargetsWhitelist", new String[0],
+				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_whitelist");
+		property.setRequiresWorldRestart(true);
+		// Converts all strings in the list to a ResourceLocation.
+		summonedCreatureTargetsWhitelist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "summonedCreatureTargetsBlacklist",
+				new String[]{"creeper"},
+				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_blacklist");
+		property.setRequiresWorldRestart(true);
+		// Converts all strings in the list to a ResourceLocation.
+		summonedCreatureTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "telekineticDisarmament", true,
+				"Whether to allow players to disarm other players using the telekinesis spell. Set to false to prevent stealing of items.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".telekinetic_disarmament");
+		telekineticDisarmament = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "teleportThroughUnbreakableBlocks", false,
+				"Whether players are allowed to teleport through unbreakable blocks (e.g. bedrock) using the phase step spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".teleport_through_unbreakable_blocks");
+		teleportThroughUnbreakableBlocks = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "mindControlTargetsBlacklist", new String[]{},
+				"List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mind_control_targets_blacklist");
+		property.setRequiresWorldRestart(true);
+		// Converts all strings in the list to a ResourceLocation.
+		mindControlTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "firebombIsCraftable", true,
@@ -346,85 +425,6 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".use_alternate_scroll_recipe");
 		property.setRequiresMcRestart(true);
 		useAlternateScrollRecipe = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "teleportThroughUnbreakableBlocks", false,
-				"Whether players are allowed to teleport through unbreakable blocks (e.g. bedrock) using the phase step spell.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".teleport_through_unbreakable_blocks");
-		teleportThroughUnbreakableBlocks = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "friendlyFire", true,
-				"Whether to allow players to damage their designated allies using magic.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".friendly_fire");
-		friendlyFire = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "telekineticDisarmament", true,
-				"Whether to allow players to disarm other players using the telekinesis spell. Set to false to prevent stealing of items.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".telekinetic_disarmament");
-		telekineticDisarmament = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "discoveryMode", true,
-				"For those who like a sense of mystery! When set to true, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is false.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".discovery_mode");
-		property.setRequiresWorldRestart(true);
-		discoveryMode = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "minionRevengeTargeting", true,
-				"Whether summoned creatures can revenge attack their owner if their owner attacks them.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".minion_revenge_targeting");
-		property.setRequiresWorldRestart(false);
-		minionRevengeTargeting = property.getBoolean();
-		propOrder.add(property.getName());
-
-		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
-		// scaling factor means that 0.5 is as big a change as 2.0, so whilst a slider is fine for increasing the
-		// damage, it doesn't give fine enough control for values less than 1.
-		property = config.get(GAMEPLAY_CATEGORY, "playerDamageScaling", 1.0,
-				"Global damage scaling factor for the damage dealt by players casting spells, relative to 1.", 0, 20);
-		property.setLanguageKey("config." + Wizardry.MODID + ".player_damage_scaling");
-		playerDamageScale = property.getDouble();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "npcDamageScaling", 1.0,
-				"Global damage scaling factor for the damage dealt by NPCs casting spells, relative to 1.", 0, 20);
-		property.setLanguageKey("config." + Wizardry.MODID + ".npc_damage_scaling");
-		npcDamageScale = property.getDouble();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "summonedCreatureTargetsWhitelist", new String[0],
-				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_whitelist");
-		property.setRequiresWorldRestart(true);
-		// Converts all strings in the list to a ResourceLocation.
-		summonedCreatureTargetsWhitelist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "summonedCreatureTargetsBlacklist",
-				new String[]{"creeper"},
-				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_blacklist");
-		property.setRequiresWorldRestart(true);
-		// Converts all strings in the list to a ResourceLocation.
-		summonedCreatureTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "mindControlTargetsBlacklist", new String[]{},
-				"List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mind_control_targets_blacklist");
-		property.setRequiresWorldRestart(true);
-		// Converts all strings in the list to a ResourceLocation.
-		mindControlTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "evilWizardDimensions", new int[]{0},
-				"List of dimension ids in which evil wizards can spawn.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_dimensions");
-		property.setRequiresMcRestart(true);
-		evilWizardDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(GAMEPLAY_CATEGORY, propOrder);
@@ -500,7 +500,7 @@ public final class Settings {
 		showSummonedCreatureNames = property.getBoolean();
 		propOrder.add(property.getName());
 
-		config.setCategoryPropertyOrder(WORLDGEN_CATEGORY, propOrder);
+		config.setCategoryPropertyOrder(CLIENT_CATEGORY, propOrder);
 	}
 	
 	private void setupCommandsConfig(){
@@ -549,7 +549,7 @@ public final class Settings {
 		alliesCommandName = property.getString();
 		propOrder.add(property.getName());
 		
-		
+		config.setCategoryPropertyOrder(COMMANDS_CATEGORY, propOrder);
 	}
 
 	private void setupResistancesConfig(){
