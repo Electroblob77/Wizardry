@@ -655,35 +655,35 @@ commands.ebwizardry:discoverspell.removespell=Removed %1$s from %2$s's spell dis
 
 config.ebwizardry.title.general=Mod Options
 
-config.ebwizardry.category.gameplay=Gameplay
+config.ebwizardry.category.gameplay=Gameplay Settings
 config.ebwizardry.category.gameplay.tooltip=Configure wizardry's general gameplay
 config.ebwizardry.title.gameplay=Gameplay Settings
-config.ebwizardry.subtitle.gameplay=Global settings that affect game mechanics. In multiplayer, the server/LAN host settings will apply.
+config.ebwizardry.subtitle.gameplay=Global settings that affect game mechanics.
 
-config.ebwizardry.category.worldgen=World Generation
+config.ebwizardry.category.worldgen=World Generation Settings
 config.ebwizardry.category.worldgen.tooltip=Configure wizardry's world generation features
 config.ebwizardry.title.worldgen=World Generation Settings
-config.ebwizardry.subtitle.worldgen=Settings that affect world generation. In multiplayer, the server/LAN host settings will apply.
+config.ebwizardry.subtitle.worldgen=Settings that affect world generation.
 
-config.ebwizardry.category.commands=Commands
+config.ebwizardry.category.commands=Command Settings
 config.ebwizardry.category.commands.tooltip=Configure wizardry's commands
 config.ebwizardry.title.commands=Command Settings
-config.ebwizardry.subtitle.commands=Settings for the commands added by Wizardry. In multiplayer, the server/LAN host settings will apply.
+config.ebwizardry.subtitle.commands=Settings for the commands added by Wizardry.
 
 config.ebwizardry.category.client=Client Settings
 config.ebwizardry.category.client.tooltip=Configure wizardry's display and controls
 config.ebwizardry.title.client=Client Settings
-config.ebwizardry.subtitle.client=Client-side settings that only affect the local minecraft game. In multiplayer, each player obeys their own client settings.
+config.ebwizardry.subtitle.client=Client-side settings that only affect the local minecraft game.
 
-config.ebwizardry.category.spells=Spells
+config.ebwizardry.category.spells=Spell Configuration
 config.ebwizardry.category.spells.tooltip=Select which spells are enabled
 config.ebwizardry.title.spells=Spell Configuration
-config.ebwizardry.subtitle.spells=Set a spell to false to disable it. In multiplayer, the server/LAN host settings will apply.
+config.ebwizardry.subtitle.spells=Set a spell to false to disable it.
 
-config.ebwizardry.category.resistances=Resistances
+config.ebwizardry.category.resistances=Resistance Configuration
 config.ebwizardry.category.resistances.tooltip=Configure which mobs are immune to different types of magic
 config.ebwizardry.title.resistances=Resistance Configuration
-config.ebwizardry.subtitle.resistances=Settings which allow entities to be made immune to certain types of magic. In multiplayer, the server/LAN host settings will apply.
+config.ebwizardry.subtitle.resistances=Settings which allow entities to be made immune to certain types of magic.
 
 config.ebwizardry.tower_rarity=Tower Rarity
 config.ebwizardry.ore_dimensions=Ore Dimensions
@@ -700,7 +700,7 @@ config.ebwizardry.show_summoned_creature_names=Show Summoned Creature Names
 config.ebwizardry.friendly_fire=Friendly Fire
 config.ebwizardry.telekinetic_disarmament=Telekinetic Disarmament
 config.ebwizardry.discovery_mode=Discovery Mode
-config.ebwizardry.enable_shift_scrolling=Enable Shift-_scrolling
+config.ebwizardry.enable_shift_scrolling=Enable Shift-scrolling
 config.ebwizardry.minion_revenge_targeting=Minion Revenge Targeting
 config.ebwizardry.player_damage_scaling=Player Damage Scaling Factor
 config.ebwizardry.npc_damage_scaling=NPC Damage Scaling Factor
@@ -734,15 +734,15 @@ config.ebwizardry.use_alternate_scroll_recipe.tooltip=Whether to require a magic
 config.ebwizardry.teleport_through_unbreakable_blocks.tooltip=Whether players are allowed to teleport through unbreakable blocks (e.g. bedrock) using the phase step spell.
 config.ebwizardry.show_summoned_creature_names.tooltip=Whether to show summoned creatures' names and owners above their heads.
 config.ebwizardry.friendly_fire.tooltip=Whether to allow players to damage their designated allies using magic.
-config.ebwizardry.telekinetic_disarmament.tooltip=Whether to allow players to disarm other players using the telekinesis spell.ebwizardry: Set to false to prevent stealing of items.
+config.ebwizardry.telekinetic_disarmament.tooltip=Whether to allow players to disarm other players using the telekinesis spell. Set to false to prevent stealing of items.
 config.ebwizardry.discovery_mode.tooltip=For those who like a sense of mystery! When set to true, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is false.
 config.ebwizardry.enable_shift_scrolling.tooltip=Whether you can switch between spells on a wand by scrolling with the mouse wheel while sneaking. Note that this will only affect you; other players connected to the same server obey their own settings.
 config.ebwizardry.minion_revenge_targeting.tooltip=Whether summoned creatures can revenge attack their owner if their owner attacks them.
 config.ebwizardry.player_damage_scaling.tooltip=Global damage scaling factor for the damage dealt by players casting spells, relative to 1.
 config.ebwizardry.npc_damage_scaling.tooltip=Global damage scaling factor for the damage dealt by NPCs casting spells, relative to 1.
 config.ebwizardry.cast_command_multiplier_limit.tooltip=Upper limit for the multipliers passed into the /cast command. This is here to stop players from accidentally breaking a world/server. Large blast mutipliers can cause extreme lag - you have been warned!
-config.ebwizardry.summoned_creature_targets_whitelist.tooltip=List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
-config.ebwizardry.summoned_creature_targets_blacklist.tooltip=List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
+config.ebwizardry.summoned_creature_targets_whitelist.tooltip=List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
+config.ebwizardry.summoned_creature_targets_blacklist.tooltip=List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
 config.ebwizardry.spell_hud_position.tooltip=The position of the spell HUD.
 config.ebwizardry.cast_command_name.tooltip=The name of the /cast command. This is what you type directly after the /; for example if this was set to 'magic' then instead of typing /cast you would type /magic instead.
 config.ebwizardry.discoverspell_command_name.tooltip=The name of the /discoverspell command. This is what you type directly after the /; for example if this was set to 'magic' then instead of typing /discoverspell you would type /magic instead.
@@ -751,10 +751,10 @@ config.ebwizardry.allies_command_name.tooltip=The name of the /allies command. T
 config.ebwizardry.mind_control_targets_blacklist.tooltip=List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
 config.ebwizardry.evil_wizard_dimensions.tooltip=List of dimension ids in which evil wizards can spawn.
 
-config.ebwizardry.mobs_immune_to_fire.tooltip=List of names of entities that are immune to fire, in addition to the defaults. Add mod creatures to this list if you want them to be immune to fire magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
-config.ebwizardry.mobs_immune_to_ice.tooltip=List of names of entities that are immune to ice, in addition to the defaults. Add mod creatures to this list if you want them to be immune to ice magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
-config.ebwizardry.mobs_immune_to_lightning.tooltip=List of names of entities that are immune to lightning, in addition to the defaults. Add mod creatures to this list if you want them to be immune to lightning magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
-config.ebwizardry.mobs_immune_to_wither.tooltip=List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
-config.ebwizardry.mobs_immune_to_poison.tooltip=List of names of entities that are immune to poison, in addition to the defaults. Add mod creatures to this list if you want them to be immune to poison magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry.wizard).
+config.ebwizardry.mobs_immune_to_fire.tooltip=List of names of entities that are immune to fire, in addition to the defaults. Add mod creatures to this list if you want them to be immune to fire magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
+config.ebwizardry.mobs_immune_to_ice.tooltip=List of names of entities that are immune to ice, in addition to the defaults. Add mod creatures to this list if you want them to be immune to ice magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
+config.ebwizardry.mobs_immune_to_lightning.tooltip=List of names of entities that are immune to lightning, in addition to the defaults. Add mod creatures to this list if you want them to be immune to lightning magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
+config.ebwizardry.mobs_immune_to_wither.tooltip=List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
+config.ebwizardry.mobs_immune_to_poison.tooltip=List of names of entities that are immune to poison, in addition to the defaults. Add mod creatures to this list if you want them to be immune to poison magic and they aren't already. Entity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. ebwizardry:wizard).
 
 wizard.debug=%1$s, %2$s, %3$s
