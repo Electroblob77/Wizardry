@@ -163,15 +163,26 @@ public class ItemWizardArmour extends ItemArmor {
 	 * the armor value.  It is also what handles armor toughness, but the wizard armor had a value of 0 for that.
 	 */
 	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack){
+		
 		Multimap<String, AttributeModifier> map = HashMultimap.create();
-		if(stack.getItemDamage() < stack.getMaxDamage() && this.armorType == slot) {
+		
+		if(stack.getItemDamage() < stack.getMaxDamage() && this.armorType == slot){
+			
 			int defense = reductions[slot.getIndex()];
-			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) 
+			float toughness = 0f;
+			
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) {
 				defense = ArmorMaterial.DIAMOND.getDamageReductionAmount(slot);
+				toughness = ArmorMaterial.DIAMOND.getToughness();
+			}
+			
 			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
 					"Armor modifier", defense, 0));
+			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
+					"Armor toughness", toughness, 0));
 		}
+		
 		return map;
 	}
 
