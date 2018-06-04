@@ -181,8 +181,18 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 				if(!entity.isInvisible() && isValidTarget(entity)){
 
 					// ... and is a player, they can be attacked, since players can't be in the whitelist or the
-					// blacklist.
-					if(entity instanceof EntityPlayer) return true;
+					// blacklist ...
+					if(entity instanceof EntityPlayer){
+						// ... unless the creature was summoned by a good wizard who the player has not angered.
+						if(getCaster() instanceof EntityWizard){
+							if(((EntityWizard)getCaster()).getRevengeTarget() != entity
+									&& ((EntityWizard)getCaster()).getAttackTarget() != entity) {
+								return false;
+							}
+						}
+						
+						return true;
+					}
 
 					// ... and is a mob, a summoned creature, a wizard ...
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
