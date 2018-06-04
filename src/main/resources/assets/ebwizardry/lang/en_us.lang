@@ -655,20 +655,35 @@ commands.ebwizardry:discoverspell.removespell=Removed %1$s from %2$s's spell dis
 
 config.ebwizardry.title.general=Mod Options
 
-config.ebwizardry.category.spells=Configure Spells
+config.ebwizardry.category.gameplay=Gameplay
+config.ebwizardry.category.gameplay.tooltip=Configure wizardry's general gameplay
+config.ebwizardry.title.gameplay=Gameplay Settings
+config.ebwizardry.subtitle.gameplay=Global settings that affect game mechanics. In multiplayer, the server/LAN host settings will apply.
+
+config.ebwizardry.category.worldgen=World Generation
+config.ebwizardry.category.worldgen.tooltip=Configure wizardry's world generation features
+config.ebwizardry.title.worldgen=World Generation Settings
+config.ebwizardry.subtitle.worldgen=Settings that affect world generation. In multiplayer, the server/LAN host settings will apply.
+
+config.ebwizardry.category.commands=Commands
+config.ebwizardry.category.commands.tooltip=Configure wizardry's commands
+config.ebwizardry.title.commands=Command Settings
+config.ebwizardry.subtitle.commands=Settings for the commands added by Wizardry. In multiplayer, the server/LAN host settings will apply.
+
+config.ebwizardry.category.client=Client Settings
+config.ebwizardry.category.client.tooltip=Configure wizardry's display and controls
+config.ebwizardry.title.client=Client Settings
+config.ebwizardry.subtitle.client=Client-side settings that only affect the local minecraft game. In multiplayer, each player obeys their own client settings.
+
+config.ebwizardry.category.spells=Spells
 config.ebwizardry.category.spells.tooltip=Select which spells are enabled
 config.ebwizardry.title.spells=Spell Configuration
-config.ebwizardry.subtitle.spells=Set a spell to false to disable it.
+config.ebwizardry.subtitle.spells=Set a spell to false to disable it. In multiplayer, the server/LAN host settings will apply.
 
-config.ebwizardry.category.resistances=Configure Resistances
+config.ebwizardry.category.resistances=Resistances
 config.ebwizardry.category.resistances.tooltip=Configure which mobs are immune to different types of magic
 config.ebwizardry.title.resistances=Resistance Configuration
-config.ebwizardry.subtitle.resistances=See descriptions of individual options for more details.
-
-config.ebwizardry.category.ids=Configure IDs
-config.ebwizardry.category.ids.tooltip=Change the IDs used by wizardry
-config.ebwizardry.title.ids=ID Configuration
-config.ebwizardry.subtitle.ids=Change these IDs if they conflict with another mod.
+config.ebwizardry.subtitle.resistances=Settings which allow entities to be made immune to certain types of magic. In multiplayer, the server/LAN host settings will apply.
 
 config.ebwizardry.tower_rarity=Tower Rarity
 config.ebwizardry.ore_dimensions=Ore Dimensions
