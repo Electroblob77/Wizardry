@@ -942,7 +942,7 @@ public final class WizardryUtilities {
 	 * 
 	 * @return False under any of the following circumstances, true otherwise:
 	 *         <p>
-	 *         - Either entity is null
+	 *         - The target is null
 	 *         <p>
 	 *         - The target is the attacker (this isn't as stupid as it sounds - anything with an AoE might cause this
 	 *         to be true, as can summoned creatures)
@@ -951,10 +951,18 @@ public final class WizardryUtilities {
 	 *         attacker need not be an ally of the target)
 	 *         <p>
 	 *         - The target is a creature that was summoned/controlled by the attacker or by an ally of the attacker.
+	 *         <p>
+	 *         <i>As of wizardry 4.1.2, this method now returns <b>true</b> instead of false if the attacker is null. This
+	 *         is because in the vast majority of cases, it makes more sense this way: if a construct has no caster, it
+	 *         should affect all entities; if a minion has no caster is should target all entities; etc.</i>
 	 */
 	public static boolean isValidTarget(Entity attacker, Entity target){
 
-		if(attacker == null || target == null) return false;
+		// Always return true if the attacker is null
+		if(attacker == null) return true;
+		
+		// Always return false if the target is null
+		if(target == null) return false;
 
 		// Tests whether the target is the attacker
 		if(target == attacker) return false;

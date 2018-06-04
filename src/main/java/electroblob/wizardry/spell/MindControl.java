@@ -203,10 +203,10 @@ public class MindControl extends Spell {
 
 				Entity caster = WizardryUtilities.getEntityByUUID(world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
-				// If the current target is already a valid mind control target, nothing happens.
-				if(WizardryUtilities.isValidTarget(caster, currentTarget)) return;
-
 				if(caster instanceof EntityLivingBase){
+
+					// If the current target is already a valid mind control target, nothing happens.
+					if(WizardryUtilities.isValidTarget(caster, currentTarget)) return;
 
 					if(MindControl.findMindControlTarget(entity, (EntityLivingBase)caster, world)){
 						// If it worked, skip setting the target to null.
