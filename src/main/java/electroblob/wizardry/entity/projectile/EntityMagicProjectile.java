@@ -1,7 +1,6 @@
 package electroblob.wizardry.entity.projectile;
 
-import java.util.List;
-
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -25,7 +24,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  * @author Electroblob
  * @see EntityBomb
  */
-public abstract class EntityMagicProjectile extends EntityThrowable {
+public abstract class EntityMagicProjectile extends EntityThrowable implements IEntityAdditionalSpawnData {
 
 	public float damageMultiplier = 1.0f;
 
@@ -42,6 +41,8 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 		// This is the standard set of parameters for this method, used by snowballs and ender pearls amongst others.
 		this.shoot(thrower, thrower.rotationPitch, thrower.rotationYaw, 0.0f, this.getSpeed(), 1.0f);
 		this.damageMultiplier = damageMultiplier;
+		// Mojang's 'fix' for the projectile-hitting-thrower bug actually made the problem worse, hence the following line.
+		this.ignoreEntity = thrower;
 	}
 
 	public EntityMagicProjectile(World world, double x, double y, double z){
@@ -78,17 +79,17 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 		// inside a mob using commands, it wouldn't hit that mob. This is so minor that it's not worth sending a packet
 		// for, though it may become more noticeable if spells firing from blocks are added.
 		// TODO: Investigate whether this is still necessary in 1.12
-		if(this.world.isRemote){
-			
-			List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
-	        
-			for(Entity entity : list){ // Why does vanilla still not use a for-each loop?
-	            if(entity.canBeCollidedWith() && this.ticksExisted < 2 && this.ignoreEntity == null){
-	            	this.ignoreEntity = entity;
-	            }
-	        }
-			// Pretty sure EntityThrowable handles the rest.
-		}
+//		if(this.world.isRemote){
+//			
+//			List<Entity> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().expand(this.motionX, this.motionY, this.motionZ).grow(1.0D));
+//	        
+//			for(Entity entity : list){ // Why does vanilla still not use a for-each loop?
+//	            if(entity.canBeCollidedWith() && this.ticksExisted < 2 && this.ignoreEntity == null){
+//	            	this.ignoreEntity = entity;
+//	            }
+//	        }
+//			// Pretty sure EntityThrowable handles the rest.
+//		}
 		
 		super.onUpdate();
 	}
@@ -103,6 +104,18 @@ public abstract class EntityMagicProjectile extends EntityThrowable {
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound){
 		super.writeEntityToNBT(nbttagcompound);
 		nbttagcompound.setFloat("damageMultiplier", damageMultiplier);
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf data){
+		data.writeInt(this.getThrower().getEntityId());
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf data){
+		Entity entity = this.world.getEntityByID(data.readInt());
+		if(entity instanceof EntityLivingBase) this.thrower = (EntityLivingBase)entity;
+		this.ignoreEntity = this.thrower;
 	}
 
 }

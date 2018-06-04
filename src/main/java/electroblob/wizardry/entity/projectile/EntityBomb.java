@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 /**
  * Same as {@link EntityMagicProjectile}, but with an additional blast multiplier field which is synced and saved to
@@ -13,7 +12,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
  * @author Electroblob
  * @since Wizardry 1.2
  */
-public abstract class EntityBomb extends EntityMagicProjectile implements IEntityAdditionalSpawnData {
+public abstract class EntityBomb extends EntityMagicProjectile {
 
 	/** The entity blast multiplier. This is now synced and saved centrally from {@link EntityBomb}. */
 	public float blastMultiplier = 1.0f;
@@ -37,11 +36,13 @@ public abstract class EntityBomb extends EntityMagicProjectile implements IEntit
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer){
+		super.writeSpawnData(buffer);
 		buffer.writeFloat(blastMultiplier);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf buffer){
+		super.readSpawnData(buffer);
 		blastMultiplier = buffer.readFloat();
 	}
 
