@@ -186,6 +186,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	protected void applyEntityAttributes(){
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5);
+		this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(30);
 	}
 
 	private int getHealCooldown(){
