@@ -99,6 +99,26 @@ public final class WizardryUtilities {
 	// ===============================================================================================================
 
 	/**
+	 * Returns the actual light level, taking natural light (skylight) and artificial light (block light) into account.
+	 * This uses the same logic as mob spawning.
+	 * 
+	 * @return The light level, from 0 (pitch darkness) to 15 (full daylight/at a torch).
+	 */
+	public static int getLightLevel(World world, BlockPos pos){
+		
+		int i = world.getLightFromNeighbors(pos);
+
+        if(world.isThundering()){
+            int j = world.getSkylightSubtracted();
+            world.setSkylightSubtracted(10);
+            i = world.getLightFromNeighbors(pos);
+            world.setSkylightSubtracted(j);
+        }
+
+        return i;
+	}
+	
+	/**
 	 * Returns whether the block at the given coordinates can be replaced by another one (works as if a block is being
 	 * placed by a player). True for air, liquids, vines, tall grass and snow layers but not for flowers, signs etc.
 	 * This is a shortcut for <code>world.getBlockState(pos).getMaterial().isReplaceable()</code>.
