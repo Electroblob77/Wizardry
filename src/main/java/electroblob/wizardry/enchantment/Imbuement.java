@@ -78,7 +78,7 @@ public interface Imbuement {
 						// If any imbuements were removed, replaces the enchantments on the book with the new ones, or
 						// deletes the book entirely if there are none left.
 						if(enchantments.isEmpty()){
-							slot.putStack(ItemStack.EMPTY); // NOTE: Will need changing in 1.11
+							slot.putStack(ItemStack.EMPTY);
 							Wizardry.logger.info("Deleted enchanted book with illegal enchantments");
 						}else{
 							EnchantmentHelper.setEnchantments(enchantments, slot.getStack());

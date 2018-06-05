@@ -45,10 +45,8 @@ public class BlockSpectral extends BlockContainer {
 		return EnumBlockRenderType.MODEL;
 	}
 
-	// Apparently it's OK to override this, despite it being deprecated. More
-	// importantly, it being deprecated is not
-	// Forge's doing, rather it is Mojang themselves misusing the @Deprecated
-	// annotation to mean 'internal, don't call'.
+	// Apparently it's OK to override this, despite it being deprecated. More importantly, it being deprecated is not
+	// Forge's doing, rather it is Mojang themselves misusing the @Deprecated annotation to mean 'internal, don't call'.
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;

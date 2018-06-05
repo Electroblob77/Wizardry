@@ -79,8 +79,13 @@ public final class WizardryClientEventHandler {
 	
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
+		
 		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_CRYSTAL);
 		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_UPGRADE);
+		
+//		for(int i=0; i<7; i++){
+//			event.getMap().registerSprite(new ResourceLocation(Wizardry.MODID, "particle/ice_" + i));
+//		}
 	}
 
 	// Shift-scrolling to change spells

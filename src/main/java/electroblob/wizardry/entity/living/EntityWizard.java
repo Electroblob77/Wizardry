@@ -161,12 +161,12 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 					// ... and is a mob, a summoned creature ...
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
-					// ... or in the whitelist ...
+							// ... or in the whitelist ...
 							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
+							.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
+							.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
 						// ... it can be attacked.
 						return true;
 					}
@@ -520,7 +520,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	}
 
 	// TODO: Switch all of this over to some kind of loot pool system?
-	
+
 	private ItemStack getRandomPrice(Tier tier){
 		ItemStack itemstack = ItemStack.EMPTY;
 		switch(this.rand.nextInt(3)){
@@ -594,8 +594,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			}else if(randomiser < 8){
 				return new ItemStack(WizardryItems.arcane_tome, 1, 1);
 			}else if(randomiser < 10){
-				EntityEquipmentSlot slot = WizardryUtilities.ARMOUR_SLOTS[rand
-						.nextInt(WizardryUtilities.ARMOUR_SLOTS.length)];
+				EntityEquipmentSlot slot = WizardryUtilities.ARMOUR_SLOTS[rand.nextInt(WizardryUtilities.ARMOUR_SLOTS.length)];
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// This means it is more likely for armour sold to be of the same element as the wizard if the
 					// wizard has an element.

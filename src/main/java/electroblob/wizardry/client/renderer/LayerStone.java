@@ -53,6 +53,8 @@ public class LayerStone implements LayerRenderer<EntityLivingBase> {
 		this.renderer = renderer;
 		this.model = renderer.getMainModel();
 	}
+	
+	// FIXME: Does not work with zombie pigmen, I have no idea why.
 
 	@Override
 	public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks,

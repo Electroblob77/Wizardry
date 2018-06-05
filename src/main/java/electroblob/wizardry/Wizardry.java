@@ -87,7 +87,13 @@ public class Wizardry {
 	/** Static instance of the {@link Settings} object for Wizardry. */
 	public static final Settings settings = new Settings();
 
-	/** Static instance of the {@link Logger} object for Wizardry. */
+	/** Static instance of the {@link Logger} object for Wizardry.
+	 * <p>
+	 * Logging conventions for wizardry (only these levels are used currently):
+	 * <p>
+	 * - <b>ERROR</b>: Anything that threw an exception; may or may not crash the game.<br>
+	 * - <b>WARN</b>: Anything that isn't supposed to happen during normal operation, but didn't throw an exception.<br>
+	 * - <b>INFO</b>: Anything that might happen during normal mod operation that the user needs to know about. */
 	public static Logger logger;
 
 	// private static Pattern entityNamePattern;
