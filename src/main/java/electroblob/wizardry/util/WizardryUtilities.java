@@ -59,6 +59,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
+ * <i>"Where do you put random but useful bits and pieces? {@code WizardryUtilities} of course - the 'stuff that doesn't
+ * fit anywhere else' class!"</i>
+ * <p>
  * This class contains some useful static methods for use anywhere - items, entities, spells, events, blocks, etc.
  * Broadly speaking, these fall into the following categories:
  * <p>

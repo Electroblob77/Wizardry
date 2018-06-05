@@ -31,6 +31,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+/**
+ * <i>"Electroblob's Wizardry adds an RPG-like system of spells to Minecraft, with the aim of being as playable as
+ * possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master
+ * the arcane! - But you knew that, right?"</i>
+ * <p>
+ * Main mod class for Wizardry. Contains the logger and settings instances, along with all the other stuff that's normally
+ * in a main mod class.
+ * @author Electroblob
+ * @since Wizardry 1.0
+ */
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob.wizardry.WizardryGuiFactory")
 public class Wizardry {
 

@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
+ * <i>"Never fear, {@code WandHelper} is here!"</i>
+ * <p>
  * Much like {@link net.minecraft.enchantment.EnchantmentHelper EnchantmentHelper}, this class has some static methods
  * which allow cleaner and more concise interaction with the wand NBT data, which is quite a complex structure. Such
  * interaction previously resulted in rather verbose and repetitive code which was hard to read and even harder to

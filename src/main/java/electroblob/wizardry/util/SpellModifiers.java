@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
+ * <i>"{@code SpellModifiers} - modify all the things!"</i>
+ * <p>
  * Object that wraps any number of spell modifiers into one, allowing for expandability within the Spell#cast methods.
  * This class is essentially a glorified {@link Map} which can be written to and read from a {@link ByteBuf}. It is
  * possible to calculate spell modifiers from wand NBT within the cast methods, but this is cumbersome and does not

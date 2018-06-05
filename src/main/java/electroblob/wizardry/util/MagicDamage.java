@@ -45,6 +45,8 @@ import net.minecraft.util.EntityDamageSource;
 // type 'attributes'. This is my attempt to collect all of these into a reasonably coherent system.
 
 /**
+ * <i>"Ouch, that hurt!"</i>
+ * <p>
  * As of wizardry 1.1, this class has replaced the damagesource-related methods in WizardryUtilities, allowing a
  * {@link DamageType} to be specified with the damage. The main reason for this is so that damage sources can fit with
  * the vanilla behaviour on armour enchantments and such like whilst still being classified as wizardry damage for the
