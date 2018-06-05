@@ -182,7 +182,7 @@ public class GuiWizardHandbook extends GuiScreen {
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.disableLighting();
 		GlStateManager.enableRescaleNormal();
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.enableColorMaterial();
 		GlStateManager.enableLighting();
 		itemRender.zLevel = 100.0F;
 
@@ -204,7 +204,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
 
 	}
@@ -219,7 +219,7 @@ public class GuiWizardHandbook extends GuiScreen {
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.disableLighting();
 		GlStateManager.enableRescaleNormal();
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GlStateManager.enableColorMaterial();
 		itemRender.zLevel = 0.0F;
 		GlStateManager.disableLighting();
 
@@ -239,7 +239,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableLighting();
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
 
 	}
@@ -345,8 +345,8 @@ public class GuiWizardHandbook extends GuiScreen {
 
 					}else{
 
-						paragraph = paragraph.replaceAll("NEXT_SPELL_KEY", Keyboard.getKeyName(ClientProxy.NEXT_SPELL.getKeyCode()));
-						paragraph = paragraph.replaceAll("PREVIOUS_SPELL_KEY", Keyboard.getKeyName(ClientProxy.PREVIOUS_SPELL.getKeyCode()));
+						paragraph = paragraph.replaceAll("NEXT_SPELL_KEY", ClientProxy.NEXT_SPELL.getDisplayName());
+						paragraph = paragraph.replaceAll("PREVIOUS_SPELL_KEY", ClientProxy.PREVIOUS_SPELL.getDisplayName());
 						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL_MINUS_30", "" + (Constants.MANA_PER_CRYSTAL - 30));
 						paragraph = paragraph.replaceAll("MANA_PER_CRYSTAL", "" + Constants.MANA_PER_CRYSTAL);
 						paragraph = paragraph.replaceAll("BASIC_MAX_CHARGE", "" + Tier.BASIC.maxCharge);
@@ -659,51 +659,36 @@ public class GuiWizardHandbook extends GuiScreen {
 		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_silk));
 		craftingResult = new ItemStack(WizardryItems.wizard_boots);
 		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-
-		if(Wizardry.settings.useAlternateScrollRecipe){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
-			craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
-			craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_crystal));
-			craftingResult = new ItemStack(WizardryItems.blank_scroll);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}else{
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
-			craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
-			craftingResult = new ItemStack(WizardryItems.blank_scroll);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
-
-		if(Wizardry.settings.firebombIsCraftable){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.BLAZE_POWDER));
-			craftingGrid.get(1).set(0, new ItemStack(Items.BLAZE_POWDER));
-			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
-			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
-			craftingResult = new ItemStack(WizardryItems.firebomb, 3);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
-
-		if(Wizardry.settings.poisonBombIsCraftable){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.SPIDER_EYE));
-			craftingGrid.get(1).set(0, new ItemStack(Items.SPIDER_EYE));
-			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
-			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
-			craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
-
-		if(Wizardry.settings.smokeBombIsCraftable){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.COAL));
-			craftingGrid.get(1).set(0, new ItemStack(Items.COAL));
-			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
-			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
-			craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
+		craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
+		craftingResult = new ItemStack(WizardryItems.blank_scroll);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.BLAZE_POWDER));
+		craftingGrid.get(1).set(0, new ItemStack(Items.BLAZE_POWDER));
+		craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+		craftingResult = new ItemStack(WizardryItems.firebomb, 3);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.SPIDER_EYE));
+		craftingGrid.get(1).set(0, new ItemStack(Items.SPIDER_EYE));
+		craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+		craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.COAL));
+		craftingGrid.get(1).set(0, new ItemStack(Items.COAL));
+		craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+		craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
 	}
 
 }

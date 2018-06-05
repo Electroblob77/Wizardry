@@ -1,6 +1,10 @@
 package electroblob.wizardry.item;
 
 import java.util.List;
+import java.util.UUID;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
@@ -8,20 +12,19 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Petrify;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -29,8 +32,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
-public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
+public class ItemWizardArmour extends ItemArmor {
 
+	//VanillaCopy, ItemArmor has this set to private for some reason.
+    public static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+	//Damage reduction values that used to be in WizardryItems.SILK [feet, legs, chest, head]
+    private static int[] reductions = new int[]{2, 4, 5, 2};
+	
 	public Element element;
 
 	public ItemWizardArmour(ArmorMaterial material, int renderIndex, EntityEquipmentSlot armourType, Element element){
@@ -149,73 +157,41 @@ public class ItemWizardArmour extends ItemArmor implements ISpecialArmor {
 	public boolean getIsRepairable(ItemStack stack, ItemStack par2ItemStack){
 		return false;
 	}
-
-	@Override
-	public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage,
-			int slotIndex){
-
-		EntityEquipmentSlot slot = getArmorSlotFromIndex(slotIndex);
-
-		if(!source.isUnblockable() && armor.getItemDamage() < armor.getMaxDamage()){
-			if(armor.hasTagCompound() && armor.getTagCompound().getBoolean("legendary")){
-				// Legendary armour gives full 10 shields, like diamond.
-				return new ArmorProperties(0, ArmorMaterial.DIAMOND.getDamageReductionAmount(slot) / 25D,
-						armor.getMaxDamage() + 1 - armor.getItemDamage());
-			}else{
-				return new ArmorProperties(0, this.damageReduceAmount / 25D,
-						armor.getMaxDamage() + 1 - armor.getItemDamage());
-			}
-		}else{
-			return new ArmorProperties(0, 0, 0);
-		}
-	}
-
-	@Override
-	public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slotIndex){
-
-		EntityEquipmentSlot slot = getArmorSlotFromIndex(slotIndex);
-
-		if(armor.getItemDamage() < armor.getMaxDamage()){
-			if(armor.hasTagCompound() && armor.getTagCompound().getBoolean("legendary")){
-				// Legendary armour gives full 10 shields, like diamond.
-				return ArmorMaterial.DIAMOND.getDamageReductionAmount(slot);
-			}else{
-				return this.getArmorMaterial().getDamageReductionAmount(slot);
-			}
-		}else{
-			return 0;
-		}
-	}
-
-	@Override
-	public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot){
-		if(stack.getItemDamage() < stack.getMaxDamage()){
-			if(stack.getItemDamage() + damage > stack.getMaxDamage()){
-				// Note for reference: this is the method to use, despite how it sounds attemptDamageItem() is called
-				// by this one, not the other way round.
-				stack.damageItem(stack.getMaxDamage() - stack.getItemDamage(), entity);
-			}else{
-				stack.damageItem(damage, entity);
-			}
-		}
-	}
-
-	/**
-	 * Returns the EntityEquipmentSlot for which index() returns an integer equal to the passed in slotIndex and which
-	 * is an armour slot (not a hand slot). This only exists because the 1.10.2/1.11.2 versions of Forge still uses an 
-	 * integer slot index in ISpecialArmor instead of an EntityEquipmentSlot.
+	
+	/*
+	 * Properly handles the defense value of the armor.  This method is responisble for the tooltip on top of
+	 * the armor value.  It is also what handles armor toughness, but the wizard armor had a value of 0 for that.
 	 */
-	// NOTE: Remove in 1.12.2
-	private EntityEquipmentSlot getArmorSlotFromIndex(int slotIndex){
-		// Had to pick something to begin with.
-		EntityEquipmentSlot slot = EntityEquipmentSlot.HEAD;
-
-		for(EntityEquipmentSlot s : WizardryUtilities.ARMOUR_SLOTS){
-			if(s.getIndex() == slotIndex){
-				slot = s;
+	@Override
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack){
+		
+		Multimap<String, AttributeModifier> map = HashMultimap.create();
+		
+		if(stack.getItemDamage() < stack.getMaxDamage() && this.armorType == slot){
+			
+			int defense = reductions[slot.getIndex()];
+			float toughness = 0f;
+			
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) {
+				defense = ArmorMaterial.DIAMOND.getDamageReductionAmount(slot);
+				toughness = ArmorMaterial.DIAMOND.getToughness();
 			}
+			
+			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
+					"Armor modifier", defense, 0));
+			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
+					"Armor toughness", toughness, 0));
 		}
-		return slot;
+		
+		return map;
+	}
+
+	// Fixes wizard armor breaking by disallowing setting damage above the max, since damageArmor is not always called.
+	// Since ISpecialArmor has been removed from this class, this may no longer be necessary, but keeping it won't hurt.
+	@Override
+	public void setDamage(ItemStack stack, int damage) {
+		if(damage <= stack.getMaxDamage()) super.setDamage(stack, damage);
+		else super.setDamage(stack, stack.getMaxDamage());
 	}
 
 	@SubscribeEvent

@@ -3,7 +3,6 @@ package electroblob.wizardry.entity.living;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import com.google.common.base.Predicate;
 
@@ -119,10 +118,10 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 							|| (entity instanceof ISummonedCreature || entity instanceof EntityWizard
 					// ... or in the whitelist ...
 									|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-											.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
+											.contains(EntityList.getKey(entity.getClass())))
 									// ... and isn't in the blacklist ...
 									&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-											.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
+											.contains(EntityList.getKey(entity.getClass()))){
 						// ... it can be attacked.
 						return true;
 					}
@@ -265,6 +264,21 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		this.spells = (List<Spell>)WizardryUtilities.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
 				(NBTTagInt tag) -> Spell.get(tag.getInt()));
 		this.hasTower = nbt.getBoolean("hasTower");
+	}
+	
+	@Override
+	public int getMaxSpawnedInChunk(){
+		return 1;
+	}
+	
+	@Override
+	public boolean getCanSpawnHere(){
+		// Evil wizards can only spawn in the specified dimensions
+		for(int id : Wizardry.settings.evilWizardDimensions){
+			if(this.dimension == id) return super.getCanSpawnHere();
+		}
+		
+		return false;
 	}
 
 	@Override

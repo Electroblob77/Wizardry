@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import java.util.Arrays;
 import java.util.List;
 
 import electroblob.wizardry.Wizardry;
@@ -14,6 +15,7 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;
@@ -143,7 +145,8 @@ public class MindControl extends Spell {
 	/** Returns true if the given entity can be mind controlled (i.e. is not a player, npc, evil wizard or boss). */
 	public static boolean canControl(EntityLivingBase target){
 		return target instanceof EntityLiving && target.isNonBoss() && !(target instanceof INpc)
-				&& !(target instanceof EntityEvilWizard);
+				&& !(target instanceof EntityEvilWizard) && !Arrays.asList(Wizardry.settings.mindControlTargetsBlacklist)
+				.contains(EntityList.getKey(target.getClass()));
 	}
 
 	/**
@@ -200,10 +203,10 @@ public class MindControl extends Spell {
 
 				Entity caster = WizardryUtilities.getEntityByUUID(world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
-				// If the current target is already a valid mind control target, nothing happens.
-				if(WizardryUtilities.isValidTarget(caster, currentTarget)) return;
-
 				if(caster instanceof EntityLivingBase){
+
+					// If the current target is already a valid mind control target, nothing happens.
+					if(WizardryUtilities.isValidTarget(caster, currentTarget)) return;
 
 					if(MindControl.findMindControlTarget(entity, (EntityLivingBase)caster, world)){
 						// If it worked, skip setting the target to null.

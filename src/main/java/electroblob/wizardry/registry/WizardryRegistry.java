@@ -73,11 +73,10 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.storage.loot.LootTableList;
@@ -89,7 +88,6 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -245,53 +243,18 @@ public final class WizardryRegistry {
 		EntityRegistry.registerEgg(registryName, eggColour, spotColour);
 	}
 
-	/** Called from the init method in the main mod class to register all the recipes. */
+	/** Now only deals with the dynamic crafting recipes and the smelting recipes. */
 	@SubscribeEvent
 	public static void registerRecipes(RegistryEvent.Register<IRecipe> event){
 		
 		IForgeRegistry<IRecipe> registry = event.getRegistry();
-
-		ItemStack magicCrystalStack = new ItemStack(WizardryItems.magic_crystal);
-		ItemStack magicWandStack = new ItemStack(WizardryItems.magic_wand, 1, Tier.BASIC.maxCharge);
-		ItemStack goldNuggetStack = new ItemStack(Items.GOLD_NUGGET);
-		ItemStack stickStack = new ItemStack(Items.STICK);
-		ItemStack bookStack = new ItemStack(Items.BOOK);
-		ItemStack spellBookStack = new ItemStack(WizardryItems.spell_book, 1, Spells.magic_missile.id());
-		Ingredient crystalFlowerStack = Ingredient.fromStacks(new ItemStack(WizardryBlocks.crystal_flower));
-		ItemStack magicCrystalStack1 = new ItemStack(WizardryItems.magic_crystal, 2);
-		ItemStack magicCrystalStack2 = new ItemStack(WizardryItems.magic_crystal, 9);
-		Ingredient crystalBlockStack = Ingredient.fromStacks(new ItemStack(WizardryBlocks.crystal_block));
-		ItemStack manaFlaskStack = new ItemStack(WizardryItems.mana_flask);
-		Ingredient bottleStack = Ingredient.fromStacks(new ItemStack(Items.GLASS_BOTTLE));
-		Ingredient gunpowderStack = Ingredient.fromStacks(new ItemStack(Items.GUNPOWDER));
-		Ingredient blazePowderStack = Ingredient.fromStacks(new ItemStack(Items.BLAZE_POWDER));
-		Ingredient spiderEyeStack = Ingredient.fromStacks(new ItemStack(Items.SPIDER_EYE));
-		// Coal or charcoal is equally fine, hence the wildcard value
-		Ingredient coalStack = Ingredient.fromStacks(new ItemStack(Items.COAL, 1, OreDictionary.WILDCARD_VALUE));
-		ItemStack firebombStack = new ItemStack(WizardryItems.firebomb, 3);
-		ItemStack poisonBombStack = new ItemStack(WizardryItems.poison_bomb, 3);
-		ItemStack smokeBombStack = new ItemStack(WizardryItems.smoke_bomb, 3);
-		ItemStack scrollStack = new ItemStack(WizardryItems.blank_scroll);
-		Ingredient paperStack = Ingredient.fromStacks(new ItemStack(Items.PAPER));
-		Ingredient stringStack = Ingredient.fromStacks(new ItemStack(Items.STRING));
-
-		registry.register(new ShapedOreRecipe(null, magicWandStack, "  x", " y ", "z  ", 'x', magicCrystalStack, 'y', stickStack, 'z', goldNuggetStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/magic_wand")));
-		registry.register(new ShapedOreRecipe(null, spellBookStack, " x ", "xyx", " x ", 'x', magicCrystalStack, 'y', bookStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/spellbook")));
-
-		registry.register(new ShapelessOreRecipe(null, magicCrystalStack1, crystalFlowerStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/magic_crystal_1")));
-		registry.register(new ShapelessOreRecipe(null, magicCrystalStack2, crystalBlockStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/magic_crystal_2")));
-
-		if(Wizardry.settings.firebombIsCraftable) registry.register(new ShapelessOreRecipe(null, firebombStack, bottleStack, gunpowderStack, blazePowderStack, blazePowderStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/fire_bomb")));
-		if(Wizardry.settings.poisonBombIsCraftable) registry.register(new ShapelessOreRecipe(null, poisonBombStack, bottleStack, gunpowderStack, spiderEyeStack, spiderEyeStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/poison_bomb")));
-		if(Wizardry.settings.smokeBombIsCraftable) registry.register(new ShapelessOreRecipe(null, smokeBombStack, bottleStack, gunpowderStack, coalStack, coalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/smoke_bomb")));
-
-		if(Wizardry.settings.useAlternateScrollRecipe){
-			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack, magicCrystalStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/blank_scroll")));
-		}else{
-			registry.register(new ShapelessOreRecipe(null, scrollStack, paperStack, stringStack).setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/blank_scroll")));
-		}
-
+		
+		FurnaceRecipes.instance().addSmeltingRecipeForBlock(WizardryBlocks.crystal_ore, new ItemStack(WizardryItems.magic_crystal), 0.5f);
+		
 		// Mana flask recipes
+		
+		ItemStack manaFlaskStack = new ItemStack(WizardryItems.mana_flask);
+		
 		ItemStack miscWandStack;
 
 		for(Element element : Element.values()){
@@ -302,7 +265,6 @@ public final class WizardryRegistry {
 				}.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_wand_" + element.getUnlocalisedName() + "_" + tier.getUnlocalisedName())));
 			}
 		}
-
 
 		ItemStack miscArmourStack;
 

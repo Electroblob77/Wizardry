@@ -9,7 +9,6 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,9 +18,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntitySparkBomb extends EntityBomb {
-
-	/** For client use, because thrower field is not visible. */
-	private int casterID;
 
 	public EntitySparkBomb(World par1World){
 		super(par1World);
@@ -85,7 +81,7 @@ public class EntitySparkBomb extends EntityBomb {
 							&& ((EntityPlayer)targets.get(i)).capabilities.isCreativeMode);
 
 			// Detects (client side) if target is the thrower, to stop particles being spawned around them.
-			if(flag && world.isRemote && targets.get(i).getEntityId() == this.casterID) flag = false;
+			//if(flag && world.isRemote && targets.get(i).getEntityId() == this.casterID) flag = false;
 
 			if(flag){
 
@@ -120,17 +116,5 @@ public class EntitySparkBomb extends EntityBomb {
 		}
 
 		this.setDead();
-	}
-
-	@Override
-	public void writeSpawnData(ByteBuf data){
-		super.writeSpawnData(data);
-		data.writeInt(this.getThrower().getEntityId());
-	}
-
-	@Override
-	public void readSpawnData(ByteBuf data){
-		super.readSpawnData(data);
-		this.casterID = data.readInt();
 	}
 }

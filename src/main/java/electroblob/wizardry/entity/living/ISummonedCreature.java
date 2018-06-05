@@ -2,7 +2,6 @@ package electroblob.wizardry.entity.living;
 
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -183,18 +182,28 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 				if(!entity.isInvisible() && isValidTarget(entity)){
 
 					// ... and is a player, they can be attacked, since players can't be in the whitelist or the
-					// blacklist.
-					if(entity instanceof EntityPlayer) return true;
+					// blacklist ...
+					if(entity instanceof EntityPlayer){
+						// ... unless the creature was summoned by a good wizard who the player has not angered.
+						if(getCaster() instanceof EntityWizard){
+							if(((EntityWizard)getCaster()).getRevengeTarget() != entity
+									&& ((EntityWizard)getCaster()).getAttackTarget() != entity) {
+								return false;
+							}
+						}
+						
+						return true;
+					}
 
 					// ... and is a mob, a summoned creature, a wizard ...
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
 							|| (entity instanceof EntityWizard && !(getCaster() instanceof EntityWizard))
 					// ... or in the whitelist ...
 							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
+									.contains(EntityList.getKey(entity.getClass())))
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-									.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
+									.contains(EntityList.getKey(entity.getClass()))){
 						// ... it can be attacked.
 						return true;
 					}
@@ -364,11 +373,18 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 				if(event.getSource().isFireDamage()) newSource.setFireDamage();
 				if(event.getSource().isProjectile()) newSource.setProjectile();
 
-				// For some reason Minecraft calculates knockback relative to DamageSource#getEntity. In vanilla this
+				// For some reason Minecraft calculates knockback relative to DamageSource#getTrueSource. In vanilla this
 				// is unnoticeable, but it looks a bit weird with summoned creatures involved - so this fixes that.
 				if(WizardryUtilities.attackEntityWithoutKnockback(event.getEntity(), newSource, event.getAmount())){
+					// Using event.getSource().getTrueSource() as this means the target is knocked back from the minion
 					WizardryUtilities.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
 					((ISummonedCreature)event.getSource().getTrueSource()).onSuccessfulAttack(event.getEntityLiving());
+					// If the target revenge-targeted the summoner, make it revenge-target the minion instead
+					// (if it didn't revenge-target, do nothing)
+					if(event.getEntityLiving().getRevengeTarget() == summoner
+							&& event.getSource().getTrueSource() instanceof EntityLivingBase){
+						event.getEntityLiving().setRevengeTarget((EntityLivingBase)event.getSource().getTrueSource());
+					}
 				}
 
 			}

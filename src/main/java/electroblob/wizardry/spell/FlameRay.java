@@ -79,36 +79,41 @@ public class FlameRay extends Spell {
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
 			SpellModifiers modifiers){
 
-		Vec3d vec = new Vec3d(target.posX - caster.posX, target.posY - caster.posY, target.posZ - caster.posZ)
-				.normalize();
-
 		if(target != null){
+
+			Vec3d vec = new Vec3d(target.posX - caster.posX, target.posY - caster.posY, target.posZ - caster.posZ).normalize();
+
 			target.setFire(10);
 			WizardryUtilities.attackEntityWithoutKnockback(target,
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.FIRE),
 					3.0f * modifiers.get(SpellModifiers.DAMAGE));
-		}
-		if(world.isRemote){
-			for(int i = 0; i < 20; i++){
-				double x1 = caster.posX + vec.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2 + world.rand.nextFloat() / 5
-						- 0.1f;
-				double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
-						vec.x * modifiers.get(WizardryItems.range_upgrade),
-						vec.y * modifiers.get(WizardryItems.range_upgrade),
-						vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
-				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
-						vec.x * modifiers.get(WizardryItems.range_upgrade),
-						vec.y * modifiers.get(WizardryItems.range_upgrade),
-						vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
+					
+			if(world.isRemote){
+				for(int i = 0; i < 20; i++){
+					double x1 = caster.posX + vec.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+					double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2 + world.rand.nextFloat() / 5
+							- 0.1f;
+					double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
+					Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
+							vec.x * modifiers.get(WizardryItems.range_upgrade),
+							vec.y * modifiers.get(WizardryItems.range_upgrade),
+							vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
+					Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
+							vec.x * modifiers.get(WizardryItems.range_upgrade),
+							vec.y * modifiers.get(WizardryItems.range_upgrade),
+							vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
+				}
 			}
+			
+			if(ticksInUse % 16 == 0){
+				if(ticksInUse == 0) caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
+				caster.playSound(WizardrySounds.SPELL_LOOP_FIRE, 0.5F, 1.0f);
+			}
+			
+			return true;
 		}
-		if(ticksInUse % 16 == 0){
-			if(ticksInUse == 0) caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
-			caster.playSound(WizardrySounds.SPELL_LOOP_FIRE, 0.5F, 1.0f);
-		}
-		return true;
+		
+		return false;
 	}
 
 	@Override

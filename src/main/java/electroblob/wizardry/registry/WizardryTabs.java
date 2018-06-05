@@ -5,8 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.common.collect.Ordering;
-
 import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.spell.Spell;
@@ -44,6 +42,7 @@ public final class WizardryTabs {
 			Collections.sort(items, itemSorter);
 		}
 	};
+	
 	public static final CreativeTabs SPELLS = new CreativeTabs("ebwizardryspells"){
 
 		@Override
@@ -103,7 +102,14 @@ public final class WizardryTabs {
 				WizardryItems.wizard_boots_sorcery, WizardryItems.wizard_hat_healing, WizardryItems.wizard_robe_healing,
 				WizardryItems.wizard_leggings_healing, WizardryItems.wizard_boots_healing);
 
-		itemSorter = Ordering.explicit(orderedItemList).onResultOf(ItemStack::getItem);
+		itemSorter = (stack1, stack2) -> {
+			// Neither stack is in the creative tab
+			if(!orderedItemList.contains(stack1.getItem()) && !orderedItemList.contains(stack2.getItem())) return 0;
+			if(!orderedItemList.contains(stack1.getItem())) return 1; // Only stack 2 is in the creative tab
+			if(!orderedItemList.contains(stack2.getItem())) return -1; // Only stack 1 is in the creative tab
+			// Both stacks are in the creative tab
+			return orderedItemList.indexOf(stack1.getItem()) - orderedItemList.indexOf(stack2.getItem());
+		};
 
 		spellItemSorter = (stack1, stack2) -> {
 

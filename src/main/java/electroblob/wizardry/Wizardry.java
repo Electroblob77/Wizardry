@@ -76,19 +76,6 @@ public class Wizardry {
 	// I can make the healing spells use damage multipliers - hurrah!
 
 	// TODO: Switch from IInventory to IItemHandler (Or don't. It's only useful for automation really.)
-	// TODO: Rearrange the config gui and file
-
-	// Updating:
-	// TODO: Make sure all obf reflection names are still correct
-	// TODO: Go through each of the summoned creatures and check there are no extra vanilla methods to override
-	// TODO: Check whether Minecraft has added some methods that do the same job as my utilities, particularly in
-	// relation to itemstacks, hotbar, armour slots and inventory slots.
-	// TODO: Add wizard towers to the /locate command
-	// TODO: Fix cascading worldgen lag and backport (offset area into loaded chunks, possibly use WorldGenMinable)
-	// TODO: Change evil wizard sounds again to use illager sounds?
-	// TODO: Chnage all instanceof checks on split entity variant classes (zombie, skeleton, etc.) to their abstract
-	// base classes where appropriate
-
 	// TODO: Have particles obey Minecraft's particle setting where appropriate
 	// (see https://github.com/RootsTeam/Embers/blob/master/src/main/java/teamroots/embers/particle/ParticleUtil.java)
 

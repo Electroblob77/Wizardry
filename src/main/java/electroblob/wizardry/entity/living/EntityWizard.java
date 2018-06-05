@@ -5,9 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import com.google.common.base.Predicate;
 
@@ -29,25 +30,24 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.IMerchant;
+import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookAtTradePlayer;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAITradePlayer;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
-import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -77,23 +77,12 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 @Mod.EventBusSubscriber
-public class EntityWizard extends EntityVillager implements ISpellCaster, IEntityAdditionalSpawnData {
-
-	/* After much debugging, the error in the compiled mod (outside of eclipse) was traced back to this class,
-	 * specifically the methods copied in from EntityVillager when I changed this class to extend it. This figures,
-	 * since I had 1.2.1 working just fine before I did that, and it was the only thing I changed. Apparently, methods
-	 * and fields with obfuscated names like func_129090_a can cause problems when compiled. One of the ones here was
-	 * renamed and the other deleted since it was never called. Watch out for this in future (unless, of course, they
-	 * are overriding something, in which case it should be fine). */
-
-	// Extending EntityVillager turned out to be a pretty neat thing to do, since now zombies will attack wizards
-	// TODO: Perhaps we should be implementing IMerchant now instead?
+public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISpellCaster, IEntityAdditionalSpawnData {
 
 	private EntityAIAttackSpell spellCastingAI = new EntityAIAttackSpell(this, 0.5D, 14.0F, 30, 50);
 
@@ -102,19 +91,21 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	/** The entity selector passed into the new AI methods. */
 	protected Predicate<Entity> targetSelector;
 
-	/** Copy of EntityVillager's buyingList, renamed to avoid confusion. */
+	/** The wizard's trades. */
 	private MerchantRecipeList trades;
+    /** The wizard's current customer. */
+    @Nullable
+    private EntityPlayer customer;
+    
 	private int timeUntilReset;
 
 	/** addDefaultEquipmentAndRecipies is called if this is true */
 	private boolean updateRecipes;
 
 	/** Data parameter for the cooldown time for wizards healing themselves. */
-	private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityWizard.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
 	/** Data parameter for the wizard's element. */
-	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityWizard.class,
-			DataSerializers.VARINT);
+	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
 
 	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
@@ -141,6 +132,8 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	protected void initEntityAI(){
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
+		// Why would you go to the effort of making the IMerchant interface and then have the AI classes only accept
+		// EntityVillager? N
 		this.tasks.addTask(1, new EntityAITradePlayer(this));
 		this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
@@ -167,7 +160,6 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
 							.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
-						// ... it can be attacked.
 						return true;
 					}
 				}
@@ -223,6 +215,55 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	@Override
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
+	}
+
+	@Override
+	public void setCustomer(EntityPlayer player){
+		this.customer = player;
+	}
+
+	@Override
+	public EntityPlayer getCustomer(){
+		return this.customer;
+	}
+
+	public boolean isTrading(){
+		return this.getCustomer() != null;
+	}
+
+	@Override
+	public void verifySellingItem(ItemStack stack){
+		// Copied from EntityVillager
+		if(!this.world.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20){
+            this.livingSoundTime = -this.getTalkInterval();
+            this.playSound(stack.isEmpty() ? SoundEvents.ENTITY_VILLAGER_NO : SoundEvents.ENTITY_VILLAGER_YES, this.getSoundVolume(), this.getSoundPitch());
+        }
+	}
+
+	@Override
+	public World getWorld(){
+		return this.world;
+	}
+
+	@Override
+	public BlockPos getPos(){
+        return new BlockPos(this);
+    }
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void setRecipes(MerchantRecipeList recipeList){
+		// Apparently nothing goes here, and nothing's here in EntityVillager either...
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return this.getElement().getWizardName();
+	}
+
+	@Override
+	protected boolean canDespawn(){
+		return false;
 	}
 
 	@Override
@@ -304,8 +345,7 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			}
 		}
 
-		// Super call removed because EntityVillager's version does things I don't want and the next one up is
-		// in EntityLivingBase and does nothing.
+		super.updateAITasks(); // This actually does nothing
 	}
 
 	@Override
@@ -339,11 +379,6 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 		}else{
 			return false;
 		}
-	}
-
-	@Override
-	public ITextComponent getDisplayName(){
-		return this.getElement().getWizardName();
 	}
 
 	@Override
@@ -382,16 +417,6 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 
 		this.towerBlocks = new HashSet<BlockPos>(WizardryUtilities.NBTToList(
 				nbt.getTagList("towerBlocks", NBT.TAG_LONG), (NBTTagLong tag) -> BlockPos.fromLong(tag.getLong())));
-	}
-
-	@Override
-	protected boolean canDespawn(){
-		return false;
-	}
-
-	@Override
-	public boolean isTrading(){
-		return this.getCustomer() != null;
 	}
 
 	@Override
@@ -662,11 +687,6 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 	}
 
 	@Override
-	public void setProfession(VillagerProfession prof){
-		// Disables Forge's stuff.
-	}
-
-	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata){
 
 		livingdata = super.onInitialSpawn(difficulty, livingdata);
@@ -823,49 +843,72 @@ public class EntityWizard extends EntityVillager implements ISpellCaster, IEntit
 			}
 		}
 	}
+	
+	// Copied from their respective AI classes
+	
+	public static class EntityAILookAtTradePlayer extends EntityAIWatchClosest {
+		
+	    private final EntityWizard wizard;
 
-	// EntityVillager overrides (that don't add features)
+	    public EntityAILookAtTradePlayer(EntityWizard wizard){
+	        super(wizard, EntityPlayer.class, 8.0F);
+	        this.wizard = wizard;
+	    }
 
-	@Override
-	public boolean isMating(){
-		return false;
+	    @Override
+	    public boolean shouldExecute(){
+	        if(this.wizard.isTrading()){
+	            this.closestEntity = this.wizard.getCustomer();
+	            return true;
+	        }else{
+	            return false;
+	        }
+	    }
 	}
+	
+	public static class EntityAITradePlayer extends EntityAIBase {
+		
+		private final EntityWizard wizard;
 
-	@Override
-	public void setMating(boolean p_70947_1_){
-	}
+	    public EntityAITradePlayer(EntityWizard wizard){
+	        this.wizard = wizard;
+	        this.setMutexBits(5);
+	    }
 
-	@Override
-	public void setPlaying(boolean p_70939_1_){
-	}
+	    @Override
+	    public boolean shouldExecute(){
+	    	
+	        if(!this.wizard.isEntityAlive()){
+	            return false;
+	        }else if(this.wizard.isInWater()){
+	            return false;
+	        }else if(!this.wizard.onGround){
+	            return false;
+	        }else if(this.wizard.velocityChanged){
+	            return false;
+	        }else{
+	        	
+	            EntityPlayer entityplayer = this.wizard.getCustomer();
 
-	@Override
-	public boolean isPlaying(){
-		return false;
-	}
+	            if(entityplayer == null){
+	                return false;
+	            }else if(this.wizard.getDistanceSq(entityplayer) > 16.0D){
+	                return false;
+	            }else{
+	                return entityplayer.openContainer != null;
+	            }
+	        }
+	    }
 
-	@Override
-	public void setLookingForHome(){
-	}
+	    @Override
+	    public void startExecuting(){
+	        this.wizard.getNavigator().clearPath();
+	    }
 
-	// Doesn't say it, but this is in fact nullable.
-	@Override
-	public EntityVillager createChild(EntityAgeable par1EntityAgeable){
-		return null;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void setRecipes(MerchantRecipeList par1MerchantRecipeList){
-	}
-
-	@Override
-	public void onStruckByLightning(EntityLightningBolt lightningBolt){
-		// Restores the normal behaviour, replacing EntityVillager's witch conversion.
-		this.attackEntityFrom(DamageSource.LIGHTNING_BOLT, 5.0F);
-		// Entity's version does something strange with the private fire variable, but since I don't have access this
-		// will probably be fine.
-		this.setFire(8);
+	    @Override
+	    public void resetTask(){
+	        this.wizard.setCustomer((EntityPlayer)null);
+	    }
 	}
 
 }

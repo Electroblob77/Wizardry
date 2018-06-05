@@ -331,7 +331,7 @@ public class ContainerArcaneWorkbench extends Container {
 				// This needs to happen so the charging works on the new wand, not the old one.
 				wand = this.getSlot(WAND_SLOT).getStack();
 
-			}else{
+			}else if(WandHelper.isWandUpgrade(upgrade.getItem())){
 
 				// Special upgrades
 

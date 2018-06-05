@@ -24,57 +24,107 @@ public class GuiConfigWizardry extends GuiConfig {
 	}
 
 	private static List<IConfigElement> getConfigEntries(){
+		
 		List<IConfigElement> configList = new ArrayList<IConfigElement>(1);
-		configList.add(new DummyCategoryElement("spellsConfig", "config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY,
-				SpellsCategory.class));
-		configList.add(new DummyCategoryElement("resistancesConfig",
-				"config." + Wizardry.MODID + ".category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
-		configList.addAll(new ConfigElement(Wizardry.settings.getConfigCategory(Configuration.CATEGORY_GENERAL))
-				.getChildElements());
+
+		configList.add(new DummyCategoryElement("gameplayConfig", "config." + Wizardry.MODID + ".category." + Settings.GAMEPLAY_CATEGORY, GameplayCategory.class));
+		configList.add(new DummyCategoryElement("worldgenConfig", "config." + Wizardry.MODID + ".category." + Settings.WORLDGEN_CATEGORY, WorldgenCategory.class));
+		configList.add(new DummyCategoryElement("commandsConfig", "config." + Wizardry.MODID + ".category." + Settings.COMMANDS_CATEGORY, CommandsCategory.class));
+		configList.add(new DummyCategoryElement("clientConfig", "config." + Wizardry.MODID + ".category." + Settings.CLIENT_CATEGORY, ClientCategory.class));
+		configList.add(new DummyCategoryElement("spellsConfig", "config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY, SpellsCategory.class));
+		configList.add(new DummyCategoryElement("resistancesConfig", "config." + Wizardry.MODID + ".category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
+		
+		configList.addAll(new ConfigElement(Wizardry.settings.getConfigCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
+		
 		return configList;
 	}
+	
+	// The reason this system is so convoluted is that it's designed for use with the @Config annotation. The problem is,
+	// I'm not sure whether that will play well with the load phases. Hmmm...
+	
+	public static abstract class CategoryBase extends CategoryEntry {
+		
+		public CategoryBase(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
 
-	/** Spells category of the config gui. This adds a button which opens up the spells category config. */
-	public static class SpellsCategory extends CategoryEntry {
+		@Override
+		protected GuiScreen buildChildScreen(){
+			
+			String category = this.getCategory();
+			
+			// This GuiConfig object specifies the configID of the object and as such will force-save when it is closed.
+			// The parent GuiConfig object's entryList will also be refreshed to reflect the changes.
+			GuiConfig childScreen = new GuiConfig(this.owningScreen,
+					(new ConfigElement(Wizardry.settings.getConfigCategory(category))).getChildElements(),
+					this.owningScreen.modID, category, false, false,
+					Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title." + category));
+
+			childScreen.titleLine2 = I18n.format("config." + Wizardry.MODID + ".subtitle." + category);
+
+			return childScreen;
+		}
+		
+		protected abstract String getCategory();
+	}
+	
+	/** Gameplay category of the config gui. */
+	public static class GameplayCategory extends CategoryBase {
+		
+		public GameplayCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
+		
+		@Override protected String getCategory() { return Settings.GAMEPLAY_CATEGORY; }
+	}
+	
+	/** Spells category of the config gui. */
+	public static class SpellsCategory extends CategoryBase {
+		
 		public SpellsCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
 			super(owningScreen, owningEntryList, prop);
 		}
-
-		@Override
-		protected GuiScreen buildChildScreen(){
-			// This GuiConfig object specifies the configID of the object and as such will force-save when it is closed.
-			// The parent GuiConfig object's entryList will also be refreshed to reflect the changes.
-			GuiConfig spellsMenu = new GuiConfig(this.owningScreen,
-					(new ConfigElement(Wizardry.settings.getConfigCategory(Settings.SPELLS_CATEGORY)))
-							.getChildElements(),
-					this.owningScreen.modID, Settings.SPELLS_CATEGORY, false, false,
-					Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title." + Settings.SPELLS_CATEGORY));
-
-			spellsMenu.titleLine2 = I18n.format("config." + Wizardry.MODID + ".subtitle." + Settings.SPELLS_CATEGORY);
-
-			return spellsMenu;
-		}
+		
+		@Override protected String getCategory() { return Settings.SPELLS_CATEGORY; }
 	}
 
 	/** Resistances category of the config gui. */
-	public static class ResistancesCategory extends CategoryEntry {
+	public static class ResistancesCategory extends CategoryBase {
+		
 		public ResistancesCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
 			super(owningScreen, owningEntryList, prop);
 		}
-
-		@Override
-		protected GuiScreen buildChildScreen(){
-			// This GuiConfig object specifies the configID of the object and as such will force-save when it is closed.
-			// The parent GuiConfig object's entryList will also be refreshed to reflect the changes.
-			GuiConfig idsMenu = new GuiConfig(this.owningScreen,
-					(new ConfigElement(Wizardry.settings.getConfigCategory(Settings.RESISTANCES_CATEGORY)))
-							.getChildElements(),
-					this.owningScreen.modID, Settings.RESISTANCES_CATEGORY, false, false,
-					Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title." + Settings.RESISTANCES_CATEGORY));
-
-			idsMenu.titleLine2 = I18n.format("config." + Wizardry.MODID + ".subtitle." + Settings.RESISTANCES_CATEGORY);
-
-			return idsMenu;
+		
+		@Override protected String getCategory() { return Settings.RESISTANCES_CATEGORY; }
+	}
+	
+	/** Worldgen category of the config gui. */
+	public static class WorldgenCategory extends CategoryBase {
+		
+		public WorldgenCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
 		}
+		
+		@Override protected String getCategory() { return Settings.WORLDGEN_CATEGORY; }
+	}
+	
+	/** Client category of the config gui. */
+	public static class ClientCategory extends CategoryBase {
+		
+		public ClientCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
+		
+		@Override protected String getCategory() { return Settings.CLIENT_CATEGORY; }
+	}
+	
+	/** Commands category of the config gui. */
+	public static class CommandsCategory extends CategoryBase {
+		
+		public CommandsCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
+		
+		@Override protected String getCategory() { return Settings.COMMANDS_CATEGORY; }
 	}
 }

@@ -34,10 +34,6 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 	}
 
 	private static void copySettings(Message message){
-		Wizardry.settings.firebombIsCraftable = message.settings.firebombIsCraftable;
-		Wizardry.settings.poisonBombIsCraftable = message.settings.poisonBombIsCraftable;
-		Wizardry.settings.smokeBombIsCraftable = message.settings.smokeBombIsCraftable;
-		Wizardry.settings.useAlternateScrollRecipe = message.settings.useAlternateScrollRecipe;
 		Wizardry.settings.discoveryMode = message.settings.discoveryMode;
 		// Wizardry.settings.maxSpellCommandMultiplier = message.settings.maxSpellCommandMultiplier;
 		// Wizardry.settings.castCommandName = message.settings.castCommandName;
@@ -65,10 +61,6 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			// This is also a great reason to have the settings as an actual object.
 			settings = new Settings();
 			// The order is important
-			settings.firebombIsCraftable = buf.readBoolean();
-			settings.poisonBombIsCraftable = buf.readBoolean();
-			settings.smokeBombIsCraftable = buf.readBoolean();
-			settings.useAlternateScrollRecipe = buf.readBoolean();
 			settings.discoveryMode = buf.readBoolean();
 			// settings.maxSpellCommandMultiplier = buf.readDouble();
 			// settings.castCommandName = ByteBufUtils.readUTF8String(buf);
@@ -79,10 +71,6 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 
 		@Override
 		public void toBytes(ByteBuf buf){
-			buf.writeBoolean(settings.firebombIsCraftable);
-			buf.writeBoolean(settings.poisonBombIsCraftable);
-			buf.writeBoolean(settings.smokeBombIsCraftable);
-			buf.writeBoolean(settings.useAlternateScrollRecipe);
 			buf.writeBoolean(settings.discoveryMode);
 			// buf.writeDouble(settings.maxSpellCommandMultiplier);
 			// ByteBufUtils.writeUTF8String(buf, settings.castCommandName);

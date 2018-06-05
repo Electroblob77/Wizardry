@@ -28,6 +28,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityArcaneWorkbench extends TileEntity implements IInventory, ITickable {
 
+	/** The inventory of the arcane workbench. */
 	private NonNullList<ItemStack> inventory;
 	/** Controls the rotation of the rune. */
 	public float timer = 0;

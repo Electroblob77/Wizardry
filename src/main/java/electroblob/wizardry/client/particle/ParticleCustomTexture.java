@@ -61,7 +61,6 @@ public abstract class ParticleCustomTexture extends ParticleWizardry {
 			float rotationYZ, float rotationXY, float rotationXZ){
 		
 		GlStateManager.pushMatrix();
-		GlStateManager.pushAttrib();
 
 		this.applyGLStateChanges();
 
@@ -111,7 +110,6 @@ public abstract class ParticleCustomTexture extends ParticleWizardry {
 
 		this.undoGLStateChanges();
 
-		GlStateManager.popAttrib();
 		GlStateManager.popMatrix();
 
 	}
