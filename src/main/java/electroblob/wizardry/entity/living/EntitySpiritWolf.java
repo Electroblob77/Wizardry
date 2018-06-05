@@ -4,7 +4,8 @@ import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -81,18 +82,21 @@ public class EntitySpiritWolf extends EntityWolf {
 		// Adds Particles on spawn. Due to client/server differences this cannot be done
 		// in the item.
 		if(this.world.isRemote){
-			for(int i = 0; i < 15; i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-						this.posX - this.width / 2 + this.rand.nextFloat() * width,
-						this.posY + this.height * this.rand.nextFloat() + 0.2f,
-						this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0, 48 + this.rand.nextInt(12),
-						0.8f, 0.8f, 1.0f);
-			}
+			this.spawnAppearParticles();
 		}
 
 		return livingdata;
 	}
 
+	private void spawnAppearParticles(){
+		for(int i=0; i<15; i++){
+			double x = this.posX - this.width / 2 + this.rand.nextFloat() * width;
+			double y = this.posY + this.height * this.rand.nextFloat() + 0.2f;
+			double z = this.posZ - this.width / 2 + this.rand.nextFloat() * width;
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).colour(0.8f, 0.8f, 1.0f).spawn(world);
+		}
+	}
+	
 	@Override
 	public void onUpdate(){
 
@@ -100,10 +104,10 @@ public class EntitySpiritWolf extends EntityWolf {
 
 		// Adds a dust particle effect
 		if(this.world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, world,
-					this.posX - this.width / 2 + this.rand.nextFloat() * width,
-					this.posY + this.height * this.rand.nextFloat() + 0.2f,
-					this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0, 0, 0.8f, 0.8f, 1.0f);
+			double x = this.posX - this.width / 2 + this.rand.nextFloat() * width;
+			double y = this.posY + this.height * this.rand.nextFloat() + 0.2f;
+			double z = this.posZ - this.width / 2 + this.rand.nextFloat() * width;
+			ParticleBuilder.create(Type.DUST).pos(x, y, z).colour(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
 		}
 	}
 
@@ -119,17 +123,17 @@ public class EntitySpiritWolf extends EntityWolf {
 			if(stack.getItem() instanceof ItemWand && this.getOwner() == player && player.isSneaking()){
 				// Prevents accidental double clicking.
 				if(this.ticksExisted > 20){
-					for(int i = 0; i < 10; i++){
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-								this.posX - this.width / 2 + this.rand.nextFloat() * width,
-								this.posY + this.height * this.rand.nextFloat() + 0.2f,
-								this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0,
-								48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
+					
+					if(this.world.isRemote){
+						this.spawnAppearParticles();
 					}
+					
 					this.setDead();
+					
 					if(WizardData.get(player) != null){
 						WizardData.get(player).hasSpiritWolf = false;
 					}
+					
 					this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 					// This is necessary to prevent the wand's spell being cast when performing this
 					// action.

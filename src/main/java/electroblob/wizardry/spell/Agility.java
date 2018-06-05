@@ -6,8 +6,9 @@ import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -31,13 +32,13 @@ public class Agility extends Spell {
 		caster.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST,
 				(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 1, false, false));
 
-		for(int i = 0; i < 10; i++){
-			double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
-			double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
-			double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-			if(world.isRemote){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
-						48 + world.rand.nextInt(12), 0.6f, 0.6f, 1.0f);
+		if(world.isRemote){
+			for(int i = 0; i < 10; i++){
+				double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
+				double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
+				double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
+				ParticleBuilder.create(Type.SPARKLE).pos(x1, y1, z1).vel(0, 0.1F, 0)
+				.lifetime(48 + world.rand.nextInt(12)).colour(0.4f, 1.0f, 0.8f).spawn(world);
 			}
 		}
 

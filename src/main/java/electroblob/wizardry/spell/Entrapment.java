@@ -9,7 +9,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -57,7 +57,7 @@ public class Entrapment extends Spell {
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 
 				world.spawnParticle(EnumParticleTypes.PORTAL, x1, y1 - 0.5, z1, 0.0d, 0.0d, 0.0d);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
+				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
 						0.1f, 0.0f, 0.0f);
 			}
 		}
@@ -99,7 +99,7 @@ public class Entrapment extends Spell {
 					double z1 = caster.posZ + dz * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 
 					world.spawnParticle(EnumParticleTypes.PORTAL, x1, y1 - 0.5, z1, 0.0d, 0.0d, 0.0d);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 							0, 0.1f, 0.0f, 0.0f);
 				}
 			}

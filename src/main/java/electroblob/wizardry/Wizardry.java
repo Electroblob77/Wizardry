@@ -156,6 +156,7 @@ public class Wizardry {
 		WizardryPacketHandler.initPackets();
 
 		proxy.initGuiBits();
+		proxy.initParticleFactories();
 	}
 
 	@EventHandler

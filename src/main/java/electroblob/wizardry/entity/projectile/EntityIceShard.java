@@ -1,10 +1,10 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -64,11 +64,8 @@ public class EntityIceShard extends EntityMagicArrow {
 		// Adds a particle effect when the ice shard hits a block.
 		if(this.world.isRemote){
 			for(int j = 0; j < 10; j++){
-				double x = this.posX - 0.25d + (rand.nextDouble() / 2);
-				double y = this.posY - 0.25d + (rand.nextDouble() / 2);
-				double z = this.posZ - 0.25d + (rand.nextDouble() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.ICE, world, x, y, z, x - this.posX, y - this.posY,
-						z - this.posZ, 20 + rand.nextInt(10));
+				ParticleBuilder.create(Type.ICE, this.rand, this.posX, this.posY, this.posZ, 0.5, true)
+				.lifetime(20 + rand.nextInt(10)).spawn(world);
 			}
 		}
 		// Parameters for sound: sound event name, volume, pitch.

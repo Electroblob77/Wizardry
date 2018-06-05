@@ -9,7 +9,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,11 +70,11 @@ public class Firestorm extends Spell {
 				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() * 0.4f - 0.2f;
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() * 0.6f - 0.3f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
 						look.x * modifiers.get(WizardryItems.range_upgrade),
 						look.y * modifiers.get(WizardryItems.range_upgrade),
 						look.z * modifiers.get(WizardryItems.range_upgrade), 0, 3 + world.rand.nextFloat(), 0, 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
 						look.x * modifiers.get(WizardryItems.range_upgrade),
 						look.y * modifiers.get(WizardryItems.range_upgrade),
 						look.z * modifiers.get(WizardryItems.range_upgrade), 0, 3 + world.rand.nextFloat(), 0, 0);

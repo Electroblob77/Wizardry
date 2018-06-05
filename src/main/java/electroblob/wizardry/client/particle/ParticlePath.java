@@ -19,32 +19,20 @@ public class ParticlePath extends ParticleCustomTexture {
 
 	private final double originX, originY, originZ;
 
-	public ParticlePath(World world, double x, double y, double z, double vx, double vy, double vz, float r, float g,
-			float b){
-		super(world, x, y, z, vx, vy, vz);
-		this.setRBGColorF(r, g, b);
+	public ParticlePath(World world, double x, double y, double z){
+		super(world, x, y, z);
+		
 		this.originX = x;
 		this.originY = y;
 		this.originZ = z;
-	}
-
-	public ParticlePath(World world, double x, double y, double z, double vx, double vy, double vz, float r, float g,
-			float b, int maxAge){
-		super(world, x, y, z, vx, vy, vz, maxAge);
-		this.setRBGColorF(r, g, b);
-		this.originX = x;
-		this.originY = y;
-		this.originZ = z;
-	}
-
-	@Override
-	public void init(){
+		
 		this.setParticleTextureIndex(0);
 		// Set to a constant to remove the randomness from Particle.
 		this.particleScale = 1.25f;
 		this.particleGravity = 0;
-		this.fullBrightness = true;
+		this.shaded = false;
 		this.canCollide = false;
+		this.setRBGColorF(1, 1, 1);
 	}
 
 	@Override

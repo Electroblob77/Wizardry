@@ -2,9 +2,9 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -53,12 +53,17 @@ public class EntityDecay extends EntityMagicConstruct {
 						target.addPotionEffect(new PotionEffect(WizardryPotions.decay, LIFETIME, 0));
 				}
 			}
+			
 		}else if(this.rand.nextInt(15) == 0){
+			
 			double radius = rand.nextDouble() * 0.8;
 			double angle = rand.nextDouble() * Math.PI * 2;
 			float brightness = rand.nextFloat() * 0.4f;
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, this.posX + radius * Math.cos(angle),
-					this.posY, this.posZ + radius * Math.sin(angle), 0, 0, 0, 0, brightness, 0, brightness + 0.1f);
+			
+			ParticleBuilder.create(Type.DARK_MAGIC)
+			.pos(this.posX + radius * Math.cos(angle), this.posY, this.posZ + radius * Math.sin(angle))
+			.colour(brightness, 0, brightness + 0.1f)
+			.spawn(world);
 		}
 	}
 

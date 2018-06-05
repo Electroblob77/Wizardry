@@ -2,12 +2,12 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
@@ -61,16 +61,23 @@ public class EntityBlizzard extends EntityMagicConstruct {
 					target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 20, 0));
 			}
 		}else{
-			// For some reason this number of particles now causes the game to lag significantly, despite it being fine
-			// in 1.7.10. I thought particles were supposed to be LESS laggy now...
-			for(int i = 1; i < 6; i++){
+			for(int i=1; i<6; i++){
+				
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.BLIZZARD, world, this.posX,
-						this.posY + rand.nextDouble() * 3, this.posZ, 0, 0, 0, 100, brightness, brightness + 0.1f, 1.0f,
-						false, rand.nextDouble() * 2.5d + 0.5d);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.BLIZZARD, world, this.posX,
-						this.posY + rand.nextDouble() * 3, this.posZ, 0, 0, 0, 100, 1.0f, 1.0f, 1.0f, false,
-						rand.nextDouble() * 2.5d + 0.5d);
+				
+				ParticleBuilder.create(Type.BLIZZARD)
+				.pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ)
+				.lifetime(100)
+				.colour(brightness, brightness + 0.1f, 1.0f)
+				.radius(rand.nextDouble() * 2.5d + 0.5d)
+				.spawn(world);
+
+				ParticleBuilder.create(Type.BLIZZARD)
+				.pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ)
+				.lifetime(100)
+				.colour(1, 1, 1)
+				.radius(rand.nextDouble() * 2.5d + 0.5d)
+				.spawn(world);
 			}
 		}
 	}

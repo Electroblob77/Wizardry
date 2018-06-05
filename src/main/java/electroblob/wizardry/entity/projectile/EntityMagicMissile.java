@@ -1,7 +1,7 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -53,16 +53,8 @@ public class EntityMagicMissile extends EntityMagicArrow {
 		}
 
 		if(this.world.isRemote){
-
-			if(this.ticksExisted % 2 == 1){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX, this.posY, this.posZ, 0, 0,
-						0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat() / 2), 0.5f + (rand.nextFloat() / 2),
-						0.5f + (rand.nextFloat() / 2));
-			}else{
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX, this.posY, this.posZ, 0, 0,
-						0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat() / 2), 0.5f + (rand.nextFloat() / 2),
-						0.5f + (rand.nextFloat() / 2));
-			}
+			ParticleBuilder.create(Type.SPARKLE).pos(this.posX, this.posY, this.posZ).lifetime(20 + rand.nextInt(10))
+			.colour(0.5f + (rand.nextFloat() / 2), 0.5f + (rand.nextFloat() / 2), 0.5f + (rand.nextFloat() / 2)).spawn(world);
 		}
 	}
 

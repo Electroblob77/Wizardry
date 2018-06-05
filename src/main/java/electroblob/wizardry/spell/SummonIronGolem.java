@@ -5,7 +5,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,7 +38,7 @@ public class SummonIronGolem extends Spell {
 			double y1 = (double)((float)pos.getY() + 0.5F + world.rand.nextFloat());
 			double z1 = (double)((float)pos.getZ() + world.rand.nextFloat() * 2 - 1.0F);
 			if(world.isRemote){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0, 0,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0, 0, 0,
 						48 + world.rand.nextInt(12), 0.6f, 0.6f, 1.0f);
 			}
 		}

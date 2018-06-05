@@ -7,7 +7,8 @@ import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -69,8 +70,9 @@ public class EntityHammer extends EntityMagicConstruct {
 		}
 
 		if(this.world.isRemote && this.ticksExisted % 3 == 0){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, this.posX - 0.5d + rand.nextDouble(),
-					this.posY + 2 * rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0, 0, 0, 3);
+			ParticleBuilder.create(Type.SPARK)
+			.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + 2 * rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble())
+			.spawn(world);
 		}
 
 		if(!this.world.isRemote){
@@ -109,12 +111,14 @@ public class EntityHammer extends EntityMagicConstruct {
 										target.posY + target.height / 2, target.posZ);
 								world.spawnEntity(arc);
 							}else{
-								for(int j = 0; j < 8; j++){
-									Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-											target.posX + world.rand.nextFloat() - 0.5,
-											target.getEntityBoundingBox().minY + target.height / 2
-													+ world.rand.nextFloat() * 2 - 1,
-											target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+								// TODO: Move all the arc particle (and sound?) stuff into a method in WizardryUtilities
+								for(int j=0; j<8; j++){
+									ParticleBuilder.create(Type.SPARK)
+									.pos(target.posX + world.rand.nextFloat() - 0.5,
+										target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
+										target.posZ + world.rand.nextFloat() - 0.5)
+									.spawn(world);
+									
 									world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, target.posX + rand.nextFloat(),
 											target.getEntityBoundingBox().minY + target.height / 2 + rand.nextFloat(),
 											target.posZ + rand.nextFloat(), 0, 0, 0);

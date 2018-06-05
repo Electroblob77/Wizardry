@@ -6,7 +6,7 @@ import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -32,7 +32,7 @@ public class GreaterHeal extends Spell {
 					double dy = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F
 							+ world.rand.nextFloat());
 					double dz = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, dx, dy, dz, 0, 0.1F, 0,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, dx, dy, dz, 0, 0.1F, 0,
 							48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 				}
 			}
@@ -54,7 +54,7 @@ public class GreaterHeal extends Spell {
 					double dx = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 					double dy = (double)((float)caster.posY + caster.getEyeHeight() - 0.5F + world.rand.nextFloat());
 					double dz = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, dx, dy, dz, 0, 0.1F, 0,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, dx, dy, dz, 0, 0.1F, 0,
 							48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 				}
 			}

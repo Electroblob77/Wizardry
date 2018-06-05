@@ -6,7 +6,7 @@ import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,12 +31,11 @@ public class Heal extends Spell {
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){
 					double d0 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
-					// Apparently the client side spawns the particles 1 block higher than it should... hence the -
-					// 0.5F.
+					// Apparently the client side spawns the particles 1 block higher than it should... hence the -0.5F.
 					double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F
 							+ world.rand.nextFloat());
 					double d2 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
 							48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 				}
 			}
@@ -59,7 +58,7 @@ public class Heal extends Spell {
 					double dx = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 					double dy = (double)((float)caster.posY + caster.getEyeHeight() - 0.5F + world.rand.nextFloat());
 					double dz = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, dx, dy, dz, 0, 0.1F, 0,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, dx, dy, dz, 0, 0.1F, 0,
 							48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 				}
 			}

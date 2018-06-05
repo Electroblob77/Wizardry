@@ -5,7 +5,8 @@ import electroblob.wizardry.potion.PotionDecay;
 import electroblob.wizardry.potion.PotionFrost;
 import electroblob.wizardry.potion.PotionMagicEffect;
 import electroblob.wizardry.potion.PotionMagicEffectParticles;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
@@ -36,8 +37,7 @@ public final class WizardryPotions {
 	public static final Potion transience = new PotionMagicEffectParticles(false, 0, 0){
 		@Override
 		public void spawnCustomParticle(World world, double x, double y, double z){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, world, x, y, z, 0, 0, 0,
-					(int)(16.0D / (Math.random() * 0.8D + 0.2D)), 0.8f, 0.8f, 1.0f);
+			ParticleBuilder.create(Type.DUST).pos(x, y, z).colour(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
 		}
 	}.setBeneficial(); // 0xffe89b
 
@@ -58,17 +58,15 @@ public final class WizardryPotions {
 		@Override
 		public void spawnCustomParticle(World world, double x, double y, double z){
 			float brightness = 0.5f + (world.rand.nextFloat() / 2);
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x, y, z, 0, 0, 0,
-					48 + world.rand.nextInt(12), brightness, brightness + 0.1f, 1.0f, true, 0);
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world, x, y, z, 0, -0.02, 0,
-					40 + world.rand.nextInt(10));
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).colour(brightness, brightness + 0.1f, 1.0f).gravity(true).spawn(world);
+			ParticleBuilder.create(Type.SNOW).pos(x, y, z).spawn(world);
 		}
 	}.setBeneficial(); // 0x52f1ff
 
 	public static final Potion static_aura = new PotionMagicEffectParticles(false, 0, 3){
 		@Override
 		public void spawnCustomParticle(World world, double x, double y, double z){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, x, y, z, 0, 0, 0, 3);
+			ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
 		}
 	}.setBeneficial(); // 0x0070ff
 

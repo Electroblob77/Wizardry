@@ -1,8 +1,8 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
@@ -56,10 +56,8 @@ public class EntityDart extends EntityMagicArrow {
 
 	@Override
 	public void tickInAir(){
-
 		if(this.world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, world, this.posX, this.posY, this.posZ, 0, -0.03, 0,
-					10 + rand.nextInt(5));
+			ParticleBuilder.create(Type.LEAF).pos(this.posX, this.posY, this.posZ).lifetime(10 + rand.nextInt(5));
 		}
 	}
 

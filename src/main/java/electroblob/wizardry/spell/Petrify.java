@@ -8,7 +8,7 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityStatue;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -112,9 +112,9 @@ public class Petrify extends Spell {
 						+ world.rand.nextFloat() / 5 - 0.1f;
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
+				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
 						0.1f, 0.1f, 0.1f);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 						12 + world.rand.nextInt(8), 0.2f, 0.2f, 0.2f);
 			}
 		}

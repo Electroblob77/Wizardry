@@ -11,15 +11,14 @@ public class ParticleBlizzard extends ParticleSnow {
 	private double radius;
 	private double speed;
 
-	public ParticleBlizzard(World world, int maxAge, double originX, double originZ, double radius, double yPos){
-		super(world, 0, 0, 0, 0, 0, 0, maxAge);
+	public ParticleBlizzard(World world, double ox, double y, double oz){
+		super(world, ox, y, oz);
 		this.angle = this.rand.nextDouble() * Math.PI * 2;
-		double x = originX - Math.cos(angle) * radius;
-		double z = originZ + radius * Math.sin(angle);
-		this.radius = radius;
-		this.setPosition(x, yPos, z);
+		double x = ox - Math.cos(angle) * radius;
+		double z = oz + radius * Math.sin(angle);
+		this.setPosition(x, y, z);
 		this.prevPosX = x;
-		this.prevPosY = yPos;
+		this.prevPosY = y;
 		this.prevPosZ = z;
 		if(rand.nextBoolean()){
 			speed = rand.nextDouble() * 2 + 1;
@@ -27,12 +26,6 @@ public class ParticleBlizzard extends ParticleSnow {
 			speed = rand.nextDouble() * -2 - 1;
 		}
 		this.multipleParticleScaleBy(1.5f);
-	}
-
-	@Override
-	public void init(){
-		super.init();
-		this.fullBrightness = true;
 	}
 
 	// @Override

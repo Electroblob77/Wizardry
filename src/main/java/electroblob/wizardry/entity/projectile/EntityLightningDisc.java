@@ -2,11 +2,11 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,6 +14,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityLightningDisc extends EntityMagicProjectile {
+	
 	public EntityLightningDisc(World par1World){
 		super(par1World);
 	}
@@ -38,8 +39,9 @@ public class EntityLightningDisc extends EntityMagicProjectile {
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult mop){
-		Entity entityHit = mop.entityHit;
+	protected void onImpact(RayTraceResult result){
+		
+		Entity entityHit = result.entityHit;
 
 		if(entityHit != null){
 			float damage = 12 * damageMultiplier;
@@ -50,7 +52,7 @@ public class EntityLightningDisc extends EntityMagicProjectile {
 
 		this.playSound(WizardrySounds.SPELL_SPARK, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 
-		if(mop.typeOfHit == RayTraceResult.Type.BLOCK) this.setDead();
+		if(result.typeOfHit == RayTraceResult.Type.BLOCK) this.setDead();
 	}
 
 	@Override
@@ -61,10 +63,9 @@ public class EntityLightningDisc extends EntityMagicProjectile {
 		// Particle effect
 		if(world.isRemote){
 			for(int i = 0; i < 8; i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, this.posX + rand.nextFloat() * 2 - 1,
-						this.posY, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
-				// world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + rand.nextFloat() - 0.5, this.posY +
-				// this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
+				// TODO: Why are the x and z parameters different?
+				ParticleBuilder.create(Type.SPARK).pos(this.posX + rand.nextFloat() * 2 - 1,
+						this.posY, this.posZ + rand.nextFloat() - 0.5).spawn(world);
 			}
 		}
 

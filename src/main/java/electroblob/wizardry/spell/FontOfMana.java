@@ -10,7 +10,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -46,7 +46,7 @@ public class FontOfMana extends Spell {
 				double radius = (1 + world.rand.nextDouble() * 4) * modifiers.get(WizardryItems.blast_upgrade);
 				double angle = world.rand.nextDouble() * Math.PI * 2;
 				float hue = world.rand.nextFloat() * 0.4f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 						caster.posX + radius * Math.cos(angle), caster.getEntityBoundingBox().minY,
 						caster.posZ + radius * Math.sin(angle), 0, 0.03, 0, 50, 1, 1 - hue, 0.6f + hue);
 

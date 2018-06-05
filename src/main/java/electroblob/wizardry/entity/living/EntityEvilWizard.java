@@ -16,8 +16,9 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -200,20 +201,19 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 			// deathTime == 0 checks the wizard isn't currently dying
 		}else if(healCooldown == -1 && this.deathTime == 0){
 
-			// Heal particles
+			// Heal particles TODO: Change this so it uses the heal spell directly
 			if(world.isRemote){
-				for(int i = 0; i < 10; i++){
-					double d0 = (double)((float)this.posX + rand.nextFloat() * 2 - 1.0F);
+				for(int i=0; i<10; i++){
+					double x = (double)((float)this.posX + rand.nextFloat() * 2 - 1.0F);
 					// Apparently the client side spawns the particles 1 block higher than it should... hence the -
 					// 0.5F.
-					double d1 = (double)((float)this.posY - 0.5F + rand.nextFloat());
-					double d2 = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
-							48 + rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+					double y = (double)((float)this.posY - 0.5F + rand.nextFloat());
+					double z = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
+					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1F, 0).colour(1, 1, 0.3f).spawn(world);
 				}
 			}else{
 				if(this.getHealth() < 10){
-					// Wizard heals himself more often if he has low health
+					// Wizards heal themseselves more often if they have low health
 					this.setHealCooldown(150);
 				}else{
 					this.setHealCooldown(400);

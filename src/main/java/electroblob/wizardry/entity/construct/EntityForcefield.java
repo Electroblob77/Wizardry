@@ -2,9 +2,9 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -62,15 +62,18 @@ public class EntityForcefield extends EntityMagicConstruct {
 			}
 		}else{
 			for(int i = 1; i < 40; i++){
+
+				// Generates a spherical pattern of particles
 				float brightness = 0.5f + (rand.nextFloat() * 0.5f);
 				double radius = 3;
 				double yaw = rand.nextDouble() * Math.PI * 2;
 				double pitch = (rand.nextDouble() - 0.5) * Math.PI;
-				// Generates a spherical pattern of particles
-				Wizardry.proxy.spawnParticle(WizardryParticleType.BRIGHT_DUST, world,
-						this.posX + radius * Math.cos(yaw) * Math.cos(pitch), this.posY + 3 + radius * Math.sin(pitch),
-						this.posZ + radius * Math.sin(yaw) * Math.cos(pitch), 0, 0, 0, 48 + this.rand.nextInt(12),
-						brightness, brightness, 1.0f);
+				
+				ParticleBuilder.create(Type.DUST)
+				.pos(this.posX + radius * Math.cos(yaw) * Math.cos(pitch), this.posY + 3 + radius * Math.sin(pitch),
+						this.posZ + radius * Math.sin(yaw) * Math.cos(pitch))
+				.lifetime(48 + this.rand.nextInt(12))
+				.colour(brightness, brightness, 1.0f);
 			}
 		}
 	}

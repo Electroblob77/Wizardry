@@ -2,12 +2,12 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
@@ -74,8 +74,10 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 		}else if(this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble() * 0.3;
 			double angle = rand.nextDouble() * Math.PI * 2;
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world, this.posX + radius * Math.cos(angle),
-					this.posY + 0.1, this.posZ + radius * Math.sin(angle), 0, 0, 0, 40 + rand.nextInt(10));
+			ParticleBuilder.create(Type.SNOW)
+			.pos(this.posX + radius * Math.cos(angle), this.posY + 0.1, this.posZ + radius * Math.sin(angle))
+			.vel(0, 0, 0) // Required since default for snow is not stationary
+			.spawn(world);
 		}
 	}
 

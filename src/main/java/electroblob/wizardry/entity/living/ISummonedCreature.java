@@ -16,7 +16,8 @@ import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.IndirectMinionDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.MinionDamage;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -288,9 +289,10 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 		}
 
 		if(this.hasParticleEffect() && thisEntity.world.isRemote && thisEntity.world.rand.nextInt(8) == 0)
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, thisEntity.world, thisEntity.posX,
-					thisEntity.posY + thisEntity.world.rand.nextDouble() * 1.5, thisEntity.posZ, 0.0d, 0.0d, 0.0d, 0,
-					0.1f, 0.0f, 0.0f);
+			ParticleBuilder.create(Type.DARK_MAGIC)
+			.pos(thisEntity.posX, thisEntity.posY + thisEntity.world.rand.nextDouble() * 1.5, thisEntity.posZ)
+			.colour(0.1f, 0.0f, 0.0f)
+			.spawn(thisEntity.world);
 
 	}
 

@@ -11,7 +11,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -71,12 +71,12 @@ public class Freeze extends Spell {
 				double dz = target.posZ - caster.posZ;
 				for(int i = 1; i < 5; i++){
 					float brightness = 0.5f + (world.rand.nextFloat() / 2);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 							caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 							WizardryUtilities.getPlayerEyesPos(caster) + (i * (dy / 5)) + world.rand.nextFloat() / 5,
 							caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0.0d, 0.0d, 0.0d,
 							12 + world.rand.nextInt(8), brightness, brightness + 0.1f, 1.0f);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world,
+					Wizardry.proxy.spawnParticle(Type.SNOW, world,
 							caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 							WizardryUtilities.getPlayerEyesPos(caster) + (i * (dy / 5)) + world.rand.nextFloat() / 5,
 							caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0, -0.02, 0,
@@ -117,13 +117,13 @@ public class Freeze extends Spell {
 
 					for(int i = 1; i < 5; i++){
 						float brightness = 0.5f + (world.rand.nextFloat() / 2);
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+						Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 								caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 								WizardryUtilities.getPlayerEyesPos(caster) + (i * (dy / 5))
 										+ world.rand.nextFloat() / 5,
 								caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0.0d, 0.0d, 0.0d,
 								20 + world.rand.nextInt(8), brightness, brightness + 0.1f, 1.0f);
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+						Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 								caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 								WizardryUtilities.getPlayerEyesPos(caster) + (i * (dy / 5))
 										+ world.rand.nextFloat() / 5,
@@ -169,12 +169,12 @@ public class Freeze extends Spell {
 				double dz = target.posZ - caster.posZ;
 				for(int i = 1; i < 5; i++){
 					float brightness = 0.5f + (world.rand.nextFloat() / 2);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 							caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 							caster.posY + caster.getEyeHeight() + (i * (dy / 5)) + world.rand.nextFloat() / 5,
 							caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0.0d, 0.0d, 0.0d,
 							12 + world.rand.nextInt(8), brightness, brightness + 0.1f, 1.0f);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world,
+					Wizardry.proxy.spawnParticle(Type.SNOW, world,
 							caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 							caster.posY + caster.getEyeHeight() + (i * (dy / 5)) + world.rand.nextFloat() / 5,
 							caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0, -0.02, 0,

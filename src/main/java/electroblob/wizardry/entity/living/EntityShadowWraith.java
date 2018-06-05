@@ -3,11 +3,11 @@ package electroblob.wizardry.entity.living;
 import java.util.Collections;
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -128,9 +128,13 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = rand.nextFloat() * 0.4f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX - 0.5d + rand.nextDouble(),
-						this.posY + this.height / 2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0,
-						0.05f, 0, 20 + rand.nextInt(10), brightness, 0.0f, brightness);
+				ParticleBuilder.create(Type.SPARKLE)
+				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(),
+						this.posZ - 0.5d + rand.nextDouble())
+				.vel(0, 0.05, 0)
+				.lifetime(20 + rand.nextInt(10))
+				.colour(brightness, 0.0f, brightness)
+				.spawn(world);
 			}
 		}
 	}
@@ -149,26 +153,25 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 		}
 
 		if(world.isRemote){
-			for(int i = 0; i < 2; i++){
+			
+			for(int i=0; i<2; i++){
+				
 				world.spawnParticle(EnumParticleTypes.PORTAL,
 						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
 						this.posY + this.rand.nextDouble() * (double)this.height,
 						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
+				
 				world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
 						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
 						this.posY + this.rand.nextDouble() * (double)this.height,
 						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
+				
 				float brightness = rand.nextFloat() * 0.2f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-						this.posY + this.rand.nextDouble() * (double)this.height,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0.05f, 0,
-						20 + rand.nextInt(10), brightness, 0.0f, brightness);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-						this.posY + this.rand.nextDouble() * (double)this.height,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0.1f,
-						0.0f, 0.0f);
+				
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).lifetime(20 + rand.nextInt(10))
+				.colour(brightness, 0.0f, brightness).spawn(world);
+				
+				ParticleBuilder.create(Type.DARK_MAGIC, this).colour(0.1f, 0.0f, 0.0f).spawn(world);
 			}
 		}
 

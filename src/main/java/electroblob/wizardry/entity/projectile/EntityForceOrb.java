@@ -2,10 +2,10 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -54,11 +54,8 @@ public class EntityForceOrb extends EntityMagicProjectile {
 		if(this.world.isRemote){
 			for(int j = 0; j < 20; j++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				double x = this.posX - 0.25d + (rand.nextDouble() / 2);
-				double y = this.posY - 0.25d + (rand.nextDouble() / 2);
-				double z = this.posZ - 0.25d + (rand.nextDouble() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x, y, z, (x - this.posX) * 2,
-						(y - this.posY) * 2, (z - this.posZ) * 2, 6, brightness, 1.0f, brightness + 0.2f);
+				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.25, true).lifetime(6)
+				.colour(brightness, 1.0f, brightness + 0.2f).spawn(world);
 			}
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
 		}

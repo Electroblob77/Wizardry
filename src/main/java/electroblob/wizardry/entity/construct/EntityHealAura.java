@@ -2,11 +2,11 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
@@ -69,13 +69,16 @@ public class EntityHealAura extends EntityMagicConstruct {
 				}
 			}
 		}else{
-			for(int i = 1; i < 3; i++){
+			for(int i=1; i<3; i++){
 				float brightness = 0.5f + (rand.nextFloat() * 0.5f);
 				double radius = rand.nextDouble() * 2.0;
 				double angle = rand.nextDouble() * Math.PI * 2;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX + radius * Math.cos(angle),
-						this.posY, this.posZ + radius * Math.sin(angle), 0, 0.05f, 0, 48 + this.rand.nextInt(12), 1.0f,
-						1.0f, brightness);
+				ParticleBuilder.create(Type.SPARKLE)
+				.pos(this.posX + radius * Math.cos(angle), this.posY, this.posZ + radius * Math.sin(angle))
+				.vel(0, 0.05, 0)
+				.lifetime(48 + this.rand.nextInt(12))
+				.colour(1.0f, 1.0f, brightness)
+				.spawn(world);
 			}
 		}
 	}

@@ -10,7 +10,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -63,7 +63,7 @@ public class LightningRay extends Spell {
 
 			}else{
 				for(int i = 0; i < 5; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+					Wizardry.proxy.spawnParticle(Type.SPARK, world,
 							target.posX + world.rand.nextFloat() - 0.5,
 							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
 							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
@@ -132,7 +132,7 @@ public class LightningRay extends Spell {
 
 			}else{
 				for(int i = 0; i < 5; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+					Wizardry.proxy.spawnParticle(Type.SPARK, world,
 							target.posX + world.rand.nextFloat() - 0.5,
 							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
 							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);

@@ -20,9 +20,10 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
@@ -213,10 +214,9 @@ public final class WizardryEventHandler {
 					world.spawnEntity(arc);
 				}else{
 					for(int i = 0; i < 8; i++){
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-								attacker.posX + world.rand.nextFloat() - 0.5, attacker.getEntityBoundingBox().minY
-								+ attacker.height / 2 + world.rand.nextFloat() * 2 - 1,
-								attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+						ParticleBuilder.create(Type.SPARK).pos(attacker.posX + world.rand.nextFloat() - 0.5,
+								attacker.getEntityBoundingBox().minY + attacker.height / 2 + world.rand.nextFloat() * 2 - 1,
+								attacker.posZ + world.rand.nextFloat() - 0.5).spawn(world);
 						world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, attacker.posX + world.rand.nextFloat() - 0.5,
 								attacker.getEntityBoundingBox().minY + attacker.height / 2 + world.rand.nextFloat() * 2
 								- 1,

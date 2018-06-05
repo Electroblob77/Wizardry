@@ -8,24 +8,21 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleMagicFlame extends Particle {
+public class ParticleMagicFlame extends ParticleWizardry {
 
 	/** The scale of the flame particle */
 	private float flameScale;
 
-	public ParticleMagicFlame(World par1World, double par2, double par4, double par6, double par8, double par10,
-			double par12, int maxAge, float scale){
-		super(par1World, par2, par4, par6, par8, par10, par12);
-		this.motionX = this.motionX * 0.009999999776482582D + par8;
-		this.motionY = this.motionY * 0.009999999776482582D + par10;
-		this.motionZ = this.motionZ * 0.009999999776482582D + par12;
-		this.flameScale = scale;
-		this.particleRed = this.particleGreen = this.particleBlue = 1.0F;
-		if(maxAge == 0){
-			this.particleMaxAge = (int)(2.0D / (Math.random() * 0.8D + 0.2D));
-		}else{
-			this.particleMaxAge = maxAge;
-		}
+	public ParticleMagicFlame(World world, double x, double y, double z){
+		super(world, x, y, z);
+		// Not sure what these did but they sure as heck won't do anything now...
+		// TESTME: If it looks the same as before, delete these.
+//		this.motionX = this.motionX * 0.009999999776482582D + par8;
+//		this.motionY = this.motionY * 0.009999999776482582D + par10;
+//		this.motionZ = this.motionZ * 0.009999999776482582D + par12;
+		this.flameScale = 1 + world.rand.nextFloat();
+		this.setRBGColorF(1, 1, 1);
+		this.particleMaxAge = (int)(2.0D / (Math.random() * 0.8D + 0.2D));
 		// IDEA: Make the particles for ray spells collide properly and not spawn on the other side of stuff.
 		this.canCollide = false;
 		this.setParticleTextureIndex(48);
@@ -42,5 +39,11 @@ public class ParticleMagicFlame extends Particle {
 	@Override
 	public int getBrightnessForRender(float par1){
 		return 256;
+	}
+	
+	@Override
+	public Particle multipleParticleScaleBy(float scale){
+		this.flameScale *= scale;
+		return super.multipleParticleScaleBy(scale);
 	}
 }

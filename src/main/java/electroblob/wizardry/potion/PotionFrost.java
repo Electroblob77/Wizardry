@@ -3,7 +3,8 @@ package electroblob.wizardry.potion;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -39,8 +40,7 @@ public class PotionFrost extends Potion implements ICustomPotionParticles {
 
 	@Override
 	public void spawnCustomParticle(World world, double x, double y, double z){
-		Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world, x, y, z, 0, -0.02, 0,
-				15 + world.rand.nextInt(5));
+		ParticleBuilder.create(Type.SNOW).pos(x, y, z).lifetime(15 + world.rand.nextInt(5)).spawn(world);
 	}
 
 	@Override

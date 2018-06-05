@@ -10,7 +10,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.tileentity.TileEntityStatue;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityBlaze;
@@ -115,9 +115,9 @@ public class IceStatue extends Spell {
 						+ world.rand.nextFloat() / 5 - 0.1f;
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 						12 + world.rand.nextInt(8), brightness, brightness + 0.1f, 1.0f);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world, x1, y1, z1, 0.0d, -0.02d, 0.0d,
+				Wizardry.proxy.spawnParticle(Type.SNOW, world, x1, y1, z1, 0.0d, -0.02d, 0.0d,
 						20 + world.rand.nextInt(10));
 
 			}

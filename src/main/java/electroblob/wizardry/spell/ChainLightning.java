@@ -12,7 +12,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -55,7 +55,7 @@ public class ChainLightning extends Spell {
 				world.spawnEntity(arc);
 			}else{
 				for(int i = 0; i < 8; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+					Wizardry.proxy.spawnParticle(Type.SPARK, world,
 							target.posX + world.rand.nextFloat() - 0.5,
 							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
 							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
@@ -97,7 +97,7 @@ public class ChainLightning extends Spell {
 						world.spawnEntity(arc);
 					}else{
 						for(int j = 0; j < 8; j++){
-							Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+							Wizardry.proxy.spawnParticle(Type.SPARK, world,
 									secondaryTarget.posX + world.rand.nextFloat() - 0.5,
 									secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2
 											+ world.rand.nextFloat() * 2 - 1,
@@ -144,7 +144,7 @@ public class ChainLightning extends Spell {
 								world.spawnEntity(arc);
 							}else{
 								for(int k = 0; k < 8; k++){
-									Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
+									Wizardry.proxy.spawnParticle(Type.SPARK, world,
 											tertiaryTarget.posX + world.rand.nextFloat() - 0.5,
 											tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height / 2
 													+ world.rand.nextFloat() * 2 - 1,

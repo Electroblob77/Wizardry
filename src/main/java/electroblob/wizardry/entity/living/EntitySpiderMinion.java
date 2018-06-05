@@ -4,7 +4,8 @@ import java.lang.ref.WeakReference;
 import java.util.UUID;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -147,9 +148,10 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 	private void spawnParticleEffect(){
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, this.posX + this.rand.nextFloat(),
-						this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0.0d, 0.0d, 0.0d, 0, 0.1f,
-						0.2f, 0.0f);
+				ParticleBuilder.create(Type.DARK_MAGIC)
+				.pos(this.posX + this.rand.nextFloat(), this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat())
+				.colour(0.1f, 0.2f, 0.0f)
+				.spawn(world);
 			}
 		}
 	}

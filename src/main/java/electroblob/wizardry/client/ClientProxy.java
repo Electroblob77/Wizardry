@@ -2,6 +2,7 @@ package electroblob.wizardry.client;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 
@@ -11,11 +12,13 @@ import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.model.ModelWizardArmour;
 import electroblob.wizardry.client.particle.ParticleBlizzard;
+import electroblob.wizardry.client.particle.ParticleBuff;
 import electroblob.wizardry.client.particle.ParticleDarkMagic;
 import electroblob.wizardry.client.particle.ParticleDust;
-import electroblob.wizardry.client.particle.ParticleGiantBubble;
+import electroblob.wizardry.client.particle.ParticleFlash;
 import electroblob.wizardry.client.particle.ParticleIce;
 import electroblob.wizardry.client.particle.ParticleLeaf;
+import electroblob.wizardry.client.particle.ParticleMagicBubble;
 import electroblob.wizardry.client.particle.ParticleMagicFlame;
 import electroblob.wizardry.client.particle.ParticlePath;
 import electroblob.wizardry.client.particle.ParticleRotatingSparkle;
@@ -23,6 +26,8 @@ import electroblob.wizardry.client.particle.ParticleSnow;
 import electroblob.wizardry.client.particle.ParticleSpark;
 import electroblob.wizardry.client.particle.ParticleSparkle;
 import electroblob.wizardry.client.particle.ParticleTornado;
+import electroblob.wizardry.client.particle.ParticleWizardry;
+import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
 import electroblob.wizardry.client.renderer.LayerStone;
 import electroblob.wizardry.client.renderer.RenderArc;
 import electroblob.wizardry.client.renderer.RenderArcaneWorkbench;
@@ -114,8 +119,9 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
 import electroblob.wizardry.tileentity.TileEntityStatue;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -135,7 +141,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
@@ -153,6 +158,9 @@ public class ClientProxy extends CommonProxy {
 
 	/** Static instance of the mixed font renderer */
 	public static MixedFontRenderer mixedFontRenderer;
+
+	/** Static particle factory map */
+	private static Map<Type, IWizardryParticleFactory> factories;
 
 	// Key Bindings
 	public static final KeyBinding NEXT_SPELL = new KeyBinding("key." + Wizardry.MODID + ".next_spell", Keyboard.KEY_N, "key.categories." + Wizardry.MODID);
@@ -265,67 +273,44 @@ public class ClientProxy extends CommonProxy {
 	// ===============================================================================================================
 
 	@Override
-	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge,
-			float r, float g, float b, boolean doGravity, double radius){
+	public void initParticleFactories(){
 
-		// Colour values are now automatically clamped to between 0 and 1, as values outside this range seem to
-		// cause strange effects in 1.10 (or more specifically, particles that are bright pink!)
-		// TODO: This is a terrible dirty fix, but it'll do for now. Find a nicer way in future.
-		if(type != WizardryParticleType.MAGIC_FIRE) r = MathHelper.clamp(r, 0, 1);
-		g = MathHelper.clamp(g, 0, 1);
-		b = MathHelper.clamp(b, 0, 1);
-
-		switch(type){
-
-		case BLIZZARD:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBlizzard(world, maxAge, x, z, radius, y));
-			break;
-		case BRIGHT_DUST:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, false));
-			break;
-		case DARK_MAGIC:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDarkMagic(world, x, y, z, velX, velY, velZ, r, g, b));
-			break;
-		case DUST:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, true));
-			break;
-		case ICE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleIce(world, x, y, z, velX, velY, velZ, maxAge));
-			break;
-		case LEAF:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleLeaf(world, x, y, z, velX, velY, velZ, maxAge));
-			break;
-		case MAGIC_BUBBLE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGiantBubble(world, x, y, z, velX, velY, velZ));
-			break;
-		case MAGIC_FIRE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleMagicFlame(world, x, y, z, velX, velY, velZ, maxAge, r == 0 ? 1 + world.rand.nextFloat() : r));
-			break;
-		case PATH:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticlePath(world, x, y, z, velX, velY, velZ, r, g, b, maxAge));
-			break;
-		case SNOW:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSnow(world, x, y, z, velX, velY, velZ));
-			break;
-		case SPARK:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSpark(world, x, y, z, velX, velY, velZ));
-			break;
-		case SPARKLE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSparkle(world, x, y, z, velX, velY, velZ, r, g, b, maxAge, doGravity));
-			break;
-		case SPARKLE_ROTATING:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleRotatingSparkle(world, maxAge, x, z, radius, y, r, g, b));
-			break;
-		default:
-			break;
+		factories = new HashMap<>();
+		
+		factories.put(Type.BLIZZARD, (world, x, y, z) -> new ParticleBlizzard(world, x, y, z));
+		factories.put(Type.DARK_MAGIC, (world, x, y, z) -> new ParticleDarkMagic(world, x, y, z));
+		factories.put(Type.DUST, (world, x, y, z) -> new ParticleDust(world, x, y, z));
+		factories.put(Type.FLASH, (world, x, y, z) -> new ParticleFlash(world, x, y, z));
+		factories.put(Type.ICE, (world, x, y, z) -> new ParticleIce(world, x, y, z));
+		factories.put(Type.LEAF, (world, x, y, z) -> new ParticleLeaf(world, x, y, z));
+		factories.put(Type.MAGIC_BUBBLE, (world, x, y, z) -> new ParticleMagicBubble(world, x, y, z));
+		factories.put(Type.MAGIC_FIRE, (world, x, y, z) -> new ParticleMagicFlame(world, x, y, z));
+		factories.put(Type.PATH, (world, x, y, z) -> new ParticlePath(world, x, y, z));
+		factories.put(Type.SNOW, (world, x, y, z) -> new ParticleSnow(world, x, y, z));
+		factories.put(Type.SPARK, (world, x, y, z) -> new ParticleSpark(world, x, y, z));
+		factories.put(Type.SPARKLE, (world, x, y, z) -> new ParticleSparkle(world, x, y, z));
+		factories.put(Type.SPARKLE_ROTATING, (world, x, y, z) -> new ParticleRotatingSparkle(world, x, y, z));
+	}
+	
+	@Override
+	public ParticleWizardry createParticle(Type type, World world, double x, double y, double z){
+		IWizardryParticleFactory factory = factories.get(type);
+		if(factory == null){
+			Wizardry.logger.warn("Unrecognised particle type %s! Ensure the particle is properly registered.", type);
+			return null;
 		}
+		return factory.createParticle(world, x, y, z);
 	}
 
 	@Override
 	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius, int maxAge,
 			IBlockState block, BlockPos pos){
-		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// ,
-																																					// world.rand.nextInt(6)));
+		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// , world.rand.nextInt(6)));
+	}
+	
+	@Override
+	public void spawnEntityParticle(World world, Entity entity, int maxAge, float r, float g, float b){
+		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBuff(world, entity, maxAge, r, g, b, world.rand.nextBoolean()));
 	}
 
 	// SECTION Packet Handlers
@@ -431,8 +416,8 @@ public class ClientProxy extends CommonProxy {
 			double x = caster.posX + radius * Math.cos(angle);
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
 			double z = caster.posZ + radius * Math.sin(angle);
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleSparkle(world, x, y, z, 0, 0.02, 0, 0.6f, 1.0f, 0.6f, 80 + world.rand.nextInt(10)));
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.02, 0).colour(0.6f, 1, 0.6f)
+			.lifetime(80 + world.rand.nextInt(10)).spawn(world);
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;

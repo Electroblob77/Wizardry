@@ -5,7 +5,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -32,11 +32,11 @@ public class Glide extends Spell {
 		}
 
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+			Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 					caster.posX - 0.25d + world.rand.nextDouble() / 2,
 					WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(),
 					caster.posZ - 0.25d + world.rand.nextDouble() / 2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
-			Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, world,
+			Wizardry.proxy.spawnParticle(Type.LEAF, world,
 					caster.posX - 0.25d + world.rand.nextDouble() / 2,
 					WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(),
 					caster.posZ - 0.25d + world.rand.nextDouble() / 2, 0, -0.03, 0, 20);

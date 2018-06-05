@@ -1,9 +1,9 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
@@ -13,6 +13,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityDarknessOrb extends EntityMagicProjectile {
+	
 	public EntityDarknessOrb(World par1World){
 		super(par1World);
 	}
@@ -59,17 +60,13 @@ public class EntityDarknessOrb extends EntityMagicProjectile {
 		super.onUpdate();
 
 		if(world.isRemote){
+			
 			float brightness = rand.nextFloat() * 0.2f;
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-					this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-					this.posY + this.rand.nextDouble() * (double)this.height,
-					this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0, 20 + rand.nextInt(10),
-					brightness, 0.0f, brightness);
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
-					this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-					this.posY + this.rand.nextDouble() * (double)this.height,
-					this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0.1f, 0.0f,
-					0.0f);
+			
+			ParticleBuilder.create(Type.SPARKLE, this).lifetime(20 + rand.nextInt(10))
+			.colour(brightness, 0.0f, brightness).spawn(world);
+			
+			ParticleBuilder.create(Type.DARK_MAGIC, this).colour(0.1f, 0.0f, 0.0f).spawn(world);
 		}
 
 		if(this.ticksExisted > 150){

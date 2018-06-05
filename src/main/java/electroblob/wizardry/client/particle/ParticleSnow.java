@@ -12,22 +12,16 @@ public class ParticleSnow extends ParticleCustomTexture {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID,
 			"textures/particle/snow_particles.png");
 
-	public ParticleSnow(World world, double x, double y, double z, double vx, double vy, double vz){
-		super(world, x, y, z, vx, vy, vz);
-	}
-
-	public ParticleSnow(World world, double x, double y, double z, double vx, double vy, double vz, int maxAge){
-		super(world, x, y, z, vx, vy, vz, maxAge);
-	}
-
-	@Override
-	public void init(){
+	public ParticleSnow(World world, double x, double y, double z){
+		super(world, x, y, z);
 		this.setParticleTextureIndex(rand.nextInt(8));
+		this.setVelocity(0, -0.02, 0);
 		this.particleScale *= 0.6f;
 		this.particleGravity = 0;
 		this.canCollide = true;
+		this.setLifetime(40 + rand.nextInt(10));
 	}
-
+	
 	@Override
 	public ResourceLocation getTexture(){
 		return TEXTURE;

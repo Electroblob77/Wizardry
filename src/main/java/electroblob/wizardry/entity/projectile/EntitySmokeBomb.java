@@ -2,9 +2,9 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,16 +42,15 @@ public class EntitySmokeBomb extends EntityBomb {
 		if(world.isRemote){
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
 			for(int i = 0; i < 60 * blastMultiplier; i++){
+				
 				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
 						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
 						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
 						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0, 0, 0);
+				
 				float brightness = rand.nextFloat() * 0.3f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0.0d, 0.0d, 0.0d, 0, brightness,
-						brightness, brightness);
+				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
+				.colour(brightness, brightness, brightness).spawn(world);
 			}
 		}
 

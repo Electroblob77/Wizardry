@@ -8,7 +8,7 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityPlayerSave;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -51,13 +51,13 @@ public class Snare extends Spell {
 				if(world.isRemote){
 					for(int i = 1; i < 5; i++){
 						float brightness = world.rand.nextFloat() / 4;
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+						Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 								caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 								WizardryUtilities.getPlayerEyesPos(caster) + (i * (dy / 5))
 										+ world.rand.nextFloat() / 5,
 								caster.posZ + (i * (dz / 5)) + world.rand.nextFloat() / 5, 0.0d, 0.0d, 0.0d,
 								20 + world.rand.nextInt(8), brightness, brightness + 0.1f, 0.0f);
-						Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, world,
+						Wizardry.proxy.spawnParticle(Type.LEAF, world,
 								caster.posX + (i * (dx / 5)) + world.rand.nextFloat() / 5,
 								WizardryUtilities.getPlayerEyesPos(caster) + (i * (dy / 5))
 										+ world.rand.nextFloat() / 5,

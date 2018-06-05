@@ -13,7 +13,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryPathFinder;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -123,7 +123,7 @@ public class Clairvoyance extends Spell {
 			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint()
 					: path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
 
-			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5,
+			Wizardry.proxy.spawnParticle(Type.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5,
 					(nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL, (nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL, (int)(1800 * durationMultiplier), 0, 1, 0.3f);
 
@@ -133,7 +133,7 @@ public class Clairvoyance extends Spell {
 
 		point = path.getFinalPathPoint();
 
-		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5, 0, 0, 0,
+		Wizardry.proxy.spawnParticle(Type.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5, 0, 0, 0,
 				(int)(1800 * durationMultiplier), 1, 1, 1);
 	}
 

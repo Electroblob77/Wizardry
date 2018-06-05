@@ -6,7 +6,8 @@ import java.util.UUID;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -144,10 +145,12 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 		if(this.world.isRemote){
 			for(int i = 0; i < 30; i++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, this.world,
-						this.posX - 1 + rand.nextDouble() * 2, this.posY + rand.nextDouble() * 3,
-						this.posZ - 1 + rand.nextDouble() * 2, 0, -0.02, 0, 12 + rand.nextInt(8), brightness,
-						brightness + 0.1f, 1.0f);
+				ParticleBuilder.create(Type.SPARKLE)
+				.pos(this.posX - 1 + rand.nextDouble() * 2, this.posY + rand.nextDouble() * 3, this.posZ - 1 + rand.nextDouble() * 2)
+				.vel(0, -0.02, 0)
+				.lifetime(12 + rand.nextInt(8))
+				.colour(brightness, brightness + 0.1f, 1.0f)
+				.spawn(world);
 			}
 		}
 	}
@@ -158,9 +161,9 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 		super.onLivingUpdate();
 
 		if(this.world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, this.world, this.posX - 1 + rand.nextDouble() * 2,
-					this.posY + rand.nextDouble() * 3, this.posZ - 1 + rand.nextDouble() * 2, 0, -0.02, 0,
-					40 + rand.nextInt(10));
+			ParticleBuilder.create(Type.SNOW)
+			.pos(this.posX - 1 + rand.nextDouble() * 2, this.posY + rand.nextDouble() * 3, this.posZ - 1 + rand.nextDouble() * 2)
+			.spawn(world);
 		}
 	}
 

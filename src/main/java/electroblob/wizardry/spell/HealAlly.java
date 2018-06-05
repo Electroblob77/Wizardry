@@ -7,7 +7,7 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +41,7 @@ public class HealAlly extends Spell {
 						double d1 = (double)((float)target.getEntityBoundingBox().minY + target.height - 0.5f
 								+ world.rand.nextFloat());
 						double d2 = (double)((float)target.posZ + world.rand.nextFloat() * 2 - 1.0F);
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
+						Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
 								48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 					}
 				}

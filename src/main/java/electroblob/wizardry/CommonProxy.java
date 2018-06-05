@@ -1,5 +1,6 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.client.particle.ParticleWizardry;
 import electroblob.wizardry.item.ItemSpectralBow;
 import electroblob.wizardry.packet.PacketCastContinuousSpell;
 import electroblob.wizardry.packet.PacketCastSpell;
@@ -11,7 +12,7 @@ import electroblob.wizardry.packet.PacketTransportation;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -56,75 +57,20 @@ public class CommonProxy {
 	// SECTION Particles
 	// ===============================================================================================================
 
-	/**
-	 * Spawns a custom particle of the specified type.
-	 * 
-	 * @param type EnumParticleType of the particle
-	 * @param world Reference to the World object
-	 * @param x Particle x position
-	 * @param y Particle y position
-	 * @param z Particle z position
-	 * @param velX Particle x velocity
-	 * @param velY Particle y velocity
-	 * @param velZ Particle z velocity
-	 * @param maxAge Lifetime of the particle in ticks
-	 * @param r Red component of particle colour; will be clamped to between 0 and 1
-	 * @param g Red component of particle colour; will be clamped to between 0 and 1
-	 * @param b Red component of particle colour; will be clamped to between 0 and 1
-	 * @param doGravity Whether the particle is affected by gravity (only affects SPARKLE at the moment)
-	 * @param radius The radius of the particle's motion, for cirular motion particles
-	 */
-	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX,
-			double velY, double velZ, int maxAge, float r, float g, float b, boolean doGravity, double radius){
-		// Does nothing since particles are client-side only
-	}
+	/** Called from init() in the main mod class to initialise the particle factories. */
+	public void initParticleFactories(){} // Does nothing since particles are client-side only
 
-	/**
-	 * Spawns a custom particle of the specified type. doGravity defaults to false and radius defaults to 0. Note that
-	 * some of these settings may not affect the particle; some particles are always affected by gravity, for instance.
-	 * 
-	 * @param type EnumParticleType of the particle
-	 * @param world Reference to the World object
-	 * @param x Particle x position
-	 * @param y Particle y position
-	 * @param z Particle z position
-	 * @param velX Particle x velocity
-	 * @param velY Particle y velocity
-	 * @param velZ Particle z velocity
-	 * @param maxAge Lifetime of the particle in ticks
-	 * @param r Red component of particle colour; will be clamped to between 0 and 1 (unless this is a MAGIC_FIRE
-	 *        particle, in which case this is the scale)
-	 * @param g Red component of particle colour; will be clamped to between 0 and 1
-	 * @param b Red component of particle colour; will be clamped to between 0 and 1
-	 */
-	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX,
-			double velY, double velZ, int maxAge, float r, float g, float b){
-		this.spawnParticle(type, world, x, y, z, velX, velY, velZ, maxAge, r, g, b, false, 0);
-	}
-
-	/**
-	 * Spawns a custom particle of the specified type. Colour defaults to white, doGravity defaults to false and radius
-	 * defaults to 0. Note that some of these settings may not affect the particle; some particles are always affected
-	 * by gravity, for instance.
-	 * 
-	 * @param type EnumParticleType of the particle
-	 * @param world Reference to the World object
-	 * @param x Particle x position
-	 * @param y Particle y position
-	 * @param z Particle z position
-	 * @param velX Particle x velocity
-	 * @param velY Particle y velocity
-	 * @param velZ Particle z velocity
-	 * @param maxAge Lifetime of the particle in ticks
-	 */
-	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX,
-			double velY, double velZ, int maxAge){
-		this.spawnParticle(type, world, x, y, z, velX, velY, velZ, maxAge, 1, 1, 1, false, 0);
+	/** Creates a new particle of the specified type from the appropriate particle factory. <i>Does not actually spawn the
+	 * particle; use {@link electroblob.wizardry.util.ParticleBuilder ParticleBuilder} to spawn particles.</i> */
+	public ParticleWizardry createParticle(Type type, World world, double x, double y, double z){
+		return null;
 	}
 
 	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
 			int maxAge, IBlockState block, BlockPos pos){
 	}
+	
+	public void spawnEntityParticle(World world, Entity entity, int maxAge, float r, float g, float b){}
 
 	// SECTION Items
 	// ===============================================================================================================

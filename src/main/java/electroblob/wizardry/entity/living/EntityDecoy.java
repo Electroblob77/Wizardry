@@ -2,8 +2,8 @@ package electroblob.wizardry.entity.living;
 
 import java.lang.ref.WeakReference;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,10 +40,13 @@ public class EntityDecoy extends EntitySummonedCreature {
 	public void onDespawn(){
 		super.onDespawn();
 		for(int i = 0; i < 20; i++){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, world,
-					this.posX + (this.rand.nextDouble() - 0.5) * this.width,
-					this.getEntityBoundingBox().minY + this.rand.nextDouble() * this.height,
-					this.posZ + (this.rand.nextDouble() - 0.5) * this.width, 0, 0, 0, 40, 0.2f, 1.0f, 0.8f);
+			ParticleBuilder.create(Type.DUST)
+			.pos(this.posX + (this.rand.nextDouble() - 0.5) * this.width, this.getEntityBoundingBox().minY
+					+ this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5) * this.width)
+			.lifetime(40)
+			.colour(0.2f, 1.0f, 0.8f)
+			.shaded(true)
+			.spawn(world);
 		}
 	}
 

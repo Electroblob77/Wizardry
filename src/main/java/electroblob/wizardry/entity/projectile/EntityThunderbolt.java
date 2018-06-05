@@ -1,9 +1,9 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
@@ -68,9 +68,7 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 		super.onUpdate();
 
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, this.posX + rand.nextFloat() * 0.2 - 0.1,
-					this.posY + this.height / 2 + rand.nextFloat() * 0.2 - 0.1,
-					this.posZ + rand.nextFloat() * 0.2 - 0.1, 0, 0, 0, 3);
+			ParticleBuilder.create(Type.SPARK, rand, posX, posY + height/2, posZ, 0.1, false).spawn(world);
 			for(int i = 0; i < 4; i++){
 				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX + rand.nextFloat() * 0.2 - 0.1,
 						this.posY + this.height / 2 + rand.nextFloat() * 0.2 - 0.1,

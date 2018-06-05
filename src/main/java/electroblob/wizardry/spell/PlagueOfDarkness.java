@@ -10,7 +10,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -50,12 +50,12 @@ public class PlagueOfDarkness extends Spell {
 			for(int i = 0; i < 40 * modifiers.get(WizardryItems.blast_upgrade); i++){
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, particleX,
+				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, particleX,
 						WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0,
 						particleZ - caster.posZ, 0, 0.1f, 0.0f, 0.0f);
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, particleX,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, particleX,
 						WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0,
 						particleZ - caster.posZ, 30, 0.1f, 0.0f, 0.05f);
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();

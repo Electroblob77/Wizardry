@@ -10,7 +10,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,16 +52,16 @@ public class ForestsCurse extends Spell {
 				double radius = (1 + world.rand.nextDouble() * 4) * modifiers.get(WizardryItems.blast_upgrade);
 				double angle = world.rand.nextDouble() * Math.PI * 2;
 				float brightness = world.rand.nextFloat() / 4;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
 						caster.posX + radius * Math.cos(angle), WizardryUtilities.getPlayerEyesPos(caster) + 0.5,
 						caster.posZ + radius * Math.sin(angle), 0, -0.2, 0, 0, 0.05f + brightness, 0.2f + brightness,
 						0.0f);
 				brightness = world.rand.nextFloat() / 4;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 						caster.posX + radius * Math.cos(angle), WizardryUtilities.getPlayerEyesPos(caster) + 0.5,
 						caster.posZ + radius * Math.sin(angle), 0, -0.05, 0, 50, 0.1f + brightness, 0.2f + brightness,
 						0.0f);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, world, caster.posX + radius * Math.cos(angle),
+				Wizardry.proxy.spawnParticle(Type.LEAF, world, caster.posX + radius * Math.cos(angle),
 						WizardryUtilities.getPlayerEyesPos(caster) + 0.5, caster.posZ + radius * Math.sin(angle), 0,
 						-0.01, 0, 40 + world.rand.nextInt(12));
 

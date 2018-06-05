@@ -3,12 +3,12 @@ package electroblob.wizardry.entity.living;
 import java.util.Collections;
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -135,22 +135,23 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 
 		if(world.isRemote){
 
-			for(int i = 0; i < 2; ++i){
+			for(int i=0; i<2; ++i){
+				
 				world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
 						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
 						this.posY + this.rand.nextDouble() * (double)this.height,
 						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-						this.posY + this.rand.nextDouble() * (double)this.height,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0, 0, 0);
+				
+				ParticleBuilder.create(Type.SPARK, this).spawn(world);
 			}
 
-			for(int i = 0; i < 10; i++){
+			for(int i=0; i<10; i++){
+				
 				float brightness = rand.nextFloat() * 0.2f;
 				double dy = this.rand.nextDouble() * (double)this.height;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE_ROTATING, world, this.posX, this.posY + dy,
-						this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0, brightness, brightness, false, 0.2f + 0.5f * dy);
+				
+				ParticleBuilder.create(Type.SPARKLE_ROTATING).pos(this.posX, this.posY + dy, this.posZ)
+				.lifetime(20 + rand.nextInt(10)).colour(0, brightness, brightness).radius(0.2f + 0.5f * dy).spawn(world);
 			}
 		}
 

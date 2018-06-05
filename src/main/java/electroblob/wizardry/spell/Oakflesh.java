@@ -7,7 +7,7 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,7 +35,7 @@ public class Oakflesh extends Spell {
 				double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 				double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
 				double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
 						48 + world.rand.nextInt(12), 0.6f, 0.5f, 0.4f);
 			}
 		}
@@ -59,7 +59,7 @@ public class Oakflesh extends Spell {
 					double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
 					double y1 = (double)((float)caster.posY + caster.getEyeHeight() - 0.5F + world.rand.nextFloat());
 					double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
+					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
 							48 + world.rand.nextInt(12), 0.6f, 0.5f, 0.4f);
 				}
 			}

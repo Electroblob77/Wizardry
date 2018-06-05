@@ -9,7 +9,7 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -44,7 +44,7 @@ public class InvigoratingPresence extends Spell {
 			for(int i = 0; i < 50 * modifiers.get(WizardryItems.blast_upgrade); i++){
 				double radius = (1 + world.rand.nextDouble() * 4) * modifiers.get(WizardryItems.blast_upgrade);
 				double angle = world.rand.nextDouble() * Math.PI * 2;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
 						caster.posX + radius * Math.cos(angle), caster.getEntityBoundingBox().minY,
 						caster.posZ + radius * Math.sin(angle), 0, 0.03, 0, 50, 1, 0.2f, 0.2f);
 

@@ -8,7 +8,7 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -74,7 +74,7 @@ public class WallOfFrost extends Spell {
 				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1,
 						look.x * modifiers.get(WizardryItems.range_upgrade),
 						look.y * modifiers.get(WizardryItems.range_upgrade),
 						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 0.4f,
@@ -84,7 +84,7 @@ public class WallOfFrost extends Spell {
 				y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
 				z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1,
 						look.x * modifiers.get(WizardryItems.range_upgrade),
 						look.y * modifiers.get(WizardryItems.range_upgrade),
 						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 1.0f,

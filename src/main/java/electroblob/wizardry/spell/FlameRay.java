@@ -9,7 +9,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -58,11 +58,11 @@ public class FlameRay extends Spell {
 				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
 						+ world.rand.nextFloat() / 5 - 0.1f;
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
 						look.x * modifiers.get(WizardryItems.range_upgrade),
 						look.y * modifiers.get(WizardryItems.range_upgrade),
 						look.z * modifiers.get(WizardryItems.range_upgrade), 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
 						look.x * modifiers.get(WizardryItems.range_upgrade),
 						look.y * modifiers.get(WizardryItems.range_upgrade),
 						look.z * modifiers.get(WizardryItems.range_upgrade), 0);
@@ -94,11 +94,11 @@ public class FlameRay extends Spell {
 				double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2 + world.rand.nextFloat() / 5
 						- 0.1f;
 				double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
 						vec.x * modifiers.get(WizardryItems.range_upgrade),
 						vec.y * modifiers.get(WizardryItems.range_upgrade),
 						vec.z * modifiers.get(WizardryItems.range_upgrade), 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world, x1, y1, z1,
+				Wizardry.proxy.spawnParticle(Type.MAGIC_FIRE, world, x1, y1, z1,
 						vec.x * modifiers.get(WizardryItems.range_upgrade),
 						vec.y * modifiers.get(WizardryItems.range_upgrade),
 						vec.z * modifiers.get(WizardryItems.range_upgrade), 0);

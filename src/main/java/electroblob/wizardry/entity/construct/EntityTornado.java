@@ -7,7 +7,8 @@ import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
@@ -133,24 +134,22 @@ public class EntityTornado extends EntityMagicConstruct {
 						yPos / 3 + 0.5d, 100, block, pos1);
 				Wizardry.proxy.spawnTornadoParticle(world, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ,
 						yPos / 3 + 0.5d, 100, block, pos1);
+				
+				// Sometimes spawns leaf particles if the block is leaves, or snow particles if the block is snow
+				if(this.rand.nextInt(3) == 0){
 
-				// Sometimes spawns leaf particles if the block is leaves
-				if(block.getMaterial() == Material.LEAVES && this.rand.nextInt(3) == 0){
+					Type type = null;
+			
+					if(block.getMaterial() == Material.LEAVES) type = Type.LEAF;
+					if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW)
+						type = Type.SNOW;
+					
 					double yPos1 = rand.nextDouble() * 8;
-					Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, world,
-							this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
-							this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), 0, -0.05, 0,
-							40 + rand.nextInt(10));
-				}
-
-				// Sometimes spawns snow particles if the block is snow
-				if(block.getMaterial() == Material.SNOW
-						|| block.getMaterial() == Material.CRAFTED_SNOW && this.rand.nextInt(3) == 0){
-					double yPos1 = rand.nextDouble() * 8;
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, world,
-							this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
-							this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), 0, -0.02, 0,
-							40 + rand.nextInt(10));
+					ParticleBuilder.create(type)
+					.pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
+							this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d))
+					.lifetime(40 + rand.nextInt(10))
+					.spawn(world);
 				}
 			}
 		}

@@ -9,7 +9,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,10 +54,10 @@ public class LifeDrain extends Spell {
 				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
 				if(i % 5 == 0){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 							0, 0.1f, 0.0f, 0.0f);
 				}
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, -0.05 * look.x * i,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, -0.05 * look.x * i,
 						-0.05 * look.y * i, -0.05 * look.z * i, 8 + world.rand.nextInt(6), 0.5f, 0.0f, 0.0f);
 			}
 		}
@@ -92,10 +92,10 @@ public class LifeDrain extends Spell {
 				double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
 				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
 				if(i % 5 == 0){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
 							0, 0.1f, 0.0f, 0.0f);
 				}
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, -0.05 * vec.x * i,
+				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, -0.05 * vec.x * i,
 						-0.05 * vec.y * i, -0.05 * vec.z * i, 8 + world.rand.nextInt(6), 0.5f, 0.0f, 0.0f);
 			}
 		}

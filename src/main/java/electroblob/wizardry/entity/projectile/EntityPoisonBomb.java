@@ -2,10 +2,10 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,16 +54,12 @@ public class EntityPoisonBomb extends EntityBomb {
 		// Particle effect
 		if(world.isRemote){
 			for(int i = 0; i < 60 * blastMultiplier; i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0.0d, 0.0d, 0.0d, 35,
-						0.2f + rand.nextFloat() * 0.3f, 0.6f, 0.0f);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0.0d, 0.0d, 0.0d, 0,
-						0.2f + rand.nextFloat() * 0.2f, 0.8f, 0.0f);
+				
+				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 2*blastMultiplier, false).lifetime(35)
+				.colour(0.2f + rand.nextFloat() * 0.3f, 0.6f, 0.0f).spawn(world);
+				
+				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
+				.colour(0.2f + rand.nextFloat() * 0.2f, 0.8f, 0.0f).spawn(world);
 			}
 			// Spawning this after the other particles fixes the rendering colour bug. It's a bit of a cheat, but it
 			// works pretty well.

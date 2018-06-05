@@ -16,18 +16,14 @@ public class ParticleSpark extends ParticleCustomTexture {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID,
 			"textures/particle/lightning_particles.png");
 
-	public ParticleSpark(World world, double x, double y, double z, double vx, double vy, double vz){
-		// Max age is always 3.
-		super(world, x, y, z, vx, vy, vz, 3);
-	}
-
-	@Override
-	public void init(){
+	public ParticleSpark(World world, double x, double y, double z){
+		super(world, x, y, z);
 		// Multiplied by 4 because the index works slightly differently for spark particles.
 		this.setParticleTextureIndex(rand.nextInt(8) * 4);
 		this.particleScale *= 1.4f;
-		this.fullBrightness = true;
+		this.shaded = false;
 		this.canCollide = false;
+		this.setLifetime(3); // Lifetime defaults to 3 (and is very unlikely to be changed)
 	}
 
 	@Override

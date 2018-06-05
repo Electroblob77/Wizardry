@@ -1,9 +1,9 @@
 package electroblob.wizardry.entity.living;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -44,9 +44,12 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = 0.3f + (rand.nextFloat() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX - 0.5d + rand.nextDouble(),
-						this.posY + this.height / 2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0,
-						0.05f, 0, 20 + rand.nextInt(10), brightness, brightness + 0.2f, 1.0f);
+				ParticleBuilder.create(Type.SPARKLE)
+				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble())
+				.vel(0, 0.05, 0)
+				.lifetime(20 + rand.nextInt(10))
+				.colour(brightness, brightness + 0.2f, 1.0f)
+				.spawn(world);
 			}
 		}
 	}
@@ -56,10 +59,7 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 		// Fortunately, lightning wraiths don't replace any of blazes' particle effects or the fire sound, they only
 		// add the sparks, so it's fine to call super here.
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-					this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-					this.posY + this.rand.nextDouble() * (double)this.height,
-					this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0, 3);
+			ParticleBuilder.create(Type.SPARK, this).spawn(world);
 		}
 		super.onLivingUpdate();
 	}

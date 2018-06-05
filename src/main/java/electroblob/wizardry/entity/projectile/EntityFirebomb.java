@@ -2,10 +2,10 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,10 +33,9 @@ public class EntityFirebomb extends EntityBomb {
 		super(par1World, par2, par4, par6);
 	}
 
-	/**
-	 * Called when this EntityThrowable hits a block or entity.
-	 */
+	@Override
 	protected void onImpact(RayTraceResult par1RayTraceResult){
+		
 		Entity entityHit = par1RayTraceResult.entityHit;
 
 		if(entityHit != null){
@@ -52,21 +51,16 @@ public class EntityFirebomb extends EntityBomb {
 
 		// Particle effect
 		if(world.isRemote){
+			
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
+			
 			for(int i = 0; i < 60 * blastMultiplier; i++){
-				// this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + (this.rand.nextDouble()*4 -
-				// 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ +
-				// (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0, 0, 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.MAGIC_FIRE, world,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0, 0, 0, 15 + rand.nextInt(5),
-						2 + rand.nextFloat(), 0, 0);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0.0d, 0.0d, 0.0d, 0, 1.0f,
-						0.2f + rand.nextFloat() * 0.4f, 0.0f);
+				
+				ParticleBuilder.create(Type.MAGIC_FIRE, rand, posX, posY, posZ, 2*blastMultiplier, false)
+				.lifetime(15 + rand.nextInt(5)).scale(2 + rand.nextFloat()).spawn(world);
+				
+				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
+				.colour(1.0f, 0.2f + rand.nextFloat() * 0.4f, 0.0f).spawn(world);
 			}
 		}
 

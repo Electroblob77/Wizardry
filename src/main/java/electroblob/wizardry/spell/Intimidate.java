@@ -9,7 +9,7 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -62,7 +62,7 @@ public class Intimidate extends Spell {
 
 		}else{
 			for(int i = 0; i < 30; i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
 						caster.posX - 1 + world.rand.nextDouble() * 2,
 						caster.getEntityBoundingBox().minY + 1.5 + world.rand.nextDouble() * 0.5,
 						caster.posZ - 1 + world.rand.nextDouble() * 2, 0, 0, 0, 0, 0.9f, 0.1f, 0.0f);

@@ -10,7 +10,7 @@ import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +48,7 @@ public class GroupHeal extends Spell {
 								double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos((EntityPlayer)target)
 										- 0.5F + world.rand.nextFloat());
 								double d2 = (double)((float)target.posZ + world.rand.nextFloat() * 2 - 1.0F);
-								Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F,
+								Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F,
 										0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 							}
 						}
@@ -77,7 +77,7 @@ public class GroupHeal extends Spell {
 								double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos((EntityPlayer)target)
 										- 0.5F + world.rand.nextFloat());
 								double d2 = (double)((float)target.posZ + world.rand.nextFloat() * 2 - 1.0F);
-								Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F,
+								Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F,
 										0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 							}
 						}

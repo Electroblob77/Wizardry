@@ -12,16 +12,10 @@ public class ParticleLeaf extends ParticleCustomTexture {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID,
 			"textures/particle/leaf_particles.png");
 
-	public ParticleLeaf(World world, double x, double y, double z, double vx, double vy, double vz){
-		super(world, x, y, z, vx, vy, vz);
-	}
-
-	public ParticleLeaf(World world, double x, double y, double z, double vx, double vy, double vz, int maxAge){
-		super(world, x, y, z, vx, vy, vz, maxAge);
-	}
-
-	@Override
-	public void init(){
+	public ParticleLeaf(World world, double x, double y, double z){
+		super(world, x, y, z);
+		this.setVelocity(0, -0.03, 0);
+		this.setLifetime(10 + rand.nextInt(5));
 		this.setParticleTextureIndex(rand.nextInt(16));
 		this.particleScale *= 1.4f;
 		this.particleGravity = 0;

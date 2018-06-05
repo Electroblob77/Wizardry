@@ -11,7 +11,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -76,12 +76,12 @@ public class MindControl extends Spell {
 				}
 			}else{
 				for(int i = 0; i < 10; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
 							target.posX - 0.25 + world.rand.nextDouble() * 0.5,
 							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25
 									+ world.rand.nextDouble() * 0.5,
 							target.posZ - 0.25 + world.rand.nextDouble() * 0.5, 0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
 							target.posX - 0.25 + world.rand.nextDouble() * 0.5,
 							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25
 									+ world.rand.nextDouble() * 0.5,
@@ -116,12 +116,12 @@ public class MindControl extends Spell {
 				}
 			}else{
 				for(int i = 0; i < 10; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
 							target.posX - 0.25 + world.rand.nextDouble() * 0.5,
 							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25
 									+ world.rand.nextDouble() * 0.5,
 							target.posZ - 0.25 + world.rand.nextDouble() * 0.5, 0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
+					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
 							target.posX - 0.25 + world.rand.nextDouble() * 0.5,
 							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25
 									+ world.rand.nextDouble() * 0.5,
