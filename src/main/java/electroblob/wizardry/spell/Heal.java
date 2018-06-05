@@ -38,6 +38,7 @@ public class Heal extends Spell {
 					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
 							48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 				}
+				Wizardry.proxy.spawnEntityParticle(world, caster, 15, 1.0f, 1.0f, 0.3f);
 			}
 
 			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,

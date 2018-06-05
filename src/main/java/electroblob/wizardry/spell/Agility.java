@@ -40,6 +40,7 @@ public class Agility extends Spell {
 				ParticleBuilder.create(Type.SPARKLE).pos(x1, y1, z1).vel(0, 0.1F, 0)
 				.lifetime(48 + world.rand.nextInt(12)).colour(0.4f, 1.0f, 0.8f).spawn(world);
 			}
+			Wizardry.proxy.spawnEntityParticle(world, caster, 15, 0.4f, 1.0f, 0.8f);
 		}
 
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
