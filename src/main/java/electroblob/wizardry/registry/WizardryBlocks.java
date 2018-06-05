@@ -40,25 +40,18 @@ public final class WizardryBlocks {
 
 	// setSoundType should be public, but in this particular version it isn't... which is a bit of a pain.
 
-	public static final Block arcane_workbench = new BlockArcaneWorkbench().setHardness(1.0F)
-			.setCreativeTab(WizardryTabs.WIZARDRY);
-	public static final Block crystal_ore = new BlockCrystalOre(Material.ROCK).setHardness(3.0F)
-			.setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Block arcane_workbench = new BlockArcaneWorkbench().setHardness(1.0F).setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Block crystal_ore = new BlockCrystalOre(Material.ROCK).setHardness(3.0F).setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Block petrified_stone = new BlockStatue(Material.ROCK).setHardness(1.5F).setResistance(10.0F);
 	public static final Block ice_statue = new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3);
 	public static final Block magic_light = new BlockMagicLight(Material.CIRCUITS);
-	public static final Block crystal_flower = new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F)
-			.setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Block crystal_flower = new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Block snare = new BlockSnare(Material.PLANTS).setHardness(0.0F);
-	public static final Block transportation_stone = new BlockTransportationStone(Material.ROCK).setHardness(0.3F)
-			.setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY);
-	public static final Block spectral_block = new BlockSpectral(Material.GLASS).setLightLevel(0.7f).setLightOpacity(0)
-			.setBlockUnbreakable().setResistance(6000000.0F);
-	public static final Block crystal_block = new Block(Material.IRON).setHardness(5.0F).setResistance(10.0F)
-			.setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Block transportation_stone = new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY);
+	public static final Block spectral_block = new BlockSpectral(Material.GLASS).setLightLevel(0.7f).setLightOpacity(0).setBlockUnbreakable().setResistance(6000000.0F);
+	public static final Block crystal_block = new Block(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY);
 	public static final Block meteor = new Block(Material.ROCK).setLightLevel(1);
-	public static final Block vanishing_cobweb = new BlockVanishingCobweb(Material.WEB).setLightOpacity(1)
-			.setHardness(4.0F);
+	public static final Block vanishing_cobweb = new BlockVanishingCobweb(Material.WEB).setLightOpacity(1).setHardness(4.0F);
 
 	static{
 		// This is here because Block#setHarvestLevel isn't chainable.
