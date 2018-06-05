@@ -659,51 +659,36 @@ public class GuiWizardHandbook extends GuiScreen {
 		craftingGrid.get(2).set(1, new ItemStack(WizardryItems.magic_silk));
 		craftingResult = new ItemStack(WizardryItems.wizard_boots);
 		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-
-		if(Wizardry.settings.useAlternateScrollRecipe){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
-			craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
-			craftingGrid.get(2).set(0, new ItemStack(WizardryItems.magic_crystal));
-			craftingResult = new ItemStack(WizardryItems.blank_scroll);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}else{
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
-			craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
-			craftingResult = new ItemStack(WizardryItems.blank_scroll);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
-
-		if(Wizardry.settings.firebombIsCraftable){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.BLAZE_POWDER));
-			craftingGrid.get(1).set(0, new ItemStack(Items.BLAZE_POWDER));
-			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
-			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
-			craftingResult = new ItemStack(WizardryItems.firebomb, 3);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
-
-		if(Wizardry.settings.poisonBombIsCraftable){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.SPIDER_EYE));
-			craftingGrid.get(1).set(0, new ItemStack(Items.SPIDER_EYE));
-			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
-			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
-			craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
-
-		if(Wizardry.settings.smokeBombIsCraftable){
-			craftingGrid = createGrid();
-			craftingGrid.get(0).set(0, new ItemStack(Items.COAL));
-			craftingGrid.get(1).set(0, new ItemStack(Items.COAL));
-			craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
-			craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
-			craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
-			RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
-		}
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.PAPER));
+		craftingGrid.get(1).set(0, new ItemStack(Items.STRING));
+		craftingResult = new ItemStack(WizardryItems.blank_scroll);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.BLAZE_POWDER));
+		craftingGrid.get(1).set(0, new ItemStack(Items.BLAZE_POWDER));
+		craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+		craftingResult = new ItemStack(WizardryItems.firebomb, 3);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.SPIDER_EYE));
+		craftingGrid.get(1).set(0, new ItemStack(Items.SPIDER_EYE));
+		craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+		craftingResult = new ItemStack(WizardryItems.poison_bomb, 3);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
+		
+		craftingGrid = createGrid();
+		craftingGrid.get(0).set(0, new ItemStack(Items.COAL));
+		craftingGrid.get(1).set(0, new ItemStack(Items.COAL));
+		craftingGrid.get(0).set(1, new ItemStack(Items.GLASS_BOTTLE));
+		craftingGrid.get(1).set(1, new ItemStack(Items.GUNPOWDER));
+		craftingResult = new ItemStack(WizardryItems.smoke_bomb, 3);
+		RECIPES.add(ImmutablePair.of(craftingResult, craftingGrid));
 	}
 
 }

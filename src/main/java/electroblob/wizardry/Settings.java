@@ -141,19 +141,6 @@ public final class Settings {
 	// Synchronised settings. These settings affect both client-side AND server-side code. Changing these locally
 	// only has an effect if the local game is the host, i.e. a dedicated server, a LAN host or a singleplayer world.
 
-	// Recipes (only need syncing for display in the wizard's handbook)
-	/** <b>[Synchronised]</b> Whether or not firebombs should be craftable. */
-	public boolean firebombIsCraftable = true;
-	/** <b>[Synchronised]</b> Whether or not poison bombs should be craftable. */
-	public boolean poisonBombIsCraftable = true;
-	/** <b>[Synchronised]</b> Whether or not poison bombs should be craftable. */
-	public boolean smokeBombIsCraftable = true;
-	/**
-	 * <b>[Synchronised]</b> Whether to require a magic crystal in the blank scroll crafting recipe (in case it
-	 * conflicts with another mod).
-	 */
-	public boolean useAlternateScrollRecipe = false;
-
 	// Gamemodes
 	/**
 	 * <b>[Synchronised]</b> When set to true, spells a player hasn't cast yet will be unreadable until they are cast
@@ -397,34 +384,6 @@ public final class Settings {
 		property.setRequiresWorldRestart(true);
 		// Converts all strings in the list to a ResourceLocation.
 		mindControlTargetsBlacklist = Arrays.stream(property.getStringList()).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "firebombIsCraftable", true,
-				"Whether firebombs can be crafted or not.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".firebomb_is_craftable");
-		property.setRequiresMcRestart(true);
-		firebombIsCraftable = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "poisonBombIsCraftable", true,
-				"Whether poison bombs can be crafted or not.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".poison_bomb_is_craftable");
-		property.setRequiresMcRestart(true);
-		poisonBombIsCraftable = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "smokeBombIsCraftable", true,
-				"Whether smoke bombs can be crafted or not.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".smoke_bomb_is_craftable");
-		property.setRequiresMcRestart(true);
-		smokeBombIsCraftable = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "useAlternateScrollRecipe", false,
-				"Whether to require a magic crystal in the shapeless crafting recipe for blank scrolls. Set to true if another mod adds a conflicting recipe.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".use_alternate_scroll_recipe");
-		property.setRequiresMcRestart(true);
-		useAlternateScrollRecipe = property.getBoolean();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(GAMEPLAY_CATEGORY, propOrder);
