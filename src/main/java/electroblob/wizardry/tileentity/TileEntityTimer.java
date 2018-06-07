@@ -3,11 +3,11 @@ package electroblob.wizardry.tileentity;
 import electroblob.wizardry.block.BlockVanishingCobweb;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 
-public class TileEntityTimer extends TileEntity implements ITickable {
+public class TileEntityTimer extends TileEntity {
 	
 	public int timer = 0;
 	public int maxTimer;
@@ -20,18 +20,17 @@ public class TileEntityTimer extends TileEntity implements ITickable {
 		this.maxTimer = maxTimer;
 	}
 	
-	@Override
-	public void update(){
+	public void updateEntity(){
 		timer++;
 		if(!this.worldObj.isRemote){
 			//System.out.println("Timer: " + timer + "/" + maxTimer);
 		}
 		if(timer > maxTimer && !this.worldObj.isRemote){// && this.worldObj.getBlockId(xCoord, yCoord, zCoord) == Wizardry.magicLight.blockID){
 			if(this.getBlockType() instanceof BlockVanishingCobweb){
-				// destroyBlock breaks the block as if broken by a player, with sound and particles.
-				this.worldObj.destroyBlock(pos, false);
+				// func_147480_a breaks the block as if broken by a player, with sound and particles.
+				this.worldObj.func_147480_a(xCoord, yCoord, zCoord, false);
 			}else{
-				this.worldObj.setBlockToAir(pos);
+				this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
 			}
 		}
 	}
@@ -48,29 +47,25 @@ public class TileEntityTimer extends TileEntity implements ITickable {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
+    public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setInteger("timer", timer);
         tagCompound.setInteger("maxTimer", maxTimer);
-		return tagCompound;
     }
     
     @Override
-	public final NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(new NBTTagCompound());
-	}
-    
-    @Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(pos, 1, tag);
-	}
+    public Packet getDescriptionPacket() {
+        //S35PacketUpdateTileEntity packet = (S35PacketUpdateTileEntity) super.getDescriptionPacket();
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+    }
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		NBTTagCompound tag = pkt.getNbtCompound();
-		readFromNBT(tag);
-	}
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+        //super.onDataPacket(net, pkt);
+        NBTTagCompound tag = pkt.func_148857_g();
+        readFromNBT(tag);
+    }
 	
 }

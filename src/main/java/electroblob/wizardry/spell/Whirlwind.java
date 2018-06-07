@@ -1,33 +1,28 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class Whirlwind extends Spell {
 
 	public Whirlwind() {
-		super(Tier.APPRENTICE, 10, Element.EARTH, "whirlwind", SpellType.DEFENCE, 15, EnumAction.NONE, false);
+		super(EnumTier.APPRENTICE, 10, EnumElement.EARTH, "whirlwind", EnumSpellType.DEFENCE, 15, EnumAction.none, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 10*modifiers.get(WizardryItems.range_upgrade));
+		MovingObjectPosition rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 10*rangeMultiplier);
 
 		if(rayTrace != null && rayTrace.entityHit instanceof EntityLivingBase){
 			EntityLivingBase target = (EntityLivingBase) rayTrace.entityHit;
@@ -40,7 +35,7 @@ public class Whirlwind extends Spell {
 				
 				// Player motion is handled on that player's client so needs packets
 				if(target instanceof EntityPlayerMP){
-					((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+					((EntityPlayerMP)target).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(target));
 				}
 			}
 			
@@ -49,19 +44,19 @@ public class Whirlwind extends Spell {
 					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F + caster.getLookVec().xCoord*caster.getDistanceToEntity(target)*0.5);
 					double y2 = (double)(WizardryUtilities.getPlayerEyesPos(caster) + world.rand.nextFloat() - 0.5F + caster.getLookVec().yCoord*caster.getDistanceToEntity(target)*0.5);
 					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F + caster.getLookVec().zCoord*caster.getDistanceToEntity(target)*0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().xCoord, caster.getLookVec().yCoord, caster.getLookVec().zCoord);
+					world.spawnParticle("cloud", x2, y2, z2, caster.getLookVec().xCoord, caster.getLookVec().yCoord, caster.getLookVec().zCoord);
 					//Minecraft.getMinecraft().effectRenderer.addEffect(new EntitySparkleFX(world, x2, y2, z2, entityplayer.getLookVec().xCoord, entityplayer.getLookVec().yCoord, entityplayer.getLookVec().zCoord, null, 1.0f, 1.0f, 0.8f, 10));
 				}
 			}
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 0.8F, world.rand.nextFloat() * 0.2F + 0.6F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 0.8F, world.rand.nextFloat() * 0.2F + 0.6F);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 		
@@ -72,7 +67,7 @@ public class Whirlwind extends Spell {
 				
 				// Player motion is handled on that player's client so needs packets
 				if(target instanceof EntityPlayerMP){
-					((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+					((EntityPlayerMP)target).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(target));
 				}
 			}
 			if(world.isRemote){
@@ -80,11 +75,11 @@ public class Whirlwind extends Spell {
 					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F + caster.getLookVec().xCoord*caster.getDistanceToEntity(target)*0.5);
 					double y2 = (double)(caster.posY + caster.getEyeHeight() + world.rand.nextFloat() - 0.5F + caster.getLookVec().yCoord*caster.getDistanceToEntity(target)*0.5);
 					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F + caster.getLookVec().zCoord*caster.getDistanceToEntity(target)*0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().xCoord, caster.getLookVec().yCoord, caster.getLookVec().zCoord);
+					world.spawnParticle("cloud", x2, y2, z2, caster.getLookVec().xCoord, caster.getLookVec().yCoord, caster.getLookVec().zCoord);
 				}
 			}
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_ICE, 0.8F, world.rand.nextFloat() * 0.2F + 0.6F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 0.8F, world.rand.nextFloat() * 0.2F + 0.6F);
 			return true;
 		}
 		

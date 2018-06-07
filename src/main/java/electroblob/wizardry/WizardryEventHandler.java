@@ -1,171 +1,86 @@
 package electroblob.wizardry;
 
-import electroblob.wizardry.constants.Constants;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import electroblob.wizardry.MagicDamage.DamageType;
 import electroblob.wizardry.entity.EntityArc;
+import electroblob.wizardry.entity.construct.EntityBubble;
+import electroblob.wizardry.entity.construct.EntityDecay;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
-import electroblob.wizardry.entity.living.ISpellCaster;
-import electroblob.wizardry.entity.living.ISummonedCreature;
-import electroblob.wizardry.event.DiscoverSpellEvent;
-import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.entity.living.EntitySilverfishMinion;
+import electroblob.wizardry.entity.living.EntityWizard;
+import electroblob.wizardry.item.ItemFlamingAxe;
+import electroblob.wizardry.item.ItemFrostAxe;
+import electroblob.wizardry.item.ItemSpectralArmour;
+import electroblob.wizardry.item.ItemSpectralBow;
+import electroblob.wizardry.item.ItemSpectralPickaxe;
+import electroblob.wizardry.item.ItemSpectralSword;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryAchievements;
-import electroblob.wizardry.registry.WizardryEnchantments;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Clairvoyance;
 import electroblob.wizardry.spell.FreezingWeapon;
+import electroblob.wizardry.spell.MindControl;
+import electroblob.wizardry.spell.ShadowWard;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.spell.Intimidate;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootEntry;
-import net.minecraft.world.storage.loot.LootEntryTable;
-import net.minecraft.world.storage.loot.LootPool;
-import net.minecraft.world.storage.loot.RandomValueRange;
-import net.minecraft.world.storage.loot.conditions.LootCondition;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.LootTableLoadEvent;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.WorldEvent;
 
-// Better ways of organising event handling:
-// - Split it into several separate handlers, each with a logical area to deal with (see Astral Sorcery)
-// - Remove most of the stuff, and have individual spell, item, block, entity, etc. classes handle their own events
-// (see Botania)
-// - Keep all the methods, but delegate near-repeated behaviours to their individual spell/potion/whatever classes
-// (TGG does this, apparently)
-// Incidentally, Twilight Forest still has one big event handler class - and a comment about how it's so long...!
-
-// In the end, I decided the most pragmatic solution was to either use the second option or keep things how they were,
-// whichever will result in more readable/easily maintainable code in each case. To keep in line with the modularity
-// of the spell system, the goal is to have nothing in here which relates to a specific spell (mostly done, but a few
-// things remain).
-
-/**
- * As of Wizardry 2.1, most of the code in this class has been relocated somewhere sensible, leaving only a few
- * miscellaneous things that don't make much sense anywhere else, or that are better kept together. Previously, this was
- * a gigantic class with about half of the entire mod's logic in it!
- * @author Electroblob
- * @since Wizardry 1.0
- */
-@Mod.EventBusSubscriber
-public final class WizardryEventHandler {
-
-	// IDEA: Config option allowing users to specify loot locations
-	private static final String[] LOOT_INJECTION_LOCATIONS = {
-			"minecraft:chests/simple_dungeon",
-			"minecraft:chests/abandoned_mineshaft",
-			"minecraft:chests/desert_pyramid",
-			"minecraft:chests/jungle_temple",
-			"minecraft:chests/stronghold_corridor",
-			"minecraft:chests/stronghold_crossing",
-			"minecraft:chests/stronghold_library",
-			"minecraft:chests/igloo_chest"
-	};
-
+public class WizardryEventHandler {
+	
 	@SubscribeEvent
-	public static void onLootTableLoadEvent(LootTableLoadEvent event){
-		if(Wizardry.settings.generateLoot){
-			for(String location : LOOT_INJECTION_LOCATIONS){
-				if(event.getName().toString().matches(location)){
-					event.getTable().addPool(getAdditive("wizardry:chests/dungeon_additions"));
-				}
-			}
-		}
-	}
-
-	private static LootPool getAdditive(String entryName){
-		return new LootPool(new LootEntry[] { getAdditiveEntry(entryName, 1) }, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), Wizardry.MODID + "_additive_pool");
-	}
-
-	private static LootEntryTable getAdditiveEntry(String name, int weight){
-		return new LootEntryTable(new ResourceLocation(name), weight, 0, new LootCondition[0], Wizardry.MODID + "_additive_entry");
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoggedInEvent(PlayerLoggedInEvent event){
-		// When a player logs in, they are sent the glyph data and the server's settings.
-		if(event.player instanceof EntityPlayerMP){
-			SpellGlyphData.get(event.player.worldObj).sync((EntityPlayerMP)event.player);
-			Wizardry.settings.sync((EntityPlayerMP)event.player);
+	public void onEntityConstructingEvent(EntityConstructing event){
+		if(event.entity instanceof EntityPlayer && ExtendedPlayer.get((EntityPlayer)event.entity) == null){
+			ExtendedPlayer.register((EntityPlayer) event.entity);
 		}
 	}
 	
 	@SubscribeEvent
-	public static void onSpellCastPreEvent(SpellCastEvent.Pre event){
-		// If a spell is disabled in the config, it will not work.
-		if(!event.getSpell().isEnabled()){
-			if(!event.getEntityLiving().worldObj.isRemote)
-				event.getEntity().addChatMessage(new TextComponentTranslation("spell.disabled", event.getSpell().getNameForTranslationFormatted()));
-			event.setCanceled(true);
-		}
-	}
-	
-	@SubscribeEvent
-	public static void onSpellCastPostEvent(SpellCastEvent.Post event){
-
-		// Spell discovery (only players can discover spells, obviously)
-		if(event.getEntity() instanceof EntityPlayer){
-			
-			EntityPlayer player = (EntityPlayer)event.getEntity();
-
-			WizardData data = WizardData.get(player);
-	
-			if(data != null){
-				// Data is updated on both sides (This line was added client-side to fix a bug back in 1.1.3, so now
-				// it's in common code, which is nice!)
-				// Short-circuiting AND means that discoverSpell is only called if the event isn't cancelled.
-				if(!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(player, event.getSpell(),
-						DiscoverSpellEvent.Source.CASTING)) && data.discoverSpell(event.getSpell())){
-					
-					// If the spell wasn't already discovered, other stuff happens:
-					if(event.getSource() == SpellCastEvent.Source.COMMAND){
-	    				// If the spell didn't send a packet itself, the extended player needs to be synced so the
-	        			// spell discovery updates on the client.
-	        			if(!event.getSpell().doesSpellRequirePacket()) data.sync();
-	        			
-					}else if(!event.getEntity().worldObj.isRemote && !player.capabilities.isCreativeMode
-							&& Wizardry.settings.discoveryMode){
-						// Sound and text only happen server-side, in survival, with discovery mode on, and only when
-						// the spell wasn't cast using commands.
-						WizardryUtilities.playSoundAtPlayer(player, SoundEvents.ENTITY_PLAYER_LEVELUP, 1.25f, 1);
-						player.addChatMessage(new TextComponentTranslation("spell.discover", event.getSpell().getNameForTranslationFormatted()));
-					}
-				}
-			}
+	public void onWorldLoadEvent(WorldEvent.Load event){
+		if(!event.world.isRemote && event.world.provider.dimensionId == 0){
+			SpellGlyphData.get(event.world);
 		}
 	}
 
@@ -192,229 +107,496 @@ public final class WizardryEventHandler {
 	 * conventions for what sort of things take what priority...? */
 
 	@SubscribeEvent
-	public static void onLivingAttackEvent(LivingAttackEvent event){
+	public void onLivingAttackEvent(LivingAttackEvent event){
 
 		// Prevents any damage to allies from magic if friendly fire is enabled
-		if(!Wizardry.settings.friendlyFire && event.getSource() != null && event.getSource().getEntity() instanceof EntityPlayer
-				&& event.getEntity() instanceof EntityPlayer && event.getSource() instanceof IElementalDamage){
-			if(WizardryUtilities.isPlayerAlly((EntityPlayer)event.getSource().getEntity(), (EntityPlayer)event.getEntity())){
+		if(!Wizardry.friendlyFire && event.source != null && event.source.getEntity() instanceof EntityPlayer
+				&& event.entity instanceof EntityPlayer && event.source instanceof IElementalDamage){
+			if(WizardryUtilities.isPlayerAlly((EntityPlayer)event.source.getEntity(), (EntityPlayer)event.entity)){
 				event.setCanceled(true);
-				// This needs to be here, since if the event is cancelled nothing else needs to happen.
+				// I think this ought to be here, since if the event is cancelled nothing else needs to happen.
 				return;
 			}
 		}
+		
+		if(event.source instanceof IElementalDamage){
+			if(MagicDamage.isEntityImmune(((IElementalDamage)event.source).getType(), event.entity)){
+				event.setCanceled(true);
+				// I would have liked to have done the 'resist' chat message here, but I overlooked the fact that I
+				// would need an instance of the spell to get its display name!
+				return;
+			}
+			// One convenient side effect of the new damage type system is that I can get rid of all the places where
+			// creepers are charged and just put them here under shock damage - this is precisely the sort of
+			// repetitive code I was trying to get rid of, since errors can (and did!) occur.
+			if(event.entityLiving instanceof EntityCreeper && !((EntityCreeper)event.entityLiving).getPowered()
+					&& ((IElementalDamage)event.source).getType() == DamageType.SHOCK){
+				// Charges creepers when they are hit by shock damage
+		        event.entityLiving.getDataWatcher().updateObject(17, Byte.valueOf((byte)1));
+		        // Gives the player that caused the shock damage the 'It's Gonna Blow' achievement
+				if(event.source.getEntity() instanceof EntityPlayer){
+					((EntityPlayer)event.source.getEntity()).triggerAchievement(Wizardry.chargeCreeper);
+				}
+			}
+		}
 
-		// Retaliatory effects
-		// These are better off here because the revenge effects are pretty similar, and I'd rather keep the (lengthy)
-		// if statement in one place.
-		if(event.getSource() != null && event.getSource().getEntity() instanceof EntityLivingBase
-				&& !event.getSource().isProjectile() && !(event.getSource() instanceof IElementalDamage &&
-						((IElementalDamage)event.getSource()).isRetaliatory())){
+		// Bursts bubble when the creature inside takes damage
+		if(event.entityLiving.ridingEntity instanceof EntityBubble &&
+				!((EntityBubble)event.entityLiving.ridingEntity).isDarkOrb){
+			event.entityLiving.ridingEntity.worldObj.playSoundAtEntity(event.entityLiving.ridingEntity, "random.pop", 1.5f, 1.0f);
+			event.entityLiving.ridingEntity.setDead();
+		}
 
-			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getEntity();
-			World world = event.getEntityLiving().worldObj;
+		// Prevents all unblockable damage while transience is active
+		if(event.entityLiving.isPotionActive(Wizardry.transience) && event.source != null && !event.source.isUnblockable()){
+			event.setCanceled(true);
+			// Again, I think this ought to be here, since if the event is cancelled nothing else needs to happen.
+			return;
+		}
 
-			// Fireskin
-			if(event.getEntityLiving().isPotionActive(WizardryPotions.fireskin)
-					&& !MagicDamage.isEntityImmune(DamageType.FIRE, event.getEntityLiving()))
-				attacker.setFire(5);
+		if(event.source != null && event.source.getEntity() instanceof EntityLivingBase){
 
-			// Ice Shroud
-			if(event.getEntityLiving().isPotionActive(WizardryPotions.ice_shroud) &&
-					!MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
-				attacker.addPotionEffect(new PotionEffect(WizardryPotions.frost, 100, 0));
+			// Cancels the mind trick effect if the creature takes damage
+			// This has been moved to within the (event.source.getEntity() instanceof EntityLivingBase) check so it doesn't
+			// crash the game with a ConcurrentModificationException. If you think about it, mind trick only ought to be
+			// cancelled if something attacks the entity since potions, drowning, cacti etc. don't affect the targeting.
+			if(event.entityLiving.isPotionActive(Wizardry.mindTrick)){
+				event.entityLiving.removePotionEffect(Wizardry.mindTrick.id);
+			}
 
-			// Static Aura
-			if(event.getEntityLiving().isPotionActive(WizardryPotions.static_aura)){
+			// 'Revenge' effects
 
+			EntityLivingBase attacker = (EntityLivingBase)event.source.getEntity();
+			World world = event.entityLiving.worldObj;
+
+			ItemStack wand = event.entityLiving.getHeldItem();
+
+			if(event.entityLiving.isPotionActive(Wizardry.fireskin) && !event.source.isProjectile()){
+				if(!MagicDamage.isEntityImmune(DamageType.FIRE, event.entityLiving)) attacker.setFire(5);
+			}
+
+			if(event.entityLiving.isPotionActive(Wizardry.iceShroud) && !event.source.isProjectile()){
+				if(!MagicDamage.isEntityImmune(DamageType.FROST, event.entityLiving))
+					attacker.addPotionEffect(new PotionEffect(Wizardry.frost.id, 100, 0, true));
+			}
+
+			if(event.entityLiving.isPotionActive(Wizardry.staticAura) && !event.source.isProjectile()){
 				if(!world.isRemote){
 					EntityArc arc = new EntityArc(world);
-					arc.setEndpointCoords(event.getEntityLiving().posX, event.getEntityLiving().posY + 1, event.getEntityLiving().posZ,
+					arc.setEndpointCoords(event.entityLiving.posX, event.entityLiving.posY + 1, event.entityLiving.posZ,
 							attacker.posX, attacker.posY + attacker.height/2, attacker.posZ);
 					world.spawnEntityInWorld(arc);
 				}else{
 					for(int i=0;i<8;i++){
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, attacker.posX + world.rand.nextFloat() - 0.5, attacker.getEntityBoundingBox().minY + attacker.height/2 + world.rand.nextFloat()*2 - 1, attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-						world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, attacker.posX + world.rand.nextFloat() - 0.5, attacker.getEntityBoundingBox().minY + attacker.height/2 + world.rand.nextFloat()*2 - 1, attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
+						Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, world, attacker.posX + world.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(attacker) + attacker.height/2 + world.rand.nextFloat()*2 - 1, attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+						world.spawnParticle("largesmoke", attacker.posX + world.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(attacker) + attacker.height/2 + world.rand.nextFloat()*2 - 1, attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
 					}
 				}
 
-				attacker.attackEntityFrom(MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.SHOCK, true), 4.0f);
-				attacker.playSound(WizardrySounds.SPELL_SPARK, 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
+				attacker.attackEntityFrom(MagicDamage.causeDirectMagicDamage(event.entityLiving, DamageType.SHOCK), 4.0f);
+				world.playSoundAtEntity(attacker, "wizardry:arc", 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
 			}
-		}
 
+			// Shadow ward
+			if(event.entityLiving instanceof EntityPlayer){
+				if(((EntityPlayer)event.entityLiving).isUsingItem() && wand != null && wand.getItemDamage() < wand.getMaxDamage()
+						&& wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof ShadowWard
+						&& !event.source.isUnblockable()){
+
+					event.setCanceled(true);
+					event.entityLiving.attackEntityFrom(DamageSource.magic, event.ammount/2);
+					attacker.attackEntityFrom(MagicDamage.causeDirectMagicDamage(event.entityLiving, DamageType.MAGIC), event.ammount/2);
+				}
+			}
+
+			if(attacker.isPotionActive(Wizardry.transience)){
+				event.setCanceled(true);
+			}
+
+			// This behaviour has been removed, but is left here in case it is needed in future.
+			/*
+			if(attacker.isPotionActive(Wizardry.fireskin) && !event.source.isProjectile()){
+				event.entityLiving.setFire(5);
+			}
+
+			if(attacker.isPotionActive(Wizardry.iceShroud) && !event.source.isProjectile()){
+				event.entityLiving.addPotionEffect(new PotionEffect(Wizardry.frost.id, 100, 0, true));
+			}
+			*/
+		}
 	}
 
 	@SubscribeEvent
-	public static void onLivingHurtEvent(LivingHurtEvent event){
-
+	public void onLivingHurtEvent(LivingHurtEvent event){
+		
+		// Curse of soulbinding
+		if(!event.entity.worldObj.isRemote && event.entityLiving instanceof EntityPlayer && !event.source.isUnblockable()){
+			ExtendedPlayer properties = ExtendedPlayer.get((EntityPlayer)event.entityLiving);
+			if(properties != null){
+				properties.damageAllSoulboundCreatures(event.ammount);
+			}
+		}
+		
 		// Flaming and freezing swords
-		if(event.getSource().getEntity() instanceof EntityLivingBase){
-
-			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getEntity();
-
-			// Players can only ever attack with their main hand, so this is the right method to use here.
-			if(attacker.getHeldItemMainhand() != null && attacker.getHeldItemMainhand().getItem() instanceof ItemSword){
-
-				int level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.flaming_weapon, attacker.getHeldItemMainhand());
-
-				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FIRE, event.getEntityLiving()))
-					event.getEntityLiving().setFire(level*4);
-
-				level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.freezing_weapon, attacker.getHeldItemMainhand());
+		if(event.source.getEntity() instanceof EntityLivingBase){
+			EntityLivingBase attacker = (EntityLivingBase)event.source.getEntity();
+			if(attacker.getHeldItem() != null && attacker.getHeldItem().getItem() instanceof ItemSword){
+				
+				int level = EnchantmentHelper.getEnchantmentLevel(Wizardry.flamingWeapon.effectId, attacker.getHeldItem());
+				
+				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FIRE, event.entityLiving))
+					event.entityLiving.setFire(level*4);
+				
+				level = EnchantmentHelper.getEnchantmentLevel(Wizardry.freezingWeapon.effectId, attacker.getHeldItem());
 				// Frost lasts for longer because it doesn't do any actual damage
-				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
-					event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level*200, 0));
+				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.entityLiving))
+					event.entityLiving.addPotionEffect(new PotionEffect(Wizardry.frost.id, level*200, 0, true));
 			}
 		}
-
+		
 		// Freezing bow
-		if(event.getSource().getSourceOfDamage() instanceof EntityArrow && event.getSource().getSourceOfDamage().getEntityData() != null){
-
-			int level = event.getSource().getSourceOfDamage().getEntityData().getInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY);
-
-			if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
-				event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level*150, 0));
+		if(event.source.getSourceOfDamage() instanceof EntityArrow && event.source.getSourceOfDamage().getEntityData() != null){
+			
+			int level = event.source.getSourceOfDamage().getEntityData().getInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY);
+			
+			if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.entityLiving))
+				event.entityLiving.addPotionEffect(new PotionEffect(Wizardry.frost.id, level*150, 0, true));
 		}
-
+		
 		// Damage scaling
-		if(event.getSource() != null && event.getSource() instanceof IElementalDamage){
-
-			if(event.getSource().getEntity() instanceof EntityPlayer){
-				event.setAmount((float)(event.getAmount() * Wizardry.settings.playerDamageScale));
+		if(event.source != null && event.source instanceof IElementalDamage){
+			
+			if(event.source.getEntity() instanceof EntityPlayer){
+				event.ammount *= Wizardry.playerDamageScale;
 			}else{
-				event.setAmount((float)(event.getAmount() * Wizardry.settings.npcDamageScale));
+				event.ammount *= Wizardry.npcDamageScale;
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+	public void onBlockPlaceEvent(BlockEvent.PlaceEvent event){
 
-		if(event.getEntityLiving() instanceof EntityPlayer){
+		if(event.player.isPotionActive(Wizardry.transience)){
+			event.setCanceled(true);
+			return;
+		}
 
-			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+		// Spectral blocks cannot be built on
+		if(event.placedAgainst == Wizardry.spectralBlock){
+			event.setCanceled(true);
+			return;
+		}
+	}
 
-			if(player.worldObj.isRemote) hackilyFixContinuousSpellCasting(player);
+	@SubscribeEvent
+	public void onBlockBreakEvent(BlockEvent.BreakEvent event){
+		
+		if(event.getPlayer().isPotionActive(Wizardry.transience)){
+			event.setCanceled(true);
+			return;
+		}
 
-			if(player.openContainer instanceof ContainerWorkbench){
-				craftingTableTick(player);
+		// Makes wizards angry if a player breaks a block in their tower
+		if(!(event.getPlayer() instanceof FakePlayer)){
+
+			List<EntityWizard> wizards = WizardryUtilities.getEntitiesWithinRadius(64, event.x, event.y, event.z, event.world, EntityWizard.class);
+
+			if(!wizards.isEmpty()){
+				for(EntityWizard wizard : wizards){
+					if(wizard.isBlockPartOfTower(event.x, event.y, event.z)){
+						wizard.setRevengeTarget(event.getPlayer());
+						event.getPlayer().triggerAchievement(Wizardry.angerWizard);
+					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onEntityStruckByLightningEvent(EntityStruckByLightningEvent event){
+
+		if(event.lightning.getEntityData() != null && event.lightning.getEntityData().hasKey("summoningPlayer")){
+
+			EntityPlayer player = (EntityPlayer)WizardryUtilities.getEntityByUUID(event.lightning.worldObj, UUID.fromString(event.lightning.getEntityData().getString("summoningPlayer")));
+
+			if(event.entity instanceof EntityCreeper){
+				player.triggerAchievement(Wizardry.chargeCreeper);
 			}
 
-			if(player.openContainer instanceof ContainerPlayer){
+			if(event.entity instanceof EntityPig){
+				player.triggerAchievement(Wizardry.frankenstein);
+			}
+		}
+
+	}
+
+	@SubscribeEvent
+	public void onLivingUpdateEvent(LivingUpdateEvent event){
+
+		if(event.entityLiving instanceof EntityPlayer){
+			
+			EntityPlayer entityplayer = (EntityPlayer)event.entityLiving;
+			
+			if(ExtendedPlayer.get(entityplayer) != null){
+				ExtendedPlayer.get(entityplayer).update(entityplayer);
+			}
+
+			if(entityplayer.openContainer instanceof ContainerWorkbench){
+				this.craftingTableTick(entityplayer);
+			}
+
+			if(entityplayer.openContainer instanceof ContainerPlayer){
 				// Unfortunately I have no choice but to call this method every tick when the player isn't using another
 				// inventory, since the only thing tracking whether the player is looking at their inventory is the GUI
 				// itself, which is client-side only.
-				playerInventoryTick(player);
+				this.playerInventoryTick(entityplayer);
 			}
 
-			testForArmourSet:{
-				for(ItemStack stack : player.getArmorInventoryList()){
-					if(stack == null || !(stack.getItem() instanceof ItemWizardArmour)){
-						break testForArmourSet;
+			if(entityplayer.getCurrentArmor(0) != null && entityplayer.getCurrentArmor(0).getItem() instanceof ItemWizardArmour
+					&& entityplayer.getCurrentArmor(1) != null && entityplayer.getCurrentArmor(1).getItem() instanceof ItemWizardArmour
+					&& entityplayer.getCurrentArmor(2) != null && entityplayer.getCurrentArmor(2).getItem() instanceof ItemWizardArmour
+					&& entityplayer.getCurrentArmor(3) != null && entityplayer.getCurrentArmor(3).getItem() instanceof ItemWizardArmour){
+
+				entityplayer.triggerAchievement(Wizardry.armourSet);
+			}
+
+			// Tests for magic weapons, decrements the time until the magic wears off, and removes the enchantment if
+			// it has run out.
+
+			magicWeapons:
+			if(ExtendedPlayer.get(entityplayer) != null){
+
+				for(ItemStack stack : entityplayer.inventory.mainInventory){
+
+					if(stack != null && stack.isItemEnchanted()){
+
+						Map enchantments = EnchantmentHelper.getEnchantments(stack);
+
+						if(enchantments.containsKey(Wizardry.magicSword.effectId) || enchantments.containsKey(Wizardry.magicBow.effectId)){
+
+							if(ExtendedPlayer.get(entityplayer).magicWeaponDuration > 0){
+								// Decrements the time until the magic wears off
+								ExtendedPlayer.get(entityplayer).magicWeaponDuration--;
+							}else{
+								// Removes the magic weapon enchantment from the enchantment map
+								enchantments.remove(Wizardry.magicSword.effectId);
+								enchantments.remove(Wizardry.magicBow.effectId);
+								// Applies the new enchantment map to the item
+								EnchantmentHelper.setEnchantments(enchantments, stack);
+							}
+
+							// If it found an imbued weapon, it can stop since there should only be one.
+							// More importantly, doing this skips the reset thing below. Just a bit tidier than a flag.
+							break magicWeapons;
+						}
 					}
 				}
-				player.addStat(WizardryAchievements.armour_set);
+
+				// Resets the magic weapon timer if the player no longer has one.
+				if(ExtendedPlayer.get(entityplayer).magicWeaponDuration > 0){
+					ExtendedPlayer.get(entityplayer).magicWeaponDuration = 0;
+				}
 			}
 
-		}
+			// Tests for flaming weapons, decrements the time until the magic wears off, and removes the enchantment if
+			// it has run out.
 
-		if(event.getEntityLiving().worldObj.isRemote){
+			flamingWeapons:
+			if(ExtendedPlayer.get(entityplayer) != null){
 
-			// Client-side continuous spell casting for NPCs
+				for(ItemStack stack : entityplayer.inventory.mainInventory){
 
-			if(event.getEntity() instanceof ISpellCaster && event.getEntity() instanceof EntityLiving){
+					if(stack != null && stack.isItemEnchanted()){
 
-				Spell spell = ((ISpellCaster)event.getEntity()).getContinuousSpell();
-				SpellModifiers modifiers = ((ISpellCaster)event.getEntity()).getModifiers();
+						Map enchantments = EnchantmentHelper.getEnchantments(stack);
 
-				if(spell != null && spell != Spells.none){
-					
-					if(!MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(event.getEntityLiving(), spell, modifiers,
-							SpellCastEvent.Source.NPC, 0))){
-					
-						spell.cast(event.getEntity().worldObj, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, 0,
-								// TODO: This implementation of modifiers relies on them being accessible client-side.
-								((EntityLiving)event.getEntity()).getAttackTarget(), modifiers);
+						if(enchantments.containsKey(Wizardry.flamingWeapon.effectId)){
+
+							if(ExtendedPlayer.get(entityplayer).flamingWeaponDuration > 0){
+								// Decrements the time until the flaming wears off
+								ExtendedPlayer.get(entityplayer).flamingWeaponDuration--;
+							}else{
+								// Removes the flaming weapon enchantment from the enchantment map
+								enchantments.remove(Wizardry.flamingWeapon.effectId);
+								// Applies the new enchantment map to the item
+								EnchantmentHelper.setEnchantments(enchantments, stack);
+							}
+
+							// If it found an imbued weapon, it can stop since there should only be one.
+							// More importantly, doing this skips the reset thing below. Just a bit tidier than a flag.
+							break flamingWeapons;
+						}
 					}
 				}
-			}
-		}
-	}
 
-	@SubscribeEvent
-	public static void onLivingDeathEvent(LivingDeathEvent event){
-
-		if(event.getSource().getEntity() instanceof EntityPlayer){
-
-			EntityPlayer player = (EntityPlayer)event.getSource().getEntity();
-
-			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
-
-				if(stack != null && stack.getItem() instanceof ItemWand && stack.isItemDamaged() && WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) > 0){
-					int damage = stack.getItemDamage() - Constants.SIPHON_MANA_PER_LEVEL*WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) - player.worldObj.rand.nextInt(Constants.SIPHON_MANA_PER_LEVEL);
-					if(damage < 0) damage = 0;
-					stack.setItemDamage(damage);
-					break;
+				// Resets the flaming weapon timer if the player no longer has one.
+				if(ExtendedPlayer.get(entityplayer).flamingWeaponDuration > 0){
+					ExtendedPlayer.get(entityplayer).flamingWeaponDuration = 0;
 				}
 			}
+			
+			// Tests for freezing weapons, decrements the time until the magic wears off, and removes the enchantment if
+			// it has run out.
 
-			if(event.getEntityLiving() == player && event.getSource() instanceof IElementalDamage){
-				player.addStat(WizardryAchievements.self_destruct);
+			freezingWeapons:
+			if(ExtendedPlayer.get(entityplayer) != null){
+
+				for(ItemStack stack : entityplayer.inventory.mainInventory){
+
+					if(stack != null && stack.isItemEnchanted()){
+
+						Map enchantments = EnchantmentHelper.getEnchantments(stack);
+
+						if(enchantments.containsKey(Wizardry.freezingWeapon.effectId)){
+
+							if(ExtendedPlayer.get(entityplayer).freezingWeaponDuration > 0){
+								// Decrements the time until the freezing wears off
+								ExtendedPlayer.get(entityplayer).freezingWeaponDuration--;
+							}else{
+								// Removes the freezing weapon enchantment from the enchantment map
+								enchantments.remove(Wizardry.freezingWeapon.effectId);
+								// Applies the new enchantment map to the item
+								EnchantmentHelper.setEnchantments(enchantments, stack);
+							}
+
+							// If it found an imbued weapon, it can stop since there should only be one.
+							// More importantly, doing this skips the reset thing below. Just a bit tidier than a flag.
+							break freezingWeapons;
+						}
+					}
+				}
+
+				// Resets the freezing weapon timer if the player no longer has one.
+				if(ExtendedPlayer.get(entityplayer).freezingWeaponDuration > 0){
+					ExtendedPlayer.get(entityplayer).freezingWeaponDuration = 0;
+				}
+			}
+			
+		}
+
+		if(event.entityLiving.worldObj.isRemote){
+
+			if(event.entityLiving.isPotionActive(Wizardry.frost)){
+
+				double x = event.entityLiving.posX + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+				double y = WizardryUtilities.getEntityFeetPos(event.entityLiving) + event.entityLiving.worldObj.rand.nextDouble()*event.entityLiving.height;
+				double z = event.entityLiving.posZ + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+
+				Wizardry.proxy.spawnParticle(EnumParticleType.SNOW, event.entityLiving.worldObj, x, y, z, 0, -0.02, 0, 15 + event.entityLiving.worldObj.rand.nextInt(5));
+			}
+
+			if(event.entityLiving.isPotionActive(Wizardry.fireskin)){
+
+				double x = event.entityLiving.posX + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+				double y = WizardryUtilities.getEntityFeetPos(event.entityLiving) + event.entityLiving.worldObj.rand.nextDouble()*event.entityLiving.height;
+				double z = event.entityLiving.posZ + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+
+				event.entityLiving.worldObj.spawnParticle("flame", x, y, z, 0, 0, 0);
+			}
+
+			if(event.entityLiving.isPotionActive(Wizardry.iceShroud)){
+
+				double x = event.entityLiving.posX + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+				double y = WizardryUtilities.getEntityFeetPos(event.entityLiving) + event.entityLiving.worldObj.rand.nextDouble()*event.entityLiving.height;
+				double z = event.entityLiving.posZ + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+
+				float brightness = 0.5f + (event.entityLiving.worldObj.rand.nextFloat()/2);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, event.entityLiving.worldObj, x, y, z, 0, 0, 0, 48 + event.entityLiving.worldObj.rand.nextInt(12), brightness, brightness + 0.1f, 1.0f, true, 0);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SNOW, event.entityLiving.worldObj, x, y, z, 0, -0.02, 0, 40 + event.entityLiving.worldObj.rand.nextInt(10));
+			}
+
+			if(event.entityLiving.isPotionActive(Wizardry.staticAura)){
+
+				double x = event.entityLiving.posX + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+				double y = WizardryUtilities.getEntityFeetPos(event.entityLiving) + event.entityLiving.worldObj.rand.nextDouble()*event.entityLiving.height;
+				double z = event.entityLiving.posZ + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, event.entityLiving.worldObj, x, y, z, 0, 0, 0, 3);
+			}
+
+			if(event.entityLiving.isPotionActive(Wizardry.transience)){
+
+				double x = event.entityLiving.posX + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+				double y = WizardryUtilities.getEntityFeetPos(event.entityLiving) + event.entityLiving.worldObj.rand.nextDouble()*event.entityLiving.height;
+				double z = event.entityLiving.posZ + (event.entityLiving.worldObj.rand.nextDouble() - 0.5)*event.entityLiving.width;
+
+				Wizardry.proxy.spawnParticle(EnumParticleType.DUST, event.entityLiving.worldObj, x, y, z, 0, 0, 0, (int)(16.0D / (Math.random() * 0.8D + 0.2D)), 0.8f, 0.8f, 1.0f);
+			}
+
+		}else{
+
+			if(event.entityLiving.isPotionActive(Wizardry.decay) && event.entityLiving.onGround && event.entityLiving.ticksExisted % Wizardry.DECAY_SPREAD_INTERVAL == 0){
+
+				List list = event.entityLiving.worldObj.getEntitiesWithinAABBExcludingEntity(event.entityLiving, event.entityLiving.boundingBox);
+
+				boolean flag = true;
+
+				for(Object object : list){
+					if(object instanceof EntityDecay) flag = false;
+				}
+
+				if(flag){
+					// The victim spreading the decay is the 'caster' here, so that it can actually wear off, otherwise it just gets infected with its own decay and the effect lasts forever.
+					event.entityLiving.worldObj.spawnEntityInWorld(new EntityDecay(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ, event.entityLiving));
+				}
+			}
+		}
+
+		// Mind trick
+		if(event.entityLiving.isPotionActive(Wizardry.mindTrick) && event.entityLiving instanceof EntityLiving){
+			// Old AI (this can't be done in onLivingSetAttackTargetEvent because that only fires for the new AI).
+			if(event.entityLiving instanceof EntityCreature) ((EntityCreature)event.entityLiving).setTarget(null);
+		}
+
+		// Mind control - old AI (this can't be done in onLivingSetAttackTargetEvent because that only fires for the new AI).
+		mindcontrol:
+			if(event.entityLiving.isPotionActive(Wizardry.mindControl) && event.entityLiving instanceof EntityLiving){
+
+				NBTTagCompound entityNBT = event.entityLiving.getEntityData();
+
+				if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY)){
+
+					Entity caster = WizardryUtilities.getEntityByUUID(event.entity.worldObj, UUID.fromString(entityNBT.getString(MindControl.NBT_KEY)));
+
+					if(caster instanceof EntityLivingBase){
+
+						if(MindControl.findMindControlTarget((EntityLiving)event.entityLiving, (EntityLivingBase)caster, event.entity.worldObj)){
+							// If it worked, skip setting the target to null.
+							break mindcontrol;
+						}
+					}
+				}
+				// If the caster couldn't be found or no valid target was found, this just acts like mind trick.
+				((EntityLiving)event.entityLiving).setAttackTarget(null);
+			}
+		
+		// Terror
+		if(event.entityLiving.isPotionActive(Wizardry.fear) && event.entityLiving instanceof EntityCreature){
+
+			NBTTagCompound entityNBT = event.entityLiving.getEntityData();
+			EntityCreature creature = (EntityCreature)event.entityLiving;
+
+			if(entityNBT != null && entityNBT.hasKey(Intimidate.NBT_KEY)){
+
+				Entity caster = WizardryUtilities.getEntityByUUID(creature.worldObj, UUID.fromString(entityNBT.getString(Intimidate.NBT_KEY)));
+
+				if(caster instanceof EntityLivingBase){
+					Intimidate.runAway(creature, (EntityLivingBase)caster);
+				}
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onLivingDropsEvent(LivingDropsEvent event){
-		// TODO: Really, this should be in a loot table (mob_additions), however I can't seem to find a way of
-		// automatically adding it to all subclasses of IMob.
-		// Evil wizards drop spell books themselves
-		if(event.getEntityLiving() instanceof IMob && !(event.getEntityLiving() instanceof EntityEvilWizard)
-				// TODO: Backport when you backport the new summoned creature system.
-				&& !(event.getEntityLiving() instanceof ISummonedCreature) && event.getSource().getEntity() instanceof EntityPlayer
-				&& Wizardry.settings.spellBookDropChance > 0){
-
-			// This does exactly what the entity drop method does, but with a different random number so that the
-			// spell book doesn't always drop with other rare drops.
-			int rareDropNumber = event.getEntity().worldObj.rand.nextInt(200) - event.getLootingLevel();
-			if(rareDropNumber < Wizardry.settings.spellBookDropChance){
-				// Drops a spell book
-				int id = WizardryUtilities.getStandardWeightedRandomSpellId(event.getEntity().worldObj.rand);
-
-				event.getDrops().add(new EntityItem(event.getEntityLiving().worldObj, event.getEntityLiving().posX, event.getEntityLiving().posY, event.getEntityLiving().posZ,
-						new ItemStack(WizardryItems.spell_book, 1, id)));
-			}
+	public void onBreakSpeedEvent(BreakSpeed event){
+		if(event.entityPlayer.isPotionActive(Wizardry.frost)){
+			// Amplifier + 1 because it starts at 0
+			event.newSpeed = event.originalSpeed * (1 - Wizardry.FROST_FATIGUE_PER_LEVEL*(event.entityPlayer.getActivePotionEffect(Wizardry.frost).getAmplifier() + 1));
 		}
 	}
 
-	@SubscribeEvent
-	public static void onItemPickupEvent(EntityItemPickupEvent event){
-		if(event.getItem().getEntityItem().getItem() == WizardryItems.magic_crystal){
-			event.getEntityPlayer().addStat(WizardryAchievements.crystal, 1);
-		}
-	}
-	
-	// Private helper methods
-	// ================================================================================================================
-
-	/**
-	 * Detects inconsistencies between player.getActiveItemStack and the actual itemstack and forces them to be equal.
-	 * Fixes issue #25.
-	 * @param player
-	 */
-	private static void hackilyFixContinuousSpellCasting(EntityPlayer player){
-		if(player.isHandActive() && player.getHeldItem(player.getActiveHand()) != null
-				&& player.getHeldItem(player.getActiveHand()).getItem() instanceof ItemWand
-				&& WandHelper.getCurrentSpell(player.getHeldItem(player.getActiveHand())).isContinuous){
-			if(player.getActiveItemStack() != player.getHeldItem(player.getActiveHand())){
-				player.setHeldItem(player.getActiveHand(), player.getActiveItemStack());
-			}
-		}
-	}
-
-	private static void playerInventoryTick(EntityPlayer player){
+	private void playerInventoryTick(EntityPlayer player) {
 
 		// Charges wand using mana flask. It is here rather than in the crafting handler so the result displays
 		// the proper damage before it is actually crafted.
@@ -425,11 +607,11 @@ public final class WizardryEventHandler {
 		IInventory craftMatrix = ((ContainerPlayer)player.openContainer).craftMatrix;
 		ItemStack outputItem = ((ContainerPlayer)player.openContainer).craftResult.getStackInSlot(0);
 
-		for(int i = 0; i < craftMatrix.getSizeInventory(); i++){
+		for (int i = 0; i < craftMatrix.getSizeInventory(); i++){
 			if(craftMatrix.getStackInSlot(i) != null){
 				ItemStack itemstack = craftMatrix.getStackInSlot(i);
 
-				if(itemstack.getItem() == WizardryItems.mana_flask){
+				if(itemstack.getItem() == Wizardry.manaFlask){
 					flag = true;
 				}
 
@@ -444,27 +626,28 @@ public final class WizardryEventHandler {
 		}
 
 		if(outputItem != null && outputItem.getItem() instanceof ItemWand && flag && wand != null){
-			outputItem.setTagCompound((wand.getTagCompound()));
-			if(wand.getItemDamage()-Constants.MANA_PER_FLASK < 0){
+			outputItem.setTagCompound(wand.getTagCompound());
+			if(wand.getItemDamage()-Wizardry.MANA_PER_FLASK < 0){
 				outputItem.setItemDamage(0);
 			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
+				outputItem.setItemDamage(wand.getItemDamage()-Wizardry.MANA_PER_FLASK);
 			}
 		}
 
 		if(outputItem != null && outputItem.getItem() instanceof ItemWizardArmour && flag && armour != null){
-			outputItem.setTagCompound((armour.getTagCompound()));
-			if(armour.getItemDamage()-Constants.MANA_PER_FLASK < 0){
+			outputItem.setTagCompound(armour.getTagCompound());
+			if(armour.getItemDamage()-Wizardry.MANA_PER_FLASK < 0){
 				outputItem.setItemDamage(0);
 			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
+				outputItem.setItemDamage(wand.getItemDamage()-Wizardry.MANA_PER_FLASK);
 			}
 		}
 	}
 
-	private static void craftingTableTick(EntityPlayer player) {
+	private void craftingTableTick(EntityPlayer player) {
 
-		// Charges wand using mana flask
+		// Charges wand using mana flask. It is here rather than in the crafting handler so the result displays
+		// the proper damage before it is actually crafted.
 
 		boolean flag = false;
 		ItemStack wand = null;
@@ -476,7 +659,7 @@ public final class WizardryEventHandler {
 			if(craftMatrix.getStackInSlot(i) != null){
 				ItemStack itemstack = craftMatrix.getStackInSlot(i);
 
-				if(itemstack.getItem() == WizardryItems.mana_flask){
+				if(itemstack.getItem() == Wizardry.manaFlask){
 					flag = true;
 				}
 
@@ -491,22 +674,300 @@ public final class WizardryEventHandler {
 		}
 
 		if(outputItem != null && outputItem.getItem() instanceof ItemWand && flag && wand != null){
-			outputItem.setTagCompound((wand.getTagCompound()));
-			if(wand.getItemDamage()-Constants.MANA_PER_FLASK < 0){
+			outputItem.setTagCompound(wand.getTagCompound());
+			if(wand.getItemDamage()-Wizardry.MANA_PER_FLASK < 0){
 				outputItem.setItemDamage(0);
 			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
+				outputItem.setItemDamage(wand.getItemDamage()-Wizardry.MANA_PER_FLASK);
 			}
 		}
 
 		if(outputItem != null && outputItem.getItem() instanceof ItemWizardArmour && flag && armour != null){
-			outputItem.setTagCompound((armour.getTagCompound()));
-			if(armour.getItemDamage()-Constants.MANA_PER_FLASK < 0){
+			outputItem.setTagCompound(armour.getTagCompound());
+			if(armour.getItemDamage()-Wizardry.MANA_PER_FLASK < 0){
 				outputItem.setItemDamage(0);
 			}else{
-				outputItem.setItemDamage(wand.getItemDamage()-Constants.MANA_PER_FLASK);
+				outputItem.setItemDamage(wand.getItemDamage()-Wizardry.MANA_PER_FLASK);
 			}
 		}
 	}
 
+	@SubscribeEvent
+	public void onLivingDeathEvent(LivingDeathEvent event){
+
+		// Extended player data saving
+		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer){
+			// This should never be null, but no harm in checking.
+			if(ExtendedPlayer.get((EntityPlayer)event.entity) != null){
+
+				ExtendedPlayer.get((EntityPlayer)event.entity).onPlayerDeath();
+
+				NBTTagCompound playerData = new NBTTagCompound();
+				ExtendedPlayer.get((EntityPlayer)event.entity).saveNBTData(playerData);
+				CommonProxy.storeEntityData(ExtendedPlayer.getSaveKey((EntityPlayer)event.entity), playerData);
+			}
+		}
+
+		if(event.source.getEntity() instanceof EntityPlayer){
+
+			EntityPlayer player = (EntityPlayer)event.source.getEntity();
+
+			// Mana siphoning. Works for the first wand with a siphon upgrade on the hotbar.
+			for(int i=0; i<9; i++){
+				ItemStack itemstack = player.inventory.getStackInSlot(i);
+				if(itemstack != null && itemstack.getItem() instanceof ItemWand && itemstack.isItemDamaged() && WandHelper.getUpgradeLevel(itemstack, Wizardry.siphonUpgrade) > 0){
+					int damage = itemstack.getItemDamage() - Wizardry.SIPHON_MANA_PER_LEVEL*WandHelper.getUpgradeLevel(itemstack, Wizardry.siphonUpgrade) - player.worldObj.rand.nextInt(Wizardry.SIPHON_MANA_PER_LEVEL);
+					if(damage < 0) damage = 0;
+					itemstack.setItemDamage(damage);
+					break;
+				}
+			}
+
+			if(event.entityLiving == player && event.source instanceof IElementalDamage){
+				player.triggerAchievement(Wizardry.selfDestruct);
+			}
+		}
+
+		if(event.source.getEntity() instanceof EntitySilverfishMinion){
+			int lifetime = ((EntitySilverfishMinion)event.source.getEntity()).lifetime;
+			// Summons 1-4 more silverfish
+			int alliesToSummon = event.entity.worldObj.rand.nextInt(4) + 1;
+
+			for(int i=0; i<alliesToSummon; i++){
+				EntitySilverfishMinion silverfish = new EntitySilverfishMinion(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, ((EntitySilverfishMinion)event.source.getEntity()).getCaster(), lifetime);
+				event.entity.worldObj.spawnEntityInWorld(silverfish);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onEntityJoinWorld(EntityJoinWorldEvent event){
+
+		if(!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer){
+			
+			NBTTagCompound playerData = CommonProxy.getEntityData(ExtendedPlayer.getSaveKey((EntityPlayer)event.entity));
+			if (playerData != null) {
+				ExtendedPlayer.get((EntityPlayer)event.entity).loadNBTData(playerData);
+			}
+			
+			// NBT data is synced AFTER it is loaded from the save file!
+			ExtendedPlayer.get((EntityPlayer)event.entity).sync();
+			
+			// When a player joins the world, they are sent the glyph data.
+			// Is there a way to only make this happen when the player actually logged in, i.e. not on respawn
+			// or leaving a portal?
+			if(event.entity instanceof EntityPlayerMP){
+				SpellGlyphData.get(event.world).sync((EntityPlayerMP)event.entity);
+			}
+		}
+
+		// Rather long-winded (but necessary) way of getting an arrow just after it has been fired, checking if the bow
+		// that fired it has the imbuement enchantment, and applying extra damage accordingly.
+		if(!event.entity.worldObj.isRemote && event.entity instanceof EntityArrow){
+
+			EntityArrow arrow = (EntityArrow)event.entity;
+
+			if(arrow.shootingEntity instanceof EntityLivingBase){
+
+				EntityLivingBase archer = (EntityLivingBase)arrow.shootingEntity;
+
+				if(archer.getHeldItem() != null && archer.getHeldItem().getItem() instanceof ItemBow){
+
+					// Taken directly from ItemBow, so it works exactly the same as the power enchantment.
+					int level = EnchantmentHelper.getEnchantmentLevel(Wizardry.magicBow.effectId, archer.getHeldItem());
+
+					if(level > 0){
+						arrow.setDamage(arrow.getDamage() + (double)level * 0.5D + 0.5D);
+					}
+					
+					if(EnchantmentHelper.getEnchantmentLevel(Wizardry.flamingWeapon.effectId, archer.getHeldItem()) > 0){
+						// Again, this is exactly what happens in ItemBow (flame is flame; level does nothing).
+						arrow.setFire(100);
+					}
+					
+					level = EnchantmentHelper.getEnchantmentLevel(Wizardry.freezingWeapon.effectId, archer.getHeldItem());
+					
+					if(level > 0){
+						if(arrow.getEntityData() != null){
+							arrow.getEntityData().setInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY, level);
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	@SubscribeEvent
+	public void onLivingDropsEvent(LivingDropsEvent event){
+		// Evil wizards drop spell books themselves
+		if(event.entityLiving instanceof EntityMob && !(event.entityLiving instanceof EntityEvilWizard) && event.source.getEntity() instanceof EntityPlayer && Wizardry.spellBookDropChance > 0){
+
+			// This does exactly what the entity drop method does, but with a different random number so that the
+			// spell book doesn't always drop with other rare drops.
+			int rareDropNumber = event.entity.worldObj.rand.nextInt(200) - event.lootingLevel;
+			if(rareDropNumber < Wizardry.spellBookDropChance){
+				// Drops a spell book
+				int id = WizardryUtilities.getStandardWeightedRandomSpellId(event.entity.worldObj.rand);
+
+				event.drops.add(new EntityItem(event.entityLiving.worldObj, event.entityLiving.posX, event.entityLiving.posY, event.entityLiving.posZ,
+						new ItemStack(Wizardry.spellBook, 1, id)));
+			}
+		}
+
+		for(EntityItem item : event.drops){
+
+			// Destroys conjured items if their caster dies.
+			if(item.getEntityItem().getItem() instanceof ItemSpectralSword
+					|| item.getEntityItem().getItem() instanceof ItemSpectralPickaxe
+					|| item.getEntityItem().getItem() instanceof ItemSpectralBow
+					|| item.getEntityItem().getItem() instanceof ItemSpectralArmour
+					|| item.getEntityItem().getItem() instanceof ItemFlamingAxe
+					|| item.getEntityItem().getItem() instanceof ItemFrostAxe){
+
+				item.setDead();
+			}
+
+			// Instantly disenchants an imbued weapon if it is dropped when the player dies.
+			if(item.getEntityItem().isItemEnchanted()){
+
+				// No need to check what enchantments the item has, since remove() does nothing if the element does not exist.
+				Map enchantments = EnchantmentHelper.getEnchantments(item.getEntityItem());
+				
+				// Removes the magic weapon enchantments from the enchantment map
+				enchantments.remove(Wizardry.magicSword.effectId);
+				enchantments.remove(Wizardry.magicBow.effectId);
+				enchantments.remove(Wizardry.flamingWeapon.effectId);
+				enchantments.remove(Wizardry.freezingWeapon.effectId);
+				
+				// Applies the new enchantment map to the item
+				EnchantmentHelper.setEnchantments(enchantments, item.getEntityItem());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
+		// Mind trick
+		// If the target is null already, no need to set it to null, or infinite loops will occur.
+		if((event.entityLiving.isPotionActive(Wizardry.mindTrick) || event.entityLiving.isPotionActive(Wizardry.fear)) && event.entityLiving instanceof EntityLiving && event.target != null){
+			// New AI
+			((EntityLiving)event.entityLiving).setAttackTarget(null);
+		}
+
+		// Mind control
+		mindcontrol:
+			if(event.entityLiving.isPotionActive(Wizardry.mindControl) && event.entityLiving instanceof EntityLiving){
+
+				NBTTagCompound entityNBT = event.entityLiving.getEntityData();
+
+				if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY)){
+
+					Entity caster = WizardryUtilities.getEntityByUUID(event.entity.worldObj, UUID.fromString(entityNBT.getString(MindControl.NBT_KEY)));
+
+					// If the target that the event tried to set is already a valid mind control target, nothing happens.
+					if(WizardryUtilities.isValidTarget(caster, event.target)) break mindcontrol;
+
+					if(caster instanceof EntityLivingBase){
+
+						if(MindControl.findMindControlTarget((EntityLiving)event.entityLiving, (EntityLivingBase)caster, event.entity.worldObj)){
+							// If it worked, skip setting the target to null.
+							break mindcontrol;
+						}
+					}
+				}
+				// If the caster couldn't be found or no valid target was found, this just acts like mind trick.
+				// If the target is null already, no need to set it to null, or infinite loops will occur.
+				if(event.target != null) ((EntityLiving)event.entityLiving).setAttackTarget(null);
+			}
+	}
+
+	@SubscribeEvent
+	public void onItemPickupEvent(EntityItemPickupEvent event){
+		if(event.item.getEntityItem().getItem() == Wizardry.magicCrystal){
+			event.entityPlayer.addStat(Wizardry.crystal, 1);
+		}
+	}
+
+	@SubscribeEvent
+	public void onItemTossEvent(ItemTossEvent event){
+
+		// Prevents conjured items being thrown by dragging and dropping outside the inventory.
+		if(event.entityItem.getEntityItem().getItem() instanceof ItemSpectralSword
+				|| event.entityItem.getEntityItem().getItem() instanceof ItemSpectralPickaxe
+				|| event.entityItem.getEntityItem().getItem() instanceof ItemSpectralBow
+				|| event.entityItem.getEntityItem().getItem() instanceof ItemSpectralArmour
+				|| event.entityItem.getEntityItem().getItem() instanceof ItemFlamingAxe
+				|| event.entityItem.getEntityItem().getItem() instanceof ItemFrostAxe){
+
+			event.setCanceled(true);
+			event.player.inventory.addItemStackToInventory(event.entityItem.getEntityItem());
+		}
+
+		// Instantly disenchants an imbued weapon if it is thrown on the ground.
+		if(event.entityItem.getEntityItem().isItemEnchanted()){
+
+			// No need to check what enchantments the item has, since remove() does nothing if the element does not exist.
+			Map enchantments = EnchantmentHelper.getEnchantments(event.entityItem.getEntityItem());
+			
+			// Removes the magic weapon enchantments from the enchantment map
+			enchantments.remove(Wizardry.magicSword.effectId);
+			enchantments.remove(Wizardry.magicBow.effectId);
+			enchantments.remove(Wizardry.flamingWeapon.effectId);
+			enchantments.remove(Wizardry.freezingWeapon.effectId);
+			
+			// Applies the new enchantment map to the item
+			EnchantmentHelper.setEnchantments(enchantments, event.entityItem.getEntityItem());
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerInteractEvent(PlayerInteractEvent event){
+
+		if(event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && event.entityPlayer.isSneaking()){
+
+			ItemStack wand = event.entityPlayer.getHeldItem();
+
+			if(wand != null && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
+
+				ExtendedPlayer properties = ExtendedPlayer.get(event.entityPlayer);
+
+				if(properties != null){
+
+					int x = event.x;
+					int y = event.y;
+					int z = event.z;
+
+					if(event.face == 0) y--;
+					if(event.face == 1) y++;
+					if(event.face == 2) z--;
+					if(event.face == 3) z++;
+					if(event.face == 4) x--;
+					if(event.face == 5) x++;
+
+					properties.setClairvoyancePoint(x, y, z, event.world.provider.dimensionId);
+					if(!event.world.isRemote){
+						event.entityPlayer.addChatMessage(new ChatComponentTranslation("spell.clairvoyance.confirm", WizardryRegistry.clairvoyance.getDisplayNameWithFormatting()));
+						event.setCanceled(true);
+					}
+				}
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onBonemealEvent(BonemealEvent event){
+		// Grows crystal flowers when bonemeal is used on grass
+		if(event.block == Blocks.grass){
+			
+			int x = event.x + event.world.rand.nextInt(8) - event.world.rand.nextInt(8);
+			int y = event.y + event.world.rand.nextInt(4) - event.world.rand.nextInt(4);
+			int z = event.z + event.world.rand.nextInt(8) - event.world.rand.nextInt(8);
+
+			if (event.world.isAirBlock(x, y, z) && (!event.world.provider.hasNoSky || y < 127) && Wizardry.crystalFlower.canBlockStay(event.world, x, y, z))
+			{
+				event.world.setBlock(x, y, z, Wizardry.crystalFlower, 0, 2);
+			}
+		}
+	}
 }

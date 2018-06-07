@@ -1,24 +1,20 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.construct.EntityLightningSigil;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class LightningSigil extends Spell {
 
 	public LightningSigil() {
-		super(Tier.APPRENTICE, 10, Element.LIGHTNING, "lightning_sigil", SpellType.ATTACK, 20, EnumAction.NONE, false);
+		super(EnumTier.APPRENTICE, 10, EnumElement.LIGHTNING, "lightning_sigil", EnumSpellType.ATTACK, 20, EnumAction.none, false);
 	}
 
 	@Override
@@ -27,22 +23,20 @@ public class LightningSigil extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(10*rangeMultiplier, world, caster, false);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK && rayTrace.sideHit == EnumFacing.UP){
-			
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK && rayTrace.sideHit == 1){
 			if(!world.isRemote){
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
-				EntityLightningSigil lightningsigil = new EntityLightningSigil(world, x, y, z, caster, modifiers.get(SpellModifiers.DAMAGE));
+				double x = rayTrace.blockX;
+				double y = rayTrace.blockY;
+				double z = rayTrace.blockZ;
+				EntityLightningSigil lightningsigil = new EntityLightningSigil(world, x + 0.5, y+1, z + 0.5, caster, damageMultiplier);
 				world.spawnEntityInWorld(lightningsigil);
 			}
-			
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F, 0.3F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:aura", 1.0F, 0.3F);
 			return true;
 		}
 		return false;

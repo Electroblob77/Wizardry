@@ -1,27 +1,28 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.entity.construct.EntityDecay;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.entity.living.EntitySkeletonMinion;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class Decay extends Spell {
 
 	public Decay(){
-		super(Tier.ADVANCED, 50, Element.NECROMANCY, "decay", SpellType.ATTACK, 200, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 50, EnumElement.NECROMANCY, "decay", EnumSpellType.ATTACK, 200, EnumAction.none, false);
 	}
 
 	@Override
@@ -30,29 +31,35 @@ public class Decay extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(12*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(12*rangeMultiplier, world, caster, false);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
 
-			BlockPos pos = rayTrace.getBlockPos();
+			int x = rayTrace.blockX;
+			int y = rayTrace.blockY;
+			int z = rayTrace.blockZ;
 			
-			if(world.getBlockState(pos.up()).isNormalCube()) return false;
+			if(world.getBlock(x, y+1, z).isNormalCube()) return false;
 			
 			if(!world.isRemote){
 				
-				world.spawnEntityInWorld(new EntityDecay(world, pos.getX()+0.5, pos.getY()+1, pos.getZ()+0.5, caster));
+				world.spawnEntityInWorld(new EntityDecay(world, x+0.5, y+1, z+0.5, caster));
 				
 				for(int i=0;i<5;i++){
-					BlockPos pos1 = WizardryUtilities.findNearbyFloorSpace(caster, 2, 6);
-					if(pos1 == null) break;
-					world.spawnEntityInWorld(new EntityDecay(world, pos1.getX()+0.5, pos1.getY(), pos1.getZ()+0.5, caster));
+					double x1 = x + world.rand.nextDouble()*4 - 2;
+					double z1 = z + world.rand.nextDouble()*4 - 2;
+					// Allows for height variation.
+					if(world.getTopSolidOrLiquidBlock((int)x1, (int)z1) - y < 6){
+						double y1 = Math.max(y, world.getTopSolidOrLiquidBlock((int)x1, (int)z1));
+						world.spawnEntityInWorld(new EntityDecay(world, x1+0.5, y1, z1+0.5, caster));
+					}
 				}
 			}
 			
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SHOOT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
-			caster.swingArm(hand);
+			world.playSoundAtEntity(caster, "mob.wither.shoot", 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+			caster.swingItem();
 			return true;
 		}
 		
@@ -60,29 +67,33 @@ public class Decay extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 			
 			int x = MathHelper.floor_double(target.posX);
-			int y = (int)(int)target.getEntityBoundingBox().minY;
+			int y = (int)(int)target.boundingBox.minY;
 			int z = MathHelper.floor_double(target.posZ);
 			
-			if(world.getBlockState(new BlockPos(x, y, z)).isNormalCube()) return false;
+			if(world.getBlock(x, y, z).isNormalCube()) return false;
 			
 			if(!world.isRemote){
 				
 				world.spawnEntityInWorld(new EntityDecay(world, x+0.5, y+1, z+0.5, caster));
 				
 				for(int i=0;i<5;i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 6);
-					if(pos == null) break;
-					world.spawnEntityInWorld(new EntityDecay(world, pos.getX()+0.5, pos.getY(), pos.getZ()+0.5, caster));
+					double x1 = x + world.rand.nextDouble()*4 - 2;
+					double z1 = z + world.rand.nextDouble()*4 - 2;
+					// Allows for height variation.
+					if(world.getTopSolidOrLiquidBlock((int)x1, (int)z1) - y < 6){
+						double y1 = Math.max(y, world.getTopSolidOrLiquidBlock((int)x1, (int)z1));
+						world.spawnEntityInWorld(new EntityDecay(world, x1+0.5, y1, z1+0.5, caster));
+					}
 				}
 			}
 			
-			caster.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
-			caster.swingArm(hand);
+			world.playSoundAtEntity(caster, "mob.wither.shoot", 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+			caster.swingItem();
 			return true;
 		}
 		

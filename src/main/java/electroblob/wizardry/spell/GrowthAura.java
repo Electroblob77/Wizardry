@@ -1,24 +1,22 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.block.IGrowable;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemDye;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class GrowthAura extends Spell {
 
 	public GrowthAura() {
-		super(Tier.APPRENTICE, 20, Element.EARTH, "growth_aura", SpellType.UTILITY, 50, EnumAction.NONE, false);
+		super(EnumTier.APPRENTICE, 20, EnumElement.EARTH, "growth_aura", EnumSpellType.UTILITY, 50, EnumAction.none, false);
 	}
 
 	@Override
@@ -27,7 +25,7 @@ public class GrowthAura extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		boolean flag = false;
 
@@ -35,39 +33,38 @@ public class GrowthAura extends Spell {
 
 			for(int j=-1; j<2; j++){
 
-				int x = (int)caster.posX + i;
-				int y = WizardryUtilities.getNearestFloorLevelC(world, new BlockPos(caster.posX + i, caster.posY, caster.posZ + j), 2) - 1;
-				int z = (int)caster.posZ + j;
+				if(!world.isRemote){
 
-				BlockPos pos = new BlockPos(x, y, z);
+					int x = (int)caster.posX + i;
+					int y = WizardryUtilities.getNearestFloorLevelC(world, (int)caster.posX + i, (int)caster.posY, (int)caster.posZ + j, 2) - 1;
+					int z = (int)caster.posZ + j;
 
-				if(y > -1 && caster.getDistance(x, y, z) <= 2){
+					if(y > -1 && caster.getDistance(x, y, z) <= 2){
 
-					IBlockState state = world.getBlockState(pos);
+						Block block = world.getBlock(x, y, z);
 
-					if(state.getBlock() instanceof IGrowable){
+						if(block instanceof IGrowable){
 
-						IGrowable igrowable = (IGrowable)state.getBlock();
+							IGrowable igrowable = (IGrowable)block;
 
-						if(igrowable.canGrow(world, pos, state, world.isRemote)){
-
-							if(!world.isRemote){
-								if(igrowable.canUseBonemeal(world, world.rand, pos, state)){
-									igrowable.grow(world, world.rand, pos, state);
+							if (igrowable.func_149851_a(world, x, y, z, world.isRemote))
+							{
+								if (igrowable.func_149852_a(world, world.rand, x, y, z))
+								{
+									igrowable.func_149853_b(world, world.rand, x, y, z);
 								}
-							}else{
-								// Yes, it's meant to be 0, and it automatically changes it to 15.
-								ItemDye.spawnBonemealParticles(world, pos, 0);
+
+								world.playAuxSFX(2005, x, y, z, 0);
+
+								flag = true;
 							}
 
-							flag = true;
 						}
 					}
 				}
 			}
 		}
 
-		if(flag) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
 		return flag;
 	}
 

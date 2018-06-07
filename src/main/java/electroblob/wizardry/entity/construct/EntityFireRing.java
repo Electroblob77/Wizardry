@@ -2,11 +2,11 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -27,7 +27,7 @@ public class EntityFireRing extends EntityMagicConstruct {
 	public void onUpdate(){
 		
 		if(this.ticksExisted % 40 == 1){
-			this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 4.0f, 0.7f);
+			this.playSound("fire.fire", 4.0f, 0.7f);
 		}
 		
 		super.onUpdate();
@@ -49,7 +49,7 @@ public class EntityFireRing extends EntityMagicConstruct {
 						target.setFire(10);
 						
 						if(this.getCaster() != null){
-							target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.FIRE), 1*damageMultiplier);
+							target.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, getCaster(), DamageType.FIRE), 1*damageMultiplier);
 						}else{
 							target.attackEntityFrom(DamageSource.magic, 1*damageMultiplier);
 						}

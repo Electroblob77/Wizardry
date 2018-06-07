@@ -1,163 +1,104 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketClairvoyance;
 import electroblob.wizardry.packet.WizardryPacketHandler;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryPathFinder;
-import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber
 public class Clairvoyance extends Spell {
-
+	
 	/** The number of ticks it takes each path particle to move from one path point to the next. */
 	public static final int PARTICLE_MOVEMENT_INTERVAL = 45;
 
-	public Clairvoyance(){
-		super(Tier.APPRENTICE, 20, Element.SORCERY, "clairvoyance", SpellType.UTILITY, 100, EnumAction.BOW, false);
+	public Clairvoyance() {
+		super(EnumTier.APPRENTICE, 20, EnumElement.SORCERY, "clairvoyance", EnumSpellType.UTILITY, 100, EnumAction.bow, false);
 	}
-
+	
 	@Override
 	public boolean doesSpellRequirePacket(){
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
-		WizardData properties = WizardData.get(caster);
+		ExtendedPlayer properties = ExtendedPlayer.get(caster);
 
 		if(properties != null && !caster.isSneaking()){
-			if(caster.dimension == properties.getClairvoyanceDimension()){
-				if(properties.getClairvoyanceLocation() != null){
-
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.searching"));
-
-					EntityZombie arbitraryZombie = new EntityZombie(world){
-						@Override public float getBlockPathWeight(BlockPos pos){ return 0; }
-					};
-					arbitraryZombie.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(256*modifiers.get(WizardryItems.range_upgrade));
-					arbitraryZombie.setPosition(caster.posX, caster.posY, caster.posZ);
-					arbitraryZombie.setPathPriority(PathNodeType.WATER, 0.0F);
-					arbitraryZombie.onGround = true;
-
-					BlockPos destination = properties.getClairvoyanceLocation();
+			if(caster.dimension == properties.clairvoyanceDimension){
+				// Has to be y since x and z could reasonably be -1.
+				if(properties.clairvoyanceY > -1){
 					
-					WizardryPathFinder pathfinder = new WizardryPathFinder(arbitraryZombie.getNavigator().getNodeProcessor());
-					
-					Path path = pathfinder.findPath(world, arbitraryZombie, destination, 256*modifiers.get(WizardryItems.range_upgrade));
-					
-					if(path != null && path.getFinalPathPoint() != null){
-						
-						int x = path.getFinalPathPoint().xCoord;
-						int y = path.getFinalPathPoint().yCoord;
-						int z = path.getFinalPathPoint().zCoord;
-												
-						if(x == destination.getX() && y == destination.getY() && z == destination.getZ()){
+					if(!world.isRemote) caster.addChatComponentMessage(new ChatComponentTranslation("spell.clairvoyance.searching"));
 
-							WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+					// Parameters: entity, x, y, z, range, passOpenDoors, passClosedDoors, avoidWater, canSwim
+					PathEntity path = world.getEntityPathToXYZ(caster, properties.clairvoyanceX, properties.clairvoyanceY, properties.clairvoyanceZ, 256*rangeMultiplier, true, true, false, true);
 
-							if(!world.isRemote && caster instanceof EntityPlayerMP){
-								WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path, modifiers.get(WizardryItems.duration_upgrade)), (EntityPlayerMP)caster);
-							}
+					// If the coordinates weren't checked, the path might not lead to the correct location.
+					if(path != null && path.getFinalPathPoint() != null
+							&& path.getFinalPathPoint().xCoord == properties.clairvoyanceX
+							&& path.getFinalPathPoint().yCoord == properties.clairvoyanceY
+							&& path.getFinalPathPoint().zCoord == properties.clairvoyanceZ){
 
-							return true;
+						world.playSoundAtEntity(caster, "wizardry:aura", 1.0f, 1.0f);
+
+						// TODO: When the chunk the destination is in is not loaded, the particles don't spawn.
+						// I think I can fix this by sending the path positions in a packet to the caster, with the
+						// added benefit of only spawning them on that player's client.
+						if(!world.isRemote && caster instanceof EntityPlayerMP){
+							WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path, durationMultiplier), (EntityPlayerMP)caster);
 						}
+
+						return true;
+
+					}else{
+						if(!world.isRemote) caster.addChatComponentMessage(new ChatComponentTranslation("spell.clairvoyance.outofrange"));
 					}
-					
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.outofrange"));
-				
 				}else{
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.undefined"));
+					if(!world.isRemote) caster.addChatComponentMessage(new ChatComponentTranslation("spell.clairvoyance.undefined"));
 				}
 			}else{
-				if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.clairvoyance.wrongdimension"));
+				if(!world.isRemote) caster.addChatComponentMessage(new ChatComponentTranslation("spell.clairvoyance.wrongdimension"));
 			}
 		}
 
-		// Fixes the problem with the sound not playing for the client of the caster.
-		if(world.isRemote) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
-
 		return false;
 	}
-
-	public static void spawnPathPaticles(World world, Path path, float durationMultiplier){
+	
+	public static void spawnPathPaticles(World world, PathEntity path, float durationMultiplier) {
 		
 		PathPoint point, nextPoint;
 
 		while(!path.isFinished()){
-
+			
 			point = path.getPathPointFromIndex(path.getCurrentPathIndex());
 			if(point == path.getFinalPathPoint()) break;
 			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint() : path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
-
-			Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5,
+			
+			Wizardry.proxy.spawnParticle(EnumParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5,
 					(nextPoint.xCoord - point.xCoord)/(float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.yCoord - point.yCoord)/(float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.zCoord - point.zCoord)/(float)PARTICLE_MOVEMENT_INTERVAL,
 					(int)(1800*durationMultiplier), 0, 1, 0.3f);
-
+			
 			path.incrementPathIndex();
 			path.incrementPathIndex();
 		}
 
 		point = path.getFinalPathPoint();
 
-		Wizardry.proxy.spawnParticle(WizardryParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5, 0, 0, 0, (int)(1800*durationMultiplier), 1, 1, 1);
-	}
-	
-	@SubscribeEvent
-	public static void onRightClickBlockEvent(PlayerInteractEvent.RightClickBlock event){
-
-		if(event.getEntityPlayer().isSneaking()){
-
-			// The event now has an ItemStack, which greatly simplifies hand-related stuff.
-			ItemStack wand = event.getItemStack();
-
-			if(wand != null && wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
-
-				WizardData properties = WizardData.get(event.getEntityPlayer());
-
-				if(properties != null){
-					// THIS is why BlockPos is a thing - in 1.7.10 this requires a clumsy switch statement.
-					BlockPos pos = event.getPos().offset(event.getFace());
-
-					properties.setClairvoyancePoint(pos, event.getWorld().provider.getDimension());
-
-					if(!event.getWorld().isRemote){
-						event.getEntityPlayer().addChatMessage(new TextComponentTranslation("spell.clairvoyance.confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
-					}
-
-					event.setCanceled(true);
-				}
-			}
-		}
+		Wizardry.proxy.spawnParticle(EnumParticleType.PATH, world, point.xCoord + 0.5, point.yCoord + 0.5, point.zCoord + 0.5, 0, 0, 0, (int)(1800*durationMultiplier), 1, 1, 1);
 	}
 
 }

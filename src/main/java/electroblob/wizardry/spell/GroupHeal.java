@@ -2,34 +2,32 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.living.ISummonedCreature;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.entity.living.EntitySummonedCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 public class GroupHeal extends Spell {
 
 	public GroupHeal() {
-		super(Tier.ADVANCED, 35, Element.HEALING, "group_heal", SpellType.DEFENCE, 150, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 35, EnumElement.HEALING, "group_heal", EnumSpellType.DEFENCE, 150, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		boolean flag = false;
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5*blastMultiplier, caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){
 
@@ -39,43 +37,42 @@ public class GroupHeal extends Spell {
 
 					if(((EntityPlayer)target).shouldHeal()){
 
-						target.heal((int)(6*modifiers.get(SpellModifiers.DAMAGE)));
+						target.heal((int)(6*damageMultiplier));
 
 						if(world.isRemote){
 							for(int i=0; i<10; i++){
 								double d0 = (double)((float)target.posX + world.rand.nextFloat()*2 - 1.0F);
 								double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos((EntityPlayer)target) - 0.5F + world.rand.nextFloat());
 								double d2 = (double)((float)target.posZ + world.rand.nextFloat()*2 - 1.0F);
-								Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+								Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 							}
 						}
 
-						WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+						world.playSoundAtEntity(caster, "wizardry:heal", 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
 						flag = true;
 					}
 				}
-				
 			// Now also works on summoned creatures
-			}else if(target instanceof ISummonedCreature){
+			}else if(target instanceof EntitySummonedCreature){
 
-				EntityLivingBase summoner = ((ISummonedCreature)target).getCaster();
+				EntityLivingBase summoner = ((EntitySummonedCreature)target).getCaster();
 
 				if(summoner == caster || (summoner instanceof EntityPlayer && WizardryUtilities.isPlayerAlly(caster, (EntityPlayer)summoner))){
 
 					if(target.getHealth() < target.getMaxHealth()){
 						
-						target.heal((int)(6*modifiers.get(SpellModifiers.DAMAGE)));
+						target.heal((int)(6*damageMultiplier));
 
 						if(world.isRemote){
 							for(int i=0; i<10; i++){
 								double d0 = (double)((float)target.posX + world.rand.nextFloat()*2 - 1.0F);
 								double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos((EntityPlayer)target) - 0.5F + world.rand.nextFloat());
 								double d2 = (double)((float)target.posZ + world.rand.nextFloat()*2 - 1.0F);
-								Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+								Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
 							}
 						}
 
-						WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+						world.playSoundAtEntity(caster, "wizardry:heal", 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
 						flag = true;
 					}
 				}

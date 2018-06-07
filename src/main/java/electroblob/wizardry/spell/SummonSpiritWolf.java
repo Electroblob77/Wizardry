@@ -1,23 +1,23 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.living.EntitySpiritWolf;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class SummonSpiritWolf extends Spell {
 
 	public SummonSpiritWolf() {
-		super(Tier.APPRENTICE, 25, Element.EARTH, "summon_spirit_wolf", SpellType.MINION, 100, EnumAction.BOW, false);
+		super(EnumTier.APPRENTICE, 25, EnumElement.EARTH, "summon_spirit_wolf", EnumSpellType.MINION, 100, EnumAction.bow, false);
 	}
 
 	@Override
@@ -26,24 +26,29 @@ public class SummonSpiritWolf extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		WizardData properties = WizardData.get(caster);
+		ExtendedPlayer properties = ExtendedPlayer.get(caster);
 		
 		if(!properties.hasSpiritWolf){
 			if(!world.isRemote){
-
-				BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
-				if(pos == null) return false;
+				double x1 = caster.posX + world.rand.nextDouble()*4 - 2;
+				double z1 = caster.posZ + world.rand.nextDouble()*4 - 2;
+				// Allows for height variation.
+				if(WizardryUtilities.getNearestFloorLevel(world, (int)x1, (int)caster.posY, (int)z1, 5) == -1){
+					return false;
+				}
+				double y1 = Math.max(caster.posY, WizardryUtilities.getNearestFloorLevel(world, (int)x1, (int)caster.posY, (int)z1, 5));
 				
 				EntitySpiritWolf wolf = new EntitySpiritWolf(world);
-				wolf.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+				if(Wizardry.showSummonedCreatureNames) wolf.setCustomNameTag(StatCollector.translateToLocalFormatted("entity.wizardry.summonedcreature.nameplate", caster.getCommandSenderName(), wolf.getCommandSenderName()));
+				wolf.setPosition(x1, y1, z1);
 				wolf.setTamed(true);
-				wolf.setOwnerId(caster.getUniqueID());
+				wolf.func_152115_b(caster.getUniqueID().toString());
 				world.spawnEntityInWorld(wolf);
 			}
 			properties.hasSpiritWolf = true;
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+			world.playSoundAtEntity(caster, "wizardry:heal", 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
 			return true;
 		}
 		return false;

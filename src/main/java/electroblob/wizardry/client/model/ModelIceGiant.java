@@ -3,14 +3,14 @@ package electroblob.wizardry.client.model;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector3f;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import electroblob.wizardry.entity.living.EntityIceGiant;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.MathHelper;
 
 @SideOnly(Side.CLIENT)
 public class ModelIceGiant extends ModelBase

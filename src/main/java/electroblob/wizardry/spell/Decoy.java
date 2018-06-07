@@ -1,27 +1,26 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.living.EntityDecoy;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class Decoy extends Spell {
 
 	public Decoy() {
-		super(Tier.ADVANCED, 40, Element.SORCERY, "decoy", SpellType.UTILITY, 200, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 40, EnumElement.SORCERY, "decoy", EnumSpellType.UTILITY, 200, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		// Determines whether the caster moves left and the decoy moves right, or vice versa.
 		// Uses the synchronised entity id to ensure it is consistent on client and server, but not always the same.
 		double splitSpeed = caster.getEntityId() % 2 == 0 ? 0.3 : -0.3;
@@ -31,26 +30,29 @@ public class Decoy extends Spell {
 			decoy.setLocationAndAngles(caster.posX, caster.posY, caster.posZ, caster.rotationYaw, caster.rotationPitch);
 			decoy.addVelocity(-caster.getLookVec().zCoord*splitSpeed, 0, caster.getLookVec().xCoord*splitSpeed);
 			// Ignores the show names setting, since this would allow a player to easily detect a decoy
-			decoy.setCustomNameTag(caster.getName());
+			decoy.setCustomNameTag(caster.getCommandSenderName());
 			world.spawnEntityInWorld(decoy);
 
 			// Tricks any mobs that are targeting the caster into targeting the decoy instead.
 			for(EntityLiving creature : WizardryUtilities.getEntitiesWithinRadius(16, caster.posX, caster.posY, caster.posZ, world, EntityLiving.class)){
 				// More likely to trick mobs the higher the damage multiplier. Starts off at 50%.
-				if(world.rand.nextInt((int)(6*modifiers.get(SpellModifiers.DAMAGE))) < 3){
+				if(world.rand.nextInt((int)(6*damageMultiplier)) < 3){
+					// New AI
 					if(creature.getAttackTarget() == caster) creature.setAttackTarget(decoy);
+					// Old AI
+					if(creature instanceof EntityCreature && ((EntityCreature)creature).getEntityToAttack() == caster) ((EntityCreature)creature).setTarget(decoy);
 				}
 			}
 		}
 
 		caster.addVelocity(caster.getLookVec().zCoord*splitSpeed, 0, -caster.getLookVec().xCoord*splitSpeed);
 
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+		world.playSoundAtEntity(caster, "wizardry:aura", 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		// Determines whether the caster moves left and the decoy moves right, or vice versa.
 		double splitSpeed = world.rand.nextBoolean() ? 0.3 : -0.3;
@@ -64,14 +66,17 @@ public class Decoy extends Spell {
 			// Tricks any mobs that are targeting the caster into targeting the decoy instead.
 			for(EntityLiving creature : WizardryUtilities.getEntitiesWithinRadius(16, caster.posX, caster.posY, caster.posZ, world, EntityLiving.class)){
 				// More likely to trick mobs the higher the damage multiplier. Starts off at 50%.
-				if(world.rand.nextInt((int)(6*modifiers.get(SpellModifiers.DAMAGE))) < 3){
+				if(world.rand.nextInt((int)(6*damageMultiplier)) < 3){
+					// New AI
 					if(creature.getAttackTarget() == caster) creature.setAttackTarget(decoy);
+					// Old AI
+					if(creature instanceof EntityCreature && ((EntityCreature)creature).getEntityToAttack() == caster) ((EntityCreature)creature).setTarget(decoy);
 				}
 			}
 		}
 		caster.addVelocity(caster.getLookVec().zCoord*splitSpeed, 0, -caster.getLookVec().xCoord*splitSpeed);
 
-		caster.playSound(WizardrySounds.SPELL_CONJURATION, 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+		world.playSoundAtEntity(caster, "wizardry:aura", 1.0F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
 		return true;
 	}
 	

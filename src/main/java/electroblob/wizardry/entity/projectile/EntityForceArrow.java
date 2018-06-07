@@ -1,9 +1,8 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.world.World;
 
 public class EntityForceArrow extends EntityMagicArrow {
@@ -37,7 +36,7 @@ public class EntityForceArrow extends EntityMagicArrow {
 
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
-        this.playSound(SoundEvents.ENTITY_FIREWORK_BLAST, 1.0F, 1.0F);
+        this.playSound("fireworks.blast", 1.0F, 1.0F);
 	}
 	
 	@Override
@@ -47,7 +46,7 @@ public class EntityForceArrow extends EntityMagicArrow {
 	
 	@Override
 	public void onBlockHit(){
-        this.playSound(SoundEvents.ENTITY_FIREWORK_BLAST, 1.0F, 1.0F);
+        this.playSound("fireworks.blast", 1.0F, 1.0F);
 	}
 	
 	@Override

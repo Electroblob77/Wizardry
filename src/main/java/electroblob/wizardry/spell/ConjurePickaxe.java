@@ -1,44 +1,42 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.item.IConjuredItem;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class ConjurePickaxe extends Spell {
 
 	public ConjurePickaxe() {
-		super(Tier.APPRENTICE, 25, Element.SORCERY, "conjure_pickaxe", SpellType.UTILITY, 50, EnumAction.BOW, false);
+		super(EnumTier.APPRENTICE, 25, EnumElement.SORCERY, "conjure_pickaxe", EnumSpellType.UTILITY, 50, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		ItemStack pickaxe = new ItemStack(WizardryItems.spectral_pickaxe);
+		ItemStack pickaxe = new ItemStack(Wizardry.spectralPickaxe);
+		pickaxe.stackTagCompound = new NBTTagCompound();
+		pickaxe.stackTagCompound.setFloat("durationMultiplier", durationMultiplier);
 		
-		IConjuredItem.setDurationMultiplier(pickaxe, modifiers.get(WizardryItems.duration_upgrade));
-		
-		if(!WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.spectral_pickaxe) && ConjureBow.conjureItemInInventory(caster, pickaxe)){
-			if(world.isRemote){
-				for(int i=0; i<10; i++){
+		if(!caster.inventory.hasItem(Wizardry.spectralPickaxe) && caster.inventory.addItemStackToInventory(pickaxe)){
+			for(int i=0; i<10; i++){
 				double x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
 				double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
 				double z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 0.7f, 0.9f, 1.0f);
+				if(world.isRemote){
+					Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 0.7f, 0.9f, 1.0f);
 				}
 			}
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+			ExtendedPlayer.get(caster).conjuredPickaxeDuration = 0;
+			world.playSoundAtEntity(caster, "wizardry:aura", 1.0f, 1.0f);
 			return true;
 		}
 		return false;

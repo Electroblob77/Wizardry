@@ -2,69 +2,63 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class PlagueOfDarkness extends Spell {
 
 	public PlagueOfDarkness() {
-		super(Tier.MASTER, 75, Element.NECROMANCY, "plague_of_darkness", SpellType.ATTACK, 200, EnumAction.BOW, false);
+		super(EnumTier.MASTER, 75, EnumElement.NECROMANCY, "plague_of_darkness", EnumSpellType.ATTACK, 200, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5.0d*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5.0d*blastMultiplier, caster.posX, caster.posY, caster.posZ, world);
 		
 		for(EntityLivingBase target : targets){
 			if(WizardryUtilities.isValidTarget(caster, target) && !MagicDamage.isEntityImmune(DamageType.WITHER, target)){
-				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER), 8.0f * modifiers.get(SpellModifiers.DAMAGE));
-				target.addPotionEffect(new PotionEffect(MobEffects.WITHER, (int)(140*modifiers.get(WizardryItems.duration_upgrade)), 2));
+				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER), 8.0f * damageMultiplier);
+				target.addPotionEffect(new PotionEffect(Potion.wither.id, (int)(140*durationMultiplier), 2));
 			}
 		}
 		if(world.isRemote){
 			double particleX, particleZ;
-			for(int i=0;i<40*modifiers.get(WizardryItems.blast_upgrade);i++){
+			for(int i=0;i<40*blastMultiplier;i++){
 				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
+				Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
 						particleX - caster.posX, 0, particleZ - caster.posZ, 0, 0.1f, 0.0f, 0.0f);
 				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
 						particleX - caster.posX, 0, particleZ - caster.posZ, 30, 0.1f, 0.0f, 0.05f);
 				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
 				
-				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
-				
+				Block block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
+				// Player actual eye height is 1.62, client is 1.5 too high, hence the -1.5.
 				if(block != null){
-					world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY, particleZ,
-							particleX - caster.posX, 0, particleZ - caster.posZ, Block.getStateId(block));
+					Wizardry.proxy.spawnDigParticle(world, particleX, caster.posY - 1.5, particleZ, particleX - caster.posX, 0, particleZ - caster.posZ,
+							block);
 				}
 			}
 		}
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_DEATH, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+		caster.swingItem();
+		world.playSoundAtEntity(caster, "mob.wither.death", 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
 

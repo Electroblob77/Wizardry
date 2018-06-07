@@ -1,84 +1,81 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.living.EntityMagicSlime;
-import electroblob.wizardry.registry.WizardryAchievements;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.entity.EntityMagicSlime;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Slime extends Spell {
 
 	public Slime() {
-		super(Tier.ADVANCED, 20, Element.EARTH, "slime", SpellType.ATTACK, 50, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 20, EnumElement.EARTH, "slime", EnumSpellType.ATTACK, 50, EnumAction.none, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		Vec3d look = caster.getLookVec();
+		Vec3 look = caster.getLookVec();
 		
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*modifiers.get(WizardryItems.range_upgrade));
+		MovingObjectPosition rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*rangeMultiplier);
 		
 		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
 			
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 			
 			if(target instanceof EntitySlime){
-				if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()));
+				if(!world.isRemote) caster.addChatComponentMessage(new ChatComponentTranslation("spell.resist", target.getCommandSenderName(), this.getDisplayNameWithFormatting()));
 			}else if(!(target instanceof EntityMagicSlime)){
 				
-				if(target instanceof EntitySkeleton) caster.addStat(WizardryAchievements.slime_skeleton);
+				if(target instanceof EntitySkeleton) caster.triggerAchievement(Wizardry.slimeSkeleton);
 				
 				if(!world.isRemote){
-					EntityMagicSlime slime = new EntityMagicSlime(world, caster, target, (int)(200*modifiers.get(WizardryItems.duration_upgrade)));
+					EntityMagicSlime slime = new EntityMagicSlime(world, (int)(200*durationMultiplier));
+					slime.setPosition(target.posX, target.posY, target.posZ);
+					slime.mountEntity(target);
 					world.spawnEntityInWorld(slime);
 				}
 			}
 		}
 
 		if(world.isRemote){
-			for(int i=1; i<(int)(25*modifiers.get(WizardryItems.range_upgrade)); i+=2){
+			for(int i=1; i<(int)(25*rangeMultiplier); i+=2){
 				double x1 = caster.posX + look.xCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
 				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
 				double z1 = caster.posZ + look.zCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
 
-				world.spawnParticle(EnumParticleTypes.SLIME, x1, y1, z1, 0.0d, 0.0d, 0.0d);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0, 0.2f, 0.8f, 0.1f);
+				world.spawnParticle("slime", x1, y1, z1, 0.0d, 0.0d, 0.0d);
+				Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0, 0.2f, 0.8f, 0.1f);
 			}
 		}
 		
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SLIME_ATTACK, 1.0F, 0.5F);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+		caster.swingItem();
+		world.playSoundAtEntity(caster, "mob.slime.attack", 1.0F, 0.5F);
+		world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null && !(target instanceof EntitySlime) && !(target instanceof EntityMagicSlime)){
 			
 			if(!world.isRemote){
-				EntityMagicSlime slime = new EntityMagicSlime(world, caster, target, (int)(200*modifiers.get(WizardryItems.duration_upgrade)));
+				EntityMagicSlime slime = new EntityMagicSlime(world, (int)(200*durationMultiplier));
+				slime.setPosition(target.posX, target.posY, target.posZ);
+				slime.mountEntity(target);
 				world.spawnEntityInWorld(slime);
 			}
 			
@@ -88,20 +85,20 @@ public class Slime extends Spell {
 				double dy = (target.posY - caster.posY)/caster.getDistanceToEntity(target);
 				double dz = (target.posZ - caster.posZ)/caster.getDistanceToEntity(target);
 				
-				for(int i=1; i<(int)(25*modifiers.get(WizardryItems.range_upgrade)); i+=2){
+				for(int i=1; i<(int)(25*rangeMultiplier); i+=2){
 					
 					double x1 = caster.posX + dx*i/2 + world.rand.nextFloat()/5 - 0.1f;
 					double y1 = caster.posY + caster.getEyeHeight() - 0.4f + dy*i/2 + world.rand.nextFloat()/5 - 0.1f;
 					double z1 = caster.posZ + dz*i/2 + world.rand.nextFloat()/5 - 0.1f;
 
-					world.spawnParticle(EnumParticleTypes.SLIME, x1, y1, z1, 0.0d, 0.0d, 0.0d);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0, 0.2f, 0.8f, 0.1f);
+					world.spawnParticle("slime", x1, y1, z1, 0.0d, 0.0d, 0.0d);
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0, 0.2f, 0.8f, 0.1f);
 				}
 			}
 			
-			caster.swingArm(hand);
-			caster.playSound(SoundEvents.ENTITY_SLIME_ATTACK, 1.0F, 0.5F);
-			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "mob.slime.attack", 1.0F, 0.5F);
+			world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 			return true;
 		
 		}

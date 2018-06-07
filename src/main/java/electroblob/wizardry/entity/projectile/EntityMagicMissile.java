@@ -1,10 +1,9 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.EnumParticleType;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.world.World;
 
 public class EntityMagicMissile extends EntityMagicArrow {
@@ -38,7 +37,7 @@ public class EntityMagicMissile extends EntityMagicArrow {
 
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
-		this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		this.playSound("game.neutral.hurt", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}
 	
 	@Override
@@ -51,10 +50,10 @@ public class EntityMagicMissile extends EntityMagicArrow {
 		if(this.worldObj.isRemote){
       
         	if(this.ticksExisted % 2 == 1){
-        		Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX, this.posY, this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2));
+        		Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, worldObj, this.posX, this.posY, this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2));
         	}
         	else{
-        		Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX, this.posY, this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2));
+        		Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, worldObj, this.posX, this.posY, this.posZ, 0, 0, 0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2), 0.5f + (rand.nextFloat()/2));
         	}
         }
     }

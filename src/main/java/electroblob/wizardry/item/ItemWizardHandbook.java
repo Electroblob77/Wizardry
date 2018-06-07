@@ -4,43 +4,33 @@ import java.util.List;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
-import electroblob.wizardry.registry.WizardryTabs;
+import electroblob.wizardry.client.GuiWizardHandbook;
+import electroblob.wizardry.spell.Spell;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemWizardHandbook extends Item {
-
-	// Yep, I hardcoded my own name into the mod. Don't want people changing it now, do I?
-	private static final String AUTHOR = "Electroblob";
+public class ItemWizardHandbook extends Item{
 	
 	public ItemWizardHandbook() {
 		super();
 		this.setMaxStackSize(1);
-		this.setCreativeTab(WizardryTabs.WIZARDRY);
-	}
-
-	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced){
-		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item.wizardry:wizard_handbook.desc", AUTHOR));
-	}
-
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand){
-		player.openGui(Wizardry.instance, WizardryGuiHandler.WIZARD_HANDBOOK, world, 0, 0, 0);
-		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
+		this.setCreativeTab(Wizardry.tabWizardry);
+		this.setTextureName("wizardry:wizard_handbook");
+		this.setUnlocalizedName("wizardHandbook");
 	}
 	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> items){
-        items.add(new ItemStack(this, 1));
-    }
+	public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4){
+		Spell spell = Spell.get(par1ItemStack.getItemDamage());
+		// Yep, I hardcoded my own name into the mod. Don't want people changing it now, do I?
+		par3List.add("\u00A77" + StatCollector.translateToLocalFormatted("item.wizardHandbook.desc", "Electroblob"));
+	}
+
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer){
+		par3EntityPlayer.openGui(Wizardry.instance, WizardryGuiHandler.WIZARD_HANDBOOK, par2World, 0, 0, 0);
+		return par1ItemStack;
+	}
 }

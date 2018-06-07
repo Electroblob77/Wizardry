@@ -1,26 +1,23 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class Glide extends Spell {
 
 	public Glide() {
-		super(Tier.ADVANCED, 5, Element.EARTH, "glide", SpellType.UTILITY, 0, EnumAction.NONE, true);
+		super(EnumTier.ADVANCED, 5, EnumElement.EARTH, "glide", EnumSpellType.UTILITY, 0, EnumAction.none, true);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(caster.motionY < -0.1 && !caster.isInWater()){
 			caster.motionY = -0.1;
@@ -32,12 +29,16 @@ public class Glide extends Spell {
 		}
 		
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, caster.posX - 0.25d + world.rand.nextDouble()/2, WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(), caster.posZ - 0.25d + world.rand.nextDouble()/2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
-			Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, world, caster.posX - 0.25d + world.rand.nextDouble()/2, WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(), caster.posZ - 0.25d + world.rand.nextDouble()/2, 0, -0.03, 0, 20);
+			Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, caster.posX - 0.25d + world.rand.nextDouble()/2, WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(), caster.posZ - 0.25d + world.rand.nextDouble()/2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
+			Wizardry.proxy.spawnParticle(EnumParticleType.LEAF, world, caster.posX - 0.25d + world.rand.nextDouble()/2, WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(), caster.posZ - 0.25d + world.rand.nextDouble()/2, 0, -0.03, 0, 20);
 		}
 		
+		//if(caster.getItemInUseDuration() == 0){
+			//world.playSoundAtEntity(entityplayer, "wizardry:sparkle", 0.5F, 1.0f);
+		//}
+		
 		if(ticksInUse % 24 == 0){
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ITEM_ELYTRA_FLYING, 0.5F, 1.0f);
+			world.playSoundAtEntity(caster, "mob.enderdragon.wings", 0.5F, 1.0f);
 		}
 		return true;
 	}

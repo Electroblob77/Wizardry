@@ -1,15 +1,16 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.entity.boss.EntityWither;
+import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class EntityDarknessOrb extends EntityMagicProjectile
@@ -34,25 +35,28 @@ public class EntityDarknessOrb extends EntityMagicProjectile
         super(par1World, par2, par4, par6);
     }
     
-    @Override
-    protected float getSpeed(){
+    /** This is the speed */ 
+    protected float func_70182_d()
+    {
         return 0.5F;
     }
 
-    @Override
-    protected void onImpact(RayTraceResult RayTraceResult)
+    /**
+     * Called when this EntityThrowable hits a block or entity.
+     */
+    protected void onImpact(MovingObjectPosition movingobjectposition)
     {
-    	Entity target = RayTraceResult.entityHit;
+    	Entity target = movingobjectposition.entityHit;
     	
         if (target != null && !MagicDamage.isEntityImmune(DamageType.WITHER, target))
         {
             float damage = 8 * damageMultiplier;
             
-            target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.WITHER).setProjectile(), damage);
+            target.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getThrower(), DamageType.WITHER).setProjectile(), damage);
             
-            if(target instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.WITHER, target)) ((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.WITHER, 150, 1));
+            if(target instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.WITHER, target)) ((EntityLivingBase)target).addPotionEffect(new PotionEffect(Potion.wither.id, 150, 1));
 
-            this.playSound(SoundEvents.ENTITY_WITHER_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+            this.playSound("mob.wither.hurt", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
         }
 
         this.setDead();
@@ -64,8 +68,8 @@ public class EntityDarknessOrb extends EntityMagicProjectile
     	
     	if(worldObj.isRemote){
 	    	float brightness = rand.nextFloat()*0.2f;
-	    	Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0, 20 + rand.nextInt(10), brightness, 0.0f, brightness);
-	    	Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0.1f, 0.0f, 0.0f);
+	    	Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0, 20 + rand.nextInt(10), brightness, 0.0f, brightness);
+	    	Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0.1f, 0.0f, 0.0f);
     	}
     	
     	if(this.ticksExisted > 150){

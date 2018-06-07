@@ -1,25 +1,19 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.entity.living.EntitySpiderMinion;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class SpiderSwarm extends Spell {
 
 	public SpiderSwarm() {
-		super(Tier.ADVANCED, 45, Element.EARTH, "spider_swarm", SpellType.MINION, 200, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 45, EnumElement.EARTH, "spider_swarm", EnumSpellType.MINION, 200, EnumAction.bow, false);
 	}
 
 	@Override
@@ -28,43 +22,57 @@ public class SpiderSwarm extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
+		
+		boolean flag = false;
+		
 		if(!world.isRemote){
 			for(int i=0;i<5;i++){
-				BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 3, 6);
-				// The spell instantly fails if no space was found (see javadoc for the above method).
-				if(pos == null) return false;
-				
-				EntitySpiderMinion spider = new EntitySpiderMinion(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)));
-				world.spawnEntityInWorld(spider);
+				double x = caster.posX + world.rand.nextDouble()*6 - 3;
+				double z = caster.posZ + world.rand.nextDouble()*6 - 3;
+				// Allows for height variation.
+				if(world.getTopSolidOrLiquidBlock((int)x, (int)z) - caster.posY < 6){
+					flag = true;
+					double y = Math.max(caster.posY, world.getTopSolidOrLiquidBlock((int)x, (int)z));
+					EntitySpiderMinion spider = new EntitySpiderMinion(world, x, y, z, caster, (int)(600*durationMultiplier));
+					world.spawnEntityInWorld(spider);
+				}
 			}
 		}
 		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
-		// Can't possibly get this far if nothing was spawned.
-		return true;
+		if(flag){
+			world.playSoundAtEntity(caster, "random.fizz", 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+		}
+		// If no spiders were spawned (like in a 1x1 hole or something) then the spell does not use up mana.
+		return flag;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
+		
+		boolean flag = false;
 		
 		if(!world.isRemote){
 			for(int i=0;i<5;i++){
-				BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 3, 6);
-				// The spell instantly fails if no space was found (see javadoc for the above method).
-				if(pos == null) return false;
-				
-				EntitySpiderMinion spider = new EntitySpiderMinion(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)));
-				world.spawnEntityInWorld(spider);
+				double x = caster.posX + world.rand.nextDouble()*6 - 3;
+				double z = caster.posZ + world.rand.nextDouble()*6 - 3;
+				// Allows for height variation.
+				if(world.getTopSolidOrLiquidBlock((int)x, (int)z) - caster.posY < 6){
+					flag = true;
+					double y = Math.max(caster.posY, world.getTopSolidOrLiquidBlock((int)x, (int)z));
+					EntitySpiderMinion spider = new EntitySpiderMinion(world, x, y, z, caster, (int)(600*durationMultiplier));
+					world.spawnEntityInWorld(spider);
+				}
 			}
 		}
-
-		caster.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
-		// Can't possibly get this far if nothing was spawned.
-		return true;
+		
+		if(flag){
+			world.playSoundAtEntity(caster, "random.fizz", 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
+		}
+		// If no spiders were spawned (like in a 1x1 hole or something) then the spell does not use up mana.
+		return flag;
 	}
-
+	
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;

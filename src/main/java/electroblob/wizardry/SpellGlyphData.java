@@ -17,17 +17,13 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /** Class responsible for generating and storing the randomised spell names and descriptions for each world, which are
  * displayed as glyphs using the SGA font renderer.
  * @since Wizardry 1.1 */
-@Mod.EventBusSubscriber
 public class SpellGlyphData extends WorldSavedData {
 
-	public static final String NAME = Wizardry.MODID + "_glyphData";
+	private static final String NAME = Wizardry.MODID + "_glyphData";
 	
 	public Map<Spell, String> randomNames = new HashMap<Spell, String>(Spell.getTotalSpellCount());
 	public Map<Spell, String> randomDescriptions = new HashMap<Spell, String>(Spell.getTotalSpellCount());
@@ -113,8 +109,6 @@ public class SpellGlyphData extends WorldSavedData {
 		PacketGlyphData.Message msg = new PacketGlyphData.Message(names, descriptions);
 		
 		WizardryPacketHandler.net.sendTo(msg, player);
-
-		Wizardry.logger.info("Synchronising spell glyph data for " + player.getName());
 		
 	}
 	
@@ -146,7 +140,7 @@ public class SpellGlyphData extends WorldSavedData {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
+	public void writeToNBT(NBTTagCompound nbt){
 
 		NBTTagList tagList = new NBTTagList();
 		
@@ -161,16 +155,5 @@ public class SpellGlyphData extends WorldSavedData {
 		}
 		
 		nbt.setTag("spellGlyphData", tagList);
-		
-		return nbt;
-	}
-
-	@SubscribeEvent
-	public static void onWorldLoadEvent(WorldEvent.Load event){
-		if(!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0){
-			// Called to initialise the spell glyph data when a world loads, if it isn't already.
-			// NOTE: Do we actually need this, or can we just let it initialise the first time it is needed? (see below)
-			SpellGlyphData.get(event.getWorld());
-		}
 	}
 }

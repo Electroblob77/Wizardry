@@ -1,35 +1,24 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryAchievements;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber
 public class LightningBolt extends Spell {
-	
-	/** The NBT key used to store the UUID of the player that summoned the lightning bolt. Used for achievements. */
-	public static final String NBT_KEY = "summoningPlayer";
 
 	public LightningBolt() {
-		super(Tier.ADVANCED, 40, Element.LIGHTNING, "lightning_bolt", SpellType.ATTACK, 80, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 40, EnumElement.LIGHTNING, "lightning_bolt", EnumSpellType.ATTACK, 80, EnumAction.none, false);
 	}
 
 	@Override
@@ -38,28 +27,29 @@ public class LightningBolt extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(200, world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(200, world, caster, false);
         
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
         	
-			BlockPos pos = rayTrace.getBlockPos();
+			int i = rayTrace.blockX;
+        	int j = rayTrace.blockY;
+        	int k = rayTrace.blockZ;
         	
-        	// Not sure why it is up 1 but it has to be for canBlockSeeSky to work properly.
-			// TODO: Remove this requirement?
-        	if(world.canBlockSeeSky(pos.up())){
+        	// Not sure why it is +1 but it has to be to work properly.
+        	if(world.canBlockSeeTheSky(i, j+1, k)){
             
 	        	if(!world.isRemote){
-		            EntityLightningBolt entitylightning = new EntityLightningBolt(world, pos.getX(), pos.getY(), pos.getZ(), false);
+		            EntityLightningBolt entitylightning = new EntityLightningBolt(world, i, j, k);
 		            world.addWeatherEffect(entitylightning);
 		            
 		            // Code for eventhandler recognition; for achievements and such like. Left in for future use.
 		            NBTTagCompound entityNBT = entitylightning.getEntityData();
-		            entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
+		            entityNBT.setString("summoningPlayer", caster.getUniqueID().toString());
 	        	}
 	        	
-	        	caster.swingArm(hand);
+	        	caster.swingItem();
 	            return true;
         	}
         }
@@ -68,24 +58,23 @@ public class LightningBolt extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 
-			int x = (int)target.posX;
-        	int y = (int)target.posY;
-        	int z = (int)target.posZ;
-
-        	// Not sure why it is up 1 but it has to be for canBlockSeeSky to work properly.
-			// TODO: Remove this requirement?
-        	if(world.canBlockSeeSky(new BlockPos(x, y, z))){
+			int i = (int)target.posX;
+        	int j = (int)target.posY;
+        	int k = (int)target.posZ;
+        	
+        	// Not sure why it is +1 but it has to be to work properly.
+        	if(world.canBlockSeeTheSky(i, j+1, k)){
             
 	        	if(!world.isRemote){
-		            EntityLightningBolt entitylightning = new EntityLightningBolt(world, x, y, z, false);
+		            EntityLightningBolt entitylightning = new EntityLightningBolt(world, i, j, k);
 		            world.addWeatherEffect(entitylightning);
 	        	}
 	        	
-	        	caster.swingArm(hand);
+	        	caster.swingItem();
 	            return true;
         	}
 		}
@@ -96,23 +85,5 @@ public class LightningBolt extends Spell {
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
-	}
-	
-	@SubscribeEvent
-	public static void onEntityStruckByLightningEvent(EntityStruckByLightningEvent event){
-
-		if(event.getLightning().getEntityData() != null && event.getLightning().getEntityData().hasKey(NBT_KEY)){
-
-			EntityPlayer player = (EntityPlayer)WizardryUtilities.getEntityByUUID(event.getLightning().worldObj, event.getLightning().getEntityData().getUniqueId("summoningPlayer"));
-
-			if(event.getEntity() instanceof EntityCreeper){
-				player.addStat(WizardryAchievements.charge_creeper);
-			}
-
-			if(event.getEntity() instanceof EntityPig){
-				player.addStat(WizardryAchievements.frankenstein);
-			}
-		}
-
 	}
 }

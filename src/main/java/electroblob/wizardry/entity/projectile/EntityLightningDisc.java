@@ -2,15 +2,19 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class EntityLightningDisc extends EntityMagicProjectile
@@ -37,14 +41,16 @@ public class EntityLightningDisc extends EntityMagicProjectile
         this.height = 0.5f;
     }
     
-    @Override
-    protected float getSpeed(){
-        return 1.2f;
+    /** This is the speed */ 
+    protected float func_70182_d()
+    {
+        return 1.2F;
     }
 
-
-    @Override
-    protected void onImpact(RayTraceResult mop)
+    /**
+     * Called when this EntityThrowable hits a block or entity.
+     */
+    protected void onImpact(MovingObjectPosition mop)
     {
     	Entity entityHit = mop.entityHit;
     	
@@ -52,15 +58,14 @@ public class EntityLightningDisc extends EntityMagicProjectile
         {
             float damage = 12 * damageMultiplier;
             
-            entityHit.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK), damage);
+            entityHit.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getThrower(), DamageType.SHOCK), damage);
         }
 
-        this.playSound(WizardrySounds.SPELL_SPARK, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+        this.playSound("wizardry:arc", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 
-    	if(mop.typeOfHit == RayTraceResult.Type.BLOCK) this.setDead();
+    	if(mop.typeOfHit == MovingObjectType.BLOCK) this.setDead();
     }
-
-    @Override
+    
     public void onUpdate(){
     	
     	super.onUpdate();
@@ -68,8 +73,8 @@ public class EntityLightningDisc extends EntityMagicProjectile
         // Particle effect
         if(worldObj.isRemote){
 			for(int i=0;i<8;i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + rand.nextFloat()*2 - 1, this.posY, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
-				//worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX + rand.nextFloat()*2 - 1, this.posY, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
+				//worldObj.spawnParticle("largesmoke", this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
 			}
         }
 	    
@@ -105,15 +110,17 @@ public class EntityLightningDisc extends EntityMagicProjectile
     	this.motionZ /= 0.99;
     }
     
-
-    @Override
+    /**
+     * Gets the amount of gravity to apply to the thrown entity with each tick.
+     */
     protected float getGravityVelocity()
     {
         return 0.0F;
     }
     
-
-    @Override
+    /**
+     * Return whether this entity should be rendered as on fire.
+     */
     public boolean canRenderOnFire()
     {
         return false;

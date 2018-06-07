@@ -1,6 +1,14 @@
 package electroblob.wizardry.tileentity;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import electroblob.wizardry.Wizardry;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.util.AxisAlignedBB;
 
 public class TileEntityMagicLight extends TileEntityTimer {
 	
@@ -19,20 +27,19 @@ public class TileEntityMagicLight extends TileEntityTimer {
 		randomiser2[0] = -1;
 	}
 	
-	@Override
-	public void update(){
+	public void updateEntity(){
 		
-		if(randomiser.length > 0 && randomiser[0] == -1){
+		if(randomiser[0] == -1){
 			for(int i=0; i<randomiser.length; i++){
 				randomiser[i] = this.worldObj.rand.nextInt(10);
 			}
 		}
-		if(randomiser2.length > 0 && randomiser2[0] == -1){
+		if(randomiser2[0] == -1){
 			for(int i=0; i<randomiser2.length; i++){
 				randomiser2[i] = this.worldObj.rand.nextInt(10);
 			}
 		}
-		super.update();
+		super.updateEntity();
 	}
 	
 	@Override
@@ -43,11 +50,10 @@ public class TileEntityMagicLight extends TileEntityTimer {
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
+    public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
         tagCompound.setIntArray("randomiser", randomiser);
         tagCompound.setIntArray("randomiser2", randomiser2);
-		return tagCompound;
     }
 	
 }

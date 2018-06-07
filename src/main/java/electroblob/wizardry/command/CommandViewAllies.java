@@ -1,28 +1,32 @@
 package electroblob.wizardry.command;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import electroblob.wizardry.WizardData;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.client.resources.I18n;
+import electroblob.wizardry.packet.PacketCastSpell;
+import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.spell.Spell;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.PlayerNotFoundException;
+import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 
 public class CommandViewAllies extends CommandBase {
 
 	@Override
 	public String getCommandName(){
-		return Wizardry.settings.alliesCommandName;
+		return Wizardry.alliesCommandName;
 	}
 
 	@Override
@@ -32,29 +36,26 @@ public class CommandViewAllies extends CommandBase {
 	}
 	
 	@Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender p_71519_1_)
+    public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_)
     {
         return true;
     }
 
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_){
-		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
-		// the custom command name will not display.
-		return "commands.wizardry:allies.usage";
-		//return I18n.format("commands.wizardry:allies.usage", Wizardry.settings.alliesCommandName);
+		return StatCollector.translateToLocalFormatted("commands.allies.usage", Wizardry.alliesCommandName);
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] arguments, BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] arguments) {
 		switch(arguments.length){
-		case 1: return getListOfStringsMatchingLastWord(arguments, server.getAllUsernames());
+		case 1: return getListOfStringsMatchingLastWord(arguments, MinecraftServer.getServer().getAllUsernames());
 		}
-		return super.getTabCompletionOptions(server, sender, arguments, pos);
+		return super.addTabCompletionOptions(sender, arguments);
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] arguments){
 
 		EntityPlayerMP player = null;
 
@@ -68,14 +69,15 @@ public class CommandViewAllies extends CommandBase {
 
 		if(arguments.length > 0){
 
-			player = getPlayer(server, sender, arguments[0]);
+			player = getPlayer(sender, arguments[0]);
 			// Don't want to catch the exception here either, because there can be no other first argument.
 			
-			if(player != sender && sender instanceof EntityPlayer && !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
-    			// Displays a chat message if a non-op tries to view another player's allies.
-				TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation("commands.wizardry:allies.permission");
-				TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
-				player.addChatMessage(TextComponentTranslation2);
+			// The long-winded statement after the '!' checks if the player is op (multiplayer) or if cheats are enabled for them (singleplayer).
+			if(player != sender && player instanceof EntityPlayer && !MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayer)player).getGameProfile())){
+
+				ChatComponentTranslation chatcomponenttranslation2 = new ChatComponentTranslation("commands.allies.permission");
+				chatcomponenttranslation2.getChatStyle().setColor(EnumChatFormatting.RED);
+				player.addChatMessage(chatcomponenttranslation2);
 				return;
 			}
 
@@ -86,10 +88,10 @@ public class CommandViewAllies extends CommandBase {
 		// player must not have been specified, meaning an exception should be thrown.
 		if(player == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
 
-		if(WizardData.get(player) != null){
+		if(ExtendedPlayer.get(player) != null){
 
 			String string = "";
-			Set<String> names = WizardData.get(player).allyNames;
+			HashSet<String> names = ExtendedPlayer.get(player).allyNames;
 
 			if(!names.isEmpty()){
 				for(String name : names){
@@ -98,13 +100,13 @@ public class CommandViewAllies extends CommandBase {
 				// Cuts the last " ," off of the string.
 				string = string.substring(0, string.length() - 2);
 			}else{
-				string = I18n.format("commands.wizardry:allies.none");
+				string = StatCollector.translateToLocal("commands.allies.none");
 			}
 
 			if(executeAsOtherPlayer){
-				sender.addChatMessage(new TextComponentTranslation("commands.wizardry:allies.list_other", player.getName(), string));
+				sender.addChatMessage(new ChatComponentTranslation("commands.allies.list_other", player.getCommandSenderName(), string));
 			}else{
-				sender.addChatMessage(new TextComponentTranslation("commands.wizardry:allies.list", string));
+				sender.addChatMessage(new ChatComponentTranslation("commands.allies.list", string));
 			}
 		}
 	}

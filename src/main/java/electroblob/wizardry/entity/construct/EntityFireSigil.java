@@ -2,13 +2,12 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityFireSigil extends EntityMagicConstruct {
@@ -49,7 +48,7 @@ public class EntityFireSigil extends EntityMagicConstruct {
 					double velY = target.motionY;
 					double velZ = target.motionZ;
 					
-					target.attackEntityFrom(this.getCaster() != null ? MagicDamage.causeIndirectMagicDamage(this, this.getCaster(), DamageType.FIRE) : DamageSource.magic, 6);
+					target.attackEntityFrom(this.getCaster() != null ? MagicDamage.causeIndirectEntityMagicDamage(this, this.getCaster(), DamageType.FIRE) : DamageSource.magic, 6);
 
 					// Removes knockback
 					target.motionX = velX;
@@ -57,8 +56,8 @@ public class EntityFireSigil extends EntityMagicConstruct {
 					target.motionZ = velZ;
 
 					if(!MagicDamage.isEntityImmune(DamageType.FIRE, target)) target.setFire(10);
-
-					this.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
+					
+					worldObj.playAuxSFX(1009, (int)this.posX, (int)this.posY, (int)this.posZ, 0);
 					
 					// The trap is destroyed once triggered.
 					this.setDead();
@@ -67,7 +66,7 @@ public class EntityFireSigil extends EntityMagicConstruct {
 		}else if(this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble()*0.3;
 			double angle = rand.nextDouble()*Math.PI*2;
-			worldObj.spawnParticle(EnumParticleTypes.FLAME, this.posX + radius*Math.cos(angle), this.posY + 0.1, this.posZ + radius*Math.sin(angle), 0, 0, 0);
+			worldObj.spawnParticle("flame", this.posX + radius*Math.cos(angle), this.posY + 0.1, this.posZ + radius*Math.sin(angle), 0, 0, 0);
 		}
 	}
 

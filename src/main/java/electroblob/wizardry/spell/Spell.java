@@ -1,50 +1,39 @@
 package electroblob.wizardry.spell;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.WizardryRegistry;
 import electroblob.wizardry.entity.living.EntityWizard;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-/**
- * Generic spell class which is the superclass to all spells in wizardry. When extending this class, you must do
+/** Generic spell class which is the superclass to all spells in wizardry. When extending this class, you must do
  * the following:
  * <p>
  * - Have a constructor which passes all necessary constants into the super constructor. I define the constants here
  * so that the constructor for an individual spell has no parameters, but you may prefer to pass in the parameters when
  * the spell is registered, so all the mana costs etc. are in one place like a sort of sandbox.
  * <p> 
- * - Implement the {@link Spell#cast(World, EntityPlayer, EnumHand, int, SpellModifiers)} method, in which you should
+ * - Implement the {@link Spell#cast(World, EntityPlayer, int, float, float, float, float)} method, in which you should
  * execute the code that makes the spell work, and return true or false depending on whether the spell succeeded and
  * therefore whether mana should be used up.
  * <p>
- * - Register the spell using {@link RegistryEvent.Register}, with {@link Spell} as the type parameter. Each spell
- * should have a single instance, like blocks and items.
- * <i>As of Wizardry 2.1, spells use the Forge registry system. Related methods such as {@link Spell#id()} and
- * {@link Spell#get(int)} have been re-routed to use this system, leaving minimal external changes. Note also that
- * the constructor automatically sets the registry name for you, though you may change it afterwards if necessary.</i>
+ * - Register the spell using {@link Spell#register(Spell)} during the init() method of your main mod class. Each spell
+ * should have a single instance, like blocks and items. Unlike with blocks and items however, it is usually not
+ * necessary to keep a reference to this instance unless something specific requires it (for example, the
+ * {@link Transportation} spell instance is stored in {@link WizardryRegistry} so that its name can be used in chat 
+ * messages). 
  * <p>
  * Also note that you can override some other methods from this class. For example, to add a
  * specific kind of formatting to a spell name or description, you can override {@link Spell#getDisplayName()},
@@ -55,33 +44,38 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * This class is also home to some useful static methods for interacting with the spell registry:<p>
  * {@link Spell#get(int)} gets a spell instance from its integer id, which corresponds to the metadata of its spell book.<br>
  * {@link Spell#get(String)} gets a spell instance from its unlocalised name.<br>
- * {@link Spell#getSpells(Predicate)} returns a list of spell instances the match the given {@link Predicate}.<br>
+ * {@link Spell#getSpells(Filter)} returns a list of spell instances the match the given {@link Filter}.
  * {@link Spell#getTotalSpellCount()} returns the total number of registered spells.
  * <hr>
  * Spell implements the {@link Comparable} interface, and as such, any collection of spells can be sorted. Spells are
- * sorted by increasing tier (see {@link Tier}), from novice to master. Within each tier, spells are sorted by element,
- * the order of which is as defined in {@link Element} (i.e. magic, fire, ice, lightning, necromancy, earth, sorcery, healing).
+ * sorted by increasing tier (see {@link EnumTier}), from novice to master. Within each tier, spells are sorted by element,
+ * the order of which is as defined in {@link EnumElement} (i.e. magic, fire, ice, lightning, necromancy, earth, sorcery, healing).
  * <hr>
  * @since Wizardry 1.0
  * @see electroblob.wizardry.item.ItemSpellBook ItemSpellBook
  * @see electroblob.wizardry.item.ItemScroll ItemScroll
- * @see Spells
+ * @see WizardryRegistry
  */
-public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements Comparable<Spell> {
+
+public abstract class Spell implements Comparable<Spell> {
 	
-	/** Forge registry-based replacement for the internal spells list. */
-	public static IForgeRegistry<Spell> registry;
+	/** The internal list of all registered spells. This is deliberately made private since it shouldn't be fiddled with. */
+	private static ArrayList<Spell> spellsList = new ArrayList<Spell>(1);
+	
+	/** The internal list of all registered spells' unlocalised names, used in commands. This is deliberately made
+	 * private since it shouldn't be fiddled with. */
+	private static ArrayList<String> unlocalisedNames = new ArrayList<String>(1);
 	
 	/** The tier this spell belongs to. */
-	public final Tier tier;
+	public final EnumTier tier;
 	/** Mana cost of the spell. If it is a continuous spell the cost is per second. */
 	public final int cost;
 	/** The element this spell belongs to. */
-	public final Element element;
+	public final EnumElement element;
 	/** The unlocalised name of the spell. */
 	private final String unlocalisedName;
 	/** The type of spell this is classified as. */
-	public final SpellType type;
+	public final EnumSpellType type;
 	/** Cooldown for the spell in ticks */
 	public final int cooldown;
 	/** The action the player does when this spell is cast. */
@@ -89,10 +83,11 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/** Whether or not the spell is continuous (keeps going as long as the mouse button is held) */
 	public final boolean isContinuous;
 	
-	/** ResourceLocation of the spell icon. */
-	private final ResourceLocation icon;
-	/** Mod ID of the mod that added this spell; defaults to {@link Wizardry#MODID} if not specified. */
-	private final String modID;
+	/** ResourceLocation of the spell icon. This is set up within the constructor; don't change it otherwise. */
+	public ResourceLocation icon;
+	/** Mod ID of the mod that added this spell; defaults to Wizardry.MODID if not specified. This is set up within the
+	 * constructor; don't change it otherwise. */
+	public String modID;
 	
 	/** False if the spell has been disabled in the config file, true otherwise. This is now encapsulated to stop it
 	 * being fiddled with. */
@@ -100,21 +95,29 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	
 	/**
 	 * This constructor should be called from any subclasses, either feeding in the constants directly or through
-	 * their own constructor from wherever the spell is registered. This is the constructor for wizardry's own spells;
-	 * spells added by other mods should use {@link Spell#Spell(Tier, int, Element, String, SpellType, int, EnumAction, boolean, String)}.
+	 * their own constructor from wherever the spell is registered. This is the constructor for original spells;
+	 * spells added by other mods should use {@link Spell#Spell(EnumTier, int, EnumElement, String, EnumSpellType, int, EnumAction, boolean, String)}.
 	 * @param tier The tier this spell belongs to.
 	 * @param cost The amount of mana used to cast the spell. If this is a continuous spell, it represents mana cost
 	 * per second and should be a multiple of 5.
 	 * @param element The element this spell belongs to.
-	 * @param name The <i>registry name</i> of the spell. This will also be the name of the icon file. The spell's
-	 * unlocalised name will be a resource location with the format [modid]:[name].
+	 * @param name The unlocalised name of the spell This will also be the name of the icon file.
 	 * @param cooldown The cooldown time for this spell in ticks.
 	 * @param action The vanilla usage action to be displayed when casting this spell.
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
 	 * right mouse button.
 	 */
-	public Spell(Tier tier, int cost, Element element, String name, SpellType type, int cooldown, EnumAction action, boolean isContinuous){
-		this(tier, cost, element, name, type, cooldown, action, isContinuous, Wizardry.MODID);
+	public Spell(EnumTier tier, int cost, EnumElement element, String name, EnumSpellType type, int cooldown, EnumAction action, boolean isContinuous){
+		this.tier = tier;
+		this.cost = cost;
+		this.element = element;
+		this.unlocalisedName = name;
+		this.type = type;
+		this.cooldown = cooldown;
+		this.action = action;
+		this.isContinuous = isContinuous;
+		this.modID = Wizardry.MODID;
+		this.icon = new ResourceLocation(this.modID, "textures/spells/" + this.unlocalisedName + ".png");
 	}
 	
 	/**
@@ -124,8 +127,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @param cost The amount of mana used to cast the spell. If this is a continuous spell, it represents mana cost
 	 * per second and should be a multiple of 5.
 	 * @param element The element this spell belongs to.
-	 * @param name The <i>registry name</i> of the spell, excluding the mod id. This will also be the name of the icon
-	 * file. The spell's unlocalised name will be a resource location with the format [modid]:[name].
+	 * @param name The unlocalised name of the spell. This will also be the name of the icon file.
 	 * @param cooldown The cooldown time for this spell in ticks.
 	 * @param action The vanilla usage action to be displayed when casting this spell (see {@link}EnumAction)
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
@@ -133,18 +135,10 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @param modID The mod id of the mod that added this spell. This allows wizardry to use the correct file
 	 * path for the spell icon, and also more generally to distinguish between original and addon spells.
 	 */
-	public Spell(Tier tier, int cost, Element element, String name, SpellType type, int cooldown, EnumAction action, boolean isContinuous, String modID){
-		this.tier = tier;
-		this.cost = cost;
-		this.element = element;
-		this.type = type;
-		this.cooldown = cooldown;
-		this.action = action;
-		this.isContinuous = isContinuous;
+	public Spell(EnumTier tier, int cost, EnumElement element, String name, EnumSpellType type, int cooldown, EnumAction action, boolean isContinuous, String modID){
+		this(tier, cost, element, name, type, cooldown, action, isContinuous);
 		this.modID = modID;
-		this.setRegistryName(modID, name);
-		this.unlocalisedName = this.getRegistryName().toString();
-		this.icon = new ResourceLocation(this.modID, "textures/spells/" + name + ".png");
+		this.icon = new ResourceLocation(this.modID, "textures/spells/" + this.unlocalisedName + ".png");
 	}
 	
 	/**
@@ -161,15 +155,17 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * are discrepancies between client and server.
 	 * @param world A reference to the world object. Again this is for convenience, you can also use caster.worldObj.
 	 * @param caster The EntityPlayer that cast the spell.
-	 * @param hand The hand that is holding the item used to cast the spell. If no item was used, this will be the main hand.
 	 * @param ticksInUse The number of ticks the spell has already been cast for. For all non-continuous spells, this is 0 and
 	 * is not used. For continuous spells, it is passed in as the maximum use duration of the item minus the count parameter in
 	 * onUsingItemTick and therefore it increases by 1 each tick.
-	 * @param modifiers A {@link SpellModifiers} object containing the modifiers that have been applied to the spell. See
-	 * the javadoc for that class for more information. If no modifiers are required, pass in {@code new SpellModifiers()}.
+	 * @param damageMultiplier The damage multiplier to apply; pass in 1 if no multiplier is needed.
+	 * @param rangeMultiplier The range multiplier to apply; pass in 1 if no multiplier is needed.
+	 * @param durationMultiplier The duration multiplier to apply; pass in 1 if no multiplier is needed.
+	 * @param blastMultiplier The blast radius multiplier to apply; pass in 1 if no multiplier is needed.
+	 * 
 	 * @return True if the spell succeeded and mana should be used up, false if not.
 	 */
-	public abstract boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers);
+	public abstract boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier);
 	
 	/** Casts the spell, but with an EntityLiving as the caster. Each subclass can optionally override this method and
 	 * within it execute the code to make the spell work. Returns a boolean to allow whatever calls this method to check if the spell
@@ -188,21 +184,21 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * It's worth noting that on the client side, this method only gets called if the server side
 	 * cast() method succeeded, so you can put any particle spawning code outside of any success conditions if there
 	 * are discrepancies between client and server.
+	 * 
 	 * @param world A reference to the world object. This is for convenience, you can also use caster.worldObj.
 	 * @param caster The EntityLiving that cast the spell.
-	 * @param hand The hand that is holding the item used to cast the spell. This will almost certainly be the main hand.
-	 * @param ticksInUse The number of ticks the spell has already been cast for. For all non-continuous spells, this is 0 and
-	 * is not used.
-	 * @param target The EntityLivingBase that is targeted by the spell. May be null in some cases.
-	 * @param modifiers A {@link SpellModifiers} object containing the modifiers that have been applied to the spell. See
-	 * the javadoc for that class for more information. If no modifiers are required, pass in {@code new SpellModifiers()}.
+	 * @param target The EntityLivingBase that is targeted by the spell. You must check if this parameter is null when overriding.
+	 * @param damageMultiplier The damage multiplier to apply; pass in 1 if no multiplier is needed.
+	 * @param rangeMultiplier The range multiplier to apply; pass in 1 if no multiplier is needed.
+	 * @param durationMultiplier The duration multiplier to apply; pass in 1 if no multiplier is needed.
+	 * @param blastMultiplier The blast radius multiplier to apply; pass in 1 if no multiplier is needed.
 	 * @return True if the spell succeeded, false if not. Returns false by default.
 	 */
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		return false;
 	}
 	
-	/** Whether NPCs such as wizards can cast this spell. If you have overridden {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)},
+	/** Whether NPCs such as wizards can cast this spell. If you have overridden {@link Spell#cast(World, EntityLiving, EntityLivingBase, float, float, float, float)},
 	 * you should override this to return true. */
 	public boolean canBeCastByNPCs(){
 		return false;
@@ -223,68 +219,31 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return true;
 	}
 	
-	/** Returns this spell's id number, which now corresponds to its position in the spell registry. 
+	/** Returns this spell's id number, which now corresponds to its position in the spells ArrayList. 
 	 * Returns -1 if the spell has not been registered. */
 	// This is final so nothing can override it, because that would cause all kinds of problems!
 	public final int id(){
-		return registry.getValues().indexOf(this);
+		return spellsList.indexOf(this);
 	}
 	
-	/** Returns the mod ID for this spell, which should be the ID of the mod that added it. The mod ID is
-	 * used to tell wizardry which filepath to use for the spell's icon. As of Wizardry 1.2, the field itself is
-	 * private, but this getter is provided for external use (though it is never called in the main Wizardry mod). */
-	public final String getModID(){
-		return modID;
-	}
-	
-	/** Returns the ResourceLocation for this spell's icon. */
-	public final ResourceLocation getIcon(){
-		return icon;
-	}
-
-	/** Returns the unlocalised name of the spell, without any prefixes or suffixes, e.g. "flame_ray". <b>This should
-	 * only be used for translation purposes.</b>  */
-	public final String getUnlocalisedName(){
+	/** Returns the unlocalised name of the spell. */
+	public String getUnlocalisedName(){
 		return unlocalisedName;
 	}
-	
-	/* The general idea with translation is to use net.minecraft.client.resources.I18n directly on the client side (and
-	 * just prepend formatting codes where necessary), and to use TextComponentTranslation on the server (setting the
-	 * style as necessary). TextComponentTranslation effectively stores what needs to be translated, without actually
-	 * translating it. If, for whatever reason, you need to supply an ITextComponent but don't want it translated
-	 * (perhaps a name?), you can use TextComponentString, which will simply keep the raw string it is given. */
 
-	/** Returns the translated display name of the spell, without formatting (i.e. not coloured). <b>Client-side only!</b>
-	 * On the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslation()}). */
-	@SideOnly(Side.CLIENT)
+	/** Returns the translated display name of the spell, without formatting (i.e. not coloured). */
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
-	}
-	
-	/** Returns a {@code TextComponentTranslation} which will be translated to the display name of the spell, without
-	 * formatting (i.e. not coloured). */
-	public TextComponentTranslation getNameForTranslation(){
-		return new TextComponentTranslation("spell." + unlocalisedName);
+		return StatCollector.translateToLocal("spell." + unlocalisedName);
 	}
 
-	/** Returns the translated display name of the spell, with formatting (i.e. coloured). <b>Client-side only!</b>
-	 * On the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslationFormatted()}). */
-	@SideOnly(Side.CLIENT)
+	/** Returns the translated display name of the spell, with formatting (i.e. coloured). */
 	public String getDisplayNameWithFormatting(){
-		return this.element.getFormattingCode() + net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
-	}
-	
-	/** Returns a {@code TextComponentTranslation} which will be translated to the display name of the spell, with
-	 * formatting (i.e. coloured). */
-	public ITextComponent getNameForTranslationFormatted(){
-		return new TextComponentTranslation("spell." + unlocalisedName).setStyle(this.element.getColour());
+		return this.element.colour + StatCollector.translateToLocal("spell." + unlocalisedName);
 	}
 
-	/** Returns the translated description of the spell, without formatting. <b>Client-side only!</b> You should not
-	 * need to use this on the server side. */
-	@SideOnly(Side.CLIENT)
+	/** Returns the translated description of the spell, without formatting. */
 	public String getDescription(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName + ".desc");
+		return StatCollector.translateToLocal("spell." + unlocalisedName + ".desc");
 	}
 
 	/** Returns whether the spell is enabled in the config. */
@@ -319,49 +278,79 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	
 	// ================================================ Static methods ==================================================
 	
+	/**
+	 * Registers a spell with the wizardry mod. Each spell should have a single instance, like blocks and items (this
+	 * instance does not usually need to be stored, but you will have to store it if you want to reference a specific
+	 * spell directly, for example transportation requires an accessible instance for printing of chat messages). 
+	 * Spells must be registered in the <b>preInit</b> method in your main mod class for them to be added to the config
+	 * file automatically.
+	 * 
+	 * @param spell The spell instance to register 
+	 * @throws NullPointerException if the passed in spell is null (why would you ever do that?).
+	 */
+	public static void register(Spell spell){
+		if(spell == null){
+			// If the null value was added to the list, it would cause an NPE later when it tries to sort the list.
+			// If the null value was ignored and not added, there would be no record of what went wrong.
+			// Therefore the best way is to throw an NPE here so whoever caused it knows why it went wrong.
+			throw new NullPointerException("Tried to register a spell, but the passed in spell was null.");
+		}else{
+			spellsList.add(spell);
+			if(!(spell instanceof None)) unlocalisedNames.add(spell.unlocalisedName);
+		}
+	}
+	
+	/** Called from the postInit method in the main wizardry class to sort all the spells. 
+	 * <p> Deprecated in favour of sorting the books and scrolls themselves in the creative tab. */
+	@Deprecated
+	public static void sortSpells(){
+		Collections.sort(spellsList);
+	}
+	
 	/** Returns the total number of registered spells, excluding the 'None' spell. Returns the same number that would
 	 * be returned by Spell.getSpells(Spell.allSpells).size(), but this method is more efficient. */
 	public static int getTotalSpellCount(){
-		return registry.getValues().size() - 1;
+		return spellsList.size() - 1;
 	}
 	
-	/** Gets a spell instance from its integer id, which now corresponds to its id in the spell registry. 
+	/** Gets a spell instance from its integer id, which now corresponds to its position in the spells ArrayList. 
 	 * If the given id has no spell (i.e. is less than 0 or greater than the total number of spells - 1)
 	 * then it will return the {@link None} spell.
 	 * <p>
-	 * <i>If you are calling this from inside a loop in which you are iterating through the spells, there is
-	 * probably a better way; see </i>{@link Spell#getSpells(Predicate)}. */
+	 * If you are calling this from inside a loop in which you are iterating through the spells, there is
+	 * probably a better way; see {@link Spell#getSpells(Filter)}. */
 	public static Spell get(int id){
-		if(id < 0 || id >= registry.getValues().size()){
-			return Spells.none;
+		return id < 0 || id >= spellsList.size() ? WizardryRegistry.none : spellsList.get(id);
+	}
+	
+	/** Returns the spell with the given unlocalised name, or null if no such spell exists. */
+	public static Spell get(String unlocalisedName){
+		for(Spell spell : Spell.getSpells(allSpells)){
+			if(spell.unlocalisedName.equals(unlocalisedName)){
+				return spell;
+			}
 		}
-		Spell spell = registry.getValues().get(id);
-		return spell == null ? Spells.none : spell;
+		return null;
 	}
 	
-	/** Returns the spell with the given registry name, or null if no such spell exists.
-	 * @param name The registry name of the spell, in the form [mod id]:[spell name]. If no mod id is specified, it
-	 * defaults to {@link Wizardry#MODID}. */
-	public static Spell get(String name){
-		ResourceLocation key = new ResourceLocation(name);
-		if(key.getResourceDomain().equals("minecraft")) key = new ResourceLocation(Wizardry.MODID, name);
-		return registry.getValue(key);
+	/** Returns a list of all registered spells' unlocalised names, excluding the 'none' spell. Used in commands. */
+	public static String[] getUnlocalisedNames(){
+		return unlocalisedNames.toArray(new String[unlocalisedNames.size()]);
 	}
 	
-	/** Returns a list of all registered spells' registry names, excluding the 'none' spell. Used in commands. */
-	public static String[] getSpellNames(){
-		// Maybe it would be better to store all of this statically?
-		Set<ResourceLocation> keys = new HashSet<ResourceLocation>(registry.getKeys());
-		keys.remove(registry.getKey(Spells.none));
-		// Streams!
-		return keys.stream().map(ResourceLocation::toString).toArray(String[]::new);
-	}
+	/* The following method is an example of where I would have liked to use the java 8 predicate and removeIf
+	 * functionality. However, since people don't update their java, I am trying to stick to java 6, annoying as that
+	 * is... so this is the most flexible I can make it within the constraints of java 6. The aim is to remove the need
+	 * to EVER iterate through the spells by id number and use spell.get(id).[condition], because this is cumbersome and
+	 * inefficient and often leads to timeouts. It's far better to restrict the RNG to only the spells you want it
+	 * to select from. Even when you're not using RNG, the for each loop is nicer and more efficient than constantly
+	 * calling Spell.get(i). */
 	
 	/**
-	 * Returns a list containing all spells matching the given {@link Predicate}. The returned list is separate from the
+	 * Returns a list containing all spells matching the given filter. The returned list is separate from the
 	 * internal spells list; any changes you make to the returned list will have no effect on wizardry since the
-	 * returned list is local to this method. Never includes the {@link None} spell. For convenience, there are some
-	 * predefined predicates in the Spell class (some of these really aren't shortcuts any more):
+	 * returned list is local to this method. Never includes the 'none' spell. For convenience, there are some
+	 * predefined filters in the Spell class:
 	 * <p>
 	 * {@link Spell#allSpells} will allow all spells to be returned<br>
 	 * {@link Spell#enabledSpells} will filter out any spells that are disabled in the config<br>
@@ -369,40 +358,74 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * {@link Spell#nonContinuousSpells} will filter out continuous spells but not disabled spells<br>
 	 * {@link Spell.TierElementFilter} will only allow enabled spells of the specified tier and element
 	 * 
-	 * @param filter A <code>Predicate&ltSpell&gt</code> that the returned spells must satisfy.
+	 * @param filter see {@link Spell.Filter}
 	 * 
-	 * @return A <b>local, modifiable</b> list of spells matching the given predicate. <i>Note that this list may be empty.</i>
+	 * @return A list of spells matching the given filter. <i>Note that this list may be empty.
 	 * */
-	public static List<Spell> getSpells(Predicate<Spell> filter){
+	public static List<Spell> getSpells(Filter filter){
 		
 		ArrayList<Spell> spells = new ArrayList<Spell>(1);
 		
-		for(Spell spell : registry.getValues()){
-			if(filter.test(spell) && spell != Spells.none) spells.add(spell);
+		for(Spell spell : spellsList){
+			if(filter.test(spell) && spell != WizardryRegistry.none) spells.add(spell);
 		}
 		
 		return spells;
 	}
 	
-	/** Predicate which allows all spells. */
-	public static Predicate<Spell> allSpells = s -> true;
+	/** To allow Java 6 compatibility, this is defined here instead of using the jdk 8 predicate. Function is exactly
+	 * the same, but specifically for spells. For convenience, there are some predefined filters in the {@link Spell}
+	 * class:
+	 * <p>
+	 * {@link Spell#allSpells} will allow all spells to be returned<br>
+	 * {@link Spell#enabledSpells} will filter out any spells that are disabled in the config<br>
+	 * {@link Spell#npcSpells} will only allow enabled spells that can be cast by NPCs (see {@link Spell#canBeCastByNPCs()})<br>
+	 * {@link Spell#nonContinuousSpells} will filter out continuous spells but not disabled spells<br>
+	 * {@link Spell.TierElementFilter} will only allow enabled spells of the specified tier and element
+	 * <p>
+	 * Edit: Turns out the google stuff has a predicate class. Oh well. */
+	public static interface Filter {
+		public boolean test(Spell spell);
+	}
 	
-	/** Predicate which allows all enabled spells. */
-	public static Predicate<Spell> enabledSpells = Spell::isEnabled;
+	/** Filter which allows all spells. */
+	public static Filter allSpells = new Filter(){
+		@Override
+		public boolean test(Spell spell) {
+			return true;
+		}
+	};
 	
-	/** Predicate which allows all non-continuous spells, even those that have been disabled. */
-	public static Predicate<Spell> nonContinuousSpells = s -> !s.isContinuous;
+	/** Filter which allows all enabled spells. */
+	public static Filter enabledSpells = new Filter(){
+		@Override
+		public boolean test(Spell spell) {
+			return spell.isEnabled();
+		}
+	};
 	
-	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastByNPCs()} returns true. */
-	public static Predicate<Spell> npcSpells = s -> s.isEnabled() && s.canBeCastByNPCs();
+	/** Filter which allows all non-continuous spells, even those that have been disabled. */
+	public static Filter nonContinuousSpells = new Filter(){
+		@Override
+		public boolean test(Spell spell) {
+			return !spell.isContinuous;
+		}
+	};
 	
-	/** Predicate which allows all enabled spells of the given tier and element (create an instance of this class
-	 * each time you want to use it). This is somewhat useless now that Wizardry uses Java 8, but it is more readable
-	 * than a lambda expression and you don't need to remember to check that the spell is enabled every time. */
-	public static class TierElementFilter implements Predicate<Spell> {
+	/** Filter which allows all enabled spells for which {@link Spell#canBeCastByNPCs()} returns true. */
+	public static Filter npcSpells = new Filter(){
+		@Override
+		public boolean test(Spell spell) {
+			return spell.isEnabled() && spell.canBeCastByNPCs();
+		}
+	};
+	
+	/** Filter type which allows all enabled spells of the given tier and element (create an instance of this class
+	 * each time you want to use it). */
+	public static class TierElementFilter implements Filter {
 		
-		private Tier tier;
-		private Element element;
+		private EnumTier tier;
+		private EnumElement element;
 		
 		/** 
 		 * Creates a new TierElementFilter that checks for the given tier and element. Does not allow spells that have
@@ -410,7 +433,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		 * @param tier The EnumTier to check for. Pass in null to allow all tiers.
 		 * @param element The EnumElement to check for. Pass in null to allow all elements.
 		 */
-		public TierElementFilter(Tier tier, Element element){
+		public TierElementFilter(EnumTier tier, EnumElement element){
 			this.tier = tier;
 			this.element = element;
 		}

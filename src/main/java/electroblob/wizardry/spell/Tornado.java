@@ -1,24 +1,20 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.entity.construct.EntityTornado;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.entity.projectile.EntityMagicMissile;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class Tornado extends Spell {
 
 	public Tornado() {
-		super(Tier.ADVANCED, 35, Element.EARTH, "tornado", SpellType.ATTACK, 80, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 35, EnumElement.EARTH, "tornado", EnumSpellType.ATTACK, 80, EnumAction.none, false);
 	}
 
 	@Override
@@ -27,23 +23,23 @@ public class Tornado extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(!world.isRemote){
 			double x = caster.posX + caster.getLookVec().xCoord;
 			double y = caster.posY;
 			double z = caster.posZ + caster.getLookVec().zCoord;
 			
-			EntityTornado tornado = new EntityTornado(world, x, y, z, caster, (int)(200*modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord/3, caster.getLookVec().zCoord/3, modifiers.get(SpellModifiers.DAMAGE));
+			EntityTornado tornado = new EntityTornado(world, x, y, z, caster, (int)(200*durationMultiplier), caster.getLookVec().xCoord/3, caster.getLookVec().zCoord/3, damageMultiplier);
 			world.spawnEntityInWorld(tornado);
 		}
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+		caster.swingItem();
+		world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 		return true;
 	}
 	
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 			
@@ -52,11 +48,11 @@ public class Tornado extends Spell {
 				double y = caster.posY;
 				double z = caster.posZ + caster.getLookVec().zCoord;
 				
-				EntityTornado tornado = new EntityTornado(world, x, y, z, caster, (int)(200*modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().xCoord/3, caster.getLookVec().zCoord/3, modifiers.get(SpellModifiers.DAMAGE));
+				EntityTornado tornado = new EntityTornado(world, x, y, z, caster, (int)(200*durationMultiplier), caster.getLookVec().xCoord/3, caster.getLookVec().zCoord/3, damageMultiplier);
 				world.spawnEntityInWorld(tornado);
 			}
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 			
 			return true;
 		}

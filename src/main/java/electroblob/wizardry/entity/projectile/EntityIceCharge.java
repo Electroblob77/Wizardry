@@ -2,24 +2,25 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class EntityIceCharge extends EntityBomb {
+public class EntityIceCharge extends EntityMagicProjectile implements IEntityAdditionalSpawnData
+{
+	/** The entity blast multiplier. Only some projectiles cause a blast, which is why this isn't in EntityMagicProjectile. */
+	public float blastMultiplier;
 	
     public EntityIceCharge(World par1World)
     {
@@ -33,7 +34,8 @@ public class EntityIceCharge extends EntityBomb {
     
     public EntityIceCharge(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier, float blastMultiplier)
     {
-        super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
+        super(par1World, par2EntityLivingBase, damageMultiplier);
+        this.blastMultiplier = blastMultiplier;
     }
 
     public EntityIceCharge(World par1World, double par2, double par4, double par6)
@@ -44,35 +46,35 @@ public class EntityIceCharge extends EntityBomb {
     /**
      * Called when this EntityThrowable hits a block or entity.
      */
-    protected void onImpact(RayTraceResult par1RayTraceResult)
+    protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
     {
-    	Entity entityHit = par1RayTraceResult.entityHit;
+    	Entity entityHit = par1MovingObjectPosition.entityHit;
     	
         if (entityHit != null)
         {
         	// This is if the ice charge gets a direct hit
             float damage = 4 * damageMultiplier;
             
-            entityHit.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.FROST).setProjectile(), damage);
+            entityHit.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getThrower(), DamageType.FROST).setProjectile(), damage);
             
             if(entityHit instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.FROST, entityHit))
-            	((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(WizardryPotions.frost, 120, 1));
+            	((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(Wizardry.frost.id, 120, 1));
         }
 
         // Particle effect
         if(worldObj.isRemote){
-    		this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
+    		this.worldObj.spawnParticle("largeexplode", this.posX, this.posY, this.posZ, 0, 0, 0);
 			for(int i=0;i<30*blastMultiplier;i++){
 				float brightness = 0.4f + rand.nextFloat()*0.5f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.ICE, worldObj, this.posX + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ + (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0.0d, 0.0d, 0.0d, 35);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, worldObj, this.posX + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ + (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0.0d, 0.0d, 0.0d, 0, brightness, brightness+0.1f, 1.0f);
+				Wizardry.proxy.spawnParticle(EnumParticleType.ICE, worldObj, this.posX + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ + (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0.0d, 0.0d, 0.0d, 35);
+				Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, worldObj, this.posX + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posY + (this.rand.nextDouble()*4 - 2)*blastMultiplier, this.posZ + (this.rand.nextDouble()*4 - 2)*blastMultiplier, 0.0d, 0.0d, 0.0d, 0, brightness, brightness+0.1f, 1.0f);
 			}
         }
 
         if(!this.worldObj.isRemote){
         	
-	    	this.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 1.5f, rand.nextFloat() * 0.4f + 0.6f);
-	    	this.playSound(WizardrySounds.SPELL_ICE, 1.2f, rand.nextFloat() * 0.4f + 1.2f);
+	    	this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "random.glass", 1.5f, rand.nextFloat() * 0.4f + 0.6f);
+	    	this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "wizardry:ice", 1.2f, rand.nextFloat() * 0.4f + 1.2f);
 			
 	    	double radius = 3.0d*blastMultiplier;
 			
@@ -81,30 +83,21 @@ public class EntityIceCharge extends EntityBomb {
 			// Slows targets
 			for(EntityLivingBase target : targets){
 				if(target != entityHit && target != this.getThrower()){
-		            if(!MagicDamage.isEntityImmune(DamageType.FROST, target)) target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 100, 0));
+		            if(!MagicDamage.isEntityImmune(DamageType.FROST, target)) target.addPotionEffect(new PotionEffect(Wizardry.frost.id, 100, 0, true));
 				}
 			}
 	    	
 	    	// Places snow and ice on ground.
 	    	for(int i=-1; i<2; i++){
 				for(int j=-1; j<2; j++){
-					
-					BlockPos pos = new BlockPos(this.posX + i, this.posY, this.posZ + j);
-					
-					int y = WizardryUtilities.getNearestFloorLevelB(worldObj, pos, 7);
-					
-					pos = new BlockPos(pos.getX(), y, pos.getZ());
-					
-					double dist = this.getDistance(pos.getX(), pos.getY(), pos.getZ());
-					
+					int y = WizardryUtilities.getNearestFloorLevelB(worldObj, (int)this.posX + i, (int)this.posY, (int)this.posZ + j, 7);
+					double dist = this.getDistance((int)this.posX + i, y, (int)this.posZ + j);
 					// Randomised with weighting so that the nearer the block the more likely it is to be snowed.
 					if(y != -1 && rand.nextInt((int)dist*2 + 1) < 1 && dist < 2){
-						if(worldObj.getBlockState(pos.down()).getBlock() == Blocks.WATER){
-							worldObj.setBlockState(pos.down(), Blocks.ICE.getDefaultState());
+						if(worldObj.getBlock((int)this.posX + i, y-1, (int)this.posZ + j) == Blocks.water){
+							worldObj.setBlock((int)this.posX + i, y-1, (int)this.posZ + j, Blocks.ice);
 						}else{
-							// Don't need to check whether the block at pos can be replaced since getNearestFloorLevelB
-							// only ever returns floors with air above them.
-							worldObj.setBlockState(pos, Blocks.SNOW_LAYER.getDefaultState());
+							worldObj.setBlock((int)this.posX + i, y, (int)this.posZ + j, Blocks.snow_layer);
 						}
 					}
 				}
@@ -131,5 +124,27 @@ public class EntityIceCharge extends EntityBomb {
     @Override
 	public boolean canRenderOnFire() {
 		return false;
+	}
+    
+	@Override
+	public void writeSpawnData(ByteBuf buffer) {
+		buffer.writeFloat(blastMultiplier);
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf buffer) {
+		blastMultiplier = buffer.readFloat();
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
+    	super.readEntityFromNBT(nbttagcompound);
+        blastMultiplier = nbttagcompound.getFloat("blastMultiplier");
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbttagcompound){
+		super.writeEntityToNBT(nbttagcompound);
+		nbttagcompound.setFloat("blastMultiplier", blastMultiplier);
 	}
 }

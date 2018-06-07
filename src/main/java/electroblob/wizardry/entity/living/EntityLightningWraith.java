@@ -1,180 +1,304 @@
 package electroblob.wizardry.entity.living;
 
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
+import electroblob.wizardry.entity.EntityArc;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityLightningWraith extends EntityBlazeMinion {
+public class EntityLightningWraith extends EntitySummonedCreature
+{
+	/** Random offset used in floating behaviour */
+	private float heightOffset = 0.5F;
+
+	/** ticks until heightOffset is randomized */
+	private int heightOffsetUpdateTime;
+	private int field_70846_g;
 
 	public EntityLightningWraith(World world){
 		super(world);
 	}
 
 	public EntityLightningWraith(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
+
 		super(world, x, y, z, caster, lifetime);
 		this.isImmuneToFire = false;
+		this.tasks.addTask(1, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(2, new EntityAILookIdle(this));
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityLiving.class, 0, false, true, IMob.mobSelector));
+		this.experienceValue = 0;
 	}
-	
-	@Override
-	protected void initEntityAI(){
-		super.initEntityAI();
-		this.tasks.taskEntries.clear();
-		this.tasks.addTask(4, new AILightningAttack(this));
-        this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWander(this, 1.0D));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(8, new EntityAILookIdle(this));
+
+	/**
+	 * Returns true if the newer Entity AI code should be run
+	 */
+	protected boolean isAIEnabled()
+	{
+		return false;
 	}
 
 	@Override
-	protected void spawnParticleEffect(){
+	public boolean hasRangedAttack() {
+		return true;
+	}
+
+	protected void applyEntityAttributes()
+	{
+		super.applyEntityAttributes();
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(6.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(16.0D);
+	}
+
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.dataWatcher.addObject(16, new Byte((byte)0));
+	}
+
+	/**
+	 * Returns the sound this mob makes while it's alive.
+	 */
+	protected String getLivingSound()
+	{
+		return "mob.blaze.breathe";
+	}
+
+	/**
+	 * Returns the sound this mob makes when it is hurt.
+	 */
+	protected String getHurtSound()
+	{
+		return "mob.blaze.hit";
+	}
+
+	/**
+	 * Returns the sound this mob makes on death.
+	 */
+	protected String getDeathSound()
+	{
+		return "mob.blaze.death";
+	}
+
+	@SideOnly(Side.CLIENT)
+	public int getBrightnessForRender(float par1)
+	{
+		return 15728880;
+	}
+
+	/**
+	 * Gets how bright this entity is.
+	 */
+	public float getBrightness(float par1)
+	{
+		return 1.0F;
+	}
+
+	@Override
+	public void onSpawn(){
 		if(this.worldObj.isRemote){
 			for(int i=0;i<15;i++){
 				float brightness = 0.3f + (rand.nextFloat()/2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX - 0.5d + rand.nextDouble(), this.posY + this.height/2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0, 0.05f, 0, 20 + rand.nextInt(10), brightness, brightness + 0.2f, 1.0f);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, worldObj, this.posX - 0.5d + rand.nextDouble(), this.posY + this.height/2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0, 0.05f, 0, 20 + rand.nextInt(10), brightness, brightness + 0.2f, 1.0f);
 			}
 		}
 	}
 
 	@Override
-	public void onLivingUpdate(){
-		// Fortunately, lightning wraiths don't replace any of blazes' particle effects or the fire sound, they only
-		// add the sparks, so it's fine to call super here.
-		if(worldObj.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0, 3);
+	public void despawn(){
+		if(this.worldObj.isRemote){
+			for(int i=0;i<15;i++){
+				float brightness = 0.3f + (rand.nextFloat()/2);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, worldObj, this.posX - 0.5d + rand.nextDouble(), this.posY + this.height/2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0, 0.05f, 0, 20 + rand.nextInt(10), brightness, brightness + 0.2f, 1.0f);
+			}
 		}
+		super.despawn();
+	}
+
+	/**
+	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+	 * use this to react to sunlight and start to burn.
+	 */
+	public void onLivingUpdate()
+	{
+
+		if (!this.worldObj.isRemote)
+		{
+			/*
+            if (this.isWet())
+            {
+                this.attackEntityFrom(DamageSource.drown, 1.0F);
+            }
+			 */
+
+			--this.heightOffsetUpdateTime;
+
+			if (this.heightOffsetUpdateTime <= 0)
+			{
+				this.heightOffsetUpdateTime = 100;
+				this.heightOffset = 0.5F + (float)this.rand.nextGaussian() * 3.0F;
+			}
+
+			if (this.getEntityToAttack() != null && this.getEntityToAttack().posY + (double)this.getEntityToAttack().getEyeHeight() > this.posY + (double)this.getEyeHeight() + (double)this.heightOffset)
+			{
+				this.motionY += (0.30000001192092896D - this.motionY) * 0.30000001192092896D;
+			}
+		}
+
+		if (this.rand.nextInt(24) == 0)
+		{
+			this.worldObj.playSoundEffect(this.posX + 0.5D, this.posY + 0.5D, this.posZ + 0.5D, "fire.fire", 1.0F + this.rand.nextFloat(), this.rand.nextFloat() * 0.7F + 0.3F);
+		}
+
+		if (!this.onGround && this.motionY < 0.0D)
+		{
+			this.motionY *= 0.6D;
+		}
+
+		if(worldObj.isRemote){
+			for (int i = 0; i < 2; ++i)
+			{
+				this.worldObj.spawnParticle("largesmoke", this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0D, 0.0D, 0.0D);
+			}
+			Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0, 3);
+		}
+
 		super.onLivingUpdate();
 	}
-	
-	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount){
-		// Removes the damage from being wet that applies to blazes by checking if the mob is actually drowning.
-		if(source == DamageSource.drown && (this.getAir() > 0 || this.isPotionActive(MobEffects.WATER_BREATHING))){
-			// In this case, the lightning wraith is not actually drowning, so cancel the damage.
-			return false;
-		}else{
-			return super.attackEntityFrom(source, amount);
+
+	/**
+	 * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
+	 */
+	protected void attackEntity(Entity target, float par2)
+	{
+		if (this.attackTime <= 0 && par2 < 2.0F && target.boundingBox.maxY > this.boundingBox.minY && target.boundingBox.minY < this.boundingBox.maxY)
+		{
+			this.attackTime = 20;
+			this.attackEntityAsMob(target);
+		}
+
+		// Added a range limit.
+		else if (par2 < 30.0F && this.getDistanceToEntity(target) < 16.0d)
+		{
+			double d0 = target.posX - this.posX;
+			double d1 = target.boundingBox.minY + (double)(target.height / 2.0F) - (this.posY + (double)(this.height / 2.0F));
+			double d2 = target.posZ - this.posZ;
+
+			if (this.attackTime == 0)
+			{
+				++this.field_70846_g;
+
+				if (this.field_70846_g == 1)
+				{
+					this.attackTime = 60;
+					//this.func_70844_e(true);
+				}
+				else if (this.field_70846_g <= 4)
+				{
+					this.attackTime = 6;
+				}
+				else
+				{
+					this.attackTime = 100;
+					this.field_70846_g = 0;
+					//this.func_70844_e(false);
+				}
+
+				if (this.field_70846_g > 1)
+				{
+					float f1 = MathHelper.sqrt_float(par2) * 0.5F;
+					worldObj.playSoundAtEntity(target, "wizardry:arc", 1.0F, rand.nextFloat() * 0.4F + 1.5F);
+
+					if(!worldObj.isRemote){
+						
+						EntityArc arc = new EntityArc(this.worldObj);
+						arc.setEndpointCoords(this.posX, this.posY + (double)(this.height / 2.0F) + 0.5D, this.posZ, target.posX, target.posY + target.height/2, target.posZ);
+						this.worldObj.spawnEntityInWorld(arc);
+
+						target.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getCaster(), DamageType.SHOCK), 5.0f);
+
+					}else{
+						// Particle effect
+						for(int j=0;j<8;j++){
+							Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, target.posX + rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(target) + target.height*rand.nextFloat(), target.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
+							worldObj.spawnParticle("largesmoke", target.posX + rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(target) + target.height*rand.nextFloat(), target.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
+						}
+					}
+				}
+			}
+
+			this.rotationYaw = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
+			this.hasAttacked = true;
 		}
 	}
-	
-	@Override
-	public boolean isBurning(){
-		// Uses the datawatcher on both sides because fire is private to Entity (and I'm not using reflection here).
-        // TESTME: This should work, but there may be some issues with updating, so if it doesn't work, copy the
-		// version from Entity and use reflection to access the fire field.
-		return this.getFlag(0);
-    }
-	
-	/** Copied straight from EntityBlaze.AIFireballAttack, with the only changes being replacement of fireball
-	 * spawning with a one-liner call to WizardryRegistry.arc.cast(...) and the removal of redundant local variables. */
-	static class AILightningAttack extends EntityAIBase {
-    
-        private final EntityBlaze blaze;
-        private int attackStep;
-        private int attackTime;
 
-        public AILightningAttack(EntityBlaze blazeIn)
-        {
-            this.blaze = blazeIn;
-            this.setMutexBits(3);
-        }
+	/**
+	 * Called when the mob is falling. Calculates and applies fall damage.
+	 */
+	protected void fall(float par1) {}
 
-        /**
-         * Returns whether the EntityAIBase should begin execution.
-         */
-        public boolean shouldExecute()
-        {
-            EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
-            return entitylivingbase != null && entitylivingbase.isEntityAlive();
-        }
+	/**
+	 * Returns the item ID for the item the mob drops on death.
+	 */
+	protected int getDropItemId()
+	{
+		return -1;
+	}
 
-        /**
-         * Execute a one shot task or start executing a continuous task
-         */
-        public void startExecuting()
-        {
-            this.attackStep = 0;
-        }
+	/**
+	 * Drop 0-2 items of this living's type. @param par1 - Whether this entity has recently been hit by a player. @param
+	 * par2 - Level of Looting used to kill this mob.
+	 */
+	protected void dropFewItems(boolean par1, int par2)
+	{
 
-        /**
-         * Resets the task
-         */
-        public void resetTask()
-        {
-        	// This might be called setOnFire, but what it really controls is whether the wraith is in attack mode.
-            this.blaze.setOnFire(false);
-        }
+	}
 
-        /**
-         * Updates the task
-         */
-        public void updateTask()
-        {
-            --this.attackTime;
-            EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
-            double d0 = this.blaze.getDistanceSqToEntity(entitylivingbase);
+	public boolean func_70845_n()
+	{
+		return (this.dataWatcher.getWatchableObjectByte(16) & 1) != 0;
+	}
 
-            if (d0 < 4.0D)
-            {
-                if (this.attackTime <= 0)
-                {
-                    this.attackTime = 20;
-                    this.blaze.attackEntityAsMob(entitylivingbase);
-                }
+	public void func_70844_e(boolean par1)
+	{
+		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
 
-                this.blaze.getMoveHelper().setMoveTo(entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ, 1.0D);
-            }
-            else if (d0 < 256.0D)
-            {
-                if (this.attackTime <= 0)
-                {
-                    ++this.attackStep;
+		if (par1)
+		{
+			b0 = (byte)(b0 | 1);
+		}
+		else
+		{
+			b0 &= -2;
+		}
 
-                    if (this.attackStep == 1)
-                    {
-                        this.attackTime = 60;
-                        this.blaze.setOnFire(true);
-                    }
-                    else if (this.attackStep <= 4)
-                    {
-                        this.attackTime = 6;
-                    }
-                    else
-                    {
-                        this.attackTime = 100;
-                        this.attackStep = 0;
-                        this.blaze.setOnFire(false);
-                    }
+		this.dataWatcher.updateObject(16, Byte.valueOf(b0));
+	}
 
-                    if(this.attackStep > 1){
-                    	// Proof, if it were at all needed, of the elegance and versatility of the spell system.
-                    	Spells.arc.cast(this.blaze.worldObj, this.blaze, EnumHand.MAIN_HAND, 0, entitylivingbase, new SpellModifiers());
-                    	// TODO: Decide if an event should be fired here. I'm guessing no.
-                    }
-                }
-
-                this.blaze.getLookHelper().setLookPositionWithEntity(entitylivingbase, 10.0F, 10.0F);
-            }
-            else
-            {
-                this.blaze.getNavigator().clearPathEntity();
-                this.blaze.getMoveHelper().setMoveTo(entitylivingbase.posX, entitylivingbase.posY, entitylivingbase.posZ, 1.0D);
-            }
-
-            super.updateTask();
-        }
-    }
+	/**
+	 * Checks to make sure the light is not too bright where the mob is spawning
+	 */
+	protected boolean isValidLightLevel()
+	{
+		return true;
+	}
 }

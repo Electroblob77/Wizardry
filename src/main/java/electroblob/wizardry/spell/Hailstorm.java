@@ -1,23 +1,20 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.construct.EntityHailstorm;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class Hailstorm extends Spell {
 
 	public Hailstorm() {
-		super(Tier.MASTER, 75, Element.ICE, "hailstorm", SpellType.ATTACK, 300, EnumAction.NONE, false);
+		super(EnumTier.MASTER, 75, EnumElement.ICE, "hailstorm", EnumSpellType.ATTACK, 300, EnumAction.none, false);
 	}
 
 	@Override
@@ -26,15 +23,15 @@ public class Hailstorm extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(20*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(20*rangeMultiplier, world, caster, false);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
 			if(!world.isRemote){
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
+				double x = rayTrace.blockX;
+				double y = rayTrace.blockY;
+				double z = rayTrace.blockZ;
 				// Moves the entity back towards the caster a bit, so the area of effect is better centred on the position.
 				// 3.0d is the distance to move the entity back towards the caster.
 				double dx = caster.posX - x;
@@ -43,12 +40,12 @@ public class Hailstorm extends Spell {
 				x += dx*distRatio;
 				z += dz*distRatio;
 				
-				EntityHailstorm hailstorm = new EntityHailstorm(world, x, y + 5, z, caster, (int)(120*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
+				EntityHailstorm hailstorm = new EntityHailstorm(world, x, y + 5, z, caster, (int)(120*durationMultiplier), damageMultiplier);
 				hailstorm.rotationYaw = caster.rotationYawHead;
 				world.spawnEntityInWorld(hailstorm);
 			}
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 			return true;
 		}
 		return false;

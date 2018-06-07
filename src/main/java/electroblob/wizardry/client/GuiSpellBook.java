@@ -2,16 +2,18 @@ package electroblob.wizardry.client;
 
 import org.lwjgl.input.Keyboard;
 
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.SpellGlyphData;
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.WizardryGuiHandler;
+import electroblob.wizardry.WizardryRegistry;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiSpellBook extends GuiScreen {
@@ -39,17 +41,17 @@ public class GuiSpellBook extends GuiScreen {
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
         
         boolean discovered = true;
-		if(Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode && WizardData.get(player) != null
-				&& !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+		if(Wizardry.discoveryMode && !player.capabilities.isCreativeMode && ExtendedPlayer.get(player) != null
+				&& !ExtendedPlayer.get(player).hasSpellBeenDiscovered(spell)){
 			discovered = false;
 		}
 
         // Draws spell illustration on opposite page, underneath the book so it shows through the hole.
-		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
-		WizardryUtilities.drawTexturedRect(xPos + 145, yPos + 20, 0, 0, 128, 128, 128, 128);
+		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.icon : WizardryRegistry.none.icon);
+		this.drawTexturedRect(xPos + 145, yPos + 20, 0, 0, 128, 128, 128, 128);
 		
         Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-        WizardryUtilities.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
+		this.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
 		
         super.drawScreen(par1, par2, par3);
         
@@ -63,14 +65,14 @@ public class GuiSpellBook extends GuiScreen {
 		
     	this.fontRendererObj.drawString("-------------------", xPos+17, yPos+34, 0);
         
-        if(spell.tier == Tier.BASIC){
+        if(spell.tier == EnumTier.BASIC){
         	// Basic is usually white but this doesn't show up.
-        	this.fontRendererObj.drawString("Tier: \u00A77" + Tier.BASIC.getDisplayName(), xPos+17, yPos+44, 0);
+        	this.fontRendererObj.drawString("Tier: \u00A77" + EnumTier.BASIC.getDisplayName(), xPos+17, yPos+44, 0);
         }else{
         	this.fontRendererObj.drawString("Tier: " + spell.tier.getDisplayNameWithFormatting(), xPos+17, yPos+44, 0);
         }
         
-        String element = "Element: " + spell.element.getFormattingCode() + spell.element.getDisplayName();
+        String element = "Element: " + spell.element.colour + spell.element.getDisplayName();
         if(!discovered) element = "Element: ?";
         this.fontRendererObj.drawString(element, xPos+17, yPos+56, 0);
         
@@ -123,5 +125,29 @@ public class GuiSpellBook extends GuiScreen {
     	super.onGuiClosed();
         Keyboard.enableRepeatEvents(false);
     }
+
+    /**
+	 * Draws a textured rectangle, taking the size of the image and the bit needed into account. Client side only, of course.
+	 * @param x The x position of the rectangle
+	 * @param y The y position of the rectangle
+	 * @param u The x position of the top left corner of the section of the image wanted
+	 * @param v The y position of the top left corner of the section of the image wanted
+	 * @param width The width of the section
+	 * @param height The height of the section
+	 * @param textureWidth The width of the actual image.
+	 * @param textureHeight The height of the actual image.
+	 */
+	public static void drawTexturedRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight)
+	{
+	    float f = 1F / (float)textureWidth;
+	    float f1 = 1F / (float)textureHeight;
+	    Tessellator tessellator = Tessellator.instance;
+	    tessellator.startDrawingQuads();
+	    tessellator.addVertexWithUV((double)(x), (double)(y + height), 0, (double)((float)(u) * f), (double)((float)(v + height) * f1));
+	    tessellator.addVertexWithUV((double)(x + width), (double)(y + height), 0, (double)((float)(u + width) * f), (double)((float)(v + height) * f1));
+	    tessellator.addVertexWithUV((double)(x + width), (double)(y), 0, (double)((float)(u + width) * f), (double)((float)(v) * f1));
+	    tessellator.addVertexWithUV((double)(x), (double)(y), 0, (double)((float)(u) * f), (double)((float)(v) * f1));
+	    tessellator.draw();
+	}
 }
 

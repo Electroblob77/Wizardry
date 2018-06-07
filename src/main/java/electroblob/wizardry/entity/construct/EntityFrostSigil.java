@@ -2,13 +2,12 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -52,7 +51,7 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 					double velY = target.motionY;
 					double velZ = target.motionZ;
 					
-					target.attackEntityFrom(this.getCaster() != null ? MagicDamage.causeIndirectMagicDamage(this, this.getCaster(), DamageType.FROST) : DamageSource.magic, 8);
+					target.attackEntityFrom(this.getCaster() != null ? MagicDamage.causeIndirectEntityMagicDamage(this, this.getCaster(), DamageType.FROST) : DamageSource.magic, 8);
 					
 					// Removes knockback
 					target.motionX = velX;
@@ -60,9 +59,9 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 					target.motionZ = velZ;
 					
 					if(!MagicDamage.isEntityImmune(DamageType.FROST, target))
-						target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 200, 1));
+						target.addPotionEffect(new PotionEffect(Wizardry.frost.id, 200, 1, true));
 					
-					this.playSound(WizardrySounds.SPELL_FREEZE, 1.0f, 1.0f);
+					this.playSound("wizardry:freeze", 1.0f, 1.0f);
 					
 					// The trap is destroyed once triggered.
 					this.setDead();
@@ -71,7 +70,7 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 		}else if(this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble()*0.3;
 			double angle = rand.nextDouble()*Math.PI*2;
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, worldObj, this.posX + radius*Math.cos(angle), this.posY + 0.1, this.posZ + radius*Math.sin(angle), 0, 0, 0, 40 + rand.nextInt(10));
+			Wizardry.proxy.spawnParticle(EnumParticleType.SNOW, worldObj, this.posX + radius*Math.cos(angle), this.posY + 0.1, this.posZ + radius*Math.sin(angle), 0, 0, 0, 40 + rand.nextInt(10));
 		}
 	}
 

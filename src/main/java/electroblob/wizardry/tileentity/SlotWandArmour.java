@@ -1,24 +1,22 @@
 package electroblob.wizardry.tileentity;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
-import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
-/**
- * The central wand/armour/scroll slot in the arcane workbench GUI.
- * @author Electroblob
- * @since Wizardry 1.0
- */
-public class SlotWandArmour extends Slot {
+public class SlotWandArmour extends SlotWizardry {
 	
 	private ContainerArcaneWorkbench container;
 
-	public SlotWandArmour(IInventory par1iInventory, int index, int x, int y, ContainerArcaneWorkbench container) {
-		super(par1iInventory, index, x, y);
+	public SlotWandArmour(IInventory par1iInventory, int par2, int par3,
+			int par4, ContainerArcaneWorkbench container) {
+		super(par1iInventory, par2, par3, par4, 1, -1);
 		this.container = container;
 	}
 	
@@ -34,16 +32,14 @@ public class SlotWandArmour extends Slot {
 		this.container.onSlotChanged(slotNumber, null, player);
 	}
 	
-	@Override
 	public int getSlotStackLimit()
     {
         return 1;
     }
 	
-	@Override
 	public boolean isItemValid(ItemStack itemstack){
 		return itemstack != null && (itemstack.getItem() instanceof ItemWand
 				|| itemstack.getItem() instanceof ItemWizardArmour
-				|| itemstack.getItem() == WizardryItems.blank_scroll);
+				|| itemstack.getItem() == Wizardry.blankScroll);
     }
 }

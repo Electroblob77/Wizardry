@@ -204,7 +204,7 @@ Credits
 ------------------------------
 Electroblob's Wizardry
 Version VERSION
-For Minecraft 1.10.2
+For Minecraft 1.7.10
 
 Designed, coded and textured by Electroblob
 
@@ -217,6 +217,5 @@ In addition, I'd like to thank the following individuals for their contributions
 Translations:
 
 - Russian: VilagVil
-- Spanish and Mexican Spanish: MadWrist
 
 Lightning ray sound effect from OhhWowProductions

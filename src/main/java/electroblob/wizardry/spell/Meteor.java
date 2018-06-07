@@ -1,24 +1,21 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.EntityMeteor;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class Meteor extends Spell {
 
 	public Meteor() {
-		super(Tier.MASTER, 100, Element.FIRE, "meteor", SpellType.ATTACK, 200, EnumAction.NONE, false);
+		super(EnumTier.MASTER, 100, EnumElement.FIRE, "meteor", EnumSpellType.ATTACK, 200, EnumAction.none, false);
 	}
 
 	@Override
@@ -27,24 +24,26 @@ public class Meteor extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(40*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(40*rangeMultiplier, world, caster, false);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
 
-			BlockPos pos = rayTrace.getBlockPos();
+			int x = rayTrace.blockX;
+			int y = rayTrace.blockY;
+			int z = rayTrace.blockZ;
 
         	// Not sure why it is +1 but it has to be to work properly.
-        	if(world.canBlockSeeSky(pos.up())){
+        	if(world.canBlockSeeTheSky(x, y+1, z)){
         		
 				if(!world.isRemote){
-					EntityMeteor meteor = new EntityMeteor(world, pos.getX(), pos.getY() + 50, pos.getZ(), modifiers.get(WizardryItems.blast_upgrade));
+					EntityMeteor meteor = new EntityMeteor(world, x, y + 50, z, Blocks.stone, blastMultiplier);
 					world.spawnEntityInWorld(meteor);
 				}
 
-				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SUMMONING, 3.0f, 1.0f);
+				caster.swingItem();
+				world.playSoundAtEntity(caster, "wizardry:darkaura", 3.0f, 1.0f);
 				return true;
         	}
 		}

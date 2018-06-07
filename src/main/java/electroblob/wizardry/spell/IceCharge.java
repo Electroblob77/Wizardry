@@ -1,24 +1,19 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.entity.projectile.EntityIceCharge;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class IceCharge extends Spell {
 
 	public IceCharge() {
-		super(Tier.ADVANCED, 20, Element.ICE, "ice_charge", SpellType.ATTACK, 30, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 20, EnumElement.ICE, "ice_charge", EnumSpellType.ATTACK, 30, EnumAction.none, false);
 	}
 
 	@Override
@@ -27,31 +22,31 @@ public class IceCharge extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(!world.isRemote){
-			EntityIceCharge icecharge = new EntityIceCharge(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
+			EntityIceCharge icecharge = new EntityIceCharge(world, caster, damageMultiplier, blastMultiplier);
 			world.spawnEntityInWorld(icecharge);
 		}
 		
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
+		caster.swingItem();
+		world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 		
 			if(!world.isRemote){
-				EntityIceCharge icecharge = new EntityIceCharge(world, caster, modifiers.get(SpellModifiers.DAMAGE), modifiers.get(WizardryItems.blast_upgrade));
+				EntityIceCharge icecharge = new EntityIceCharge(world, caster, damageMultiplier, blastMultiplier);
 				icecharge.directTowards(target, 1.5f);
 				world.spawnEntityInWorld(icecharge);
 			}
 			
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 			return true;
 		}
 		

@@ -2,12 +2,12 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -29,7 +29,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 	public void onUpdate(){
 
 		if(this.ticksExisted % 25 == 1){
-			this.playSound(WizardrySounds.SPELL_LOOP_SPARKLE, 0.1f, 1.0f);
+			this.playSound("wizardry:sparkle", 0.1f, 1.0f);
 		}
 
 		super.onUpdate();
@@ -49,7 +49,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 						double velZ = target.motionZ;
 
 						if(this.getCaster() != null){
-							target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT), 1*damageMultiplier);
+							target.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, getCaster(), DamageType.RADIANT), 1*damageMultiplier);
 						}else{
 							target.attackEntityFrom(DamageSource.magic, 1*damageMultiplier);
 						}
@@ -69,7 +69,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 				float brightness = 0.5f + (rand.nextFloat()*0.5f);
 				double radius = rand.nextDouble()*2.0;
 				double angle = rand.nextDouble()*Math.PI*2;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, worldObj, this.posX + radius*Math.cos(angle), this.posY, this.posZ + radius*Math.sin(angle), 0, 0.05f, 0, 48 + this.rand.nextInt(12), 1.0f, 1.0f, brightness);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, worldObj, this.posX + radius*Math.cos(angle), this.posY, this.posZ + radius*Math.sin(angle), 0, 0.05f, 0, 48 + this.rand.nextInt(12), 1.0f, 1.0f, brightness);
 			}
 		}
 	}

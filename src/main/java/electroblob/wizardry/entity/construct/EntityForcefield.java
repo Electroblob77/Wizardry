@@ -2,16 +2,19 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class EntityForcefield extends EntityMagicConstruct {
@@ -20,7 +23,7 @@ public class EntityForcefield extends EntityMagicConstruct {
 		super(world);
 		this.height = 6;
 		this.width = 6;
-		this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 3, this.posY - 3, this.posZ - 3, this.posX + 3, this.posY + 3, this.posZ + 3));
+		this.boundingBox.setBounds(this.posX - 3, this.posY - 3, this.posZ - 3, this.posX + 3, this.posY + 3, this.posZ + 3);
 	}
 	
 	public EntityForcefield(World world, double x, double y, double z, EntityLivingBase caster, int lifetime) {
@@ -29,7 +32,7 @@ public class EntityForcefield extends EntityMagicConstruct {
 		super(world, x, y-3, z, caster, lifetime, 1.0f);
 		this.height = 6;
 		this.width = 6;
-		this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 3, this.posY - 3, this.posZ - 3, this.posX + 3, this.posY + 3, this.posZ + 3));
+		this.boundingBox.setBounds(this.posX - 3, this.posY - 3, this.posZ - 3, this.posX + 3, this.posY + 3, this.posZ + 3);
 	}
 	
 	public boolean canBeCollidedWith()
@@ -39,7 +42,7 @@ public class EntityForcefield extends EntityMagicConstruct {
 	
     public AxisAlignedBB getCollisionBox(Entity par1Entity)
     {
-        return par1Entity.getEntityBoundingBox();
+        return par1Entity.boundingBox;
     }
     
 	public void onUpdate(){
@@ -54,7 +57,7 @@ public class EntityForcefield extends EntityMagicConstruct {
 					target.addVelocity((target.posX - this.posX)*multiplier, (target.posY - (this.posY + 3))*multiplier, (target.posZ - this.posZ)*multiplier);
 					// Player motion is handled on that player's client so needs packets
 					if(target instanceof EntityPlayerMP){
-						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+						((EntityPlayerMP)target).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(target));
 					}
 				}
 			}
@@ -65,18 +68,17 @@ public class EntityForcefield extends EntityMagicConstruct {
         		double yaw = rand.nextDouble()*Math.PI*2;
         		double pitch = (rand.nextDouble()-0.5)*Math.PI;
         		// Generates a spherical pattern of particles
-        		Wizardry.proxy.spawnParticle(WizardryParticleType.BRIGHT_DUST, worldObj, this.posX + radius*Math.cos(yaw)*Math.cos(pitch), this.posY + 3 + radius*Math.sin(pitch), this.posZ + radius*Math.sin(yaw)*Math.cos(pitch), 0, 0, 0, 48 + this.rand.nextInt(12), brightness, brightness, 1.0f);
+        		Wizardry.proxy.spawnParticle(EnumParticleType.BRIGHT_DUST, worldObj, this.posX + radius*Math.cos(yaw)*Math.cos(pitch), this.posY + 3 + radius*Math.sin(pitch), this.posZ + radius*Math.sin(yaw)*Math.cos(pitch), 0, 0, 0, 48 + this.rand.nextInt(12), brightness, brightness, 1.0f);
 			}
 		}
 	}
 	
-	public boolean attackEntityFrom(DamageSource source, float par2){
-		
-		if(source != null && source.getSourceOfDamage() != null){
-			// Now works for any source of damage.
-			source.getSourceOfDamage().playSound(WizardrySounds.SPELL_DEFLECTION, 0.3f, 1.3f);
+	public boolean attackEntityFrom(DamageSource par1DamageSource, float par2)
+    {
+		if(par1DamageSource != null && par1DamageSource.getSourceOfDamage() instanceof IProjectile){
+			worldObj.playSoundAtEntity(par1DamageSource.getSourceOfDamage(), "wizardry:effect", 0.3f, 1.3f);
 		}
-		super.attackEntityFrom(source, par2);
+		super.attackEntityFrom(par1DamageSource, par2);
 		return false;
     }
 		

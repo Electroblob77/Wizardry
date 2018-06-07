@@ -1,23 +1,21 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.living.EntitySpiritHorse;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class SummonSpiritHorse extends Spell {
 
 	public SummonSpiritHorse() {
-		super(Tier.ADVANCED, 50, Element.EARTH, "summon_spirit_horse", SpellType.MINION, 150, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 50, EnumElement.EARTH, "summon_spirit_horse", EnumSpellType.MINION, 150, EnumAction.bow, false);
 	}
 
 	@Override
@@ -26,24 +24,29 @@ public class SummonSpiritHorse extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		WizardData properties = WizardData.get(caster);
+		ExtendedPlayer properties = ExtendedPlayer.get(caster);
 		
 		if(!properties.hasSpiritHorse){
 			if(!world.isRemote){
-
-				BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
-				if(pos == null) return false;
+				double x1 = caster.posX + world.rand.nextDouble()*4 - 2;
+				double z1 = caster.posZ + world.rand.nextDouble()*4 - 2;
+				// Allows for height variation.
+				if(WizardryUtilities.getNearestFloorLevel(world, (int)x1, (int)caster.posY, (int)z1, 5) == -1){
+					return false;
+				}
+				double y1 = Math.max(caster.posY, WizardryUtilities.getNearestFloorLevel(world, (int)x1, (int)caster.posY, (int)z1, 5));
 				
 				EntitySpiritHorse horse = new EntitySpiritHorse(world);
-				horse.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+				if(Wizardry.showSummonedCreatureNames) horse.setCustomNameTag(StatCollector.translateToLocalFormatted("entity.wizardry.summonedcreature.nameplate", caster.getCommandSenderName(), horse.getCommandSenderName()));
+				horse.setPosition(x1, y1, z1);
 				horse.setTamedBy(caster);
 				horse.setHorseSaddled(true);
 				world.spawnEntityInWorld(horse);
 			}
 			properties.hasSpiritHorse = true;
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+			world.playSoundAtEntity(caster, "wizardry:heal", 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
 			return true;
 		}
 		return false;

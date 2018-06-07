@@ -1,14 +1,11 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,31 +15,31 @@ import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.SkeletonType;
+import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Metamorphosis extends Spell {
 
 	public Metamorphosis() {
-		super(Tier.APPRENTICE, 15, Element.NECROMANCY, "metamorphosis", SpellType.UTILITY, 30, EnumAction.NONE, false);
+		super(EnumTier.APPRENTICE, 15, EnumElement.NECROMANCY, "metamorphosis", EnumSpellType.UTILITY, 30, EnumAction.none, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		Vec3d look = caster.getLookVec();
+		Vec3 look = caster.getLookVec();
 		
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 10*modifiers.get(WizardryItems.range_upgrade));
+		MovingObjectPosition rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 10*rangeMultiplier);
 		
 		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
 			
@@ -61,11 +58,10 @@ public class Metamorphosis extends Spell {
 				newEntity = new EntityPig(world);
 			}
 			else if(entityHit instanceof EntitySkeleton){
-				// IDEA: Interaction with husks/strays?
-				if(((EntitySkeleton)entityHit).getSkeletonType() == SkeletonType.NORMAL){
-					((EntitySkeleton)entityHit).setSkeletonType(SkeletonType.WITHER);
+				if(((EntitySkeleton)entityHit).getSkeletonType() == 0){
+					((EntitySkeleton)entityHit).setSkeletonType(1);
 				}else{
-					((EntitySkeleton)entityHit).setSkeletonType(SkeletonType.NORMAL);
+					((EntitySkeleton)entityHit).setSkeletonType(0);
 				}
 				flag = true;
 			}
@@ -107,21 +103,21 @@ public class Metamorphosis extends Spell {
 				}
 
 				if(world.isRemote){
-					for(int i=1; i<(int)(25*modifiers.get(WizardryItems.range_upgrade)); i+=2){
+					for(int i=1; i<(int)(25*rangeMultiplier); i+=2){
 						// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
 						double x1 = caster.posX + look.xCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
 						double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.yCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
 						double z1 = caster.posZ + look.zCoord*i/2 + world.rand.nextFloat()/5 - 0.1f;
 						//world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
-						Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 12 + world.rand.nextInt(8), 0.2f, 0.0f, 0.1f);
+						Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 12 + world.rand.nextInt(8), 0.2f, 0.0f, 0.1f);
 					}
 					for(int i=0;i<5;i++){
-						Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, xPos, yPos, zPos, 0.0d, 0.0d, 0.0d, 0, 0.1f, 0.0f, 0.0f);
+						Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, xPos, yPos, zPos, 0.0d, 0.0d, 0.0d, 0, 0.1f, 0.0f, 0.0f);
 		    		}
 				}
 				
-				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_DEFLECTION, 0.5F, 0.8f);
+				caster.swingItem();
+				world.playSoundAtEntity(caster, "wizardry:effect", 0.5F, 0.8f);
 				return true;
 			}
 		}

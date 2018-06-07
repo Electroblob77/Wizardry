@@ -1,23 +1,18 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryBlocks;
-import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.tileentity.TileEntityTimer;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class Cobwebs extends Spell {
@@ -25,7 +20,7 @@ public class Cobwebs extends Spell {
 	private static final int baseDuration = 400;
 
 	public Cobwebs() {
-		super(Tier.ADVANCED, 30, Element.EARTH, "cobwebs", SpellType.ATTACK, 70, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 30, EnumElement.EARTH, "cobwebs", EnumSpellType.ATTACK, 70, EnumAction.none, false);
 	}
 
 	@Override
@@ -34,44 +29,95 @@ public class Cobwebs extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(12*modifiers.get(WizardryItems.range_upgrade), world, caster, true);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(12*rangeMultiplier, world, caster, true);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
+			
+			int blockHitX = rayTrace.blockX;
+			int blockHitY = rayTrace.blockY;
+			int blockHitZ = rayTrace.blockZ;
+			int blockHitSide = rayTrace.sideHit;
 			
 			boolean flag = false;
 			
-			BlockPos pos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
+			switch(blockHitSide){
+			case 0: blockHitY--; break;
+			case 1: blockHitY++; break;
+			case 2: blockHitZ--; break;
+			case 3: blockHitZ++; break;
+			case 4: blockHitX--; break;
+			case 5: blockHitX++; break;
+			}
 			
-			if(world.isAirBlock(pos)){
+			if(world.isAirBlock(blockHitX, blockHitY, blockHitZ)){
 				if(!world.isRemote){
-					world.setBlockState(pos, WizardryBlocks.vanishing_cobweb.getDefaultState());
-					if(world.getTileEntity(pos) instanceof TileEntityTimer){
-						((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(baseDuration*modifiers.get(WizardryItems.duration_upgrade)));
+					world.setBlock(blockHitX, blockHitY, blockHitZ, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX, blockHitY, blockHitZ) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX, blockHitY, blockHitZ)).setLifetime((int)(baseDuration*durationMultiplier));
 					}
 				}
 				flag = true;
 			}
-			
-			for(EnumFacing side : EnumFacing.values()){
-				
-				BlockPos pos1 = pos.offset(side);
-				
-				if(world.isAirBlock(pos1)){
-					if(!world.isRemote){
-						world.setBlockState(pos1, WizardryBlocks.vanishing_cobweb.getDefaultState());
-						if(world.getTileEntity(pos1) instanceof TileEntityTimer){
-							((TileEntityTimer)world.getTileEntity(pos1)).setLifetime((int)(baseDuration*modifiers.get(WizardryItems.duration_upgrade)));
-						}
+			if(world.isAirBlock(blockHitX+1, blockHitY, blockHitZ)){
+				if(!world.isRemote){
+					world.setBlock(blockHitX+1, blockHitY, blockHitZ, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX+1, blockHitY, blockHitZ) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX+1, blockHitY, blockHitZ)).setLifetime((int)(baseDuration*durationMultiplier));
 					}
-					flag = true;
 				}
+				flag = true;
+			}
+			if(world.isAirBlock(blockHitX-1, blockHitY, blockHitZ)){
+				if(!world.isRemote){
+					world.setBlock(blockHitX-1, blockHitY, blockHitZ, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX-1, blockHitY, blockHitZ) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX-1, blockHitY, blockHitZ)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(blockHitX, blockHitY+1, blockHitZ)){
+				if(!world.isRemote){
+					world.setBlock(blockHitX, blockHitY+1, blockHitZ, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX, blockHitY+1, blockHitZ) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX, blockHitY+1, blockHitZ)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(blockHitX, blockHitY-1, blockHitZ)){
+				if(!world.isRemote){
+					world.setBlock(blockHitX, blockHitY-1, blockHitZ, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX, blockHitY-1, blockHitZ) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX, blockHitY-1, blockHitZ)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(blockHitX, blockHitY, blockHitZ+1)){
+				if(!world.isRemote){
+					world.setBlock(blockHitX, blockHitY, blockHitZ+1, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX, blockHitY, blockHitZ+1) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX, blockHitY, blockHitZ+1)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(blockHitX, blockHitY, blockHitZ-1)){
+				if(!world.isRemote){
+					world.setBlock(blockHitX, blockHitY, blockHitZ-1, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(blockHitX, blockHitY, blockHitZ-1) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX, blockHitY, blockHitZ-1)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
 			}
 				
 			if(flag){
-				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_LAVA_EXTINGUISH, 1.0f, 1.0f);
+				caster.swingItem();
+				world.playSoundAtEntity(caster, "random.fizz", 1.0f, 1.0f);
 				return true;
 			}
 		}
@@ -79,46 +125,83 @@ public class Cobwebs extends Spell {
 	}
 	
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(target != null){
 			
 			int x = MathHelper.floor_double(target.posX);
-			int y = (int)target.getEntityBoundingBox().minY;
+			int y = (int)target.boundingBox.minY;
 			int z = MathHelper.floor_double(target.posZ);
 			
 			boolean flag = false;
 			
-			BlockPos pos = new BlockPos(x, y, z);
-
-			if(world.isAirBlock(pos)){
+			if(world.isAirBlock(x, y, z)){
 				if(!world.isRemote){
-					world.setBlockState(pos, WizardryBlocks.vanishing_cobweb.getDefaultState());
-					if(world.getTileEntity(pos) instanceof TileEntityTimer){
-						((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(baseDuration*modifiers.get(WizardryItems.duration_upgrade)));
+					world.setBlock(x, y, z, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x, y, z) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x, y, z)).setLifetime((int)(baseDuration*durationMultiplier));
 					}
 				}
 				flag = true;
 			}
-			
-			for(EnumFacing side : EnumFacing.values()){
-				
-				BlockPos pos1 = pos.offset(side);
-				
-				if(world.isAirBlock(pos1)){
-					if(!world.isRemote){
-						world.setBlockState(pos1, WizardryBlocks.vanishing_cobweb.getDefaultState());
-						if(world.getTileEntity(pos1) instanceof TileEntityTimer){
-							((TileEntityTimer)world.getTileEntity(pos1)).setLifetime((int)(baseDuration*modifiers.get(WizardryItems.duration_upgrade)));
-						}
+			if(world.isAirBlock(x+1, y, z)){
+				if(!world.isRemote){
+					world.setBlock(x+1, y, z, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x+1, y, z) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x+1, y, z)).setLifetime((int)(baseDuration*durationMultiplier));
 					}
-					flag = true;
 				}
+				flag = true;
+			}
+			if(world.isAirBlock(x-1, y, z)){
+				if(!world.isRemote){
+					world.setBlock(x-1, y, z, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x-1, y, z) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x-1, y, z)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(x, y+1, z)){
+				if(!world.isRemote){
+					world.setBlock(x, y+1, z, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x, y+1, z) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x, y+1, z)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(x, y-1, z)){
+				if(!world.isRemote){
+					world.setBlock(x, y-1, z, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x, y-1, z) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x, y-1, z)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(x, y, z+1)){
+				if(!world.isRemote){
+					world.setBlock(x, y, z+1, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x, y, z+1) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x, y, z+1)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
+			}
+			if(world.isAirBlock(x, y, z-1)){
+				if(!world.isRemote){
+					world.setBlock(x, y, z-1, Wizardry.vanishingCobweb);
+					if(world.getTileEntity(x, y, z-1) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x, y, z-1)).setLifetime((int)(baseDuration*durationMultiplier));
+					}
+				}
+				flag = true;
 			}
 				
 			if(flag){
-				caster.swingArm(hand);
-				caster.playSound(SoundEvents.BLOCK_LAVA_EXTINGUISH, 1.0f, 1.0f);
+				caster.swingItem();
+				world.playSoundAtEntity(caster, "random.fizz", 1.0f, 1.0f);
 				return true;
 			}
 		}

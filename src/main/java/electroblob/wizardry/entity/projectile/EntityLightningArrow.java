@@ -1,11 +1,12 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.EnumParticleType;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class EntityLightningArrow extends EntityMagicArrow {
@@ -42,16 +43,16 @@ public class EntityLightningArrow extends EntityMagicArrow {
 		
 		if(worldObj.isRemote){
 			for(int j=0;j<8;j++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
 			}
 		}
-		/* Pretty sure this needn't be here, probably missed it when I implemented the damage type system.
+		
 		if(entityHit instanceof EntityCreeper && !((EntityCreeper)entityHit).getPowered()){
 	        entityHit.getDataWatcher().updateObject(17, Byte.valueOf((byte)1));
-			if(this.getShootingEntity() instanceof EntityPlayer) ((EntityPlayer)this.getShootingEntity()).addStat(Wizardry.chargeCreeper);
+			if(this.getShootingEntity() instanceof EntityPlayer) ((EntityPlayer)this.getShootingEntity()).triggerAchievement(Wizardry.chargeCreeper);
 		}
-		*/
-        this.playSound(WizardrySounds.SPELL_SPARK, 1.0F, 1.0F);
+		
+        this.playSound("wizardry:arc", 1.0F, 1.0F);
 	}
 	
 	@Override
@@ -62,7 +63,7 @@ public class EntityLightningArrow extends EntityMagicArrow {
     	}
 
 		if(worldObj.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX, this.posY, this.posZ, 0, 0, 0, 3);
+			Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX, this.posY, this.posZ, 0, 0, 0, 3);
         }
 		
     }

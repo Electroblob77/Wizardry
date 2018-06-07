@@ -2,10 +2,10 @@ package electroblob.wizardry;
 
 import java.util.Set;
 
+import cpw.mods.fml.client.IModGuiFactory;
 import electroblob.wizardry.client.GuiConfigWizardry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.client.IModGuiFactory;
 
 public class WizardryGuiFactory implements IModGuiFactory {
 	
@@ -27,8 +27,7 @@ public class WizardryGuiFactory implements IModGuiFactory {
         return null;
     }
  
-    @SuppressWarnings("deprecation") // It's a bit of Forge that hasn't been tidied up, but we have to implement it.
-	@Override
+    @Override
     public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) 
     {
         return null;

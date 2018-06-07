@@ -1,13 +1,11 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
@@ -44,9 +42,9 @@ public class EntityIceShard extends EntityMagicArrow {
 	public void onEntityHit(EntityLivingBase entityHit){
 		
         // Adds a freeze effect to the target.
-        if(!MagicDamage.isEntityImmune(DamageType.FROST, entityHit)) entityHit.addPotionEffect(new PotionEffect(WizardryPotions.frost, 200, 0));
+        if(!MagicDamage.isEntityImmune(DamageType.FROST, entityHit)) entityHit.addPotionEffect(new PotionEffect(Wizardry.frost.id, 200, 0, true));
         
-		this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		this.playSound("game.neutral.hurt", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}
 	
 	@Override
@@ -62,11 +60,11 @@ public class EntityIceShard extends EntityMagicArrow {
     			double x = this.posX - 0.25d + (rand.nextDouble()/2);
     			double y = this.posY - 0.25d + (rand.nextDouble()/2);
     			double z = this.posZ - 0.25d + (rand.nextDouble()/2);
-    			Wizardry.proxy.spawnParticle(WizardryParticleType.ICE, worldObj, x, y, z, x - this.posX, y - this.posY, z - this.posZ, 20 + rand.nextInt(10));
+    			Wizardry.proxy.spawnParticle(EnumParticleType.ICE, worldObj, x, y, z, x - this.posX, y - this.posY, z - this.posZ, 20 + rand.nextInt(10));
     		}
     	}
     	// Parameters for sound: sound event name, volume, pitch.
-    	this.playSound(SoundEvents.ENTITY_SPLASH_POTION_BREAK, 1.0F, rand.nextFloat() * 0.4F + 1.2F);
+    	this.playSound("game.potion.smash", 1.0F, rand.nextFloat() * 0.4F + 1.2F);
     	
 	}
 	

@@ -1,24 +1,19 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.entity.projectile.EntityMagicMissile;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class MagicMissile extends Spell {
 
 	public MagicMissile() {
-		super(Tier.BASIC, 5, Element.MAGIC, "magic_missile", SpellType.ATTACK, 10, EnumAction.NONE, false);
+		super(EnumTier.BASIC, 5, EnumElement.MAGIC, "magic_missile", EnumSpellType.ATTACK, 10, EnumAction.none, false);
 	}
 
 	@Override
@@ -27,31 +22,31 @@ public class MagicMissile extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(!world.isRemote){
-			EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, 2*modifiers.get(WizardryItems.range_upgrade), modifiers.get(SpellModifiers.DAMAGE));
+			EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, 2*rangeMultiplier, damageMultiplier);
 			world.spawnEntityInWorld(magicMissile);
 		}
 		
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_MAGIC, 1.0F, world.rand.nextFloat() * 0.4F + 1.2F);
+		caster.swingItem();
+		world.playSoundAtEntity(caster, "wizardry:magic", 1.0F, world.rand.nextFloat() * 0.4F + 1.2F);
 		
 		return true;
 	}
 	
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 			
 			if(!world.isRemote){
-				EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, target, 2*modifiers.get(WizardryItems.range_upgrade), 4, modifiers.get(SpellModifiers.DAMAGE));
+				EntityMagicMissile magicMissile = new EntityMagicMissile(world, caster, target, 2*rangeMultiplier, 4, damageMultiplier);
 				world.spawnEntityInWorld(magicMissile);
 			}
 			
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_MAGIC, 1.0F, world.rand.nextFloat() * 0.4F + 1.2F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:magic", 1.0F, world.rand.nextFloat() * 0.4F + 1.2F);
 			
 			return true;
 		}

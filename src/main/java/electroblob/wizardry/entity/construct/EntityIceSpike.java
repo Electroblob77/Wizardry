@@ -1,9 +1,8 @@
 package electroblob.wizardry.entity.construct;
 
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.MagicDamage.DamageType;
+import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
@@ -32,14 +31,14 @@ public class EntityIceSpike extends EntityMagicConstruct {
 		
 		this.moveEntity(this.motionX, this.motionY, this.motionZ);
 		
-		if(lifetime - this.ticksExisted == 30) this.playSound(WizardrySounds.SPELL_ICE, 1, 2);
+		if(lifetime - this.ticksExisted == 30) this.playSound("wizardry:ice", 1, 2);
 		
 		if(!this.worldObj.isRemote){
-			for(Object entity : this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox())){
+			for(Object entity : this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox)){
 				if(entity instanceof EntityLivingBase && this.isValidTarget((EntityLivingBase)entity)){
 					// Potion effect only gets added if the damage succeeded.
 					if(((EntityLivingBase)entity).attackEntityFrom(MagicDamage.causeDirectMagicDamage(this.getCaster(), DamageType.FROST), 5*this.damageMultiplier))
-						((EntityLivingBase)entity).addPotionEffect(new PotionEffect(WizardryPotions.frost, 100, 0));
+						((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Wizardry.frost.id, 100, 0));
 				}
 			}
 		}

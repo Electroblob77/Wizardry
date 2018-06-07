@@ -1,17 +1,18 @@
 package electroblob.wizardry.enchantment;
 
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentDamage;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 
 // This one is for imbued swords. The only reason this is separate is that the way vanilla is written allows me to hook
 // into the damage increase for melee weapons, meaning I don't have to use events - always handy!
-public class EnchantmentMagicSword extends EnchantmentDamage implements Imbuement {
+public class EnchantmentMagicSword extends EnchantmentDamage {
 
-	public EnchantmentMagicSword() {
-		super(Enchantment.Rarity.COMMON, 0, EntityEquipmentSlot.MAINHAND);
+	public EnchantmentMagicSword(int id) {
+		super(id, 0, 0);
 		// Setting this to null stops the book appearing in the creative inventory
 		this.type = null;
 	}
@@ -35,15 +36,17 @@ public class EnchantmentMagicSword extends EnchantmentDamage implements Imbuemen
 
     // Returns the number by which the damage should be increased (or something)
     @Override
-    public float calcDamageByCreature(int p_152376_1_, EnumCreatureAttribute p_152376_2_)
+    public float func_152376_a(int p_152376_1_, EnumCreatureAttribute p_152376_2_)
     {
         return (float)p_152376_1_ * 1.25F;
     }
 
-    @Override
+    /**
+     * Return the name of key in translation table of this enchantment.
+     */
     public String getName()
     {
-        return "enchantment." + this.getRegistryName();
+        return "enchantment.magic_sword";
     }
     
     @Override

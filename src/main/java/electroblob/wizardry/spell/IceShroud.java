@@ -1,25 +1,21 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
+import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class IceShroud extends Spell {
 
 	public IceShroud() {
-		super(Tier.ADVANCED, 40, Element.ICE, "ice_shroud", SpellType.DEFENCE, 250, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 40, EnumElement.ICE, "ice_shroud", EnumSpellType.DEFENCE, 250, EnumAction.bow, false);
 	}
 
 	@Override
@@ -28,29 +24,29 @@ public class IceShroud extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		// Cannot be cast when it has already been cast
-		if(!caster.isPotionActive(WizardryPotions.ice_shroud)){
+		if(!caster.isPotionActive(Wizardry.iceShroud)){
 			if(!world.isRemote){
-				caster.addPotionEffect(new PotionEffect(WizardryPotions.ice_shroud, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+				caster.addPotionEffect(new PotionEffect(Wizardry.iceShroud.id, (int)(600*durationMultiplier), 0, true));
+				world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 			}
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(target != null){
 			// Cannot be cast when it has already been cast
-			if(!caster.isPotionActive(WizardryPotions.ice_shroud)){
+			if(!caster.isPotionActive(Wizardry.iceShroud)){
 				if(!world.isRemote){
-					caster.addPotionEffect(new PotionEffect(WizardryPotions.ice_shroud, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					caster.addPotionEffect(new PotionEffect(Wizardry.iceShroud.id, (int)(600*durationMultiplier), 0, true));
+					world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 				}
-				caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, world.rand.nextFloat() * 0.4F + 1.4F);
 				return true;
 			}
 			return false;

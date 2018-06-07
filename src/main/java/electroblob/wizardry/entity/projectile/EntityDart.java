@@ -1,12 +1,11 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.EnumParticleType;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
@@ -42,20 +41,20 @@ public class EntityDart extends EntityMagicArrow
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
         //Adds a weakness effect to the target.
-        entityHit.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 1, false, false));
-		this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+        entityHit.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 1, true));
+		this.playSound("game.neutral.hurt", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}
 	
 	@Override
 	public void onBlockHit(){
-		this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		this.playSound("random.bowhit", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}
 	
 	@Override
 	public void tickInAir(){
 		
 		if(this.worldObj.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, worldObj, this.posX, this.posY, this.posZ, 0, -0.03, 0, 10 + rand.nextInt(5));
+			Wizardry.proxy.spawnParticle(EnumParticleType.LEAF, worldObj, this.posX, this.posY, this.posZ, 0, -0.03, 0, 10 + rand.nextInt(5));
         }
     }
 	

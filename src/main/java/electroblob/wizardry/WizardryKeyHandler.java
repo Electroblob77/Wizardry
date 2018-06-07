@@ -2,13 +2,13 @@ package electroblob.wizardry;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class WizardryKeyHandler {
 
@@ -25,7 +25,9 @@ public class WizardryKeyHandler {
 			
 			if(Wizardry.proxy instanceof ClientProxy){
 				
-				if(ClientProxy.NEXT_SPELL.isPressed() && Minecraft.getMinecraft().inGameHasFocus){
+				ClientProxy proxy = (ClientProxy)Wizardry.proxy;
+				
+			    if(proxy.nextSpell.isPressed() && Minecraft.getMinecraft().inGameHasFocus){
 		     		if(!NkeyPressed){
 		     			NkeyPressed = true;
 		     		}else{
@@ -33,12 +35,12 @@ public class WizardryKeyHandler {
 		     		}
 		     		if(!NkeyAlreadyPressed){
 		     			// Packet building
-		            	IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.NEXT_SPELL_KEY);
+		            	IMessage msg = new PacketControlInput.Message(1);
 		            	WizardryPacketHandler.net.sendToServer(msg);
 		     		}
 			    }
 			    
-			    if(ClientProxy.PREVIOUS_SPELL.isPressed() && Minecraft.getMinecraft().inGameHasFocus){
+			    if(proxy.previousSpell.isPressed() && Minecraft.getMinecraft().inGameHasFocus){
 			    	if(!BkeyPressed){
 		     			BkeyPressed = true;
 		     		}else{
@@ -46,7 +48,7 @@ public class WizardryKeyHandler {
 		     		}
 		    		if(!BkeyAlreadyPressed){
 		     			// Packet building
-		            	IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.PREVIOUS_SPELL_KEY);
+		            	IMessage msg = new PacketControlInput.Message(2);
 		            	WizardryPacketHandler.net.sendToServer(msg);
 		    		}
 			    }

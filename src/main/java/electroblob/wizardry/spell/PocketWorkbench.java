@@ -1,22 +1,20 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.client.GuiPortableCrafting;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class PocketWorkbench extends Spell {
 
 	public PocketWorkbench() {
-		super(Tier.APPRENTICE, 30, Element.SORCERY, "pocket_workbench", SpellType.UTILITY, 40, EnumAction.BOW, false);
+		super(EnumTier.APPRENTICE, 30, EnumElement.SORCERY, "pocket_workbench", EnumSpellType.UTILITY, 40, EnumAction.bow, false);
 	}
 
 	@Override
@@ -25,14 +23,14 @@ public class PocketWorkbench extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		// TODO: Investigate possible item duplication bug with this spell. So far I have been unable to recreate it.
 		if(!world.isRemote){
 			caster.openGui(Wizardry.instance, WizardryGuiHandler.PORTABLE_CRAFTING, world, (int)caster.posX, (int)caster.posY, (int)caster.posZ);
 		}
 
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1, 1);
+		world.playSoundAtEntity(caster, "wizardry:aura", 1, 1);
 
 		return true;
 	}

@@ -1,12 +1,15 @@
 package electroblob.wizardry.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** Font renderer that renders parts of strings surrounded by '#' (without quotes) in the SGA instead of normal text.
  * @since Wizardry 1.1 */
@@ -19,7 +22,7 @@ public class MixedFontRenderer extends FontRenderer {
 	}
 	
 	@Override
-    public int drawString(String string, float x, float y, int colour, boolean shadow){
+    public int drawString(String string, int x, int y, int colour, boolean shadow){
 		
 		int l = 0;
 		
@@ -33,8 +36,8 @@ public class MixedFontRenderer extends FontRenderer {
 	        	l += Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(section, x, y, colour, shadow);
 				x += Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(section);
 	        }else{
-	        	l += Minecraft.getMinecraft().fontRendererObj.drawString(section, x, y, colour, shadow);
-				x += Minecraft.getMinecraft().fontRendererObj.getStringWidth(section);
+	        	l += Minecraft.getMinecraft().fontRenderer.drawString(section, x, y, colour, shadow);
+				x += Minecraft.getMinecraft().fontRenderer.getStringWidth(section);
 	        }
 			
 			string = string.substring(string.indexOf('#') + 1);
@@ -44,7 +47,7 @@ public class MixedFontRenderer extends FontRenderer {
 		if(sga){
         	l += Minecraft.getMinecraft().standardGalacticFontRenderer.drawString(string, x, y, colour, shadow);
         }else{
-        	l += Minecraft.getMinecraft().fontRendererObj.drawString(string, x, y, colour, shadow);
+        	l += Minecraft.getMinecraft().fontRenderer.drawString(string, x, y, colour, shadow);
         }
 		
         return l;
@@ -64,7 +67,7 @@ public class MixedFontRenderer extends FontRenderer {
 			if(sga){
 	        	l += Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(section);
 	        }else{
-	        	l += Minecraft.getMinecraft().fontRendererObj.getStringWidth(section);
+	        	l += Minecraft.getMinecraft().fontRenderer.getStringWidth(section);
 	        }
 			
 			string = string.substring(string.indexOf('#') + 1);
@@ -74,7 +77,7 @@ public class MixedFontRenderer extends FontRenderer {
 		if(sga){
         	l += Minecraft.getMinecraft().standardGalacticFontRenderer.getStringWidth(string);
         }else{
-        	l += Minecraft.getMinecraft().fontRendererObj.getStringWidth(string);
+        	l += Minecraft.getMinecraft().fontRenderer.getStringWidth(string);
         }
 		
         return l;
@@ -87,7 +90,7 @@ public class MixedFontRenderer extends FontRenderer {
 		if(string.contains("#")){
         	Minecraft.getMinecraft().standardGalacticFontRenderer.drawSplitString(string.substring(1), x, y, width, colour);
         }else{
-        	Minecraft.getMinecraft().fontRendererObj.drawSplitString(string, x, y, width, colour);
+        	Minecraft.getMinecraft().fontRenderer.drawSplitString(string, x, y, width, colour);
         }
     }
 

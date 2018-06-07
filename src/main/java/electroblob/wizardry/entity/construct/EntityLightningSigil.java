@@ -2,16 +2,17 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import electroblob.wizardry.entity.EntityArc;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityLightningSigil extends EntityMagicConstruct {
@@ -57,14 +58,14 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 					double velZ = target.motionZ;
 					
 					// Only works if target is actually damaged to account for hurtResistantTime
-					if(target.attackEntityFrom(getCaster() != null ? MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.SHOCK) : DamageSource.magic, 6)){
+					if(target.attackEntityFrom(getCaster() != null ? MagicDamage.causeIndirectEntityMagicDamage(this, getCaster(), DamageType.SHOCK) : DamageSource.magic, 6)){
 						
 						// Removes knockback
 						target.motionX = velX;
 						target.motionY = velY;
 						target.motionZ = velZ;
 						
-						this.playSound(WizardrySounds.SPELL_SPARK, 1.0f, 1.0f);
+						this.playSound("wizardry:arc", 1.0f, 1.0f);
 						
 						// Secondary chaining effect
 						double seekerRange = 5.0d;
@@ -84,14 +85,14 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 									worldObj.spawnEntityInWorld(arc);
 								}else{
 									for(int k=0;k<8;k++){
-										Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, secondaryTarget.posX + worldObj.rand.nextFloat() - 0.5, secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height/2 + worldObj.rand.nextFloat()*2 - 1, secondaryTarget.posZ + worldObj.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-										worldObj.spawnParticle(EnumParticleTypes.SMOKE_LARGE, secondaryTarget.posX + worldObj.rand.nextFloat() - 0.5, secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height/2 + worldObj.rand.nextFloat()*2 - 1, secondaryTarget.posZ + worldObj.rand.nextFloat() - 0.5, 0, 0, 0);
+										Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, secondaryTarget.posX + worldObj.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(secondaryTarget) + secondaryTarget.height/2 + worldObj.rand.nextFloat()*2 - 1, secondaryTarget.posZ + worldObj.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+										worldObj.spawnParticle("largesmoke", secondaryTarget.posX + worldObj.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(secondaryTarget) + secondaryTarget.height/2 + worldObj.rand.nextFloat()*2 - 1, secondaryTarget.posZ + worldObj.rand.nextFloat() - 0.5, 0, 0, 0);
 									}
 								}
 								
-								secondaryTarget.playSound(WizardrySounds.SPELL_SPARK, 1.0F, worldObj.rand.nextFloat() * 0.4F + 1.5F);
+								worldObj.playSoundAtEntity(secondaryTarget, "wizardry:arc", 1.0F, worldObj.rand.nextFloat() * 0.4F + 1.5F);
 								
-								secondaryTarget.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.SHOCK), 4);
+								secondaryTarget.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, getCaster(), DamageType.SHOCK), 4);
 							}
 						
 						}
@@ -105,7 +106,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 		if(this.worldObj.isRemote && this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble()*0.3;
 			double angle = rand.nextDouble()*Math.PI*2;
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + radius*Math.cos(angle), this.posY + 0.1, this.posZ + radius*Math.sin(angle), 0, 0, 0, 3);
+			Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX + radius*Math.cos(angle), this.posY + 0.1, this.posZ + radius*Math.sin(angle), 0, 0, 0, 3);
 		}
 	}
 

@@ -3,13 +3,16 @@ package electroblob.wizardry.entity.construct;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
-import electroblob.wizardry.util.WizardryUtilities;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import electroblob.wizardry.ExtendedPlayer;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.entity.living.EntitySummonedCreature;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 /**
  * This class is for all inanimate magical constructs which are not projectiles. It was made from scratch
@@ -59,10 +62,10 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 	// Overrides the original to stop the entity moving when it intersects stuff. The default arrow does this to allow
     // it to stick in blocks.
 	@Override
-	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport)
+	public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9)
     {
-        this.setPosition(x, y, z);
-        this.setRotation(yaw, pitch);
+        this.setPosition(par1, par3, par5);
+        this.setRotation(par7, par8);
     }
 	
 	public void onUpdate(){
@@ -99,7 +102,8 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbttagcompound){
-		casterUUID = nbttagcompound.getUniqueId("casterUUID");
+		String string = nbttagcompound.getString("casterUUID");
+		if(WizardryUtilities.verifyUUIDString(string)) casterUUID = UUID.fromString(string);
         lifetime = nbttagcompound.getInteger("lifetime");
         damageMultiplier = nbttagcompound.getFloat("damageMultiplier");
 	}
@@ -107,7 +111,7 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbttagcompound){
 		if(this.getCaster() != null){
-        	nbttagcompound.setUniqueId("casterUUID", this.getCaster().getUniqueID());
+        	nbttagcompound.setString("casterUUID", this.getCaster().getUniqueID().toString());
         }
 		nbttagcompound.setInteger("lifetime", lifetime);
 		nbttagcompound.setFloat("damageMultiplier", damageMultiplier);

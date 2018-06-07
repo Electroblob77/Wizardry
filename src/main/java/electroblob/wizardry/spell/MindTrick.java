@@ -1,127 +1,94 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber
 public class MindTrick extends Spell {
 
 	public MindTrick() {
-		super(Tier.BASIC, 10, Element.NECROMANCY, "mind_trick", SpellType.ATTACK, 40, EnumAction.NONE, false);
+		super(EnumTier.BASIC, 10, EnumElement.NECROMANCY, "mind_trick", EnumSpellType.ATTACK, 40, EnumAction.none, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*modifiers.get(WizardryItems.range_upgrade));
+		MovingObjectPosition rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*rangeMultiplier);
 
 		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
 
 			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
 
 			if(!world.isRemote){
-
 				if(target instanceof EntityPlayer){
-
-					target.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 0));
-
+					target.addPotionEffect(new PotionEffect(Potion.confusion.id, (int)(300*durationMultiplier), 0));
 				}else if(target instanceof EntityLiving){
-
+					// New AI
 					((EntityLiving)target).setAttackTarget(null);
-					target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					// Old AI
+					if(target instanceof EntityCreature) ((EntityCreature)target).setTarget(null);
+
+					target.addPotionEffect(new PotionEffect(Wizardry.mindTrick.id, (int)(300*durationMultiplier), 0));
 				}
 			}else{
 				for(int i=0; i<10; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
+							WizardryUtilities.getEntityFeetPos(target) + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
 							target.posZ - 0.25 + world.rand.nextDouble()*0.5,
 							0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
 				}
 			}
-
-			target.playSound(WizardrySounds.SPELL_DEFLECTION, 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
-			caster.swingArm(hand);
+			world.playSoundAtEntity(target, "wizardry:effect", 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
+			caster.swingItem();
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		if(target != null){
 			if(!world.isRemote){
 				if(target instanceof EntityPlayer){
-
-					target.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 0));
-
+					target.addPotionEffect(new PotionEffect(Potion.confusion.id, (int)(300*durationMultiplier), 0));
 				}else if(target instanceof EntityLiving){
-
+					// New AI
 					((EntityLiving)target).setAttackTarget(null);
-					target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick, (int)(300*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					// Old AI
+					if(target instanceof EntityCreature) ((EntityCreature)target).setTarget(null);
 
+					target.addPotionEffect(new PotionEffect(Wizardry.mindTrick.id, (int)(300*durationMultiplier), 0));
 				}
 			}else{
 				for(int i=0; i<10; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
+							WizardryUtilities.getEntityFeetPos(target) + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
 							target.posZ - 0.25 + world.rand.nextDouble()*0.5,
 							0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
 				}
 			}
-
-			target.playSound(WizardrySounds.SPELL_DEFLECTION, 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
-			caster.swingArm(hand);
+			world.playSoundAtEntity(target, "wizardry:effect", 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
+			caster.swingItem();
 			return true;
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean canBeCastByNPCs() {
 		return true;
-	}
-
-	@SubscribeEvent
-	public static void onLivingAttackEvent(LivingAttackEvent event){
-		if(event.getSource() != null && event.getSource().getEntity() instanceof EntityLivingBase){
-			// Cancels the mind trick effect if the creature takes damage
-			// This has been moved to within an (event.getSource().getEntity() instanceof EntityLivingBase) check so it doesn't
-			// crash the game with a ConcurrentModificationException. If you think about it, mind trick only ought to be
-			// cancelled if something attacks the entity since potions, drowning, cacti etc. don't affect the targeting.
-			if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_trick)){
-				event.getEntityLiving().removePotionEffect(WizardryPotions.mind_trick);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
-		// Mind trick
-		// If the target is null already, no need to set it to null, or infinite loops will occur.
-		if((event.getEntityLiving().isPotionActive(WizardryPotions.mind_trick) || event.getEntityLiving().isPotionActive(WizardryPotions.fear)) && event.getEntityLiving() instanceof EntityLiving && event.getTarget() != null){
-			((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
-		}
 	}
 }

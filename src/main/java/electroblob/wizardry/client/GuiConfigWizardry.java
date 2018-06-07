@@ -3,30 +3,30 @@ package electroblob.wizardry.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import electroblob.wizardry.Settings;
+import cpw.mods.fml.client.config.DummyConfigElement.DummyCategoryElement;
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.GuiConfigEntries;
+import cpw.mods.fml.client.config.GuiConfigEntries.CategoryEntry;
+import cpw.mods.fml.client.config.IConfigElement;
 import electroblob.wizardry.Wizardry;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.config.DummyConfigElement.DummyCategoryElement;
-import net.minecraftforge.fml.client.config.GuiConfig;
-import net.minecraftforge.fml.client.config.GuiConfigEntries;
-import net.minecraftforge.fml.client.config.GuiConfigEntries.CategoryEntry;
-import net.minecraftforge.fml.client.config.IConfigElement;
 
 public class GuiConfigWizardry extends GuiConfig {
 
 	public GuiConfigWizardry(GuiScreen parent){
-		super(parent, getConfigEntries(), Wizardry.MODID, false, false, Wizardry.NAME + " - " + I18n.format("config.wizardry.title.general"));
+		super(parent, getConfigEntries(), Wizardry.MODID, false, false, Wizardry.NAME + " - " + StatCollector.translateToLocal("config.title.general"));
 		//this.titleLine2 = "File location: " + Wizardry.config.getConfigFile().getAbsolutePath();
 	}
 	
 	private static List<IConfigElement> getConfigEntries(){
 		List<IConfigElement> configList = new ArrayList<IConfigElement>(1);
-		configList.add(new DummyCategoryElement("spellsConfig", "config.wizardry.category." + Settings.SPELLS_CATEGORY, SpellsCategory.class));
-		configList.add(new DummyCategoryElement("resistancesConfig", "config.wizardry.category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
-		configList.addAll(new ConfigElement(Wizardry.settings.getConfigCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
+		configList.add(new DummyCategoryElement("spellsConfig", "config.category.spells", SpellsCategory.class));
+		configList.add(new DummyCategoryElement("resistancesConfig", "config.category.resistances", ResistancesCategory.class));
+		configList.add(new DummyCategoryElement("idsConfig", "config.category.ids", IDsCategory.class));
+		configList.addAll(new ConfigElement(Wizardry.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
 		return configList;
 	}
 	
@@ -44,11 +44,11 @@ public class GuiConfigWizardry extends GuiConfig {
             // This GuiConfig object specifies the configID of the object and as such will force-save when it is closed.
         	// The parent GuiConfig object's entryList will also be refreshed to reflect the changes.
         	GuiConfig spellsMenu = new GuiConfig(this.owningScreen, 
-                    (new ConfigElement(Wizardry.settings.getConfigCategory(Settings.SPELLS_CATEGORY))).getChildElements(), 
-                    this.owningScreen.modID, Settings.SPELLS_CATEGORY, false, false,
-                    Wizardry.NAME + " - " + I18n.format("config.wizardry.title." + Settings.SPELLS_CATEGORY));
+                    (new ConfigElement(Wizardry.config.getCategory(Wizardry.SPELLS_CATEGORY))).getChildElements(), 
+                    this.owningScreen.modID, Wizardry.SPELLS_CATEGORY, false, false,
+                    Wizardry.NAME + " - " + StatCollector.translateToLocal("config.title.spells"));
         	
-        	spellsMenu.titleLine2 = I18n.format("config.wizardry.subtitle." + Settings.SPELLS_CATEGORY);
+        	spellsMenu.titleLine2 = StatCollector.translateToLocal("config.subtitle.spells");
         	
             return spellsMenu;
         }
@@ -68,11 +68,35 @@ public class GuiConfigWizardry extends GuiConfig {
             // This GuiConfig object specifies the configID of the object and as such will force-save when it is closed.
         	// The parent GuiConfig object's entryList will also be refreshed to reflect the changes.
         	GuiConfig idsMenu = new GuiConfig(this.owningScreen, 
-                    (new ConfigElement(Wizardry.settings.getConfigCategory(Settings.RESISTANCES_CATEGORY))).getChildElements(), 
-                    this.owningScreen.modID, Settings.RESISTANCES_CATEGORY, false, false,
-                    Wizardry.NAME + " - " + I18n.format("config.wizardry.title." + Settings.RESISTANCES_CATEGORY));
+                    (new ConfigElement(Wizardry.config.getCategory(Wizardry.RESISTANCES_CATEGORY))).getChildElements(), 
+                    this.owningScreen.modID, Wizardry.RESISTANCES_CATEGORY, false, false,
+                    Wizardry.NAME + " - " + StatCollector.translateToLocal("config.title.resistances"));
         	
-        	idsMenu.titleLine2 = I18n.format("config.wizardry.subtitle." + Settings.RESISTANCES_CATEGORY);
+        	idsMenu.titleLine2 = StatCollector.translateToLocal("config.subtitle.resistances");
+        	
+            return idsMenu;
+        }
+    }
+    
+    /** IDs category of the config gui. */
+    public static class IDsCategory extends CategoryEntry
+    {
+        public IDsCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop)
+        {
+            super(owningScreen, owningEntryList, prop);
+        }
+        
+        @Override
+        protected GuiScreen buildChildScreen()
+        {
+            // This GuiConfig object specifies the configID of the object and as such will force-save when it is closed.
+        	// The parent GuiConfig object's entryList will also be refreshed to reflect the changes.
+        	GuiConfig idsMenu = new GuiConfig(this.owningScreen, 
+                    (new ConfigElement(Wizardry.config.getCategory(Wizardry.IDS_CATEGORY))).getChildElements(), 
+                    this.owningScreen.modID, Wizardry.IDS_CATEGORY, false, false,
+                    Wizardry.NAME + " - " + StatCollector.translateToLocal("config.title.ids"));
+        	
+        	idsMenu.titleLine2 = StatCollector.translateToLocal("config.subtitle.ids");
         	
             return idsMenu;
         }

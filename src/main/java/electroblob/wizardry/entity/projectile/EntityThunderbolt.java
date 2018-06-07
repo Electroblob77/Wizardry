@@ -1,18 +1,16 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class EntityThunderbolt extends EntityMagicProjectile {
-	
+public class EntityThunderbolt extends EntityMagicProjectile
+{
     public EntityThunderbolt(World par1World)
     {
         super(par1World);
@@ -34,7 +32,7 @@ public class EntityThunderbolt extends EntityMagicProjectile {
     }
     
     /** This is the speed */ 
-    protected float getSpeed()
+    protected float func_70182_d()
     {
         return 2.5F;
     }
@@ -42,25 +40,25 @@ public class EntityThunderbolt extends EntityMagicProjectile {
     /**
      * Called when this EntityThrowable hits a block or entity.
      */
-    protected void onImpact(RayTraceResult par1RayTraceResult)
+    protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
     {
-    	Entity entityHit = par1RayTraceResult.entityHit;
+    	Entity entityHit = par1MovingObjectPosition.entityHit;
     	
         if(entityHit != null){
         	
             float damage = 3 * damageMultiplier;
             
-            entityHit.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK).setProjectile(), damage);
+            entityHit.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getThrower(), DamageType.SHOCK).setProjectile(), damage);
             
             // Knockback
             entityHit.addVelocity(this.motionX*0.2, this.motionY*0.2, this.motionZ*0.2);
         }
 
-        this.playSound(SoundEvents.ENTITY_FIREWORK_LARGE_BLAST, 1.4F, 0.5f + this.rand.nextFloat() * 0.1F);
+        this.playSound("fireworks.largeBlast", 1.4F, 0.5f + this.rand.nextFloat() * 0.1F);
 
         // Particle effect
         if(worldObj.isRemote){
-			worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
+			worldObj.spawnParticle("largeexplode", this.posX, this.posY, this.posZ, 0, 0, 0);
         }
 
         this.setDead();
@@ -71,9 +69,9 @@ public class EntityThunderbolt extends EntityMagicProjectile {
     	super.onUpdate();
     	
     	if(worldObj.isRemote){
-    		Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + rand.nextFloat()*0.2 - 0.1, this.posY + this.height/2 + rand.nextFloat()*0.2 - 0.1, this.posZ + rand.nextFloat()*0.2 - 0.1, 0, 0, 0, 3);
+    		Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX + rand.nextFloat()*0.2 - 0.1, this.posY + this.height/2 + rand.nextFloat()*0.2 - 0.1, this.posZ + rand.nextFloat()*0.2 - 0.1, 0, 0, 0, 3);
     		for(int i=0; i<4; i++){
-    			worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, this.posX + rand.nextFloat()*0.2 - 0.1, this.posY + this.height/2 + rand.nextFloat()*0.2 - 0.1, this.posZ + rand.nextFloat()*0.2 - 0.1, 0, 0, 0);
+    			worldObj.spawnParticle("smoke", this.posX + rand.nextFloat()*0.2 - 0.1, this.posY + this.height/2 + rand.nextFloat()*0.2 - 0.1, this.posZ + rand.nextFloat()*0.2 - 0.1, 0, 0, 0);
     		}
     	}
     	

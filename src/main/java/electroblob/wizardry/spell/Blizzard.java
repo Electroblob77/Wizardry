@@ -1,25 +1,22 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.entity.construct.EntityBlizzard;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class Blizzard extends Spell {
 
 	public Blizzard() {
-		super(Tier.ADVANCED, 40, Element.ICE, "blizzard", SpellType.ATTACK, 100, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 40, EnumElement.ICE, "blizzard", EnumSpellType.ATTACK, 100, EnumAction.none, false);
 	}
 
 	@Override
@@ -28,27 +25,27 @@ public class Blizzard extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(20*modifiers.get(WizardryItems.range_upgrade), world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(20*rangeMultiplier, world, caster, false);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
 			if(!world.isRemote){
-				double x = rayTrace.hitVec.xCoord;
-				double y = rayTrace.hitVec.yCoord;
-				double z = rayTrace.hitVec.zCoord;
-				EntityBlizzard blizzard = new EntityBlizzard(world, x, y+0.5, z, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
+				double x = rayTrace.blockX;
+				double y = rayTrace.blockY;
+				double z = rayTrace.blockZ;
+				EntityBlizzard blizzard = new EntityBlizzard(world, x, y+1.5, z, caster, (int)(600*durationMultiplier), damageMultiplier);
 				world.spawnEntityInWorld(blizzard);
 			}
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 			return true;
 		}
 		return false;
 	}
 	
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 			
@@ -56,11 +53,11 @@ public class Blizzard extends Spell {
 				double x = target.posX;
 				double y = target.posY;
 				double z = target.posZ;
-				EntityBlizzard blizzard = new EntityBlizzard(world, x, y+0.5, z, caster, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE));
+				EntityBlizzard blizzard = new EntityBlizzard(world, x, y+0.5, z, caster, (int)(600*durationMultiplier), damageMultiplier);
 				world.spawnEntityInWorld(blizzard);
 			}
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:ice", 1.0F, 1.0F);
 			return true;
 		}
 		

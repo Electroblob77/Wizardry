@@ -1,25 +1,21 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryBlocks;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
 import electroblob.wizardry.tileentity.TileEntityTimer;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.World;
 
 public class Light extends Spell {
 
 	public Light() {
-		super(Tier.BASIC, 5, Element.SORCERY, "light", SpellType.UTILITY, 15, EnumAction.NONE, false);
+		super(EnumTier.BASIC, 5, EnumElement.SORCERY, "light", EnumSpellType.UTILITY, 15, EnumAction.none, false);
 	}
 
 	@Override
@@ -28,45 +24,54 @@ public class Light extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(4, world, caster, false);
+		MovingObjectPosition rayTrace = WizardryUtilities.rayTrace(4, world, caster, false);
 		
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+		if(rayTrace != null && rayTrace.typeOfHit == MovingObjectType.BLOCK){
 			
-			BlockPos pos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
+			int blockHitX = rayTrace.blockX;
+			int blockHitY = rayTrace.blockY;
+			int blockHitZ = rayTrace.blockZ;
+			int blockHitSide = rayTrace.sideHit;
 			
-			if(world.isAirBlock(pos)){
+			switch(blockHitSide){
+			case 0: blockHitY--; break;
+			case 1: blockHitY++; break;
+			case 2: blockHitZ--; break;
+			case 3: blockHitZ++; break;
+			case 4: blockHitX--; break;
+			case 5: blockHitX++; break;
+			}
+			
+			if(world.isAirBlock(blockHitX, blockHitY, blockHitZ)){
 				
 				if(!world.isRemote){
-					world.setBlockState(pos, WizardryBlocks.magic_light.getDefaultState());
-					if(world.getTileEntity(pos) instanceof TileEntityTimer){
-						((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(600*modifiers.get(WizardryItems.duration_upgrade)));
+					world.setBlock(blockHitX, blockHitY, blockHitZ, Wizardry.magicLight);
+					if(world.getTileEntity(blockHitX, blockHitY, blockHitZ) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(blockHitX, blockHitY, blockHitZ)).setLifetime((int)(600*durationMultiplier));
 					}
 				}
 				
-				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+				caster.swingItem();
+				world.playSoundAtEntity(caster, "wizardry:aura", 1.0f, 1.0f);
 				return true;
 			}
 		}else{
-			
 			int x = (int) (Math.floor(caster.posX) + caster.getLookVec().xCoord*4);
 			int y = (int) (Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().yCoord*4);
 			int z = (int) (Math.floor(caster.posZ) + caster.getLookVec().zCoord*4);
 			
-			BlockPos pos = new BlockPos(x, y, z);
-			
-			if(world.isAirBlock(pos)){
+			if(world.isAirBlock(x, y, z)){
 				//world.playSound(x, y, z, "sound.ambient.cave.cave", 1.0f, 1.5f, false);
 				if(!world.isRemote){
-					world.setBlockState(pos, WizardryBlocks.magic_light.getDefaultState());
-					if(world.getTileEntity(pos) instanceof TileEntityTimer){
-						((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(600*modifiers.get(WizardryItems.duration_upgrade)));
+					world.setBlock(x, y, z, Wizardry.magicLight);
+					if(world.getTileEntity(x, y, z) instanceof TileEntityTimer){
+						((TileEntityTimer)world.getTileEntity(x, y, z)).setLifetime((int)(600*durationMultiplier));
 					}
 				}
-				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+				caster.swingItem();
+				world.playSoundAtEntity(caster, "wizardry:aura", 1.0f, 1.0f);
 				return true;
 			}
 		}

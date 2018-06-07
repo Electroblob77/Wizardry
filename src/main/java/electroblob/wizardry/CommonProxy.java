@@ -1,54 +1,81 @@
 package electroblob.wizardry;
 
-import electroblob.wizardry.item.ItemSpectralBow;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
+
+import cpw.mods.fml.common.FMLCommonHandler;
 import electroblob.wizardry.packet.PacketCastContinuousSpell;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.PacketClairvoyance;
 import electroblob.wizardry.packet.PacketGlyphData;
-import electroblob.wizardry.packet.PacketNPCCastSpell.Message;
 import electroblob.wizardry.packet.PacketPlayerSync;
 import electroblob.wizardry.packet.PacketTransportation;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryParticleType;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.Block;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 
-/**
- * The common proxy for wizardry, serving the usual purpose of dealing with all things that need to be handled
+/** The common proxy for wizardry, serving the usual purpose of dealing with all things that need to be handled
  * differently on the client and the server. A lot of the methods here appear to do absolutely nothing; this is
  * because they do client-only things which are only handled in the client proxy.
- * @see {@link electroblob.wizardry.client.ClientProxy}
- * @author Electroblob
- * @since Wizardry 1.0
- * */
-@SuppressWarnings("deprecation")
+ * @see {@link electroblob.wizardry.client.ClientProxy} */
 public class CommonProxy {
+
+	/** Used to store IExtendedEntityProperties data temporarily between player death and respawn */
+	private static final Map<String, NBTTagCompound> extendedEntityData = new HashMap<String, NBTTagCompound>();
 	
-	// SECTION Registry
-	// ===============================================================================================================
-
     public void registerRenderers(){}
-
-	public void initialiseLayers(){}
     
     public void registerKeyBindings(){}
     
 	public void registerSpellHUD(){}
     
-	public net.minecraft.client.model.ModelBiped getWizardArmourModel(){ return null; }
-
-	public void initMixedFontRenderer(){}
+	public ModelBiped getWizardArmourModel(){
+		return null;
+	}
 	
-	// SECTION Particles
-	// ===============================================================================================================
+    /**
+    * Adds an entity's custom data to the map for temporary storage
+    * @param compound An NBT Tag Compound that stores the IExtendedEntityProperties data only
+    */
+    public static void storeEntityData(String name, NBTTagCompound compound){
+    	extendedEntityData.put(name, compound);
+    }
+
+    /**
+    * Removes the compound from the map and returns the NBT tag stored for name or null if none exists
+    */
+    public static NBTTagCompound getEntityData(String name){
+    	return extendedEntityData.remove(name);
+    }
+    
+    public double getPlayerEyesPos(EntityPlayer player){
+		return player.posY + player.eyeHeight;
+    }
+    
+    /** Gets the absolute coordinates of the tip of the wand belonging to the given entity. If this is a client in
+     * first person view, the coordinates will instead be the entity's position + 1.2. */
+    public Vec3 getWandTipPosition(EntityLivingBase entity){
+		
+		// 0.7 forwards, 0.4 to the right, and 1.35 upwards.
+		
+		double x = entity.posX - 0.7*Math.sin(Math.toRadians(entity.renderYawOffset)) - 0.4*Math.cos(Math.toRadians(entity.renderYawOffset));
+		double y = entity.boundingBox.minY + 1.35;
+		double z = entity.posZ + 0.7*Math.cos(Math.toRadians(entity.renderYawOffset)) - 0.4*Math.sin(Math.toRadians(entity.renderYawOffset));
+		
+		return Vec3.createVectorHelper(x, y, z);
+	}
     
     /**
      * Spawns a custom particle of the specified type.
@@ -62,13 +89,13 @@ public class CommonProxy {
      * @param velY Particle y velocity
      * @param velZ Particle z velocity
      * @param maxAge Lifetime of the particle in ticks
-     * @param r Red component of particle colour; will be clamped to between 0 and 1
-     * @param g Red component of particle colour; will be clamped to between 0 and 1
-     * @param b Red component of particle colour; will be clamped to between 0 and 1
+     * @param r Red component of particle colour
+     * @param g Red component of particle colour
+     * @param b Red component of particle colour
      * @param doGravity Whether the particle is affected by gravity (only affects SPARKLE at the moment)
      * @param radius The radius of the particle's motion, for cirular motion particles
      */
-    public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge, float r, float g, float b, boolean doGravity, double radius){
+    public void spawnParticle(EnumParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge, float r, float g, float b, boolean doGravity, double radius){
     	// Does nothing since particles are client-side only
     }
     
@@ -85,11 +112,11 @@ public class CommonProxy {
      * @param velY Particle y velocity
      * @param velZ Particle z velocity
      * @param maxAge Lifetime of the particle in ticks
-     * @param r Red component of particle colour; will be clamped to between 0 and 1 (unless this is a MAGIC_FIRE particle, in which case this is the scale)
-     * @param g Red component of particle colour; will be clamped to between 0 and 1
-     * @param b Red component of particle colour; will be clamped to between 0 and 1
+     * @param r Red component of particle colour (unless this is a MAGIC_FIRE particle, in which case this is the scale)
+     * @param g Red component of particle colour
+     * @param b Red component of particle colour
      */
-    public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge, float r, float g, float b){
+    public void spawnParticle(EnumParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge, float r, float g, float b){
     	this.spawnParticle(type, world, x, y, z, velX, velY, velZ, maxAge, r, g, b, false, 0);
     }
     
@@ -107,16 +134,41 @@ public class CommonProxy {
      * @param velZ Particle z velocity
      * @param maxAge Lifetime of the particle in ticks
      */
-    public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge){
+    public void spawnParticle(EnumParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge){
     	this.spawnParticle(type, world, x, y, z, velX, velY, velZ, maxAge, 1, 1, 1, false, 0);
     }
     
-	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius, int maxAge, IBlockState block, BlockPos pos){}
+    public void spawnDigParticle(World world, double x, double y, double z, double velX, double velY, double velZ, Block block){}
 
-	// SECTION Items
-	// ===============================================================================================================
-	
-	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack) {
+	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius, int maxAge, Block block, int metadata){}
+    
+    /** Plays a sound which moves with the given entity.
+     * 
+     * @param entity The source of the sound
+     * @param soundName String resource path of the sound
+     * @param volume Volume relative to 1
+     * @param pitch Pitch relative to 1
+     * @param repeat Whether to repeat the sound for as long as the entity is alive (or until stopped manually)
+     */
+	public void playMovingSound(Entity entity, String soundName, float volume, float pitch, boolean repeat){}
+    
+    public void handleCastSpellPacket(PacketCastSpell.Message message){}
+    
+    public double getWandDisplayDamage(ItemStack stack){
+    	return 1.0d;
+    }
+    
+	public int getConjuredItemDisplayDamage(ItemStack stack){
+		return 0;
+	}
+
+	public void registerEventHandlers(){
+		MinecraftForge.EVENT_BUS.register(new WizardryEventHandler());
+	}
+
+	public void handleTransportationPacket(PacketTransportation.Message message){}
+
+	public FontRenderer getFontRenderer(ItemStack stack) {
 		return null;
 	}
 	
@@ -128,49 +180,24 @@ public class CommonProxy {
 		
 		// I have now learnt that the server side I18n always translates to the default en_US, so I could just return
 		// a hardcoded name in English instead.
-		Wizardry.logger.info("A mod has called ItemScroll#getItemStackDisplayName from the server side. Using the"
-				+ "deprecated server-side translation methods as a fallback.");
+		//Wizardry.logger.info("A mod has called ItemScroll#getItemStackDisplayName from the server side. Using the"
+		//		+ "deprecated server-side translation methods as a fallback.");
 		
 		// Displays [Empty slot] if spell is continuous.
 		Spell spell = Spell.get(scroll.getItemDamage());
-		if(spell.isContinuous) spell = Spells.none;
+		if(spell.isContinuous) spell = WizardryRegistry.none;
 		
-		return I18n.translateToLocalFormatted("item.wizardry:wizardry:scroll.name", I18n.translateToLocal("spell." + spell.getUnlocalisedName())).trim();
+		return StatCollector.translateToLocalFormatted("item.scroll.name", StatCollector.translateToLocal("spell." + spell.getUnlocalisedName())).trim();
 	}
 
-	public double getConjuredBowDurability(ItemStack stack){
-		return ((ItemSpectralBow)WizardryItems.spectral_bow).getDefaultDurabilityForDisplay(stack);
-	}
-
-	// SECTION Packet Handlers
-	// ===============================================================================================================
-	
 	public void handlePlayerSyncPacket(PacketPlayerSync.Message message){}
+
 	public void handleGlyphDataPacket(PacketGlyphData.Message message){}
-    public void handleCastSpellPacket(PacketCastSpell.Message message){}
+
 	public void handleCastContinuousSpellPacket(PacketCastContinuousSpell.Message message){}
-	public void handleNPCCastSpellPacket(Message message){}
-	public void handleTransportationPacket(PacketTransportation.Message message){}
-	public void handleClairvoyancePacket(PacketClairvoyance.Message message){}
-	
-	// SECTION Misc
-	// ===============================================================================================================
 
 	public void setToNumberSliderEntry(Property property){}
-	//public void setToEntityNameEntry(Property property){}
-	
-    /** Plays a sound which moves with the given entity.
-     * 
-     * @param entity The source of the sound
-     * @param sound The SoundEvent to play
-     * @param volume Volume relative to 1
-     * @param pitch Pitch relative to 1
-     * @param repeat Whether to repeat the sound for as long as the entity is alive (or until stopped manually)
-     */
-	public void playMovingSound(Entity entity, SoundEvent sound, float volume, float pitch, boolean repeat){}
-	
-	/** Gets the client side world using Minecraft.getMinecraft().theWorld. <b>Only to be called client side!</b>
-	 * Returns null on the server side. */
-	public World getTheWorld(){ return null; }
+
+	public void handleClairvoyancePacket(PacketClairvoyance.Message message){}
 
 }

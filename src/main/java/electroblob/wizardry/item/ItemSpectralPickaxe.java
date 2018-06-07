@@ -1,82 +1,72 @@
 package electroblob.wizardry.item;
 
-import java.util.List;
-
-import net.minecraft.creativetab.CreativeTabs;
+import electroblob.wizardry.ExtendedPlayer;
+import electroblob.wizardry.Wizardry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemSpectralPickaxe extends ItemPickaxe implements IConjuredItem {
+public class ItemSpectralPickaxe extends ItemPickaxe{
 
-	public ItemSpectralPickaxe(ToolMaterial material){
+	public ItemSpectralPickaxe(ToolMaterial material) {
 		super(material);
-		this.setMaxDamage(getBaseDuration());
+		this.setMaxDamage(600);
 		this.setNoRepair();
 		this.setCreativeTab(null);
 	}
 	
 	@Override
-	public int getBaseDuration(){
-		return 600;
-	}
-	
-	@Override
-	public int getMaxDamage(ItemStack stack){
-        return this.getMaxDamageFromNBT(stack);
+	public int getMaxDamage(ItemStack stack)
+    {
+        return stack.hasTagCompound()? (int)(getMaxDamage()*stack.stackTagCompound.getFloat("durationMultiplier")) : getMaxDamage();
     }
 	
 	@Override
-	// This method allows the code for the item's timer to be greatly simplified by damaging it directly from
-	// onUpdate() and removing the workaround that involved WizardData and all sorts of crazy stuff.
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged){
-		
-		if(oldStack != null || newStack != null){
-			// We only care about the situation where we specifically want the animation NOT to play.
-			if(oldStack.getItem() == newStack.getItem() && !slotChanged) return false;
+	public void onUpdate(ItemStack itemstack, World par2World, Entity entity, int par4, boolean par5) {
+		// Allows the 'cheaty' damage bar rendering code to start working.
+		if(itemstack.getItemDamage() == 0){
+			itemstack.setItemDamage(1);
 		}
-		
-		return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
+		if(entity instanceof EntityPlayer){
+			ExtendedPlayer properties = ExtendedPlayer.get((EntityPlayer)entity);
+			properties.conjuredPickaxeDuration++;
+			if(properties.conjuredPickaxeDuration > this.getMaxDamage(itemstack)){
+				((EntityPlayer)entity).inventory.consumeInventoryItem(itemstack.getItem());
+				properties.conjuredPickaxeDuration = 0;
+			}
+		}
 	}
 	
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
-		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, null);
-		stack.setItemDamage(damage + 1);
-	}
+	public int getDisplayDamage(ItemStack stack){
+		return Wizardry.proxy.getConjuredItemDisplayDamage(stack);
+    }
 	
 	@Override
-    @SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack stack){
+	public boolean hasEffect(ItemStack par1ItemStack, int pass){
 		return true;
 	}
 	
 	@Override
-	public boolean getIsRepairable(ItemStack stack, ItemStack par2ItemStack){
+	public boolean getIsRepairable(ItemStack par1ItemStack, ItemStack par2ItemStack)
+    {
         return false;
     }
 	
 	@Override
-	public int getItemEnchantability(){
+	public int getItemEnchantability()
+    {
         return 0;
     }
 	
-	// Cannot be dropped
+	//Cannot be dropped
 	@Override
-	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player){
+	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player)
+    {
         return false;
-    }
-	
-	@Override
-    @SideOnly(Side.CLIENT)
-    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> subItems){
-        subItems.add(new ItemStack(this, 1));
     }
 
 }

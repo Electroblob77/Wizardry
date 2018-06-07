@@ -2,26 +2,25 @@ package electroblob.wizardry.item;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.event.SpellCastEvent;
-import electroblob.wizardry.event.SpellCastEvent.Source;
+import electroblob.wizardry.WizardryRegistry;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
-import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemScroll extends Item {
 
@@ -29,23 +28,24 @@ public class ItemScroll extends Item {
 		super();
 		this.setHasSubtypes(true);
 		this.setMaxStackSize(1);
-		this.setCreativeTab(WizardryTabs.SPELLS);
+		this.setCreativeTab(Wizardry.tabSpells);
+		this.setTextureName("wizardry:scroll");
+		this.setUnlocalizedName("scroll");
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List<ItemStack> list){
+	public void getSubItems(Item item, CreativeTabs par2CreativeTabs, List list){
+		// Isn't this sooooo much neater with the filter thing?
 		for(Spell spell : Spell.getSpells(Spell.nonContinuousSpells)){
 			list.add(new ItemStack(item, 1, spell.id()));
 		}
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack stack){
+	public boolean hasEffect(ItemStack stack, int par2){
 		return true;
 	}
-
+	
 	@Override
 	// Item's version of this method is, quite frankly, an abomination. Why is a deprecated method being used as such
 	// an integral part of the code? And what's the point in getUnlocalisedNameInefficiently?
@@ -60,61 +60,70 @@ public class ItemScroll extends Item {
 		 * Simply put, I can't predict that, and it's not my job to cater for other people's incorrect usage of code,
 		 * especially when that might compromise some perfectly reasonable use (think Bibliocraft's 'best guess' book
 		 * detection). */
-		// TODO: Backport this proxy-based fix.
 		return Wizardry.proxy.getScrollDisplayName(stack);
 
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand){
+	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player){
 
+		if(player.isPotionActive(Wizardry.arcaneJammer)) return stack;
+		
 		Spell spell = Spell.get(stack.getItemDamage());
-		// By default, scrolls have no modifiers - but with the event system, they could be added.
-		SpellModifiers modifiers = new SpellModifiers();
-		
-		// If anything stops the spell working at this point, nothing else happens.
-		if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(player, spell, modifiers, Source.SCROLL))){
-			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
+
+		// If a spell is disabled in the config, it will not work.
+		if(!spell.isEnabled()){
+			if(!world.isRemote) player.addChatMessage(new ChatComponentTranslation("spell.disabled", spell.getDisplayNameWithFormatting()));
+			return stack;
 		}
-		
+
 		if(!spell.isContinuous){
 
-			if(!world.isRemote){
-				
-				if(spell.cast(world, player, hand, 0, new SpellModifiers())){
-					
-					MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.SCROLL));
+			/*
+			if(spell.chargeup > 0 && !entityplayer.isUsingItem()){
+				// Spells with a chargeup time are now handled separately.
+				entityplayer.setItemInUse(stack, this.getMaxItemUseDuration(stack));
+				return stack;
+			}
+			*/
 
+			if(!world.isRemote){
+					
+				if(spell.cast(world, player, 0, 1, 1, 1, 1)){
+					
 					if(spell.doesSpellRequirePacket()){
 						// Sends a packet to all players in dimension to tell them to spawn particles.
-						IMessage msg = new PacketCastSpell.Message(player.getEntityId(), hand, spell.id(), modifiers);
-						WizardryPacketHandler.net.sendToDimension(msg, world.provider.getDimension());
+						IMessage msg = new PacketCastSpell.Message(player.getEntityId(), 0, spell.id(), 1, 1, 1);
+				    	WizardryPacketHandler.net.sendToDimension(msg, world.provider.dimensionId);
 					}
-
-					// Scrolls are consumed upon successful use in survival mode
+					
+					if(!player.capabilities.isCreativeMode && !ExtendedPlayer.get(player).hasSpellBeenDiscovered(spell) && Wizardry.discoveryMode){
+						player.worldObj.playSoundAtEntity(player, "random.levelup", 1.25f, 1);
+						if(!player.worldObj.isRemote) player.addChatMessage(new ChatComponentTranslation("spell.discover", spell.getDisplayNameWithFormatting()));
+					}
+					ExtendedPlayer.get(player).discoverSpell(spell);
+					
 					if(!player.capabilities.isCreativeMode) stack.stackSize--;
-
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 				}
-
-			// This else if check was bugging me for AGES! I can't believe I didn't compare to ItemWand before.
-			}else if(!spell.doesSpellRequirePacket()){
-				// Client-inconsistent spell casting. This code only runs client-side.
-				if(spell.cast(world, player, hand, 0, modifiers)){
-					// This is all that needs to happen, because everything above works fine on just the server side.
-					MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.SCROLL));
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+				
+			}else{
+				if(spell.cast(world, player, 0, 1, 1, 1, 1)){
+					// Added in version 1.1.3 to fix the client-side spell discovery not updating for spells with the
+					// packet optimisation.
+					if(ExtendedPlayer.get(player) != null){
+						ExtendedPlayer.get(player).discoverSpell(spell);
+					}
 				}
 			}
 		}
-
-		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
-
+	
+	return stack;
+	
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
+	public FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
 	}
 }

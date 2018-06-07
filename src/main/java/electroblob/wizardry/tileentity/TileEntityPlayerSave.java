@@ -3,14 +3,14 @@ package electroblob.wizardry.tileentity;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 
-public class TileEntityPlayerSave extends TileEntity implements ITickable {
+public class TileEntityPlayerSave extends TileEntity {
 
 	/** The entity that created this construct */
 	private WeakReference<EntityLivingBase> caster;
@@ -21,15 +21,14 @@ public class TileEntityPlayerSave extends TileEntity implements ITickable {
 	private UUID casterUUID;
 	
 	public TileEntityPlayerSave(EntityLivingBase caster){
-		this.caster = new WeakReference<EntityLivingBase>(caster);
+		this.caster = new WeakReference(caster);
 	}
 	
 	public TileEntityPlayerSave(){
 		
 	}
-	
-	@Override
-	public void update(){
+
+	public void updateEntity(){
 		if(this.getCaster() == null && this.casterUUID != null){
 			Entity entity = WizardryUtilities.getEntityByUUID(worldObj, casterUUID);
 			if(entity instanceof EntityLivingBase){
@@ -41,19 +40,15 @@ public class TileEntityPlayerSave extends TileEntity implements ITickable {
 	@Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        casterUUID = tagCompound.getUniqueId("casterUUID");
+        casterUUID = UUID.fromString(tagCompound.getString("casterUUID"));
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tagCompound) {
-    	
+    public void writeToNBT(NBTTagCompound tagCompound) {
         super.writeToNBT(tagCompound);
-        
 		if(this.getCaster() != null){
-        	tagCompound.setUniqueId("casterUUID", this.getCaster().getUniqueID());
+        	tagCompound.setString("casterUUID", this.getCaster().getUniqueID().toString());
         }
-		
-		return tagCompound;
     }
     
     /**
@@ -66,7 +61,7 @@ public class TileEntityPlayerSave extends TileEntity implements ITickable {
 	}
 	
 	public void setCaster(EntityLivingBase caster){
-		this.caster = new WeakReference<EntityLivingBase>(caster);
+		this.caster = new WeakReference(caster);
 	}
 
 }

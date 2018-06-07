@@ -1,24 +1,19 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Constants;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
+import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class SixthSense extends Spell {
 
 	public SixthSense() {
-		super(Tier.APPRENTICE, 20, Element.EARTH, "sixth_sense", SpellType.UTILITY, 100, EnumAction.BOW, false);
+		super(EnumTier.APPRENTICE, 20, EnumElement.EARTH, "sixth_sense", EnumSpellType.UTILITY, 100, EnumAction.bow, false);
 	}
 
 	@Override
@@ -27,13 +22,15 @@ public class SixthSense extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-				
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
+		
+		ExtendedPlayer properties = ExtendedPlayer.get(caster);
+		
 		// Cannot be cast when it has already been cast
 		if(!world.isRemote){
-			caster.addPotionEffect(new PotionEffect(WizardryPotions.sixth_sense, (int)(400*modifiers.get(WizardryItems.duration_upgrade)), (int)((modifiers.get(WizardryItems.range_upgrade)-1f)/Constants.RANGE_INCREASE_PER_LEVEL)));
+			caster.addPotionEffect(new PotionEffect(Wizardry.sixthSense.id, (int)(400*durationMultiplier), (int)((rangeMultiplier-1f)/Wizardry.RANGE_INCREASE_PER_LEVEL), true));
+			world.playSoundAtEntity(caster, "mob.wither.shoot", 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 		}
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SHOOT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
 		return true;
 	}
 

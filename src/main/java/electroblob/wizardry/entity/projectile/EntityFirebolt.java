@@ -1,12 +1,10 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class EntityFirebolt extends EntityMagicProjectile
@@ -30,27 +28,38 @@ public class EntityFirebolt extends EntityMagicProjectile
     {
         super(par1World, par2, par4, par6);
     }
-
+    
+    /** This is the speed */ 
     @Override
-    protected void onImpact(RayTraceResult rayTrace)
+    protected float func_70182_d()
     {
-    	Entity entityHit = rayTrace.entityHit;
+        return 2.5F;
+    }
+
+    /**
+     * Called when this EntityThrowable hits a block or entity.
+     */
+    @Override
+    protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
+    {
+    	Entity entityHit = par1MovingObjectPosition.entityHit;
     	
         if (entityHit != null)
         {
             float damage = 5 * damageMultiplier;
             
-            entityHit.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.FIRE).setProjectile(), damage);
+            entityHit.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getThrower(), DamageType.FIRE).setProjectile(), damage);
             
             if(!MagicDamage.isEntityImmune(DamageType.FIRE, entityHit)) entityHit.setFire(5);
         }
 
-        this.playSound(SoundEvents.BLOCK_LAVA_POP, 2, 0.8f + rand.nextFloat()*0.3f);
+        this.playSound("liquid.lavapop", 2, 0.8f + rand.nextFloat()*0.3f);
 
         // Particle effect
         if(worldObj.isRemote){
 			for(int i=0;i<8;i++){
-				worldObj.spawnParticle(EnumParticleTypes.LAVA, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
+				//Minecraft.getMinecraft().effectRenderer.addEffect(new EntitySparkFX(worldObj, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0));
+				worldObj.spawnParticle("lava", this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
 			}
         }
 
@@ -64,7 +73,7 @@ public class EntityFirebolt extends EntityMagicProjectile
     	
     	if(worldObj.isRemote){
     		for(int i=0; i<4; i++){
-    			worldObj.spawnParticle(EnumParticleTypes.FLAME, this.posX + rand.nextFloat()*0.2 - 0.1, this.posY + this.height/2 + rand.nextFloat()*0.2 - 0.1, this.posZ + rand.nextFloat()*0.2 - 0.1, 0, 0, 0);
+    			worldObj.spawnParticle("flame", this.posX + rand.nextFloat()*0.2 - 0.1, this.posY + this.height/2 + rand.nextFloat()*0.2 - 0.1, this.posZ + rand.nextFloat()*0.2 - 0.1, 0, 0, 0);
     		}
     	}
     	

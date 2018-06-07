@@ -1,23 +1,19 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.entity.projectile.EntityFirebolt;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class Firebolt extends Spell {
 
 	public Firebolt() {
-		super(Tier.APPRENTICE, 10, Element.FIRE, "firebolt", SpellType.ATTACK, 10, EnumAction.NONE, false);
+		super(EnumTier.APPRENTICE, 10, EnumElement.FIRE, "firebolt", EnumSpellType.ATTACK, 10, EnumAction.none, false);
 	}
 
 	@Override
@@ -26,34 +22,31 @@ public class Firebolt extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(!world.isRemote){
-			EntityFirebolt firebolt = new EntityFirebolt(world, caster, modifiers.get(SpellModifiers.DAMAGE));
-			firebolt.motionX *= 2.5;
-			firebolt.motionY *= 2.5;
-			firebolt.motionZ *= 2.5;
+			EntityFirebolt firebolt = new EntityFirebolt(world, caster, damageMultiplier);
 			world.spawnEntityInWorld(firebolt);
+			world.playAuxSFX(1009, (int)caster.posX, (int)caster.posY, (int)caster.posZ, 0);
 		}
 		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
-		caster.swingArm(hand);
+		caster.swingItem();
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 			
 			if(!world.isRemote){
-				EntityFirebolt firebolt = new EntityFirebolt(world, caster, modifiers.get(SpellModifiers.DAMAGE));
+				EntityFirebolt firebolt = new EntityFirebolt(world, caster, damageMultiplier);
 				firebolt.directTowards(target, 2.5f);
 				world.spawnEntityInWorld(firebolt);
+				world.playAuxSFX(1009, (int)caster.posX, (int)caster.posY, (int)caster.posZ, 0);
 			}
-
-			caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
-			caster.swingArm(hand);
+			
+			caster.swingItem();
 			return true;
 		}
 		

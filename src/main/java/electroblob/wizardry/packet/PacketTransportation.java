@@ -1,29 +1,29 @@
 package electroblob.wizardry.packet;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketTransportation.Message;
+import electroblob.wizardry.spell.Spell;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
 
-/** <b>[Server -> Client]</b> This packet is sent when a player is teleported due to the transportation spell to spawn
- * the particles. */
+/** This packet is sent when a player is teleported due to the transportation spell to spawn the particles. */
 public class PacketTransportation implements IMessageHandler<Message, IMessage> {
-
+	
 	@Override
 	public IMessage onMessage(Message message, MessageContext ctx)
 	{
 		// Just to make sure that the side is correct
 		if(ctx.side.isClient()){
-			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
-			// methods any more than necessary.
-			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable(){
-				@Override
-				public void run(){
-					Wizardry.proxy.handleTransportationPacket(message);
-				}
-			});
+			Wizardry.proxy.handleTransportationPacket(message);
 		}
 
 		return null;

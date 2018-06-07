@@ -2,44 +2,38 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.world.World;
 
 public class Shockwave extends Spell {
 
 	public Shockwave() {
-		super(Tier.MASTER, 65, Element.SORCERY, "shockwave", SpellType.ATTACK, 150, EnumAction.BOW, false);
+		super(EnumTier.MASTER, 65, EnumElement.SORCERY, "shockwave", EnumSpellType.ATTACK, 150, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5.0d*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(5.0d*blastMultiplier, caster.posX, caster.posY, caster.posZ, world);
 		
 		for(EntityLivingBase target : targets){
 			if(WizardryUtilities.isValidTarget(caster, target)){
 				// Damage increases closer to player up to a maximum of 4 hearts (at 1 block distance).
 				float damage = Math.min(8.0f/target.getDistanceToEntity(caster), 8.0f);
-				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.BLAST), damage * modifiers.get(SpellModifiers.DAMAGE));
+				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.BLAST), damage * damageMultiplier);
 				
 				if(!world.isRemote){
 					
@@ -58,40 +52,39 @@ public class Shockwave extends Spell {
 
 					// Player motion is handled on that player's client so needs packets
 					if(target instanceof EntityPlayerMP){
-						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+						((EntityPlayerMP)target).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(target));
 					}
 				}
 			}
 		}
 		if(world.isRemote){
-						
+			
+			world.spawnParticle("largeexplode", caster.posX, caster.boundingBox.minY + 0.1, caster.posZ, 0, 0, 0);
+			
 			double particleX, particleZ;
 			for(int i=0;i<40;i++){
 				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
 						particleX - caster.posX, 0, particleZ - caster.posZ, 30, 0.8f, 0.8f, 1.0f);
 				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ,
 						particleX - caster.posX, 0, particleZ - caster.posZ, 30, 0.9f, 0.9f, 0.9f);
 				particleX = caster.posX - 1.0d + 2*world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2*world.rand.nextDouble();
 				
-				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
-				
+				Block block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
+				// Player actual eye height is 1.62, client is 1.5 too high, hence the -1.5.
 				if(block != null){
-					world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY, particleZ,
-							particleX - caster.posX, 0, particleZ - caster.posZ, Block.getStateId(block));
+					Wizardry.proxy.spawnDigParticle(world, particleX, WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0, particleZ - caster.posZ,
+							block);
 				}
 			}
-			
-			world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, caster.posX, caster.getEntityBoundingBox().minY + 0.1, caster.posZ, 0, 0, 0);
-
 		}
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 1.0f, 0.7f);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 2.0f, 0.3f);
+		caster.swingItem();
+		world.playSoundAtEntity(caster, "wizardry:boom", 1.0f, 0.7f);
+		world.playSoundAtEntity(caster, "wizardry:boom", 2.0f, 0.3f);
 		return true;
 	}
 

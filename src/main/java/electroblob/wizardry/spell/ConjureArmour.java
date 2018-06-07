@@ -1,30 +1,27 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.item.IConjuredItem;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class ConjureArmour extends Spell {
 
 	public ConjureArmour() {
-		super(Tier.ADVANCED, 45, Element.HEALING, "conjure_armour", SpellType.DEFENCE, 50, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 45, EnumElement.HEALING, "conjure_armour", EnumSpellType.DEFENCE, 50, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		ItemStack armour;
 		boolean flag = false;
@@ -32,34 +29,38 @@ public class ConjureArmour extends Spell {
 		// Note that armourInventory is the other way round! Also note that a blank "ench" tag is set to trick
 		// the renderer into showing the enchantment effect on the actual armour model.
 		
-		if(caster.inventory.armorInventory[3] == null && !WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.spectral_helmet)){
-			armour = new ItemStack(WizardryItems.spectral_helmet);
-			IConjuredItem.setDurationMultiplier(armour, modifiers.get(WizardryItems.duration_upgrade));
-			armour.getTagCompound().setTag("ench", new NBTTagList());
+		if(caster.inventory.armorInventory[3] == null && !caster.inventory.hasItem(Wizardry.spectralHelmet)){
+			armour = new ItemStack(Wizardry.spectralHelmet);
+			armour.stackTagCompound = new NBTTagCompound();
+			armour.stackTagCompound.setFloat("durationMultiplier", durationMultiplier);
+			armour.stackTagCompound.setTag("ench", new NBTTagList());
 			caster.inventory.armorInventory[3] = armour;
 			flag = true;
 		}
 
-		if(caster.inventory.armorInventory[2] == null && !WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.spectral_chestplate)){
-			armour = new ItemStack(WizardryItems.spectral_chestplate);
-			IConjuredItem.setDurationMultiplier(armour, modifiers.get(WizardryItems.duration_upgrade));
-			armour.getTagCompound().setTag("ench", new NBTTagList());
+		if(caster.inventory.armorInventory[2] == null && !caster.inventory.hasItem(Wizardry.spectralChestplate)){
+			armour = new ItemStack(Wizardry.spectralChestplate);
+			armour.stackTagCompound = new NBTTagCompound();
+			armour.stackTagCompound.setFloat("durationMultiplier", durationMultiplier);
+			armour.stackTagCompound.setTag("ench", new NBTTagList());
 			caster.inventory.armorInventory[2] = armour;
 			flag = true;
 		}
 
-		if(caster.inventory.armorInventory[1] == null && !WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.spectral_leggings)){
-			armour = new ItemStack(WizardryItems.spectral_leggings);
-			IConjuredItem.setDurationMultiplier(armour, modifiers.get(WizardryItems.duration_upgrade));
-			armour.getTagCompound().setTag("ench", new NBTTagList());
+		if(caster.inventory.armorInventory[1] == null && !caster.inventory.hasItem(Wizardry.spectralLeggings)){
+			armour = new ItemStack(Wizardry.spectralLeggings);
+			armour.stackTagCompound = new NBTTagCompound();
+			armour.stackTagCompound.setFloat("durationMultiplier", durationMultiplier);
+			armour.stackTagCompound.setTag("ench", new NBTTagList());
 			caster.inventory.armorInventory[1] = armour;
 			flag = true;
 		}
 
-		if(caster.inventory.armorInventory[0] == null && !WizardryUtilities.doesPlayerHaveItem(caster, WizardryItems.spectral_boots)){
-			armour = new ItemStack(WizardryItems.spectral_boots);
-			IConjuredItem.setDurationMultiplier(armour, modifiers.get(WizardryItems.duration_upgrade));
-			armour.getTagCompound().setTag("ench", new NBTTagList());
+		if(caster.inventory.armorInventory[0] == null && !caster.inventory.hasItem(Wizardry.spectralBoots)){
+			armour = new ItemStack(Wizardry.spectralBoots);
+			armour.stackTagCompound = new NBTTagCompound();
+			armour.stackTagCompound.setFloat("durationMultiplier", durationMultiplier);
+			armour.stackTagCompound.setTag("ench", new NBTTagList());
 			caster.inventory.armorInventory[0] = armour;
 			flag = true;
 		}
@@ -71,11 +72,12 @@ public class ConjureArmour extends Spell {
 					double x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
 					double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
 					double z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 0.7f, 0.9f, 1.0f);
+					Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0, 48 + world.rand.nextInt(12), 0.7f, 0.9f, 1.0f);
 				}
 			}
 			
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+			ExtendedPlayer.get(caster).conjuredArmourDuration = 0;
+			world.playSoundAtEntity(caster, "wizardry:aura", 1.0f, 1.0f);
 		}
 		
 		return flag;

@@ -2,15 +2,13 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumParticleType;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityDecay extends EntityMagicConstruct {
@@ -37,22 +35,23 @@ public class EntityDecay extends EntityMagicConstruct {
 		
 		super.onUpdate();
 		
-		if(this.rand.nextInt(700) == 0 && this.ticksExisted+100 < LIFETIME) this.playSound(SoundEvents.BLOCK_LAVA_AMBIENT, 0.2F + rand.nextFloat() * 0.2F, 0.6F + rand.nextFloat() * 0.15F);
+		if(this.rand.nextInt(700) == 0 && this.ticksExisted+100 < LIFETIME) this.playSound("liquid.lava", 0.2F + rand.nextFloat() * 0.2F, 0.6F + rand.nextFloat() * 0.15F);
 		
 		if(!this.worldObj.isRemote){
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY, this.posZ, this.worldObj);
-			for(EntityLivingBase target : targets){
-				if(target != this.getCaster()){
+			List targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY, this.posZ, this.worldObj);
+			for(int i=0; i<targets.size(); i++){
+				if(targets.get(i) instanceof EntityLivingBase && targets.get(i) != this.getCaster()){
+					
+					EntityLivingBase target = (EntityLivingBase)targets.get(i);
 					// If this check wasn't here the potion would be reapplied every tick and hence the entity would be damaged each tick.
-					// In this case, we do want particles to be shown.
-					if(!target.isPotionActive(WizardryPotions.decay)) target.addPotionEffect(new PotionEffect(WizardryPotions.decay, LIFETIME, 0));
+					if(!target.isPotionActive(Wizardry.decay)) target.addPotionEffect(new PotionEffect(Wizardry.decay.id, LIFETIME, 0, false));
 				}
 			}
 		}else if(this.rand.nextInt(15) == 0){
 			double radius = rand.nextDouble()*0.8;
 			double angle = rand.nextDouble()*Math.PI*2;
 			float brightness = rand.nextFloat()*0.4f;
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, worldObj, this.posX + radius*Math.cos(angle), this.posY, this.posZ + radius*Math.sin(angle), 0, 0, 0, 0, brightness, 0, brightness+0.1f);
+			Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, worldObj, this.posX + radius*Math.cos(angle), this.posY, this.posZ + radius*Math.sin(angle), 0, 0, 0, 0, brightness, 0, brightness+0.1f);
 		}
 	}
 	
@@ -69,9 +68,9 @@ public class EntityDecay extends EntityMagicConstruct {
 	}
 
 	/**
-     * Checks using a Vec3dd to determine if this entity is within range of that vector to be rendered. Args: Vec3dD
+     * Checks using a Vec3d to determine if this entity is within range of that vector to be rendered. Args: vec3D
      */
-    public boolean isInRangeToRenderVec3dD(Vec3d par1Vec3d)
+    public boolean isInRangeToRenderVec3D(Vec3 par1Vec3)
     {
         return true;
     }

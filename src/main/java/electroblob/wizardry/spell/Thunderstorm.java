@@ -2,49 +2,44 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import electroblob.wizardry.entity.EntityArc;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class Thunderstorm extends Spell {
 
 	public Thunderstorm() {
-		super(Tier.MASTER, 100, Element.LIGHTNING, "thunderstorm", SpellType.ATTACK, 250, EnumAction.BOW, false);
+		super(EnumTier.MASTER, 100, EnumElement.LIGHTNING, "thunderstorm", EnumSpellType.ATTACK, 250, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		if(world.canBlockSeeSky(new BlockPos(caster))){
+		if(world.canBlockSeeTheSky((int)caster.posX, (int)caster.posY, (int)caster.posZ)){
 		
 			for(int r=0; r<10; r++){
 	    		
-	    		double radius = 4 + world.rand.nextDouble()*6*modifiers.get(WizardryItems.blast_upgrade);
+	    		double radius = 4 + world.rand.nextDouble()*6*blastMultiplier;
 	    		double angle = world.rand.nextDouble()*Math.PI*2;
 	    		
 	        	double x = caster.posX + radius*Math.cos(angle);
 	        	double z = caster.posZ + radius*Math.sin(angle);
-	        	double y = WizardryUtilities.getNearestFloorLevel(world, new BlockPos(x, caster.posY, z), 10);
+	        	double y = WizardryUtilities.getNearestFloorLevel(world, (int)x, (int)caster.posY, (int)z, 10);
 	            
 	        	if(!world.isRemote){
-		            EntityLightningBolt entitylightning = new EntityLightningBolt(world, x, y, z, false);
+		            EntityLightningBolt entitylightning = new EntityLightningBolt(world, x, y, z);
 		            world.addWeatherEffect(entitylightning);
 	        	}
 	            
@@ -52,7 +47,7 @@ public class Thunderstorm extends Spell {
 	            //NBTTagCompound entityNBT = entitylightning.getEntityData();
 	            //entityNBT.setInteger("summoningPlayer", entityplayer.entityId);
 	            
-	        	// Secondary chaining effect
+	        	//Secondary chaining effect
 				double seekerRange = 10.0d;
 				
 				List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange, x, y+1, z, world);
@@ -69,14 +64,14 @@ public class Thunderstorm extends Spell {
 							world.spawnEntityInWorld(arc);
 						}else{
 							for(int j=0;j<8;j++){
-								Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, secondaryTarget.posX + world.rand.nextFloat() - 0.5, secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height/2 + world.rand.nextFloat()*2 - 1, secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-								world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, secondaryTarget.posX + world.rand.nextFloat() - 0.5, secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height/2 + world.rand.nextFloat()*2 - 1, secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
+								Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, world, secondaryTarget.posX + world.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(secondaryTarget) + secondaryTarget.height/2 + world.rand.nextFloat()*2 - 1, secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+								world.spawnParticle("largesmoke", secondaryTarget.posX + world.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(secondaryTarget) + secondaryTarget.height/2 + world.rand.nextFloat()*2 - 1, secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
 				    		}
 						}
 						
-						secondaryTarget.playSound(WizardrySounds.SPELL_SPARK, 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
+						world.playSoundAtEntity(secondaryTarget, "wizardry:arc", 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
 						
-						secondaryTarget.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 10.0f * modifiers.get(SpellModifiers.DAMAGE));
+						secondaryTarget.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 10.0f * damageMultiplier);
 						
 						//Tertiary chaining effect
 						
@@ -95,14 +90,14 @@ public class Thunderstorm extends Spell {
 									world.spawnEntityInWorld(arc);
 								}else{
 									for(int k=0;k<8;k++){
-										Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world, tertiaryTarget.posX + world.rand.nextFloat() - 0.5, tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height/2 + world.rand.nextFloat()*2 - 1, tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-										world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, tertiaryTarget.posX + world.rand.nextFloat() - 0.5, tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height/2 + world.rand.nextFloat()*2 - 1, tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
+										Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, world, tertiaryTarget.posX + world.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(tertiaryTarget) + tertiaryTarget.height/2 + world.rand.nextFloat()*2 - 1, tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+										world.spawnParticle("largesmoke", tertiaryTarget.posX + world.rand.nextFloat() - 0.5, WizardryUtilities.getEntityFeetPos(tertiaryTarget) + tertiaryTarget.height/2 + world.rand.nextFloat()*2 - 1, tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
 						    		}
 								}
 								
-								tertiaryTarget.playSound(WizardrySounds.SPELL_SPARK, 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
+								world.playSoundAtEntity(tertiaryTarget, "wizardry:arc", 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
 								
-								tertiaryTarget.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 8.0f * modifiers.get(SpellModifiers.DAMAGE));
+								tertiaryTarget.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 8.0f * damageMultiplier);
 							}
 						}
 					}

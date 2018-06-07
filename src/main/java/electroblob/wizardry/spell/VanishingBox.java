@@ -1,21 +1,17 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryEnderChest;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class VanishingBox extends Spell {
 
 	public VanishingBox() {
-		super(Tier.ADVANCED, 45, Element.SORCERY, "vanishing_box", SpellType.UTILITY, 70, EnumAction.BOW, false);
+		super(EnumTier.ADVANCED, 45, EnumElement.SORCERY, "vanishing_box", EnumSpellType.UTILITY, 70, EnumAction.bow, false);
 	}
 
 	@Override
@@ -24,7 +20,7 @@ public class VanishingBox extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(!world.isRemote){
 			
@@ -35,7 +31,7 @@ public class VanishingBox extends Spell {
 			}
 		}
 		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_ENDERCHEST_OPEN, 1, 1);
+		world.playSoundAtEntity(caster, "wizardry:aura", 1, 1);
 		
 		return true;
 	}

@@ -1,23 +1,19 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.entity.projectile.EntityThunderbolt;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class Thunderbolt extends Spell {
 
 	public Thunderbolt() {
-		super(Tier.BASIC, 10, Element.LIGHTNING, "thunderbolt", SpellType.ATTACK, 15, EnumAction.NONE, false);
+		super(EnumTier.BASIC, 10, EnumElement.LIGHTNING, "thunderbolt", EnumSpellType.ATTACK, 15, EnumAction.none, false);
 	}
 
 	@Override
@@ -26,31 +22,31 @@ public class Thunderbolt extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		if(!world.isRemote){
-			EntityThunderbolt thunderbolt = new EntityThunderbolt(world, caster, modifiers.get(SpellModifiers.DAMAGE));
+			EntityThunderbolt thunderbolt = new EntityThunderbolt(world, caster, damageMultiplier);
 			world.spawnEntityInWorld(thunderbolt);
+			world.playSoundAtEntity(caster, "wizardry:ice", 0.8F, world.rand.nextFloat() * 0.2F + 0.8F);
 		}
-
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 0.8F, world.rand.nextFloat() * 0.2F + 0.8F);
-		caster.swingArm(hand);
+		
+		caster.swingItem();
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier){
 		
 		if(target != null){
 		
 			if(!world.isRemote){
-				EntityThunderbolt thunderbolt = new EntityThunderbolt(world, caster, modifiers.get(SpellModifiers.DAMAGE));
+				EntityThunderbolt thunderbolt = new EntityThunderbolt(world, caster, damageMultiplier);
 				thunderbolt.directTowards(target, 2.5f);
 				world.spawnEntityInWorld(thunderbolt);
+				world.playSoundAtEntity(caster, "wizardry:ice", 0.8F, world.rand.nextFloat() * 0.2F + 0.8F);
 			}
-
-			caster.playSound(WizardrySounds.SPELL_ICE, 0.8F, world.rand.nextFloat() * 0.2F + 0.8F);
-			caster.swingArm(hand);
+			
+			caster.swingItem();
 			return true;
 		}
 		

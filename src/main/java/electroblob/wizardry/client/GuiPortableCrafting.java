@@ -1,12 +1,13 @@
 package electroblob.wizardry.client;
 
+import org.lwjgl.opengl.GL11;
+
+import electroblob.wizardry.WizardryGuiHandler;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerWorkbench;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /** Crafting table GUI that doesn't require a crafting table container object. */
@@ -14,9 +15,9 @@ public class GuiPortableCrafting extends GuiContainer {
  
 	private static final ResourceLocation craftingTableGuiTextures = new ResourceLocation("textures/gui/container/crafting_table.png");
 	
-	public GuiPortableCrafting(InventoryPlayer p_i1084_1_, World p_i1084_2_, BlockPos pos)
+	public GuiPortableCrafting(InventoryPlayer p_i1084_1_, World p_i1084_2_, int p_i1084_3_, int p_i1084_4_, int p_i1084_5_)
     {
-        super(new ContainerWorkbench(p_i1084_1_, p_i1084_2_, pos));
+        super(new ContainerWorkbench(p_i1084_1_, p_i1084_2_, p_i1084_3_, p_i1084_4_, p_i1084_5_));
     }
 
     /**
@@ -30,7 +31,7 @@ public class GuiPortableCrafting extends GuiContainer {
 
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_)
     {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(craftingTableGuiTextures);
         int k = (this.width - this.xSize) / 2;
         int l = (this.height - this.ySize) / 2;

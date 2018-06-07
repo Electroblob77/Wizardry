@@ -2,6 +2,7 @@ package electroblob.wizardry.client.model;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.entity.Entity;
 
 public class ModelWizard extends ModelBiped
 {

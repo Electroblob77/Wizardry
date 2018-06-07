@@ -2,52 +2,49 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class FontOfMana extends Spell {
 
 	public FontOfMana() {
-		super(Tier.MASTER, 100, Element.HEALING, "font_of_mana", SpellType.UTILITY, 250, EnumAction.BOW, false);
+		super(EnumTier.MASTER, 100, EnumElement.HEALING, "font_of_mana", EnumSpellType.UTILITY, 250, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
-		List<EntityPlayer> targets = WizardryUtilities.getEntitiesWithinRadius(5*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world, EntityPlayer.class);
+		List<EntityPlayer> targets = WizardryUtilities.getEntitiesWithinRadius(5*blastMultiplier, caster.posX, caster.posY, caster.posZ, world, EntityPlayer.class);
 		
 		for(EntityPlayer target : targets){
 			if(WizardryUtilities.isPlayerAlly(caster, target) || target == caster){
 				// Damage multiplier can only ever be 1 or 1.6 for master spells, so there's little point in actually calculating this.
-				target.addPotionEffect(new PotionEffect(WizardryPotions.font_of_mana, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), modifiers.get(SpellModifiers.DAMAGE) > 1 ? 1 : 0));
+				target.addPotionEffect(new PotionEffect(Wizardry.fontOfMana.id, (int)(600*durationMultiplier), damageMultiplier > 1 ? 1 : 0));
 			}
 		}
 		
 		if(world.isRemote){
-			for(int i=0;i<100*modifiers.get(WizardryItems.blast_upgrade);i++){
-        		double radius = (1 + world.rand.nextDouble()*4)*modifiers.get(WizardryItems.blast_upgrade);
+			for(int i=0;i<100*blastMultiplier;i++){
+        		double radius = (1 + world.rand.nextDouble()*4)*blastMultiplier;
         		double angle = world.rand.nextDouble()*Math.PI*2;
         		float hue = world.rand.nextFloat()*0.4f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, caster.posX + radius*Math.cos(angle), caster.getEntityBoundingBox().minY, caster.posZ + radius*Math.sin(angle),
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARKLE, world, caster.posX + radius*Math.cos(angle), WizardryUtilities.getEntityFeetPos(caster), caster.posZ + radius*Math.sin(angle),
 						0, 0.03, 0, 50, 1, 1-hue, 0.6f+hue);
 
 			}
 		}
 
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
+		world.playSoundAtEntity(caster, "wizardry:heal", 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
 		return true;
 	}
 

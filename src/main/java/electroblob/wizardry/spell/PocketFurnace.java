@@ -1,27 +1,25 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class PocketFurnace extends Spell {
 
 	public PocketFurnace() {
-		super(Tier.APPRENTICE, 30, Element.FIRE, "pocket_furnace", SpellType.UTILITY, 40, EnumAction.BOW, false);
+		super(EnumTier.APPRENTICE, 30, EnumElement.FIRE, "pocket_furnace", EnumSpellType.UTILITY, 40, EnumAction.bow, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		int usesLeft = 5;
 		
@@ -33,12 +31,12 @@ public class PocketFurnace extends Spell {
 			
 			if(stack != null){
 
-				result = FurnaceRecipes.instance().getSmeltingResult(stack);
+				result = FurnaceRecipes.smelting().getSmeltingResult(stack);
 				
 				if(result != null){
 					if(stack.stackSize <= usesLeft){
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.stackSize, result.getItemDamage());
-						if(WizardryUtilities.doesPlayerHaveItem(caster, result.getItem())){
+						if(caster.inventory.hasItem(result.getItem())){
 							caster.inventory.addItemStackToInventory(stack2);
 							caster.inventory.setInventorySlotContents(i, null);
 						}else{
@@ -54,14 +52,14 @@ public class PocketFurnace extends Spell {
 			}
 		}
 		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, 1, 0.75f);
+		caster.playSound("fire.fire", 1, 0.75f);
 		
 		if(world.isRemote){
 			for(int i=0; i<10; i++){
 				double x1 = (double)((float)caster.posX + world.rand.nextFloat()*2 - 1.0F);
 				double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F + world.rand.nextFloat());
 				double z1 = (double)((float)caster.posZ + world.rand.nextFloat()*2 - 1.0F);
-				world.spawnParticle(EnumParticleTypes.FLAME, x1, y1, z1, 0, 0.01F, 0);
+				world.spawnParticle("flame", x1, y1, z1, 0, 0.01F, 0);
 			}
 		}
 		

@@ -2,38 +2,30 @@ package electroblob.wizardry.command;
 
 import java.util.List;
 
-import electroblob.wizardry.WizardData;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.event.SpellCastEvent;
-import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 
 public class CommandCastSpell extends CommandBase {
 
 	@Override
 	public String getCommandName(){
-		return Wizardry.settings.castCommandName;
+		return Wizardry.castCommandName;
 	}
 	
 	@Override
@@ -43,37 +35,38 @@ public class CommandCastSpell extends CommandBase {
 	}
 	
 	@Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender){
+		// Only ops (multiplayer) or players with cheats enabled (singleplayer/LAN) can use /cast.
+        return !(sender instanceof EntityPlayer) || MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayer)sender).getGameProfile());
+    }
+
+	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_){
-		// Not ideal, but the way this is implemented means I have no choice. Only used in the help command, so in there
-		// the custom command name will not display.
-		return "commands.wizardry:cast.usage";
-		//return I18n.format("commands.wizardry:cast.usage", Wizardry.settings.castCommandName);
+		return StatCollector.translateToLocalFormatted("commands.cast.usage", Wizardry.castCommandName);
 	}
 	
 	@Override
-	public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] arguments, BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] arguments) {
 		switch(arguments.length){
-		case 1: return getListOfStringsMatchingLastWord(arguments, Spell.getSpellNames());
-		case 2: return getListOfStringsMatchingLastWord(arguments, server.getAllUsernames());
+		case 1: return getListOfStringsMatchingLastWord(arguments, Spell.getUnlocalisedNames());
+		case 2: return getListOfStringsMatchingLastWord(arguments, MinecraftServer.getServer().getAllUsernames());
 		}
-		return super.getTabCompletionOptions(server, sender, arguments, pos);
+		return super.addTabCompletionOptions(sender, arguments);
 	}
 
 	@Override
-	public void execute(MinecraftServer server, ICommandSender sender, String[] arguments) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] arguments){
 		
 		if(arguments.length < 1){
-            throw new WrongUsageException("commands.wizardry:cast.usage", Wizardry.settings.castCommandName);
+            throw new WrongUsageException("commands.cast.usage", Wizardry.castCommandName);
         }else{
             
-        	// ===== Parameter retrieval =====
-        	
         	int i=0;
         	
-        	EntityPlayerMP caster = null;
+        	EntityPlayerMP entityplayermp = null;
         	
         	try{
-        		caster = getCommandSenderAsPlayer(sender);
+        		entityplayermp = getCommandSenderAsPlayer(sender);
         	}catch(PlayerNotFoundException exception){
         		// Nothing here since the player specifying is done later, I just don't want it to throw an exception here.
         	}
@@ -81,7 +74,7 @@ public class CommandCastSpell extends CommandBase {
         	Spell spell = Spell.get(arguments[i++]);
         	
         	if(spell == null){
-        		throw new NumberInvalidException("commands.wizardry:cast.not_found", new Object[]{arguments[i-1]});
+        		throw new NumberInvalidException("commands.cast.not_found", new Object[]{arguments[i-1]});
         	}
         	
         	boolean castAsOtherPlayer = false;
@@ -90,10 +83,10 @@ public class CommandCastSpell extends CommandBase {
 	        	try{
 	        		// If the second argument is a player and is not the player that gave the command, the spell is cast
 	        		// as the given player rather than the command sender, and there is a different chat readout.
-	        		EntityPlayerMP entityplayermp = getPlayer(server, sender, arguments[i++]);
-	        		if(caster != entityplayermp){
+	        		EntityPlayerMP entityplayermp1 = getPlayer(sender, arguments[i++]);
+	        		if(entityplayermp != entityplayermp1){
 	        			castAsOtherPlayer = true;
-	        			caster = entityplayermp;
+	        			entityplayermp = entityplayermp1;
 	        		}
 	        	}catch(PlayerNotFoundException exception){
 	        		// If no player was found, rather than give an error it simply assumes the player was unspecified.
@@ -103,56 +96,27 @@ public class CommandCastSpell extends CommandBase {
         	
         	// If, after this point, the player is still null, the sender must be a command block or the console and the
         	// player must not have been specified, meaning an exception should be thrown.
-        	if(caster == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
-            
-        	SpellModifiers modifiers = new SpellModifiers();
-            
-        	if(i < arguments.length){
-            	
-        		// Copied from CommandGive. Why it doesn't just use arguments[i] itself I don't know.
-                String nbt = getChatComponentFromNthArg(sender, arguments, i++).getUnformattedText();
-
-                try{
-                    modifiers = SpellModifiers.fromNBT(JsonToNBT.getTagFromJson(nbt));
-                }catch(NBTException nbtexception){
-                    throw new CommandException("commands.wizardry:cast.tag_error", nbtexception.getMessage());
-                }
-                
-                for(float multiplier : modifiers.getModifiers().values()){
-                	if(multiplier < 0){
-                        throw new NumberInvalidException("commands.generic.double.tooSmall", multiplier, 0);
-                    }else if(multiplier > Wizardry.settings.maxSpellCommandMultiplier){
-                        throw new NumberInvalidException("commands.generic.double.tooBig", multiplier, Wizardry.settings.maxSpellCommandMultiplier);
-                    }
-                }
-                
-            }
+        	if(entityplayermp == null) throw new PlayerNotFoundException("You must specify which player you wish to perform this action on.");
         	
-        	// ===== Spell casting =====
-    		
-        	// If anything stops the spell working at this point, nothing else happens.
-    		if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(caster, spell, modifiers, Source.COMMAND))){
-            	displayFailMessage(sender, spell);
-    			return;
-    		}
+    		float damageMultiplier = i < arguments.length ? (float)this.parseDoubleBounded(sender, arguments[i++], 0d, Wizardry.maxSpellCommandMultiplier) : 1;
+    		float rangeMultiplier = i < arguments.length ? (float)this.parseDoubleBounded(sender, arguments[i++], 0d, Wizardry.maxSpellCommandMultiplier) : 1;
+    		float durationMultiplier = i < arguments.length ? (float)this.parseDoubleBounded(sender, arguments[i++], 0d, Wizardry.maxSpellCommandMultiplier) : 1;
+    		float blastMultiplier = i < arguments.length ? (float)this.parseDoubleBounded(sender, arguments[i++], 0d, Wizardry.maxSpellCommandMultiplier) : 1;
         	
-    		WizardData data = WizardData.get((EntityPlayer)caster);
-            
         	if(spell.isContinuous){
         		
-        		// Events for continuous spell casting via commands are dealt with in WizardData.
+        		ExtendedPlayer properties = ExtendedPlayer.get((EntityPlayer)entityplayermp);
         		
-        		if(data != null){
-        			if(data.isCasting()){
-        				data.stopCastingContinuousSpell();
+        		if(properties != null){
+        			if(properties.isCasting()){
+        				ExtendedPlayer.get((EntityPlayer)entityplayermp).stopCastingContinuousSpell();
         			}else{
-        				
-        				data.startCastingContinuousSpell(spell, modifiers);
+        				ExtendedPlayer.get((EntityPlayer)entityplayermp).startCastingContinuousSpell(spell, damageMultiplier, rangeMultiplier, durationMultiplier, blastMultiplier);
         				
         				if(castAsOtherPlayer){
-                			sender.addChatMessage(new TextComponentTranslation("commands.wizardry:cast.success_remote_continuous", spell.getNameForTranslationFormatted(), caster.getName()));
+                			sender.addChatMessage(new ChatComponentTranslation("commands.cast.success_remote_continuous", spell.getDisplayNameWithFormatting(), entityplayermp.getCommandSenderName()));
             			}else{
-            				sender.addChatMessage(new TextComponentTranslation("commands.wizardry:cast.success_continuous", spell.getNameForTranslationFormatted()));
+            				sender.addChatMessage(new ChatComponentTranslation("commands.cast.success_continuous", spell.getDisplayNameWithFormatting()));
             			}
         			}
         			
@@ -161,36 +125,39 @@ public class CommandCastSpell extends CommandBase {
         		
         	}else{
 
-        		if(spell.cast(caster.worldObj, caster, EnumHand.MAIN_HAND, 0, modifiers)){
+        		if(spell.cast(entityplayermp.worldObj, entityplayermp, 0, damageMultiplier, rangeMultiplier, durationMultiplier, blastMultiplier)){
         			
-        			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(caster, spell, modifiers, Source.COMMAND));
+        			// TODO: In this case, is it more efficient/simpler/better design to just do away with the packet
+        			// optimisation entirely rather than calling sync() for spells which don't send packets?
         			
         			if(spell.doesSpellRequirePacket()){
 						// Sends a packet to all players in dimension to tell them to spawn particles.
 						// Only sent if the spell succeeded, because if the spell failed, you wouldn't
 						// need to spawn any particles!
-						IMessage msg = new PacketCastSpell.Message(caster.getEntityId(), null, spell.id(), modifiers);
-						WizardryPacketHandler.net.sendToDimension(msg, caster.worldObj.provider.getDimension());
+						IMessage msg = new PacketCastSpell.Message(entityplayermp.getEntityId(), 0, spell.id(), damageMultiplier, rangeMultiplier, blastMultiplier);
+						WizardryPacketHandler.net.sendToDimension(msg, entityplayermp.worldObj.provider.dimensionId);
 					}
         			
+        			if(ExtendedPlayer.get((EntityPlayer)entityplayermp) != null){
+        				ExtendedPlayer.get((EntityPlayer)entityplayermp).discoverSpell(spell);
+        				// If the spell didn't send a packet itself, the extended player needs to be synced so the
+        				// spell discovery updates on the client.
+        				if(!spell.doesSpellRequirePacket()) ExtendedPlayer.get((EntityPlayer)entityplayermp).sync();
+        			}
+        			
         			if(castAsOtherPlayer){
-            			sender.addChatMessage(new TextComponentTranslation("commands.wizardry:cast.success_remote", spell.getNameForTranslationFormatted(), caster.getName()));
+            			sender.addChatMessage(new ChatComponentTranslation("commands.cast.success_remote", spell.getDisplayNameWithFormatting(), entityplayermp.getCommandSenderName()));
         			}else{
-        				sender.addChatMessage(new TextComponentTranslation("commands.wizardry:cast.success", spell.getNameForTranslationFormatted()));
+        				sender.addChatMessage(new ChatComponentTranslation("commands.cast.success", spell.getDisplayNameWithFormatting()));
         			}
         			return;
         		}
         	}
         	
-        	displayFailMessage(sender, spell);
+        	IChatComponent message = new ChatComponentTranslation("commands.cast.fail", spell.getDisplayNameWithFormatting());
+        	message.getChatStyle().setColor(EnumChatFormatting.RED);
+			sender.addChatMessage(message);
         }
-	}
-	
-	/** Displays the "Unable to cast [spell]" message in the chat. */
-	private void displayFailMessage(ICommandSender sender, Spell spell){
-    	ITextComponent message = new TextComponentTranslation("commands.wizardry:cast.fail", spell.getNameForTranslationFormatted());
-    	message.getStyle().setColor(TextFormatting.RED);
-		sender.addChatMessage(message);
 	}
 
 }

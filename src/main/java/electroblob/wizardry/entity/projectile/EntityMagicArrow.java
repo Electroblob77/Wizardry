@@ -4,13 +4,17 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.UUID;
 
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
+import org.apache.logging.log4j.core.helpers.UUIDUtil;
+
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.MagicDamage.DamageType;
+import electroblob.wizardry.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,38 +23,31 @@ import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketChangeGameState;
+import net.minecraft.network.play.server.S2BPacketChangeGameState;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** This class was copied from EntityArrow in the 1.7.10 update as part of the overhaul and major cleanup
  * of the code for the projectiles. It provides a unifying superclass for all <b>directed</b> projectiles (i.e. not
  * spherical stuff like snowballs), namely magic missile, ice shard, force arrow, lightning arrow and dart.
- * All spherical projectiles should extend {@link EntityMagicProjectile}.
+ * All other projectiles should extend {@link EntityMagicProjectile}.
  * <p>
  * This class handles saving of the damage multiplier and all shared logic. Methods are provided which are
  * triggered at useful points during the entity update cycle as well as a few getters for various properties.
  * Override any of these to change the behaviour (no need to call super for any of them).
  * @since Wizardry 1.0
- * @author Electroblob
  */
-public abstract class EntityMagicArrow extends Entity implements IProjectile, IEntityAdditionalSpawnData {
-
+public abstract class EntityMagicArrow extends Entity implements IProjectile, IEntityAdditionalSpawnData
+{
     private int blockX = -1;
     private int blockY = -1;
     private int blockZ = -1;
     /** The block the arrow is stuck in */
-    private IBlockState stuckInBlock;
+    private Block stuckInBlock;
     /** The metadata of the block the arrow is stuck in */
     private int inData;
     private boolean inGround;
@@ -74,6 +71,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
     public EntityMagicArrow(World world)
     {
         super(world);
+        this.renderDistanceWeight = 10.0D;
         this.setSize(0.5F, 0.5F);
     }
 
@@ -82,9 +80,10 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
     public EntityMagicArrow(World world, double x, double y, double z)
     {
         super(world);
+        this.renderDistanceWeight = 10.0D;
         this.setSize(0.5F, 0.5F);
         this.setPosition(x, y, z);
-        // yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
+        this.yOffset = 0.0F;
     }
 
     /** Creates a projectile at the position of the caster, pointing at the given target. The trajectory seems to be altered 
@@ -93,13 +92,14 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
     public EntityMagicArrow(World world, EntityLivingBase caster, Entity target, float speed, float aimingError, float damageMultiplier)
     {
         super(world);
-        this.shootingEntity = new WeakReference<EntityLivingBase>(caster);
+        this.renderDistanceWeight = 10.0D;
+        this.shootingEntity = new WeakReference(caster);
         this.damageMultiplier = damageMultiplier;
 
         this.posY = caster.posY + (double)caster.getEyeHeight() - 0.10000000149011612D;
         double d0 = target.posX - caster.posX;
-        double d1 = this.doGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - this.posY
-        		: target.getEntityBoundingBox().minY + (double)(target.height / 2.0F) - this.posY;
+        double d1 = this.doGravity() ? target.boundingBox.minY + (double)(target.height / 3.0F) - this.posY
+        		: target.boundingBox.minY + (double)(target.height / 2.0F) - this.posY;
         double d2 = target.posZ - caster.posZ;
         double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d2 * d2);
 
@@ -110,21 +110,21 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
             double d4 = d0 / d3;
             double d5 = d2 / d3;
             this.setLocationAndAngles(caster.posX + d4, this.posY, caster.posZ + d5, f2, f3);
-            // yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
-
+            this.yOffset = 0.0F;
             // f4 depends on the horizontal distance between the two entities and accounts for bullet drop,
             // but of course if gravity is ignored this should be 0.
-            float bulletDropCompensation = this.doGravity() ? (float)d3 * 0.2F : 0;
-            this.setThrowableHeading(d0, d1 + (double)bulletDropCompensation, d2, speed, aimingError);
+            float f4 = this.doGravity() ? (float)d3 * 0.2F : 0;
+            this.setThrowableHeading(d0, d1 + (double)f4, d2, speed, aimingError);
         }
     }
 
     /** Creates a projectile pointing in the direction the caster is looking, with the given speed. 
-     * <b>Use this constructor for normal, player-cast spells. */
+     * USE THIS CONSTRUCTOR FOR NORMAL SPELLS. */
     public EntityMagicArrow(World world, EntityLivingBase caster, float speed, float damageMultiplier)
     {
         super(world);
-        this.shootingEntity = new WeakReference<EntityLivingBase>(caster);
+        this.renderDistanceWeight = 10.0D;
+        this.shootingEntity = new WeakReference(caster);
         this.damageMultiplier = damageMultiplier;
 
         this.setSize(0.5F, 0.5F);
@@ -133,7 +133,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
         this.posY -= 0.10000000149011612D;
         this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
         this.setPosition(this.posX, this.posY, this.posZ);
-        // yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
+        this.yOffset = 0.0F;
         this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
         this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
         this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
@@ -189,13 +189,21 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
         this.ticksInGround = 0;
     }
 
-    // There was an override for setPositionAndRotationDirect here, but it was exactly the same as the superclass
-    // method (in Entity), so it was removed since it was redundant.
+    /**
+     * Sets the position and rotation. Only difference from the other one is no bounding on the rotation. Args: posX,
+     * posY, posZ, yaw, pitch
+     * - Allows the arrow to stick in blocks, I think.
+     */
+    @SideOnly(Side.CLIENT)
+    public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_, float p_70056_8_, int p_70056_9_)
+    {
+        this.setPosition(p_70056_1_, p_70056_3_, p_70056_5_);
+        this.setRotation(p_70056_7_, p_70056_8_);
+    }
 
     /**
      * Sets the velocity to the args. Args: x, y, z. THIS IS CLIENT SIDE ONLY! DO NOT USE IN COMMON OR SERVER CODE!
      */
-    @Override
     @SideOnly(Side.CLIENT)
     public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_)
     {
@@ -230,7 +238,9 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
     /** Called when the projectile hits a block. Override to add sound effects and such like. */
     public void onBlockHit(){}
 
-    @Override
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate(){
     	
         super.onUpdate();
@@ -249,14 +259,14 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
             this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(this.motionY, (double)f) * 180.0D / Math.PI);
         }
 
-        BlockPos blockpos = new BlockPos(this.blockX, this.blockY, this.blockZ);
-        IBlockState iblockstate = this.worldObj.getBlockState(blockpos);
+        Block block = this.worldObj.getBlock(this.blockX, this.blockY, this.blockZ);
 
-        if (iblockstate.getMaterial() != Material.AIR)
+        if (block.getMaterial() != Material.air)
         {
-            AxisAlignedBB axisalignedbb = iblockstate.getCollisionBoundingBox(this.worldObj, blockpos);
+            block.setBlockBoundsBasedOnState(this.worldObj, this.blockX, this.blockY, this.blockZ);
+            AxisAlignedBB axisalignedbb = block.getCollisionBoundingBoxFromPool(this.worldObj, this.blockX, this.blockY, this.blockZ);
 
-            if (axisalignedbb != Block.NULL_AABB && axisalignedbb.offset(blockpos).isVecInside(new Vec3d(this.posX, this.posY, this.posZ)))
+            if (axisalignedbb != null && axisalignedbb.isVecInside(Vec3.createVectorHelper(this.posX, this.posY, this.posZ)))
             {
                 this.inGround = true;
             }
@@ -274,26 +284,26 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
         	this.tickInGround();
         }
         // When the arrow is in the air
-        else{
+        else
+        {
+            ++this.ticksInAir;
             
             this.tickInAir();
             
-            this.ticksInGround = 0;
-            ++this.ticksInAir;
-            Vec3d vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
-            Vec3d vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
-            RayTraceResult raytraceresult = this.worldObj.rayTraceBlocks(vec3d1, vec3d, false, true, false);
-            vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
-            vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+            Vec3 vec31 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+            Vec3 vec3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
+            MovingObjectPosition movingobjectposition = this.worldObj.func_147447_a(vec31, vec3, false, true, false);
+            vec31 = Vec3.createVectorHelper(this.posX, this.posY, this.posZ);
+            vec3 = Vec3.createVectorHelper(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 
-            if (raytraceresult != null)
+            if (movingobjectposition != null)
             {
-                vec3d = new Vec3d(raytraceresult.hitVec.xCoord, raytraceresult.hitVec.yCoord, raytraceresult.hitVec.zCoord);
+                vec3 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
             }
 
             
             Entity entity = null;
-            List<?> list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox().addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
+            List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.addCoord(this.motionX, this.motionY, this.motionZ).expand(1.0D, 1.0D, 1.0D));
             double d0 = 0.0D;
             int i;
             float f1;
@@ -305,12 +315,12 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
                 if (entity1.canBeCollidedWith() && (entity1 != this.getShootingEntity() || this.ticksInAir >= 5))
                 {
                     f1 = 0.3F;
-                    AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().expand((double)f1, (double)f1, (double)f1);
-                    RayTraceResult RayTraceResult1 = axisalignedbb1.calculateIntercept(vec3d1, vec3d);
+                    AxisAlignedBB axisalignedbb1 = entity1.boundingBox.expand((double)f1, (double)f1, (double)f1);
+                    MovingObjectPosition movingobjectposition1 = axisalignedbb1.calculateIntercept(vec31, vec3);
 
-                    if (RayTraceResult1 != null)
+                    if (movingobjectposition1 != null)
                     {
-                        double d1 = vec3d1.distanceTo(RayTraceResult1.hitVec);
+                        double d1 = vec31.distanceTo(movingobjectposition1.hitVec);
 
                         if (d1 < d0 || d0 == 0.0D)
                         {
@@ -323,25 +333,25 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
             if (entity != null)
             {
-                raytraceresult = new RayTraceResult(entity);
+                movingobjectposition = new MovingObjectPosition(entity);
             }
 
             // Players that are considered invulnerable to the caster allow the projectile to pass straight through them.
-            if (raytraceresult != null && raytraceresult.entityHit != null && raytraceresult.entityHit instanceof EntityPlayer)
+            if (movingobjectposition != null && movingobjectposition.entityHit != null && movingobjectposition.entityHit instanceof EntityPlayer)
             {
-                EntityPlayer entityplayer = (EntityPlayer)raytraceresult.entityHit;
+                EntityPlayer entityplayer = (EntityPlayer)movingobjectposition.entityHit;
 
                 if (entityplayer.capabilities.disableDamage || this.getShootingEntity() instanceof EntityPlayer && !((EntityPlayer)this.getShootingEntity()).canAttackPlayer(entityplayer))
                 {
-                    raytraceresult = null;
+                    movingobjectposition = null;
                 }
             }
 
             // If the arrow hits something
-            if (raytraceresult != null)
+            if (movingobjectposition != null)
             {
             	// If the arrow hits an entity
-                if (raytraceresult.entityHit != null)
+                if (movingobjectposition.entityHit != null)
                 {
                     DamageSource damagesource = null;
 
@@ -351,14 +361,14 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
                     }
                     else
                     {
-                        damagesource = MagicDamage.causeIndirectMagicDamage(this, (EntityLivingBase)this.getShootingEntity(), this.getDamageType()).setProjectile();
+                        damagesource = MagicDamage.causeIndirectEntityMagicDamage(this, (EntityLivingBase)this.getShootingEntity(), this.getDamageType()).setProjectile();
                     }
 
-                    if (raytraceresult.entityHit.attackEntityFrom(damagesource, (float)(this.getDamage()*this.damageMultiplier)))
+                    if (movingobjectposition.entityHit.attackEntityFrom(damagesource, (float)(this.getDamage()*this.damageMultiplier)))
                     {
-                        if (raytraceresult.entityHit instanceof EntityLivingBase)
+                        if (movingobjectposition.entityHit instanceof EntityLivingBase)
                         {
-                            EntityLivingBase entityHit = (EntityLivingBase)raytraceresult.entityHit;
+                            EntityLivingBase entityHit = (EntityLivingBase)movingobjectposition.entityHit;
                             
                             this.onEntityHit(entityHit);
 
@@ -368,24 +378,24 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
                                 if (f4 > 0.0F)
                                 {
-                                	raytraceresult.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6000000238418579D / (double)f4, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6000000238418579D / (double)f4);
+                                    movingobjectposition.entityHit.addVelocity(this.motionX * (double)this.knockbackStrength * 0.6000000238418579D / (double)f4, 0.1D, this.motionZ * (double)this.knockbackStrength * 0.6000000238418579D / (double)f4);
                                 }
                             }
 
                             // Thorns enchantment
                             if (this.getShootingEntity() != null && this.getShootingEntity() instanceof EntityLivingBase)
                             {
-                                EnchantmentHelper.applyThornEnchantments(entityHit, this.getShootingEntity());
-                                EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase)this.getShootingEntity(), entityHit);
+                                EnchantmentHelper.func_151384_a(entityHit, this.getShootingEntity());
+                                EnchantmentHelper.func_151385_b((EntityLivingBase)this.getShootingEntity(), entityHit);
                             }
 
-                            if (this.getShootingEntity() != null && raytraceresult.entityHit != this.getShootingEntity() && raytraceresult.entityHit instanceof EntityPlayer && this.getShootingEntity() instanceof EntityPlayerMP)
+                            if (this.getShootingEntity() != null && movingobjectposition.entityHit != this.getShootingEntity() && movingobjectposition.entityHit instanceof EntityPlayer && this.getShootingEntity() instanceof EntityPlayerMP)
                             {
-                                ((EntityPlayerMP)this.getShootingEntity()).connection.sendPacket(new SPacketChangeGameState(6, 0.0F));
+                                ((EntityPlayerMP)this.getShootingEntity()).playerNetServerHandler.sendPacket(new S2BPacketChangeGameState(6, 0.0F));
                             }
                         }
 
-                        if (!(raytraceresult.entityHit instanceof EntityEnderman) && !this.doOverpenetration())
+                        if (!(movingobjectposition.entityHit instanceof EntityEnderman) && !this.doOverpenetration())
                         {
                             this.setDead();
                         }
@@ -408,13 +418,14 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
                 // If the arrow hits a block
                 else
                 {
-                    this.blockX = raytraceresult.getBlockPos().getX();
-                    this.blockY = raytraceresult.getBlockPos().getY();
-                    this.blockZ = raytraceresult.getBlockPos().getZ();
-                    this.stuckInBlock = this.worldObj.getBlockState(raytraceresult.getBlockPos());
-                    this.motionX = (double)((float)(raytraceresult.hitVec.xCoord - this.posX));
-                    this.motionY = (double)((float)(raytraceresult.hitVec.yCoord - this.posY));
-                    this.motionZ = (double)((float)(raytraceresult.hitVec.zCoord - this.posZ));
+                    this.blockX = movingobjectposition.blockX;
+                    this.blockY = movingobjectposition.blockY;
+                    this.blockZ = movingobjectposition.blockZ;
+                    this.stuckInBlock = this.worldObj.getBlock(this.blockX, this.blockY, this.blockZ);
+                    this.inData = this.worldObj.getBlockMetadata(this.blockX, this.blockY, this.blockZ);
+                    this.motionX = (double)((float)(movingobjectposition.hitVec.xCoord - this.posX));
+                    this.motionY = (double)((float)(movingobjectposition.hitVec.yCoord - this.posY));
+                    this.motionZ = (double)((float)(movingobjectposition.hitVec.zCoord - this.posZ));
                     //f2 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ);
                     //this.posX -= this.motionX / (double)f2 * 0.05000000074505806D;
                     //this.posY -= this.motionY / (double)f2 * 0.05000000074505806D;
@@ -425,9 +436,9 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
                     
                     this.onBlockHit();
 
-                    if (this.stuckInBlock.getMaterial() != Material.AIR)
+                    if (this.stuckInBlock.getMaterial() != Material.air)
                     {
-                        this.stuckInBlock.getBlock().onEntityCollidedWithBlock(this.worldObj, raytraceresult.getBlockPos(), this.stuckInBlock, this);
+                        this.stuckInBlock.onEntityCollidedWithBlock(this.worldObj, this.blockX, this.blockY, this.blockZ, this);
                     }
                 }
             }
@@ -468,7 +479,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
                 for (int l = 0; l < 4; ++l)
                 {
                     float f4 = 0.25F;
-                    this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
+                    this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double)f4, this.posY - this.motionY * (double)f4, this.posZ - this.motionZ * (double)f4, this.motionX, this.motionY, this.motionZ);
                 }
 
                 f3 = 0.8F;
@@ -488,44 +499,49 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
             if(this.doGravity()) this.motionY -= 0.05;
             
             this.setPosition(this.posX, this.posY, this.posZ);
-            this.doBlockCollisions();
+            this.func_145775_I();
         }
     }
 
-    @Override
+	/**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
     public void writeEntityToNBT(NBTTagCompound tag)
     {
         tag.setShort("xTile", (short)this.blockX);
         tag.setShort("yTile", (short)this.blockY);
         tag.setShort("zTile", (short)this.blockZ);
         tag.setShort("life", (short)this.ticksInGround);
-        if(this.stuckInBlock != null){
-        	ResourceLocation resourcelocation = (ResourceLocation)Block.REGISTRY.getNameForObject(this.stuckInBlock.getBlock());
-        	tag.setString("inTile", resourcelocation == null ? "" : resourcelocation.toString());
-        }
+        tag.setByte("inTile", (byte)Block.getIdFromBlock(this.stuckInBlock));
         tag.setByte("inData", (byte)this.inData);
         tag.setByte("shake", (byte)this.arrowShake);
         tag.setByte("inGround", (byte)(this.inGround ? 1 : 0));
         tag.setFloat("damageMultiplier", this.damageMultiplier);
 		if(this.getShootingEntity() != null){
-        	tag.setUniqueId("casterUUID", this.getShootingEntity().getUniqueID());
+        	tag.setString("casterUUID", this.getShootingEntity().getUniqueID().toString());
         }
     }
 
-    @Override
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
     public void readEntityFromNBT(NBTTagCompound tag)
     {
         this.blockX = tag.getShort("xTile");
         this.blockY = tag.getShort("yTile");
         this.blockZ = tag.getShort("zTile");
         this.ticksInGround = tag.getShort("life");
-        // Commented out for now because there's some funny stuff going on with blockstates and metadata.
-        //this.stuckInBlock = Block.getBlockById(tag.getByte("inTile") & 255);
+        this.stuckInBlock = Block.getBlockById(tag.getByte("inTile") & 255);
         this.inData = tag.getByte("inData") & 255;
         this.arrowShake = tag.getByte("shake") & 255;
         this.inGround = tag.getByte("inGround") == 1;
         this.damageMultiplier = tag.getFloat("damageMultiplier");
-		casterUUID = tag.getUniqueId("casterUUID");
+		String string = tag.getString("casterUUID");
+		// Fixed issue #3:
+		// Uses regex to verify that the string is a valid UUID (I can't see why it wouldn't be, but it was reported
+		// on the issue tracker so I've fixed it).
+		if(WizardryUtilities.verifyUUIDString(string))
+			casterUUID = UUID.fromString(string);
     }
     
     /**
@@ -564,7 +580,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
     }
     
     public void readSpawnData(ByteBuf buffer){
-    	if(buffer.isReadable()) this.shootingEntity = new WeakReference<EntityLivingBase>((EntityLivingBase)this.worldObj.getEntityByID(buffer.readInt()));
+    	if(buffer.isReadable()) this.shootingEntity = new WeakReference((EntityLivingBase)this.worldObj.getEntityByID(buffer.readInt()));
     }
 
 	/**
@@ -577,6 +593,6 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	}
 	
 	public void setShootingEntity(EntityLivingBase entity) {
-		shootingEntity = new WeakReference<EntityLivingBase>(entity);
+		shootingEntity = new WeakReference(entity);
 	}
 }

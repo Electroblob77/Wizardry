@@ -2,19 +2,21 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
-public class EntitySpark extends EntityMagicProjectile {
-	
+public class EntitySpark extends EntityMagicProjectile
+{
     public EntitySpark(World par1World)
     {
         super(par1World);
@@ -36,7 +38,7 @@ public class EntitySpark extends EntityMagicProjectile {
     }
     
     /** This is the speed */ 
-    protected float getSpeed()
+    protected float func_70182_d()
     {
         return 0.5F;
     }
@@ -44,23 +46,23 @@ public class EntitySpark extends EntityMagicProjectile {
     /**
      * Called when this EntityThrowable hits a block or entity.
      */
-    protected void onImpact(RayTraceResult par1RayTraceResult)
+    protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
     {
-    	Entity entityHit = par1RayTraceResult.entityHit;
+    	Entity entityHit = par1MovingObjectPosition.entityHit;
     	
         if (entityHit != null){
         	
             float damage = 6 * damageMultiplier;
-            entityHit.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK), damage);
+            entityHit.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, this.getThrower(), DamageType.SHOCK), damage);
             
         }
 
-        this.playSound(WizardrySounds.SPELL_SPARK, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+        this.playSound("wizardry:arc", 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 
         // Particle effect
         if(worldObj.isRemote){
 			for(int i=0;i<8;i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, worldObj, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
+				Wizardry.proxy.spawnParticle(EnumParticleType.SPARK, worldObj, this.posX + rand.nextFloat() - 0.5, this.posY + this.height/2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0, 3);
 			}
         }
 

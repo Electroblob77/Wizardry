@@ -2,25 +2,23 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.MagicDamage.DamageType;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardryAchievements;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.BiomeDictionary;
 
 public class EntityTornado extends EntityMagicConstruct {
 
@@ -48,16 +46,12 @@ public class EntityTornado extends EntityMagicConstruct {
 
 		if(this.ticksExisted % 120 == 1 && worldObj.isRemote){
 			// Repeat is false so that the sound fades out when the tornado does rather than stopping suddenly
-			Wizardry.proxy.playMovingSound(this, WizardrySounds.SPELL_LOOP_WIND, 1.0f, 1.0f, false);
+			Wizardry.proxy.playMovingSound(this, "wizardry:wind", 1.0f, 1.0f, false);
 		}
 		
 		this.moveEntity(velX, motionY, velZ);
 		
-		BlockPos pos = new BlockPos(this);
-		int y = WizardryUtilities.getNearestFloorLevelC(worldObj, pos.up(3), 5);
-		pos = new BlockPos(pos.getX(), y, pos.getZ());
-		
-		if(this.worldObj.getBlockState(pos).getMaterial() == Material.LAVA){
+		if(this.worldObj.getBlock((int)this.posX, WizardryUtilities.getNearestFloorLevelC(worldObj, (int)this.posX, (int)this.posY + 3, (int)this.posZ, 5) - 1, (int)this.posZ).getMaterial() == Material.lava){
 			// Fire tornado!
 			this.setFire(5);
 		}
@@ -70,7 +64,9 @@ public class EntityTornado extends EntityMagicConstruct {
 
 				if(this.isValidTarget(target)){
 
+					double velX = target.motionX;
 					double velY = target.motionY;
+					double velZ = target.motionZ;
 
 					double dx = this.posX-target.posX > 0? 0.5 - (this.posX-target.posX)/8 : -0.5 - (this.posX-target.posX)/8;
 					double dz = this.posZ-target.posZ > 0? 0.5 - (this.posZ-target.posZ)/8 : -0.5 - (this.posZ-target.posZ)/8;
@@ -80,7 +76,7 @@ public class EntityTornado extends EntityMagicConstruct {
 					}
 					
 					if(this.getCaster() != null){
-						target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC), 1*damageMultiplier);
+						target.attackEntityFrom(MagicDamage.causeIndirectEntityMagicDamage(this, getCaster(), DamageType.MAGIC), 1*damageMultiplier);
 					}else{
 						target.attackEntityFrom(DamageSource.magic, 1*damageMultiplier);
 					}
@@ -91,66 +87,62 @@ public class EntityTornado extends EntityMagicConstruct {
 					
 					// Player motion is handled on that player's client so needs packets
 					if(target instanceof EntityPlayerMP){
-						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+						((EntityPlayerMP)target).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(target));
 					}
 
-					// The 'Not Again...' achievement
-					if(target instanceof EntityPig && WizardryUtilities.getRider(target) instanceof EntityPlayer){
-						((EntityPlayer)WizardryUtilities.getRider(target)).addStat(WizardryAchievements.pig_tornado);
+					if(target instanceof EntityPig && target.riddenByEntity instanceof EntityPlayer){
+						((EntityPlayer)target.riddenByEntity).triggerAchievement(Wizardry.pigTornado);
 					}
 				}
 			}
 		}else{
 			for(int i=1; i<10; i++){
-				
+				float brightness = rand.nextFloat()*0.7f;
 				double yPos = rand.nextDouble()*8;
 				
 				int blockX = (int)this.posX - 2 + this.rand.nextInt(4);
 				int blockZ = (int)this.posZ - 2 + this.rand.nextInt(4);
+				int blockY = WizardryUtilities.getNearestFloorLevelC(worldObj, blockX, (int)this.posY + 3, blockZ, 5) - 1;
 				
-				BlockPos pos1 = new BlockPos(blockX, this.posY+3, blockZ);
-				
-				int blockY = WizardryUtilities.getNearestFloorLevelC(worldObj, pos1, 5) - 1;
-				
-				pos1 = new BlockPos(pos1.getX(), blockY, pos1.getZ());
-				
-				IBlockState block = this.worldObj.getBlockState(pos1);
+				Block block = this.worldObj.getBlock(blockX, blockY, blockZ);
+				int metadata = this.worldObj.getBlockMetadata(blockX, blockY, blockZ);
 				
 				// If the block it found was air or something it can't pick up, it makes a best guess based on the biome.
 				if(!canTornadoPickUpBitsOf(block)){
-					block = worldObj.getBiome(pos1).topBlock;
+					block = worldObj.getBiomeGenForCoords(blockX, blockZ).topBlock;
+					metadata = 0;
 				}
 				
-				Wizardry.proxy.spawnTornadoParticle(worldObj, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ, yPos/3 + 0.5d, 100, block, pos1);
-				Wizardry.proxy.spawnTornadoParticle(worldObj, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ, yPos/3 + 0.5d, 100, block, pos1);
+				Wizardry.proxy.spawnTornadoParticle(worldObj, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ, yPos/3 + 0.5d, 100, block, metadata);
+				Wizardry.proxy.spawnTornadoParticle(worldObj, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ, yPos/3 + 0.5d, 100, block, metadata);
 				
 				// Sometimes spawns leaf particles if the block is leaves
-				if(block.getMaterial() == Material.LEAVES && this.rand.nextInt(3) == 0){
+				if(block.getMaterial() == Material.leaves && this.rand.nextInt(3) == 0){
 					double yPos1 = rand.nextDouble()*8;
-					Wizardry.proxy.spawnParticle(WizardryParticleType.LEAF, worldObj, this.posX + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), this.posY + yPos1, this.posZ + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), 0, -0.05, 0, 40 + rand.nextInt(10));
+					Wizardry.proxy.spawnParticle(EnumParticleType.LEAF, worldObj, this.posX + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), this.posY + yPos1, this.posZ + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), 0, -0.05, 0, 40 + rand.nextInt(10));
 				}
 				
 				// Sometimes spawns snow particles if the block is snow
-				if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW && this.rand.nextInt(3) == 0){
+				if(block.getMaterial() == Material.snow || block.getMaterial() == Material.craftedSnow && this.rand.nextInt(3) == 0){
 					double yPos1 = rand.nextDouble()*8;
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, worldObj, this.posX + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), this.posY + yPos1, this.posZ + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), 0, -0.02, 0, 40 + rand.nextInt(10));
+					Wizardry.proxy.spawnParticle(EnumParticleType.SNOW, worldObj, this.posX + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), this.posY + yPos1, this.posZ + (rand.nextDouble()*2-1)*(yPos1/3 + 0.5d), 0, -0.02, 0, 40 + rand.nextInt(10));
 				}
 			}
 		}
 	}
 	
-	private static boolean canTornadoPickUpBitsOf(IBlockState block){
+	private static boolean canTornadoPickUpBitsOf(Block block){
 		Material material = block.getMaterial();
-		return material == Material.CRAFTED_SNOW
-				|| material == Material.GROUND
-				|| material == Material.GRASS
-				|| material == Material.LAVA
-				|| material == Material.SAND
-				|| material == Material.SNOW
-				|| material == Material.WATER
-				|| material == Material.PLANTS
-				|| material == Material.LEAVES
-				|| material == Material.VINE;
+		return material == Material.craftedSnow
+				|| material == Material.ground
+				|| material == Material.grass
+				|| material == Material.lava
+				|| material == Material.sand
+				|| material == Material.snow
+				|| material == Material.water
+				|| material == Material.plants
+				|| material == Material.leaves
+				|| material == Material.vine;
 	}
 
 	@Override

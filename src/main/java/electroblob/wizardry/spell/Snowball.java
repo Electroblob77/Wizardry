@@ -1,21 +1,18 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class Snowball extends Spell {
 
 	public Snowball() {
-		super(Tier.BASIC, 1, Element.ICE, "snowball", SpellType.ATTACK, 1, EnumAction.NONE, false);
+		super(EnumTier.BASIC, 1, EnumElement.ICE, "snowball", EnumSpellType.ATTACK, 1, EnumAction.none, false);
 	}
 
 	@Override
@@ -24,16 +21,23 @@ public class Snowball extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
-				
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
+		
+		Vec3 look = caster.getLookVec();
+		
 		if(!world.isRemote){
+			
 			EntitySnowball snowball = new EntitySnowball(world, caster);
-	        snowball.setHeadingFromThrower(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 1.5f, 1.0f);
+			
+			//snowball.motionX = look.xCoord * 1.5;
+			//snowball.motionY = look.yCoord * 1.5;
+			//snowball.motionZ = look.zCoord * 1.5;
+			
 			world.spawnEntityInWorld(snowball);
 		}
 		
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
-		caster.swingArm(hand);
+		world.playSoundAtEntity(caster, "random.bow", 0.5F, 0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+		caster.swingItem();
 		return true;
 	}
 

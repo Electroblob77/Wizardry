@@ -2,36 +2,28 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumParticleType;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.living.EntityEvilWizard;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.entity.living.EntityWizard;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.INpc;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Mod.EventBusSubscriber
 public class MindControl extends Spell {
 
 	/** The NBT tag name for storing the controlling entity's UUID in the target's tag compound. Defined here in case
@@ -39,99 +31,100 @@ public class MindControl extends Spell {
 	public static final String NBT_KEY = "controllingEntity";
 
 	public MindControl() {
-		super(Tier.ADVANCED, 40, Element.NECROMANCY, "mind_control", SpellType.ATTACK, 150, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 40, EnumElement.NECROMANCY, "mind_control", EnumSpellType.ATTACK, 150, EnumAction.none, false);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*modifiers.get(WizardryItems.range_upgrade));
+		MovingObjectPosition rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster, 8*rangeMultiplier);
 
 		if(rayTrace != null && rayTrace.entityHit != null && rayTrace.entityHit instanceof EntityLivingBase){
 
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
+			Entity target = rayTrace.entityHit;
 
 			if(!world.isRemote){
-				if(!canControl(target)){
+				if(target instanceof EntityPlayer || target instanceof IBossDisplayData || target instanceof INpc){
 					// Adds a message saying that the player/boss entity/wizard resisted mind control
-					if(!world.isRemote) caster.addChatComponentMessage(new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()));
+					if(!world.isRemote) caster.addChatComponentMessage(new ChatComponentTranslation("spell.resist", target.getCommandSenderName(), this.getDisplayNameWithFormatting()));
 
 				}else if(target instanceof EntityLiving){
 
 					if(!MindControl.findMindControlTarget((EntityLiving)target, caster, world)){
 						// If no valid target was found, this just acts like mind trick.
+						// New AI
 						((EntityLiving)target).setAttackTarget(null);
+						// Old AI
+						if(target instanceof EntityCreature) ((EntityCreature)target).setTarget(null);
 					}
 
 					NBTTagCompound entityNBT = target.getEntityData();
-					if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
+					if(entityNBT != null) entityNBT.setString(NBT_KEY, caster.getUniqueID().toString());
 
-					((EntityLiving)target).addPotionEffect(new PotionEffect(WizardryPotions.mind_control, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					((EntityLiving)target).addPotionEffect(new PotionEffect(Wizardry.mindControl.id, (int)(600*durationMultiplier), 0));
 				}
 			}else{
 				for(int i=0; i<10; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
+							WizardryUtilities.getEntityFeetPos(target) + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
 							target.posZ - 0.25 + world.rand.nextDouble()*0.5,
 							0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
+							WizardryUtilities.getEntityFeetPos(target) + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
 							target.posZ - 0.25 + world.rand.nextDouble()*0.5,
 							0, 0, 0, 0, 0.2f, 0.04f, 0.25f);
 				}
 			}
-			target.playSound(WizardrySounds.SPELL_SUMMONING, 1.0f, 1.0f);
-			caster.swingArm(hand);
+			world.playSoundAtEntity(target, "wizardry:darkaura", 1.0f, 1.0f);
+			caster.swingItem();
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityLiving caster, EntityLivingBase target, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 
 		if(target != null){
 			if(!world.isRemote){
-				if(canControl(target)){
+				if(target instanceof EntityLiving && !(target instanceof IBossDisplayData)
+						&& !(target instanceof EntityWizard)){
 
 					if(!MindControl.findMindControlTarget((EntityLiving)target, caster, world)){
 						// If no valid target was found, this just acts like mind trick.
+						// New AI
 						((EntityLiving)target).setAttackTarget(null);
+						// Old AI
+						if(target instanceof EntityCreature) ((EntityCreature)target).setTarget(null);
 					}
 
 					NBTTagCompound entityNBT = target.getEntityData();
-					if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
+					if(entityNBT != null) entityNBT.setString(NBT_KEY, caster.getUniqueID().toString());
 
-					((EntityLiving)target).addPotionEffect(new PotionEffect(WizardryPotions.mind_control, (int)(600*modifiers.get(WizardryItems.duration_upgrade)), 0));
+					((EntityLiving)target).addPotionEffect(new PotionEffect(Wizardry.mindControl.id, (int)(600*durationMultiplier), 0));
 				}
 			}else{
 				for(int i=0; i<10; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
+							WizardryUtilities.getEntityFeetPos(target) + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
 							target.posZ - 0.25 + world.rand.nextDouble()*0.5,
 							0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
+					Wizardry.proxy.spawnParticle(EnumParticleType.DARK_MAGIC, world, target.posX - 0.25 + world.rand.nextDouble()*0.5,
+							WizardryUtilities.getEntityFeetPos(target) + target.getEyeHeight() - 0.25 + world.rand.nextDouble()*0.5,
 							target.posZ - 0.25 + world.rand.nextDouble()*0.5,
 							0, 0, 0, 0, 0.2f, 0.04f, 0.25f);
 				}
 			}
-			target.playSound(WizardrySounds.SPELL_SUMMONING, 1.0f, 1.0f);
-			caster.swingArm(hand);
+			world.playSoundAtEntity(target, "wizardry:darkaura", 1.0f, 1.0f);
+			caster.swingItem();
 			return true;
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean canBeCastByNPCs(){
 		return true;
-	}
-
-	/** Returns true if the given entity can be mind controlled (i.e. is not a player, npc, evil wizard or boss). */
-	public static boolean canControl(EntityLivingBase target){
-		return target instanceof EntityLiving && target.isNonBoss() && !(target instanceof INpc)
-				&& !(target instanceof EntityEvilWizard);
 	}
 
 	/**
@@ -149,7 +142,7 @@ public class MindControl extends Spell {
 		// no longer lasts until the creature dies; instead it is a potion effect which continues to
 		// set the target until it wears off.
 		List<EntityLivingBase> possibleTargets = WizardryUtilities.getEntitiesWithinRadius(
-				((EntityLiving)target).getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).getAttributeValue(),
+				((EntityLiving)target).getEntityAttribute(SharedMonsterAttributes.followRange).getAttributeValue(),
 				target.posX, target.posY, target.posZ, world);
 
 		possibleTargets.remove(target);
@@ -164,7 +157,9 @@ public class MindControl extends Spell {
 		}
 
 		if(newAITarget != null){
-			// From 1.7.10 - this seems not to work quite right; the entity appears to continue attacking this target
+			// Old AI
+			if(target instanceof EntityCreature) ((EntityCreature)target).setTarget(newAITarget);
+			// New AI - this seems not to work quite right; the entity appears to continue attacking this target
 			// after it gets killed (not noticeable in survival since it will target the player again immediately.)
 			((EntityLiving)target).setAttackTarget(newAITarget);
 
@@ -175,43 +170,5 @@ public class MindControl extends Spell {
 
 	}
 
-	@SubscribeEvent
-	public static void onLivingUpdateEvent(LivingUpdateEvent event){
-		// This was added because something got changed in the AI classes which means LivingSetAttackTargetEvent doesn't
-		// get fired when I want it to... so I'm firing it myself.
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving
-				&& ((EntityLiving)event.getEntityLiving()).getAttackTarget() != null
-				&& !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive())
-			((EntityLiving)event.getEntityLiving()).setAttackTarget(null); // Causes the event to be fired
-	}
-
-	@SubscribeEvent
-	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
-		
-		if(event.getTarget() == null) return; // Prevents infinite loops with mind trick
-
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && MindControl.canControl(event.getEntityLiving())){
-
-			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();
-
-			if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY + "Most")){
-
-				Entity caster = WizardryUtilities.getEntityByUUID(event.getEntity().worldObj, entityNBT.getUniqueId(MindControl.NBT_KEY));
-
-				// If the target that the event tried to set is already a valid mind control target, nothing happens.
-				if(WizardryUtilities.isValidTarget(caster, event.getTarget())) return;
-
-				if(caster instanceof EntityLivingBase){
-
-					if(MindControl.findMindControlTarget((EntityLiving)event.getEntityLiving(), (EntityLivingBase)caster, event.getEntity().worldObj)){
-						// If it worked, skip setting the target to null.
-						return;
-					}
-				}
-			}
-			// If the caster couldn't be found or no valid target was found, this just acts like mind trick.
-			((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
-		}
-	}
 
 }

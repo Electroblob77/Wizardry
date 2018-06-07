@@ -2,29 +2,25 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.EnumElement;
+import electroblob.wizardry.EnumSpellType;
+import electroblob.wizardry.EnumTier;
+import electroblob.wizardry.MagicDamage;
+import electroblob.wizardry.WizardryUtilities;
+import electroblob.wizardry.MagicDamage.DamageType;
 import electroblob.wizardry.entity.construct.EntityLightningPulse;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
-import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class LightningPulse extends Spell {
 
 	public LightningPulse() {
-		super(Tier.ADVANCED, 25, Element.LIGHTNING, "lightning_pulse", SpellType.ATTACK, 75, EnumAction.NONE, false);
+		super(EnumTier.ADVANCED, 25, EnumElement.LIGHTNING, "lightning_pulse", EnumSpellType.ATTACK, 75, EnumAction.none, false);
 	}
 
 	@Override
@@ -33,16 +29,16 @@ public class LightningPulse extends Spell {
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers) {
+	public boolean cast(World world, EntityPlayer caster, int ticksInUse, float damageMultiplier, float rangeMultiplier, float durationMultiplier, float blastMultiplier) {
 		
 		if(caster.onGround){
 			
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(3.0d*modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(3.0d*blastMultiplier, caster.posX, caster.posY, caster.posZ, world);
 			
 			for(EntityLivingBase target : targets){
 				if(WizardryUtilities.isValidTarget(caster, target)){
 					// Damage is 4 hearts no matter where the target is.
-					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 8 * modifiers.get(SpellModifiers.DAMAGE));
+					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), 8 * damageMultiplier);
 					
 					if(!world.isRemote){
 						
@@ -59,18 +55,18 @@ public class LightningPulse extends Spell {
 
 						// Player motion is handled on that player's client so needs packets
 						if(target instanceof EntityPlayerMP){
-							((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+							((EntityPlayerMP)target).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(target));
 						}
 					}
 				}
 			}
 			if(!world.isRemote){
-				EntityLightningPulse lightningpulse = new EntityLightningPulse(world, caster.posX, caster.getEntityBoundingBox().minY, caster.posZ, caster, 7, modifiers.get(SpellModifiers.DAMAGE));
+				EntityLightningPulse lightningpulse = new EntityLightningPulse(world, caster.posX, caster.boundingBox.minY, caster.posZ, caster, 7, damageMultiplier);
 				world.spawnEntityInWorld(lightningpulse);
 			}
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0f, 1.0f);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 2.0f, 1.0f);
+			caster.swingItem();
+			world.playSoundAtEntity(caster, "wizardry:electricitya", 1.0f, 1.0f);
+			world.playSoundAtEntity(caster, "wizardry:boom", 2.0f, 1.0f);
 			return true;
 		}
 		return false;

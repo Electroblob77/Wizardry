@@ -1,73 +1,73 @@
 package electroblob.wizardry.client.renderer;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityDecay;
-import net.minecraft.client.renderer.GlStateManager;
+import electroblob.wizardry.entity.construct.EntityHealAura;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class RenderDecay extends Render<EntityDecay> {
+public class RenderDecay extends Render {
 
 	private static final ResourceLocation[] textures = new ResourceLocation[10];
     
-	public RenderDecay(RenderManager renderManager){
-		super(renderManager);
+	public RenderDecay(){
 		for(int i=0;i<10;i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/decay_" + i + ".png");
+			textures[i] = new ResourceLocation("wizardry:textures/entity/decay_" + i + ".png");
 		}
 	}
 
 	@Override
-    public void doRender(EntityDecay entity, double par2, double par4, double par6, float par8, float par9){
+    public void doRender(Entity entity, double par2, double par4, double par6, float par8, float par9){
 		
-        GlStateManager.pushMatrix();
-        GlStateManager.enableBlend();
-        GlStateManager.disableLighting();
+        GL11.glPushMatrix();
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_LIGHTING);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         
         float yOffset = 0;
         
-        GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
+        if(entity.riddenByEntity != null){
+        	yOffset = entity.riddenByEntity.height/2;
+        }
+        
+        GL11.glTranslatef((float)par2, (float)par4 + yOffset, (float)par6);
         
         this.bindTexture(textures[((EntityDecay)entity).textureIndex]);
         float f6 = 1.0F;
         float f7 = 0.5F;
         float f8 = 0.5F;
         
-        GlStateManager.rotate(-90, 1, 0, 0);
+        GL11.glRotatef(-90, 1, 0, 0);
         
         float scale = 2*Math.min(1, (float)(EntityDecay.LIFETIME - entity.ticksExisted)/50f);
         
-        GlStateManager.scale(scale, scale, scale);
+        GL11.glScalef(scale, scale, scale);
         
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawingQuads();
         //tessellator.setColorRGBA_I(k1, 128);
-        //buffer.normal(0.0F, 1.0F, 0.0F);
-	    buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.01).tex(0, 1).endVertex();
-	    buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.01).tex(1, 1).endVertex();
-	    buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.01).tex(1, 0).endVertex();
-	    buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.01).tex(0, 0).endVertex();
+        tessellator.setNormal(0.0F, 1.0F, 0.0F);
+	    tessellator.addVertexWithUV((double)(0.0F - f7), (double)(0.0F - f8), 0.01, 0, 1);
+	    tessellator.addVertexWithUV((double)(f6 - f7), (double)(0.0F - f8), 0.01, 1, 1);
+	    tessellator.addVertexWithUV((double)(f6 - f7), (double)(1.0F - f8), 0.01, 1, 0);
+	    tessellator.addVertexWithUV((double)(0.0F - f7), (double)(1.0F - f8), 0.01, 0, 0);
         
         tessellator.draw();
         
-        GlStateManager.disableBlend();
-        GlStateManager.enableLighting();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.popMatrix();
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glPopMatrix();
     }
 
 	@Override
-	protected ResourceLocation getEntityTexture(EntityDecay entity) {
+	protected ResourceLocation getEntityTexture(Entity entity) {
 		return null;
 	}
 
