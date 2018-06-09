@@ -6,7 +6,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum SpellType {
 
-	ATTACK("attack"), DEFENCE("defence"), UTILITY("utility"), MINION("minion");
+	ATTACK("attack"),
+	DEFENCE("defence"),
+	UTILITY("utility"),
+	MINION("minion"),
+	BUFF("buff"),
+	CONSTRUCT("construct"),
+	PROJECTILE("projectile"),
+	ALTERATION("alteration");
 
 	private final String unlocalisedName;
 
