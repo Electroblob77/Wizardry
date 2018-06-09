@@ -27,7 +27,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	private double AISpeed = 0.5;
 
 	// Can attack for 7 seconds, then must cool down for 3.
-	private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 60, 140);
+	private EntityAIAttackSpell<EntityPhoenix> spellAttackAI = new EntityAIAttackSpell<EntityPhoenix>(this, AISpeed, 15f, 60, 140);
 
 	private Spell continuousSpell;
 

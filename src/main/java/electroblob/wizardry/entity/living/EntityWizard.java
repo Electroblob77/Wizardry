@@ -84,7 +84,7 @@ import net.minecraftforge.oredict.OreDictionary;
 @Mod.EventBusSubscriber
 public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISpellCaster, IEntityAdditionalSpawnData {
 
-	private EntityAIAttackSpell spellCastingAI = new EntityAIAttackSpell(this, 0.5D, 14.0F, 30, 50);
+	private EntityAIAttackSpell<EntityWizard> spellCastingAI = new EntityAIAttackSpell<>(this, 0.5D, 14.0F, 30, 50);
 
 	public int textureIndex = 0;
 

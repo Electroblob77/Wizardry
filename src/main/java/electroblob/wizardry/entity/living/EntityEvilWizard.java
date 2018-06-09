@@ -55,7 +55,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntityAdditionalSpawnData {
 
-	private EntityAIAttackSpell spellCastingAI = new EntityAIAttackSpell(this, 0.5D, 14.0F, 30, 50);
+	private EntityAIAttackSpell<EntityEvilWizard> spellCastingAI = new EntityAIAttackSpell<EntityEvilWizard>(this, 0.5D, 14.0F, 30, 50);
 
 	public int textureIndex = 0;
 

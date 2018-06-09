@@ -31,7 +31,7 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 
 	private double AISpeed = 1.0;
 
-	private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 30, 0);
+	private EntityAIAttackSpell<EntityShadowWraith> spellAttackAI = new EntityAIAttackSpell<EntityShadowWraith>(this, AISpeed, 15f, 30, 0);
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.darkness_orb);
 

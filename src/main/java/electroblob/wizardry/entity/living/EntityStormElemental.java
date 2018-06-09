@@ -29,7 +29,7 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 
 	private double AISpeed = 1.0;
 
-	private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 30, 0);
+	private EntityAIAttackSpell<EntityStormElemental> spellAttackAI = new EntityAIAttackSpell<EntityStormElemental>(this, AISpeed, 15f, 30, 0);
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.lightning_disc);
 
