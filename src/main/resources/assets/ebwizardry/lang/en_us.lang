@@ -15,6 +15,8 @@ item.ebwizardry:advanced_wand.name=Advanced Wand
 item.ebwizardry:master_wand.name=Master Wand
 item.ebwizardry:spell_book.name=Spell Book
 
+item.ebwizardry:spell_book.apply_to_wizard=Replaced %1$s's spell %2$s with %3$s
+
 item.ebwizardry:arcane_tome.name=Tome of Arcana
 item.ebwizardry:arcane_tome.desc1=Upgrades any %1$s
 item.ebwizardry:arcane_tome.desc2=wand to %1$s tier

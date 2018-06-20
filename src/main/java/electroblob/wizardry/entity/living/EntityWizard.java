@@ -67,6 +67,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
@@ -372,8 +373,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
 		if(player.capabilities.isCreativeMode && stack.getItem() instanceof ItemSpellBook){
-			if(this.spells.size() >= 4 && Spell.get(stack.getItemDamage()).canBeCastByNPCs()){
-				this.spells.set(rand.nextInt(3) + 1, Spell.get(stack.getItemDamage()));
+			Spell spell = Spell.get(stack.getItemDamage());
+			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
+				// The set(...) method returns the element that was replaced - neat!
+				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
+						this.getDisplayName(), this.spells.set(rand.nextInt(3) + 1, spell).getNameForTranslationFormatted(),
+						spell.getNameForTranslationFormatted()));
 				return true;
 			}
 		}

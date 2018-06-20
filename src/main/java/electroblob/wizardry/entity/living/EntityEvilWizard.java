@@ -48,6 +48,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -250,8 +251,12 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
 		if(player.capabilities.isCreativeMode && stack.getItem() instanceof ItemSpellBook){
-			if(this.spells.size() >= 4 && Spell.get(stack.getItemDamage()).canBeCastByNPCs()){
-				this.spells.set(rand.nextInt(3) + 1, Spell.get(stack.getItemDamage()));
+			Spell spell = Spell.get(stack.getItemDamage());
+			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
+				// The set(...) method returns the element that was replaced - neat!
+				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
+						this.getDisplayName(), this.spells.set(rand.nextInt(3) + 1, spell).getNameForTranslationFormatted(),
+						spell.getNameForTranslationFormatted()));
 				return true;
 			}
 		}
