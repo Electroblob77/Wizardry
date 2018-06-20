@@ -141,13 +141,13 @@ public final class ParticleBuilder {
 	 */
 	public static ParticleBuilder create(Type type, Random random, double x, double y, double z, double radius, boolean move){
 		
-		double px = x + (random.nextDouble() - 0.5D) * radius;
-		double py = y + (random.nextDouble() - 0.5D) * radius;
-		double pz = z + (random.nextDouble() - 0.5D) * radius;
+		double px = x + (random.nextDouble()*2 - 1) * radius;
+		double py = y + (random.nextDouble()*2 - 1) * radius;
+		double pz = z + (random.nextDouble()*2 - 1) * radius;
 		
-		if(move) return ParticleBuilder.instance.particle(type).pos(x, y, z).vel(px-x, py-y, pz-z);
+		if(move) return ParticleBuilder.instance.particle(type).pos(px, py, pz).vel(px-x, py-y, pz-z);
 		
-		return ParticleBuilder.instance.particle(type).pos(x, y, z);
+		return ParticleBuilder.instance.particle(type).pos(px, py, pz);
 	}
 	
 	// Core builder methods
