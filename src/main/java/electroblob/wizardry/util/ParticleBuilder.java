@@ -17,7 +17,8 @@ import net.minecraft.world.World;
  * types in wizardry made the method overloads in the proxies very cumbersome and inevitably resulted in redundant
  * parameters, which made the code messy and hard to read. Those methods have now been removed.
  * <p>
- * It also goes without saying that <b>this class should only ever be used client-side</b>.
+ * It also goes without saying that <b>this class should only ever be used client-side</b>. Attempting to spawn particles
+ * on the server side will not work and will print a warning to the console.
  * <p>
  * {@link ParticleBuilder#instance} retrieves the static instance of the particle builder. Use
  * {@link ParticleBuilder#particle(Type)} to start building a particle, or alternatively use the static
@@ -334,6 +335,14 @@ public final class ParticleBuilder {
 		
 		if(y < 0 && entity == null) Wizardry.logger.warn("Spawning particle below y = 0 - are you sure the position/entity"
 				+ "has been set correctly?");
+		
+		if(!world.isRemote){
+			Wizardry.logger.warn("ParticleBuilder.spawn(...) called on the server side! ParticleBuilder has prevented a"
+					+ "server crash, but calling it on the server will do nothing. Consider adding a world.isRemote check.");
+			// Must stop here because the line after this if statement would crash the server!
+			reset();
+			return;
+		}
 		
 		electroblob.wizardry.client.particle.ParticleWizardry particle = Wizardry.proxy.createParticle(type, world, x, y, z);
 		
