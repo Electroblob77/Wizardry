@@ -43,7 +43,7 @@ public class EntitySpiritHorse extends EntityHorse {
 		if(this.hasCustomName()){
 			return this.getCustomNameTag();
 		}else{
-			return I18n.translateToLocal("entity.wizardry.Spirit Horse.name");
+			return I18n.translateToLocal("entity.wizardry.spirit_horse.name");
 		}
 	}
 
