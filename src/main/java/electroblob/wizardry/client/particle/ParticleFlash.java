@@ -16,7 +16,7 @@ public class ParticleFlash extends ParticleWizardry {
 	public ParticleFlash(World world, double x, double y, double z){
 		super(world, x, y, z);
 		this.setRBGColorF(1, 1, 1);
-		this.particleScale = 7.1f; // 7.1f is the value used in fireworks
+		this.particleScale = 0.6f; // 7.1f is the value used in fireworks
 		this.particleMaxAge = 4;
 	}
 	
