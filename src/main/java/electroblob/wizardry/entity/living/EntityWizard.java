@@ -158,10 +158,11 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					if((entity instanceof IMob || entity instanceof ISummonedCreature
 							// ... or in the whitelist ...
 							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-							.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT)))
+									.contains(EntityList.getKey(entity.getClass())))
 							// ... and isn't in the blacklist ...
 							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-							.contains(EntityList.getEntityString(entity).toLowerCase(Locale.ROOT))){
+									.contains(EntityList.getKey(entity.getClass()))){
+						// ... it can be attacked.
 						return true;
 					}
 				}
