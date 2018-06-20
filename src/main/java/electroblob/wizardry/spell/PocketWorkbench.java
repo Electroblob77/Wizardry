@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class PocketWorkbench extends Spell {
 
 	public PocketWorkbench(){
-		super(Tier.APPRENTICE, 30, Element.SORCERY, "pocket_workbench", SpellType.UTILITY, 40, EnumAction.BOW, false);
+		super("pocket_workbench", Tier.APPRENTICE, Element.SORCERY, SpellType.UTILITY, 30, 40, EnumAction.BOW, false);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.WizardData;
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
@@ -11,9 +10,10 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryPathFinder;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,7 +40,7 @@ public class Clairvoyance extends Spell {
 	public static final int PARTICLE_MOVEMENT_INTERVAL = 45;
 
 	public Clairvoyance(){
-		super(Tier.APPRENTICE, 20, Element.SORCERY, "clairvoyance", SpellType.UTILITY, 100, EnumAction.BOW, false);
+		super("clairvoyance", Tier.APPRENTICE, Element.SORCERY, SpellType.UTILITY, 20, 100, EnumAction.BOW, false);
 	}
 
 	@Override
@@ -123,9 +123,11 @@ public class Clairvoyance extends Spell {
 			nextPoint = path.getCurrentPathLength() - path.getCurrentPathIndex() <= 2 ? path.getFinalPathPoint()
 					: path.getPathPointFromIndex(path.getCurrentPathIndex() + 2);
 
-			Wizardry.proxy.spawnParticle(Type.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5,
-					(nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL, (nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
-					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL, (int)(1800 * durationMultiplier), 0, 1, 0.3f);
+			ParticleBuilder.create(Type.PATH).pos(point.x + 0.5, point.y + 0.5, point.z + 0.5).vel(
+					(nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
+					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL)
+			.lifetime((int)(1800 * durationMultiplier)).colour(0, 1, 0.3f).spawn(world);
 
 			path.incrementPathIndex();
 			path.incrementPathIndex();
@@ -133,8 +135,8 @@ public class Clairvoyance extends Spell {
 
 		point = path.getFinalPathPoint();
 
-		Wizardry.proxy.spawnParticle(Type.PATH, world, point.x + 0.5, point.y + 0.5, point.z + 0.5, 0, 0, 0,
-				(int)(1800 * durationMultiplier), 1, 1, 1);
+		ParticleBuilder.create(Type.PATH).pos(point.x + 0.5, point.y + 0.5, point.z + 0.5)
+		.lifetime((int)(1800 * durationMultiplier)).colour(1, 1, 1).spawn(world);
 	}
 
 	@SubscribeEvent

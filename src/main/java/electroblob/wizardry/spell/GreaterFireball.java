@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class GreaterFireball extends Spell {
 
 	public GreaterFireball(){
-		super(Tier.ADVANCED, 20, Element.FIRE, "greater_fireball", SpellType.ATTACK, 30, EnumAction.NONE, false);
+		super("greater_fireball", Tier.ADVANCED, Element.FIRE, SpellType.ATTACK, 20, 30, EnumAction.NONE, false);
 	}
 
 	@Override

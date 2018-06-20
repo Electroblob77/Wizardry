@@ -7,6 +7,8 @@ import javax.annotation.Nonnull;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.world.EnumDifficulty;
 
 /**
  * Interface for entities that can cast spells. Mainly intended for use by wizard-type entities, but can be implemented
@@ -65,4 +67,13 @@ public interface ISpellCaster {
 	 * to NBT is up to you. If the implementing class does not deal with continuous spells, leave this method blank.
 	 */
 	public void setContinuousSpell(Spell spell);
+	
+	/**
+	 * Returns the aiming arror for the given difficulty, used in projectile spells. Defaults to the values used by
+	 * skeletons, which are: Easy - 10, Normal - 6, Hard - 2, Peaceful - 10 (rarely used).
+	 */
+	// This is what default methods are actually intended for!
+	public default int getAimingError(EnumDifficulty difficulty) {
+		return WizardryUtilities.getDefaultAimingError(difficulty);
+	}
 }

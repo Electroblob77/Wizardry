@@ -16,12 +16,7 @@ public class EntityIceSpike extends EntityMagicConstruct {
 		this.setSize(0.5f, 1.0f);
 	}
 
-	public EntityIceSpike(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
-		this.setSize(0.5f, 1.0f);
-	}
-
+	@Override
 	public void onUpdate(){
 
 		if(lifetime - this.ticksExisted < 15){

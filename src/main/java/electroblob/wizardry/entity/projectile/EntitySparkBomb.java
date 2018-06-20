@@ -7,42 +7,26 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntitySparkBomb extends EntityBomb {
 
-	public EntitySparkBomb(World par1World){
-		super(par1World);
+	public EntitySparkBomb(World world){
+		super(world);
 	}
 
-	public EntitySparkBomb(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntitySparkBomb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
-			float blastMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
-	}
-
-	public EntitySparkBomb(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
-	/**
-	 * Called when this EntityThrowable hits a block or entity.
-	 */
-	protected void onImpact(RayTraceResult par1RayTraceResult){
+	@Override
+	protected void onImpact(RayTraceResult rayTrace){
+		
 		this.playSound(SoundEvents.ENTITY_FIREWORK_BLAST_FAR, 0.5f, 0.5f);
 
-		Entity entityHit = par1RayTraceResult.entityHit;
+		Entity entityHit = rayTrace.entityHit;
 
 		if(entityHit != null){
 			// This is if the spark bomb gets a direct hit
@@ -58,15 +42,7 @@ public class EntitySparkBomb extends EntityBomb {
 
 		// Particle effect
 		if(world.isRemote){
-			for(int i = 0; i < 8; i++){
-				double x = this.posX + rand.nextDouble() - 0.5;
-				double y = this.posY + this.height / 2 + rand.nextDouble() - 0.5;
-				double z = this.posZ + rand.nextDouble() - 0.5;
-				ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
-				world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + rand.nextFloat() - 0.5,
-						this.posY + this.height / 2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0,
-						0);
-			}
+			ParticleBuilder.spawnShockParticles(world, posX, posY + height/2, posZ);
 		}
 
 		double seekerRange = 5.0d * blastMultiplier;
@@ -102,15 +78,7 @@ public class EntitySparkBomb extends EntityBomb {
 
 				}else{
 					// Particle effect
-					for(int j = 0; j < 8; j++){
-						double x = target.posX + rand.nextFloat() - 0.5;
-						double y = target.getEntityBoundingBox().minY + target.height * rand.nextFloat();
-						double z = target.posZ + rand.nextFloat() - 0.5;
-						ParticleBuilder.create(Type.SPARK).pos(x, y,  z).spawn(world);
-						world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, target.posX + rand.nextFloat() - 0.5,
-								target.getEntityBoundingBox().minY + target.height * rand.nextFloat(),
-								target.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
-					}
+					ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
 				}
 			}
 		}

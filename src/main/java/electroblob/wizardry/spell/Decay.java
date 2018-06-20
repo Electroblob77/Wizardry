@@ -7,94 +7,39 @@ import electroblob.wizardry.entity.construct.EntityDecay;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class Decay extends Spell {
+public class Decay extends SpellConstructRanged<EntityDecay> {
+	
+	private static final int BASE_SPAWN_COUNT = 5;
 
 	public Decay(){
-		super(Tier.ADVANCED, 50, Element.NECROMANCY, "decay", SpellType.ATTACK, 200, EnumAction.NONE, false);
+		super("decay", Tier.ADVANCED, Element.NECROMANCY, SpellType.ATTACK, 50, 200, EntityDecay::new, 400, 12, SoundEvents.ENTITY_WITHER_SHOOT);
+		this.soundValues(1, 1.1f, 0.1f);
+		this.floor(true);
+		this.overlap(true);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
-		return false;
-	}
+	protected boolean spawnConstruct(World world, double x, double y, double z, EntityLivingBase caster, SpellModifiers modifiers){
+		
+		if(world.getBlockState(new BlockPos(x, y, z)).isNormalCube()) return false;
+		
+		super.spawnConstruct(world, x, y, z, caster, modifiers);
+		
+		int quantity = (int)(BASE_SPAWN_COUNT * modifiers.get(WizardryItems.blast_upgrade));
+		int horizontalRange = (int)(2 * modifiers.get(WizardryItems.blast_upgrade));
+		int verticalRange = (int)(6 * modifiers.get(WizardryItems.blast_upgrade));
 
-	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(12 * modifiers.get(WizardryItems.range_upgrade), world,
-				caster, false);
-
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
-
-			BlockPos pos = rayTrace.getBlockPos();
-
-			if(world.getBlockState(pos.up()).isNormalCube()) return false;
-
-			if(!world.isRemote){
-
-				world.spawnEntity(new EntityDecay(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, caster));
-
-				for(int i = 0; i < 5; i++){
-					BlockPos pos1 = WizardryUtilities.findNearbyFloorSpace(caster, 2, 6);
-					if(pos1 == null) break;
-					world.spawnEntity(
-							new EntityDecay(world, pos1.getX() + 0.5, pos1.getY(), pos1.getZ() + 0.5, caster));
-				}
-			}
-
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SHOOT, 1.0F,
-					world.rand.nextFloat() * 0.2F + 1.0F);
-			caster.swingArm(hand);
-			return true;
+		for(int i=0; i<quantity; i++){
+			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, horizontalRange, verticalRange);
+			if(pos == null) break;
+			super.spawnConstruct(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster, modifiers);
 		}
-
-		return false;
-	}
-
-	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
-			SpellModifiers modifiers){
-
-		if(target != null){
-
-			int x = MathHelper.floor(target.posX);
-			int y = (int)(int)target.getEntityBoundingBox().minY;
-			int z = MathHelper.floor(target.posZ);
-
-			if(world.getBlockState(new BlockPos(x, y, z)).isNormalCube()) return false;
-
-			if(!world.isRemote){
-
-				world.spawnEntity(new EntityDecay(world, x + 0.5, y + 1, z + 0.5, caster));
-
-				for(int i = 0; i < 5; i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 6);
-					if(pos == null) break;
-					world.spawnEntity(new EntityDecay(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, caster));
-				}
-			}
-
-			caster.playSound(SoundEvents.ENTITY_WITHER_SHOOT, 1.0F, world.rand.nextFloat() * 0.2F + 1.0F);
-			caster.swingArm(hand);
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean canBeCastByNPCs(){
+		
 		return true;
 	}
 

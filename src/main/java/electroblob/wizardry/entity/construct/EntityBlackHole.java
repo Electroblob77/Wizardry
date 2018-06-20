@@ -12,8 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityBlackHole extends EntityMagicConstruct {
 
@@ -22,21 +23,6 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 	public EntityBlackHole(World world){
 		super(world);
-		this.width = 6.0f;
-		this.height = 3.0f;
-		randomiser = new int[30];
-		for(int i = 0; i < randomiser.length; i++){
-			randomiser[i] = this.rand.nextInt(10);
-		}
-		randomiser2 = new int[30];
-		for(int i = 0; i < randomiser2.length; i++){
-			randomiser2[i] = this.rand.nextInt(10);
-		}
-	}
-
-	public EntityBlackHole(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
 		this.width = 6.0f;
 		this.height = 3.0f;
 		randomiser = new int[30];
@@ -135,11 +121,10 @@ public class EntityBlackHole extends EntityMagicConstruct {
 			}
 		}
 	}
-
-	/**
-	 * Checks using a Vec3dd to determine if this entity is within range of that vector to be rendered. Args: Vec3dD
-	 */
-	public boolean isInRangeToRenderVec3dD(Vec3d par1Vec3d){
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean isInRangeToRenderDist(double distance){
 		return true;
 	}
 

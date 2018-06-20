@@ -31,35 +31,12 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override
-	public int getLifetime(){
-		return lifetime;
-	}
-
-	@Override
-	public void setLifetime(int lifetime){
-		this.lifetime = lifetime;
-	}
-
-	@Override
-	public WeakReference<EntityLivingBase> getCasterReference(){
-		return casterReference;
-	}
-
-	@Override
-	public void setCasterReference(WeakReference<EntityLivingBase> reference){
-		casterReference = reference;
-	}
-
-	@Override
-	public UUID getCasterUUID(){
-		return casterUUID;
-	}
-
-	@Override
-	public void setCasterUUID(UUID uuid){
-		this.casterUUID = uuid;
-	}
+	@Override public int getLifetime(){ return lifetime; }
+	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
+	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
+	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
+	@Override public UUID getCasterUUID(){ return casterUUID; }
+	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
 
 	public EntityMagicSlime(World world){
 		super(world);
@@ -88,13 +65,8 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 
 	// EntitySlime overrides
 
-	@Override
-	protected void initEntityAI(){
-	} // Has no AI!
-
-	@Override
-	protected void dealDamage(EntityLivingBase entity){
-	} // Handles damage itself
+	@Override protected void initEntityAI(){} // Has no AI!
+	@Override protected void dealDamage(EntityLivingBase entity){} // Handles damage itself
 
 	@Override
 	public void setDead(){
@@ -197,35 +169,12 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 
 	// Recommended overrides
 
-	@Override
-	protected int getExperiencePoints(EntityPlayer player){
-		return 0;
-	}
-
-	@Override
-	protected boolean canDropLoot(){
-		return false;
-	}
-
-	@Override
-	protected Item getDropItem(){
-		return null;
-	}
-
-	@Override
-	protected ResourceLocation getLootTable(){
-		return null;
-	}
-
-	@Override
-	public boolean canPickUpLoot(){
-		return false;
-	}
-
-	// This vanilla method has nothing to do with the custom onDespawn() method.
-	@Override
-	protected boolean canDespawn(){
-		return false;
-	}
+	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
+	@Override protected boolean canDropLoot(){ return false; }
+	@Override protected Item getDropItem(){ return null; }
+	@Override protected ResourceLocation getLootTable(){ return null; }
+	@Override public boolean canPickUpLoot(){ return false; }
+	// This vanilla method has nothing to do with the custom despawn() method.
+	@Override protected boolean canDespawn(){ return false; }
 
 }

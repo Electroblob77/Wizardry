@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class Leap extends Spell {
 
 	public Leap(){
-		super(Tier.BASIC, 10, Element.EARTH, "leap", SpellType.UTILITY, 20, EnumAction.NONE, false);
+		super("leap", Tier.BASIC, Element.EARTH, SpellType.UTILITY, 10, 20, EnumAction.NONE, false);
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class Leap extends Spell {
 
 		if(caster.onGround){
 
-			caster.motionY = 0.65 * modifiers.get(SpellModifiers.DAMAGE);
+			caster.motionY = 0.65 * modifiers.get(SpellModifiers.POTENCY);
 			caster.addVelocity(caster.getLookVec().x * 0.3, 0, caster.getLookVec().z * 0.3);
 
 			if(world.isRemote){

@@ -35,12 +35,9 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.darkness_orb);
 
+	/** Creates a new shadow wraith in the gievn world. */
 	public EntityShadowWraith(World world){
 		super(world);
-	}
-
-	public EntityShadowWraith(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		// For some reason this can't be in initEntityAI
 		this.tasks.addTask(0, this.spellAttackAI);
 	}
@@ -128,13 +125,8 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = rand.nextFloat() * 0.4f;
-				ParticleBuilder.create(Type.SPARKLE)
-				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(),
-						this.posZ - 0.5d + rand.nextDouble())
-				.vel(0, 0.05, 0)
-				.lifetime(20 + rand.nextInt(10))
-				.colour(brightness, 0.0f, brightness)
-				.spawn(world);
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).lifetime(20 + rand.nextInt(10))
+				.colour(brightness, 0.0f, brightness).spawn(world);
 			}
 		}
 	}

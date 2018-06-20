@@ -28,13 +28,6 @@ public class EntityBubble extends EntityMagicConstruct {
 		super(world);
 	}
 
-	public EntityBubble(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			boolean isDarkOrb, float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
-		// this.setSize(0.1f, 0.1f);
-		this.isDarkOrb = isDarkOrb;
-	}
-
 	@Override
 	public double getMountedYOffset(){
 		return 0.1;

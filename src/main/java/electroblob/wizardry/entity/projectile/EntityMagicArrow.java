@@ -59,7 +59,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	/** Seems to be some sort of timer for animating an arrow. */
 	public int arrowShake;
 	/** The owner of this arrow. */
-	private WeakReference<EntityLivingBase> shootingEntity;
+	private WeakReference<EntityLivingBase> caster;
 	/**
 	 * The UUID of the caster. Note that this is only for loading purposes; during normal updates the actual entity
 	 * instance is stored (so that getEntityByUUID is not called constantly), so this will not always be synced (this is
@@ -70,86 +70,73 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	int ticksInAir;
 	/** The amount of knockback an arrow applies when it hits a mob. */
 	private int knockbackStrength;
-	/**
-	 * The damage multiplier for the arrow. Normally this isn't set directly, since it can be done via the constructor.
-	 * An exception is where other entities need to pass in their multipliers, e.g. ice charge.
-	 */
+	/** The damage multiplier for the projectile. */
 	public float damageMultiplier = 1.0f;
 
-	/** Basic shell constructor. Should only be used by the client. */
+	/** Creates a new projectile in the given world. */
 	public EntityMagicArrow(World world){
 		super(world);
 		this.setSize(0.5F, 0.5F);
 	}
-
-	/**
-	 * Creates a projectile at position xyz in world, with no motion. Do not create a projectile with this constructor
-	 * and then call setVelocity() as that method is, bizarrely, client-side only.
-	 */
-	public EntityMagicArrow(World world, double x, double y, double z){
-		super(world);
-		this.setSize(0.5F, 0.5F);
-		this.setPosition(x, y, z);
-		// yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
-	}
-
-	/**
-	 * Creates a projectile at the position of the caster, pointing at the given target. The trajectory seems to be
-	 * altered slightly by a random amount determined by the aimingError parameter. For reference, skeletons set this to
-	 * 10 on easy, 6 on normal and 2 on hard difficulty.
-	 */
-	public EntityMagicArrow(World world, EntityLivingBase caster, Entity target, float speed, float aimingError,
-			float damageMultiplier){
-		super(world);
-		this.shootingEntity = new WeakReference<EntityLivingBase>(caster);
-		this.damageMultiplier = damageMultiplier;
-
-		this.posY = caster.posY + (double)caster.getEyeHeight() - 0.10000000149011612D;
-		double d0 = target.posX - caster.posX;
-		double d1 = this.doGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0F) - this.posY
-				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0F) - this.posY;
-		double d2 = target.posZ - caster.posZ;
-		double d3 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
-
-		if(d3 >= 1.0E-7D){
-			float f2 = (float)(Math.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
-			float f3 = (float)(-(Math.atan2(d1, d3) * 180.0D / Math.PI));
-			double d4 = d0 / d3;
-			double d5 = d2 / d3;
-			this.setLocationAndAngles(caster.posX + d4, this.posY, caster.posZ + d5, f2, f3);
-			// yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
-
-			// f4 depends on the horizontal distance between the two entities and accounts for bullet drop,
-			// but of course if gravity is ignored this should be 0.
-			float bulletDropCompensation = this.doGravity() ? (float)d3 * 0.2F : 0;
-			this.shoot(d0, d1 + (double)bulletDropCompensation, d2, speed, aimingError);
-		}
-	}
-
-	/**
-	 * Creates a projectile pointing in the direction the caster is looking, with the given speed. <b>Use this
-	 * constructor for normal, player-cast spells.
-	 */
-	public EntityMagicArrow(World world, EntityLivingBase caster, float speed, float damageMultiplier){
-		super(world);
-		this.shootingEntity = new WeakReference<EntityLivingBase>(caster);
-		this.damageMultiplier = damageMultiplier;
-
-		this.setSize(0.5F, 0.5F);
+	
+	// Initialiser methods
+	
+	/** Sets the shooter of the projectile to the given caster, positions the projctile at the given caster's eyes and 
+	 * aims it in the direction they are looking with the given speed. */
+	public void aim(EntityLivingBase caster, float speed){
+		
+		this.setCaster(caster);
+		
 		this.setLocationAndAngles(caster.posX, caster.posY + (double)caster.getEyeHeight(), caster.posZ,
 				caster.rotationYaw, caster.rotationPitch);
+		
 		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
 		this.posY -= 0.10000000149011612D;
 		this.posZ -= (double)(MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
+		
 		this.setPosition(this.posX, this.posY, this.posZ);
+		
 		// yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
 		this.motionX = (double)(-MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI)
 				* MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
+		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
 		this.motionZ = (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI)
 				* MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI));
-		this.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI));
+		
 		this.shoot(this.motionX, this.motionY, this.motionZ, speed * 1.5F, 1.0F);
 	}
+
+	/** Sets the shooter of the projectile to the given caster, positions the projctile at the given caster's eyes and 
+	 * aims it at the given target with the given speed. The trajectory will be altered slightly by a random amount
+	 * determined by the aimingError parameter. For reference, skeletons set this to 10 on easy, 6 on normal and 2 on hard
+	 * difficulty. */
+	public void aim(EntityLivingBase caster, Entity target, float speed, float aimingError){
+		
+		this.setCaster(caster);
+
+		this.posY = caster.posY + (double)caster.getEyeHeight() - 0.1d;
+		double dx = target.posX - caster.posX;
+		double dy = this.doGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - this.posY
+				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - this.posY;
+		double dz = target.posZ - caster.posZ;
+		double horizontalDistance = (double)MathHelper.sqrt(dx * dx + dz * dz);
+
+		if(horizontalDistance >= 1.0E-7D){
+			float yaw = (float)(Math.atan2(dz, dx) * 180.0d / Math.PI) - 90.0f;
+			float pitch = (float)(-(Math.atan2(dy, horizontalDistance) * 180.0d / Math.PI));
+			double dxNormalised = dx / horizontalDistance;
+			double dzNormalised = dz / horizontalDistance;
+			this.setLocationAndAngles(caster.posX + dxNormalised, this.posY, caster.posZ + dzNormalised, yaw, pitch);
+			// yOffset was set to 0 here, but that has been replaced by getYOffset(), which returns 0 in Entity anyway.
+
+			// Depends on the horizontal distance between the two entities and accounts for bullet drop,
+			// but of course if gravity is ignored this should be 0 since there is no bullet drop.
+			float bulletDropCompensation = this.doGravity() ? (float)horizontalDistance * 0.2f : 0;
+			this.shoot(dx, dy + (double)bulletDropCompensation, dz, speed, aimingError);
+		}
+	}
+	
+	// Property getters (to be overridden by subclasses)
 
 	/** Subclasses must override this to set their own base damage. */
 	public abstract double getDamage();
@@ -180,86 +167,52 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		return false;
 	}
 
+	// Setters and getters
+
+	/** Sets the amount of knockback the projectile applies when it hits a mob. */
+	public void setKnockbackStrength(int knockback){
+		this.knockbackStrength = knockback;
+	}
+	
 	/**
-	 * Similar to setArrowHeading, it's point the throwable entity to a x, y, z direction.
+	 * Returns the EntityLivingBase that created this construct, or null if it no longer exists. Cases where the entity
+	 * may no longer exist are: entity died or was deleted, mob despawned, player logged out, entity teleported to
+	 * another dimension, or this construct simply had no caster in the first place.
 	 */
-	@Override
-	public void shoot(double x, double y, double z, float speed, float randomness){
-		float f2 = MathHelper.sqrt(x * x + y * y + z * z);
-		x /= (double)f2;
-		y /= (double)f2;
-		z /= (double)f2;
-		x += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D
-				* (double)randomness;
-		y += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D
-				* (double)randomness;
-		z += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D
-				* (double)randomness;
-		x *= (double)speed;
-		y *= (double)speed;
-		z *= (double)speed;
-		this.motionX = x;
-		this.motionY = y;
-		this.motionZ = z;
-		float f3 = MathHelper.sqrt(x * x + z * z);
-		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
-		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, (double)f3) * 180.0D / Math.PI);
-		this.ticksInGround = 0;
+	public EntityLivingBase getCaster(){
+		return caster == null ? null : caster.get();
 	}
 
-	// There was an override for setPositionAndRotationDirect here, but it was exactly the same as the superclass
-	// method (in Entity), so it was removed since it was redundant.
-
-	/**
-	 * Sets the velocity to the args. Args: x, y, z. THIS IS CLIENT SIDE ONLY! DO NOT USE IN COMMON OR SERVER CODE!
-	 */
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_){
-		this.motionX = p_70016_1_;
-		this.motionY = p_70016_3_;
-		this.motionZ = p_70016_5_;
-
-		if(this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F){
-			float f = MathHelper.sqrt(p_70016_1_ * p_70016_1_ + p_70016_5_ * p_70016_5_);
-			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(p_70016_1_, p_70016_5_) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(p_70016_3_, (double)f) * 180.0D / Math.PI);
-			this.prevRotationPitch = this.rotationPitch;
-			this.prevRotationYaw = this.rotationYaw;
-			this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-			this.ticksInGround = 0;
-		}
+	public void setCaster(EntityLivingBase entity){
+		caster = new WeakReference<EntityLivingBase>(entity);
 	}
+	
+	// Methods triggered during the update cycle
 
-	/**
-	 * Called each tick when the projectile is in a block. Defaults to setDead(), but can be overridden to change the
-	 * behaviour.
-	 */
-	public void tickInGround(){
+	/** Called each tick when the projectile is in a block. Defaults to setDead(), but can be overridden to change the
+	 * behaviour. */
+	protected void tickInGround(){
 		this.setDead();
 	}
 
 	/** Called each tick when the projectile is in the air. Override to add particles and such like. */
-	public void tickInAir(){
-	}
+	protected void tickInAir(){}
 
 	/** Called when the projectile hits an entity. Override to add potion effects and such like. */
-	public void onEntityHit(EntityLivingBase entityHit){
-	}
+	protected void onEntityHit(EntityLivingBase entityHit){}
 
 	/** Called when the projectile hits a block. Override to add sound effects and such like. */
-	public void onBlockHit(){
-	}
+	protected void onBlockHit(){}
 
 	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
 
-		if(this.getShootingEntity() == null && this.casterUUID != null){
+		if(this.getCaster() == null && this.casterUUID != null){
 			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
 			if(entity instanceof EntityLivingBase){
-				this.shootingEntity = new WeakReference<EntityLivingBase>((EntityLivingBase)entity);
+				this.caster = new WeakReference<EntityLivingBase>((EntityLivingBase)entity);
 			}
 		}
 
@@ -320,7 +273,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 			for(i = 0; i < list.size(); ++i){
 				Entity entity1 = (Entity)list.get(i);
 
-				if(entity1.canBeCollidedWith() && (entity1 != this.getShootingEntity() || this.ticksInAir >= 5)){
+				if(entity1.canBeCollidedWith() && (entity1 != this.getCaster() || this.ticksInAir >= 5)){
 					f1 = 0.3F;
 					AxisAlignedBB axisalignedbb1 = entity1.getEntityBoundingBox().grow((double)f1, (double)f1,
 							(double)f1);
@@ -347,8 +300,8 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 					&& raytraceresult.entityHit instanceof EntityPlayer){
 				EntityPlayer entityplayer = (EntityPlayer)raytraceresult.entityHit;
 
-				if(entityplayer.capabilities.disableDamage || this.getShootingEntity() instanceof EntityPlayer
-						&& !((EntityPlayer)this.getShootingEntity()).canAttackPlayer(entityplayer)){
+				if(entityplayer.capabilities.disableDamage || this.getCaster() instanceof EntityPlayer
+						&& !((EntityPlayer)this.getCaster()).canAttackPlayer(entityplayer)){
 					raytraceresult = null;
 				}
 			}
@@ -359,11 +312,11 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 				if(raytraceresult.entityHit != null){
 					DamageSource damagesource = null;
 
-					if(this.getShootingEntity() == null){
+					if(this.getCaster() == null){
 						damagesource = DamageSource.causeThrownDamage(this, this);
 					}else{
 						damagesource = MagicDamage.causeIndirectMagicDamage(this,
-								(EntityLivingBase)this.getShootingEntity(), this.getDamageType()).setProjectile();
+								(EntityLivingBase)this.getCaster(), this.getDamageType()).setProjectile();
 					}
 
 					if(raytraceresult.entityHit.attackEntityFrom(damagesource,
@@ -386,17 +339,17 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 							}
 
 							// Thorns enchantment
-							if(this.getShootingEntity() != null
-									&& this.getShootingEntity() instanceof EntityLivingBase){
-								EnchantmentHelper.applyThornEnchantments(entityHit, this.getShootingEntity());
-								EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase)this.getShootingEntity(),
+							if(this.getCaster() != null
+									&& this.getCaster() instanceof EntityLivingBase){
+								EnchantmentHelper.applyThornEnchantments(entityHit, this.getCaster());
+								EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase)this.getCaster(),
 										entityHit);
 							}
 
-							if(this.getShootingEntity() != null && raytraceresult.entityHit != this.getShootingEntity()
+							if(this.getCaster() != null && raytraceresult.entityHit != this.getCaster()
 									&& raytraceresult.entityHit instanceof EntityPlayer
-									&& this.getShootingEntity() instanceof EntityPlayerMP){
-								((EntityPlayerMP)this.getShootingEntity()).connection
+									&& this.getCaster() instanceof EntityPlayerMP){
+								((EntityPlayerMP)this.getCaster()).connection
 										.sendPacket(new SPacketChangeGameState(6, 0.0F));
 							}
 						}
@@ -498,6 +451,51 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	}
 
 	@Override
+	public void shoot(double x, double y, double z, float speed, float randomness){
+		float f2 = MathHelper.sqrt(x * x + y * y + z * z);
+		x /= (double)f2;
+		y /= (double)f2;
+		z /= (double)f2;
+		x += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)randomness;
+		y += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)randomness;
+		z += this.rand.nextGaussian() * (double)(this.rand.nextBoolean() ? -1 : 1) * 0.007499999832361937D * (double)randomness;
+		x *= (double)speed;
+		y *= (double)speed;
+		z *= (double)speed;
+		this.motionX = x;
+		this.motionY = y;
+		this.motionZ = z;
+		float f3 = MathHelper.sqrt(x * x + z * z);
+		this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(x, z) * 180.0D / Math.PI);
+		this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(y, (double)f3) * 180.0D / Math.PI);
+		this.ticksInGround = 0;
+	}
+
+	// There was an override for setPositionAndRotationDirect here, but it was exactly the same as the superclass
+	// method (in Entity), so it was removed since it was redundant.
+
+	/** Sets the velocity to the args. Args: x, y, z. THIS IS CLIENT SIDE ONLY! DO NOT USE IN COMMON OR SERVER CODE! */
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void setVelocity(double p_70016_1_, double p_70016_3_, double p_70016_5_){
+		this.motionX = p_70016_1_;
+		this.motionY = p_70016_3_;
+		this.motionZ = p_70016_5_;
+
+		if(this.prevRotationPitch == 0.0F && this.prevRotationYaw == 0.0F){
+			float f = MathHelper.sqrt(p_70016_1_ * p_70016_1_ + p_70016_5_ * p_70016_5_);
+			this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(p_70016_1_, p_70016_5_) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(p_70016_3_, (double)f) * 180.0D / Math.PI);
+			this.prevRotationPitch = this.rotationPitch;
+			this.prevRotationYaw = this.rotationYaw;
+			this.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
+			this.ticksInGround = 0;
+		}
+	}
+	
+	// Data reading and writing
+
+	@Override
 	public void writeEntityToNBT(NBTTagCompound tag){
 		tag.setShort("xTile", (short)this.blockX);
 		tag.setShort("yTile", (short)this.blockY);
@@ -512,8 +510,8 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		tag.setByte("shake", (byte)this.arrowShake);
 		tag.setByte("inGround", (byte)(this.inGround ? 1 : 0));
 		tag.setFloat("damageMultiplier", this.damageMultiplier);
-		if(this.getShootingEntity() != null){
-			tag.setUniqueId("casterUUID", this.getShootingEntity().getUniqueID());
+		if(this.getCaster() != null){
+			tag.setUniqueId("casterUUID", this.getCaster().getUniqueID());
 		}
 	}
 
@@ -531,12 +529,27 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		this.damageMultiplier = tag.getFloat("damageMultiplier");
 		casterUUID = tag.getUniqueId("casterUUID");
 	}
+	
+	@Override
+	public void writeSpawnData(ByteBuf buffer){
+		if(this.getCaster() != null) buffer.writeInt(this.getCaster().getEntityId());
+	}
 
-	/**
-	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-	 * prevent them from trampling crops
-	 */
+	@Override
+	public void readSpawnData(ByteBuf buffer){
+		if(buffer.isReadable()) this.caster = new WeakReference<EntityLivingBase>(
+				(EntityLivingBase)this.world.getEntityByID(buffer.readInt()));
+	}
+
+	// Miscellaneous overrides
+	
+	@Override
 	protected boolean canTriggerWalking(){
+		return false;
+	}
+	
+	@Override
+	public boolean canBeAttackedWithItem(){
 		return false;
 	}
 
@@ -545,44 +558,6 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		return 0.0F;
 	}
 
-	/**
-	 * Sets the amount of knockback the arrow applies when it hits a mob.
-	 */
-	public void setKnockbackStrength(int p_70240_1_){
-		this.knockbackStrength = p_70240_1_;
-	}
-
-	/**
-	 * If returns false, the item will not inflict any damage against entities.
-	 */
-	public boolean canAttackWithItem(){
-		return false;
-	}
-
-	public void writeSpawnData(ByteBuf buffer){
-		if(this.getShootingEntity() != null) buffer.writeInt(this.getShootingEntity().getEntityId());
-	}
-
-	public void readSpawnData(ByteBuf buffer){
-		if(buffer.isReadable()) this.shootingEntity = new WeakReference<EntityLivingBase>(
-				(EntityLivingBase)this.world.getEntityByID(buffer.readInt()));
-	}
-
-	/**
-	 * Returns the EntityLivingBase that created this construct, or null if it no longer exists. Cases where the entity
-	 * may no longer exist are: entity died or was deleted, mob despawned, player logged out, entity teleported to
-	 * another dimension, or this construct simply had no caster in the first place.
-	 */
-	public EntityLivingBase getShootingEntity(){
-		return shootingEntity == null ? null : shootingEntity.get();
-	}
-
-	public void setShootingEntity(EntityLivingBase entity){
-		shootingEntity = new WeakReference<EntityLivingBase>(entity);
-	}
-
 	@Override
-	protected void entityInit() {
-		// TODO Auto-generated method stub
-	}
+	protected void entityInit(){}
 }

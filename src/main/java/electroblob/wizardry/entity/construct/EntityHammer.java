@@ -28,15 +28,8 @@ public class EntityHammer extends EntityMagicConstruct {
 	/** How long the hammer has been falling for. */
 	public int fallTime;
 
-	public EntityHammer(World par1World){
-		super(par1World);
-		this.setSize(1.0f, 1.9F);
-		this.noClip = false;
-	}
-
-	public EntityHammer(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
+	public EntityHammer(World world){
+		super(world);
 		this.setSize(1.0f, 1.9F);
 		this.motionX = 0.0D;
 		this.motionY = 0.0D;

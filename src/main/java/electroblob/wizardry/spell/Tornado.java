@@ -4,74 +4,20 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.construct.EntityTornado;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.world.World;
 
-public class Tornado extends Spell {
+public class Tornado extends SpellConstruct<EntityTornado> {
 
 	public Tornado(){
-		super(Tier.ADVANCED, 35, Element.EARTH, "tornado", SpellType.ATTACK, 80, EnumAction.NONE, false);
+		super("tornado", Tier.ADVANCED, Element.EARTH, SpellType.ATTACK, 35, 80, EnumAction.NONE, EntityTornado::new, 200, WizardrySounds.SPELL_ICE);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
-		return false;
-	}
-
-	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-
-		if(!world.isRemote){
-			double x = caster.posX + caster.getLookVec().x;
-			double y = caster.posY;
-			double z = caster.posZ + caster.getLookVec().z;
-
-			EntityTornado tornado = new EntityTornado(world, x, y, z, caster,
-					(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().x / 3,
-					caster.getLookVec().z / 3, modifiers.get(SpellModifiers.DAMAGE));
-			world.spawnEntity(tornado);
-		}
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
-		return true;
-	}
-
-	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
-			SpellModifiers modifiers){
-
-		if(target != null){
-
-			if(!world.isRemote){
-				double x = caster.posX + caster.getLookVec().x;
-				double y = caster.posY;
-				double z = caster.posZ + caster.getLookVec().z;
-
-				EntityTornado tornado = new EntityTornado(world, x, y, z, caster,
-						(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), caster.getLookVec().x / 3,
-						caster.getLookVec().z / 3, modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntity(tornado);
-			}
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_ICE, 1.0F, 1.0F);
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean canBeCastByNPCs(){
-		return true;
+	protected void addConstructExtras(EntityTornado construct, EntityLivingBase caster, SpellModifiers modifiers){
+		construct.setHorizontalVelocity(caster.getLookVec().x / 3, caster.getLookVec().z / 3);
 	}
 
 }

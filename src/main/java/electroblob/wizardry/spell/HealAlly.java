@@ -4,53 +4,63 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class HealAlly extends Spell {
+public class HealAlly extends SpellRay {
 
 	public HealAlly(){
-		super(Tier.APPRENTICE, 10, Element.HEALING, "heal_ally", SpellType.DEFENCE, 20, EnumAction.NONE, false);
+		super("heal_ally", Tier.APPRENTICE, Element.HEALING, SpellType.DEFENCE, 10, 20, false, 10, WizardrySounds.SPELL_HEAL);
+		this.soundValues(0.7f, 1.2f, 0.4f);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade), 8.0f);
-
-		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
-			if(target.getHealth() < target.getMaxHealth()){
-				target.heal((int)(5 * modifiers.get(SpellModifiers.DAMAGE)));
+	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target)){
+			
+			EntityLivingBase entity = (EntityLivingBase)target;
+			
+			if(entity.getHealth() < entity.getMaxHealth() && entity.getHealth() > 0){
+				
+				entity.heal((int)(5 * modifiers.get(SpellModifiers.POTENCY)));
 
 				if(world.isRemote){
+					
+					float r = 1; float g = 1; float b = 0.3f;
+					
 					for(int i = 0; i < 10; i++){
-						double d0 = (double)((float)target.posX + world.rand.nextFloat() * 2 - 1.0F);
-						// Apparently the client side spawns the particles 1 block higher than it should... hence the -
-						// 0.5F.
-						double d1 = (double)((float)target.getEntityBoundingBox().minY + target.height - 0.5f
-								+ world.rand.nextFloat());
-						double d2 = (double)((float)target.posZ + world.rand.nextFloat() * 2 - 1.0F);
-						Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
-								48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+						double x1 = (double)((float)entity.posX + world.rand.nextFloat() * 2 - 1.0f);
+						double y1 = (double)((float)entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5f + world.rand.nextFloat());
+						double z1 = (double)((float)entity.posZ + world.rand.nextFloat() * 2 - 1.0f);
+						ParticleBuilder.create(Type.SPARKLE).pos(x1, y1, z1).vel(0, 0.1F, 0).colour(r, g, b).spawn(world);
 					}
+					
+					Wizardry.proxy.spawnEntityParticle(world, entity, 15, r, g, b);
 				}
-
-				caster.swingArm(hand);
-				target.playSound(WizardrySounds.SPELL_HEAL, 0.7F, world.rand.nextFloat() * 0.4F + 1.0F);
-				return true;
 			}
+			
+			return true;
 		}
+		
+		return false;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		return false;
+	}
+
+	@Override
+	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 

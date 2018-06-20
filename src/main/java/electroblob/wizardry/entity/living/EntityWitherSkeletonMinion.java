@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import electroblob.wizardry.Wizardry;
+import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -20,6 +21,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -39,57 +41,17 @@ public class EntityWitherSkeletonMinion extends EntityWitherSkeleton implements 
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override
-	public int getLifetime(){
-		return lifetime;
-	}
+	@Override public int getLifetime(){ return lifetime; }
+	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
+	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
+	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
+	@Override public UUID getCasterUUID(){ return casterUUID; }
+	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
 
-	@Override
-	public void setLifetime(int lifetime){
-		this.lifetime = lifetime;
-	}
-
-	@Override
-	public WeakReference<EntityLivingBase> getCasterReference(){
-		return casterReference;
-	}
-
-	@Override
-	public void setCasterReference(WeakReference<EntityLivingBase> reference){
-		casterReference = reference;
-	}
-
-	@Override
-	public UUID getCasterUUID(){
-		return casterUUID;
-	}
-
-	@Override
-	public void setCasterUUID(UUID uuid){
-		this.casterUUID = uuid;
-	}
-
-	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
-	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
-	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
-	 * anything inside it other than call super().
-	 */
+	/** Creates a new wither skeleton minion in the given world. */
 	public EntityWitherSkeletonMinion(World world){
 		super(world);
 		this.experienceValue = 0;
-	}
-
-	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
-	 * this class (be sure to call super()) so that AI and other things can be added.
-	 */
-	public EntityWitherSkeletonMinion(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world);
-		this.setPosition(x, y, z);
-		this.casterReference = new WeakReference<EntityLivingBase>(caster);
-		this.experienceValue = 0;
-		this.lifetime = lifetime;
 	}
 
 	// EntitySkeleton overrides
@@ -105,13 +67,13 @@ public class EntityWitherSkeletonMinion extends EntityWitherSkeleton implements 
 				0, false, true, this.getTargetSelector()));
 	}
 
-	// Shouldn't have randomised armour, but does still need a bow!
+	// Shouldn't have randomised armour, but does still need a sword!
 	@Override
 	protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty){
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SWORD));
+		this.setDropChance(EntityEquipmentSlot.MAINHAND, 0.0f);
 	}
 
-	// Where the skeleton minion is summoned does not affect its type.
 	@Override
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata){
 		// Can't call super, so the code from the next level up (EntityLiving) had to be copied as well.
@@ -123,6 +85,9 @@ public class EntityWitherSkeletonMinion extends EntityWitherSkeleton implements 
 		}else{
 			this.setLeftHanded(false);
 		}
+		
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.STONE_SWORD));
+		this.setDropChance(EntityEquipmentSlot.MAINHAND, 0.0f);
 
 		// Halloween pumpkin heads! Why not?
 		if(this.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()){
@@ -201,40 +166,18 @@ public class EntityWitherSkeletonMinion extends EntityWitherSkeleton implements 
 
 	// Recommended overrides
 
-	@Override
-	protected int getExperiencePoints(EntityPlayer player){
-		return 0;
-	}
-
-	@Override
-	protected boolean canDropLoot(){
-		return false;
-	}
-
-	@Override
-	protected Item getDropItem(){
-		return null;
-	}
-
-	@Override
-	protected ResourceLocation getLootTable(){
-		return null;
-	}
-
-	@Override
-	public boolean canPickUpLoot(){
-		return false;
-	}
-
+	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
+	@Override protected boolean canDropLoot(){ return false; }
+	@Override protected Item getDropItem(){ return null; }
+	@Override protected ResourceLocation getLootTable(){ return null; }
+	@Override public boolean canPickUpLoot(){ return false; }
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override
-	protected boolean canDespawn(){
-		return false;
-	}
+	@Override protected boolean canDespawn(){ return false; }
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
-		return true;
+		// Returns true unless the given entity type is a flying entity and this skeleton does not have a bow.
+		return !EntityFlying.class.isAssignableFrom(entityType) || this.getHeldItemMainhand().getItem() instanceof ItemBow;
 	}
 
 	@Override

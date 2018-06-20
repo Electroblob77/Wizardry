@@ -18,12 +18,14 @@ import net.minecraft.world.World;
 
 public class EntityDecoy extends EntitySummonedCreature {
 
+	/** Creates a new decoy in the given world. */
 	public EntityDecoy(World world){
 		super(world);
 	}
-
-	public EntityDecoy(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
+	
+	@Override
+	public void setCaster(EntityLivingBase caster){
+		super.setCaster(caster);
 		this.setAlwaysRenderNameTag(caster instanceof EntityPlayer);
 	}
 

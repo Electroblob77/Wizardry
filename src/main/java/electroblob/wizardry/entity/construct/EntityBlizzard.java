@@ -16,15 +16,8 @@ import net.minecraft.world.World;
 
 public class EntityBlizzard extends EntityMagicConstruct {
 
-	public EntityBlizzard(World par1World){
-		super(par1World);
-		this.height = 1.0f;
-		this.width = 1.0f;
-	}
-
-	public EntityBlizzard(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
+	public EntityBlizzard(World world){
+		super(world);
 		this.height = 1.0f;
 		this.width = 1.0f;
 	}

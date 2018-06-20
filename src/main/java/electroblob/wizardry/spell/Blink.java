@@ -22,14 +22,14 @@ import net.minecraft.world.World;
 public class Blink extends Spell {
 
 	public Blink(){
-		super(Tier.APPRENTICE, 15, Element.SORCERY, "blink", SpellType.UTILITY, 25, EnumAction.NONE, false);
+		super("blink", Tier.APPRENTICE, Element.SORCERY, SpellType.UTILITY, 15, 25, EnumAction.NONE, false);
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(25 * modifiers.get(WizardryItems.range_upgrade), world,
-				caster, false);
+		RayTraceResult rayTrace = WizardryUtilities.standardBlockRayTrace(world, caster,
+				25 * modifiers.get(WizardryItems.range_upgrade), false);
 
 		// It's worth noting that on the client side, the cast() method only gets called if the server side
 		// cast method succeeded, so you need not check any conditions for spawning particles.

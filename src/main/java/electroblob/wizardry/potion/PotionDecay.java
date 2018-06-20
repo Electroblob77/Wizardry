@@ -68,8 +68,8 @@ public class PotionDecay extends Potion {
 		
 		EntityLivingBase target = event.getEntityLiving();
 		
-		if(target.isPotionActive(WizardryPotions.decay) && target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0
-				 && target.onGround){
+		if(!target.world.isRemote && target.isPotionActive(WizardryPotions.decay) && target.onGround
+				&& target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0){
 
 			List<Entity> entities = target.world.getEntitiesWithinAABBExcludingEntity(target,
 					target.getEntityBoundingBox());
@@ -80,7 +80,10 @@ public class PotionDecay extends Potion {
 			
 			// The victim spreading the decay is the 'caster' here, so that it can actually wear off, otherwise it
 			// just gets infected with its own decay and the effect lasts forever.
-			target.world.spawnEntity(new EntityDecay(target.world, target.posX, target.posY, target.posZ, target));
+			EntityDecay decay = new EntityDecay(target.world);
+			decay.setCaster(target);
+			decay.setPosition(target.posX, target.posY, target.posZ);
+			target.world.spawnEntity(decay);
 		}
 	}
 

@@ -10,23 +10,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityDecay extends EntityMagicConstruct {
 
 	public int textureIndex = 0;
-	public static final int LIFETIME = 400;
 
-	public EntityDecay(World par1World){
-		super(par1World);
-		textureIndex = this.rand.nextInt(10);
-		this.height = 0.2f;
-		this.width = 2.0f;
-	}
-
-	public EntityDecay(World par1World, double x, double y, double z, EntityLivingBase caster){
-		super(par1World, x, y, z, caster, LIFETIME, 1);
+	public EntityDecay(World world){
+		super(world);
 		textureIndex = this.rand.nextInt(10);
 		this.height = 0.2f;
 		this.width = 2.0f;
@@ -37,7 +28,7 @@ public class EntityDecay extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		if(this.rand.nextInt(700) == 0 && this.ticksExisted + 100 < LIFETIME)
+		if(this.rand.nextInt(700) == 0 && this.ticksExisted + 100 < lifetime)
 			this.playSound(SoundEvents.BLOCK_LAVA_AMBIENT, 0.2F + rand.nextFloat() * 0.2F,
 					0.6F + rand.nextFloat() * 0.15F);
 
@@ -50,7 +41,7 @@ public class EntityDecay extends EntityMagicConstruct {
 					// damaged each tick.
 					// In this case, we do want particles to be shown.
 					if(!target.isPotionActive(WizardryPotions.decay))
-						target.addPotionEffect(new PotionEffect(WizardryPotions.decay, LIFETIME, 0));
+						target.addPotionEffect(new PotionEffect(WizardryPotions.decay, lifetime, 0));
 				}
 			}
 			
@@ -67,23 +58,15 @@ public class EntityDecay extends EntityMagicConstruct {
 		}
 	}
 
-	protected void entityInit(){
-	}
+	@Override protected void entityInit(){}
+
+	@Override protected void readEntityFromNBT(NBTTagCompound nbttagcompound){}
+
+	@Override protected void writeEntityToNBT(NBTTagCompound nbttagcompound){}
 
 	@Override
-	protected void readEntityFromNBT(NBTTagCompound nbttagcompound){
-
-	}
-
-	@Override
-	protected void writeEntityToNBT(NBTTagCompound nbttagcompound){
-
-	}
-
-	/**
-	 * Checks using a Vec3dd to determine if this entity is within range of that vector to be rendered. Args: Vec3dD
-	 */
-	public boolean isInRangeToRenderVec3dD(Vec3d par1Vec3d){
+	public boolean isInRangeToRenderDist(double distance){
 		return true;
 	}
+	
 }

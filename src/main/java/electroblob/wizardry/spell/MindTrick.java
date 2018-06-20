@@ -1,23 +1,23 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -25,90 +25,56 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
-public class MindTrick extends Spell {
+public class MindTrick extends SpellRay {
+	
+	private static final int BASE_DURATION = 300;
 
 	public MindTrick(){
-		super(Tier.BASIC, 10, Element.NECROMANCY, "mind_trick", SpellType.ATTACK, 40, EnumAction.NONE, false);
+		super("mind_trick", Tier.BASIC, Element.NECROMANCY, SpellType.ATTACK, 10, 40, false, 8, WizardrySounds.SPELL_DEFLECTION);
+		this.soundValues(0.7f, 1, 0.4f);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				8 * modifiers.get(WizardryItems.range_upgrade));
-
-		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
-
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
+	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target)){
 
 			if(!world.isRemote){
 
 				if(target instanceof EntityPlayer){
 
-					target.addPotionEffect(new PotionEffect(MobEffects.NAUSEA,
-							(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 0));
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.NAUSEA,
+							(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 0));
 
 				}else if(target instanceof EntityLiving){
 
 					((EntityLiving)target).setAttackTarget(null);
-					target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick,
-							(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 0));
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.mind_trick,
+							(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 0));
 				}
+				
 			}else{
-				for(int i = 0; i < 10; i++){
-					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
-							target.posX - 0.25 + world.rand.nextDouble() * 0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25
-									+ world.rand.nextDouble() * 0.5,
-							target.posZ - 0.25 + world.rand.nextDouble() * 0.5, 0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
+				for(int i=0; i<10; i++){
+					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, target.posX,
+							target.getEntityBoundingBox().minY + target.getEyeHeight(), target.posZ, 0.25, false)
+					.colour(0.8f, 0.2f, 1.0f).spawn(world);
 				}
 			}
-
-			target.playSound(WizardrySounds.SPELL_DEFLECTION, 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
-			caster.swingArm(hand);
+			
 			return true;
 		}
+		
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
-			SpellModifiers modifiers){
-
-		if(target != null){
-			if(!world.isRemote){
-				if(target instanceof EntityPlayer){
-
-					target.addPotionEffect(new PotionEffect(MobEffects.NAUSEA,
-							(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 0));
-
-				}else if(target instanceof EntityLiving){
-
-					((EntityLiving)target).setAttackTarget(null);
-					target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick,
-							(int)(300 * modifiers.get(WizardryItems.duration_upgrade)), 0));
-
-				}
-			}else{
-				for(int i = 0; i < 10; i++){
-					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
-							target.posX - 0.25 + world.rand.nextDouble() * 0.5,
-							target.getEntityBoundingBox().minY + target.getEyeHeight() - 0.25
-									+ world.rand.nextDouble() * 0.5,
-							target.posZ - 0.25 + world.rand.nextDouble() * 0.5, 0, 0, 0, 0, 0.8f, 0.2f, 1.0f);
-				}
-			}
-
-			target.playSound(WizardrySounds.SPELL_DEFLECTION, 0.7F, world.rand.nextFloat() * 0.4F + 0.8F);
-			caster.swingArm(hand);
-			return true;
-		}
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
-		return true;
+	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		return false;
 	}
 
 	@SubscribeEvent

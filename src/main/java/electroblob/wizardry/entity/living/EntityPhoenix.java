@@ -27,18 +27,15 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	private double AISpeed = 0.5;
 
 	// Can attack for 7 seconds, then must cool down for 3.
-	private EntityAIAttackSpell<EntityPhoenix> spellAttackAI = new EntityAIAttackSpell<EntityPhoenix>(this, AISpeed, 15f, 60, 140);
+	private EntityAIAttackSpell<EntityPhoenix> spellAttackAI = new EntityAIAttackSpell<>(this, AISpeed, 15f, 60, 140);
 
 	private Spell continuousSpell;
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.flame_ray);
 
+	/** Creates a new phoenix in the given world. */
 	public EntityPhoenix(World world){
 		super(world);
-	}
-
-	public EntityPhoenix(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		this.isImmuneToFire = true;
 		this.height = 2.0f;
 		// For some reason this can't be in initEntityAI
@@ -185,8 +182,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	}
 
 	@Override
-	public void fall(float distance, float damageMultiplier){
-	} // Immune to fall damage
+	public void fall(float distance, float damageMultiplier){} // Immune to fall damage
 
 	@Override
 	public boolean isBurning(){

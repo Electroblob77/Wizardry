@@ -3,27 +3,15 @@ package electroblob.wizardry.entity.projectile;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityFirebolt extends EntityMagicProjectile {
-	public EntityFirebolt(World par1World){
-		super(par1World);
-	}
-
-	public EntityFirebolt(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntityFirebolt(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier);
-	}
-
-	public EntityFirebolt(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
+	
+	public EntityFirebolt(World world){
+		super(world);
 	}
 
 	@Override
@@ -72,17 +60,11 @@ public class EntityFirebolt extends EntityMagicProjectile {
 		}
 	}
 
-	/**
-	 * Gets the amount of gravity to apply to the thrown entity with each tick.
-	 */
 	@Override
-	protected float getGravityVelocity(){
-		return 0.0F;
+	public boolean hasNoGravity(){
+		return true;
 	}
 
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
 	@Override
 	public boolean canRenderOnFire(){
 		return false;

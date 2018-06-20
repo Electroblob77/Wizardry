@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class Light extends Spell {
 
 	public Light(){
-		super(Tier.BASIC, 5, Element.SORCERY, "light", SpellType.UTILITY, 15, EnumAction.NONE, false);
+		super("light", Tier.BASIC, Element.SORCERY, SpellType.UTILITY, 5, 15, EnumAction.NONE, false);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class Light extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(4, world, caster, false);
+		RayTraceResult rayTrace = WizardryUtilities.standardBlockRayTrace(world, caster, 4, false);
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 

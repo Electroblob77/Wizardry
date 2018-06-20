@@ -9,10 +9,10 @@ import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.EntitySkeletonMinion;
 import electroblob.wizardry.entity.living.EntityWitherSkeletonMinion;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,21 +31,16 @@ import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityMooshroom;
 import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class Metamorphosis extends Spell {
+public class Metamorphosis extends SpellRay {
 
 	public static final BiMap<Class<? extends EntityLivingBase>, Class<? extends EntityLivingBase>> TRANSFORMATIONS = HashBiMap.create();
 
-	public Metamorphosis(){
-		super(Tier.APPRENTICE, 15, Element.NECROMANCY, "metamorphosis", SpellType.UTILITY, 30, EnumAction.NONE, false);
-
+	static {
 		addTransformation(EntityPig.class, EntityPigZombie.class);
 		addTransformation(EntityCow.class, EntityMooshroom.class);
 		addTransformation(EntityChicken.class, EntityBat.class);
@@ -66,25 +61,26 @@ public class Metamorphosis extends Spell {
 			previousEntity = entity;
 		}
 	}
+	
+	public Metamorphosis(){
+		super("metamorphosis", Tier.APPRENTICE, Element.NECROMANCY, SpellType.UTILITY, 15, 30, false, 10, WizardrySounds.SPELL_DEFLECTION);
+		this.soundValues(0.5f, 0.8f, 0);
+	}
+	
+	@Override public boolean canBeCastByNPCs() { return false; }
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-
-		Vec3d look = caster.getLookVec();
-
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade));
-
-		if(rayTrace != null && rayTrace.entityHit != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
-
-			Entity entityHit = rayTrace.entityHit;
-			double xPos = entityHit.posX;
-			double yPos = entityHit.posY;
-			double zPos = entityHit.posZ;
+	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target)){
+			
+			double xPos = target.posX;
+			double yPos = target.posY;
+			double zPos = target.posZ;
 
 			// Sneaking allows the entities to be cycled through in the other direction.
 			Class<? extends EntityLivingBase> newEntityClass = caster.isSneaking() ?
-					TRANSFORMATIONS.inverse().get(entityHit.getClass()) : TRANSFORMATIONS.get(entityHit.getClass());
+					TRANSFORMATIONS.inverse().get(target.getClass()) : TRANSFORMATIONS.get(target.getClass());
 
 			if(newEntityClass == null) return false;
 
@@ -93,7 +89,8 @@ public class Metamorphosis extends Spell {
 			try {
 				newEntity = newEntityClass.getConstructor(World.class).newInstance(world);
 			} catch (Exception e){
-				Wizardry.logger.error("Error while attempting to transform entity " + entityHit.getClass() + " to entity " + newEntityClass);
+				Wizardry.logger.error("Error while attempting to transform entity " + target.getClass() + " to entity "
+						+ newEntityClass);
 				e.printStackTrace();
 			}
 			
@@ -101,39 +98,34 @@ public class Metamorphosis extends Spell {
 
 			if(!world.isRemote){
 				// Transfers attributes from the old entity to the new one.
-				newEntity.setHealth(((EntityLivingBase)entityHit).getHealth());
+				newEntity.setHealth(((EntityLivingBase)target).getHealth());
 				NBTTagCompound tag = new NBTTagCompound();
-				entityHit.writeToNBT(tag);
+				target.writeToNBT(tag);
 				// Remove the UUID because keeping it the same causes the entity to disappear
 				WizardryUtilities.removeUniqueId(tag, "UUID");
 				newEntity.readFromNBT(tag);
 
-				entityHit.setDead();
+				target.setDead();
 				newEntity.setPosition(xPos, yPos, zPos);
 				world.spawnEntity(newEntity);
 				
 			}else{
-				
-				for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
-					// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-					double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-					double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-							+ world.rand.nextFloat() / 5 - 0.1f;
-					double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-					// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
-					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
-							12 + world.rand.nextInt(8), 0.2f, 0.0f, 0.1f);
-				}
-				for(int i = 0; i < 5; i++){
-					Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, xPos, yPos, zPos, 0.0d,
-							0.0d, 0.0d, 0, 0.1f, 0.0f, 0.0f);
+				for(int i=0; i<5; i++){
+					ParticleBuilder.create(Type.DARK_MAGIC).pos(xPos, yPos, zPos).colour(0.1f, 0, 0).spawn(world);
 				}
 			}
-
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_DEFLECTION, 0.5F, 0.8f);
-			return true;
 		}
+		
+		return false;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		return false;
+	}
+
+	@Override
+	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 

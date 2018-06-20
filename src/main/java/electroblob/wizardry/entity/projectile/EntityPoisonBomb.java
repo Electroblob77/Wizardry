@@ -18,26 +18,14 @@ import net.minecraft.world.World;
 
 public class EntityPoisonBomb extends EntityBomb {
 
-	public EntityPoisonBomb(World par1World){
-		super(par1World);
+	public EntityPoisonBomb(World world){
+		super(world);
 	}
-
-	public EntityPoisonBomb(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntityPoisonBomb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
-			float blastMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
-	}
-
-	public EntityPoisonBomb(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
+	
 	@Override
-	protected void onImpact(RayTraceResult par1RayTraceResult){
-		Entity entityHit = par1RayTraceResult.entityHit;
+	protected void onImpact(RayTraceResult rayTrace){
+		
+		Entity entityHit = rayTrace.entityHit;
 
 		if(entityHit != null){
 			// This is if the poison bomb gets a direct hit

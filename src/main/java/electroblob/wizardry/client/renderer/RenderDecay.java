@@ -44,7 +44,7 @@ public class RenderDecay extends Render<EntityDecay> {
 
 		GlStateManager.rotate(-90, 1, 0, 0);
 
-		float scale = 2 * Math.min(1, (float)(EntityDecay.LIFETIME - entity.ticksExisted) / 50f);
+		float scale = 2 * Math.min(1, (float)(entity.lifetime - entity.ticksExisted) / 50f);
 
 		GlStateManager.scale(scale, scale, scale);
 

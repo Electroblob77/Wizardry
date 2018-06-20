@@ -375,7 +375,7 @@ public class ItemWand extends Item {
 		// normal mob on full 20 health, but wither 2 for the same duration only deals about 6 hearts of damage in
 		// total.
 		if(this.element == spell.element){
-			modifiers.set(SpellModifiers.DAMAGE, 1.0f + (this.tier.level + 1) * Constants.DAMAGE_INCREASE_PER_TIER,
+			modifiers.set(SpellModifiers.POTENCY, 1.0f + (this.tier.level + 1) * Constants.DAMAGE_INCREASE_PER_TIER,
 					true);
 		}
 
@@ -401,7 +401,7 @@ public class ItemWand extends Item {
 
 	private boolean selectMinionTarget(EntityPlayer player, World world){
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, player, 16);
+		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, player, 16, false);
 
 		if(rayTrace != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
 

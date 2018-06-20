@@ -64,27 +64,10 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 		this.casterUUID = uuid;
 	}
 
-	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
-	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
-	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
-	 * anything inside it other than call super().
-	 */
+	/** Creates a new summoned creature in the given world. */
 	public EntitySummonedCreature(World world){
 		super(world);
 		this.experienceValue = 0;
-	}
-
-	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
-	 * this class (be sure to call super()) so that AI and other things can be added.
-	 */
-	public EntitySummonedCreature(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world);
-		this.setPosition(x, y, z);
-		this.casterReference = new WeakReference<EntityLivingBase>(caster);
-		this.experienceValue = 0;
-		this.lifetime = lifetime;
 	}
 
 	// Implementations
@@ -134,36 +117,13 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 
 	// Recommended overrides
 
-	@Override
-	protected int getExperiencePoints(EntityPlayer player){
-		return 0;
-	}
-
-	@Override
-	protected boolean canDropLoot(){
-		return false;
-	}
-
-	@Override
-	protected Item getDropItem(){
-		return null;
-	}
-
-	@Override
-	protected ResourceLocation getLootTable(){
-		return null;
-	}
-
-	@Override
-	public boolean canPickUpLoot(){
-		return false;
-	}
-
-	// This vanilla method has nothing to do with the custom onDespawn() method.
-	@Override
-	protected boolean canDespawn(){
-		return false;
-	}
+	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
+	@Override protected boolean canDropLoot(){ return false; }
+	@Override protected Item getDropItem(){ return null; }
+	@Override protected ResourceLocation getLootTable(){ return null; }
+	@Override public boolean canPickUpLoot(){ return false; }
+	// This vanilla method has nothing to do with the custom despawn() method.
+	@Override protected boolean canDespawn(){ return false; }
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -171,7 +131,6 @@ public abstract class EntitySummonedCreature extends EntityCreature implements I
 		return !EntityFlying.class.isAssignableFrom(entityType) || this.hasRangedAttack();
 	}
 
-	// TODO: Backport the following two methods to 1.7.10.
 	@Override
 	public ITextComponent getDisplayName(){
 		if(getCaster() != null){

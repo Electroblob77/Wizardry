@@ -5,7 +5,6 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
@@ -17,26 +16,11 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 		super(par1World);
 	}
 
-	public EntityThunderbolt(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
+	@Override public boolean hasNoGravity(){ return true; }
 
-	public EntityThunderbolt(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier);
-	}
-
-	public EntityThunderbolt(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
-	/** This is the speed */
-	protected float getSpeed(){
-		return 2.5F;
-	}
-
-	/**
-	 * Called when this EntityThrowable hits a block or entity.
-	 */
+	@Override public boolean canRenderOnFire(){ return false; }
+	
+	@Override
 	protected void onImpact(RayTraceResult par1RayTraceResult){
 		
 		Entity entityHit = par1RayTraceResult.entityHit;
@@ -63,6 +47,7 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 		this.setDead();
 	}
 
+	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
@@ -80,18 +65,5 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 			this.setDead();
 		}
 	}
-
-	/**
-	 * Gets the amount of gravity to apply to the thrown entity with each tick.
-	 */
-	protected float getGravityVelocity(){
-		return 0.0F;
-	}
-
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
-	public boolean canRenderOnFire(){
-		return false;
-	}
+	
 }

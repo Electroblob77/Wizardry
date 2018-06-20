@@ -21,26 +21,11 @@ import net.minecraft.world.World;
 
 public class EntityIceCharge extends EntityBomb {
 
-	public EntityIceCharge(World par1World){
-		super(par1World);
+	public EntityIceCharge(World world){
+		super(world);
 	}
 
-	public EntityIceCharge(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntityIceCharge(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
-			float blastMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
-	}
-
-	public EntityIceCharge(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
-	/**
-	 * Called when this EntityThrowable hits a block or entity.
-	 */
+	@Override
 	protected void onImpact(RayTraceResult par1RayTraceResult){
 		Entity entityHit = par1RayTraceResult.entityHit;
 
@@ -62,7 +47,7 @@ public class EntityIceCharge extends EntityBomb {
 			for(int i = 0; i < 30 * blastMultiplier; i++){
 				
 				ParticleBuilder.create(Type.ICE, rand, this.posX, this.posY, this.posZ, 2 * blastMultiplier, false)
-				.lifetime(35).spawn(world);
+				.lifetime(35).gravity(true).spawn(world);
 				
 				float brightness = 0.4f + rand.nextFloat() * 0.5f;
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, this.posX, this.posY, this.posZ, 2 * blastMultiplier, false)
@@ -118,11 +103,12 @@ public class EntityIceCharge extends EntityBomb {
 				double dx = rand.nextDouble() - 0.5;
 				double dy = rand.nextDouble() - 0.5;
 				double dz = rand.nextDouble() - 0.5;
-				EntityIceShard iceshard = new EntityIceShard(world, this.posX + dx, this.posY + dy, this.posZ + dz);
+				EntityIceShard iceshard = new EntityIceShard(world);
+				iceshard.setPosition(this.posX + dx, this.posY + dy, this.posZ + dz);
 				iceshard.motionX = dx;
 				iceshard.motionY = dy;
 				iceshard.motionZ = dz;
-				iceshard.setShootingEntity(this.getThrower());
+				iceshard.setCaster(this.getThrower());
 				iceshard.damageMultiplier = this.damageMultiplier;
 				world.spawnEntity(iceshard);
 			}

@@ -1,11 +1,11 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class Flight extends Spell {
 
 	public Flight(){
-		super(Tier.MASTER, 10, Element.EARTH, "flight", SpellType.UTILITY, 0, EnumAction.NONE, true);
+		super("flight", Tier.MASTER, Element.EARTH, SpellType.UTILITY, 10, 0, EnumAction.NONE, true);
 	}
 
 	@Override
@@ -36,19 +36,22 @@ public class Flight extends Spell {
 			}
 			caster.fallDistance = 0.0f;
 		}
+		
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
-					caster.posX - 1 + world.rand.nextDouble() * 2,
-					WizardryUtilities.getPlayerEyesPos(caster) - 0.5f + world.rand.nextDouble(),
-					caster.posZ - 1 + world.rand.nextDouble() * 2, 0, -0.1F, 0, 15, 0.8f, 1.0f, 0.5f);
-			Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
-					caster.posX - 1 + world.rand.nextDouble() * 2,
-					WizardryUtilities.getPlayerEyesPos(caster) - 0.5f + world.rand.nextDouble(),
-					caster.posZ - 1 + world.rand.nextDouble() * 2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
+			double x = caster.posX - 1 + world.rand.nextDouble() * 2;
+			double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double z = caster.posZ - 1 + world.rand.nextDouble() * 2;
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).lifetime(15).colour(0.8f, 1, 0.5f).spawn(world);
+			x = caster.posX - 1 + world.rand.nextDouble() * 2;
+			y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			z = caster.posZ - 1 + world.rand.nextDouble() * 2;
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).lifetime(15).colour(1, 1, 1).spawn(world);
 		}
+		
 		if(ticksInUse % 24 == 0){
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERDRAGON_FLAP, 0.5F, 1.0f);
 		}
+		
 		return true;
 	}
 

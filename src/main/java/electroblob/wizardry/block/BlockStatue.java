@@ -2,13 +2,14 @@ package electroblob.wizardry.block;
 
 import java.util.Random;
 
-import electroblob.wizardry.spell.Petrify;
 import electroblob.wizardry.tileentity.TileEntityStatue;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -23,6 +24,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockStatue extends BlockContainer {
 
 	private boolean isIce;
+	
+	/** The NBT tag name for storing the petrified flag (used for rendering) in the target's tag compound. */
+	public static final String NBT_KEY = "petrified";
 
 	public BlockStatue(Material material){
 		super(material);
@@ -146,7 +150,7 @@ public class BlockStatue extends BlockContainer {
 
 			// This is only when position == 1 because world.destroyBlock calls this function for the other blocks.
 			if(tileentity != null && tileentity.position == 1 && tileentity.creature != null){
-				tileentity.creature.getEntityData().removeTag(Petrify.NBT_KEY);
+				tileentity.creature.getEntityData().removeTag(BlockStatue.NBT_KEY);
 				tileentity.creature.isDead = false;
 				world.spawnEntity(tileentity.creature);
 			}
@@ -166,4 +170,84 @@ public class BlockStatue extends BlockContainer {
 
 		return this.isIce && block == this ? false : super.shouldSideBeRendered(blockState, blockAccess, pos, side);
 	}
+	
+	/**
+	 * Turns the given entity into a statue. The type of statue depends on the block instance this method was invoked on.
+	 * @param entity The entity to turn into a statue.
+	 * @param duration The time for which the entity should remain a statue. For petrified creatures, this is the minimum
+	 * time it can stay as a statue.
+	 * @return True if the entity was successfully turned into a statue, false if not (i.e. something was in the way).
+	 */
+	// Making this an instance method means it works equally well for both types of statue
+	public boolean convertToStatue(EntityLiving entity, int duration){
+		
+		if(entity.deathTime > 0) return false;
+
+		BlockPos pos = new BlockPos(entity);
+		World world = entity.world;
+
+		entity.hurtTime = 0; // Stops the entity looking red while frozen and the resulting z-fighting
+		entity.extinguish();
+
+		// Short mobs such as spiders and pigs
+		if((entity.height < 1.2 || entity.isChild()) && WizardryUtilities.canBlockBeReplaced(world, pos)){
+			
+			world.setBlockState(pos, this.getDefaultState());
+			if(world.getTileEntity(pos) instanceof TileEntityStatue){
+				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(entity, 1, 1);
+				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
+			}
+			
+			if(!this.isIce) entity.getEntityData().setBoolean(NBT_KEY, true);
+			entity.setDead();
+			return true;
+		}
+		// Normal sized mobs like zombies and skeletons
+		else if(entity.height < 2.5 && WizardryUtilities.canBlockBeReplaced(world, pos)
+				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
+			
+			world.setBlockState(pos, this.getDefaultState());
+			if(world.getTileEntity(pos) instanceof TileEntityStatue){
+				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(entity, 1, 2);
+				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
+			}
+
+			world.setBlockState(pos.up(), this.getDefaultState());
+			if(world.getTileEntity(pos.up()) instanceof TileEntityStatue){
+				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(entity, 2, 2);
+			}
+			
+			if(!this.isIce) entity.getEntityData().setBoolean(NBT_KEY, true);
+			entity.setDead();
+			return true;
+		}
+		// Tall mobs like endermen
+		else if(WizardryUtilities.canBlockBeReplaced(world, pos)
+				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())
+				&& WizardryUtilities.canBlockBeReplaced(world, pos.up(2))){
+			
+			world.setBlockState(pos, this.getDefaultState());
+			if(world.getTileEntity(pos) instanceof TileEntityStatue){
+				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(entity, 1, 3);
+				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
+			}
+
+			world.setBlockState(pos.up(), this.getDefaultState());
+			if(world.getTileEntity(pos.up()) instanceof TileEntityStatue){
+				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(entity, 2, 3);
+			}
+
+			world.setBlockState(pos.up(2), this.getDefaultState());
+			if(world.getTileEntity(pos.up(2)) instanceof TileEntityStatue){
+				((TileEntityStatue)world.getTileEntity(pos.up(2))).setCreatureAndPart(entity, 3, 3);
+			}
+			
+			if(!this.isIce) entity.getEntityData().setBoolean(NBT_KEY, true);
+			entity.setDead();
+			return true;
+		}
+			
+		return false;
+	}
+	
 }

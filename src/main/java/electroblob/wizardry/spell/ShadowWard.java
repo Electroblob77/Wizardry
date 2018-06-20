@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ShadowWard extends Spell {
 
 	public ShadowWard(){
-		super(Tier.ADVANCED, 10, Element.NECROMANCY, "shadow_ward", SpellType.DEFENCE, 0, EnumAction.BLOCK, true);
+		super("shadow_ward", Tier.ADVANCED, Element.NECROMANCY, SpellType.DEFENCE, 10, 0, EnumAction.BLOCK, true);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class ShadowWard extends Spell {
 			double dx = -1 + 2 * world.rand.nextFloat();
 			double dy = -1 + world.rand.nextFloat();
 			double dz = -1 + 2 * world.rand.nextFloat();
-			world.spawnParticle(EnumParticleTypes.PORTAL, caster.posX, WizardryUtilities.getPlayerEyesPos(caster), caster.posZ, dx, dy, dz);
+			world.spawnParticle(EnumParticleTypes.PORTAL, caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ, dx, dy, dz);
 		}
 
 		if(ticksInUse % 50 == 0){

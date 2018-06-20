@@ -24,7 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class Transience extends Spell {
 
 	public Transience(){
-		super(Tier.ADVANCED, 50, Element.HEALING, "transience", SpellType.DEFENCE, 100, EnumAction.BOW, false);
+		super("transience", Tier.ADVANCED, Element.HEALING, SpellType.BUFF, 50, 100, EnumAction.BOW, false);
 	}
 
 	@Override

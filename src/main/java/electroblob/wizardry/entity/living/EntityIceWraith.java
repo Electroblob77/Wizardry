@@ -25,12 +25,9 @@ public class EntityIceWraith extends EntityBlazeMinion {
 	/** The version from EntityLivingBase is only used in onLivingUpdate, so it can safely be copied. */
 	private int jumpTicks;
 
+	/** Creates a new ice wraith in the given world. */
 	public EntityIceWraith(World world){
 		super(world);
-	}
-
-	public EntityIceWraith(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		this.isImmuneToFire = false;
 	}
 
@@ -204,32 +201,24 @@ public class EntityIceWraith extends EntityBlazeMinion {
 			this.setMutexBits(3);
 		}
 
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
+		@Override
 		public boolean shouldExecute(){
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
 			return entitylivingbase != null && entitylivingbase.isEntityAlive();
 		}
 
-		/**
-		 * Execute a one shot task or start executing a continuous task
-		 */
+		@Override
 		public void startExecuting(){
 			this.attackStep = 0;
 		}
 
-		/**
-		 * Resets the task
-		 */
+		@Override
 		public void resetTask(){
 			// This might be called setOnFire, but what it really controls is whether the wraith is in attack mode.
 			this.blaze.setOnFire(false);
 		}
 
-		/**
-		 * Updates the task
-		 */
+		@Override
 		public void updateTask(){
 			--this.attackTime;
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();

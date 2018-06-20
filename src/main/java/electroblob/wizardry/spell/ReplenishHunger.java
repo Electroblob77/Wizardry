@@ -1,45 +1,39 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class ReplenishHunger extends Spell {
+public class ReplenishHunger extends SpellBuff {
 
 	public ReplenishHunger(){
-		super(Tier.APPRENTICE, 10, Element.HEALING, "replenish_hunger", SpellType.UTILITY, 30, EnumAction.BOW, false);
+		super("replenish_hunger", Tier.APPRENTICE, Element.HEALING, SpellType.BUFF, 10, 30, WizardrySounds.SPELL_HEAL, 1, 0.7f, 0.3f);
+		this.soundValues(0.7f, 1.2f, 0.4f);
 	}
-
+	
+	@Override public boolean canBeCastByNPCs(){ return false; }
+	
+	@Override
+	protected boolean applyEffects(EntityLivingBase caster, SpellModifiers modifiers){
+		return true; // In this case the best solution is to remove the functionality of this method and override cast.
+	}
+	
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		if(caster.getFoodStats().needFood()){
-			int foodAmount = (int)(6 * modifiers.get(SpellModifiers.DAMAGE));
+			int foodAmount = (int)(4 * modifiers.get(SpellModifiers.POTENCY));
 			// Fixed issue #6: Changed to addStats, since setFoodLevel is client-side only
 			caster.getFoodStats().addStats(foodAmount, foodAmount * 0.1f);
-			if(world.isRemote){
-				for(int i = 0; i < 10; i++){
-					double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
-					double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F
-							+ world.rand.nextFloat());
-					double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
-							48 + world.rand.nextInt(12), 1.0f, 0.7f, 0.3f);
-				}
-			}
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
-					world.rand.nextFloat() * 0.4F + 1.0F);
-			return true;
+			return super.cast(world, caster, hand, ticksInUse, modifiers);
 		}
+		
 		return false;
 	}
 

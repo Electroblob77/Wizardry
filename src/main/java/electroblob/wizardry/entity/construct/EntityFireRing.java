@@ -12,15 +12,8 @@ import net.minecraft.world.World;
 
 public class EntityFireRing extends EntityMagicConstruct {
 
-	public EntityFireRing(World par1World){
-		super(par1World);
-		this.height = 1.0f;
-		this.width = 5.0f;
-	}
-
-	public EntityFireRing(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
+	public EntityFireRing(World world){
+		super(world);
 		this.height = 1.0f;
 		this.width = 5.0f;
 	}

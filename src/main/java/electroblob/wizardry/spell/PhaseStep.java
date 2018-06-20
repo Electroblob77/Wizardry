@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class PhaseStep extends Spell {
 
 	public PhaseStep(){
-		super(Tier.ADVANCED, 35, Element.SORCERY, "phase_step", SpellType.UTILITY, 40, EnumAction.NONE, false);
+		super("phase_step", Tier.ADVANCED, Element.SORCERY, SpellType.UTILITY, 35, 40, EnumAction.NONE, false);
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class PhaseStep extends Spell {
 
 		// Phase step does not gain range from range multiplier, instead it increases the thickness
 		// of the wall you can teleport through.
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(5, world, caster, false);
+		RayTraceResult rayTrace = WizardryUtilities.standardBlockRayTrace(world, caster, 5, false);
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 
@@ -71,7 +71,7 @@ public class PhaseStep extends Spell {
 		if(world.isRemote){
 			for(int i = 0; i < 10; i++){
 				double dx1 = caster.posX;
-				double dy1 = WizardryUtilities.getPlayerEyesPos(caster) - 1.5 + 2 * world.rand.nextFloat();
+				double dy1 = caster.getEntityBoundingBox().minY + 2 * world.rand.nextFloat();
 				double dz1 = caster.posZ;
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);

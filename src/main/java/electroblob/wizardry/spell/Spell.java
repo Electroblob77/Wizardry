@@ -79,16 +79,18 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/** Forge registry-based replacement for the internal spells list. */
 	public static IForgeRegistry<Spell> registry;
 
-	/** The tier this spell belongs to. */
-	public final Tier tier;
-	/** Mana cost of the spell. If it is a continuous spell the cost is per second. */
-	public final int cost;
-	/** The element this spell belongs to. */
-	public final Element element;
+	/** Mod ID of the mod that added this spell; defaults to {@link Wizardry#MODID} if not specified. */
+	private final String modID;
 	/** The unlocalised name of the spell. */
 	private final String unlocalisedName;
+	/** The tier this spell belongs to. */
+	public final Tier tier;
+	/** The element this spell belongs to. */
+	public final Element element;
 	/** The type of spell this is classified as. */
 	public final SpellType type;
+	/** Mana cost of the spell. If it is a continuous spell the cost is per second. */
+	public final int cost;
 	/** Cooldown for the spell in ticks */
 	public final int cooldown;
 	/** The action the player does when this spell is cast. */
@@ -98,66 +100,64 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/** ResourceLocation of the spell icon. */
 	private final ResourceLocation icon;
-	/** Mod ID of the mod that added this spell; defaults to {@link Wizardry#MODID} if not specified. */
-	private final String modID;
 
 	/**
 	 * False if the spell has been disabled in the config file, true otherwise. This is now encapsulated to stop it
 	 * being fiddled with.
 	 */
-	private boolean isEnabled = true;
+	private boolean enabled = true;
 
 	/**
 	 * This constructor should be called from any subclasses, either feeding in the constants directly or through their
 	 * own constructor from wherever the spell is registered. This is the constructor for wizardry's own spells; spells
 	 * added by other mods should use
-	 * {@link Spell#Spell(Tier, int, Element, String, SpellType, int, EnumAction, boolean, String)}.
-	 * 
-	 * @param tier The tier this spell belongs to.
-	 * @param cost The amount of mana used to cast the spell. If this is a continuous spell, it represents mana cost per
-	 *        second and should be a multiple of 5.
-	 * @param element The element this spell belongs to.
+	 * {@link Spell#Spell(String, String, Tier, Element, SpellType, int, int, EnumAction, boolean)}.
 	 * @param name The <i>registry name</i> of the spell. This will also be the name of the icon file. The spell's
 	 *        unlocalised name will be a resource location with the format [modid]:[name].
+	 * @param tier The tier this spell belongs to.
+	 * @param element The element this spell belongs to.
+	 * @param type The type of spell this is classified as.
+	 * @param cost The amount of mana used to cast the spell. If this is a continuous spell, it represents mana cost per
+	 *        second and should be a multiple of 5.
 	 * @param cooldown The cooldown time for this spell in ticks.
 	 * @param action The vanilla usage action to be displayed when casting this spell.
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
 	 *        right mouse button.
 	 */
-	public Spell(Tier tier, int cost, Element element, String name, SpellType type, int cooldown, EnumAction action,
+	public Spell(String name, Tier tier, Element element, SpellType type, int cost, int cooldown, EnumAction action,
 			boolean isContinuous){
-		this(tier, cost, element, name, type, cooldown, action, isContinuous, Wizardry.MODID);
+		this(Wizardry.MODID, name, tier, element, type, cost, cooldown, action, isContinuous);
 	}
 
 	/**
 	 * This constructor should be called from any subclasses, either feeding in the constants directly or through their
 	 * own constructor from wherever the spell is registered.
-	 * 
-	 * @param tier The tier this spell belongs to.
-	 * @param cost The amount of mana used to cast the spell. If this is a continuous spell, it represents mana cost per
-	 *        second and should be a multiple of 5.
-	 * @param element The element this spell belongs to.
+	 * @param modID The mod id of the mod that added this spell. This allows wizardry to use the correct file path for
+	 *        the spell icon, and also more generally to distinguish between original and addon spells.
 	 * @param name The <i>registry name</i> of the spell, excluding the mod id. This will also be the name of the icon
 	 *        file. The spell's unlocalised name will be a resource location with the format [modid]:[name].
+	 * @param tier The tier this spell belongs to.
+	 * @param element The element this spell belongs to.
+	 * @param type The type of spell this is classified as.
+	 * @param cost The amount of mana used to cast the spell. If this is a continuous spell, it represents mana cost per
+	 *        second and should be a multiple of 5.
 	 * @param cooldown The cooldown time for this spell in ticks.
 	 * @param action The vanilla usage action to be displayed when casting this spell (see {@link}EnumAction)
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
 	 *        right mouse button.
-	 * @param modID The mod id of the mod that added this spell. This allows wizardry to use the correct file path for
-	 *        the spell icon, and also more generally to distinguish between original and addon spells.
 	 */
-	public Spell(Tier tier, int cost, Element element, String name, SpellType type, int cooldown, EnumAction action,
-			boolean isContinuous, String modID){
-		this.tier = tier;
-		this.cost = cost;
-		this.element = element;
-		this.type = type;
-		this.cooldown = cooldown;
-		this.action = action;
-		this.isContinuous = isContinuous;
+	public Spell(String modID, String name, Tier tier, Element element, SpellType type, int cost, int cooldown,
+			EnumAction action, boolean isContinuous){
 		this.modID = modID;
 		this.setRegistryName(modID, name);
 		this.unlocalisedName = this.getRegistryName().toString();
+		this.tier = tier;
+		this.element = element;
+		this.type = type;
+		this.cost = cost;
+		this.cooldown = cooldown;
+		this.action = action;
+		this.isContinuous = isContinuous;
 		this.icon = new ResourceLocation(this.modID, "textures/spells/" + name + ".png");
 	}
 
@@ -187,8 +187,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 *        {@code new SpellModifiers()}.
 	 * @return True if the spell succeeded and mana should be used up, false if not.
 	 */
-	public abstract boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse,
-			SpellModifiers modifiers);
+	public abstract boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers);
 
 	/**
 	 * Casts the spell, but with an EntityLiving as the caster. Each subclass can optionally override this method and
@@ -337,12 +336,12 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/** Returns whether the spell is enabled in the config. */
 	public final boolean isEnabled(){
-		return isEnabled;
+		return enabled;
 	}
 
 	/** Sets whether the spell is enabled or not. */
 	public final void setEnabled(boolean isEnabled){
-		this.isEnabled = isEnabled;
+		this.enabled = isEnabled;
 	}
 
 	// Spells are sorted according to tier and element. Where several spells have the same tier and element,
@@ -472,5 +471,5 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 			return spell.isEnabled() && (this.tier == null || spell.tier == this.tier)
 					&& (this.element == null || spell.element == this.element);
 		}
-	};
+	}
 }

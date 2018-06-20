@@ -9,40 +9,17 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class EntityForceOrb extends EntityMagicProjectile {
-
-	/**
-	 * The entity blast multiplier. In this particular case, it doesn't need syncing, so this class doesn't extend
-	 * EntityBlastProjectile.
-	 */
-	public float blastMultiplier;
-
-	public EntityForceOrb(World par1World){
-		super(par1World);
+public class EntityForceOrb extends EntityBomb {
+	
+	public EntityForceOrb(World world){
+		super(world);
 	}
 
-	public EntityForceOrb(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntityForceOrb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
-			float blastMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier);
-		this.blastMultiplier = blastMultiplier;
-	}
-
-	public EntityForceOrb(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
-	/**
-	 * Called when this EntityThrowable hits a block or entity.
-	 */
+	@Override
 	protected void onImpact(RayTraceResult par1RayTraceResult){
 
 		if(par1RayTraceResult.entityHit != null){
@@ -96,16 +73,5 @@ public class EntityForceOrb extends EntityMagicProjectile {
 			this.setDead();
 		}
 	}
-
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
-		super.readEntityFromNBT(nbttagcompound);
-		blastMultiplier = nbttagcompound.getFloat("blastMultiplier");
-	}
-
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbttagcompound){
-		super.writeEntityToNBT(nbttagcompound);
-		nbttagcompound.setFloat("blastMultiplier", blastMultiplier);
-	}
+	
 }

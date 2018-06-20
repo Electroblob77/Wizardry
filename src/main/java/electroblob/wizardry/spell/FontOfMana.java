@@ -2,15 +2,15 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public class FontOfMana extends Spell {
 
 	public FontOfMana(){
-		super(Tier.MASTER, 100, Element.HEALING, "font_of_mana", SpellType.UTILITY, 250, EnumAction.BOW, false);
+		super("font_of_mana", Tier.MASTER, Element.HEALING, SpellType.UTILITY, 100, 250, EnumAction.BOW, false);
 	}
 
 	@Override
@@ -37,19 +37,23 @@ public class FontOfMana extends Spell {
 				// calculating this.
 				target.addPotionEffect(new PotionEffect(WizardryPotions.font_of_mana,
 						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)),
-						modifiers.get(SpellModifiers.DAMAGE) > 1 ? 1 : 0));
+						modifiers.get(SpellModifiers.POTENCY) > 1 ? 1 : 0));
 			}
 		}
 
 		if(world.isRemote){
 			for(int i = 0; i < 100 * modifiers.get(WizardryItems.blast_upgrade); i++){
+				
 				double radius = (1 + world.rand.nextDouble() * 4) * modifiers.get(WizardryItems.blast_upgrade);
 				double angle = world.rand.nextDouble() * Math.PI * 2;
 				float hue = world.rand.nextFloat() * 0.4f;
-				Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
-						caster.posX + radius * Math.cos(angle), caster.getEntityBoundingBox().minY,
-						caster.posZ + radius * Math.sin(angle), 0, 0.03, 0, 50, 1, 1 - hue, 0.6f + hue);
-
+				
+				double x = caster.posX + radius * Math.cos(angle);
+				double y = caster.getEntityBoundingBox().minY;
+				double z = caster.posZ + radius * Math.sin(angle);
+				
+				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).lifetime(50)
+				.colour(1, 1 - hue, 0.6f + hue).spawn(world);
 			}
 		}
 

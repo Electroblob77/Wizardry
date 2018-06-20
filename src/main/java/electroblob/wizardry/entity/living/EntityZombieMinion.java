@@ -36,27 +36,10 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override public UUID getCasterUUID(){ return casterUUID; }
 	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
 
-	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
-	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
-	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
-	 * anything inside it other than call super().
-	 */
+	/** Creates a new zombie minion in the given world. */
 	public EntityZombieMinion(World world){
 		super(world);
 		this.experienceValue = 0;
-	}
-
-	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
-	 * this class (be sure to call super()) so that AI and other things can be added.
-	 */
-	public EntityZombieMinion(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world);
-		this.setPosition(x, y, z);
-		this.casterReference = new WeakReference<EntityLivingBase>(caster);
-		this.experienceValue = 0;
-		this.lifetime = lifetime;
 	}
 
 	// EntityZombie overrides (EntityZombie is a long class so there are lots of these)

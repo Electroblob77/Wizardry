@@ -13,34 +13,20 @@ import net.minecraft.world.World;
 
 public class EntityFireSigil extends EntityMagicConstruct {
 
-	public EntityFireSigil(World par1World){
-		super(par1World);
+	public EntityFireSigil(World world){
+		super(world);
 		this.height = 0.2f;
 		this.width = 2.0f;
 	}
 
-	public EntityFireSigil(World par1World, double x, double y, double z, EntityLivingBase caster,
-			float damageMultiplier){
-		super(par1World, x, y, z, caster, -1, damageMultiplier);
-		this.height = 0.2f;
-		this.width = 2.0f;
-	}
-
-	// Overrides the original to stop the entity moving when it intersects stuff. The default arrow does this to allow
-	// it to stick in blocks.
-	public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9){
-		this.setPosition(par1, par3, par5);
-		this.setRotation(par7, par8);
-	}
-
+	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
-					this.posZ, this.world);
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(width/2, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 
@@ -76,13 +62,9 @@ public class EntityFireSigil extends EntityMagicConstruct {
 	}
 
 	@Override
-	protected void entityInit(){
+	protected void entityInit(){}
 
-	}
-
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
+	@Override
 	public boolean canRenderOnFire(){
 		return false;
 	}

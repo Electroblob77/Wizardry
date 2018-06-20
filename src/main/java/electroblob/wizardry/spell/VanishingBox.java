@@ -15,13 +15,10 @@ import net.minecraft.world.World;
 public class VanishingBox extends Spell {
 
 	public VanishingBox(){
-		super(Tier.ADVANCED, 45, Element.SORCERY, "vanishing_box", SpellType.UTILITY, 70, EnumAction.BOW, false);
+		super("vanishing_box", Tier.ADVANCED, Element.SORCERY, SpellType.UTILITY, 45, 70, EnumAction.BOW, false);
 	}
 
-	@Override
-	public boolean doesSpellRequirePacket(){
-		return false;
-	}
+	@Override public boolean doesSpellRequirePacket(){ return false; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){

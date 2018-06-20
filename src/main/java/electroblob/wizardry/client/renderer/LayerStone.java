@@ -4,8 +4,8 @@ import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 
+import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.client.ClientProxy;
-import electroblob.wizardry.spell.Petrify;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -60,7 +60,7 @@ public class LayerStone implements LayerRenderer<EntityLivingBase> {
 	public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks,
 			float ageInTicks, float netHeadYaw, float headPitch, float scale){
 
-		if(entity.getEntityData().getBoolean(Petrify.NBT_KEY)){
+		if(entity.getEntityData().getBoolean(BlockStatue.NBT_KEY)){
 
 			GlStateManager.enableLighting();
 			int i = this.getBlockBrightnessForEntity(entity, partialTicks);

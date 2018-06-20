@@ -22,15 +22,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class LightningPulse extends Spell {
+		
+	private static final double BASE_RADIUS = 3;
+	private static final float BASE_DAMAGE = 8;
 
 	public LightningPulse(){
-		super(Tier.ADVANCED, 25, Element.LIGHTNING, "lightning_pulse", SpellType.ATTACK, 75, EnumAction.NONE, false);
+		super("lightning_pulse", Tier.ADVANCED, Element.LIGHTNING, SpellType.ATTACK, 25, 75, EnumAction.NONE, false);
 	}
 
 	@Override
 	public boolean doesSpellRequirePacket(){
 		return false;
 	}
+	
+	// TODO: NPC casting support
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
@@ -38,13 +43,13 @@ public class LightningPulse extends Spell {
 		if(caster.onGround){
 
 			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
-					3.0d * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+					BASE_RADIUS * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
 
 			for(EntityLivingBase target : targets){
 				if(WizardryUtilities.isValidTarget(caster, target)){
-					// Damage is 4 hearts no matter where the target is.
+					// Base damage is 4 hearts no matter where the target is.
 					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-							8 * modifiers.get(SpellModifiers.DAMAGE));
+							BASE_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
 
 					if(!world.isRemote){
 
@@ -66,15 +71,20 @@ public class LightningPulse extends Spell {
 					}
 				}
 			}
+			
 			if(!world.isRemote){
-				EntityLightningPulse lightningpulse = new EntityLightningPulse(world, caster.posX,
-						caster.getEntityBoundingBox().minY, caster.posZ, caster, 7,
-						modifiers.get(SpellModifiers.DAMAGE));
+				// Surely neither of the commented lines would have done anything?
+				EntityLightningPulse lightningpulse = new EntityLightningPulse(world);
+				lightningpulse.setPosition(caster.posX, caster.getEntityBoundingBox().minY, caster.posZ);
+				//lightningpulse.setCaster(caster);
+				lightningpulse.lifetime = 7;
+				//lightningpulse.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
 				world.spawnEntity(lightningpulse);
 			}
+			
 			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0f, 1.0f);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 2.0f, 1.0f);
+			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1, 1);
+			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 2, 1);
 			return true;
 		}
 		return false;

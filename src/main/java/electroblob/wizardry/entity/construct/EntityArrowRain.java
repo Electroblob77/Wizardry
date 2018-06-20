@@ -1,6 +1,5 @@
 package electroblob.wizardry.entity.construct;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityTippedArrow;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -8,15 +7,8 @@ import net.minecraft.world.World;
 
 public class EntityArrowRain extends EntityMagicConstruct {
 
-	public EntityArrowRain(World par1World){
-		super(par1World);
-		this.height = 3.0f;
-		this.width = 5.0f;
-	}
-
-	public EntityArrowRain(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
+	public EntityArrowRain(World world){
+		super(world);
 		this.height = 3.0f;
 		this.width = 5.0f;
 	}

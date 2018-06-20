@@ -2,7 +2,6 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
@@ -10,8 +9,9 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -26,22 +26,25 @@ import net.minecraft.world.World;
 
 public class Shockwave extends Spell {
 
+	private static final double BASE_RADIUS = 5;
+	private static final float BASE_DAMAGE = 8;
+
 	public Shockwave(){
-		super(Tier.MASTER, 65, Element.SORCERY, "shockwave", SpellType.ATTACK, 150, EnumAction.BOW, false);
+		super("shockwave", Tier.MASTER, Element.SORCERY, SpellType.ATTACK, 65, 150, EnumAction.BOW, false);
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
-				5.0d * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+				BASE_RADIUS * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){
 			if(WizardryUtilities.isValidTarget(caster, target)){
 				// Damage increases closer to player up to a maximum of 4 hearts (at 1 block distance).
-				float damage = Math.min(8.0f / target.getDistance(caster), 8.0f);
+				float damage = Math.min(BASE_DAMAGE / target.getDistance(caster), BASE_DAMAGE);
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.BLAST),
-						damage * modifiers.get(SpellModifiers.DAMAGE));
+						damage * modifiers.get(SpellModifiers.POTENCY));
 
 				if(!world.isRemote){
 
@@ -65,23 +68,25 @@ public class Shockwave extends Spell {
 				}
 			}
 		}
+		
 		if(world.isRemote){
 
 			double particleX, particleZ;
+			
 			for(int i = 0; i < 40; i++){
+				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, particleX,
-						WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0,
-						particleZ - caster.posZ, 30, 0.8f, 0.8f, 1.0f);
+				ParticleBuilder.create(Type.SPARKLE).pos(particleX, caster.getEntityBoundingBox().minY, particleZ)
+				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).lifetime(30).colour(0.8f, 0.8f, 1).spawn(world);
+				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
-				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, particleX,
-						WizardryUtilities.getPlayerEyesPos(caster) - 1.5, particleZ, particleX - caster.posX, 0,
-						particleZ - caster.posZ, 30, 0.9f, 0.9f, 0.9f);
+				ParticleBuilder.create(Type.SPARKLE).pos(particleX, caster.getEntityBoundingBox().minY, particleZ)
+				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).lifetime(30).colour(0.9f, 0.9f, 0.9f).spawn(world);
+				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
-
 				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
 
 				if(block != null){
@@ -94,6 +99,7 @@ public class Shockwave extends Spell {
 					caster.getEntityBoundingBox().minY + 0.1, caster.posZ, 0, 0, 0);
 
 		}
+		
 		caster.swingArm(hand);
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 1.0f, 0.7f);
 		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 2.0f, 0.3f);

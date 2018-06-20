@@ -7,6 +7,7 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -18,13 +19,6 @@ public class EntityEarthquake extends EntityMagicConstruct {
 
 	public EntityEarthquake(World world){
 		super(world);
-		this.height = 1.0f;
-		this.width = 1.0f;
-	}
-
-	public EntityEarthquake(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
 		this.height = 1.0f;
 		this.width = 1.0f;
 	}
@@ -99,19 +93,16 @@ public class EntityEarthquake extends EntityMagicConstruct {
 					}
 				}
 			}
-			// TODO: Uncomment once 2.1.0 is released
-			// }else{
-			//
-			// // Constant 15 blocks for now
-			// List<EntityPlayer> targets = WizardryUtilities.getEntitiesWithinRadius(15, this.posX, this.posY,
-			// this.posZ, world, EntityPlayer.class);
-			//
-			// float magnitude = 6f * ((float)(this.lifetime - this.ticksExisted))/(float)this.lifetime;
-			//
-			// // Makes the screen shake
-			// for(EntityLivingBase target : targets){
-			// target.setAngles(0, this.ticksExisted % 4 < 2 ? magnitude : -magnitude);
-			// }
+		}else{
+			// Constant 15 blocks for now
+			List<EntityPlayer> targets = WizardryUtilities.getEntitiesWithinRadius(15, posX, posY, posZ, world, EntityPlayer.class);
+
+			float magnitude = 6f * ((float)(this.lifetime - this.ticksExisted))/(float)this.lifetime;
+
+			// Makes the screen shake
+			for(EntityPlayer target : targets){
+				target.rotationPitch = this.ticksExisted % 2 == 0 ? magnitude : -magnitude;
+			}
 		}
 	}
 

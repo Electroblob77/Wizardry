@@ -30,9 +30,8 @@ public class ItemFirebomb extends Item {
 		player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if(!world.isRemote){
-			EntityFirebomb firebomb = new EntityFirebomb(world, player);
-			// This is the standard set of parameters for this method, used by snowballs and ender pearls.
-			firebomb.shoot(player, player.rotationPitch, player.rotationYaw, 0.0f, 1.5f, 1.0f);
+			EntityFirebomb firebomb = new EntityFirebomb(world);
+			firebomb.aim(player, 1.5f);
 			world.spawnEntity(firebomb);
 		}
 

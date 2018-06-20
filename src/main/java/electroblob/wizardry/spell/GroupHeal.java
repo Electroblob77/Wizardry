@@ -9,8 +9,9 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,7 +22,7 @@ import net.minecraft.world.World;
 public class GroupHeal extends Spell {
 
 	public GroupHeal(){
-		super(Tier.ADVANCED, 35, Element.HEALING, "group_heal", SpellType.DEFENCE, 150, EnumAction.BOW, false);
+		super("group_heal", Tier.ADVANCED, Element.HEALING, SpellType.DEFENCE, 35, 150, EnumAction.BOW, false);
 	}
 
 	@Override
@@ -40,17 +41,18 @@ public class GroupHeal extends Spell {
 
 					if(((EntityPlayer)target).shouldHeal()){
 
-						target.heal((int)(6 * modifiers.get(SpellModifiers.DAMAGE)));
+						target.heal(6 * modifiers.get(SpellModifiers.POTENCY));
 
 						if(world.isRemote){
+							
 							for(int i = 0; i < 10; i++){
-								double d0 = (double)((float)target.posX + world.rand.nextFloat() * 2 - 1.0F);
-								double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos((EntityPlayer)target)
-										- 0.5F + world.rand.nextFloat());
-								double d2 = (double)((float)target.posZ + world.rand.nextFloat() * 2 - 1.0F);
-								Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F,
-										0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+								double x = caster.posX + world.rand.nextDouble() * 2 - 1;
+								double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+								double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
+								ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(1, 1, 0.3f).spawn(world);
 							}
+							 
+							Wizardry.proxy.spawnEntityParticle(world, caster, 15, 1, 1, 0.3f);
 						}
 
 						WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
@@ -59,7 +61,7 @@ public class GroupHeal extends Spell {
 					}
 				}
 
-				// Now also works on summoned creatures
+			// Now also works on summoned creatures
 			}else if(target instanceof ISummonedCreature){
 
 				EntityLivingBase summoner = ((ISummonedCreature)target).getCaster();
@@ -67,19 +69,19 @@ public class GroupHeal extends Spell {
 				if(summoner == caster || (summoner instanceof EntityPlayer
 						&& WizardryUtilities.isPlayerAlly(caster, (EntityPlayer)summoner))){
 
-					if(target.getHealth() < target.getMaxHealth()){
+					if(target.getHealth() < target.getMaxHealth() && target.getHealth() > 0){
 
-						target.heal((int)(6 * modifiers.get(SpellModifiers.DAMAGE)));
+						target.heal(6 * modifiers.get(SpellModifiers.POTENCY));
 
 						if(world.isRemote){
 							for(int i = 0; i < 10; i++){
-								double d0 = (double)((float)target.posX + world.rand.nextFloat() * 2 - 1.0F);
-								double d1 = (double)((float)WizardryUtilities.getPlayerEyesPos((EntityPlayer)target)
-										- 0.5F + world.rand.nextFloat());
-								double d2 = (double)((float)target.posZ + world.rand.nextFloat() * 2 - 1.0F);
-								Wizardry.proxy.spawnParticle(Type.SPARKLE, world, d0, d1, d2, 0, 0.1F,
-										0, 48 + world.rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+								double x = caster.posX + world.rand.nextDouble() * 2 - 1;
+								double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+								double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
+								ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(1, 1, 0.3f).spawn(world);
 							}
+							 
+							Wizardry.proxy.spawnEntityParticle(world, caster, 15, 1, 1, 0.3f);
 						}
 
 						WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,

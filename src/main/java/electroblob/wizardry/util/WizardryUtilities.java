@@ -53,6 +53,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -238,15 +239,15 @@ public final class WizardryUtilities {
 	}
 
 	/**
-	 * Gets a random position on the ground near the player within the specified horizontal and vertical ranges. Used to
-	 * find a position to spawn entities in summoning spells.
+	 * Gets a random position on the ground near the given entity within the specified horizontal and vertical ranges.
+	 * Used to find a position to spawn entities in summoning spells.
 	 * 
-	 * @param entity The entity around which to search
+	 * @param entity The entity around which to search.
 	 * @param horizontalRange The maximum number of blocks on the x or z axis the returned position can be from the
 	 *        given entity. <i>The number of operations performed by this method is proportional to the square of this
 	 *        parameter, so for performance reasons it is recommended that it does not exceed around 10.</i>
 	 * @param verticalRange The maximum number of blocks on the y axis the returned position can be from the given
-	 *        entity
+	 *        entity.
 	 * @return A BlockPos with the coordinates of the block directly above the ground at the position found, or null if
 	 *         none were found within range. Importantly, since this method checks <i>all possible</i> positions within
 	 *         range (i.e. randomness only occurs when deciding between the possible positions), if it returns null once
@@ -257,8 +258,31 @@ public final class WizardryUtilities {
 	public static BlockPos findNearbyFloorSpace(Entity entity, int horizontalRange, int verticalRange){
 
 		World world = entity.world;
-		List<BlockPos> possibleLocations = new ArrayList<BlockPos>();
 		BlockPos origin = new BlockPos(entity);
+		return findNearbyFloorSpace(world, origin, horizontalRange, verticalRange);
+	}
+	
+	/**
+	 * Gets a random position on the ground near the given BlockPos within the specified horizontal and vertical ranges.
+	 * Used to find a position to spawn entities in summoning spells.
+	 * 
+	 * @param world The world in which to search.
+	 * @param origin The BlockPos around which to search.
+	 * @param horizontalRange The maximum number of blocks on the x or z axis the returned position can be from the
+	 *        given position. <i>The number of operations performed by this method is proportional to the square of this
+	 *        parameter, so for performance reasons it is recommended that it does not exceed around 10.</i>
+	 * @param verticalRange The maximum number of blocks on the y axis the returned position can be from the given
+	 *        position.
+	 * @return A BlockPos with the coordinates of the block directly above the ground at the position found, or null if
+	 *         none were found within range. Importantly, since this method checks <i>all possible</i> positions within
+	 *         range (i.e. randomness only occurs when deciding between the possible positions), if it returns null once
+	 *         then it will always return null given the same circumstances and parameters. What this means is that you
+	 *         can (and should) immediately stop trying to cast a summoning spell if this returns null.
+	 */
+	@Nullable
+	public static BlockPos findNearbyFloorSpace(World world, BlockPos origin, int horizontalRange, int verticalRange){
+		
+		List<BlockPos> possibleLocations = new ArrayList<BlockPos>();
 
 		for(int x = -horizontalRange; x <= horizontalRange; x++){
 			for(int z = -horizontalRange; z <= horizontalRange; z++){
@@ -272,7 +296,6 @@ public final class WizardryUtilities {
 		}else{
 			return possibleLocations.get(world.rand.nextInt(possibleLocations.size()));
 		}
-
 	}
 
 	/**
@@ -424,23 +447,6 @@ public final class WizardryUtilities {
 		target.knockBack(null, 0.4f, dx, dz);
 	}
 
-	// Just what benefit does having posY be the eye position on the first person client actually give?
-
-	/**
-	 * Gets the y coordinate of the given player's eyes. This is to cover an inconsistency between the value of
-	 * EntityPlayer.posY on the first person client and everywhere else; in first person (i.e. when
-	 * Minecraft.getMinecraft().player == player) player.posY is the eye position, but everywhere else it is the feet
-	 * position. This is intended for use when spawning particles, since this is the only situation where the
-	 * discrepancy is likely to matter.
-	 * <p>
-	 * As of Wizardry 1.2, this is just a shorthand for:
-	 * <p>
-	 * <code><center>player.getEntityBoundingBox().minY + player.getEyeHeight()</code></center>
-	 */
-	public static double getPlayerEyesPos(EntityPlayer player){
-		return player.getEntityBoundingBox().minY + player.getEyeHeight();
-	}
-
 	/**
 	 * Returns a list of the itemstacks in the given player's hotbar. Defined here for convenience and to centralise the
 	 * (unfortunately unavoidable) use of hardcoded numbers to reference the inventory slots. The returned list is a
@@ -509,6 +515,17 @@ public final class WizardryUtilities {
 	public static boolean isPlayerOp(EntityPlayer player, MinecraftServer server){
 		return server.getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
 	}
+
+	/** Returns the default aiming arror used by skeletons for the given difficulty. For reference, these are: Easy - 10,
+	 * Normal - 6, Hard - 2, Peaceful - 10 (rarely used). */
+	public static int getDefaultAimingError(EnumDifficulty difficulty){
+		switch(difficulty){
+		case EASY: return 10;
+		case NORMAL: return 6;
+		case HARD: return 2;
+		default: return 10; // Peaceful counts as easy; the only time this is used is when a player attacks a (good) wizard.
+		}
+	}
 	
 	/**
 	 * Returns true if the given entity is an EntityLivingBase and not an armour stand; makes the code a bit neater.
@@ -539,7 +556,7 @@ public final class WizardryUtilities {
 	 * Does a block ray trace (NOT entities) from an entity's eyes (i.e. properly...)
 	 */
 	@Nullable
-	public static RayTraceResult rayTrace(double range, World world, EntityLivingBase entity, boolean hitLiquids){
+	public static RayTraceResult standardBlockRayTrace(World world, EntityLivingBase entity, double range, boolean hitLiquids){
 
 		Vec3d start = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
 		Vec3d look = entity.getLookVec();
@@ -557,16 +574,8 @@ public final class WizardryUtilities {
 	 * @return
 	 */
 	@Nullable
-	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range){
-		double dx = entity.getLookVec().x * range;
-		double dy = entity.getLookVec().y * range;
-		double dz = entity.getLookVec().z * range;
-		HashSet<Entity> hashset = new HashSet<Entity>(1);
-		hashset.add(entity);
-		return WizardryUtilities.tracePath(world, (float)entity.posX,
-				(float)(entity.getEntityBoundingBox().minY + entity.getEyeHeight()), (float)entity.posZ,
-				(float)(entity.posX + dx), (float)(entity.posY + entity.getEyeHeight() + dy), (float)(entity.posZ + dz),
-				1.0f, hashset, false);
+	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range, boolean hitLiquids){
+		return standardEntityRayTrace(world, entity, range, 1, hitLiquids);
 	}
 
 	/**
@@ -580,8 +589,7 @@ public final class WizardryUtilities {
 	 * @return
 	 */
 	@Nullable
-	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range,
-			float borderSize){
+	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range, float borderSize, boolean hitLiquids){
 		double dx = entity.getLookVec().x * range;
 		double dy = entity.getLookVec().y * range;
 		double dz = entity.getLookVec().z * range;
@@ -590,12 +598,11 @@ public final class WizardryUtilities {
 		return WizardryUtilities.tracePath(world, (float)entity.posX,
 				(float)(entity.getEntityBoundingBox().minY + entity.getEyeHeight()), (float)entity.posZ,
 				(float)(entity.posX + dx), (float)(entity.posY + entity.getEyeHeight() + dy), (float)(entity.posZ + dz),
-				borderSize, hashset, false);
+				borderSize, hashset, false, hitLiquids);
 	}
 
 	/**
-	 * Method for ray tracing entities (the useless default method doesn't work, despite EnumHitType having an ENTITY
-	 * field...) You can also use this for seeking.
+	 * Method for ray tracing entities. You can also use this for seeking.
 	 * 
 	 * @param world
 	 * @param x startX
@@ -611,7 +618,7 @@ public final class WizardryUtilities {
 	 */
 	@Nullable
 	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz,
-			float borderSize, HashSet<Entity> excluded, boolean collideablesOnly){
+			float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean hitLiquids){
 
 		Vec3d startVec = new Vec3d(x, y, z);
 		// Vec3d lookVec = new Vec3d(tx-x, ty-y, tz-z);
@@ -622,10 +629,9 @@ public final class WizardryUtilities {
 		float maxX = x > tx ? x : tx;
 		float maxY = y > ty ? y : ty;
 		float maxZ = z > tz ? z : tz;
-		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize,
-				borderSize);
+		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize, borderSize);
 		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);
-		RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec);
+		RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec, hitLiquids);
 		startVec = new Vec3d(x, y, z);
 		endVec = new Vec3d(tx, ty, tz);
 		float maxDistance = (float)endVec.distanceTo(startVec);

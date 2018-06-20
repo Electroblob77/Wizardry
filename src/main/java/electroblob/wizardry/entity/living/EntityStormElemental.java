@@ -33,13 +33,11 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.lightning_disc);
 
+	/** Creates a new storm elemental in the given world. */
 	public EntityStormElemental(World world){
 		super(world);
-	}
-
-	public EntityStormElemental(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		// For some reason this can't be in initEntityAI
+		// TESTME: May need to be inside a !world.isRemote check.
 		this.tasks.addTask(0, this.spellAttackAI);
 	}
 

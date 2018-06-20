@@ -1,70 +1,62 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.WizardData;
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
-public class CurseOfSoulbinding extends Spell {
+public class CurseOfSoulbinding extends SpellRay {
 
 	public CurseOfSoulbinding(){
-		super(Tier.ADVANCED, 35, Element.NECROMANCY, "curse_of_soulbinding", SpellType.ATTACK, 100, EnumAction.NONE,
-				false);
+		super("curse_of_soulbinding", Tier.ADVANCED, Element.NECROMANCY, SpellType.ATTACK, 35, 100, false, 10, SoundEvents.ENTITY_WITHER_SPAWN);
+		this.soundValues(1, 1.1f, 0.2f);
+	}
+	
+	@Override public boolean canBeCastByNPCs() { return false; }
+
+	@Override
+	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target) && caster instanceof EntityPlayer
+				&& WizardData.get((EntityPlayer)caster) != null){
+			// Return false if soulbinding failed (e.g. if the target is already soulbound)
+			if(!WizardData.get((EntityPlayer)caster).soulbind((EntityLivingBase)target)) return false;
+		}
+		
+		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+		return false;
+	}
 
-		Vec3d look = caster.getLookVec();
-
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade));
-
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
-				&& WizardryUtilities.isLiving(rayTrace.entityHit) && WizardData.get(caster) != null){
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
-			if(!WizardData.get(caster).soulbind(target)) return false;
-		}
-
-		if(world.isRemote){
-			for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
-				// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
-				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
-						0.4f, 0.0f, 0.0f);
-				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
-						0.1f, 0.0f, 0.0f);
-				Wizardry.proxy.spawnParticle(Type.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
-						12 + world.rand.nextInt(8), 1.0f, 0.8f, 1.0f);
-			}
-		}
-
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 1.0F,
-				world.rand.nextFloat() * 0.2F + 1.0F);
+	@Override
+	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		return true;
+	}
+	
+	@Override
+	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.4f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.1f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).lifetime(12 + world.rand.nextInt(8)).colour(1, 0.8f, 1).spawn(world);
 	}
 
 	@SubscribeEvent

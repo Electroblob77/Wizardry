@@ -208,7 +208,7 @@ public final class WizardryClientEventHandler {
 
 		Minecraft mc = Minecraft.getMinecraft();
 		WizardData properties = WizardData.get(mc.player);
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(mc.world, mc.player, 16);
+		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(mc.world, mc.player, 16, false);
 		RenderManager renderManager = event.getRenderer().getRenderManager();
 
 		ItemStack wand = mc.player.getHeldItemMainhand();

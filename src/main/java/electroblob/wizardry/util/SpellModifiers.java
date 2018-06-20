@@ -40,8 +40,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 // fly.
 public final class SpellModifiers {
 
-	/** Constant string identifier for the damage modifier. All the other modifiers in Wizardry have items. */
-	public static final String DAMAGE = "damage";
+	/** Constant string identifier for the potency modifier. All the other modifiers in Wizardry have items. */
+	public static final String POTENCY = "potency";
 
 	private Map<String, Float> multiplierMap;
 	private Map<String, Float> syncedMultiplierMap;

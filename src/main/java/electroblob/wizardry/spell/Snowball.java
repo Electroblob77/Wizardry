@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class Snowball extends Spell {
 
 	public Snowball(){
-		super(Tier.BASIC, 1, Element.ICE, "snowball", SpellType.ATTACK, 1, EnumAction.NONE, false);
+		super("snowball", Tier.BASIC, Element.ICE, SpellType.ATTACK, 1, 1, EnumAction.NONE, false);
 	}
 
 	@Override

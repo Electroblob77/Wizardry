@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class SixthSense extends Spell {
 
 	public SixthSense(){
-		super(Tier.APPRENTICE, 20, Element.EARTH, "sixth_sense", SpellType.UTILITY, 100, EnumAction.BOW, false);
+		super("sixth_sense", Tier.APPRENTICE, Element.EARTH, SpellType.BUFF, 20, 100, EnumAction.BOW, false);
 	}
 
 	@Override

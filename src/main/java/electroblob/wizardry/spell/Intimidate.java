@@ -2,14 +2,14 @@ package electroblob.wizardry.spell;
 
 import java.util.List;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -34,9 +34,12 @@ public class Intimidate extends Spell {
 
 	/** The NBT tag name for storing the feared entity's UUID in the target's tag compound. */
 	public static final String NBT_KEY = "fearedEntity";
+	
+	private static final double BASE_RANGE = 8;
+	private static final int BASE_DURATION = 600;
 
 	public Intimidate(){
-		super(Tier.APPRENTICE, 20, Element.NECROMANCY, "intimidate", SpellType.ATTACK, 100, EnumAction.BOW, false);
+		super("intimidate", Tier.APPRENTICE, Element.NECROMANCY, SpellType.ATTACK, 20, 100, EnumAction.BOW, false);
 	}
 
 	@Override
@@ -45,8 +48,8 @@ public class Intimidate extends Spell {
 		if(!world.isRemote){
 
 			List<EntityCreature> entities = WizardryUtilities.getEntitiesWithinRadius(
-					8 * modifiers.get(WizardryItems.range_upgrade), caster.posX, caster.posY, caster.posZ, world,
-					EntityCreature.class);
+					BASE_RANGE * modifiers.get(WizardryItems.range_upgrade), caster.posX, caster.posY, caster.posZ,
+					world, EntityCreature.class);
 
 			for(EntityCreature target : entities){
 
@@ -56,16 +59,16 @@ public class Intimidate extends Spell {
 				if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
 
 				((EntityLiving)target).addPotionEffect(new PotionEffect(WizardryPotions.fear,
-						(int)(600 * modifiers.get(WizardryItems.duration_upgrade)), 0));
+						(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 0));
 
 			}
 
 		}else{
 			for(int i = 0; i < 30; i++){
-				Wizardry.proxy.spawnParticle(Type.DARK_MAGIC, world,
-						caster.posX - 1 + world.rand.nextDouble() * 2,
-						caster.getEntityBoundingBox().minY + 1.5 + world.rand.nextDouble() * 0.5,
-						caster.posZ - 1 + world.rand.nextDouble() * 2, 0, 0, 0, 0, 0.9f, 0.1f, 0.0f);
+				double x = caster.posX - 1 + world.rand.nextDouble() * 2;
+				double y = caster.getEntityBoundingBox().minY + 1.5 + world.rand.nextDouble() * 0.5;
+				double z = caster.posZ - 1 + world.rand.nextDouble() * 2;
+				ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.9f, 0.1f, 0).spawn(world);
 			}
 		}
 		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERDRAGON_GROWL, 1.0f, 1.0f);

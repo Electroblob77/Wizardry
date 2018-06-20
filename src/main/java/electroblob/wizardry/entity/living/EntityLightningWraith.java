@@ -21,10 +21,6 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 
 	public EntityLightningWraith(World world){
 		super(world);
-	}
-
-	public EntityLightningWraith(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		this.isImmuneToFire = false;
 	}
 
@@ -44,12 +40,8 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = 0.3f + (rand.nextFloat() / 2);
-				ParticleBuilder.create(Type.SPARKLE)
-				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble())
-				.vel(0, 0.05, 0)
-				.lifetime(20 + rand.nextInt(10))
-				.colour(brightness, brightness + 0.2f, 1.0f)
-				.spawn(world);
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).lifetime(20 + rand.nextInt(10))
+				.colour(brightness, brightness + 0.2f, 1.0f).spawn(world);
 			}
 		}
 	}
@@ -98,32 +90,24 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 			this.setMutexBits(3);
 		}
 
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
+		@Override
 		public boolean shouldExecute(){
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
 			return entitylivingbase != null && entitylivingbase.isEntityAlive();
 		}
 
-		/**
-		 * Execute a one shot task or start executing a continuous task
-		 */
+		@Override
 		public void startExecuting(){
 			this.attackStep = 0;
 		}
 
-		/**
-		 * Resets the task
-		 */
+		@Override
 		public void resetTask(){
 			// This might be called setOnFire, but what it really controls is whether the wraith is in attack mode.
 			this.blaze.setOnFire(false);
 		}
 
-		/**
-		 * Updates the task
-		 */
+		@Override
 		public void updateTask(){
 			--this.attackTime;
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
@@ -154,8 +138,7 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 
 					if(this.attackStep > 1){
 						// Proof, if it were at all needed, of the elegance and versatility of the spell system.
-						Spells.arc.cast(this.blaze.world, this.blaze, EnumHand.MAIN_HAND, 0, entitylivingbase,
-								new SpellModifiers());
+						Spells.arc.cast(this.blaze.world, this.blaze, EnumHand.MAIN_HAND, 0, entitylivingbase, new SpellModifiers());
 						// TODO: Decide if an event should be fired here. I'm guessing no.
 					}
 				}

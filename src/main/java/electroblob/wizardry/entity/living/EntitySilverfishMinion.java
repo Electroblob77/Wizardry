@@ -30,57 +30,17 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override
-	public int getLifetime(){
-		return lifetime;
-	}
+	@Override public int getLifetime(){ return lifetime; }
+	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
+	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
+	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
+	@Override public UUID getCasterUUID(){ return casterUUID; }
+	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
 
-	@Override
-	public void setLifetime(int lifetime){
-		this.lifetime = lifetime;
-	}
-
-	@Override
-	public WeakReference<EntityLivingBase> getCasterReference(){
-		return casterReference;
-	}
-
-	@Override
-	public void setCasterReference(WeakReference<EntityLivingBase> reference){
-		casterReference = reference;
-	}
-
-	@Override
-	public UUID getCasterUUID(){
-		return casterUUID;
-	}
-
-	@Override
-	public void setCasterUUID(UUID uuid){
-		this.casterUUID = uuid;
-	}
-
-	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
-	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
-	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
-	 * anything inside it other than call super().
-	 */
+	/** Creates a new silverfish minion in the given world. */
 	public EntitySilverfishMinion(World world){
 		super(world);
 		this.experienceValue = 0;
-	}
-
-	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
-	 * this class (be sure to call super()) so that AI and other things can be added.
-	 */
-	public EntitySilverfishMinion(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world);
-		this.setPosition(x, y, z);
-		this.casterReference = new WeakReference<EntityLivingBase>(caster);
-		this.experienceValue = 0;
-		this.lifetime = lifetime;
 	}
 
 	// EntitySilverfish overrides
@@ -144,8 +104,10 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 			int alliesToSummon = rand.nextInt(4) + 1;
 
 			for(int i = 0; i < alliesToSummon; i++){
-				EntitySilverfishMinion silverfish = new EntitySilverfishMinion(this.world, victim.posX, victim.posY,
-						victim.posZ, this.getCaster(), this.lifetime);
+				EntitySilverfishMinion silverfish = new EntitySilverfishMinion(this.world);
+				silverfish.setPosition(victim.posX, victim.posY, victim.posZ);
+				silverfish.setCaster(this.getCaster());
+				silverfish.setLifetime(this.getLifetime());
 				this.world.spawnEntity(silverfish);
 			}
 		}
@@ -177,36 +139,13 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 
 	// Recommended overrides
 
-	@Override
-	protected int getExperiencePoints(EntityPlayer player){
-		return 0;
-	}
-
-	@Override
-	protected boolean canDropLoot(){
-		return false;
-	}
-
-	@Override
-	protected Item getDropItem(){
-		return null;
-	}
-
-	@Override
-	protected ResourceLocation getLootTable(){
-		return null;
-	}
-
-	@Override
-	public boolean canPickUpLoot(){
-		return false;
-	}
-
+	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
+	@Override protected boolean canDropLoot(){ return false; }
+	@Override protected Item getDropItem(){ return null; }
+	@Override protected ResourceLocation getLootTable(){ return null; }
+	@Override public boolean canPickUpLoot(){ return false; }
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override
-	protected boolean canDespawn(){
-		return false;
-	}
+	@Override protected boolean canDespawn(){ return false; }
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){

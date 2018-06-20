@@ -18,25 +18,12 @@ import net.minecraft.world.World;
 
 public class EntitySmokeBomb extends EntityBomb {
 
-	public EntitySmokeBomb(World par1World){
-		super(par1World);
-	}
-
-	public EntitySmokeBomb(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntitySmokeBomb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
-			float blastMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
-	}
-
-	public EntitySmokeBomb(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
+	public EntitySmokeBomb(World world){
+		super(world);
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult par1RayTraceResult){
+	protected void onImpact(RayTraceResult rayTrace){
 
 		// Particle effect
 		if(world.isRemote){

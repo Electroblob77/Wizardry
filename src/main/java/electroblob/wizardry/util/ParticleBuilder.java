@@ -4,6 +4,7 @@ import java.util.Random;
 
 import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -373,6 +374,23 @@ public final class ParticleBuilder {
 		shaded = false;
 		scale = 1;
 		entity = null;
+	}
+	
+	// Methods for spawning specific effects (similar to the FX playing methods with the ids in RenderGlobal)
+	
+	/** Spawns spark and large smoke particles (8 of each) within a 1x1x1 volume centred on the given position. */
+	public static void spawnShockParticles(World world, double x, double y, double z) {
+		double px, py, pz;
+		for(int i=0; i<8; i++){
+			px = x + world.rand.nextDouble() - 0.5;
+			py = y + world.rand.nextDouble() - 0.5;
+			pz = z + world.rand.nextDouble() - 0.5;
+			ParticleBuilder.create(Type.SPARK).pos(px, py, pz).spawn(world);
+			px = x + world.rand.nextDouble() - 0.5;
+			py = y + world.rand.nextDouble() - 0.5;
+			pz = z + world.rand.nextDouble() - 0.5;
+			world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, px, py, pz, 0, 0, 0);
+		}
 	}
 	
 }

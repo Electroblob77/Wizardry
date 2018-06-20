@@ -15,32 +15,14 @@ import net.minecraft.world.World;
 
 public class EntitySpark extends EntityMagicProjectile {
 
-	public EntitySpark(World par1World){
-		super(par1World);
+	public EntitySpark(World world){
+		super(world);
 	}
 
-	public EntitySpark(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntitySpark(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier);
-	}
-
-	public EntitySpark(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
-	/** This is the speed */
-	protected float getSpeed(){
-		return 0.5F;
-	}
-
-	/**
-	 * Called when this EntityThrowable hits a block or entity.
-	 */
-	protected void onImpact(RayTraceResult par1RayTraceResult){
-		Entity entityHit = par1RayTraceResult.entityHit;
+	@Override
+	protected void onImpact(RayTraceResult rayTrace){
+		
+		Entity entityHit = rayTrace.entityHit;
 
 		if(entityHit != null){
 
@@ -98,17 +80,13 @@ public class EntitySpark extends EntityMagicProjectile {
 			this.setDead();
 		}
 	}
-
-	/**
-	 * Gets the amount of gravity to apply to the thrown entity with each tick.
-	 */
-	protected float getGravityVelocity(){
-		return 0.0F;
+	
+	@Override
+	public boolean hasNoGravity(){
+		return true;
 	}
 
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
+	@Override
 	public boolean canRenderOnFire(){
 		return false;
 	}

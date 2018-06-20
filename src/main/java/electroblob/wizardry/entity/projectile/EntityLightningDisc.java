@@ -15,27 +15,10 @@ import net.minecraft.world.World;
 
 public class EntityLightningDisc extends EntityMagicProjectile {
 	
-	public EntityLightningDisc(World par1World){
-		super(par1World);
-	}
-
-	public EntityLightningDisc(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntityLightningDisc(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier);
-	}
-
-	public EntityLightningDisc(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
+	public EntityLightningDisc(World world){
+		super(world);
 		this.width = 2.0f;
 		this.height = 0.5f;
-	}
-
-	@Override
-	protected float getSpeed(){
-		return 1.2f;
 	}
 
 	@Override
@@ -65,7 +48,7 @@ public class EntityLightningDisc extends EntityMagicProjectile {
 			for(int i = 0; i < 8; i++){
 				// TODO: Why are the x and z parameters different?
 				ParticleBuilder.create(Type.SPARK).pos(this.posX + rand.nextFloat() * 2 - 1,
-						this.posY, this.posZ + rand.nextFloat() - 0.5).spawn(world);
+						this.posY, this.posZ + rand.nextFloat() * 2 - 1).spawn(world);
 			}
 		}
 
@@ -105,8 +88,8 @@ public class EntityLightningDisc extends EntityMagicProjectile {
 	}
 
 	@Override
-	protected float getGravityVelocity(){
-		return 0.0F;
+	public boolean hasNoGravity(){
+		return true;
 	}
 
 	@Override

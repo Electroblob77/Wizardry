@@ -16,27 +16,14 @@ import net.minecraft.world.World;
 
 public class EntityFirebomb extends EntityBomb {
 
-	public EntityFirebomb(World par1World){
-		super(par1World);
-	}
-
-	public EntityFirebomb(World par1World, EntityLivingBase par2EntityLivingBase){
-		super(par1World, par2EntityLivingBase);
-	}
-
-	public EntityFirebomb(World par1World, EntityLivingBase par2EntityLivingBase, float damageMultiplier,
-			float blastMultiplier){
-		super(par1World, par2EntityLivingBase, damageMultiplier, blastMultiplier);
-	}
-
-	public EntityFirebomb(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
+	public EntityFirebomb(World world){
+		super(world);
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult par1RayTraceResult){
+	protected void onImpact(RayTraceResult rayTrace){
 		
-		Entity entityHit = par1RayTraceResult.entityHit;
+		Entity entityHit = rayTrace.entityHit;
 
 		if(entityHit != null){
 			// This is if the firebomb gets a direct hit

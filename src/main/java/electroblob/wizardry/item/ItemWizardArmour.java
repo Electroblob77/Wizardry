@@ -7,11 +7,11 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryTabs;
-import electroblob.wizardry.spell.Petrify;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -142,7 +142,7 @@ public class ItemWizardArmour extends ItemArmor {
 		// fix, considering how long I spent trying to do this before - a bit of lateral thinking was all it took.
 		// Do note however that a texture pack could override this.
 		if(entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isInvisible()
-				&& !entity.getEntityData().getBoolean(Petrify.NBT_KEY))
+				&& !entity.getEntityData().getBoolean(BlockStatue.NBT_KEY))
 			return "ebwizardry:textures/armour/invisible_armour.png";
 
 		if(slot == EntityEquipmentSlot.LEGS)

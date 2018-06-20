@@ -1,7 +1,6 @@
 package electroblob.wizardry.entity.projectile;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -21,29 +20,16 @@ public abstract class EntityBomb extends EntityMagicProjectile {
 		super(world);
 	}
 
-	public EntityBomb(World world, EntityLivingBase thrower){
-		super(world, thrower);
-	}
-
-	public EntityBomb(World world, EntityLivingBase thrower, float damageMultiplier, float blastMultiplier){
-		super(world, thrower, damageMultiplier);
-		this.blastMultiplier = blastMultiplier;
-	}
-
-	public EntityBomb(World par1World, double par2, double par4, double par6){
-		super(par1World, par2, par4, par6);
-	}
-
 	@Override
 	public void writeSpawnData(ByteBuf buffer){
-		super.writeSpawnData(buffer);
 		buffer.writeFloat(blastMultiplier);
+		super.writeSpawnData(buffer);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf buffer){
-		super.readSpawnData(buffer);
 		blastMultiplier = buffer.readFloat();
+		super.readSpawnData(buffer);
 	}
 
 	@Override

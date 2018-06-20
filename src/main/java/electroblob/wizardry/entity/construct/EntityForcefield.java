@@ -20,40 +20,34 @@ public class EntityForcefield extends EntityMagicConstruct {
 		super(world);
 		this.height = 6;
 		this.width = 6;
-		this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 3, this.posY - 3, this.posZ - 3, this.posX + 3,
-				this.posY + 3, this.posZ + 3));
-	}
-
-	public EntityForcefield(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
 		// y-3 because it needs to be centred on the given position
-		// Damage multiplier is 1 because forcefields do no damage!
-		super(world, x, y - 3, z, caster, lifetime, 1.0f);
-		this.height = 6;
-		this.width = 6;
-		this.setEntityBoundingBox(new AxisAlignedBB(this.posX - 3, this.posY - 3, this.posZ - 3, this.posX + 3,
-				this.posY + 3, this.posZ + 3));
+		this.setEntityBoundingBox(new AxisAlignedBB(posX - 3, posY - 3, posZ - 3, posX + 3, posY + 3, posZ + 3));
 	}
 
+	@Override
 	public boolean canBeCollidedWith(){
 		return !this.isDead;
 	}
 
-	public AxisAlignedBB getCollisionBox(Entity par1Entity){
-		return par1Entity.getEntityBoundingBox();
+	@Override
+	public AxisAlignedBB getCollisionBox(Entity entity){
+		return entity.getEntityBoundingBox();
 	}
 
+	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
 
 		if(!this.world.isRemote){
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(3.5, this.posX, this.posY + 3,
-					this.posZ, this.world);
+			// TESTME: This used to say posY+3, but I'm pretty sure that's wrong because of how the bounding box was set...
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(3.5, posX, posY, posZ, world);
+			
 			for(EntityLivingBase target : targets){
 				if(this.isValidTarget(target)){
-					double multiplier = (3.5 - target.getDistance(this.posX, this.posY + 3, this.posZ)) * 0.1;
+					double multiplier = (3.5 - target.getDistance(this.posX, this.posY, this.posZ)) * 0.1;
 					target.addVelocity((target.posX - this.posX) * multiplier,
-							(target.posY - (this.posY + 3)) * multiplier, (target.posZ - this.posZ) * multiplier);
+							(target.posY - this.posY) * multiplier, (target.posZ - this.posZ) * multiplier);
 					// Player motion is handled on that player's client so needs packets
 					if(target instanceof EntityPlayerMP){
 						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
@@ -78,19 +72,18 @@ public class EntityForcefield extends EntityMagicConstruct {
 		}
 	}
 
-	public boolean attackEntityFrom(DamageSource source, float par2){
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float damage){
 
 		if(source != null && source.getImmediateSource() != null){
 			// Now works for any source of damage.
 			source.getImmediateSource().playSound(WizardrySounds.SPELL_DEFLECTION, 0.3f, 1.3f);
 		}
-		super.attackEntityFrom(source, par2);
+		super.attackEntityFrom(source, damage);
 		return false;
 	}
 
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
+	@Override
 	public boolean canRenderOnFire(){
 		return false;
 	}

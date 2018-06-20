@@ -20,13 +20,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 		this.width = 5.0f;
 	}
 
-	public EntityHealAura(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
-		this.height = 1.0f;
-		this.width = 5.0f;
-	}
-
+	@Override
 	public void onUpdate(){
 
 		if(this.ticksExisted % 25 == 1){
@@ -37,8 +31,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5d, this.posX, this.posY,
-					this.posZ, this.world);
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 
@@ -83,9 +76,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 		}
 	}
 
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
+	@Override
 	public boolean canRenderOnFire(){
 		return false;
 	}

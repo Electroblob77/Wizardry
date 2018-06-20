@@ -49,6 +49,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -177,6 +178,17 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
+	}
+	
+	@Override
+	public int getAimingError(EnumDifficulty difficulty){
+		// Being more intelligent than skeletons, wizards are a little more accurate.
+		switch(difficulty){
+		case EASY: return 7;
+		case NORMAL: return 4;
+		case HARD: return 1;
+		default: return 7; // Peaceful counts as easy
+		}
 	}
 
 	@Override

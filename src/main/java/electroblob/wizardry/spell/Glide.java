@@ -1,11 +1,11 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class Glide extends Spell {
 
 	public Glide(){
-		super(Tier.ADVANCED, 5, Element.EARTH, "glide", SpellType.UTILITY, 0, EnumAction.NONE, true);
+		super("glide", Tier.ADVANCED, Element.EARTH, SpellType.UTILITY, 5, 0, EnumAction.NONE, true);
 	}
 
 	@Override
@@ -32,19 +32,20 @@ public class Glide extends Spell {
 		}
 
 		if(world.isRemote){
-			Wizardry.proxy.spawnParticle(Type.SPARKLE, world,
-					caster.posX - 0.25d + world.rand.nextDouble() / 2,
-					WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(),
-					caster.posZ - 0.25d + world.rand.nextDouble() / 2, 0, -0.1F, 0, 15, 1.0f, 1.0f, 1.0f);
-			Wizardry.proxy.spawnParticle(Type.LEAF, world,
-					caster.posX - 0.25d + world.rand.nextDouble() / 2,
-					WizardryUtilities.getPlayerEyesPos(caster) - 1.5f + world.rand.nextDouble(),
-					caster.posZ - 0.25d + world.rand.nextDouble() / 2, 0, -0.03, 0, 20);
+			double x = caster.posX - 0.25 + world.rand.nextDouble() / 2;
+			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble();
+			double z = caster.posZ - 0.25 + world.rand.nextDouble() / 2;
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).lifetime(15).colour(1, 1, 1).spawn(world);
+			x = caster.posX - 0.25 + world.rand.nextDouble() / 2;
+			y = caster.getEntityBoundingBox().minY + world.rand.nextDouble();
+			z = caster.posZ - 0.25 + world.rand.nextDouble() / 2;
+			ParticleBuilder.create(Type.LEAF).pos(x, y, z).lifetime(20).spawn(world);
 		}
 
 		if(ticksInUse % 24 == 0){
 			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ITEM_ELYTRA_FLYING, 0.5F, 1.0f);
 		}
+		
 		return true;
 	}
 

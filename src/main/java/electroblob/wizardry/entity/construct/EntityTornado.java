@@ -34,17 +34,13 @@ public class EntityTornado extends EntityMagicConstruct {
 		this.width = 5.0f;
 		this.isImmuneToFire = false;
 	}
-
-	public EntityTornado(World world, double x, double y, double z, EntityLivingBase caster, int lifetime, double velX,
-			double velZ, float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
-		this.height = 8.0f;
-		this.width = 5.0f;
+	
+	public void setHorizontalVelocity(double velX, double velZ){
 		this.velX = velX;
 		this.velZ = velZ;
-		this.isImmuneToFire = false;
 	}
 
+	@Override
 	public void onUpdate(){
 
 		super.onUpdate();

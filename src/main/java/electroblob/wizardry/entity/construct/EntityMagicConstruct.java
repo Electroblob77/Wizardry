@@ -10,6 +10,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * This class is for all inanimate magical constructs which are not projectiles. It was made from scratch to provide a
@@ -42,30 +44,18 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 	/** The damage multiplier for this construct, determined by the wand with which it was cast. */
 	public float damageMultiplier = 1.0f;
 
-	public EntityMagicConstruct(World par1World){
-		super(par1World);
-		this.height = 1.0f;
-		this.width = 1.0f;
-		this.noClip = true;
-	}
-
-	public EntityMagicConstruct(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
+	public EntityMagicConstruct(World world){
 		super(world);
 		this.height = 1.0f;
 		this.width = 1.0f;
-		this.setPosition(x, y, z);
-		this.caster = new WeakReference<EntityLivingBase>(caster);
 		this.noClip = true;
-		this.lifetime = lifetime;
-		this.damageMultiplier = damageMultiplier;
 	}
 
 	// Overrides the original to stop the entity moving when it intersects stuff. The default arrow does this to allow
 	// it to stick in blocks.
 	@Override
-	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch,
-			int posRotationIncrements, boolean teleport){
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotationDirect(double x, double y, double z, float yaw, float pitch, int posRotationIncrements, boolean teleport){
 		this.setPosition(x, y, z);
 		this.setRotation(yaw, pitch);
 	}
@@ -135,6 +125,10 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 	 */
 	public EntityLivingBase getCaster(){
 		return caster == null ? null : caster.get();
+	}
+	
+	public void setCaster(EntityLivingBase caster){
+		this.caster = new WeakReference<EntityLivingBase>(caster);
 	}
 
 	/**

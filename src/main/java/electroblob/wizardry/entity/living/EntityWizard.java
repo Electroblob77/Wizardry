@@ -23,10 +23,10 @@ import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WildcardTradeList;
-import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
@@ -70,6 +70,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.FakePlayer;
@@ -215,6 +216,17 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	@Override
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
+	}
+	
+	@Override
+	public int getAimingError(EnumDifficulty difficulty){
+		// Being more intelligent than skeletons, wizards are a little more accurate.
+		switch(difficulty){
+		case EASY: return 7;
+		case NORMAL: return 4;
+		case HARD: return 1;
+		default: return 7; // Peaceful counts as easy
+		}
 	}
 
 	@Override

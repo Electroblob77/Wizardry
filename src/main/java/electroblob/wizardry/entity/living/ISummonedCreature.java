@@ -130,6 +130,14 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 	default EntityLivingBase getCaster(){
 		return getCasterReference() == null ? null : getCasterReference().get();
 	}
+	
+	/**
+	 * Sets the EntityLivingBase that summoned this creature. <i>This is the correct method to use to set the owner of
+	 * this summoned creature.
+	 */
+	default void setCaster(@Nullable EntityLivingBase caster){
+		setCasterReference(new WeakReference<EntityLivingBase>(caster));
+	}
 
 	// Miscellaneous
 
