@@ -1,18 +1,23 @@
 package electroblob.wizardry.potion;
 
+import java.util.stream.Collectors;
+
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.living.PotionColorCalculationEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Interface for potion effects that spawn custom particles instead of (or as well as) the vanilla 'swirly' particles.
+ * To hide the vanilla 'swirly' particles, set the potion's liquid colour to 0 (black). By default, potions that implement
+ * this interface no longer mix their colour with other potions.
  * 
  * @author Electroblob
  * @since Wizardry 1.2
  */
-// TODO: Backport.
 @Mod.EventBusSubscriber
 public interface ICustomPotionParticles {
 
@@ -26,6 +31,11 @@ public interface ICustomPotionParticles {
 	 * @param z The z coordinate of the particle, already set to a random value within the entity's bounding box.
 	 */
 	void spawnCustomParticle(World world, double x, double y, double z);
+	
+	/** Returns true if this potion should mix its colour with others, false if not. Defaults to false. */
+	default boolean shouldMixColour(){
+		return false;
+	}
 
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
@@ -42,10 +52,17 @@ public interface ICustomPotionParticles {
 					double z = event.getEntityLiving().posZ
 							+ (event.getEntityLiving().world.rand.nextDouble() - 0.5) * event.getEntityLiving().width;
 
-					((ICustomPotionParticles)effect.getPotion()).spawnCustomParticle(event.getEntityLiving().world, x,
-							y, z);
+					((ICustomPotionParticles)effect.getPotion()).spawnCustomParticle(event.getEntityLiving().world, x, y, z);
 				}
 			}
 		}
+	}
+	
+	@SubscribeEvent
+	// Prevents instances of this interface for which shouldMixColour() returns false from affecting mixed potion colours
+	public static void onPotionColourCalculationEvent(PotionColorCalculationEvent event){
+		event.setColor(PotionUtils.getPotionColorFromEffectList(event.getEffects().stream().filter(
+				p -> !(p instanceof ICustomPotionParticles && !((ICustomPotionParticles)p).shouldMixColour()))
+				.collect(Collectors.toList())));
 	}
 }
