@@ -526,8 +526,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		// THIS is why I wrote the list/map <-> NBT methods. Look how neat this is!
 		properties.setTag("allies", WizardryUtilities.listToNBT(this.allies, WizardryUtilities::UUIDtoTagCompound));
 		properties.setTag("allyNames", WizardryUtilities.listToNBT(this.allyNames, NBTTagString::new));
-		properties.setTag("soulboundCreatures",
-				WizardryUtilities.listToNBT(this.soulboundCreatures, WizardryUtilities::UUIDtoTagCompound));
+		properties.setTag("soulboundCreatures", WizardryUtilities.listToNBT(this.soulboundCreatures, WizardryUtilities::UUIDtoTagCompound));
 
 		// Might be worth converting this over to WizardryUtilities.listToNBT.
 		int[] spells = new int[this.spellsDiscovered.size()];

@@ -17,8 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityMeteor extends EntityFallingBlock {
 
 	/**
-	 * The entity blast multiplier. Only some projectiles cause a blast, which is why this isn't in
-	 * EntityMagicProjectile.
+	 * The entity blast multiplier.
 	 */
 	public float blastMultiplier;
 

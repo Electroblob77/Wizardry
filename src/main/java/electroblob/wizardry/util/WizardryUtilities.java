@@ -464,7 +464,7 @@ public final class WizardryUtilities {
 
 	/**
 	 * Returns a list of the itemstacks in the given player's hotbar and offhand, sorted into the following order: main
-	 * hand, offhand, rest of hotbar left-to-right. The returned list is a modifiable copy of part of the player's
+	 * hand, offhand, rest of hotbar left-to-right. The returned list is a modifiable shallow copy of part of the player's
 	 * inventory stack list; as such, changes to the list are <b>not</b> written through to the player's inventory.
 	 * However, the ItemStack instances themselves are not copied, so changes to any of their fields (size, metadata...)
 	 * will change those in the player's inventory.
@@ -983,7 +983,7 @@ public final class WizardryUtilities {
 	 *         <p>
 	 *         <i>As of wizardry 4.1.2, this method now returns <b>true</b> instead of false if the attacker is null. This
 	 *         is because in the vast majority of cases, it makes more sense this way: if a construct has no caster, it
-	 *         should affect all entities; if a minion has no caster is should target all entities; etc.</i>
+	 *         should affect all entities; if a minion has no caster it should target all entities; etc.</i>
 	 */
 	public static boolean isValidTarget(Entity attacker, Entity target){
 

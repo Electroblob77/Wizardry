@@ -60,7 +60,6 @@ public class ItemScroll extends Item {
 		 * server side, but the result to then be sent to the client, which means broken discovery system. Simply put, I
 		 * can't predict that, and it's not my job to cater for other people's incorrect usage of code, especially when
 		 * that might compromise some perfectly reasonable use (think Bibliocraft's 'best guess' book detection). */
-		// TODO: Backport this proxy-based fix.
 		return Wizardry.proxy.getScrollDisplayName(stack);
 
 	}

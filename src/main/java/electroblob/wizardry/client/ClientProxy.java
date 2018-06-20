@@ -277,18 +277,18 @@ public class ClientProxy extends CommonProxy {
 
 		factories = new HashMap<>();
 		
-		factories.put(Type.BLIZZARD, (world, x, y, z) -> new ParticleBlizzard(world, x, y, z));
-		factories.put(Type.DARK_MAGIC, (world, x, y, z) -> new ParticleDarkMagic(world, x, y, z));
-		factories.put(Type.DUST, (world, x, y, z) -> new ParticleDust(world, x, y, z));
-		factories.put(Type.FLASH, (world, x, y, z) -> new ParticleFlash(world, x, y, z));
-		factories.put(Type.ICE, (world, x, y, z) -> new ParticleIce(world, x, y, z));
-		factories.put(Type.LEAF, (world, x, y, z) -> new ParticleLeaf(world, x, y, z));
-		factories.put(Type.MAGIC_BUBBLE, (world, x, y, z) -> new ParticleMagicBubble(world, x, y, z));
-		factories.put(Type.MAGIC_FIRE, (world, x, y, z) -> new ParticleMagicFlame(world, x, y, z));
-		factories.put(Type.PATH, (world, x, y, z) -> new ParticlePath(world, x, y, z));
-		factories.put(Type.SNOW, (world, x, y, z) -> new ParticleSnow(world, x, y, z));
-		factories.put(Type.SPARK, (world, x, y, z) -> new ParticleSpark(world, x, y, z));
-		factories.put(Type.SPARKLE, (world, x, y, z) -> new ParticleSparkle(world, x, y, z));
+		factories.put(Type.BLIZZARD, 		(world, x, y, z) -> new ParticleBlizzard(world, x, y, z));
+		factories.put(Type.DARK_MAGIC, 		(world, x, y, z) -> new ParticleDarkMagic(world, x, y, z));
+		factories.put(Type.DUST, 			(world, x, y, z) -> new ParticleDust(world, x, y, z));
+		factories.put(Type.FLASH, 			(world, x, y, z) -> new ParticleFlash(world, x, y, z));
+		factories.put(Type.ICE, 			(world, x, y, z) -> new ParticleIce(world, x, y, z));
+		factories.put(Type.LEAF, 			(world, x, y, z) -> new ParticleLeaf(world, x, y, z));
+		factories.put(Type.MAGIC_BUBBLE, 	(world, x, y, z) -> new ParticleMagicBubble(world, x, y, z));
+		factories.put(Type.MAGIC_FIRE, 		(world, x, y, z) -> new ParticleMagicFlame(world, x, y, z));
+		factories.put(Type.PATH, 			(world, x, y, z) -> new ParticlePath(world, x, y, z));
+		factories.put(Type.SNOW, 			(world, x, y, z) -> new ParticleSnow(world, x, y, z));
+		factories.put(Type.SPARK, 			(world, x, y, z) -> new ParticleSpark(world, x, y, z));
+		factories.put(Type.SPARKLE, 		(world, x, y, z) -> new ParticleSparkle(world, x, y, z));
 		factories.put(Type.SPARKLE_ROTATING, (world, x, y, z) -> new ParticleRotatingSparkle(world, x, y, z));
 	}
 	

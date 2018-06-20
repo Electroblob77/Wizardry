@@ -32,7 +32,7 @@ import net.minecraft.world.World;
  * <p>
  * <code>ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).colour(r, g, b).spawn(world);</code>
  * @author Electroblob
- * @since Wizardry 4.2.0
+ * @since Wizardry 4.2
  */
 public final class ParticleBuilder {
 
@@ -58,7 +58,7 @@ public final class ParticleBuilder {
 	private Entity entity;
 	
 	/** Enum constants representing the different types of particle added by wizardry. As of 4.2.0, this has been moved
-	 * from its own file {@code Type} to inside {@link ParticleBuilder}. This allowed its name to be
+	 * from its own file {@code WizardryParticleType} to inside {@link ParticleBuilder}. This allowed its name to be
 	 * shortened to simply {@code Type}, making most references more concise. References in classes where another
 	 * {@code Type} is also used can simply refer to the full name, {@code ParticleBuilder.Type}, which is no more verbose
 	 * than before.
@@ -86,6 +86,11 @@ public final class ParticleBuilder {
 	}
 	
 	// Convenience methods
+	
+	// These may seem to go against the whole point of this class, but of course they return the ParticleBuilder instance
+	// so anything else can still be chained onto them - centralising commonly-used particle spawning patterns without
+	// losing any of the flexibility of the particle builder. In addition, callers of these methods are still free to
+	// change any of the parameters that were set within them afterwards.
 	
 	/**
 	 * Starts building a particle of the given type. Static convenience version of

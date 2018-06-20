@@ -134,7 +134,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		// Why would you go to the effort of making the IMerchant interface and then have the AI classes only accept
-		// EntityVillager? N
+		// EntityVillager?
 		this.tasks.addTask(1, new EntityAITradePlayer(this));
 		this.tasks.addTask(1, new EntityAILookAtTradePlayer(this));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
