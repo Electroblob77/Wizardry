@@ -1,5 +1,6 @@
 package electroblob.wizardry.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -164,7 +165,8 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 
 	/** Adds the passed in damage type to the list of damage types to which the given entity is immune. */
 	public static void addEntityImmunity(Class<? extends Entity> entityType, DamageType immunity){
-		List<DamageType> immunities = Arrays.asList(immunityMapping.get(entityType));
+		List<DamageType> immunities = immunityMapping.get(entityType) == null ? new ArrayList<DamageType>()
+				: Arrays.asList(immunityMapping.get(entityType));
 		immunities.add(immunity);
 		// Apparently putting 0 here works just fine.
 		immunityMapping.put(entityType, immunities.toArray(new DamageType[0]));
