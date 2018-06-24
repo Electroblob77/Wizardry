@@ -1,4 +1,4 @@
-package electroblob.wizardry.client;
+package electroblob.wizardry.client.gui;
 
 import org.lwjgl.input.Keyboard;
 

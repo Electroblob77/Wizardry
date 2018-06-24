@@ -1,4 +1,4 @@
-package electroblob.wizardry.client;
+package electroblob.wizardry.client.gui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;

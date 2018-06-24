@@ -1,4 +1,4 @@
-package electroblob.wizardry.client;
+package electroblob.wizardry.client.gui;
 
 import org.lwjgl.input.Keyboard;
 
@@ -54,8 +54,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_){
 
 		// Tests if there is a wand in the workbench and edits the positioning accordingly
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots
-				.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
+		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack() && this.inventorySlots
+				.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getStack().getItem() instanceof ItemWand){
 			xSize = xSizeNoTip + tooltipWidth;
 			guiLeft = (this.width - this.xSize) / 2;
 			this.applyBtn.x = (this.width - tooltipWidth) / 2 + 48;
@@ -65,7 +65,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			this.applyBtn.x = this.width / 2 + 48;
 		}
 
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack()){
+		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack()){
 			this.applyBtn.enabled = true;
 		}else{
 			this.applyBtn.enabled = false;
@@ -94,8 +94,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 
 		// Tooltip only drawn if there is a wand
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots
-				.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
+		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack() && this.inventorySlots
+				.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getStack().getItem() instanceof ItemWand){
 
 			// Tooltip box
 			drawTexturedModalRect(guiLeft + xSizeNoTip, guiTop, xSizeNoTip, 0, 256 - xSizeNoTip - 4, ySize);
@@ -103,7 +103,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			drawTexturedModalRect(guiLeft + xSize - (256 - xSizeNoTip - 4), guiTop, xSizeNoTip + 4, 0,
 					256 - xSizeNoTip - 4, ySize);
 
-			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack();
+			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getStack();
 
 			Spell[] spells = WandHelper.getSpells(wand);
 
@@ -161,10 +161,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		this.fontRenderer.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName()
 				: I18n.format(this.playerInventory.getName()), 8, this.ySize - 96 + 2, 4210752);
 
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots
-				.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
+		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack() && this.inventorySlots
+				.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getStack().getItem() instanceof ItemWand){
 
-			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack();
+			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getStack();
 
 			this.fontRenderer.drawStringWithShadow("\u00A7f" + wand.getDisplayName(), xSizeNoTip + 6, 6, 0);
 			this.fontRenderer.drawStringWithShadow(

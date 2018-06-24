@@ -1,4 +1,4 @@
-package electroblob.wizardry.client;
+package electroblob.wizardry.client.gui;
 
 import java.util.ArrayList;
 import java.util.List;

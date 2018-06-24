@@ -1,4 +1,4 @@
-package electroblob.wizardry.client;
+package electroblob.wizardry.client.gui;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.WizardryUtilities;
