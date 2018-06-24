@@ -10,6 +10,8 @@ import electroblob.wizardry.CommonProxy;
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.gui.GuiSpellDisplay;
+import electroblob.wizardry.client.gui.GuiWizardHandbook;
 import electroblob.wizardry.client.model.ModelWizardArmour;
 import electroblob.wizardry.client.particle.ParticleBlizzard;
 import electroblob.wizardry.client.particle.ParticleBuff;
