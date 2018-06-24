@@ -70,6 +70,8 @@ public abstract class SpellRay extends Spell {
 	protected boolean ignoreEntities = false;
 	/** Whether liquids count as blocks when raytracing. Defaults to false. */
 	protected boolean hitLiquids = false;
+	/** The aim assist to use when raytracing. Defaults to 0. */
+	protected float aimAssist = 0;
 
 	public SpellRay(String name, Tier tier, Element element, SpellType type, int cost, int cooldown, boolean isContinuous, double baseRange, SoundEvent sound){
 		this(Wizardry.MODID, name, tier, element, type, cost, cooldown, isContinuous, baseRange, sound);
@@ -147,6 +149,17 @@ public abstract class SpellRay extends Spell {
 		return this;
 	}
 	
+	/**
+	 * Sets the aim assist to use when raytracing.
+	 * @param particleVelocity The aim assist to use when raytracing. See {@link WizardryUtilities#rayTrace(World, Vec3d,
+	 * Vec3d, float, boolean, Class, java.util.function.Predicate)} for more details.
+	 * @return The spell instance, allowing this method to be chained onto the constructor.
+	 */
+	public SpellRay aimAssist(float aimAssist){
+		this.aimAssist = aimAssist;
+		return this;
+	}
+	
 	@Override public boolean canBeCastByNPCs(){ return true; }
 
 	// Finally everything in here is standardised and written in a form that's actually readable - it was long overdue!
@@ -157,49 +170,7 @@ public abstract class SpellRay extends Spell {
 		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET,
 				caster.posZ);
 		
-		double range = baseRange * modifiers.get(WizardryItems.range_upgrade);
-		
-		// The first method will hit the first block it touches, passing through entities as if they weren't there. 
-		// The second method will hit the first thing it touches, whether that's a block or an entity.
-		// Note that when it hits a block, the exact position hit is returned in hitVec, whereas when it hits an
-		// entity, it just returns the entity's position in hitVec.
-		RayTraceResult rayTrace = ignoreEntities
-				? WizardryUtilities.standardBlockRayTrace(world, caster, range, hitLiquids)
-				: WizardryUtilities.standardEntityRayTrace(world, caster, range, hitLiquids);
-		
-		boolean flag = false;
-		
-		if(rayTrace != null){
-			// Doesn't matter which way round these are, they're mutually exclusive
-			if(rayTrace.typeOfHit == RayTraceResult.Type.ENTITY){
-				
-				Entity target = rayTrace.entityHit;
-				// Do whatever the spell does when it hits an entity
-				flag = onEntityHit(world, target, caster, ticksInUse, modifiers);
-				// If the spell succeeded, clip the particles to the correct distance so they don't go through the entity
-				if(flag){
-					// The most pragmatic solution is to use the target's centre point for reasons explained earlier
-					double dx = origin.x - target.posX;
-					double dy = origin.y - (target.getEntityBoundingBox().minY + target.height/2);
-					double dz = origin.z - target.posZ;
-					range = MathHelper.sqrt(dx*dx + dy*dy + dz*dz);
-				}
-				
-			}else if(rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
-				// Do whatever the spell does when it hits an block
-				flag = onBlockHit(world, rayTrace.getBlockPos(), rayTrace.sideHit, caster, ticksInUse, modifiers);
-				// If the spell succeeded, clip the particles to the correct distance so they don't go through the block
-				if(flag) range = origin.distanceTo(rayTrace.hitVec);
-			}
-		}
-		
-		// If flag is false, either the spell missed or the relevant entity/block hit method returned false
-		if(!flag && !onMiss(world, caster, ticksInUse, modifiers)) return false;
-		
-		// Particle spawning
-		if(world.isRemote){
-			spawnParticleRay(world, origin, look, range);
-		}
+		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 		
 		if(!isContinuous) caster.swingArm(hand); // Bit of a dirty fix but I don't think it'll be a problem!
 		if(sound != null) WizardryUtilities.playSoundAtPlayer(caster, sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
@@ -250,6 +221,46 @@ public abstract class SpellRay extends Spell {
 		
 		if(!isContinuous) caster.swingArm(hand); // Bit of a dirty fix but I don't think it'll be a problem!
 		if(sound != null) caster.playSound(sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+		return true;
+	}
+	
+	/** Player and dispenser casting are almost identical so this takes care of the shared stuff. */
+	private boolean shootSpell(World world, Vec3d origin, Vec3d direction, @Nullable EntityPlayer caster, int ticksInUse, SpellModifiers modifiers){
+		
+		double range = baseRange * modifiers.get(WizardryItems.range_upgrade);
+		Vec3d endpoint = origin.add(direction.scale(range));
+			
+		// The first method will hit the first block it touches, passing through entities as if they weren't there. 
+		// The second method will hit the first thing it touches, whether that's a block or an entity. This method now
+		// returns the exact hit position for entities as well as blocks.
+		RayTraceResult rayTrace = WizardryUtilities.rayTrace(world, origin, endpoint, aimAssist, hitLiquids, Entity.class, e -> e == caster);
+		
+		boolean flag = false;
+		
+		if(rayTrace != null){
+			// Doesn't matter which way round these are, they're mutually exclusive
+			if(rayTrace.typeOfHit == RayTraceResult.Type.ENTITY){
+				// Do whatever the spell does when it hits an entity
+				flag = onEntityHit(world, rayTrace.entityHit, caster, ticksInUse, modifiers);
+				// If the spell succeeded, clip the particles to the correct distance so they don't go through the entity
+				if(flag) range = origin.distanceTo(rayTrace.hitVec);
+				
+			}else if(rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
+				// Do whatever the spell does when it hits an block
+				flag = onBlockHit(world, rayTrace.getBlockPos(), rayTrace.sideHit, caster, ticksInUse, modifiers);
+				// If the spell succeeded, clip the particles to the correct distance so they don't go through the block
+				if(flag) range = origin.distanceTo(rayTrace.hitVec);
+			}
+		}
+		
+		// If flag is false, either the spell missed or the relevant entity/block hit method returned false
+		if(!flag && !onMiss(world, caster, ticksInUse, modifiers)) return false;
+		
+		// Particle spawning
+		if(world.isRemote){
+			spawnParticleRay(world, origin, direction, range);
+		}
+		
 		return true;
 	}
 	

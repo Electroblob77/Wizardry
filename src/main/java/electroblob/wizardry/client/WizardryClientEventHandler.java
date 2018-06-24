@@ -208,7 +208,6 @@ public final class WizardryClientEventHandler {
 
 		Minecraft mc = Minecraft.getMinecraft();
 		WizardData properties = WizardData.get(mc.player);
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(mc.world, mc.player, 16, false);
 		RenderManager renderManager = event.getRenderer().getRenderManager();
 
 		ItemStack wand = mc.player.getHeldItemMainhand();
@@ -218,45 +217,51 @@ public final class WizardryClientEventHandler {
 		}
 
 		// Target selection pointer
-		if(mc.player.isSneaking() && wand.getItem() instanceof ItemWand && rayTrace != null && !(event.getEntity() instanceof EntityArmorStand)
-				&& rayTrace.entityHit == event.getEntity() && properties != null && properties.selectedMinion != null){
+		if(mc.player.isSneaking() && wand.getItem() instanceof ItemWand && WizardryUtilities.isLiving(event.getEntity())
+				 && properties != null && properties.selectedMinion != null){
+			
+			// -> Moved this in here so it isn't called every tick
+			RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(mc.world, mc.player, 16, false);
+			
+			if(rayTrace != null && rayTrace.entityHit == event.getEntity()){
 
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
+				Tessellator tessellator = Tessellator.getInstance();
+				BufferBuilder buffer = tessellator.getBuffer();
 
-			GlStateManager.pushMatrix();
+				GlStateManager.pushMatrix();
 
-			GlStateManager.disableCull();
-			GlStateManager.disableLighting();
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-			// Disabling depth test allows it to be seen through everything.
-			GlStateManager.disableDepth();
-			GlStateManager.color(1, 1, 1, 1);
+				GlStateManager.disableCull();
+				GlStateManager.disableLighting();
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+				// Disabling depth test allows it to be seen through everything.
+				GlStateManager.disableDepth();
+				GlStateManager.color(1, 1, 1, 1);
 
-			GlStateManager.translate(event.getX(), event.getY() + event.getEntity().height + 0.5, event.getZ());
+				GlStateManager.translate(event.getX(), event.getY() + event.getEntity().height + 0.5, event.getZ());
 
-			// This counteracts the reverse rotation behaviour when in front f5 view.
-			// Fun fact: this is a bug with vanilla too! Look at a snowball in front f5 view, for example.
-			float yaw = mc.gameSettings.thirdPersonView == 2 ? renderManager.playerViewX : -renderManager.playerViewX;
-			GlStateManager.rotate(180 - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-			GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
+				// This counteracts the reverse rotation behaviour when in front f5 view.
+				// Fun fact: this is a bug with vanilla too! Look at a snowball in front f5 view, for example.
+				float yaw = mc.gameSettings.thirdPersonView == 2 ? renderManager.playerViewX : -renderManager.playerViewX;
+				GlStateManager.rotate(180 - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+				GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-			mc.renderEngine.bindTexture(targetPointerTexture);
+				mc.renderEngine.bindTexture(targetPointerTexture);
 
-			buffer.pos(-0.2, 0.24, 0).tex(0, 0).endVertex();
-			buffer.pos(0.2, 0.24, 0).tex(9f / 16f, 0).endVertex();
-			buffer.pos(0.2, -0.24, 0).tex(9f / 16f, 11f / 16f).endVertex();
-			buffer.pos(-0.2, -0.24, 0).tex(0, 11f / 16f).endVertex();
+				buffer.pos(-0.2, 0.24, 0).tex(0, 0).endVertex();
+				buffer.pos(0.2, 0.24, 0).tex(9f / 16f, 0).endVertex();
+				buffer.pos(0.2, -0.24, 0).tex(9f / 16f, 11f / 16f).endVertex();
+				buffer.pos(-0.2, -0.24, 0).tex(0, 11f / 16f).endVertex();
 
-			tessellator.draw();
+				tessellator.draw();
 
-			GlStateManager.enableCull();
-			GlStateManager.enableLighting();
-			GlStateManager.enableDepth();
+				GlStateManager.enableCull();
+				GlStateManager.enableLighting();
+				GlStateManager.enableDepth();
 
-			GlStateManager.popMatrix();
+				GlStateManager.popMatrix();
+			}
 		}
 
 		// Summoned creature selection pointer

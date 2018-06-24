@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
@@ -553,118 +553,145 @@ public final class WizardryUtilities {
 	// ===============================================================================================================
 
 	/**
-	 * Does a block ray trace (NOT entities) from an entity's eyes (i.e. properly...)
+	 * Helper method which performs a ray trace for <b>blocks only</b> from an entity's eye position in the direction
+	 * they are looking, over a specified range, using {@link World#rayTraceBlocks(Vec3d, Vec3d, boolean)}.
+	 * 
+	 * @param world The world in which to perform the ray trace.
+	 * @param entity The entity from which to perform the ray trace. The ray trace will start from this entity's eye
+	 * position and proceed in the direction the entity is looking.
+	 * @param range The distance over which the ray trace will be performed.
+	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
+	 * not there.
+	 * @return A {@link RayTraceResult} representing the object that was hit, which may be either a block or nothing.
+	 * Returns {@code null} only if the origin and endpoint are within the same block.
 	 */
 	@Nullable
 	public static RayTraceResult standardBlockRayTrace(World world, EntityLivingBase entity, double range, boolean hitLiquids){
-
-		Vec3d start = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
-		Vec3d look = entity.getLookVec();
-		Vec3d end = start.addVector(look.x * range, look.y * range, look.z * range);
-		return world.rayTraceBlocks(start, end, hitLiquids);
+		// This method does not apply an offset like ray spells do, since it is not desirable in most other use cases.
+		Vec3d origin = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
+		Vec3d endpoint = origin.add(entity.getLookVec().scale(range));
+		return world.rayTraceBlocks(origin, endpoint, hitLiquids);
 	}
 
 	/**
-	 * Helper method which does a rayTrace for entities from an entity's eye level in the direction they are looking
-	 * with a specified range, using the tracePath method. Tidies up the code a bit. Border size defaults to 1.
+	 * Helper method which performs a ray trace for blocks and entities from an entity's eye position in the direction
+	 * they are looking, over a specified range, using {@link WizardryUtilities#rayTrace(World, Vec3d, Vec3d, float,
+	 * boolean, Class, Predicate)}. Aim assist is zero, the entity type is simply {@code Entity} (all entities), and the
+	 * filter removes the given entity and allows all others.
 	 * 
-	 * @param world
-	 * @param entity
-	 * @param range
-	 * @return
+	 * @param world The world in which to perform the ray trace.
+	 * @param entity The entity from which to perform the ray trace. The ray trace will start from this entity's eye
+	 * position and proceed in the direction the entity is looking. This entity will be ignored when ray tracing.
+	 * @param range The distance over which the ray trace will be performed.
+	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
+	 * not there.
+	 * @return A {@link RayTraceResult} representing the object that was hit, which may be an entity, a block or
+	 * nothing. Returns {@code null} only if the origin and endpoint are within the same block and no entity was hit.
 	 */
 	@Nullable
-	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range, boolean hitLiquids){
-		return standardEntityRayTrace(world, entity, range, 1, hitLiquids);
+	public static RayTraceResult standardEntityRayTrace(World world, Entity entity, double range, boolean hitLiquids){
+		// This method does not apply an offset like ray spells do, since it is not desirable in most other use cases.
+		Vec3d origin = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
+		Vec3d endpoint = origin.add(entity.getLookVec().scale(range));
+		return WizardryUtilities.rayTrace(world, origin, endpoint, 0, hitLiquids, Entity.class, e -> e == entity);
 	}
 
 	/**
-	 * Helper method which does a rayTrace for entities from a entity's eye level in the direction they are looking with
-	 * a specified range and radius, using the tracePath method. Tidies up the code a bit.
+	 * Performs a ray trace for blocks and entities, starting at the given origin and finishing at the given endpoint.
+	 * As of wizardry 4.2, the ray tracing methods have been rewritten to be more user-friendly and implement proper
+	 * aim assist.
+	 * <p>
+	 * <i>N.B. It is possible to ignore entities entirely by passing in a {@code Predicate} that is always false;
+	 * however, in this specific case it is more efficient to use
+	 * {@link World#rayTraceBlocks(Vec3d, Vec3d, boolean, boolean, boolean)} or one of its overloads.</i>
 	 * 
-	 * @param world
-	 * @param entity
-	 * @param range
-	 * @param borderSize
-	 * @return
-	 */
-	@Nullable
-	public static RayTraceResult standardEntityRayTrace(World world, EntityLivingBase entity, double range, float borderSize, boolean hitLiquids){
-		double dx = entity.getLookVec().x * range;
-		double dy = entity.getLookVec().y * range;
-		double dz = entity.getLookVec().z * range;
-		HashSet<Entity> hashset = new HashSet<Entity>(1);
-		hashset.add(entity);
-		return WizardryUtilities.tracePath(world, (float)entity.posX,
-				(float)(entity.getEntityBoundingBox().minY + entity.getEyeHeight()), (float)entity.posZ,
-				(float)(entity.posX + dx), (float)(entity.posY + entity.getEyeHeight() + dy), (float)(entity.posZ + dz),
-				borderSize, hashset, false, hitLiquids);
-	}
-
-	/**
-	 * Method for ray tracing entities. You can also use this for seeking.
+	 * @param <T> The type of entities to include; all other entities will be ignored.
+	 * @param world The world in which to perform the ray trace.
+	 * @param origin A vector representing the coordinates of the start point of the ray trace.
+	 * @param endpoint A vector representing the coordinates of the finish point of the ray trace.
+	 * @param aimAssist In addition to direct hits, the ray trace will also hit entities that are up to this distance
+	 * from its path. For a normal ray trace, this should be 0. Values greater than 0 will give an 'aim assist' effect.
+	 * @param hitLiquids Whether liquids should be ignored when ray tracing blocks
+	 * @param entityType The class of entities to include; all other entities will be ignored.
+	 * @param filter A {@link Predicate} which filters out entities that can be ignored; often used to exclude the
+	 * player that is performing the ray trace.
 	 * 
-	 * @param world
-	 * @param x startX
-	 * @param y startY
-	 * @param z startZ
-	 * @param tx endX
-	 * @param ty endY
-	 * @param tz endZ
-	 * @param borderSize extra area to examine around line for entities
-	 * @param excluded any excluded entities (the player, etc)
-	 * @return a RayTraceResult of either the block hit (no entity hit), the entity hit (hit an entity), or null for
-	 *         nothing hit
+	 * @return A {@link RayTraceResult} representing the object that was hit, which may be an entity, a block or
+	 * nothing. Returns {@code null} only if the origin and endpoint are within the same block and no entity was hit.
+	 * 
+	 * @see WizardryUtilities#standardEntityRayTrace(World, Entity, double, boolean)
+	 * @see WizardryUtilities#standardBlockRayTrace(World, EntityLivingBase, double, boolean)
 	 */
+	// Interestingly enough, aimAssist can be negative, which means hits have to be in the middle of entities!
 	@Nullable
-	public static RayTraceResult tracePath(World world, float x, float y, float z, float tx, float ty, float tz,
-			float borderSize, HashSet<Entity> excluded, boolean collideablesOnly, boolean hitLiquids){
+	public static RayTraceResult rayTrace(World world, Vec3d origin, Vec3d endpoint, float aimAssist,
+			boolean hitLiquids, Class<? extends Entity> entityType, Predicate<? super Entity> filter){
+		
+		// 1 is the standard amount of extra search volume, and aim assist needs to increase this further as well as 
+		// expanding the entities' bounding boxes.
+		float borderSize = 1 + aimAssist;
 
-		Vec3d startVec = new Vec3d(x, y, z);
-		// Vec3d lookVec = new Vec3d(tx-x, ty-y, tz-z);
-		Vec3d endVec = new Vec3d(tx, ty, tz);
-		float minX = x < tx ? x : tx;
-		float minY = y < ty ? y : ty;
-		float minZ = z < tz ? z : tz;
-		float maxX = x > tx ? x : tx;
-		float maxY = y > ty ? y : ty;
-		float maxZ = z > tz ? z : tz;
-		AxisAlignedBB bb = new AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ).grow(borderSize, borderSize, borderSize);
-		List<Entity> allEntities = world.getEntitiesWithinAABBExcludingEntity(null, bb);
-		RayTraceResult blockHit = world.rayTraceBlocks(startVec, endVec, hitLiquids);
-		startVec = new Vec3d(x, y, z);
-		endVec = new Vec3d(tx, ty, tz);
-		float maxDistance = (float)endVec.distanceTo(startVec);
-		if(blockHit != null){
-			maxDistance = (float)blockHit.hitVec.distanceTo(startVec);
+		// The AxisAlignedBB constructor accepts min/max coords in either order.
+		AxisAlignedBB searchVolume = new AxisAlignedBB(origin.x, origin.y, origin.z, endpoint.x, endpoint.y, endpoint.z)
+				.grow(borderSize, borderSize, borderSize);
+		
+		// Gets all of the entities in the bounding box that could be collided with.
+		List<Entity> entities = world.getEntitiesWithinAABB(entityType, searchVolume);
+		// Applies the given filter to remove entities that should be ignored.
+		entities.removeIf(filter);
+		
+		// Finds the first block hit by the ray trace, if any.
+		RayTraceResult result = world.rayTraceBlocks(origin, endpoint, hitLiquids);
+		
+		// Clips the entity search range to the part of the ray trace before the block hit, if it hit a block.
+		if(result != null){
+			endpoint = result.hitVec;
 		}
+		
+		// Search variables
 		Entity closestHitEntity = null;
-		float closestHit = maxDistance;
-		float currentHit = 0.f;
-		AxisAlignedBB entityBb;// = ent.getBoundingBox();
+		Vec3d closestHitPosition = endpoint;
+		AxisAlignedBB entityBounds;
 		RayTraceResult intercept;
-		for(Entity ent : allEntities){
-			if((ent.canBeCollidedWith() || !collideablesOnly)
-					&& ((excluded != null && !excluded.contains(ent)) || excluded == null)){
-				float entBorder = ent.getCollisionBorderSize();
-				entityBb = ent.getEntityBoundingBox();
-				if(entityBb != null){
-					entityBb = entityBb.grow(entBorder, entBorder, entBorder);
-					intercept = entityBb.calculateIntercept(startVec, endVec);
-					if(intercept != null){
-						currentHit = (float)intercept.hitVec.distanceTo(startVec);
-						if(currentHit < closestHit || currentHit == 0){
-							closestHit = currentHit;
-							closestHitEntity = ent;
-						}
+		
+		// Iterates through all the entities 
+		for(Entity entity : entities){
+			
+			entityBounds = entity.getEntityBoundingBox();
+			
+			if(entityBounds != null){
+
+				// This is zero for everything except fireballs...
+				float entityBorderSize = entity.getCollisionBorderSize(); 
+				// ... meaning the following line does nothing in all other cases.
+				// -> Added the non-zero check to prevent unnecessary AABB object creation.
+				if(entityBorderSize != 0) entityBounds = entityBounds.grow(entityBorderSize, entityBorderSize, entityBorderSize);
+				
+				// Aim assist expands the bounding box to hit entities within the specified distance of the ray trace.
+				if(aimAssist != 0) entityBounds = entityBounds.grow(aimAssist, aimAssist, aimAssist);
+				
+				// Finds the first point at which the ray trace intercepts the entity's bounding box, if any.
+				intercept = entityBounds.calculateIntercept(origin, endpoint);
+				
+				// If the ray trace hit the entity...
+				if(intercept != null){
+					// Decides whether the entity that was hit is the closest so far, and if so, overwrites the old one.
+					float currentHitDistance = (float)intercept.hitVec.distanceTo(origin);
+					float closestHitDistance = (float)closestHitPosition.distanceTo(origin);
+					if(currentHitDistance < closestHitDistance){
+						closestHitEntity = entity;
+						closestHitPosition = intercept.hitVec;
 					}
 				}
 			}
 		}
+		
+		// If the ray trace hit an entity, return that entity; otherwise return the result of the block ray trace.
 		if(closestHitEntity != null){
-			blockHit = new RayTraceResult(closestHitEntity);
+			result = new RayTraceResult(closestHitEntity, closestHitPosition);
 		}
-		return blockHit;
+		
+		return result;
 	}
 
 	// SECTION Rendering and GUIs
