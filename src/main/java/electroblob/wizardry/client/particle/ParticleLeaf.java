@@ -20,6 +20,8 @@ public class ParticleLeaf extends ParticleCustomTexture {
 		this.particleScale *= 1.4f;
 		this.particleGravity = 0;
 		this.canCollide = true;
+		// Produces a variety of browns and greens
+		this.setRBGColorF(0.1f + 0.3f * world.rand.nextFloat(), 0.5f + 0.3f * world.rand.nextFloat(), 0.1f);
 	}
 
 	@Override
