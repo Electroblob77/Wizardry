@@ -46,7 +46,7 @@ public class EntityIceLance extends EntityMagicArrow {
 		if(this.world.isRemote){
 			for(int j = 0; j < 10; j++){
 				ParticleBuilder.create(Type.ICE, this.rand, this.posX, this.posY, this.posZ, 0.5, true)
-				.lifetime(20 + rand.nextInt(10)).spawn(world);
+				.lifetime(20 + rand.nextInt(10)).gravity(true).spawn(world);
 			}
 		}
 		// Parameters for sound: sound event name, volume, pitch.

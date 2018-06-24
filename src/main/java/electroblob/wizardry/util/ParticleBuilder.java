@@ -355,7 +355,11 @@ public final class ParticleBuilder {
 		particle.multipleParticleScaleBy(scale);
 		if(!Double.isNaN(vx) && !Double.isNaN(vy) && !Double.isNaN(vz)) particle.setVelocity(vx, vy, vz);
 		if(r >= 0 && g >= 0 && b >= 0) particle.setRBGColorF(r, g, b);
-		if(fr >= 0 && fg >= 0 && fb >= 0) particle.setFadeColour(fr, fg, fb);
+		if(fr >= 0 && fg >= 0 && fb >= 0){
+			particle.setFadeColour(fr, fg, fb);
+		}else{
+			particle.setFadeColour(r, g, b); // If fade colour was unspecified, it defaults to the main colour
+		}
 		if(lifetime >= 0) particle.setLifetime(lifetime);
 		particle.setGravity(gravity);
 		particle.setShaded(shaded);

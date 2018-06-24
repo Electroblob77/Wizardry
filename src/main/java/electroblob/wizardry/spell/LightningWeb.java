@@ -163,7 +163,7 @@ public class LightningWeb extends SpellRay {
 		}else{
 			// Particle effect
 			for(int i=0; i<5; i++){
-				ParticleBuilder.create(Type.SPARK, target);
+				ParticleBuilder.create(Type.SPARK, target).spawn(world);
 			}
 		}
 	}
