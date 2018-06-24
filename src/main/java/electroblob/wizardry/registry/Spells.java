@@ -24,6 +24,7 @@ import electroblob.wizardry.entity.living.EntitySpiderMinion;
 import electroblob.wizardry.entity.living.EntityStormElemental;
 import electroblob.wizardry.entity.living.EntityWitherSkeletonMinion;
 import electroblob.wizardry.entity.living.EntityZombieMinion;
+import electroblob.wizardry.entity.projectile.EntityDarknessOrb;
 import electroblob.wizardry.entity.projectile.EntityDart;
 import electroblob.wizardry.entity.projectile.EntityFirebolt;
 import electroblob.wizardry.entity.projectile.EntityFirebomb;
@@ -311,7 +312,7 @@ public final class Spells {
 		registry.register(new SpellMinion<>("summon_wither_skeleton", Tier.ADVANCED, Element.NECROMANCY, 35, 150, EntityWitherSkeletonMinion::new, 600, WizardrySounds.SPELL_SUMMONING).soundValues(7, 0.6f, 0));
 		registry.register(new Entrapment());
 		registry.register(new WitherSkull());
-		registry.register(new SpellProjectile("darkness_orb", Tier.ADVANCED, Element.NECROMANCY, 20, 20, EntityThunderbolt::new, 0.5f, SoundEvents.ENTITY_WITHER_SHOOT).soundValues(0.5f, 0.4f, 0.2f));
+		registry.register(new SpellProjectile("darkness_orb", Tier.ADVANCED, Element.NECROMANCY, 20, 20, EntityDarknessOrb::new, 0.5f, SoundEvents.ENTITY_WITHER_SHOOT).soundValues(0.5f, 0.4f, 0.2f));
 		registry.register(new ShadowWard());
 		registry.register(new Decay());
 		registry.register(new SpellBuff("water_breathing", Tier.ADVANCED, Element.EARTH, SpellType.BUFF, 30, 250, WizardrySounds.SPELL_HEAL, 0.3f, 0.3f, 1, Triple.of(MobEffects.WATER_BREATHING, 1200, 0)){ @Override public boolean canBeCastByNPCs(){ return false; } }.soundValues(0.7f, 1.2f, 0.4f));
