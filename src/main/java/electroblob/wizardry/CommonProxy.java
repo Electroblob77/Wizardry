@@ -87,14 +87,7 @@ public class CommonProxy {
 	 */
 	public String getScrollDisplayName(ItemStack scroll){
 
-		// I have now learnt that the server side I18n always translates to the default en_US, so I could just return
-		// a hardcoded name in English instead.
-		Wizardry.logger.info("A mod has called ItemScroll#getItemStackDisplayName from the server side. Using the"
-				+ "deprecated server-side translation methods as a fallback.");
-
-		// Displays [Empty slot] if spell is continuous.
 		Spell spell = Spell.get(scroll.getItemDamage());
-		if(spell.isContinuous) spell = Spells.none;
 
 		return I18n.translateToLocalFormatted("item." + Wizardry.MODID + ":scroll.name",
 				I18n.translateToLocal("spell." + spell.getUnlocalisedName())).trim();

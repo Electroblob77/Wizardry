@@ -10,6 +10,7 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,19 +25,27 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemScroll extends Item {
+	
+	/** The maximum number of ticks a continuous spell scroll can be cast for (by holding the use item button). */
+	// TODO: Make this configurable
+	public static final int CASTING_TIME = 120;
 
 	public ItemScroll(){
 		super();
 		setHasSubtypes(true);
-		setMaxStackSize(1);
+		setMaxStackSize(16);
 		setCreativeTab(WizardryTabs.SPELLS);
 	}
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-		if (isInCreativeTab(tab)) {
-			for(Spell spell : Spell.getSpells(Spell.nonContinuousSpells)){
-				list.add(new ItemStack(this, 1, spell.id()));
+		if(isInCreativeTab(tab)){
+			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
+			// is not required, only the id.
+			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
+				// i+1 is used so that the metadata ties up with the id() method. In other words, the none spell has id
+				// 0 and since this is not used as a spell book the metadata starts at 1.
+				list.add(new ItemStack(this, 1, i + 1));
 			}
 		}
 	}
@@ -63,6 +72,11 @@ public class ItemScroll extends Item {
 		return Wizardry.proxy.getScrollDisplayName(stack);
 
 	}
+	
+	@Override
+	public int getMaxItemUseDuration(ItemStack stack){
+		return CASTING_TIME;
+	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand){
@@ -78,7 +92,13 @@ public class ItemScroll extends Item {
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 		}
 
-		if(!spell.isContinuous){
+		// Now we can cast continuous spells with scrolls!
+		if(spell.isContinuous){
+			if(!player.isHandActive()){
+				player.setActiveHand(hand);
+				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+			}
+		}else{
 
 			if(!world.isRemote){
 
@@ -111,6 +131,54 @@ public class ItemScroll extends Item {
 
 		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 
+	}
+	
+	// For continuous spells. The count argument actually decrements by 1 each tick.
+	@Override
+	public void onUsingTick(ItemStack stack, EntityLivingBase user, int count){
+
+		if(user instanceof EntityPlayer){
+
+			EntityPlayer player = (EntityPlayer)user;
+
+			Spell spell = Spell.get(stack.getItemDamage());
+			// By default, scrolls have no modifiers - but with the event system, they could be added.
+			SpellModifiers modifiers = new SpellModifiers();
+			int castingTick = stack.getMaxItemUseDuration() - count;
+
+			if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(Source.SCROLL, spell, player, modifiers, castingTick)))
+				return;
+
+			// Continuous spells (these must check if they can be cast each tick since the mana changes)
+			if(spell.isContinuous){
+
+				if(spell.cast(player.world, player, player.getActiveHand(), castingTick, modifiers)){
+
+					if(castingTick == 0)
+						MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.SCROLL, spell, player, modifiers));
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft){
+		// Consumes a continuous spell scroll when a player in survival mode stops using it.
+		if(Spell.get(stack.getItemDamage()).isContinuous
+				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).capabilities.isCreativeMode)){
+			stack.shrink(1);
+		}
+	}
+	
+	@Override
+	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase user){
+		// Consumes a continuous spell scroll when the casting elapses whilst in use by a player in survival mode.
+		if(Spell.get(stack.getItemDamage()).isContinuous
+				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).capabilities.isCreativeMode)){
+			stack.shrink(1);
+		}
+		
+		return stack;
 	}
 
 	@Override

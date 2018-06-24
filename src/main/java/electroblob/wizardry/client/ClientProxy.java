@@ -241,9 +241,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public String getScrollDisplayName(ItemStack scroll){
 
-		// Displays [Empty slot] if spell is continuous.
 		Spell spell = Spell.get(scroll.getItemDamage());
-		if(spell.isContinuous) spell = Spells.none;
 
 		EntityPlayer player = Minecraft.getMinecraft().player;
 

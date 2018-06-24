@@ -13,6 +13,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.item.ItemArcaneTome;
 import electroblob.wizardry.item.ItemArmourUpgrade;
+import electroblob.wizardry.item.ItemBlankScroll;
 import electroblob.wizardry.item.ItemFirebomb;
 import electroblob.wizardry.item.ItemFlamingAxe;
 import electroblob.wizardry.item.ItemFrostAxe;
@@ -119,8 +120,8 @@ public final class WizardryItems {
 	public static final Item firebomb = new ItemFirebomb();
 	public static final Item poison_bomb = new ItemPoisonBomb();
 
-	public static final Item blank_scroll = new Item().setCreativeTab(WizardryTabs.WIZARDRY);
-	public static final Item scroll = new ItemScroll().setCreativeTab(WizardryTabs.SPELLS);
+	public static final Item blank_scroll = new ItemBlankScroll();
+	public static final Item scroll = new ItemScroll();
 
 	// The only way to get these is in dungeon chests (They are legendary, after all. Wizards don't just have them.
 	// Also if they were sold you could buy four from the same wizard - and that's no fun at all!)

@@ -30,7 +30,7 @@ public class ItemSpellBook extends Item {
 	public ItemSpellBook(){
 		super();
 		setHasSubtypes(true);
-		setMaxStackSize(1);
+		setMaxStackSize(16);
 		setCreativeTab(WizardryTabs.SPELLS);
 	}
 
