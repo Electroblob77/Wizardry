@@ -44,7 +44,7 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 
 	private void renderEffect(TileEntityArcaneWorkbench tileentity){
 
-		ItemStack itemstack = tileentity.getStackInSlot(ContainerArcaneWorkbench.WAND_SLOT);
+		ItemStack itemstack = tileentity.getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
 		if(!itemstack.isEmpty()){
 			GlStateManager.pushMatrix();
@@ -77,7 +77,7 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 	 * @param tileentity The instance of the workbench tile entity
 	 */
 	private void renderWand(TileEntityArcaneWorkbench tileentity, double viewAngle){
-		ItemStack stack = tileentity.getStackInSlot(ContainerArcaneWorkbench.WAND_SLOT);
+		ItemStack stack = tileentity.getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
 		if(!stack.isEmpty()){
 
