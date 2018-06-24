@@ -2,7 +2,6 @@ package electroblob.wizardry.client.gui;
 
 import java.util.List;
 
-import electroblob.wizardry.Settings.GuiPosition;
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
@@ -30,11 +29,22 @@ public class GuiSpellDisplay extends Gui {
 
 	private Minecraft mc;
 
-	private static final ResourceLocation hudTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_hud.png");
+	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_hud.png");
 
-	public GuiSpellDisplay(Minecraft par1Minecraft){
+	// Measurements
+	/** Width of the used portion of the HUD texture */ 				private static final int HUD_WIDTH = 128;
+	/** Height of the used portion of the HUD texture */				private static final int HUD_HEIGHT = 64;
+	/** Distance (in x and y) of the spell icon from the screen edge */ private static final int SPELL_ICON_INSET = 2;
+	/** Line spacing for the spell name (when on two lines) */			private static final int TEXT_LINE_SPACING = 1;
+	/** Distance in x from the edge of the screen to the spell name */	private static final int TEXT_INSET_X = 42;
+	/** Distance in x of the cooldown bar from the screen edge */		private static final int COOLDOWN_BAR_INSET_X = 42;
+	/** Length of the cooldown bar portion of the HUD texture */		private static final int COOLDOWN_BAR_LENGTH = 79;
+	/** Height of the cooldown bar portion of the HUD texture */		private static final int COOLDOWN_BAR_HEIGHT = 5;
+	/** Width and height of the spell icon (very unlikely to change!) */private static final int SPELL_ICON_SIZE = 32;
+	
+	public GuiSpellDisplay(Minecraft minecraft){
 		super();
-		this.mc = par1Minecraft;
+		this.mc = minecraft;
 	}
 
 	@SubscribeEvent
@@ -65,26 +75,8 @@ public class GuiSpellDisplay extends Gui {
 			cooldownMultiplier /= 2 + player.getActivePotionEffect(WizardryPotions.font_of_mana).getAmplifier();
 		}
 
-		// Coordinates of the top left corner of the HUD.
-		int left = 0;
-		int top = 0;
-		boolean mirror = false;
-
-		if(Wizardry.settings.spellHUDPosition == GuiPosition.BOTTOM_LEFT){
-			left = 0;
-			top = height - 36;
-		}else if(Wizardry.settings.spellHUDPosition == GuiPosition.TOP_LEFT){
-			left = 0;
-			top = 0;
-		}else if(Wizardry.settings.spellHUDPosition == GuiPosition.TOP_RIGHT){
-			left = width - 128;
-			top = 0;
-			mirror = true;
-		}else if(Wizardry.settings.spellHUDPosition == GuiPosition.BOTTOM_RIGHT){
-			left = width - 128;
-			top = height - 36;
-			mirror = true;
-		}
+		boolean flipX = Wizardry.settings.spellHUDPosition.flipX;
+		boolean flipY = Wizardry.settings.spellHUDPosition.flipY;
 
 		boolean discovered = true;
 
@@ -100,50 +92,70 @@ public class GuiSpellDisplay extends Gui {
 			String spellName = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
 			FontRenderer font = discovered ? this.mc.fontRenderer : this.mc.standardGalacticFontRenderer;
 
-			int maxWidth = 90;
+			int maxWidth = HUD_WIDTH - TEXT_INSET_X;
+			int stringWidth = font.getStringWidth(spellName);
+			int iconMidpoint = (SPELL_ICON_SIZE + 2*SPELL_ICON_INSET)/2; // Should be 18
 
-			if(font.getStringWidth(spellName) <= maxWidth){
+			// TODO: Make a 'scrolling' animation when changing spells, using the text alpha channel to fade it in
+			// and out.
+			if(stringWidth <= maxWidth){
+				//GL11.glPushMatrix();
+                //GL11.glEnable(GL11.GL_BLEND);
+                //OpenGlHelper.glBlendFunc(770, 771, 1, 0); // Taken from GuiInGame. TODO: Replace with OpenGL caps.
 				// Single line is rendered more centrally
-				font.drawStringWithShadow(colour + spellName, mirror ? left + 5 : left + 41, top + 13, 0xffffffff);
-
+				font.drawStringWithShadow(colour + spellName, flipX ? width - TEXT_INSET_X - stringWidth : TEXT_INSET_X,
+						// The text is an odd number of pixels high so we need to subtract an extra 1 when at the bottom
+						flipY ? iconMidpoint - font.FONT_HEIGHT/2 : height - iconMidpoint - font.FONT_HEIGHT/2 - 1, 0xffffffff);
+                //GL11.glDisable(GL11.GL_BLEND);
+                //GL11.glPopMatrix();
 			}else{
 
 				int lineNumber = 0;
 
 				List<String> lines = font.listFormattedStringToWidth(spellName, maxWidth);
 
-				for(Object line : lines){
-					if(line instanceof String){
-						font.drawStringWithShadow(colour + (String)line, mirror ? left + 5 : left + 41, top + 6 + 11 * lineNumber, 0xffffffff);
-					}
+				for(String line : lines){
+					int lineWidth = font.getStringWidth((String)line);
+					font.drawStringWithShadow(colour + (String)line, flipX ? width - TEXT_INSET_X - lineWidth : TEXT_INSET_X,
+							// This time there are two lines so we need to subtract the full line height, and an extra 1 for the spacing 
+							(flipY ? iconMidpoint - font.FONT_HEIGHT - 1 : height - iconMidpoint - font.FONT_HEIGHT - 1)
+							// Note that there should only ever be two lines maximum
+							+ lineNumber*(font.FONT_HEIGHT + TEXT_LINE_SPACING), 0xffffffff);
 					lineNumber++;
 				}
 			}
 
 		}else if(event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR){
 
+			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1, 1, 1);
 
-			this.mc.renderEngine.bindTexture(hudTexture);
-
-			// Background of spell hud
-			this.drawTexturedModalRect(left, top, 0, mirror ? 36 : 0, 128, 36);
-
-			// Cooldown bar
-			if(cooldown > 0){
-				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, top + 28, 128, 6, 82, 6);
-
-				int l = (int)(((double)(spell.cooldown * cooldownMultiplier - cooldown) / (double)(spell.cooldown * cooldownMultiplier)) * 82);
-
-				this.drawTexturedModalRect(mirror ? left + 5 : left + 41, top + 28, 128, 0, l, 6);
-			}
-
-			// Spell illustration
+			// Spell illustration - this is now done first so it is behind the HUD texture
 			this.mc.renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
 
-			WizardryUtilities.drawTexturedRect(mirror ? left + 94 : left + 2, top + 2, 0, 0, 32, 32, 32, 32);
+			WizardryUtilities.drawTexturedRect(flipX ? width - SPELL_ICON_INSET - SPELL_ICON_SIZE : SPELL_ICON_INSET,
+					flipY ? SPELL_ICON_INSET : height - SPELL_ICON_INSET - SPELL_ICON_SIZE, 0, 0, 32, 32, 32, 32);
+			
+			this.mc.renderEngine.bindTexture(texture);
+
+			// Background of spell hud
+			WizardryUtilities.drawTexturedFlippedRect(flipX ? width-HUD_WIDTH : 0, flipY ? 0 : height-HUD_HEIGHT,
+					// The 128 here is a uv value, not a dimension, and hence is left as a hardcoded number.
+					player.capabilities.isCreativeMode ? 128 : 0, 0, HUD_WIDTH, HUD_HEIGHT, 256, 256, flipX, flipY);
+
+			// Cooldown bar
+			if(!player.capabilities.isCreativeMode && cooldown > 0){
+
+				int l = (int)(((double)(spell.cooldown * cooldownMultiplier - cooldown)
+						/ (double)(spell.cooldown * cooldownMultiplier)) * COOLDOWN_BAR_LENGTH);
+				// Likewise, the 64 here is a uv value and therefore left as a hardcoded number.
+				WizardryUtilities.drawTexturedFlippedRect(flipX ? width - COOLDOWN_BAR_INSET_X - COOLDOWN_BAR_LENGTH : COOLDOWN_BAR_INSET_X,
+						flipY ? 1 : height-1-COOLDOWN_BAR_HEIGHT, 0, 64, l, COOLDOWN_BAR_HEIGHT, 256, 256, false, flipY);
+			}
+
+			GlStateManager.popMatrix();
 			
 			// Blend needs to be left enabled here because otherwise the hotbar becomes opaque
 		}

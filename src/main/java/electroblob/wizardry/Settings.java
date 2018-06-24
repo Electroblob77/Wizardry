@@ -168,7 +168,10 @@ public final class Settings {
 	/** Set of constants for each of the four positions that the spell HUD can be in. */
 	public enum GuiPosition {
 
-		BOTTOM_LEFT("Bottom left"), TOP_LEFT("Top left"), TOP_RIGHT("Top right"), BOTTOM_RIGHT("Bottom right");
+		BOTTOM_LEFT("Bottom left", false, false),
+		TOP_LEFT("Top left", false, true),
+		TOP_RIGHT("Top right", true, true),
+		BOTTOM_RIGHT("Bottom right", true, false);
 
 		/** Constant array storing the names of each of the constants, in the order they are declared. */
 		public static final String[] names;
@@ -182,8 +185,10 @@ public final class Settings {
 
 		/** The readable name for this GUI position that will be displayed on the button in the config GUI. */
 		public final String name;
+		public boolean flipX;
+		public boolean flipY;
 
-		GuiPosition(String name){
+		GuiPosition(String name, boolean flipX, boolean flipY){
 			this.name = name;
 		}
 

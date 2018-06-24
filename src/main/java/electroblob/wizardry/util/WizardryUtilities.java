@@ -716,28 +716,48 @@ public final class WizardryUtilities {
 	 * @param textureHeight The height of the actual image.
 	 */
 	@SideOnly(Side.CLIENT)
-	public static void drawTexturedRect(int x, int y, int u, int v, int width, int height, int textureWidth,
-			int textureHeight){
+	public static void drawTexturedRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight){
+		drawTexturedFlippedRect(x, y, u, v, width, height, textureWidth, textureHeight, false, false);
+	}
+	
+	/**
+	 * <b>[Client-side only]</b> Draws a textured rectangle, taking the size of the image and the bit needed into
+	 * account, unlike {@link net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int)
+	 * Gui.drawTexturedModalRect(int, int, int, int, int, int)}, which is harcoded for only 256x256 textures. Also handy
+	 * for custom potion icons. This version allows the texture to be flipped in x and/or y.
+	 * 
+	 * @param x The x position of the rectangle
+	 * @param y The y position of the rectangle
+	 * @param u The x position of the top left corner of the section of the image wanted
+	 * @param v The y position of the top left corner of the section of the image wanted
+	 * @param width The width of the section
+	 * @param height The height of the section
+	 * @param textureWidth The width of the actual image.
+	 * @param textureHeight The height of the actual image.
+	 * @param flipX Whether to flip the texture in the x direction.
+	 * @param flipY Whether to flip the texture in the y direction.
+	 */
+	@SideOnly(Side.CLIENT)
+	public static void drawTexturedFlippedRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, boolean flipX, boolean flipY){
 
 		float f = 1F / (float)textureWidth;
 		float f1 = 1F / (float)textureHeight;
+		
+		int u1 = flipX ? u + width : u;
+		int u2 = flipX ? u : u + width;
+		int v1 = flipY ? v + height : v;
+		int v2 = flipY ? v : v + height;
 
 		// Essentially the same as getting the tessellator. For most code, you'll want the tessellator AND the
-		// vertexbuffer
-		// stored in local variables.
-		BufferBuilder buffer = net.minecraft.client.renderer.Tessellator.getInstance()
-				.getBuffer();
+		// vertexbuffer stored in local variables.
+		BufferBuilder buffer = net.minecraft.client.renderer.Tessellator.getInstance().getBuffer();
 		// Equivalent of tessellator.startDrawingQuads()
-		buffer.begin(org.lwjgl.opengl.GL11.GL_QUADS,
-				net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
+		buffer.begin(org.lwjgl.opengl.GL11.GL_QUADS, net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX);
 		// Equivalent of tessellator.addVertex()
-		buffer.pos((double)(x), (double)(y + height), 0)
-				.tex((double)((float)(u) * f), (double)((float)(v + height) * f1)).endVertex();
-		buffer.pos((double)(x + width), (double)(y + height), 0)
-				.tex((double)((float)(u + width) * f), (double)((float)(v + height) * f1)).endVertex();
-		buffer.pos((double)(x + width), (double)(y), 0).tex((double)((float)(u + width) * f), (double)((float)(v) * f1))
-				.endVertex();
-		buffer.pos((double)(x), (double)(y), 0).tex((double)((float)(u) * f), (double)((float)(v) * f1)).endVertex();
+		buffer.pos((double)(x), 		(double)(y + height), 0).tex((double)((float)(u1) * f), (double)((float)(v2) * f1)).endVertex();
+		buffer.pos((double)(x + width), (double)(y + height), 0).tex((double)((float)(u2) * f), (double)((float)(v2) * f1)).endVertex();
+		buffer.pos((double)(x + width), (double)(y), 		  0).tex((double)((float)(u2) * f), (double)((float)(v1) * f1)).endVertex();
+		buffer.pos((double)(x), 		(double)(y), 		  0).tex((double)((float)(u1) * f), (double)((float)(v1) * f1)).endVertex();
 		// Exactly the same as before.
 		net.minecraft.client.renderer.Tessellator.getInstance().draw();
 	}
