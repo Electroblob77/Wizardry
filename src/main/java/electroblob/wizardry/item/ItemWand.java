@@ -13,6 +13,7 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -30,6 +31,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,7 +61,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * 
  * @since Wizardry 1.0
  */
-public class ItemWand extends Item {
+public class ItemWand extends Item implements IWorkbenchItem {
+	
+	/** The number of spell slots a wand has with no attunement upgrades applied. */
+	public static final int BASE_SPELL_SLOTS = 5;
 
 	public Tier tier;
 	public Element element;
@@ -423,5 +428,143 @@ public class ItemWand extends Item {
 		}
 
 		return false;
+	}
+
+	@Override
+	public int getSpellSlotCount(ItemStack stack){
+		return BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(stack, WizardryItems.attunement_upgrade);
+	}
+
+	@Override
+	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		
+		boolean changed = false;
+		
+		// Upgrades wand if necessary. Damage is copied, preserving remaining durability,
+		// and also the entire NBT tag compound.
+		if(upgrade.getStack().getItem() == WizardryItems.arcane_tome){
+
+			// Checks the wand upgrade is for the tier above the wand's tier.
+			// It is guaranteed that: this == centre.getStack().getItem()
+			if(upgrade.getStack().getItemDamage() - 1 == this.tier.ordinal()){
+				
+				Tier tier = Tier.values()[upgrade.getStack().getItemDamage()];
+				
+				ItemStack newWand = new ItemStack(WizardryUtilities.getWand(tier, this.element));
+				newWand.setTagCompound(centre.getStack().getTagCompound());
+				// This needs to be done after copying the tag compound so the max damage for the new wand
+				// takes storage upgrades into account.
+				newWand.setItemDamage(newWand.getMaxDamage() - (centre.getStack().getMaxDamage() - centre.getStack().getItemDamage()));
+				
+				centre.putStack(newWand);
+				upgrade.decrStackSize(1);
+				
+				if(tier == Tier.APPRENTICE) WizardryAdvancementTriggers.apprentice.triggerFor(player);
+				if(tier == Tier.MASTER) WizardryAdvancementTriggers.master.triggerFor(player);
+				
+				changed = true;
+			}
+
+		}else if(WandHelper.isWandUpgrade(upgrade.getStack().getItem())){
+
+			// Special upgrades
+			Item specialUpgrade = upgrade.getStack().getItem();
+
+			if(WandHelper.getTotalUpgrades(centre.getStack()) < this.tier.upgradeLimit
+					&& WandHelper.getUpgradeLevel(centre.getStack(), specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
+
+				// Used to preserve existing mana when upgrading storage rather than creating free mana.
+				int prevMana = centre.getStack().getMaxDamage() - centre.getStack().getItemDamage();
+
+				WandHelper.applyUpgrade(centre.getStack(), specialUpgrade);
+
+				// Special behaviours for specific upgrades
+				if(specialUpgrade == WizardryItems.storage_upgrade){
+					
+					centre.getStack().setItemDamage(centre.getStack().getMaxDamage() - prevMana);
+					
+				}else if(specialUpgrade == WizardryItems.attunement_upgrade){
+
+					int newSlotCount = BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(centre.getStack(),
+							WizardryItems.attunement_upgrade);
+					
+					Spell[] spells = WandHelper.getSpells(centre.getStack());
+					Spell[] newSpells = new Spell[newSlotCount];
+
+					for(int i = 0; i < newSpells.length; i++){
+						newSpells[i] = i < spells.length && spells[i] != null ? spells[i] : Spells.none;
+					}
+
+					WandHelper.setSpells(centre.getStack(), newSpells);
+
+					int[] cooldowns = WandHelper.getCooldowns(centre.getStack());
+					int[] newCooldowns = new int[newSlotCount];
+
+					if(cooldowns.length > 0){
+						for(int i = 0; i < cooldowns.length; i++){
+							newCooldowns[i] = cooldowns[i];
+						}
+					}
+
+					WandHelper.setCooldowns(centre.getStack(), newCooldowns);
+				}
+
+				upgrade.decrStackSize(1);
+				WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
+
+				if(WandHelper.getTotalUpgrades(centre.getStack()) == Tier.MASTER.upgradeLimit){
+					WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
+				}
+				
+				changed = true;
+			}
+		}
+
+		// Reads NBT spell id array to variable, edits this, then writes it back to NBT.
+		// Original spells are preserved; if a slot is left empty the existing spell binding will remain.
+		// Accounts for spells which cannot be applied because they are above the wand's tier; these spells
+		// will not bind but the existing spell in that slot will remain and other applicable spells will
+		// be bound as normal, along with any upgrades and crystals.
+		Spell[] spells = WandHelper.getSpells(centre.getStack());
+		
+		if(spells.length <= 0){
+			// Base value here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
+			spells = new Spell[BASE_SPELL_SLOTS];
+		}
+		
+		for(int i = 0; i < spells.length; i++){
+			if(spellBooks[i].getStack() != ItemStack.EMPTY){
+				
+				Spell spell = Spell.get(spellBooks[i].getStack().getItemDamage());
+				// If the wand is powerful enough for the spell and it's not already bound to that slot
+				if(!(spell.tier.level > this.tier.level) && spells[i] != spell){
+					spells[i] = spell;
+					changed = true;
+				}
+			}
+		}
+		
+		WandHelper.setSpells(centre.getStack(), spells);
+
+		// Charges wand by appropriate amount
+		if(crystals.getStack() != ItemStack.EMPTY){
+			
+			int chargeDepleted = centre.getStack().getItemDamage();
+			
+			if(crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL < chargeDepleted){
+				
+				centre.getStack().setItemDamage(chargeDepleted - crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL);
+				crystals.decrStackSize(crystals.getStack().getCount());
+				changed = true;
+				
+			}else if(chargeDepleted != 0){
+
+				centre.getStack().setItemDamage(0);
+				crystals.decrStackSize((int)Math.ceil(((double)chargeDepleted) / Constants.MANA_PER_CRYSTAL));
+				changed = true;
+			}
+		}
+		
+		return changed;
 	}
 }

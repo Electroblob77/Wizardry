@@ -56,7 +56,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	@Override
 	public void update(){
 
-		ItemStack itemstack = this.getStackInSlot(ContainerArcaneWorkbench.WAND_SLOT);
+		ItemStack itemstack = this.getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
 		// Decrements wand damage (increases mana) every 1.5 seconds if it has a condenser upgrade
 		if(itemstack.getItem() instanceof ItemWand && !this.world.isRemote && itemstack.isItemDamaged()
@@ -93,33 +93,42 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	}
 
 	@Override
-	public ItemStack decrStackSize(int slot, int amt){
+	public ItemStack decrStackSize(int slot, int amount){
+		
 		ItemStack stack = getStackInSlot(slot);
+		
 		if(!stack.isEmpty()){
-			if(stack.getCount() <= amt){
+			if(stack.getCount() <= amount){
 				setInventorySlotContents(slot, ItemStack.EMPTY);
 			}else{
-				stack = stack.splitStack(amt);
+				stack = stack.splitStack(amount);
 				if(stack.getCount() == 0){
 					setInventorySlotContents(slot, ItemStack.EMPTY);
 				}
 			}
+			this.markDirty();
 		}
+		
 		return stack;
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int slot){
+		
 		ItemStack stack = getStackInSlot(slot);
+		
 		if(!stack.isEmpty()){
 			setInventorySlotContents(slot, ItemStack.EMPTY);
 		}
+		
 		return stack;
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack){
+		
 		inventory.set(slot, stack);
+		
 		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
 			stack.setCount(getInventoryStackLimit());
 		}
@@ -166,7 +175,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		}else if(slotNumber == ContainerArcaneWorkbench.CRYSTAL_SLOT){
 			return itemstack.getItem() == WizardryItems.magic_crystal;
 
-		}else if(slotNumber == ContainerArcaneWorkbench.WAND_SLOT){
+		}else if(slotNumber == ContainerArcaneWorkbench.CENTRE_SLOT){
 			return (itemstack.getItem() instanceof ItemWand || itemstack.getItem() instanceof ItemWizardArmour
 					|| itemstack.getItem() == WizardryItems.blank_scroll);
 

@@ -11,6 +11,7 @@ import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryTabs;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.util.ITooltipFlag;
@@ -20,9 +21,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -32,7 +35,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
-public class ItemWizardArmour extends ItemArmor {
+public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem {
 
 	//VanillaCopy, ItemArmor has this set to private for some reason.
     public static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
@@ -209,6 +212,54 @@ public class ItemWizardArmour extends ItemArmor {
 			// If it gets this far, then all slots must be wizard armour, so trigger the achievement.
 			WizardryAdvancementTriggers.armour_set.triggerFor(player);
 		}
+	}
+
+	@Override
+	public int getSpellSlotCount(ItemStack stack){
+		return 0; // Doesn't have any spell slots!
+	}
+
+	@Override
+	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		
+		boolean changed = false;
+		
+		// Applies legendary upgrade
+		if(upgrade.getStack().getItem() == WizardryItems.armour_upgrade){
+			
+			if(!centre.getStack().hasTagCompound()){
+				centre.getStack().setTagCompound(new NBTTagCompound());
+			}
+			
+			if(!centre.getStack().getTagCompound().hasKey("legendary")){
+				
+				centre.getStack().getTagCompound().setBoolean("legendary", true);
+				upgrade.decrStackSize(1);
+				WizardryAdvancementTriggers.legendary.triggerFor(player);
+				changed = true;
+			}
+		}
+		
+		// Charges armour by appropriate amount
+		if(crystals.getStack() != ItemStack.EMPTY){
+			
+			int chargeDepleted = centre.getStack().getItemDamage();
+			
+			if(crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL < chargeDepleted){
+				
+				centre.getStack().setItemDamage(chargeDepleted - crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL);
+				crystals.decrStackSize(crystals.getStack().getCount());
+				changed = true;
+				
+			}else if(chargeDepleted != 0){
+
+				centre.getStack().setItemDamage(0);
+				crystals.decrStackSize((int)Math.ceil(((double)chargeDepleted) / Constants.MANA_PER_CRYSTAL));
+				changed = true;
+			}
+		}
+		
+		return changed;
 	}
 
 }

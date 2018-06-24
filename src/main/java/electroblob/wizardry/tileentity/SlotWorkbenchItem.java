@@ -1,8 +1,6 @@
 package electroblob.wizardry.tileentity;
 
-import electroblob.wizardry.item.ItemWand;
-import electroblob.wizardry.item.ItemWizardArmour;
-import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.item.IWorkbenchItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -14,12 +12,12 @@ import net.minecraft.item.ItemStack;
  * @author Electroblob
  * @since Wizardry 1.0
  */
-public class SlotWandArmour extends Slot {
+public class SlotWorkbenchItem extends Slot {
 
 	private ContainerArcaneWorkbench container;
 
-	public SlotWandArmour(IInventory par1iInventory, int index, int x, int y, ContainerArcaneWorkbench container){
-		super(par1iInventory, index, x, y);
+	public SlotWorkbenchItem(IInventory inventory, int index, int x, int y, ContainerArcaneWorkbench container){
+		super(inventory, index, x, y);
 		this.container = container;
 	}
 
@@ -41,8 +39,7 @@ public class SlotWandArmour extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack itemstack){
-		return (itemstack.getItem() instanceof ItemWand || itemstack.getItem() instanceof ItemWizardArmour
-				|| itemstack.getItem() == WizardryItems.blank_scroll);
+	public boolean isItemValid(ItemStack stack){
+		return stack.getItem() instanceof IWorkbenchItem && ((IWorkbenchItem)stack.getItem()).canPlace(stack);
 	}
 }
