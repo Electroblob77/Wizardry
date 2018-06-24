@@ -23,6 +23,7 @@ import net.minecraft.world.World;
 public class Wither extends SpellRay {
 	
 	private static final int BASE_DURATION = 200;
+	private static final int BASE_DAMAGE = 1;
 
 	public Wither(){
 		super("wither", Tier.APPRENTICE, Element.NECROMANCY, SpellType.ATTACK, 10, 20, false, 10, SoundEvents.ENTITY_WITHER_HURT);
@@ -40,7 +41,7 @@ public class Wither extends SpellRay {
 						this.getNameForTranslationFormatted()));
 			}else{
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER),
-						1.0f * modifiers.get(SpellModifiers.POTENCY));
+						BASE_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
 				((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.WITHER,
 						(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 1));
 			}

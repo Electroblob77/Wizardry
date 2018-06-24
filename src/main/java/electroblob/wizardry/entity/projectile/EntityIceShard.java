@@ -17,7 +17,7 @@ public class EntityIceShard extends EntityMagicArrow {
 		super(world);
 	}
 
-	@Override public double getDamage(){ return 6.0d; }
+	@Override public double getDamage(){ return 6; }
 
 	@Override public DamageType getDamageType(){ return DamageType.FROST; }
 

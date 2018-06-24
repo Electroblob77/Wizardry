@@ -63,6 +63,7 @@ public class Wizardry {
 	// IDEA: Improve the algorithm that finds a place to summon creatures to take walls into account.
 	// IDEA: Replace all uses of Math.cos and Math.sin with MathHelper versions
 	// IDEA: Triggering of inbuilt Forge events in relevant places?
+	// IDEA: Abstract the vanilla particles behind the particle builder
 
 	/* Minor bugs that need fixing at some point:
 	 * - Player skin hat layer shows through wizard hats - Wizard armour breaks rather than just running out of mana (I
@@ -78,6 +79,15 @@ public class Wizardry {
 	// TODO: Switch from IInventory to IItemHandler (Or don't. It's only useful for automation really.)
 	// TODO: Have particles obey Minecraft's particle setting where appropriate
 	// (see https://github.com/RootsTeam/Embers/blob/master/src/main/java/teamroots/embers/particle/ParticleUtil.java)
+	// TODO: Interfaces for various things, like 'stuff that can be put in the central slot of an arcane workbench'
+	// TODO: Go over all the worldgen code, use IWorldGenerator
+	// TODO: Implement a continuous sound system using MovingSoundEntity, allowing continuous spells to have a long sound
+	// loop as well as a start and end sound
+	// TODO: EntityMagicArrow needs attention
+	// TODO: Go over particle spawning on projectile impact and make sure hitvec is used wherever appropriate
+	// TODO: Replace spell IDs in packets with ResourceLocation strings
+	// TODO: Forcefield needs looking at, esp. with regards to projectiles and explosions
+	// TODO: TileEntityArcaneWorkbench needs looking at, esp. regarding inventory and markDirty
 
 	// NOTE: Add melee upgrades to loot tables when they are added.
 

@@ -545,6 +545,7 @@ public final class WizardryUtilities {
 	 * private. (You <i>could</i> call {@link EntityCreeper#onStruckByLightning(...)} and then heal it and extinguish
 	 * it, but that's a bit awkward.)
 	 */
+	// The reflection here only gets done once to initialise the POWERED field, so it's not a performance issue at all.
 	public static void chargeCreeper(EntityCreeper creeper){
 		creeper.getDataManager().set(POWERED, true);
 	}

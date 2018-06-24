@@ -70,6 +70,7 @@ public abstract class EntityMagicProjectile extends EntityThrowable implements I
 			// Depends on the horizontal distance between the two entities and accounts for bullet drop,
 			// but of course if gravity is ignored this should be 0 since there is no bullet drop.
 			float bulletDropCompensation = !this.hasNoGravity() ? (float)horizontalDistance * 0.2f : 0;
+			// It turns out that this method normalises the input (x, y, z) anyway
 			this.shoot(dx, dy + (double)bulletDropCompensation, dz, speed, aimingError);
 		}
 	}

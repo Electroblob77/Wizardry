@@ -252,6 +252,9 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
 			this.ticksInGround = 0;
 			++this.ticksInAir;
+			
+			// Does a ray trace to determine whether the projectile will hit a block in the next tick
+			
 			Vec3d vec3d1 = new Vec3d(this.posX, this.posY, this.posZ);
 			Vec3d vec3d = new Vec3d(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 			RayTraceResult raytraceresult = this.world.rayTraceBlocks(vec3d1, vec3d, false, true, false);
@@ -262,6 +265,9 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 				vec3d = new Vec3d(raytraceresult.hitVec.x, raytraceresult.hitVec.y,
 						raytraceresult.hitVec.z);
 			}
+			
+			// Uses bounding boxes to determine whether the projectile will hit an entity in the next tick, and if so
+			// overwrites the block hit with an entity
 
 			Entity entity = null;
 			List<?> list = this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox()

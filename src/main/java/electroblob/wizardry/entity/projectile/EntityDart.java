@@ -15,7 +15,7 @@ public class EntityDart extends EntityMagicArrow {
 		super(world);
 	}
 
-	@Override public double getDamage(){ return 4.0d; }
+	@Override public double getDamage(){ return 4; }
 
 	@Override public boolean doGravity(){ return true; }
 

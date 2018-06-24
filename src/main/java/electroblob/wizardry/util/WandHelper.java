@@ -260,7 +260,8 @@ public final class WandHelper {
 
 	/**
 	 * Applies the given upgrade to the given wand, or in other words increases the level for that upgrade by 1. This
-	 * does <b>not</b> account for the individual or total upgrade stack limits.
+	 * does <b>not</b> account for the individual or total upgrade stack limits or any special behaviour; it only deals
+	 * with the NBT data.
 	 */
 	public static void applyUpgrade(ItemStack wand, Item upgrade){
 

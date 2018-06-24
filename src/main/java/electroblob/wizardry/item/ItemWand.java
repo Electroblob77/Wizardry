@@ -167,7 +167,7 @@ public class ItemWand extends Item implements IWorkbenchItem {
 
 		text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.spell",
 				discovered ? "\u00A77" + spell.getDisplayNameWithFormatting()
-						: "#\u00A79" + SpellGlyphData.getGlyphName(spell, player.world)));
+				: "#\u00A79" + SpellGlyphData.getGlyphName(spell, player.world)));
 
 		text.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.mana",
 				(this.getMaxDamage(itemstack) - this.getDamage(itemstack)), this.getMaxDamage(itemstack)));
@@ -208,7 +208,7 @@ public class ItemWand extends Item implements IWorkbenchItem {
 		// Conditions for the spell to be attempted. The tier check is a failsafe; it should never be false unless the
 		// NBT is modified directly.
 		if(!spell.isContinuous && spell.tier.level <= this.tier.level
-		// Checks that the wand has enough mana to cast the spell
+				// Checks that the wand has enough mana to cast the spell
 				&& spell.cost <= (stack.getMaxDamage() - stack.getItemDamage())
 				// Checks that the spell is not in cooldown or that the player is in creative mode
 				&& (WandHelper.getCurrentCooldown(stack) == 0 || player.capabilities.isCreativeMode)){
@@ -238,7 +238,7 @@ public class ItemWand extends Item implements IWorkbenchItem {
 
 						float cooldownMultiplier = 1.0f
 								- WandHelper.getUpgradeLevel(stack, WizardryItems.cooldown_upgrade)
-										* Constants.COOLDOWN_REDUCTION_PER_LEVEL;
+								* Constants.COOLDOWN_REDUCTION_PER_LEVEL;
 
 						if(player.isPotionActive(WizardryPotions.font_of_mana)){
 							// Dividing by this rather than setting it takes upgrades and font of mana into account

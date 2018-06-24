@@ -10,10 +10,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum Tier {
 
-	BASIC(700, 3, 12, new Style().setColor(TextFormatting.WHITE), "basic"), APPRENTICE(1000, 4, 5,
-			new Style().setColor(TextFormatting.AQUA), "apprentice"), ADVANCED(1500, 5, 2,
-					new Style().setColor(TextFormatting.DARK_BLUE),
-					"advanced"), MASTER(2500, 6, 1, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
+	BASIC(700, 3, 12, new Style().setColor(TextFormatting.WHITE), "basic"),
+	APPRENTICE(1000, 5, 5, new Style().setColor(TextFormatting.AQUA), "apprentice"),
+	ADVANCED(1500, 7, 2, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
+	MASTER(2500, 9, 1, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
 
 	/** Maximum mana a wand of this tier can store. */
 	public final int maxCharge;

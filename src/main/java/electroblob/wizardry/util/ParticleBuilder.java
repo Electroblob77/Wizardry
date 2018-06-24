@@ -72,7 +72,8 @@ public final class ParticleBuilder {
 		/** Single pixel particle.<p><b>Defaults:</b><p>Lifetime: 16-80 ticks<br>Colour: white */ 			DUST,
 		/** Rapid flash, like fireworks.<p><b>Defaults:</b><p>Lifetime: 4 ticks<br>Colour: white */ 		FLASH,
 		/** Small shard of ice.<p><b>Defaults:</b><p>Lifetime: 8-40 ticks<br>Gravity: true */ 				ICE,
-		/** Single green/brown leaf.<p><b>Defaults:</b><p>Lifetime: 10-15 ticks<br>Velocity: (0, -0.03, 0) */ LEAF,
+		/** Single leaf.<p><b>Defaults:</b><p>Lifetime: 10-15 ticks<br>Velocity: (0, -0.03, 0)
+		 * <br>Colour: green/brown */ 																		LEAF,
 		/** Bubble that doesn't burst in air.<p><b>Defaults:</b><p>Lifetime: 8-40 ticks	*/					MAGIC_BUBBLE,
 		/** Scaleable, moving flame.<p><b>Defaults:</b><p>Lifetime: 8-40 ticks<br> */ 						MAGIC_FIRE,
 		/** Soft-edged round particle.<p><b>Defaults:</b><p>Lifetime: 8-40 ticks<br>Colour: white */ 		PATH,

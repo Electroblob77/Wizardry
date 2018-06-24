@@ -36,7 +36,7 @@ public class ItemSpellBook extends Item {
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-		if (isInCreativeTab(tab)) {
+		if(isInCreativeTab(tab)) {
 			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
 			// is not required, only the id.
 			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
