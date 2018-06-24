@@ -46,6 +46,10 @@ public class Banish extends SpellRay {
 					world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 							world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 				}
+				
+				// Can't be bothered to route this through the proxies!
+				if(entity == net.minecraft.client.Minecraft.getMinecraft().player)
+					electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
 			}
 
 			if(y > -1){

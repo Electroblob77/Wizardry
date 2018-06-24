@@ -43,6 +43,9 @@ public class Blink extends Spell {
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx, dy, dz, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 			}
+			
+			// Can't be bothered to route this through the proxies!
+			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
 		}
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){

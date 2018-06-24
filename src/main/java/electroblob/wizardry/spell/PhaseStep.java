@@ -76,6 +76,9 @@ public class PhaseStep extends Spell {
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 			}
+			
+			// Can't be bothered to route this through the proxies!
+			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
 		}
 
 		return false;

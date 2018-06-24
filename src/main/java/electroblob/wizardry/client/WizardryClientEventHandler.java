@@ -44,6 +44,7 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -66,9 +67,29 @@ public final class WizardryClientEventHandler {
 	private static final ResourceLocation sixthSenseTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/sixth_sense.png");
 	private static final ResourceLocation sixthSenseOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_overlay.png");
 	private static final ResourceLocation frostOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/frost_overlay.png");
+	private static final ResourceLocation blinkOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/blink_overlay.png");
 	private static final ResourceLocation pointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/pointer.png");
 	private static final ResourceLocation targetPointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/target_pointer.png");
 
+	/** The remaining time for which the blink screen overlay effect will be displayed in first-person. Since this is
+	 * only for the first-person player (the instance of which is itself stored in a static variable), this can simply
+	 * be stored statically here, rather than needing to be in {@code WizardData}. */
+	private static int blinkEffectTimer;
+	/** The number of ticks the blink effect lasts for. */
+	private static final int BLINK_EFFECT_DURATION = 8;
+	
+	/** Starts the first person blink overlay effect. */
+	public static void playBlinkEffect(){
+		blinkEffectTimer = BLINK_EFFECT_DURATION;
+	}
+	
+	@SubscribeEvent
+	public static void onLivingUpdateEvent(LivingUpdateEvent event){
+		if(event.getEntity() == Minecraft.getMinecraft().player){
+			if(blinkEffectTimer > 0) blinkEffectTimer--;
+		}
+	}
+	
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
 		
@@ -128,6 +149,11 @@ public final class WizardryClientEventHandler {
 			}
 
 			event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
+		}
+		
+		if(blinkEffectTimer > 0){
+			float f = ((float)Math.max(blinkEffectTimer - 2, 0))/BLINK_EFFECT_DURATION;
+			event.setNewfov(event.getFov() + f * f * 0.7f);
 		}
 	}
 	
@@ -354,66 +380,72 @@ public final class WizardryClientEventHandler {
 	@SubscribeEvent
 	public static void onRenderGameOverlayEvent(RenderGameOverlayEvent.Post event){
 
-		if(event.getType() == RenderGameOverlayEvent.ElementType.HELMET
-				&& Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.sixth_sense)){
-
-			GlStateManager.pushMatrix();
-
-			GlStateManager.disableDepth();
-			GlStateManager.depthMask(false);
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			GlStateManager.disableAlpha();
-			Minecraft.getMinecraft().renderEngine.bindTexture(sixthSenseOverlayTexture);
-
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
-
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buffer.pos(0.0D, (double)event.getResolution().getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-			buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(), -90.0D).tex(1.0D, 1.0D)
-					.endVertex();
-			buffer.pos((double)event.getResolution().getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
-			buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
-			tessellator.draw();
-
-			GlStateManager.depthMask(true);
-			GlStateManager.enableDepth();
-			GlStateManager.enableAlpha();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-			GlStateManager.popMatrix();
+		if(event.getType() == RenderGameOverlayEvent.ElementType.HELMET){
+			
+			if(Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.sixth_sense)){
+				
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+				GlStateManager.color(1, 1, 1, 1);
+				GlStateManager.disableAlpha();
+				
+				renderScreenOverlay(event, sixthSenseOverlayTexture);
+				
+				GlStateManager.enableAlpha();
+				GlStateManager.color(1, 1, 1, 1);
+			}
+			
+			if(Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.frost)){
+				
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+				GlStateManager.color(1, 1, 1, 1);
+				GlStateManager.disableAlpha();
+				
+				renderScreenOverlay(event, frostOverlayTexture);
+				
+				GlStateManager.enableAlpha();
+				GlStateManager.color(1, 1, 1, 1);
+			}
+			
+			if(blinkEffectTimer > 0){
+				
+				float alpha = ((float)blinkEffectTimer)/BLINK_EFFECT_DURATION;
+				
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ONE, GL11.GL_ZERO);
+				GlStateManager.color(1, 1, 1, alpha);
+				GlStateManager.disableAlpha();
+				
+				renderScreenOverlay(event, blinkOverlayTexture);
+				
+				GlStateManager.enableAlpha();
+				GlStateManager.color(1, 1, 1, 1);
+			}
 		}
+	}
+	
+	private static void renderScreenOverlay(RenderGameOverlayEvent.Post event, ResourceLocation texture){
+		
+		GlStateManager.pushMatrix();
 
-		if(event.getType() == RenderGameOverlayEvent.ElementType.HELMET && Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.frost)){
+		GlStateManager.disableDepth();
+		GlStateManager.depthMask(false);
+		
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
-			GlStateManager.pushMatrix();
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder buffer = tessellator.getBuffer();
 
-			GlStateManager.disableDepth();
-			GlStateManager.depthMask(false);
-			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-			GlStateManager.disableAlpha();
-			Minecraft.getMinecraft().renderEngine.bindTexture(frostOverlayTexture);
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buffer.pos(0.0D, (double)event.getResolution().getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
+		buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(), -90.0D).tex(1.0D, 1.0D)
+				.endVertex();
+		buffer.pos((double)event.getResolution().getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+		buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
+		tessellator.draw();
+		
+		GlStateManager.depthMask(true);
+		GlStateManager.enableDepth();
 
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder buffer = tessellator.getBuffer();
-
-			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			buffer.pos(0.0D, (double)event.getResolution().getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-			buffer.pos((double)event.getResolution().getScaledWidth(), (double)event.getResolution().getScaledHeight(), -90.0D).tex(1.0D, 1.0D)
-					.endVertex();
-			buffer.pos((double)event.getResolution().getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
-			buffer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
-
-			tessellator.draw();
-			GlStateManager.depthMask(true);
-			GlStateManager.enableDepth();
-			GlStateManager.enableAlpha();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-			GlStateManager.popMatrix();
-		}
+		GlStateManager.popMatrix();
 	}
 
 	// FIXME: Something in here is making the first person shadow ward rather translucent.
