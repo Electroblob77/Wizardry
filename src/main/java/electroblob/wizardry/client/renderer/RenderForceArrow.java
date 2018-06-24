@@ -73,13 +73,23 @@ public class RenderForceArrow extends Render<EntityForceArrow> {
 		GlStateManager.scale(scale, scale, scale);
 		GlStateManager.translate(-4.0F, 0.0F, 0.0F);
 
+		// Front
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		buffer.pos(-5, 3.5, -3.5).tex((double)u5, (double)v5).endVertex();
 		buffer.pos(-5, 3.5, 3.5).tex((double)u6, (double)v5).endVertex();
 		buffer.pos(-5, -3.5, 3.5).tex((double)u6, (double)v6).endVertex();
-		buffer.pos(-5, -3.5, -3.5).tex((double)u5, (double)v6);
+		buffer.pos(-5, -3.5, -3.5).tex((double)u5, (double)v6).endVertex();
+		tessellator.draw();
+		
+		// Back
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		buffer.pos(-5, -3.5, -3.5).tex((double)u5, (double)v6).endVertex();
+		buffer.pos(-5, -3.5, 3.5).tex((double)u6, (double)v6).endVertex();
+		buffer.pos(-5, 3.5, 3.5).tex((double)u6, (double)v5).endVertex();
+		buffer.pos(-5, 3.5, -3.5).tex((double)u5, (double)v5).endVertex();
 		tessellator.draw();
 
+		// Rings
 		for(int i = 0; i < 5; i++){
 			GlStateManager.color(1, 1, 1, 1 - i * 0.2f);
 			double j = i + ((double)arrow.ticksExisted % 3) / 3;
@@ -102,6 +112,7 @@ public class RenderForceArrow extends Render<EntityForceArrow> {
 
 		GlStateManager.color(1, 1, 1, 1);
 
+		// Sides
 		for(int i = 0; i < 4; ++i){
 			GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
 			GL11.glNormal3f(0.0F, 0.0F, scale);
