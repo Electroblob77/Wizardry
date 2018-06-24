@@ -6,6 +6,7 @@ import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 /**
@@ -185,6 +186,19 @@ public final class ParticleBuilder {
 	}
 	
 	/**
+	 * Sets the position of the particle being built. This is a vector-based alternative to {@link ParticleBuilder#pos(
+	 * double, double, double)}, allowing for even more concise code when a vector is available.
+	 * <p>
+	 * <b>Affects:</b> All particle types
+	 * @param pos A vector representing the coordinates of the particle to be built.
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is not yet building.
+	 */
+	public ParticleBuilder pos(Vec3d pos){
+		return pos(pos.x, pos.y, pos.z);
+	}
+	
+	/**
 	 * Sets the velocity of the particle being built. If unspecified, this defaults to the particle's default velocity,
 	 * specified within its constructor.
 	 * <p>
@@ -201,6 +215,19 @@ public final class ParticleBuilder {
 		this.vy = vy;
 		this.vz = vz;
 		return this;
+	}
+	
+	/**
+	 * Sets the velocity of the particle being built. This is a vector-based alternative to {@link ParticleBuilder#vel(
+	 * double, double, double)}, allowing for even more concise code when a vector is available.
+	 * <p>
+	 * <b>Affects:</b> All particle types
+	 * @param vel A vector representing the velocity of the particle to be built.
+	 * @return The particle builder instance, allowing other methods to be chained onto this one
+	 * @throws IllegalStateException if the particle builder is not yet building.
+	 */
+	public ParticleBuilder vel(Vec3d vel){
+		return vel(vel.x, vel.y, vel.z);
 	}
 	
 	/**
