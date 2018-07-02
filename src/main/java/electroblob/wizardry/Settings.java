@@ -462,7 +462,7 @@ public final class Settings {
 		enableShiftScrolling = property.getBoolean();
 		propOrder.add(property.getName());
 		
-		property = config.get(CLIENT_CATEGORY, "reverseScrollDirection", true, "Whether to reverse the scroll direction used to switch between spells on a wand while sneaking.");
+		property = config.get(CLIENT_CATEGORY, "reverseScrollDirection", false, "Whether to reverse the scroll direction used to switch between spells on a wand while sneaking.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".reverse_scroll_direction");
 		property.setRequiresWorldRestart(false);
 		reverseScrollDirection = property.getBoolean();
