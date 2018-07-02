@@ -158,6 +158,8 @@ public final class Settings {
 	 * while sneaking.
 	 */
 	public boolean enableShiftScrolling = true;
+	/** <b>[Client-only]</b> Whether to reverse the spell switching scroll direction.*/
+	public boolean reverseScrollDirection = false;
 
 	// Display
 	/** <b>[Client-only]</b> Whether to show summoned creatures' names and owners above their heads. */
@@ -458,6 +460,12 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".enable_shift_scrolling");
 		property.setRequiresWorldRestart(false);
 		enableShiftScrolling = property.getBoolean();
+		propOrder.add(property.getName());
+		
+		property = config.get(CLIENT_CATEGORY, "reverseScrollDirection", true, "Whether to reverse the scroll direction used to switch between spells on a wand while sneaking.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".reverse_scroll_direction");
+		property.setRequiresWorldRestart(false);
+		reverseScrollDirection = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(CLIENT_CATEGORY, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name, "The position of the spell HUD.", GuiPosition.names);

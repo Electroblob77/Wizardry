@@ -101,10 +101,12 @@ public class WizardryControlHandler {
 				&& Wizardry.settings.enableShiftScrolling){
 
 			event.setCanceled(true);
+			
+			int d = Wizardry.settings.reverseScrollDirection ? -event.getDwheel() : event.getDwheel();
 
-			if(event.getDwheel() > 0){
+			if(d > 0){
 				selectNextSpell(wand);
-			}else if(event.getDwheel() < 0){
+			}else if(d < 0){
 				selectPreviousSpell(wand);
 			}
 		}
