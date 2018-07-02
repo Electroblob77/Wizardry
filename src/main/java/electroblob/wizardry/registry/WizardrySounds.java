@@ -37,6 +37,7 @@ public final class WizardrySounds {
 	public static final SoundEvent SPELL_LOOP_WIND = createSound("wind");
 	public static final SoundEvent SPELL_EARTHQUAKE = createSound("rumble");
 	public static final SoundEvent SPELL_FORCE = createSound("force");
+	public static final SoundEvent SELECT_SPELL = createSound("select");
 
 	/** Trick borrowed from the Twilight Forest, makes things neater. */
 	public static SoundEvent createSound(String name){
@@ -65,5 +66,6 @@ public final class WizardrySounds {
 		event.getRegistry().register(SPELL_LOOP_WIND);
 		event.getRegistry().register(SPELL_EARTHQUAKE);
 		event.getRegistry().register(SPELL_FORCE);
+		event.getRegistry().register(SELECT_SPELL);
 	}
 }

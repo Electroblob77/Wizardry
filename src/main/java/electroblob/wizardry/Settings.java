@@ -164,6 +164,10 @@ public final class Settings {
 	public boolean showSummonedCreatureNames = true;
 	/** <b>[Client-only]</b> The position of the spell HUD. */
 	public GuiPosition spellHUDPosition = GuiPosition.BOTTOM_LEFT;
+	
+	public static final String DEFAULT_HUD_SKIN_KEY = "default"; // Defined here so it's not in a client-only class.
+	/** <b>[Client-only]</b> The string identifier of the skin used for the spell HUD. */
+	public String spellHUDSkin = DEFAULT_HUD_SKIN_KEY;
 
 	/** Set of constants for each of the four positions that the spell HUD can be in. */
 	public enum GuiPosition {
@@ -190,6 +194,8 @@ public final class Settings {
 
 		GuiPosition(String name, boolean flipX, boolean flipY){
 			this.name = name;
+			this.flipX = flipX;
+			this.flipY = flipY;
 		}
 
 		/**
@@ -457,6 +463,12 @@ public final class Settings {
 		property = config.get(CLIENT_CATEGORY, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name, "The position of the spell HUD.", GuiPosition.names);
 		property.setLanguageKey("config." + Wizardry.MODID + ".spell_hud_position");
 		spellHUDPosition = GuiPosition.fromName(property.getString());
+		propOrder.add(property.getName());
+		
+		property = config.get(CLIENT_CATEGORY, "spellHUDSkin", DEFAULT_HUD_SKIN_KEY, "The skin used for the spell HUD.", Wizardry.proxy.getSpellHUDSkins().toArray(new String[0]));
+		property.setLanguageKey("config." + Wizardry.MODID + ".spell_hud_skin");
+		Wizardry.proxy.setToHUDChooserEntry(property);
+		spellHUDSkin = property.getString();
 		propOrder.add(property.getName());
 
 		property = config.get(CLIENT_CATEGORY, "showSummonedCreatureNames", true, "Whether to show summoned creatures' names and owners above their heads.");

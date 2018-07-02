@@ -35,5 +35,7 @@
 		
 	"sparkle": {"category": "player","sounds": [{"name": "ebwizardry:sparkle","stream": false}]},
 	"wind": {"category": "player","sounds": [{"name": "ebwizardry:wind","stream": false}]},
-	"rumble": {"category": "player","sounds": [{"name": "ebwizardry:rumble","stream": false}]}
+	"rumble": {"category": "player","sounds": [{"name": "ebwizardry:rumble","stream": false}]},
+	
+	"select": {"category": "player","sounds": [{"name": "ebwizardry:select","stream": false}]}
 }

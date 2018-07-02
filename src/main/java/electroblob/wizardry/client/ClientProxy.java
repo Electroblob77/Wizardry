@@ -130,6 +130,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBlaze;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -186,15 +188,18 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void registerSpellHUD(){
-		MinecraftForge.EVENT_BUS.register(new GuiSpellDisplay(Minecraft.getMinecraft()));
-	}
-
-	@Override
 	public void initGuiBits(){
 		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"),
 				Minecraft.getMinecraft().renderEngine, false);
 		GuiWizardHandbook.initDisplayRecipes();
+	}
+	
+	@Override
+	public void registerResourceReloadListener(){
+		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+		if(manager instanceof IReloadableResourceManager){
+		    ((IReloadableResourceManager)manager).registerReloadListener(GuiSpellDisplay::loadSkins);
+		}
 	}
 
 	// SECTION Misc
@@ -203,6 +208,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void setToNumberSliderEntry(Property property){
 		property.setConfigEntryClass(NumberSliderEntry.class);
+	}
+	
+	@Override
+	public void setToHUDChooserEntry(Property property){
+		property.setConfigEntryClass(SpellHUDSkinChooserEntry.class);
 	}
 
 	@Override
@@ -213,6 +223,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void playMovingSound(Entity entity, SoundEvent sound, float volume, float pitch, boolean repeat){
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, sound, volume, pitch, repeat));
+	}
+	
+	@Override
+	public Set<String> getSpellHUDSkins(){
+		return GuiSpellDisplay.getSkinKeys();
 	}
 
 	// SECTION Items

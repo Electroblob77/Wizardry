@@ -7,8 +7,6 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.item.ItemSpectralBow;
 import electroblob.wizardry.item.ItemWand;
-import electroblob.wizardry.packet.PacketControlInput;
-import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Flight;
@@ -38,7 +36,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.GuiContainerEvent;
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -47,7 +44,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -99,37 +95,6 @@ public final class WizardryClientEventHandler {
 //		for(int i=0; i<7; i++){
 //			event.getMap().registerSprite(new ResourceLocation(Wizardry.MODID, "particle/ice_" + i));
 //		}
-	}
-
-	// Shift-scrolling to change spells
-	@SubscribeEvent
-	public static void onMouseEvent(MouseEvent event){
-
-		EntityPlayer player = Minecraft.getMinecraft().player;
-		ItemStack wand = player.getHeldItemMainhand();
-
-		if(!(wand.getItem() instanceof ItemWand)){
-			wand = player.getHeldItemOffhand();
-			// If the player isn't holding a wand, then nothing else needs to be done.
-			if(!(wand.getItem() instanceof ItemWand)) return;
-		}
-
-		if(Minecraft.getMinecraft().inGameHasFocus && !wand.isEmpty() && event.getDwheel() != 0 && player.isSneaking()
-				&& Wizardry.settings.enableShiftScrolling){
-
-			event.setCanceled(true);
-
-			if(event.getDwheel() > 0){
-				// Packet building
-				IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.PREVIOUS_SPELL_KEY);
-				WizardryPacketHandler.net.sendToServer(msg);
-
-			}else if(event.getDwheel() < 0){
-				// Packet building
-				IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.NEXT_SPELL_KEY);
-				WizardryPacketHandler.net.sendToServer(msg);
-			}
-		}
 	}
 
 	@SubscribeEvent

@@ -120,6 +120,8 @@ public class Wizardry {
 	public void preInit(FMLPreInitializationEvent event){
 
 		logger = event.getModLog();
+		
+		proxy.registerResourceReloadListener();
 
 		settings.initConfig(event);
 
@@ -162,9 +164,7 @@ public class Wizardry {
 
 		// Event Handlers
 		GameRegistry.registerWorldGenerator(generator, 0);
-		MinecraftForge.EVENT_BUS.register(new WizardryKeyHandler());
 		MinecraftForge.EVENT_BUS.register(instance);
-		proxy.registerSpellHUD(); // This can't easily be converted to use the new @Mod.EventBusSubscriber system
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new WizardryGuiHandler());
 		WizardryPacketHandler.initPackets();
 

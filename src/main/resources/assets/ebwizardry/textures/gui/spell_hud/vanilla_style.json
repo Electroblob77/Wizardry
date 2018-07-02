@@ -1,0 +1,33 @@
+{
+	"name": "Vanilla-style",
+	"description": "A vanilla Minecraft-styled skin, for the purists out there.",
+	"width": 128,
+	"height": 36,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 40,
+		"y": 18
+	},
+	"spell_cascade_offset": {
+		"x": 0,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 40,
+		"y": 0,
+		"length": 81,
+		"height": 5,
+		"mirror": {
+			"x": false,
+			"y": false
+		},
+		"show_when_full": true
+	}
+}

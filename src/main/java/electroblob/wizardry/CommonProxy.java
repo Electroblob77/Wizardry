@@ -46,13 +46,14 @@ public class CommonProxy {
 	public void registerKeyBindings(){
 	}
 
-	public void registerSpellHUD(){}
 
 	public net.minecraft.client.model.ModelBiped getWizardArmourModel(){
 		return null;
 	}
 
 	public void initGuiBits(){}
+	
+	public void registerResourceReloadListener(){}
 
 	// SECTION Particles
 	// ===============================================================================================================
@@ -126,6 +127,8 @@ public class CommonProxy {
 
 	public void setToNumberSliderEntry(Property property){
 	}
+	
+	public void setToHUDChooserEntry(Property property){}
 	// public void setToEntityNameEntry(Property property){}
 
 	/**
@@ -145,6 +148,11 @@ public class CommonProxy {
 	 * null on the server side.
 	 */
 	public World getTheWorld(){
+		return null;
+	}
+
+	/** Returns an unmodifiable set of the string keys for all of the loaded spell HUD skins. */
+	public Set<String> getSpellHUDSkins(){
 		return null;
 	}
 

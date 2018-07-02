@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
@@ -116,49 +117,81 @@ public final class WandHelper {
 
 		return Spells.none;
 	}
+	
+	/** Returns the spell after the currently selected spell for the given wand, or the 'none' spell if the wand has no
+	 * spell data. */
+	public static Spell getNextSpell(ItemStack wand){
+
+		Spell[] spells = getSpells(wand);
+
+		if(wand.getTagCompound() != null){
+			return spells[getNextSpellIndex(wand)];
+		}
+
+		return Spells.none;
+	}
+	
+	/** Returns the spell before the currently selected spell for the given wand, or the 'none' spell if the wand has no
+	 * spell data. */
+	public static Spell getPreviousSpell(ItemStack wand){
+
+		Spell[] spells = getSpells(wand);
+
+		if(wand.getTagCompound() != null){
+			return spells[getPreviousSpellIndex(wand)];
+		}
+
+		return Spells.none;
+	}
 
 	/** Selects the next spell in this wand's list of spells. */
 	public static void selectNextSpell(ItemStack wand){
 		// 5 here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
-		if(getSpells(wand).length < 0) setSpells(wand, new Spell[5]);
+		if(getSpells(wand).length < 0) setSpells(wand, new Spell[ItemWand.BASE_SPELL_SLOTS]);
 
 		if(wand.getTagCompound() != null){
-
-			int numberOfSpells = getSpells(wand).length;
-			int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
-
-			// Greater than or equal to so that if attunement upgrades are somehow removed by NBT modification it just
-			// resets.
-			if(selectedSpell >= numberOfSpells - 1){
-				selectedSpell = 0;
-			}else{
-				selectedSpell++;
-			}
-
-			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, selectedSpell);
-
+			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, getNextSpellIndex(wand));
 		}
 	}
 
 	/** Selects the previous spell in this wand's list of spells. */
 	public static void selectPreviousSpell(ItemStack wand){
-
 		// 5 here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
-		if(getSpells(wand).length < 0) setSpells(wand, new Spell[5]);
-		// This cannot possibly be null here, and yet I am getting an NPE...
+		if(getSpells(wand).length < 0) setSpells(wand, new Spell[ItemWand.BASE_SPELL_SLOTS]);
+
 		if(wand.getTagCompound() != null){
-
-			int numberOfSpells = getSpells(wand).length;
-			int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
-
-			if(selectedSpell <= 0){
-				selectedSpell = numberOfSpells - 1;
-			}else{
-				selectedSpell--;
-			}
-
-			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, selectedSpell);
+			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, getPreviousSpellIndex(wand));
 		}
+	}
+	
+	private static int getNextSpellIndex(ItemStack wand){
+		
+		int numberOfSpells = getSpells(wand).length;
+		int spellIndex = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+		
+		// Greater than or equal to so that if attunement upgrades are somehow removed by NBT modification it just
+		// resets.
+		if(spellIndex >= numberOfSpells - 1){
+			spellIndex = 0;
+		}else{
+			spellIndex++;
+		}
+		
+		return spellIndex;
+	}
+	
+	private static int getPreviousSpellIndex(ItemStack wand){
+		
+		int numberOfSpells = getSpells(wand).length;
+		int spellIndex = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+
+		if(spellIndex <= 0){
+			spellIndex = numberOfSpells - 1;
+		}else{
+			spellIndex--;
+		}
+
+		return spellIndex;
 	}
 
 	/**
@@ -209,6 +242,28 @@ public final class WandHelper {
 		if(cooldowns.length == 0) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
 		return cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)];
+	}
+	
+	/** Returns the given wand's cooldown for the spell after the currently selected spell, or 0 if the wand has no
+	 * cooldown data. */
+	public static int getNextCooldown(ItemStack wand){
+
+		int[] cooldowns = getCooldowns(wand);
+
+		if(cooldowns.length == 0) return 0;
+		// Don't need to check if the tag compound is null since the above check is equivalent.
+		return cooldowns[getNextSpellIndex(wand)];
+	}
+	
+	/** Returns the given wand's cooldown for the spell before the currently selected spell, or 0 if the wand has no
+	 * cooldown data. */
+	public static int getPreviousCooldown(ItemStack wand){
+
+		int[] cooldowns = getCooldowns(wand);
+
+		if(cooldowns.length == 0) return 0;
+		// Don't need to check if the tag compound is null since the above check is equivalent.
+		return cooldowns[getPreviousSpellIndex(wand)];
 	}
 
 	/** Sets the given wand's cooldown for the currently selected spell. */
