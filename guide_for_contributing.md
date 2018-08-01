@@ -2,7 +2,18 @@
 
 ## Submitting an issue
 
-When submitting an issue, please stick to the issue template. Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem! Most importantly, use gist or pastebin to post crash reports.
+When submitting an issue, I would be grateful if you could follow these few guidelines:
+
+- First and foremost, please check your issue hasn't already been posted. The issue tracker is searchable, so try typing in a few keywords and see if anything comes up.
+
+- Please stick to the issue template, it's there to help you provide the right information so I can fix the problem more easily. If you're not sure what to put for anything, that's ok, just leave it as it is.
+
+- Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem!
+
+- There's no need to put 'tags' in square brackets in the issue title, I'll put proper github issue tags on it which will also help organise it. You can use them to search for issues too!
+
+- Most importantly, use gist or pastebin to post crash reports. Do not paste the entire crash report inline, not even in a code block!
+> If you've got a git account (which you do, if you're posting an issue) you can access gist, and pastebin doesn't require an account at all, so there's no excuse!
 
 ## Submitting a PR
 
