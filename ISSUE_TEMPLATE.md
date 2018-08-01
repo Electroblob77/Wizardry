@@ -1,3 +1,5 @@
+Please read the [guide for contributing](https://github.com/Electroblob77/Wizardry/blob/1.12.2/guide_for_contributing.md) before posting.
+
 Minecraft version: 1.12.2 [change as necessary]  
 Wizardry version: 4.1.2 [change as necessary]  
 Environment: Singleplayer/LAN game/Server [delete as necessary]
