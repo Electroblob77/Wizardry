@@ -12,6 +12,8 @@ When submitting an issue, I would be grateful if you could follow these few guid
 
 - There's no need to put 'tags' in square brackets in the issue title, I'll put proper github issue tags on it which will also help organise it. You can use them to search for issues too!
 
+- Don't close an issue unless it has actually been fixed or is no longer relevant - otherwise I might not end up fixing it at all! Usually I'll take care of closing issues anyway, so you don't have to worry about it.
+
 - Most importantly, use gist or pastebin to post crash reports. Do not paste the entire crash report inline, not even in a code block!
 > If you've got a git account (which you do, if you're posting an issue) you can access gist, and pastebin doesn't require an account at all, so there's no excuse!
 
