@@ -33,12 +33,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.*;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -278,12 +278,14 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		for(ItemStack stack : player.inventory.mainInventory){
 			if(stack.isItemEnchanted()){
 
-				Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+				NBTTagList enchantmentList = stack.getItem() == Items.ENCHANTED_BOOK ?
+						ItemEnchantedBook.getEnchantments(stack) : stack.getEnchantmentTagList();
 
-				Iterator<Entry<Enchantment, Integer>> iterator = enchantments.entrySet().iterator();
+				Iterator<NBTBase> iterator =enchantmentList.iterator();
 				// For each of the item's enchantments
 				while(iterator.hasNext()){
-					Enchantment enchantment = iterator.next().getKey();
+					NBTTagCompound enchantmentTag = (NBTTagCompound) iterator.next();
+					Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"));
 					// Ignores the enchantment unless it is an imbuement
 					if(enchantment instanceof Imbuement){
 						int duration = this.getImbuementDuration(enchantment);
@@ -295,10 +297,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 							activeImbuements.add((Imbuement)enchantment);
 							// Otherwise:
 						}else{
-							// Removes the enchantment from the enchantment map
+							// Removes the enchantment from the item
 							iterator.remove();
-							// Applies the new enchantment map to the item
-							EnchantmentHelper.setEnchantments(enchantments, stack);
 						}
 					}
 				}
