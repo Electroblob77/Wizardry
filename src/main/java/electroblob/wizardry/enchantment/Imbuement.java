@@ -95,7 +95,7 @@ public interface Imbuement {
 					})){
 						// If any imbuements were removed, inform about the removal of the enchantment(s), or
 						// delete the book entirely if there are none left.
-						if(enchantmentList.hasNoTags()){
+						if(enchantmentList.isEmpty()){
 							slot.putStack(ItemStack.EMPTY); // NOTE: Will need changing in 1.11
 							Wizardry.logger.info("Deleted enchanted book with illegal enchantments");
 						}else{

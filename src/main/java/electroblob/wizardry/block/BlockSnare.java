@@ -51,7 +51,7 @@ public class BlockSnare extends BlockContainer {
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entity){
+	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity){
 
 		if(!world.isRemote && entity instanceof EntityLivingBase){
 			if(world.getTileEntity(pos) instanceof TileEntityPlayerSave){
@@ -80,7 +80,7 @@ public class BlockSnare extends BlockContainer {
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer() {
 		return BlockRenderLayer.CUTOUT;
 	}
 

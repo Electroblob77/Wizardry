@@ -175,7 +175,7 @@ public class WizardryWorldGenerator implements IWorldGenerator {
 			}
 
 			// 0 = West, 1 = North, 2 = East, 3 = South (The way you would face when walking out of the door)
-			EnumFacing orientation = EnumFacing.getHorizontal(random.nextInt(4));
+			EnumFacing orientation = EnumFacing.byHorizontalIndex(random.nextInt(4));
 			boolean flip = random.nextBoolean();
 
 			if(checkSpaceForTower(world, origin, towerBlueprint, orientation, flip)){
@@ -299,7 +299,7 @@ public class WizardryWorldGenerator implements IWorldGenerator {
 									// Rotates the door depending on whether flip is true.
 									ItemDoor.placeDoor(
 											world, pos, flip
-													? EnumFacing.getHorizontal(3 - orientation.getHorizontalIndex())
+													? EnumFacing.byHorizontalIndex(3 - orientation.getHorizontalIndex())
 															.getOpposite()
 													: orientation.rotateYCCW(),
 											Blocks.OAK_DOOR, false);

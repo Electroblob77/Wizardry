@@ -97,7 +97,7 @@ public class BlockStatue extends BlockContainer {
 	}
 
 	@Override
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return this.isIce ? BlockRenderLayer.TRANSLUCENT : BlockRenderLayer.SOLID;
 	}
 
