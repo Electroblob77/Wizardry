@@ -179,11 +179,11 @@ public class Wizardry {
 	public static void onMissingMappingEvent(RegistryEvent.MissingMappings<Item> event){
 		// Just get, not getAll, since the mod id didn't change!
 		for(RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
-			if(mapping.key.getResourceDomain().equals(Wizardry.MODID)){
+			if(mapping.key.getNamespace().equals(Wizardry.MODID)){
 
 				Item replacement = null;
 
-				switch(mapping.key.getResourcePath()){
+				switch(mapping.key.getPath()){
 
 				case "wand_basic": replacement = WizardryItems.magic_wand; break;
 				case "wand_basic_fire": replacement = WizardryItems.basic_fire_wand; break;

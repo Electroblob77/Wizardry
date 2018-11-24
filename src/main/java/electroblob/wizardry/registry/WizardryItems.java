@@ -271,7 +271,7 @@ public final class WizardryItems {
 	 */
 	public static void registerItem(IForgeRegistry<Item> registry, Item item, String name){
 		item.setRegistryName(Wizardry.MODID, name);
-		item.setUnlocalizedName(item.getRegistryName().toString());
+		item.setTranslationKey(item.getRegistryName().toString());
 		registry.register(item);
 	}
 

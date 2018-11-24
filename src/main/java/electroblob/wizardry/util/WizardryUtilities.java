@@ -540,7 +540,7 @@ public final class WizardryUtilities {
 
 		Vec3d start = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
 		Vec3d look = entity.getLookVec();
-		Vec3d end = start.addVector(look.x * range, look.y * range, look.z * range);
+		Vec3d end = start.add(look.x * range, look.y * range, look.z * range);
 		return world.rayTraceBlocks(start, end, hitLiquids);
 	}
 
@@ -893,7 +893,7 @@ public final class WizardryUtilities {
 		// The original tag list should remain unchanged, hence the copy.
 		NBTTagList tagList2 = (NBTTagList)tagList.copy();
 
-		while(!tagList2.hasNoTags()){
+		while(!tagList2.isEmpty()){
 			NBTBase tag = tagList2.removeTag(0);
 			// Why oh why is NBTTagList not parametrised? It even has a tagType field, so it must know!
 			try{
