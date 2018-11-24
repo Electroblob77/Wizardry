@@ -1,7 +1,5 @@
 buildscript {
     repositories {
-        mavenCentral()
-		mavenLocal()
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
     }
@@ -10,7 +8,6 @@ buildscript {
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
-apply plugin: 'maven'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
@@ -36,12 +33,6 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
-repositories {
-	mavenLocal()
-	mavenCentral()
-    maven { url = "http://maven.bluexin.be/repository/snapshots/" }
-}
-
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -63,8 +54,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-	deobfCompile ("com.teamwizardry.librarianlib:librarianlib-particle-system-1.12.2:4.16-SNAPSHOT:deobf") {changing = true}
-	deobfCompile "com.teamwizardry:wizardry:0.9.7"
+
 }
 
 processResources {
