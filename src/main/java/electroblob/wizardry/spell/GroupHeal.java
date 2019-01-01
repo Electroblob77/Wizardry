@@ -9,8 +9,8 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,10 +49,10 @@ public class GroupHeal extends Spell {
 								double x = caster.posX + world.rand.nextDouble() * 2 - 1;
 								double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 								double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
-								ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(1, 1, 0.3f).spawn(world);
+								ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(1, 1, 0.3f).spawn(world);
 							}
-							 
-							Wizardry.proxy.spawnEntityParticle(world, caster, 15, 1, 1, 0.3f);
+
+							ParticleBuilder.create(Type.BUFF).entity(caster).clr(1, 1, 0.3f).spawn(world);
 						}
 
 						WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
@@ -78,10 +78,10 @@ public class GroupHeal extends Spell {
 								double x = caster.posX + world.rand.nextDouble() * 2 - 1;
 								double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 								double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
-								ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(1, 1, 0.3f).spawn(world);
+								ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(1, 1, 0.3f).spawn(world);
 							}
-							 
-							Wizardry.proxy.spawnEntityParticle(world, caster, 15, 1, 1, 0.3f);
+
+							ParticleBuilder.create(Type.BUFF).entity(caster).clr(1, 1, 0.3f).spawn(world);
 						}
 
 						WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,

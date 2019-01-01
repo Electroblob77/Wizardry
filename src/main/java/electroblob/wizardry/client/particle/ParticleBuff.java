@@ -21,34 +21,39 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class ParticleBuff extends ParticleEntityLinked {
+public class ParticleBuff extends ParticleWizardry {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/particle/buff.png");
 	private final boolean mirror;
 	
-	public ParticleBuff(World world, Entity entity, float r, float g, float b, boolean mirror){
-		super(world, entity);
-		this.setRBGColorF(r, g, b);
-		this.mirror = mirror;
-	}
-
-	public ParticleBuff(World world, Entity entity, int maxAge, float r, float g, float b, boolean mirror){
-		super(world, entity, maxAge);
-		this.setRBGColorF(r, g, b);
-		this.mirror = mirror;
-	}
-
-	@Override
-	public void init(){
-		this.particleGravity = 0;
-		this.posY += 1;
+	public ParticleBuff(World world, double x, double y, double z){
+		super(world, x, y, z);
+		this.setVelocity(0, 0.27, 0); // Approximately what it was before
+		this.mirror = world.rand.nextBoolean();
+		this.setMaxAge(15);
+		this.setGravity(false);
+		this.canCollide = false;
 	}
 	
 	@Override
 	public void onUpdate(){
 		super.onUpdate();
-		this.setPosition(this.entity.posX, this.entity.posY + 1 + 4f * this.particleAge/this.particleMaxAge, this.entity.posZ);
 		if(this.particleAge > this.particleMaxAge/2) this.particleAlpha = 2f - 2f*(float)this.particleAge/(float)this.particleMaxAge;
+	}
+	
+	/* There are 4 layers of particles, specified as 0-3 by the method below. - Layer 0 causes the normal particles.png
+	 * to be bound to the render engine for normal particles. - Layer 1 causes the block textures to be bound to the
+	 * render engine for digging fx and falling fx. - Layer 2 causes the item textures to be bound to the render engine
+	 * for tool breaking fx, snowballpoofs, slime particles, etc. - Layer 3 is not used in vanilla minecraft and was
+	 * presumably added by forge for exactly this reason. This means no texture is bound by vanilla minecraft, meaning
+	 * you are free to do as you wish without possibly overwriting vanilla particles. Mod particles won't be overwritten
+	 * anyway since they bind their own textures. It is of course important to bind the texture every time you render a
+	 * custom particle, but I don't see how you could do it any other way, since you don't have access to
+	 * EffectRenderer. */
+	@Override
+	public int getFXLayer(){
+		// This can only be 0-3 or it will cause an ArrayIndexOutOfBoundsException in EffectRenderer.
+		return 3;
 	}
 	
 	@Override

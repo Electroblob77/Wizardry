@@ -70,8 +70,6 @@ public class CommonProxy {
 	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius,
 			int maxAge, IBlockState block, BlockPos pos){
 	}
-	
-	public void spawnEntityParticle(World world, Entity entity, int maxAge, float r, float g, float b){}
 
 	// SECTION Items
 	// ===============================================================================================================

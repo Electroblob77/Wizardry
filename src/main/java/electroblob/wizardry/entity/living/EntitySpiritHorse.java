@@ -120,7 +120,7 @@ public class EntitySpiritHorse extends EntityHorse {
 			double x = this.posX - this.width / 2 + this.rand.nextFloat() * width;
 			double y = this.posY + this.height * this.rand.nextFloat() + 0.2f;
 			double z = this.posZ - this.width / 2 + this.rand.nextFloat() * width;
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).colour(0.8f, 0.8f, 1.0f).spawn(world);
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).spawn(world);
 		}
 	}
 
@@ -158,7 +158,7 @@ public class EntitySpiritHorse extends EntityHorse {
 			double x = this.posX - this.width / 2 + this.rand.nextFloat() * width;
 			double y = this.posY + this.height * this.rand.nextFloat() + 0.2f;
 			double z = this.posZ - this.width / 2 + this.rand.nextFloat() * width;
-			ParticleBuilder.create(Type.DUST).pos(x, y, z).colour(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
+			ParticleBuilder.create(Type.DUST).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
 		}
 
 		// Spirit horse disappears a short time after being dismounted.

@@ -2,7 +2,6 @@ package electroblob.wizardry.entity.construct;
 
 import java.util.List;
 
-import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -11,7 +10,6 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityLightningSigil extends EntityMagicConstruct {
@@ -65,25 +63,14 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 
 						if(secondaryTarget != target && this.isValidTarget(secondaryTarget)){
 
-							if(!world.isRemote){
-								EntityArc arc = new EntityArc(world);
-								arc.setEndpointCoords(target.posX, target.posY + target.height / 2, target.posZ,
-										secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height / 2,
+							if(world.isRemote){
+								
+								ParticleBuilder.create(Type.LIGHTNING).entity(target)
+								.pos(0, target.height/2, 0).target(secondaryTarget).spawn(world);
+								
+								ParticleBuilder.spawnShockParticles(world, secondaryTarget.posX,
+										secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2,
 										secondaryTarget.posZ);
-								world.spawnEntity(arc);
-							}else{
-								for(int k = 0; k < 8; k++){
-									ParticleBuilder.create(Type.SPARK)
-									.pos(secondaryTarget.posX + world.rand.nextFloat() - 0.5,
-										secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2 + world.rand.nextFloat() * 2 - 1,
-										secondaryTarget.posZ + world.rand.nextFloat() - 0.5)
-									.spawn(world);
-									world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
-											secondaryTarget.posX + world.rand.nextFloat() - 0.5,
-											secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2
-													+ world.rand.nextFloat() * 2 - 1,
-											secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
-								}
 							}
 
 							secondaryTarget.playSound(WizardrySounds.SPELL_SPARK, 1.0F,

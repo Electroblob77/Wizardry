@@ -47,10 +47,10 @@ public class EntityDarknessOrb extends EntityMagicProjectile {
 			
 			float brightness = rand.nextFloat() * 0.2f;
 			
-			ParticleBuilder.create(Type.SPARKLE, this).lifetime(20 + rand.nextInt(10))
-			.colour(brightness, 0.0f, brightness).spawn(world);
+			ParticleBuilder.create(Type.SPARKLE, this).time(20 + rand.nextInt(10))
+			.clr(brightness, 0.0f, brightness).spawn(world);
 			
-			ParticleBuilder.create(Type.DARK_MAGIC, this).colour(0.1f, 0.0f, 0.0f).spawn(world);
+			ParticleBuilder.create(Type.DARK_MAGIC, this).clr(0.1f, 0.0f, 0.0f).spawn(world);
 		}
 
 		if(this.ticksExisted > 150){

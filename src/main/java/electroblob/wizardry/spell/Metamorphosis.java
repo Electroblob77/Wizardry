@@ -34,6 +34,7 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Metamorphosis extends SpellRay {
@@ -111,7 +112,7 @@ public class Metamorphosis extends SpellRay {
 				
 			}else{
 				for(int i=0; i<5; i++){
-					ParticleBuilder.create(Type.DARK_MAGIC).pos(xPos, yPos, zPos).colour(0.1f, 0, 0).spawn(world);
+					ParticleBuilder.create(Type.DARK_MAGIC).pos(xPos, yPos, zPos).clr(0.1f, 0, 0).spawn(world);
 				}
 			}
 		}

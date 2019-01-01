@@ -41,10 +41,10 @@ public class HealAlly extends SpellRay {
 						double x1 = (double)((float)entity.posX + world.rand.nextFloat() * 2 - 1.0f);
 						double y1 = (double)((float)entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5f + world.rand.nextFloat());
 						double z1 = (double)((float)entity.posZ + world.rand.nextFloat() * 2 - 1.0f);
-						ParticleBuilder.create(Type.SPARKLE).pos(x1, y1, z1).vel(0, 0.1F, 0).colour(r, g, b).spawn(world);
+						ParticleBuilder.create(Type.SPARKLE).pos(x1, y1, z1).vel(0, 0.1F, 0).clr(r, g, b).spawn(world);
 					}
-					
-					Wizardry.proxy.spawnEntityParticle(world, entity, 15, r, g, b);
+
+					ParticleBuilder.create(Type.BUFF).entity(caster).clr(r, g, b).spawn(world);
 				}
 			}
 			

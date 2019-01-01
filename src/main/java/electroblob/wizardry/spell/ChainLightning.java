@@ -102,12 +102,11 @@ public class ChainLightning extends SpellRay {
 			target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
 		}
 
-		if(!world.isRemote){
-			EntityArc arc = new EntityArc(world);
-			arc.setEndpointCoords(caster.posX, caster.getEntityBoundingBox().minY + caster.height / 2, caster.posZ,
-					target.posX, target.getEntityBoundingBox().minY + target.height / 2, target.posZ);
-			world.spawnEntity(arc);
-		}else{
+		if(world.isRemote){
+			
+			ParticleBuilder.create(Type.LIGHTNING).entity(caster)
+			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
+			
 			ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
 		}
 

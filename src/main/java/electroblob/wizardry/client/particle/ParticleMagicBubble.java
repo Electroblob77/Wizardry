@@ -9,9 +9,7 @@ public class ParticleMagicBubble extends ParticleWizardry {
 
 	public ParticleMagicBubble(World world, double x, double y, double z){
 		super(world, x, y, z);
-		this.particleRed = 1.0F;
-		this.particleGreen = 1.0F;
-		this.particleBlue = 1.0F;
+		this.setRBGColorF(1, 1, 1);
 		this.setParticleTextureIndex(32);
 		this.setSize(0.02F, 0.02F);
 		this.particleScale *= this.rand.nextFloat() * 0.6F + 0.2F;

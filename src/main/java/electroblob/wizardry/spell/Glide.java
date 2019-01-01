@@ -35,11 +35,11 @@ public class Glide extends Spell {
 			double x = caster.posX - 0.25 + world.rand.nextDouble() / 2;
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble();
 			double z = caster.posZ - 0.25 + world.rand.nextDouble() / 2;
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).lifetime(15).colour(1, 1, 1).spawn(world);
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(1, 1, 1).spawn(world);
 			x = caster.posX - 0.25 + world.rand.nextDouble() / 2;
 			y = caster.getEntityBoundingBox().minY + world.rand.nextDouble();
 			z = caster.posZ - 0.25 + world.rand.nextDouble() / 2;
-			ParticleBuilder.create(Type.LEAF).pos(x, y, z).lifetime(20).spawn(world);
+			ParticleBuilder.create(Type.LEAF).pos(x, y, z).time(20).spawn(world);
 		}
 
 		if(ticksInUse % 24 == 0){

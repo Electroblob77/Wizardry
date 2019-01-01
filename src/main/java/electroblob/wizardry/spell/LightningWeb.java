@@ -5,7 +5,6 @@ import java.util.List;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -20,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -119,19 +119,20 @@ public class LightningWeb extends SpellRay {
 	@Override
 	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		// This is a nice example of when onMiss is used for more than just returning a boolean
-		if(!world.isRemote){
+		if(world.isRemote){
+			
+			if(caster != null) origin = origin.subtract(0, Y_OFFSET, 0);
+			
+			double freeRange = 0.8 * baseRange; // The arc does not reach full range when it has a free end
+			Vec3d endpoint = origin.add(direction.scale(freeRange));
+			
+			ParticleBuilder.create(Type.BEAM).entity(caster).clr(0.2f, 0.6f, 1)
+			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(endpoint).spawn(world);
 			
 			if(ticksInUse % 2 == 0){
-				
-				double freeRange = 0.8 * baseRange; // The arc does not reach full range when it has a free end
 
-				EntityArc arc = new EntityArc(world);
-				arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ,
-						caster.posX + caster.getLookVec().x * freeRange,
-						caster.posY + caster.getEyeHeight() + caster.getLookVec().y * freeRange,
-						caster.posZ + caster.getLookVec().z * freeRange);
-				arc.lifetime = 1;
-				world.spawnEntity(arc);
+				ParticleBuilder.create(Type.LIGHTNING).entity(caster)
+				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(endpoint).spawn(world);
 				
 			}
 		}
@@ -150,17 +151,16 @@ public class LightningWeb extends SpellRay {
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
 		}
 		
-		if(!world.isRemote){
-			// Arc entity spawning
-			if(ticksInUse % 2 == 0){
-				EntityArc arc = new EntityArc(world);
-				arc.setEndpointCoords(origin.posX, origin.posY + 1.2, origin.posZ, target.posX,
-						target.posY + target.height / 2, target.posZ);
-				arc.lifetime = 1;
-				world.spawnEntity(arc);
-			}
+		if(world.isRemote){
 			
-		}else{
+			ParticleBuilder.create(Type.BEAM).entity(caster).clr(0.2f, 0.6f, 1)
+			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
+			
+			if(ticksInUse % 3 == 0){
+				ParticleBuilder.create(Type.LIGHTNING).entity(caster)
+				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
+			}
+
 			// Particle effect
 			for(int i=0; i<5; i++){
 				ParticleBuilder.create(Type.SPARK, target).spawn(world);

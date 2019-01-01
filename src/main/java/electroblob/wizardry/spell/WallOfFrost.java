@@ -129,9 +129,9 @@ public class WallOfFrost extends SpellRay {
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
 		float brightness = world.rand.nextFloat();
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).lifetime(8 + world.rand.nextInt(12))
-		.colour(0.4f + 0.6f * brightness, 0.6f + 0.4f*brightness, 1).spawn(world);
-		ParticleBuilder.create(Type.SNOW).pos(x, y, z).vel(vx, vy, vz).lifetime(8 + world.rand.nextInt(12)).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(12))
+		.clr(0.4f + 0.6f * brightness, 0.6f + 0.4f*brightness, 1).spawn(world);
+		ParticleBuilder.create(Type.SNOW).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(12)).spawn(world);
 	}
 
 }

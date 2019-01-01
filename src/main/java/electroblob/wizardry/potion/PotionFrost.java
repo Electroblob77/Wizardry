@@ -40,7 +40,6 @@ public class PotionFrost extends Potion implements ICustomPotionParticles {
 
 	@Override
 	public void spawnCustomParticle(World world, double x, double y, double z){
-		ParticleBuilder.create(Type.SNOW).pos(x, y, z).lifetime(15 + world.rand.nextInt(5)).spawn(world);
 	}
 
 	@Override
@@ -55,6 +54,7 @@ public class PotionFrost extends Potion implements ICustomPotionParticles {
 	public void renderHUDEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc, float alpha){
 		mc.renderEngine.bindTexture(ICON);
 		WizardryUtilities.drawTexturedRect(x + 3, y + 3, 0, 0, 18, 18, 18, 18);
+		ParticleBuilder.create(Type.SNOW).pos(x, y, z).time(15 + world.rand.nextInt(5)).spawn(world);
 	}
 
 	@SubscribeEvent

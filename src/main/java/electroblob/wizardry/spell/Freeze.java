@@ -87,8 +87,8 @@ public class Freeze extends SpellRay {
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
 		float brightness = 0.5f + (world.rand.nextFloat() / 2);
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).lifetime(12 + world.rand.nextInt(8))
-		.colour(brightness, brightness + 0.1f, 1).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).time(12 + world.rand.nextInt(8))
+		.clr(brightness, brightness + 0.1f, 1).spawn(world);
 		ParticleBuilder.create(Type.SNOW).pos(x, y, z).spawn(world);
 	}
 

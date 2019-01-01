@@ -127,7 +127,7 @@ public class Clairvoyance extends Spell {
 					(nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL)
-			.lifetime((int)(1800 * durationMultiplier)).colour(0, 1, 0.3f).spawn(world);
+			.time((int)(1800 * durationMultiplier)).clr(0, 1, 0.3f).spawn(world);
 
 			path.incrementPathIndex();
 			path.incrementPathIndex();
@@ -136,7 +136,7 @@ public class Clairvoyance extends Spell {
 		point = path.getFinalPathPoint();
 
 		ParticleBuilder.create(Type.PATH).pos(point.x + 0.5, point.y + 0.5, point.z + 0.5)
-		.lifetime((int)(1800 * durationMultiplier)).colour(1, 1, 1).spawn(world);
+		.time((int)(1800 * durationMultiplier)).clr(1, 1, 1).spawn(world);
 	}
 
 	@SubscribeEvent

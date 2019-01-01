@@ -308,7 +308,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 		if(this.hasParticleEffect() && thisEntity.world.isRemote && thisEntity.world.rand.nextInt(8) == 0)
 			ParticleBuilder.create(Type.DARK_MAGIC)
 			.pos(thisEntity.posX, thisEntity.posY + thisEntity.world.rand.nextDouble() * 1.5, thisEntity.posZ)
-			.colour(0.1f, 0.0f, 0.0f)
+			.clr(0.1f, 0.0f, 0.0f)
 			.spawn(thisEntity.world);
 
 	}

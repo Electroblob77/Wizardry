@@ -68,7 +68,7 @@ public class Intimidate extends Spell {
 				double x = caster.posX - 1 + world.rand.nextDouble() * 2;
 				double y = caster.getEntityBoundingBox().minY + 1.5 + world.rand.nextDouble() * 0.5;
 				double z = caster.posZ - 1 + world.rand.nextDouble() * 2;
-				ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.9f, 0.1f, 0).spawn(world);
+				ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.9f, 0.1f, 0).spawn(world);
 			}
 		}
 		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERDRAGON_GROWL, 1.0f, 1.0f);

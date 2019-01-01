@@ -221,7 +221,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 					// 0.5F.
 					double y = (double)((float)this.posY - 0.5F + rand.nextFloat());
 					double z = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
-					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1F, 0).colour(1, 1, 0.3f).spawn(world);
+					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1F, 0).clr(1, 1, 0.3f).spawn(world);
 				}
 			}else{
 				if(this.getHealth() < 10){

@@ -54,9 +54,9 @@ public class CurseOfSoulbinding extends SpellRay {
 	
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
-		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.4f, 0, 0).spawn(world);
-		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.1f, 0, 0).spawn(world);
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).lifetime(12 + world.rand.nextInt(8)).colour(1, 0.8f, 1).spawn(world);
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.4f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.1f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).time(12 + world.rand.nextInt(8)).clr(1, 0.8f, 1).spawn(world);
 	}
 
 	@SubscribeEvent

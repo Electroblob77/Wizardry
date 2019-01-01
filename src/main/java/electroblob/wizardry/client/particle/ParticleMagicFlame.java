@@ -15,14 +15,11 @@ public class ParticleMagicFlame extends ParticleWizardry {
 
 	public ParticleMagicFlame(World world, double x, double y, double z){
 		super(world, x, y, z);
-		// Not sure what these did but they sure as heck won't do anything now...
-		// TESTME: If it looks the same as before, delete these.
-//		this.motionX = this.motionX * 0.009999999776482582D + par8;
-//		this.motionY = this.motionY * 0.009999999776482582D + par10;
-//		this.motionZ = this.motionZ * 0.009999999776482582D + par12;
 		this.flameScale = 1 + world.rand.nextFloat();
 		this.setRBGColorF(1, 1, 1);
+		this.particleAlpha = 1;
 		this.particleMaxAge = (int)(2.0D / (Math.random() * 0.8D + 0.2D));
+		this.shaded = false;
 		// IDEA: Make the particles for ray spells collide properly and not spawn on the other side of stuff.
 		this.canCollide = false;
 		this.setParticleTextureIndex(48);

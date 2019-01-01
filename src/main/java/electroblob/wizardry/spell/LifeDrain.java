@@ -89,10 +89,10 @@ public class LifeDrain extends SpellRay {
 	
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
-		if(world.rand.nextInt(5) == 0) ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.1f, 0, 0).spawn(world);
+		if(world.rand.nextInt(5) == 0) ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.1f, 0, 0).spawn(world);
 		// This used to multiply the velocity by the distance from the caster
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).lifetime(8 + world.rand.nextInt(6))
-		.colour(0.5f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(6))
+		.clr(0.5f, 0, 0).spawn(world);
 	}
 
 }

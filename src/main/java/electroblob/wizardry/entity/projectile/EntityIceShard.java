@@ -41,9 +41,13 @@ public class EntityIceShard extends EntityMagicArrow {
 	public void onBlockHit(){
 		// Adds a particle effect when the ice shard hits a block.
 		if(this.world.isRemote){
+			// Gets a position slightly away from the block hit so the particle doesn't get cut in half by the block face
+			Vec3d vec = hit.hitVec.add(new Vec3d(hit.sideHit.getDirectionVec()).scale(0.15));
+			ParticleBuilder.create(Type.FLASH).pos(vec).clr(0.75f, 1, 1).spawn(world);
+			
 			for(int j = 0; j < 10; j++){
 				ParticleBuilder.create(Type.ICE, this.rand, this.posX, this.posY, this.posZ, 0.5, true)
-				.lifetime(20 + rand.nextInt(10)).gravity(true).spawn(world);
+				.time(20 + rand.nextInt(10)).gravity(true).spawn(world);
 			}
 		}
 		// Parameters for sound: sound event name, volume, pitch.

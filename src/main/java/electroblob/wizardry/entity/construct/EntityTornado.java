@@ -140,12 +140,14 @@ public class EntityTornado extends EntityMagicConstruct {
 					if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW)
 						type = Type.SNOW;
 					
-					double yPos1 = rand.nextDouble() * 8;
-					ParticleBuilder.create(type)
-					.pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
-							this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d))
-					.lifetime(40 + rand.nextInt(10))
-					.spawn(world);
+					if(type != null){
+						double yPos1 = rand.nextDouble() * 8;
+						ParticleBuilder.create(type)
+						.pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
+								this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d))
+						.time(40 + rand.nextInt(10))
+						.spawn(world);
+					}
 				}
 			}
 		}

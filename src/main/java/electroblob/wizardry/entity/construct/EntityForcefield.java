@@ -66,8 +66,8 @@ public class EntityForcefield extends EntityMagicConstruct {
 				ParticleBuilder.create(Type.DUST)
 				.pos(this.posX + radius * Math.cos(yaw) * Math.cos(pitch), this.posY + 3 + radius * Math.sin(pitch),
 						this.posZ + radius * Math.sin(yaw) * Math.cos(pitch))
-				.lifetime(48 + this.rand.nextInt(12))
-				.colour(brightness, brightness, 1.0f).spawn(world);
+				.time(48 + this.rand.nextInt(12))
+				.clr(brightness, brightness, 1.0f).spawn(world);
 			}
 		}
 	}

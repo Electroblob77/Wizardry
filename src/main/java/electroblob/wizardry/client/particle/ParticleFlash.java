@@ -17,13 +17,13 @@ public class ParticleFlash extends ParticleWizardry {
 		super(world, x, y, z);
 		this.setRBGColorF(1, 1, 1);
 		this.particleScale = 0.6f; // 7.1f is the value used in fireworks
-		this.particleMaxAge = 4;
+		this.particleMaxAge = 6;
 	}
 	
 	@Override
     public void renderParticle(BufferBuilder buffer, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ){
-        float f4 = particleScale * MathHelper.sin(((float)this.particleAge + partialTicks - 1.0F) * 0.25F * (float)Math.PI);
-        this.setAlphaF(0.6F - ((float)this.particleAge + partialTicks - 1.0F) * 0.25F * 0.5F);
+        float f4 = particleScale * MathHelper.sin(((float)this.particleAge + partialTicks - 1.0F)/particleMaxAge * (float)Math.PI);
+        this.setAlphaF(0.6F - ((float)this.particleAge + partialTicks - 1.0F)/particleMaxAge * 0.5F);
         float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
         float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
         float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);

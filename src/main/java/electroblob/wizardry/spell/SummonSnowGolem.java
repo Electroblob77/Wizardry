@@ -39,7 +39,7 @@ public class SummonSnowGolem extends Spell {
 				double x = pos.getX() + world.rand.nextDouble() * 2 - 1;
 				double y = pos.getY() + 0.5 + world.rand.nextDouble();
 				double z = pos.getZ() + world.rand.nextDouble() * 2 - 1;
-				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(0.6f, 0.6f, 1).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(0.6f, 0.6f, 1).spawn(world);
 			}
 		}
 		

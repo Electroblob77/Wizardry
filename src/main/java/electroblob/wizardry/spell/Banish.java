@@ -89,7 +89,7 @@ public class Banish extends SpellRay {
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
 		world.spawnParticle(EnumParticleTypes.PORTAL, x, y - 0.5, z, 0, 0, 0);
-		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).colour(0.2f, 0, 0.2f).spawn(world);
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.2f, 0, 0.2f).spawn(world);
 	}
 
 }

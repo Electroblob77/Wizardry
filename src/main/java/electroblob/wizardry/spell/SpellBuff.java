@@ -144,10 +144,10 @@ public class SpellBuff extends Spell {
 			double x = caster.posX + world.rand.nextDouble() * 2 - 1;
 			double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(r, g, b).spawn(world);
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(r, g, b).spawn(world);
 		}
 		
-		Wizardry.proxy.spawnEntityParticle(world, caster, 15, r, g, b);
+		ParticleBuilder.create(Type.BUFF).entity(caster).clr(r, g, b).spawn(world);
 	}
 
 }

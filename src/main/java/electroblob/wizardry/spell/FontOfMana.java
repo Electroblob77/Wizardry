@@ -52,8 +52,8 @@ public class FontOfMana extends Spell {
 				double y = caster.getEntityBoundingBox().minY;
 				double z = caster.posZ + radius * Math.sin(angle);
 				
-				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).lifetime(50)
-				.colour(1, 1 - hue, 0.6f + hue).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).time(50)
+				.clr(1, 1 - hue, 0.6f + hue).spawn(world);
 			}
 		}
 

@@ -41,13 +41,17 @@ public class EntityPoisonBomb extends EntityBomb {
 
 		// Particle effect
 		if(world.isRemote){
+			
+			ParticleBuilder.create(Type.FLASH).pos(this.getPositionVector()).scale(5 * blastMultiplier)
+			.clr(0.2f + rand.nextFloat() * 0.3f, 0.6f, 0.0f).spawn(world);
+			
 			for(int i = 0; i < 60 * blastMultiplier; i++){
 				
-				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 2*blastMultiplier, false).lifetime(35)
-				.colour(0.2f + rand.nextFloat() * 0.3f, 0.6f, 0.0f).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 2*blastMultiplier, false).time(35)
+				.clr(0.2f + rand.nextFloat() * 0.3f, 0.6f, 0.0f).spawn(world);
 				
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
-				.colour(0.2f + rand.nextFloat() * 0.2f, 0.8f, 0.0f).spawn(world);
+				.clr(0.2f + rand.nextFloat() * 0.2f, 0.8f, 0.0f).spawn(world);
 			}
 			// Spawning this after the other particles fixes the rendering colour bug. It's a bit of a cheat, but it
 			// works pretty well.

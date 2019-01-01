@@ -32,6 +32,12 @@ public class EntityLightningArrow extends EntityMagicArrow {
 		}
 		
 		this.playSound(WizardrySounds.SPELL_SPARK, 1.0F, 1.0F);
+	@Override
+	public void onBlockHit(RayTraceResult hit){
+		if(this.world.isRemote){
+			Vec3d vec = hit.hitVec.add(new Vec3d(hit.sideHit.getDirectionVec()).scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET));
+			ParticleBuilder.create(Type.SCORCH).pos(vec).face(hit.sideHit).clr(0.4f, 0.8f, 1).scale(0.6f).spawn(world);
+		}
 	}
 
 	@Override

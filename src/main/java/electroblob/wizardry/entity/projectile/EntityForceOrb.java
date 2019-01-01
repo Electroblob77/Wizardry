@@ -31,8 +31,8 @@ public class EntityForceOrb extends EntityBomb {
 		if(this.world.isRemote){
 			for(int j = 0; j < 20; j++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.25, true).lifetime(6)
-				.colour(brightness, 1.0f, brightness + 0.2f).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.25, true).time(6)
+				.clr(brightness, 1.0f, brightness + 0.2f).spawn(world);
 			}
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
 		}

@@ -53,7 +53,7 @@ public class EntityDecay extends EntityMagicConstruct {
 			
 			ParticleBuilder.create(Type.DARK_MAGIC)
 			.pos(this.posX + radius * Math.cos(angle), this.posY, this.posZ + radius * Math.sin(angle))
-			.colour(brightness, 0, brightness + 0.1f)
+			.clr(brightness, 0, brightness + 0.1f)
 			.spawn(world);
 		}
 	}

@@ -110,7 +110,7 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 			for(int i = 0; i < 15; i++){
 				ParticleBuilder.create(Type.DARK_MAGIC)
 				.pos(this.posX + this.rand.nextFloat(), this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat())
-				.colour(0.1f, 0.2f, 0.0f)
+				.clr(0.1f, 0.2f, 0.0f)
 				.spawn(world);
 			}
 		}

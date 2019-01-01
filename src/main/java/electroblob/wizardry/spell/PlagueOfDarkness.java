@@ -58,12 +58,12 @@ public class PlagueOfDarkness extends Spell {
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
 				ParticleBuilder.create(Type.DARK_MAGIC).pos(particleX, caster.getEntityBoundingBox().minY, particleZ)
-				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).colour(0.1f, 0, 0).spawn(world);
+				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).clr(0.1f, 0, 0).spawn(world);
 				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
 				ParticleBuilder.create(Type.SPARKLE).pos(particleX, caster.getEntityBoundingBox().minY, particleZ)
-				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).lifetime(30).colour(0.1f, 0, 0.05f).spawn(world);
+				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).time(30).clr(0.1f, 0, 0.05f).spawn(world);
 				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();

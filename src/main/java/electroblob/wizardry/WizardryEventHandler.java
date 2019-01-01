@@ -206,22 +206,13 @@ public final class WizardryEventHandler {
 			// Static Aura
 			if(event.getEntityLiving().isPotionActive(WizardryPotions.static_aura)){
 
-				if(!world.isRemote){
-					EntityArc arc = new EntityArc(world);
-					arc.setEndpointCoords(event.getEntityLiving().posX, event.getEntityLiving().posY + 1,
-							event.getEntityLiving().posZ, attacker.posX, attacker.posY + attacker.height / 2,
-							attacker.posZ);
-					world.spawnEntity(arc);
-				}else{
-					for(int i = 0; i < 8; i++){
-						ParticleBuilder.create(Type.SPARK).pos(attacker.posX + world.rand.nextFloat() - 0.5,
-								attacker.getEntityBoundingBox().minY + attacker.height / 2 + world.rand.nextFloat() * 2 - 1,
-								attacker.posZ + world.rand.nextFloat() - 0.5).spawn(world);
-						world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, attacker.posX + world.rand.nextFloat() - 0.5,
-								attacker.getEntityBoundingBox().minY + attacker.height / 2 + world.rand.nextFloat() * 2
-								- 1,
-								attacker.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0);
-					}
+				if(world.isRemote){
+					
+					ParticleBuilder.create(Type.LIGHTNING).entity(event.getEntity()).pos(0, event.getEntity().height/2, 0)
+					.target(attacker).spawn(world);
+					
+					ParticleBuilder.spawnShockParticles(world, attacker.posX,
+							attacker.getEntityBoundingBox().minY + attacker.height, attacker.posZ);
 				}
 
 				attacker.attackEntityFrom(

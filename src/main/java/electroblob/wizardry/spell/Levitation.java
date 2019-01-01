@@ -30,7 +30,7 @@ public class Levitation extends Spell {
 			double x = caster.posX - 0.25 + world.rand.nextDouble() * 0.5;
 			double y = caster.getEntityBoundingBox().minY;
 			double z = caster.posZ - 0.25 + world.rand.nextDouble() * 0.5;
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).lifetime(15).colour(0.5f, 1, 0.7f).spawn(world);
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(0.5f, 1, 0.7f).spawn(world);
 		}
 		if(ticksInUse % 24 == 0 && world.isRemote){
 			Wizardry.proxy.playMovingSound(caster, WizardrySounds.SPELL_LOOP_SPARKLE, 0.5f, 1, false);

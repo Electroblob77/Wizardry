@@ -54,7 +54,7 @@ public class InvokeWeather extends Spell {
 					double x = caster.posX + world.rand.nextDouble() * 2 - 1;
 					double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 					double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
-					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).colour(0.5f, 0.7f, 1).spawn(world);
+					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(0.5f, 0.7f, 1).spawn(world);
 				}
 			}
 

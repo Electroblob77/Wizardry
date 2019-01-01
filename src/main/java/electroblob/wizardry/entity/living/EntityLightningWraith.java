@@ -40,8 +40,8 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = 0.3f + (rand.nextFloat() / 2);
-				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).lifetime(20 + rand.nextInt(10))
-				.colour(brightness, brightness + 0.2f, 1.0f).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).time(20 + rand.nextInt(10))
+				.clr(brightness, brightness + 0.2f, 1.0f).spawn(world);
 			}
 		}
 	}

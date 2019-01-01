@@ -60,7 +60,7 @@ public class ArcaneJammer extends SpellRay {
 	
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).lifetime(12 + world.rand.nextInt(8)).colour(0.9f, 0.3f, 0.7f)
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).time(12 + world.rand.nextInt(8)).clr(0.9f, 0.3f, 0.7f)
 		.spawn(world);
 	}
 

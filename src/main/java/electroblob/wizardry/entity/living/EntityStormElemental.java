@@ -148,8 +148,9 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 				float brightness = rand.nextFloat() * 0.2f;
 				double dy = this.rand.nextDouble() * (double)this.height;
 				
-				ParticleBuilder.create(Type.SPARKLE_ROTATING).pos(this.posX, this.posY + dy, this.posZ)
-				.lifetime(20 + rand.nextInt(10)).colour(0, brightness, brightness).radius(0.2f + 0.5f * dy).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE).pos(this.posX, this.posY + dy, this.posZ)
+				.time(20 + rand.nextInt(10)).clr(0, brightness, brightness)//.entity(this)
+				.spin(0.2 + 0.5 * dy, 0.1 + 0.05 * world.rand.nextDouble()).spawn(world);
 			}
 		}
 

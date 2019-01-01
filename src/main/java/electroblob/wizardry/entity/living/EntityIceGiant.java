@@ -99,8 +99,8 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 		if(this.world.isRemote){
 			for(int i = 0; i < 30; i++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				ParticleBuilder.create(Type.SPARKLE, this).vel(0, -0.02, 0).lifetime(12 + rand.nextInt(8))
-				.colour(brightness, brightness + 0.1f, 1.0f).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, -0.02, 0).time(12 + rand.nextInt(8))
+				.clr(brightness, brightness + 0.1f, 1.0f).spawn(world);
 			}
 		}
 	}

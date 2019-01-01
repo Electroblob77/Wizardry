@@ -51,8 +51,8 @@ public class EntityIceWraith extends EntityBlazeMinion {
 				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(),
 						this.posZ - 0.5d + rand.nextDouble())
 				.vel(0, 0.05f, 0)
-				.lifetime(20 + rand.nextInt(10))
-				.colour(brightness, brightness + 0.1f, 1.0f)
+				.time(20 + rand.nextInt(10))
+				.clr(brightness, brightness + 0.1f, 1.0f)
 				.spawn(world);
 			}
 		}

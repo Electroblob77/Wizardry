@@ -82,7 +82,7 @@ public class EntitySilverfishMinion extends EntitySilverfish implements ISummone
 			for(int i = 0; i < 15; i++){
 				ParticleBuilder.create(Type.DARK_MAGIC)
 				.pos(this.posX + this.rand.nextFloat(), this.posY + this.rand.nextFloat(), this.posZ + this.rand.nextFloat())
-				.colour(0.3f, 0.3f, 0.3f)
+				.clr(0.3f, 0.3f, 0.3f)
 				.spawn(world);
 			}
 		}

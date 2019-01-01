@@ -54,9 +54,9 @@ public class Snare extends SpellRay {
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
 		float brightness = world.rand.nextFloat() * 0.25f;
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).lifetime(20 + world.rand.nextInt(8))
-		.colour(brightness, brightness + 0.1f, 0).spawn(world);
-		ParticleBuilder.create(Type.LEAF).pos(x, y, z).vel(0, -0.01, 0).lifetime(40 + world.rand.nextInt(10)).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).time(20 + world.rand.nextInt(8))
+		.clr(brightness, brightness + 0.1f, 0).spawn(world);
+		ParticleBuilder.create(Type.LEAF).pos(x, y, z).vel(0, -0.01, 0).time(40 + world.rand.nextInt(10)).spawn(world);
 	}
 
 }

@@ -2,11 +2,11 @@ package electroblob.wizardry.entity.projectile;
 
 import java.util.List;
 
-import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -65,19 +65,14 @@ public class EntitySparkBomb extends EntityBomb {
 
 				if(!this.world.isRemote){
 
-					EntityArc arc = new EntityArc(this.world);
-					arc.setEndpointCoords(this.posX, this.posY, this.posZ, target.posX, target.posY + target.height / 2,
-							target.posZ);
-					this.world.spawnEntity(arc);
-
-					target.playSound(WizardrySounds.SPELL_SPARK, 1.0F, rand.nextFloat() * 0.4F + 1.5F);
+					target.playSound(WizardrySounds.ENTITY_SPARK_BOMB_CHAIN, 1.0F, rand.nextFloat() * 0.4F + 1.5F);
 
 					target.attackEntityFrom(
 							MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK),
 							5.0f * damageMultiplier);
 
 				}else{
-					// Particle effect
+					ParticleBuilder.create(Type.LIGHTNING).pos(this.getPositionVector()).target(target).spawn(world);
 					ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
 				}
 			}

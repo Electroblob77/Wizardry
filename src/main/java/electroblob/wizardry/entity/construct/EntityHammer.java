@@ -3,7 +3,6 @@ package electroblob.wizardry.entity.construct;
 import java.util.List;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -98,24 +97,12 @@ public class EntityHammer extends EntityMagicConstruct {
 
 						if(this.isValidTarget(target)){
 
-							if(!world.isRemote){
-								EntityArc arc = new EntityArc(world);
-								arc.setEndpointCoords(this.posX, this.posY + this.height - 0.1, this.posZ, target.posX,
-										target.posY + target.height / 2, target.posZ);
-								world.spawnEntity(arc);
-							}else{
-								// TODO: Move all the arc particle (and sound?) stuff into a method in WizardryUtilities
-								for(int j=0; j<8; j++){
-									ParticleBuilder.create(Type.SPARK)
-									.pos(target.posX + world.rand.nextFloat() - 0.5,
-										target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
-										target.posZ + world.rand.nextFloat() - 0.5)
-									.spawn(world);
-									
-									world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, target.posX + rand.nextFloat(),
-											target.getEntityBoundingBox().minY + target.height / 2 + rand.nextFloat(),
-											target.posZ + rand.nextFloat(), 0, 0, 0);
-								}
+							if(world.isRemote){
+								
+								ParticleBuilder.create(Type.LIGHTNING).pos(posX, posY + height - 0.1, posZ) .target(target).spawn(world);
+								
+								ParticleBuilder.spawnShockParticles(world, target.posX,
+										target.getEntityBoundingBox().minY + target.height, target.posZ);
 							}
 
 							target.playSound(WizardrySounds.SPELL_SPARK, 1.0F, rand.nextFloat() * 0.4F + 1.5F);

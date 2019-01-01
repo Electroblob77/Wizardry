@@ -43,7 +43,7 @@ public class BlockCrystalFlower extends BlockBush {
 		if(world.isRemote && random.nextBoolean()){
 			ParticleBuilder.create(Type.SPARKLE)
 			.pos(pos.getX() + random.nextDouble(), pos.getY() + random.nextDouble() / 2 + 0.5, pos.getZ() + random.nextDouble()).vel(0, 0.01, 0)
-					.lifetime(20 + random.nextInt(10)).colour(0.5f + (random.nextFloat() / 2), 0.5f + (random.nextFloat() / 2),
+					.time(20 + random.nextInt(10)).clr(0.5f + (random.nextFloat() / 2), 0.5f + (random.nextFloat() / 2),
 					0.5f + (random.nextFloat() / 2)).spawn(world);
 		}
 	}

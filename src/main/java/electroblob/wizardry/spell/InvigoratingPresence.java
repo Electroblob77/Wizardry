@@ -53,7 +53,7 @@ public class InvigoratingPresence extends Spell {
 				double y = caster.getEntityBoundingBox().minY;
 				double z = caster.posZ + radius * Math.sin(angle);
 				
-				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).lifetime(50).colour(1, 0.2f, 0.2f).spawn(world);
+				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).time(50).clr(1, 0.2f, 0.2f).spawn(world);
 
 			}
 		}

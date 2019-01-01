@@ -69,8 +69,8 @@ public class EntityHealAura extends EntityMagicConstruct {
 				ParticleBuilder.create(Type.SPARKLE)
 				.pos(this.posX + radius * Math.cos(angle), this.posY, this.posZ + radius * Math.sin(angle))
 				.vel(0, 0.05, 0)
-				.lifetime(48 + this.rand.nextInt(12))
-				.colour(1.0f, 1.0f, brightness)
+				.time(48 + this.rand.nextInt(12))
+				.clr(1.0f, 1.0f, brightness)
 				.spawn(world);
 			}
 		}

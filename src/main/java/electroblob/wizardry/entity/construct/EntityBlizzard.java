@@ -53,24 +53,13 @@ public class EntityBlizzard extends EntityMagicConstruct {
 				if(!MagicDamage.isEntityImmune(DamageType.FROST, target))
 					target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 20, 0));
 			}
+			
 		}else{
-			for(int i=1; i<6; i++){
-				
-				float brightness = 0.5f + (rand.nextFloat() / 2);
-				
-				ParticleBuilder.create(Type.BLIZZARD)
-				.pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ)
-				.lifetime(100)
-				.colour(brightness, brightness + 0.1f, 1.0f)
-				.radius(rand.nextDouble() * 2.5d + 0.5d)
-				.spawn(world);
-
-				ParticleBuilder.create(Type.BLIZZARD)
-				.pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ)
-				.lifetime(100)
-				.colour(1, 1, 1)
-				.radius(rand.nextDouble() * 2.5d + 0.5d)
-				.spawn(world);
+			
+			for(int i=1; i<12; i++){
+				double speed = (rand.nextBoolean() ? 1 : -1) * 0.1 + 0.05 * rand.nextDouble();
+				ParticleBuilder.create(Type.SNOW).pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ).vel(0, 0, 0)
+				.time(100).scale(2).spin(rand.nextDouble() * 2.5 + 0.5, speed).spawn(world);
 			}
 		}
 	}

@@ -55,9 +55,9 @@ public class IceStatue extends SpellRay {
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
 		float brightness = 0.5f + world.rand.nextFloat() * 0.5f;
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).lifetime(12 + world.rand.nextInt(8))
-		.colour(brightness, brightness + 0.1f, 1.0f).spawn(world);
-		ParticleBuilder.create(Type.SNOW).pos(x, y, z).lifetime(20 + world.rand.nextInt(10)).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).time(12 + world.rand.nextInt(8))
+		.clr(brightness, brightness + 0.1f, 1.0f).spawn(world);
+		ParticleBuilder.create(Type.SNOW).pos(x, y, z).time(20 + world.rand.nextInt(10)).spawn(world);
 	}
 
 }

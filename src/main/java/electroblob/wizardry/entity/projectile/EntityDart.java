@@ -36,7 +36,7 @@ public class EntityDart extends EntityMagicArrow {
 	@Override
 	public void tickInAir(){
 		if(this.world.isRemote){
-			ParticleBuilder.create(Type.LEAF, this).lifetime(10 + rand.nextInt(5)).spawn(world);
+			ParticleBuilder.create(Type.LEAF, this).time(10 + rand.nextInt(5)).spawn(world);
 		}
 	}
 

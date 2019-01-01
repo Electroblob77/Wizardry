@@ -78,12 +78,12 @@ public class Shockwave extends Spell {
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
 				ParticleBuilder.create(Type.SPARKLE).pos(particleX, caster.getEntityBoundingBox().minY, particleZ)
-				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).lifetime(30).colour(0.8f, 0.8f, 1).spawn(world);
+				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).time(30).clr(0.8f, 0.8f, 1).spawn(world);
 				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
 				ParticleBuilder.create(Type.SPARKLE).pos(particleX, caster.getEntityBoundingBox().minY, particleZ)
-				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).lifetime(30).colour(0.9f, 0.9f, 0.9f).spawn(world);
+				.vel(particleX - caster.posX, 0, particleZ - caster.posZ).time(30).clr(0.9f, 0.9f, 0.9f).spawn(world);
 				
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();

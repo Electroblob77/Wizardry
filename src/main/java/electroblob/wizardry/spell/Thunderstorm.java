@@ -5,12 +5,12 @@ import java.util.List;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
@@ -72,12 +72,10 @@ public class Thunderstorm extends Spell {
 
 					if(WizardryUtilities.isValidTarget(caster, secondaryTarget)){
 
-						if(!world.isRemote){
-							EntityArc arc = new EntityArc(world);
-							arc.setEndpointCoords(x, y + 1, z, secondaryTarget.posX,
-									secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ);
-							world.spawnEntity(arc);
-						}else{
+						if(world.isRemote){
+
+							ParticleBuilder.create(Type.LIGHTNING).pos(x, y, z).target(secondaryTarget).spawn(world);
+							
 							ParticleBuilder.spawnShockParticles(world, secondaryTarget.posX,
 									secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2,
 									secondaryTarget.posZ);
@@ -102,14 +100,9 @@ public class Thunderstorm extends Spell {
 							if(!secondaryTargets.contains(tertiaryTarget)
 									&& WizardryUtilities.isValidTarget(caster, tertiaryTarget)){
 
-								if(!world.isRemote){
-									EntityArc arc = new EntityArc(world);
-									arc.setEndpointCoords(secondaryTarget.posX,
-											secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ,
-											tertiaryTarget.posX, tertiaryTarget.posY + tertiaryTarget.height / 2,
-											tertiaryTarget.posZ);
-									world.spawnEntity(arc);
-								}else{
+								if(world.isRemote){
+									ParticleBuilder.create(Type.LIGHTNING).entity(secondaryTarget)
+									.pos(0, secondaryTarget.height/2, 0).target(tertiaryTarget).spawn(world);
 									ParticleBuilder.spawnShockParticles(world, tertiaryTarget.posX,
 											tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height / 2,
 											tertiaryTarget.posZ);

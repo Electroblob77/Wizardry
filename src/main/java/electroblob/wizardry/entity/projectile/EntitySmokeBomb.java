@@ -27,7 +27,11 @@ public class EntitySmokeBomb extends EntityBomb {
 
 		// Particle effect
 		if(world.isRemote){
+			
+			ParticleBuilder.create(Type.FLASH).pos(this.getPositionVector()).scale(5 * blastMultiplier).clr(0, 0, 0).spawn(world);
+			
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
+						
 			for(int i = 0; i < 60 * blastMultiplier; i++){
 				
 				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
@@ -37,7 +41,7 @@ public class EntitySmokeBomb extends EntityBomb {
 				
 				float brightness = rand.nextFloat() * 0.3f;
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
-				.colour(brightness, brightness, brightness).spawn(world);
+				.clr(brightness, brightness, brightness).spawn(world);
 			}
 		}
 

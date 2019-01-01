@@ -201,8 +201,10 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	/** Called when the projectile hits an entity. Override to add potion effects and such like. */
 	protected void onEntityHit(EntityLivingBase entityHit){}
 
-	/** Called when the projectile hits a block. Override to add sound effects and such like. */
-	protected void onBlockHit(){}
+	/** Called when the projectile hits a block. Override to add sound effects and such like. 
+	 * @param hit A vector representing the exact coordinates of the hit; use this to centre particle effects, for
+	 * example. */
+	protected void onBlockHit(RayTraceResult hit){}
 
 	@Override
 	public void onUpdate(){
@@ -390,7 +392,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 					this.inGround = true;
 					this.arrowShake = 7;
 
-					this.onBlockHit();
+					this.onBlockHit(raytraceresult);
 
 					if(this.stuckInBlock.getMaterial() != Material.AIR){
 						this.stuckInBlock.getBlock().onEntityCollidedWithBlock(this.world, raytraceresult.getBlockPos(),

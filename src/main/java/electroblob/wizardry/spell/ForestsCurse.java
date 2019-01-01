@@ -50,13 +50,13 @@ public class ForestsCurse extends SpellAreaEffect {
 		
 		float brightness = world.rand.nextFloat() / 4;
 		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).vel(0, -0.2, 0)
-		.colour(0.05f + brightness, 0.2f + brightness, 0).spawn(world);
+		.clr(0.05f + brightness, 0.2f + brightness, 0).spawn(world);
 		
 		brightness = world.rand.nextFloat() / 4;
-		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.05, 0).lifetime(50)
-		.colour(0.1f + brightness, 0.2f + brightness, 0).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.05, 0).time(50)
+		.clr(0.1f + brightness, 0.2f + brightness, 0).spawn(world);
 		
-		ParticleBuilder.create(Type.LEAF).pos(x, y, z).vel(0, -0.01, 0).lifetime(40 + world.rand.nextInt(12)).spawn(world);
+		ParticleBuilder.create(Type.LEAF).pos(x, y, z).vel(0, -0.01, 0).time(40 + world.rand.nextInt(12)).spawn(world);
 	}
 
 }

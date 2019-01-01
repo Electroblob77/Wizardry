@@ -13,25 +13,9 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.gui.GuiSpellDisplay;
 import electroblob.wizardry.client.gui.GuiWizardHandbook;
 import electroblob.wizardry.client.model.ModelWizardArmour;
-import electroblob.wizardry.client.particle.ParticleBlizzard;
-import electroblob.wizardry.client.particle.ParticleBuff;
-import electroblob.wizardry.client.particle.ParticleDarkMagic;
-import electroblob.wizardry.client.particle.ParticleDust;
-import electroblob.wizardry.client.particle.ParticleFlash;
-import electroblob.wizardry.client.particle.ParticleIce;
-import electroblob.wizardry.client.particle.ParticleLeaf;
-import electroblob.wizardry.client.particle.ParticleMagicBubble;
-import electroblob.wizardry.client.particle.ParticleMagicFlame;
-import electroblob.wizardry.client.particle.ParticlePath;
-import electroblob.wizardry.client.particle.ParticleRotatingSparkle;
-import electroblob.wizardry.client.particle.ParticleSnow;
-import electroblob.wizardry.client.particle.ParticleSpark;
-import electroblob.wizardry.client.particle.ParticleSparkle;
-import electroblob.wizardry.client.particle.ParticleTornado;
-import electroblob.wizardry.client.particle.ParticleWizardry;
+import electroblob.wizardry.client.particle.*;
 import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
 import electroblob.wizardry.client.renderer.LayerStone;
-import electroblob.wizardry.client.renderer.RenderArc;
 import electroblob.wizardry.client.renderer.RenderArcaneWorkbench;
 import electroblob.wizardry.client.renderer.RenderBlackHole;
 import electroblob.wizardry.client.renderer.RenderBlank;
@@ -45,7 +29,6 @@ import electroblob.wizardry.client.renderer.RenderHammer;
 import electroblob.wizardry.client.renderer.RenderIceGiant;
 import electroblob.wizardry.client.renderer.RenderIceSpike;
 import electroblob.wizardry.client.renderer.RenderLightningDisc;
-import electroblob.wizardry.client.renderer.RenderLightningPulse;
 import electroblob.wizardry.client.renderer.RenderMagicArrow;
 import electroblob.wizardry.client.renderer.RenderMagicLight;
 import electroblob.wizardry.client.renderer.RenderPhoenix;
@@ -55,7 +38,6 @@ import electroblob.wizardry.client.renderer.RenderSpiritHorse;
 import electroblob.wizardry.client.renderer.RenderSpiritWolf;
 import electroblob.wizardry.client.renderer.RenderStatue;
 import electroblob.wizardry.client.renderer.RenderWizard;
-import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.entity.EntityShield;
 import electroblob.wizardry.entity.construct.EntityArrowRain;
 import electroblob.wizardry.entity.construct.EntityBlackHole;
@@ -71,7 +53,6 @@ import electroblob.wizardry.entity.construct.EntityHailstorm;
 import electroblob.wizardry.entity.construct.EntityHammer;
 import electroblob.wizardry.entity.construct.EntityHealAura;
 import electroblob.wizardry.entity.construct.EntityIceSpike;
-import electroblob.wizardry.entity.construct.EntityLightningPulse;
 import electroblob.wizardry.entity.construct.EntityLightningSigil;
 import electroblob.wizardry.entity.construct.EntityTornado;
 import electroblob.wizardry.entity.living.EntityDecoy;
@@ -291,27 +272,30 @@ public class ClientProxy extends CommonProxy {
 	public void initParticleFactories(){
 
 		factories = new HashMap<>();
-		
-		factories.put(Type.BLIZZARD, 		(world, x, y, z) -> new ParticleBlizzard(world, x, y, z));
-		factories.put(Type.DARK_MAGIC, 		(world, x, y, z) -> new ParticleDarkMagic(world, x, y, z));
-		factories.put(Type.DUST, 			(world, x, y, z) -> new ParticleDust(world, x, y, z));
-		factories.put(Type.FLASH, 			(world, x, y, z) -> new ParticleFlash(world, x, y, z));
-		factories.put(Type.ICE, 			(world, x, y, z) -> new ParticleIce(world, x, y, z));
-		factories.put(Type.LEAF, 			(world, x, y, z) -> new ParticleLeaf(world, x, y, z));
-		factories.put(Type.MAGIC_BUBBLE, 	(world, x, y, z) -> new ParticleMagicBubble(world, x, y, z));
-		factories.put(Type.MAGIC_FIRE, 		(world, x, y, z) -> new ParticleMagicFlame(world, x, y, z));
-		factories.put(Type.PATH, 			(world, x, y, z) -> new ParticlePath(world, x, y, z));
-		factories.put(Type.SNOW, 			(world, x, y, z) -> new ParticleSnow(world, x, y, z));
-		factories.put(Type.SPARK, 			(world, x, y, z) -> new ParticleSpark(world, x, y, z));
-		factories.put(Type.SPARKLE, 		(world, x, y, z) -> new ParticleSparkle(world, x, y, z));
-		factories.put(Type.SPARKLE_ROTATING, (world, x, y, z) -> new ParticleRotatingSparkle(world, x, y, z));
+
+		factories.put(Type.BEAM, ParticleBeam::new);
+		factories.put(Type.BUFF, ParticleBuff::new);
+		factories.put(Type.DARK_MAGIC, ParticleDarkMagic::new);
+		factories.put(Type.DUST, ParticleDust::new);
+		factories.put(Type.FLASH, ParticleFlash::new);
+		factories.put(Type.ICE, ParticleIce::new);
+		factories.put(Type.LEAF, ParticleLeaf::new);
+		factories.put(Type.LIGHTNING, ParticleLightning::new);
+		factories.put(Type.LIGHTNING_PULSE, ParticleLightningPulse::new);
+		factories.put(Type.MAGIC_BUBBLE, ParticleMagicBubble::new);
+		factories.put(Type.MAGIC_FIRE, ParticleMagicFlame::new);
+		factories.put(Type.PATH, ParticlePath::new);
+		factories.put(Type.SCORCH, ParticleScorch::new);
+		factories.put(Type.SNOW, ParticleSnow::new);
+		factories.put(Type.SPARK, ParticleSpark::new);
+		factories.put(Type.SPARKLE, ParticleSparkle::new);
 	}
 	
 	@Override
 	public ParticleWizardry createParticle(Type type, World world, double x, double y, double z){
 		IWizardryParticleFactory factory = factories.get(type);
 		if(factory == null){
-			Wizardry.logger.warn("Unrecognised particle type %s! Ensure the particle is properly registered.", type);
+			Wizardry.logger.warn("Unrecognised particle type %s ! Ensure the particle is properly registered.", type);
 			return null;
 		}
 		return factory.createParticle(world, x, y, z);
@@ -431,8 +415,8 @@ public class ClientProxy extends CommonProxy {
 			double x = caster.posX + radius * Math.cos(angle);
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
 			double z = caster.posZ + radius * Math.sin(angle);
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.02, 0).colour(0.6f, 1, 0.6f)
-			.lifetime(80 + world.rand.nextInt(10)).spawn(world);
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.02, 0).clr(0.6f, 1, 0.6f)
+			.time(80 + world.rand.nextInt(10)).spawn(world);
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
@@ -578,7 +562,6 @@ public class ClientProxy extends CommonProxy {
 				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/smoke_bomb.png"), false));
 
 		// Effects and constructs
-		RenderingRegistry.registerEntityRenderingHandler(EntityArc.class, RenderArc::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlackHole.class, RenderBlackHole::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShield.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, RenderBubble::new);
@@ -608,7 +591,6 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireRing.class,
 				manager -> new RenderFireRing(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/ring_of_fire.png"), 5.0f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecay.class, RenderDecay::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLightningPulse.class, manager -> new RenderLightningPulse(manager, 8.0f));
 
 		// TESRs
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArcaneWorkbench.class, new RenderArcaneWorkbench());

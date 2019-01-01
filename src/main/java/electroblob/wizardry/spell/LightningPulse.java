@@ -5,11 +5,12 @@ import java.util.List;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.construct.EntityLightningPulse;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
@@ -72,14 +73,10 @@ public class LightningPulse extends Spell {
 				}
 			}
 			
-			if(!world.isRemote){
-				// Surely neither of the commented lines would have done anything?
-				EntityLightningPulse lightningpulse = new EntityLightningPulse(world);
-				lightningpulse.setPosition(caster.posX, caster.getEntityBoundingBox().minY, caster.posZ);
-				//lightningpulse.setCaster(caster);
-				lightningpulse.lifetime = 7;
-				//lightningpulse.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
-				world.spawnEntity(lightningpulse);
+			if(world.isRemote){
+				ParticleBuilder.create(Type.LIGHTNING_PULSE).pos(caster.posX, caster.getEntityBoundingBox().minY
+						+ WizardryUtilities.ANTI_Z_FIGHTING_OFFSET, caster.posZ)
+				.scale(modifiers.get(WizardryItems.blast_upgrade)).spawn(world);
 			}
 			
 			caster.swingArm(hand);

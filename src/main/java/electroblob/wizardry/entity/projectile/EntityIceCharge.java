@@ -47,11 +47,11 @@ public class EntityIceCharge extends EntityBomb {
 			for(int i = 0; i < 30 * blastMultiplier; i++){
 				
 				ParticleBuilder.create(Type.ICE, rand, this.posX, this.posY, this.posZ, 2 * blastMultiplier, false)
-				.lifetime(35).gravity(true).spawn(world);
+				.time(35).gravity(true).spawn(world);
 				
 				float brightness = 0.4f + rand.nextFloat() * 0.5f;
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, this.posX, this.posY, this.posZ, 2 * blastMultiplier, false)
-				.colour(brightness, brightness + 0.1f, 1.0f).spawn(world);
+				.clr(brightness, brightness + 0.1f, 1.0f).spawn(world);
 			}
 		}
 
