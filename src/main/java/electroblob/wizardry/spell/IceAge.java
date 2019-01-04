@@ -149,7 +149,7 @@ public class IceAge extends Spell {
 							world.setBlockState(pos.down(), Blocks.OBSIDIAN.getDefaultState());
 						}else if(world.getBlockState(pos.down()) == Blocks.FLOWING_LAVA.getDefaultState()){
 							world.setBlockState(pos.down(), Blocks.COBBLESTONE.getDefaultState());
-						}else if(world.canSnowAt(pos, false)){
+						}else if(Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos)){
 							world.setBlockState(pos, Blocks.SNOW_LAYER.getDefaultState());
 						}
 					}
