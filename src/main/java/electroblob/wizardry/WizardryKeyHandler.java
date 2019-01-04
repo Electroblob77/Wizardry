@@ -26,12 +26,16 @@ public class WizardryKeyHandler {
 		if(Wizardry.proxy instanceof ClientProxy){
 
 			EntityPlayer player = Minecraft.getMinecraft().player;
-			ItemStack wand = player.getHeldItemMainhand();
 
-			if(!(wand.getItem() instanceof ItemWand)){
-				wand = player.getHeldItemOffhand();
-				// If the player isn't holding a wand, then nothing else needs to be done.
-				if(!(wand.getItem() instanceof ItemWand)) return;
+			if(player != null){
+
+				ItemStack wand = player.getHeldItemMainhand();
+
+				if(!(wand.getItem() instanceof ItemWand)){
+					wand = player.getHeldItemOffhand();
+					// If the player isn't holding a wand, then nothing else needs to be done.
+					if(!(wand.getItem() instanceof ItemWand)) return;
+				}
 			}
 
 			if(ClientProxy.NEXT_SPELL.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus){
