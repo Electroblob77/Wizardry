@@ -307,10 +307,13 @@ Code:
 
 - Corail31
 - 12foo
+- Shadows-of-Fire
+- HellFirePvP
 
 Translations:
 
 - Russian: VilagVil
 - Spanish and Mexican Spanish: MadWrist
+- Chinese: ZHENGLOC and dragon-evol
 
 Lightning ray sound effect from OhhWowProductions
