@@ -1,79 +1,60 @@
 package electroblob.wizardry;
 
-import electroblob.wizardry.item.ItemWand;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import org.lwjgl.input.Keyboard;
-
 import electroblob.wizardry.client.ClientProxy;
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class WizardryKeyHandler {
 
 	boolean NkeyPressed = false;
 	boolean BkeyPressed = false;
-	boolean NkeyAlreadyPressed = false;
-	boolean BkeyAlreadyPressed = false;
 
+	// Changed to a tick event to allow mouse button keybinds
+	// The 'lag' that happened previously was actually because the code only fired when a keyboard key was pressed!
 	@SubscribeEvent
-	public void onKeyInput(InputEvent.KeyInputEvent event){
+	public void onTickEvent(TickEvent.ClientTickEvent event){
 
-		// Key pressed
-		if(Keyboard.getEventKeyState()){
+		if(event.phase == TickEvent.Phase.END) return; // Only really needs to be once per tick
 
-			if(Wizardry.proxy instanceof ClientProxy){
+		if(Wizardry.proxy instanceof ClientProxy){
 
-				EntityPlayer player = Minecraft.getMinecraft().player;
-				ItemStack wand = player.getHeldItemMainhand();
+			EntityPlayer player = Minecraft.getMinecraft().player;
+			ItemStack wand = player.getHeldItemMainhand();
 
-				if(!(wand.getItem() instanceof ItemWand)){
-					wand = player.getHeldItemOffhand();
-					// If the player isn't holding a wand, then nothing else needs to be done.
-					if(!(wand.getItem() instanceof ItemWand)) return;
-				}
-
-				if(ClientProxy.NEXT_SPELL.isPressed() && Minecraft.getMinecraft().inGameHasFocus){
-					if(!NkeyPressed){
-						NkeyPressed = true;
-					}else{
-						NkeyAlreadyPressed = true;
-					}
-					if(!NkeyAlreadyPressed){
-						// Packet building
-						IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.NEXT_SPELL_KEY);
-						WizardryPacketHandler.net.sendToServer(msg);
-					}
-				}
-
-				if(ClientProxy.PREVIOUS_SPELL.isPressed() && Minecraft.getMinecraft().inGameHasFocus){
-					if(!BkeyPressed){
-						BkeyPressed = true;
-					}else{
-						BkeyAlreadyPressed = true;
-					}
-					if(!BkeyAlreadyPressed){
-						// Packet building
-						IMessage msg = new PacketControlInput.Message(
-								PacketControlInput.ControlType.PREVIOUS_SPELL_KEY);
-						WizardryPacketHandler.net.sendToServer(msg);
-					}
-				}
+			if(!(wand.getItem() instanceof ItemWand)){
+				wand = player.getHeldItemOffhand();
+				// If the player isn't holding a wand, then nothing else needs to be done.
+				if(!(wand.getItem() instanceof ItemWand)) return;
 			}
-		}
 
-		// Key released
-		else{
-			if(NkeyPressed){
+			if(ClientProxy.NEXT_SPELL.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus){
+				if(!NkeyPressed){
+					NkeyPressed = true;
+					// Packet building
+					IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.NEXT_SPELL_KEY);
+					WizardryPacketHandler.net.sendToServer(msg);
+				}
+			}else{
 				NkeyPressed = false;
-				NkeyAlreadyPressed = false;
-			}else if(BkeyPressed){
+			}
+
+			if(ClientProxy.PREVIOUS_SPELL.isKeyDown() && Minecraft.getMinecraft().inGameHasFocus){
+				if(!BkeyPressed){
+					BkeyPressed = true;
+					// Packet building
+					IMessage msg = new PacketControlInput.Message(
+							PacketControlInput.ControlType.PREVIOUS_SPELL_KEY);
+					WizardryPacketHandler.net.sendToServer(msg);
+				}
+			}else{
 				BkeyPressed = false;
-				BkeyAlreadyPressed = false;
 			}
 		}
 	}
