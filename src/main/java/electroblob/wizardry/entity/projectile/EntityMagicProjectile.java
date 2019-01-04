@@ -107,15 +107,20 @@ public abstract class EntityMagicProjectile extends EntityThrowable implements I
 	}
 
 	@Override
+	// For now, we're only writing when the thrower exists, so subclasses MUST CALL SUPER LAST.
+	// TODO: Figure out whether there's a default value we can write that is never used as an entity id (0? -1? +/-MAX_VALUE?)
 	public void writeSpawnData(ByteBuf data){
-		data.writeInt(this.getThrower().getEntityId());
+		if(this.getThrower() != null) data.writeInt(this.getThrower().getEntityId());
 	}
 
 	@Override
+	// For now, we're only writing when the thrower exists, so subclasses MUST CALL SUPER LAST.
 	public void readSpawnData(ByteBuf data){
-		Entity entity = this.world.getEntityByID(data.readInt());
-		if(entity instanceof EntityLivingBase) this.thrower = (EntityLivingBase)entity;
-		this.ignoreEntity = this.thrower;
+		if(data.isReadable()){
+			Entity entity = this.world.getEntityByID(data.readInt());
+			if(entity instanceof EntityLivingBase) this.thrower = (EntityLivingBase)entity;
+			this.ignoreEntity = this.thrower;
+		}
 	}
 
 }

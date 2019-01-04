@@ -36,14 +36,14 @@ public abstract class EntityBomb extends EntityMagicProjectile {
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer){
-		super.writeSpawnData(buffer);
 		buffer.writeFloat(blastMultiplier);
+		super.writeSpawnData(buffer);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf buffer){
-		super.readSpawnData(buffer);
 		blastMultiplier = buffer.readFloat();
+		super.readSpawnData(buffer);
 	}
 
 	@Override
