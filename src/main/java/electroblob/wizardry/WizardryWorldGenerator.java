@@ -237,7 +237,8 @@ public class WizardryWorldGenerator implements IWorldGenerator {
 				// BlockPos is immutable, so I'm not sure if simply saying pos1 = pos will be sufficient.
 				BlockPos layerCentre = new BlockPos(origin);
 
-				while(flag){
+				// Stop when the bottom of the world is reached
+				while(flag && layerCentre.getY() > 0){
 
 					flag = false;
 
