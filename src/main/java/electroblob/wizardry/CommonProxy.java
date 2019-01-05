@@ -37,15 +37,11 @@ public class CommonProxy {
 	// SECTION Registry
 	// ===============================================================================================================
 
-	public void registerRenderers(){
-	}
+	public void registerRenderers(){}
 
-	public void initialiseLayers(){
-	}
+	public void initialiseLayers(){}
 
-	public void registerKeyBindings(){
-	}
-
+	public void registerKeyBindings(){}
 
 	public net.minecraft.client.model.ModelBiped getWizardArmourModel(){
 		return null;
@@ -123,10 +119,10 @@ public class CommonProxy {
 	// SECTION Misc
 	// ===============================================================================================================
 
-	public void setToNumberSliderEntry(Property property){
-	}
+	public void setToNumberSliderEntry(Property property){}
 	
 	public void setToHUDChooserEntry(Property property){}
+	
 	// public void setToEntityNameEntry(Property property){}
 
 	/**
