@@ -1056,43 +1056,4 @@ public final class WizardryUtilities {
 		return spells.get(random.nextInt(spells.size())).id();
 	}
 
-	// TODO: These methods need a rethink. What are we trying to achieve with them? Should each use case look in the
-	// same pool of items? For example, might we (or someone else) want to have a wand which can generate in chests, but
-	// is not used by wizards?
-
-	// I reckon this should be strictly for cases where we only ever want the standard wand set, i.e. wizards' gear,
-	// etc.
-
-	/**
-	 * Helper method to return the appropriate armour item based on element and slot. As of Wizardry 2.1, this uses the
-	 * immutable map stored in {@link WizardryItems#ARMOUR_MAP}. Currently used to iterate through armour for
-	 * registering charging recipes and for chest generation.
-	 * 
-	 * @param element The EnumElement of the armour required. Null will be converted to {@link Element#MAGIC}.
-	 * @param slot EntityEquipmentSlot of the armour piece required
-	 * @return The armour item which corresponds to the given element and slot, or null if no such item exists.
-	 * @throws IllegalArgumentException if the given slot is not an armour slot.
-	 */
-	public static Item getArmour(Element element, EntityEquipmentSlot slot){
-		if(slot == null || slot.getSlotType() != Type.ARMOR)
-			throw new IllegalArgumentException("Must be a valid armour slot");
-		if(element == null) element = Element.MAGIC;
-		return WizardryItems.ARMOUR_MAP.get(ImmutablePair.of(slot, element));
-	}
-
-	/**
-	 * Helper method to return the appropriate wand based on tier and element.As of Wizardry 2.1, this uses the
-	 * immutable map stored in {@link WizardryItems#WAND_MAP}. Currently used in the packet handler for upgrading wands,
-	 * for chest generation and to iterate through wands for charging recipes.
-	 * 
-	 * @param tier The tier of the wand required.
-	 * @param element The element of the wand required. Null will be converted to {@link Element#MAGIC}.
-	 * @return The wand item which corresponds to the given element and slot, or null if no such item exists.
-	 * @throws NullPointerException if the given tier is null.
-	 */
-	public static Item getWand(Tier tier, Element element){
-		if(tier == null) throw new NullPointerException("The given tier cannot be null.");
-		if(element == null) element = Element.MAGIC;
-		return WizardryItems.WAND_MAP.get(ImmutablePair.of(tier, element));
-	}
 }
