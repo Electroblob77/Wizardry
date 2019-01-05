@@ -46,5 +46,21 @@
 	"skyrim_style": {
 		"texture": "ebwizardry:gui/spell_hud/skyrim_style",
 		"metadata": "ebwizardry:gui/spell_hud/skyrim_style"
+	},
+	"futuristic": {
+		"texture": "ebwizardry:gui/spell_hud/futuristic",
+		"metadata": "ebwizardry:gui/spell_hud/futuristic"
+	},
+	"steampunk": {
+		"texture": "ebwizardry:gui/spell_hud/steampunk",
+		"metadata": "ebwizardry:gui/spell_hud/steampunk"
+	},
+	"dragon": {
+		"texture": "ebwizardry:gui/spell_hud/dragon",
+		"metadata": "ebwizardry:gui/spell_hud/dragon"
+	},
+	"compass": {
+		"texture": "ebwizardry:gui/spell_hud/compass",
+		"metadata": "ebwizardry:gui/spell_hud/compass"
 	}
 }

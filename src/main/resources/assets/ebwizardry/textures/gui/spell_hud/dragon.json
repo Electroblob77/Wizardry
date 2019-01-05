@@ -1,0 +1,33 @@
+{
+	"name": "Dragonstone",
+	"description": "A replica of the insignia of Nefazar, the only wizard to have single-handedly slain a fully-grown dragon.",
+	"width": 128,
+	"height": 42,
+	"mirror": {
+		"x": true,
+		"y": false
+	},
+	"spell_icon_inset": {
+		"x": 3,
+		"y": 4
+	},
+	"text_inset": {
+		"x": 42,
+		"y": 20
+	},
+	"spell_cascade_offset": {
+		"x": 1,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 33,
+		"y": 2,
+		"length": 93,
+		"height": 5,
+		"mirror": {
+			"x": true,
+			"y": false
+		},
+		"show_when_full": true
+	}
+}
