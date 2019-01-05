@@ -1,7 +1,5 @@
 package electroblob.wizardry;
 
-import org.apache.logging.log4j.Logger;
-
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
 import electroblob.wizardry.command.CommandSetAlly;
@@ -30,6 +28,7 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob.wizardry.WizardryGuiFactory")
 public class Wizardry {
@@ -136,7 +135,6 @@ public class Wizardry {
 
 		// Event Handlers
 		GameRegistry.registerWorldGenerator(generator, 0);
-		MinecraftForge.EVENT_BUS.register(new WizardryKeyHandler());
 		MinecraftForge.EVENT_BUS.register(instance);
 		proxy.registerSpellHUD(); // This can't easily be converted to use the new @Mod.EventBusSubscriber system
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new WizardryGuiHandler());

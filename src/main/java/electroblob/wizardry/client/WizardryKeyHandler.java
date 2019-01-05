@@ -1,25 +1,30 @@
-package electroblob.wizardry;
+package electroblob.wizardry.client;
 
-import electroblob.wizardry.client.ClientProxy;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class WizardryKeyHandler {
 
-	boolean NkeyPressed = false;
-	boolean BkeyPressed = false;
+	static boolean NkeyPressed = false;
+	static boolean BkeyPressed = false;
 
 	// Changed to a tick event to allow mouse button keybinds
 	// The 'lag' that happened previously was actually because the code only fired when a keyboard key was pressed!
 	@SubscribeEvent
-	public void onTickEvent(TickEvent.ClientTickEvent event){
+	public static void onTickEvent(TickEvent.ClientTickEvent event){
 
 		if(event.phase == TickEvent.Phase.END) return; // Only really needs to be once per tick
 
