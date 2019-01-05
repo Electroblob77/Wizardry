@@ -6,10 +6,13 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.gui.GuiSpellDisplay.Skin;
 import electroblob.wizardry.registry.Spells;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.client.config.GuiSelectString;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
@@ -22,8 +25,19 @@ public class GuiSelectHUDSkin extends GuiSelectString {
 	@Override
 	public void initGui(){
 		super.initGui();
+		setEntryListDimensions();
+	}
+	
+	@Override
+    protected void actionPerformed(GuiButton button){
+		super.actionPerformed(button);
+		setEntryListDimensions(); // Stops the entry list from resizing when a button is pressed
+    }
+	
+	private void setEntryListDimensions(){
 		this.entryList.setDimensions(150, height, 43, height-43);
 		this.entryList.left = 10;
+		this.entryList.maxEntryWidth = 120;
 		this.entryList.headerPadding = 5;
 	}
 	
@@ -36,7 +50,7 @@ public class GuiSelectHUDSkin extends GuiSelectString {
 		
 		if(this.currentValue instanceof String){
 			
-			this.drawString(this.fontRenderer, "Preview:", 170, 44, 0xffffff);
+			this.drawString(this.fontRenderer, I18n.format("config." + Wizardry.MODID + ":spell_hud_skin.preview"), 170, 44, 0xffffff);
 			
 			int previewLeft = 170;
 			int previewRight = width-10;
