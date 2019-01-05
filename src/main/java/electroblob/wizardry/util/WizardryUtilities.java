@@ -80,17 +80,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public final class WizardryUtilities {
 
-	/**
-	 * Constant which is simply an array of the four armour slots. (Could've sworn this exists somewhere in vanilla, but
-	 * I can't find it anywhere...)
-	 */
+	/** Constant which is simply an array of the four armour slots. (Could've sworn this exists somewhere in vanilla,
+	 * but I can't find it anywhere...) */
 	public static final EntityEquipmentSlot[] ARMOUR_SLOTS;
 	/** Changed to a constant in wizardry 2.1, since this is a lot more efficient. */
 	private static final DataParameter<Boolean> POWERED;
 
-	static{
+	static {
 		// The list of slots needs to be mutable.
-		List<EntityEquipmentSlot> slots = new ArrayList<EntityEquipmentSlot>(
+		List<EntityEquipmentSlot> slots = new ArrayList<>(
 				Arrays.asList(EntityEquipmentSlot.values()));
 		slots.removeIf(slot -> slot.getSlotType() != Type.ARMOR);
 		ARMOUR_SLOTS = slots.toArray(new EntityEquipmentSlot[0]);
@@ -146,13 +144,11 @@ public final class WizardryUtilities {
 
 	/**
 	 * Returns whether the block at the given coordinates is unbreakable in survival mode. In vanilla this is true for
-	 * bedrock and end portal frame, for example. This is a shortcut for
-	 * world.getBlockState(pos).getBlockHardness(world, pos) == -1.0f. Not much of a shortcut any more, since block ids
-	 * have been phased out.
+	 * bedrock and end portal frame, for example. This is a shortcut for:<p>
+	 * {@code world.getBlockState(pos).getBlockHardness(world, pos) == -1.0f}
 	 */
 	public static boolean isBlockUnbreakable(World world, BlockPos pos){
-		return world.isAirBlock(new BlockPos(pos)) ? false
-				: world.getBlockState(pos).getBlockHardness(world, pos) == -1.0f;
+		return !world.isAirBlock(new BlockPos(pos)) && world.getBlockState(pos).getBlockHardness(world, pos) == -1.0f;
 	}
 
 	/**
@@ -160,11 +156,9 @@ public final class WizardryUtilities {
 	 * Liquids and other blocks that cannot be built on top of do not count, but stuff like signs does. (Technically any
 	 * block is allowed to be the floor according to the code, but seeing as it searches upwards and non-solid blocks
 	 * usually need a supporting block, the floor is likely to always be solid).
-	 * 
-	 * @param world
-	 * @param x The x coordinate to search in
-	 * @param y The y coordinate to search from
-	 * @param z The z coordinate to search in
+	 *
+	 * @param world The world to search in
+	 * @param pos The coordinates to search from
 	 * @param range The maximum distance from the given y coordinate to search.
 	 * @return The y coordinate of the closest floor level, or -1 if there is none. Returns the actual level of the
 	 *         floor as would be seen in the debug screen when the player is standing on it.
@@ -189,10 +183,8 @@ public final class WizardryUtilities {
 	 * Finds the nearest floor level to the given y coord within the range specified at the given x and z coords. Only
 	 * works if the block above the floor is actually air and the floor is solid or a liquid.
 	 * 
-	 * @param world
-	 * @param x The x coordinate to search in
-	 * @param y The y coordinate to search from
-	 * @param z The z coordinate to search in
+	 * @param world The world to search in
+	 * @param pos The coordinates to search from
 	 * @param range The maximum distance from the given y coordinate to search.
 	 * @return The y coordinate of the closest floor level, or -1 if there is none. Returns the actual level of the
 	 *         floor as would be seen in the debug screen when the player is standing on it.
@@ -216,11 +208,9 @@ public final class WizardryUtilities {
 	/**
 	 * Finds the nearest floor level to the given y coord within the range specified at the given x and z coords.
 	 * Everything that is not air is treated as floor, even stuff that can't be walked on.
-	 * 
-	 * @param world
-	 * @param x The x coordinate to search in
-	 * @param y The y coordinate to search from
-	 * @param z The z coordinate to search in
+	 *
+	 * @param world The world to search in
+	 * @param pos The coordinates to search from
 	 * @param range The maximum distance from the given y coordinate to search.
 	 * @return The y coordinate of the closest floor level, or -1 if there is none. Returns the actual level of the
 	 *         floor as would be seen in the debug screen when the player is standing on it.
@@ -300,7 +290,7 @@ public final class WizardryUtilities {
 
 	/**
 	 * Gets the blockstate of the block the specified entity is standing on. Uses
-	 * {@link MathHelper#floor_double(double)} because casting to int will not return the correct coordinate when x or z
+	 * {@link MathHelper#floor(double)} because casting to int will not return the correct coordinate when x or z
 	 * is negative.
 	 */
 	public static IBlockState getBlockEntityIsStandingOn(Entity entity){
@@ -331,7 +321,7 @@ public final class WizardryUtilities {
 	 * this does not exclude any entities; if any specific entities are to be excluded this must be checked when
 	 * iterating through the list.
 	 * 
-	 * @see {@link WizardryUtilities#getEntitiesWithinRadius(double, double, double, double, World)}
+	 * @see WizardryUtilities#getEntitiesWithinRadius(double, double, double, double, World)
 	 * @param radius The search radius
 	 * @param x The x coordinate to search around
 	 * @param y The y coordinate to search around
@@ -396,12 +386,11 @@ public final class WizardryUtilities {
 
 	/**
 	 * Returns the entity riding the given entity, or null if there is none. Allows for neater code now that entities
-	 * have a list of passengers, because it is necessary to check that the list is not null or empty first.
+	 * have a list of passengers, because it is necessary to check that the list is not empty first.
 	 */
 	@Nullable
 	public static Entity getRider(Entity entity){
-		return entity.getPassengers() != null && !entity.getPassengers().isEmpty() ? entity.getPassengers().get(0)
-				: null;
+		return !entity.getPassengers().isEmpty() ? entity.getPassengers().get(0) : null;
 	}
 
 	/**
@@ -542,8 +531,8 @@ public final class WizardryUtilities {
 
 	/**
 	 * Turns the given creeper into a charged creeper. In 1.10, this requires reflection since the DataManager keys are
-	 * private. (You <i>could</i> call {@link EntityCreeper#onStruckByLightning(...)} and then heal it and extinguish
-	 * it, but that's a bit awkward.)
+	 * private. (You <i>could</i> call {@link EntityCreeper#onStruckByLightning(EntityLightningBolt)} and then heal it
+	 * and extinguish it, but that's a bit awkward, and it'll trigger events and stuff...)
 	 */
 	// The reflection here only gets done once to initialise the POWERED field, so it's not a performance issue at all.
 	public static void chargeCreeper(EntityCreeper creeper){
@@ -578,7 +567,7 @@ public final class WizardryUtilities {
 	 * Helper method which performs a ray trace for blocks and entities from an entity's eye position in the direction
 	 * they are looking, over a specified range, using {@link WizardryUtilities#rayTrace(World, Vec3d, Vec3d, float,
 	 * boolean, Class, Predicate)}. Aim assist is zero, the entity type is simply {@code Entity} (all entities), and the
-	 * filter removes the given entity and allows all others.
+	 * filter removes the given entity and any dying entities and allows all others.
 	 * 
 	 * @param world The world in which to perform the ray trace.
 	 * @param entity The entity from which to perform the ray trace. The ray trace will start from this entity's eye

@@ -17,12 +17,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public final class WizardryEnchantments {
 
-	// At the moment these enchantments generate on books in dungeon chests due to a bad bit of code
-	// (EnchantRandomly:50).
+	// At the moment these enchantments generate on books in dungeon chests due to a bad bit of code (EnchantRandomly:49).
 	// No idea how to fix this because I have no way of hooking into that code... removing the enchantments from the
 	// registry works, but breaks everything else!
 
-	// TODO: For the time being, a dynamic solution will have to do, i.e. intercept the book when it is generated and
+	// For the time being, a dynamic solution will have to do, i.e. intercept the book when it is generated and
 	// reassign its enchantment.
 
 	// All of these have custom classes, so the unlocalised name (referred to simply as 'name' for enchantments) is

@@ -1,5 +1,6 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.client.gui.handbook.GuiWizardHandbook;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWizardHandbook;
 import electroblob.wizardry.spell.Spell;
@@ -45,7 +46,7 @@ public class WizardryGuiHandler implements IGuiHandler {
 			}
 		}else if(id == WIZARD_HANDBOOK && (player.getHeldItemMainhand().getItem() instanceof ItemWizardHandbook
 				|| player.getHeldItemOffhand().getItem() instanceof ItemWizardHandbook)){
-			return new electroblob.wizardry.client.gui.GuiWizardHandbook();
+			return new GuiWizardHandbook();
 		}else if(id == SPELL_BOOK){
 			if(player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
 				return new electroblob.wizardry.client.gui.GuiSpellBook(Spell.get(player.getHeldItemMainhand().getItemDamage()));

@@ -52,7 +52,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * written the {@link WandHelper} class.<i> I strongly recommend you use it for interacting with wand items wherever
  * possible.</i>
  * <p>
- * It's unikely that anything in this class will be of much use externally, but should you wish to use it for whatever
+ * It's unlikely that anything in this class will be of much use externally, but should you wish to use it for whatever
  * reason (perhaps if you extend it), it works as follows:
  * <p>
  * - onItemRightClick is where non-continuous spells are cast, and it sets the item in use for continuous spells<br>

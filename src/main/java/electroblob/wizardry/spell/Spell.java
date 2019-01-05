@@ -272,7 +272,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return modID;
 	}
 
-	/** Returns the ResourceLocation for this spell's icon. */
+	/** Returns the {@code ResourceLocation} for this spell's icon. */
 	public final ResourceLocation getIcon(){
 		return icon;
 	}
@@ -368,7 +368,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/**
 	 * Returns the total number of registered spells, excluding the 'None' spell. Returns the same number that would be
-	 * returned by Spell.getSpells(Spell.allSpells).size(), but this method is more efficient.
+	 * returned by {@code Spell.getSpells(Spell.allSpells).size()}, but this method is more efficient.
 	 */
 	public static int getTotalSpellCount(){
 		return registry.getValuesCollection().size() - 1;

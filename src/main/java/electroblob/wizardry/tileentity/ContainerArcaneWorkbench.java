@@ -26,10 +26,8 @@ public class ContainerArcaneWorkbench extends Container {
 	/** The arcane workbench tile entity associated with this container. */
 	public TileEntityArcaneWorkbench tileentity;
 
-	public static final ResourceLocation EMPTY_SLOT_CRYSTAL = new ResourceLocation(Wizardry.MODID,
-			"gui/empty_slot_crystal");
-	public static final ResourceLocation EMPTY_SLOT_UPGRADE = new ResourceLocation(Wizardry.MODID,
-			"gui/empty_slot_upgrade");
+	public static final ResourceLocation EMPTY_SLOT_CRYSTAL = new ResourceLocation(Wizardry.MODID, "gui/empty_slot_crystal");
+	public static final ResourceLocation EMPTY_SLOT_UPGRADE = new ResourceLocation(Wizardry.MODID, "gui/empty_slot_upgrade");
 
 	public static final int CRYSTAL_SLOT = 8;
 	public static final int CENTRE_SLOT = 9;
@@ -260,7 +258,7 @@ public class ContainerArcaneWorkbench extends Container {
 			if(((IWorkbenchItem)centre.getStack().getItem())
 				.onApplyButtonPressed(player, centre, this.getSlot(CRYSTAL_SLOT), this.getSlot(UPGRADE_SLOT), spellBooks)){
 				
-				// TODO: Sound and possibly animation for spell binding
+				// Probably don't need to do anything here, unless we're going to use packets to control the animation
 			}
 		}
 	}

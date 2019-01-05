@@ -54,7 +54,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
 /**
- * Class responsible for defining, storing and registering all of wizardry's spells.
+ * Class responsible for defining, storing and registering all of wizardry's spells. Use this to access individual
+ * spell instances, similar to the {@code Blocks} and {@code Items} classes.
  * 
  * @author Electroblob
  * @since Wizardry 2.1
@@ -75,7 +76,8 @@ public final class Spells {
 	public static void createRegistry(RegistryEvent.NewRegistry event){
 
 		// Beats me why we need both of these. Surely the type parameter means it already knows?
-		RegistryBuilder<Spell> builder = new RegistryBuilder<Spell>();
+		// EDIT: It's probably because of type erasure, thinking about it.
+		RegistryBuilder<Spell> builder = new RegistryBuilder<>();
 		builder.setType(Spell.class);
 		builder.setName(new ResourceLocation(Wizardry.MODID, "spells"));
 		builder.setIDRange(0, 5000); // Is there any penalty for using a larger number?

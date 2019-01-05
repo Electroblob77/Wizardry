@@ -507,7 +507,6 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		NBTTagCompound properties = new NBTTagCompound();
 
-		// ...so Java 8 allows you to do stuff like this:
 		properties.setTag("imbuements", WizardryUtilities.mapToNBT(this.imbuementDurations,
 				imbuement -> new NBTTagInt(Enchantment.getEnchantmentID((Enchantment)imbuement)), NBTTagInt::new));
 
@@ -523,7 +522,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			properties.setLong("clairvoyanceLocation", this.clairvoyanceLocation.toLong());
 		properties.setInteger("clairvoyanceDimension", this.getClairvoyanceDimension());
 
-		// THIS is why I wrote the list/map <-> NBT methods. Look how neat this is!
+		// Mmmmmm Java 8....
 		properties.setTag("allies", WizardryUtilities.listToNBT(this.allies, WizardryUtilities::UUIDtoTagCompound));
 		properties.setTag("allyNames", WizardryUtilities.listToNBT(this.allyNames, NBTTagString::new));
 		properties.setTag("soulboundCreatures", WizardryUtilities.listToNBT(this.soulboundCreatures, WizardryUtilities::UUIDtoTagCompound));
@@ -660,55 +659,5 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 
 	}
-
-	// Ended up deleting IWizardData because it was unnecessary. This is the comment that was at the start of it:
-
-	/* I'm not going to lie, I will never find the capabilities system even remotely intuitive so this is a bare-minimum
-	 * approach just to get things working (four classes where one would have done?!) At one point I considered simply
-	 * wrapping my old IEEP inside a single-field capability, but I eventually decided I would at least *try* to do it
-	 * properly.
-	 * 
-	 * "...without having to directly implement many interfaces." - Forge Docs. I still can't see what's wrong with
-	 * implementing many interfaces; surely that's what Java interfaces are designed for?
-	 * 
-	 * Other things I find annoying: - IStorage. It's completely redundant in the majority of cases, and I don't
-	 * understand why we need yet another separate class. - Making an interface, only to implement it once and once
-	 * only. This completely defeats the point of interfaces. - The EnumFacing parameter, which is again redundant for
-	 * everything that isn't a tile entity. So much for a clean, neat system.
-	 * 
-	 * What Forge has effectively done is conflated two different functions: attaching data to stuff and cross-mod
-	 * integration/soft dependencies. I think this is bad design; it would have been better to keep the two features
-	 * separate.
-	 * 
-	 * Here's my current understanding of how the capability system works: - You make an interface which defines the
-	 * things your capability can do (this class). I will call this the TEMPLATE. - You implement that interface with
-	 * your default implementation (WizardData). This is the closest analog to your old IEEP implementation class. THIS
-	 * CLASS STORES ALL THE VARIABLES, and hence has one instance for each instance of whatever it is attached to. I
-	 * will call this the DATA. - The DATA class implements INBTSerializable (assuming you want it to be saved, which is
-	 * nearly always the case) - Despite its name, Capability<T> does NOT represent a capability itself. Instead, it
-	 * acts as a sort of identifier/key, the idea being that you can access a particular instance of your DATA given the
-	 * key (which tells forge that you want a capability of type TEMPLATE) and the object you want the DATA for. This is
-	 * what Entity.getCapability(...) does.
-	 * 
-	 * To really understand what's going on though, you need to sift through Forge's verbose data structures and find
-	 * where capabilities are actually hooked into vanilla: - Anything that implements ICapabilityProvider will have a
-	 * private CapabilityDispatcher field. This holds other ICapabilityProviders. (I know. This inheritance pattern DOES
-	 * NOT MAKE SENSE, because these could, in theory, be OTHER ENTITIES!) - This field is assigned a value through
-	 * Forge's event factory, which, as we are all familiar with, calls all the methods marked with @SubscribeEvent.
-	 * These methods add individual ICapabilityProviders to a Map stored in the event, which the event factory then
-	 * wraps in a CapabilityDispatcher (which is itself an ICapabilityProvider) for the object that called it. - In your
-	 * event handler, you return a custom ICapabilityProvider which is effectively bolted on to the player, and
-	 * duplicates the ICapabilityProvider methods so you can hook into them and return an instance of your DATA class. -
-	 * Where before there was a simple collection of IEEPs stored in the player, there is now a tree of
-	 * ICapabilityProviders:
-	 * 
-	 * - Entity/TileEntity/ItemStack - Vanilla ICapabilityProviders, mostly IItemHandlers, stored as fields. -
-	 * CapabilityDispatcher, stored as a field. - Custom ICapabilityProviders - Custom CapabilityDispatchers - ...
-	 * 
-	 * Most importantly, EACH PLAYER HOLDS THEIR OWN INSTANCE OF THIS TREE.
-	 * 
-	 * When a capability is retrieved, the following process happens: 1. For the Entity/TileEntity/ItemStack instance,
-	 * ICapabilityProvider.getCapability(...) is called. 2. The request propogates through the tree and finds the
-	 * requested capability. */
 
 }

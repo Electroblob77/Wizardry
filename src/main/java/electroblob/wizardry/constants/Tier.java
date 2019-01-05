@@ -68,8 +68,7 @@ public enum Tier {
 
 		int totalWeight = 0;
 
-		for(Tier tier : tiers)
-			totalWeight += tier.weight;
+		for(Tier tier : tiers) totalWeight += tier.weight;
 
 		int randomiser = random.nextInt(totalWeight);
 		int cumulativeWeight = 0;

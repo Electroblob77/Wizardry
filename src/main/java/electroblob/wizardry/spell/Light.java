@@ -59,7 +59,6 @@ public class Light extends Spell {
 			BlockPos pos = new BlockPos(x, y, z);
 
 			if(world.isAirBlock(pos)){
-				// world.playSound(x, y, z, "sound.ambient.cave.cave", 1.0f, 1.5f, false);
 				if(!world.isRemote){
 					world.setBlockState(pos, WizardryBlocks.magic_light.getDefaultState());
 					if(world.getTileEntity(pos) instanceof TileEntityTimer){

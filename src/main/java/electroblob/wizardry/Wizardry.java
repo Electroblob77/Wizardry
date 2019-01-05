@@ -79,7 +79,6 @@ public class Wizardry {
 	// TODO: Switch from IInventory to IItemHandler (Or don't. It's only useful for automation really.)
 	// TODO: Have particles obey Minecraft's particle setting where appropriate
 	// (see https://github.com/RootsTeam/Embers/blob/master/src/main/java/teamroots/embers/particle/ParticleUtil.java)
-	// TODO: Interfaces for various things, like 'stuff that can be put in the central slot of an arcane workbench'
 	// TODO: Go over all the worldgen code, use IWorldGenerator
 	// TODO: Implement a continuous sound system using MovingSoundEntity, allowing continuous spells to have a long sound
 	// loop as well as a start and end sound
@@ -88,6 +87,9 @@ public class Wizardry {
 	// TODO: Replace spell IDs in packets with ResourceLocation strings
 	// TODO: Forcefield needs looking at, esp. with regards to projectiles and explosions
 	// TODO: TileEntityArcaneWorkbench needs looking at, esp. regarding inventory and markDirty
+	// TODO: Fireskin somehow lost its particles
+	// TODO: Convert settings over to the @Config system
+	// TODO: Go through listeners of LivingHurtEvent and decide whether they should change to LivingDamageEvent
 
 	// NOTE: Add melee upgrades to loot tables when they are added.
 
@@ -208,7 +210,7 @@ public class Wizardry {
 		for(RegistryEvent.MissingMappings.Mapping<Item> mapping : event.getAllMappings()){
 			if(mapping.key.getResourceDomain().equals(Wizardry.MODID)){
 
-				Item replacement = null;
+				Item replacement;
 
 				switch(mapping.key.getResourcePath()){
 

@@ -157,7 +157,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 	 * Called by the client when it receives a Entity spawn packet. Data should be read out of the stream in the same
 	 * way as it was written. <b>Implementors must call super when overriding.</b>
 	 *
-	 * @param additionalData The packet data stream
+	 * @param buffer The packet data stream
 	 */
 	@Override
 	default void readSpawnData(ByteBuf buffer){
@@ -241,11 +241,11 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 	 * to do something when a successful attack is made. This was added because the event-based damage source system can
 	 * cause parts of attackEntityAsMob not to fire, since attackEntityFrom is intercepted and canceled.
 	 * <p>
-	 * Usage examples: {@link EntitySliverfishMinion} uses this to summon more silverfish if the target is killed,
+	 * Usage examples: {@link EntitySilverfishMinion} uses this to summon more silverfish if the target is killed,
 	 * {@link EntitySkeletonMinion} and {@link EntitySpiderMinion} use this to add potion effects to the target.
 	 */
 	default void onSuccessfulAttack(EntityLivingBase target){
-	};
+	}
 
 	// Delegates
 

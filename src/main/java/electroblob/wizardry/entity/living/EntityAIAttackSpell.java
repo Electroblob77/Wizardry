@@ -108,6 +108,7 @@ public class EntityAIAttackSpell<T extends EntityLiving & ISpellCaster> extends 
 				new PacketNPCCastSpell.Message(attacker.getEntityId(), target == null ? -1 : target.getEntityId(),
 						EnumHand.MAIN_HAND, spell.id(), modifiers),
 				// Particles are usually only visible from 16 blocks away, so 128 is more than far enough.
+				// TODO: Why is this one a 128 block radius, whilst the other one is all in dimension?
 				new TargetPoint(attacker.dimension, attacker.posX, attacker.posY, attacker.posZ, 128));
 	}
 

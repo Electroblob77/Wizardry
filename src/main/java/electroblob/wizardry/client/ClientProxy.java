@@ -533,8 +533,8 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityForceArrow.class, RenderForceArrow::new);
 
 		// Creatures
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritWolf.class, manager -> new RenderSpiritWolf(manager));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritHorse.class, manager -> new RenderSpiritHorse(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritWolf.class, RenderSpiritWolf::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritHorse.class, RenderSpiritHorse::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityWizard.class, RenderWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEvilWizard.class, RenderEvilWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecoy.class, RenderDecoy::new);

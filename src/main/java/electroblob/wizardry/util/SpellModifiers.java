@@ -26,8 +26,8 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * that not all wand upgrades affect spells). SpellModifiers objects are <i>mutable</i>, so you can simply change the
  * values they contain to modify the spell.
  * <p>
- * To use a SpellModifiers object within the <code>Spell.cast</code> methods, simply retrieve the desired multiplier
- * using {@link SpellModifiers#get(Item)} for wand upgrades, or {@link SpellModifiers#get(String)} if the multiplier is
+ * To use a SpellModifiers object within the <code>Spell.cast</code> methods, simply retrieve the desired modifier
+ * using {@link SpellModifiers#get(Item)} for wand upgrades, or {@link SpellModifiers#get(String)} if the modifier is
  * not from a wand upgrade.
  * 
  * @author Electroblob
@@ -139,6 +139,9 @@ public final class SpellModifiers {
 			buf.writeFloat(entry.getValue());
 		}
 	}
+	
+	// These two don't use the Map <-> NBT methods in WizardryUtilities because it's better to use the strings as keys
+	// themselves rather than storing them separately.
 
 	/**
 	 * Creates a new SpellModifiers object from the given NBTTagCompound. The NBTTagCompound should have 1 or more float

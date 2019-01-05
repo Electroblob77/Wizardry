@@ -34,11 +34,11 @@ public class PotionDecay extends Potion {
 	}
 
 	@Override
-	public boolean isReady(int p_76397_1_, int p_76397_2_){
+	public boolean isReady(int duration, int amplifier){
 		// Copied from the vanilla wither effect. It does the timing stuff. 25 is the number of ticks between hits at
 		// amplifier 0
-		int k = 25 >> p_76397_2_;
-		return k > 0 ? p_76397_1_ % k == 0 : true;
+		int k = 25 >> amplifier;
+		return k > 0 ? duration % k == 0 : true;
 	}
 
 	@Override

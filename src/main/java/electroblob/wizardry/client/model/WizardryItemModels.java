@@ -166,9 +166,8 @@ public final class WizardryItemModels {
 	 * Registers an item model, using the item's registry name as the model name (this convention makes it easier to
 	 * keep track of everything). Variant defaults to "normal". Registers the model for metadata 0 automatically, plus
 	 * all the other metadata values that the item can take, as defined in
-	 * {@link Item#getSubItems(Item, net.minecraft.creativetab.CreativeTabs, java.util.List)}. The passed in item
-	 * <b>must</b> allow null to be passed in for the creative tab parameter in the aforementioned method, or a
-	 * {@link NullPointerException} will result.
+	 * {@link Item#getSubItems(Item, net.minecraft.creativetab.CreativeTabs, java.util.List)}. The creative tab supplied
+	 * to the aforementioned method will be whichever one the item is in.
 	 */
 	private static void registerItemModel(Item item){
 

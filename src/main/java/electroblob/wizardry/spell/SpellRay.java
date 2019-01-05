@@ -276,6 +276,10 @@ public abstract class SpellRay extends Spell {
 			spawnParticle(world, x, y, z, velocity.x, velocity.y, velocity.z);
 		}
 	}
+	// The exact behaviour of the returned values of the following three methods can be a little confusing. Normally,
+	// either onEntityHit or onBlockHit (or both) will return true when the spell succeeded in hitting the block or
+	// entity, and false if not (note that those two methods are mutually exclusive). If false is returned, onMiss will
+	// be called - onMiss will never be called if either of the other methods returns true.
 	
 	/**
 	 * Called when the spell hits an entity. Will never be called if ignoreEntities is true.

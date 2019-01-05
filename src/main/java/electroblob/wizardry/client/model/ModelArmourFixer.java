@@ -4,9 +4,14 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityArmorStand;
 
-public class ModelWtfMojang extends ModelBiped {
+/**
+ * Fixes custom armour models 'breathing' on the stand and rotates the helmet properly.
+ * @author Shadows-of-Fire
+ * @since Wizardry 4.1.2
+ */
+public class ModelArmourFixer extends ModelBiped {
 
-	public ModelWtfMojang(float modelSize, float rotationYOffset, int textureWidth, int textureHeight) {
+	public ModelArmourFixer(float modelSize, float rotationYOffset, int textureWidth, int textureHeight) {
 		super(modelSize, rotationYOffset, textureWidth, textureHeight);
 	}
 

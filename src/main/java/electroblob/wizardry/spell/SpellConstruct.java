@@ -40,7 +40,7 @@ import net.minecraft.world.World;
  */
 public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	
-	/** A factory that creates projectile entities. */
+	/** A factory that creates construct entities. */
 	protected final Function<World, T> constructFactory;
 	/** The base lifetime of the construct created by this spell, or -1 if the construct does not despawn. */
 	protected final int baseDuration;

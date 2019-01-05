@@ -144,7 +144,7 @@ public final class Settings {
 	// Gamemodes
 	/**
 	 * <b>[Synchronised]</b> When set to true, spells a player hasn't cast yet will be unreadable until they are cast
-	 * (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in
+	 * (on a per-world basis). Has no effect when in creative mode. Scrolls of identification will be unobtainable in
 	 * survival mode if this is false.
 	 */
 	public boolean discoveryMode = true;

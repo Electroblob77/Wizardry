@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Items that implement this interface may be placed in the central slot of the arcane workbench as long as
- * {@link IWorkbenchItem#canPlace(ItemStack)} returns true.The number of spell book slots displayed is also specified
+ * {@link IWorkbenchItem#canPlace(ItemStack)} returns true. The number of spell book slots displayed is also specified
  * using {@link IWorkbenchItem#getSpellSlotCount(ItemStack)}.
  * <p>
  * Items that implement this interface define what happens if they are in the central slot of the arcane workbench and

@@ -48,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Event handler responsible for all client-side only events, mostly rendering.
+ * Event handler responsible for client-side only events, mostly rendering.
  * 
  * @author Electroblob
  * @since Wizardry 1.0

@@ -134,12 +134,12 @@ public class CommonProxy {
 	 * 
 	 * @param entity The source of the sound
 	 * @param sound The SoundEvent to play
+	 * @param category The SoundCategory to use
 	 * @param volume Volume relative to 1
 	 * @param pitch Pitch relative to 1
 	 * @param repeat Whether to repeat the sound for as long as the entity is alive (or until stopped manually)
 	 */
-	public void playMovingSound(Entity entity, SoundEvent sound, float volume, float pitch, boolean repeat){
-	}
+	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){}
 
 	/**
 	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns
@@ -153,5 +153,4 @@ public class CommonProxy {
 	public Set<String> getSpellHUDSkins(){
 		return null;
 	}
-
 }

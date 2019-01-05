@@ -146,29 +146,26 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		this.tasks.addTask(7, new EntityAIWander(this, 0.6D));
 		this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
 
-		this.targetSelector = new Predicate<Entity>(){
+		this.targetSelector = entity -> {
 
-			public boolean apply(Entity entity){
+			// If the target is valid and not invisible...
+			if(entity != null && !entity.isInvisible()
+					&& WizardryUtilities.isValidTarget(EntityWizard.this, entity)){
 
-				// If the target is valid and not invisible...
-				if(entity != null && !entity.isInvisible()
-						&& WizardryUtilities.isValidTarget(EntityWizard.this, entity)){
-
-					// ... and is a mob, a summoned creature ...
-					if((entity instanceof IMob || entity instanceof ISummonedCreature
-							// ... or in the whitelist ...
-							|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-									.contains(EntityList.getKey(entity.getClass())))
-							// ... and isn't in the blacklist ...
-							&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-									.contains(EntityList.getKey(entity.getClass()))){
-						// ... it can be attacked.
-						return true;
-					}
+				// ... and is a mob, a summoned creature ...
+				if((entity instanceof IMob || entity instanceof ISummonedCreature
+						// ... or in the whitelist ...
+						|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
+								.contains(EntityList.getKey(entity.getClass())))
+						// ... and isn't in the blacklist ...
+						&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
+								.contains(EntityList.getKey(entity.getClass()))){
+					// ... it can be attacked.
+					return true;
 				}
-
-				return false;
 			}
+
+			return false;
 		};
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));

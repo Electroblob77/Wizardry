@@ -8,8 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
- * Class responsible for defining, storing and registering all of wizardry's sound events. For some reason, these worked
- * in the beta versions despite not being registered...
+ * Class responsible for defining, storing and registering all of wizardry's sound events.
  * 
  * @author Electroblob
  * @since Wizardry 2.1

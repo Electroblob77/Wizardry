@@ -37,9 +37,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber
 public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem {
 
-	//VanillaCopy, ItemArmor has this set to private for some reason.
+	// VanillaCopy, ItemArmor has this set to private for some reason.
     public static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
-	//Damage reduction values that used to be in WizardryItems.SILK [feet, legs, chest, head]
+	// Damage reduction values that used to be in WizardryItems.SILK [feet, legs, chest, head]
     private static int[] reductions = new int[]{2, 4, 5, 2};
 	
 	public Element element;

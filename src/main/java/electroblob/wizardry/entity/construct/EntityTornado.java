@@ -137,8 +137,7 @@ public class EntityTornado extends EntityMagicConstruct {
 					Type type = null;
 			
 					if(block.getMaterial() == Material.LEAVES) type = Type.LEAF;
-					if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW)
-						type = Type.SNOW;
+					if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW) type = Type.SNOW;
 					
 					if(type != null){
 						double yPos1 = rand.nextDouble() * 8;

@@ -34,8 +34,7 @@ public class EntityFirebolt extends EntityMagicProjectile {
 		if(world.isRemote){
 			for(int i = 0; i < 8; i++){
 				world.spawnParticle(EnumParticleTypes.LAVA, this.posX + rand.nextFloat() - 0.5,
-						this.posY + this.height / 2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0,
-						0);
+						this.posY + this.height / 2 + rand.nextFloat() - 0.5, this.posZ + rand.nextFloat() - 0.5, 0, 0, 0);
 			}
 		}
 

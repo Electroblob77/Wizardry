@@ -26,13 +26,6 @@ import net.minecraftforge.registries.IForgeRegistry;
 @Mod.EventBusSubscriber
 public final class WizardryBlocks {
 
-	// I get registry events, they make sense - even I doubted myself with when to do various things in the load
-	// process,
-	// so I can see why the folks at Forge wanted to save us having to think about it.
-	// What I do not understand is why you would use @ObjectHolder for your own blocks and items. What's the point in
-	// making your code longer and more complicated, when you can just define the blocks as constants and register them
-	// later?
-
 	// Found a very nice way of registering things using arrays, which might make @ObjectHolder actually useful.
 	// http://www.minecraftforge.net/forum/topic/49497-1112-is-using-registryevent-this-way-ok/
 

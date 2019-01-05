@@ -3,7 +3,7 @@ package electroblob.wizardry.client.model;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelWizardArmour extends ModelWtfMojang {
+public class ModelWizardArmour extends ModelArmourFixer {
 	ModelRenderer Shape1;
 	ModelRenderer Shape2;
 	ModelRenderer Shape3;
