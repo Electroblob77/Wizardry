@@ -1,19 +1,19 @@
 package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.potion.PotionDecay;
-import electroblob.wizardry.potion.PotionFrost;
-import electroblob.wizardry.potion.PotionMagicEffect;
-import electroblob.wizardry.potion.PotionMagicEffectParticles;
+import electroblob.wizardry.potion.*;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
 /**
@@ -22,73 +22,39 @@ import net.minecraftforge.registries.IForgeRegistry;
  * @author Electroblob
  * @since Wizardry 2.1
  */
+@ObjectHolder(Wizardry.MODID)
 @Mod.EventBusSubscriber
 public final class WizardryPotions {
 
-	/* Interestingly, setting the colour to black stops the particles from rendering. This is great, however, the black
-	 * colour then 'mixes' with other potions that are applied. Whilst this is a bit annoying, for the amount it is
-	 * likely to get noticed it is certainly preferable to always making showParticles false, because now I can give the
-	 * user the option (via commands) of having one of my potion effects without particles, and more importantly the
-	 * potion effect HUD still gets displayed. TODO: Backport to 1.7.10, assuming it also works in that version. This
-	 * means also changing whenever the potion effect is added such that it is NOT ambient. */
-
-	public static final Potion frost = new PotionFrost(true, 0); // Colour was 0x38ddec (was arbitrary anyway)
-
-	public static final Potion transience = new PotionMagicEffectParticles(false, 0, 0){
-		@Override
-		public void spawnCustomParticle(World world, double x, double y, double z){
-			ParticleBuilder.create(Type.DUST).pos(x, y, z).colour(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
-		}
-	}.setBeneficial(); // 0xffe89b
-
-	public static final Potion fireskin = new PotionMagicEffectParticles(false, 0, 1){
-		@Override
-		public void spawnCustomParticle(World world, double x, double y, double z){
-			world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0, 0, 0);
-		}
-
-		@Override
-		public void performEffect(EntityLivingBase entitylivingbase, int strength){
-			entitylivingbase.extinguish(); // Stops melee mobs that are on fire from setting the player on fire,
-			// without allowing the player to actually stand in fire or swim in lava without taking damage.
-		};
-	}.setBeneficial(); // 0xff2f02
-
-	public static final Potion ice_shroud = new PotionMagicEffectParticles(false, 0, 2){
-		@Override
-		public void spawnCustomParticle(World world, double x, double y, double z){
-			float brightness = 0.5f + (world.rand.nextFloat() / 2);
-			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).colour(brightness, brightness + 0.1f, 1.0f).gravity(true).spawn(world);
-			ParticleBuilder.create(Type.SNOW).pos(x, y, z).spawn(world);
-		}
-	}.setBeneficial(); // 0x52f1ff
-
-	public static final Potion static_aura = new PotionMagicEffectParticles(false, 0, 3){
-		@Override
-		public void spawnCustomParticle(World world, double x, double y, double z){
-			ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
-		}
-	}.setBeneficial(); // 0x0070ff
-
-	public static final Potion decay = new PotionDecay(true, 0x3c006c);
-	public static final Potion sixth_sense = new PotionMagicEffect(false, 0xc6ff01, 4).setBeneficial();
-	public static final Potion arcane_jammer = new PotionMagicEffect(false, 0xcf4aa2, 5);
-	public static final Potion mind_trick = new PotionMagicEffect(true, 0x601683, 6);
-	public static final Potion mind_control = new PotionMagicEffect(true, 0x320b44, 7);
-	public static final Potion font_of_mana = new PotionMagicEffect(false, 0xffe5bb, 8).setBeneficial();
-	public static final Potion fear = new PotionMagicEffect(true, 0xbd0100, 9);
+	public static final Potion frost = null;
+	public static final Potion transience = null;
+	public static final Potion fireskin = null;
+	public static final Potion ice_shroud = null;
+	public static final Potion static_aura = null;
+	public static final Potion decay = null;
+	public static final Potion sixth_sense = null;
+	public static final Potion arcane_jammer = null;
+	public static final Potion mind_trick = null;
+	public static final Potion mind_control = null;
+	public static final Potion font_of_mana = null;
+	public static final Potion fear = null;
+	public static final Potion curse_of_soulbinding = null;
+	public static final Potion paralysis = null;
+	public static final Potion muffle = null;
+	public static final Potion ward = null;
+	public static final Potion slow_time = null;
 
 	/**
 	 * Sets both the registry and unlocalised names of the given potion, then registers it with the given registry. Use
-	 * this instead of {@link Potion#setRegistryName(String)} and {@link Potion#setUnlocalizedName(String)} during
+	 * this instead of {@link Potion#setRegistryName(String)} and {@link Potion#setPotionName(String)} during
 	 * construction, for convenience and consistency.
 	 * 
 	 * @param registry The registry to register the given potion to.
-	 * @param potion The potion to register.
 	 * @param name The name of the potion, without the mod ID or the .name stuff. The registry name will be
 	 *        {@code ebwizardry:[name]}. The unlocalised name will be {@code potion.ebwizardry:[name].name}.
+	 * @param potion The potion to register.
 	 */
-	public static void registerPotion(IForgeRegistry<Potion> registry, Potion potion, String name){
+	public static void registerPotion(IForgeRegistry<Potion> registry, String name, Potion potion){
 		potion.setRegistryName(Wizardry.MODID, name);
 		// For some reason, Potion#getName() doesn't prepend "potion." itself, so it has to be done here.
 		potion.setPotionName("potion." + potion.getRegistryName().toString());
@@ -100,18 +66,101 @@ public final class WizardryPotions {
 
 		IForgeRegistry<Potion> registry = event.getRegistry();
 
-		registerPotion(registry, frost, "frost");
-		registerPotion(registry, transience, "transience");
-		registerPotion(registry, fireskin, "fireskin");
-		registerPotion(registry, ice_shroud, "ice_shroud");
-		registerPotion(registry, static_aura, "static_aura");
-		registerPotion(registry, decay, "decay");
-		registerPotion(registry, sixth_sense, "sixth_sense");
-		registerPotion(registry, arcane_jammer, "arcane_jammer");
-		registerPotion(registry, mind_trick, "mind_trick");
-		registerPotion(registry, mind_control, "mind_control");
-		registerPotion(registry, font_of_mana, "font_of_mana");
-		registerPotion(registry, fear, "fear");
+		// Interestingly, setting the colour to black stops the particles from rendering.
+
+		registerPotion(registry, "frost", new PotionFrost(true, 0)); // Colour was 0x38ddec (was arbitrary anyway)
+		
+		registerPotion(registry, "transience", new PotionMagicEffectParticles(false, 0,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_transience")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){
+				ParticleBuilder.create(Type.DUST).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
+			}
+		}.setBeneficial()); // 0xffe89b
+		
+		registerPotion(registry, "fireskin", new PotionMagicEffectParticles(false, 0,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_fireskin")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){
+				world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0, 0, 0);
+			}
+
+			@Override
+			public void performEffect(EntityLivingBase entitylivingbase, int strength){
+				entitylivingbase.extinguish(); // Stops melee mobs that are on fire from setting the player on fire,
+				// without allowing the player to actually stand in fire or swim in lava without taking damage.
+			};
+		}.setBeneficial()); // 0xff2f02
+		
+		registerPotion(registry, "ice_shroud", new PotionMagicEffectParticles(false, 0,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_ice_shroud")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){
+				float brightness = 0.5f + (world.rand.nextFloat() / 2);
+				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).clr(brightness, brightness + 0.1f, 1.0f).gravity(true).spawn(world);
+				ParticleBuilder.create(Type.SNOW).pos(x, y, z).spawn(world);
+			}
+		}.setBeneficial()); // 0x52f1ff
+		
+		registerPotion(registry, "static_aura", new PotionMagicEffectParticles(false, 0,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_static_aura")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){
+				ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
+			}
+		}.setBeneficial()); // 0x0070ff
+		
+		registerPotion(registry, "decay", new PotionDecay(true, 0x3c006c));
+
+		registerPotion(registry, "sixth_sense", new PotionMagicEffect(false, 0xc6ff01,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_sixth_sense")){
+			@Override
+			public void removeAttributesModifiersFromEntity(EntityLivingBase target, AbstractAttributeMap attributeMapIn, int amplifier){
+				// Reset the shader
+				if(target.world.isRemote && target == net.minecraft.client.Minecraft.getMinecraft().player){
+					net.minecraft.client.Minecraft.getMinecraft().entityRenderer.stopUseShader();
+				}
+			}
+		}.setBeneficial());
+
+		registerPotion(registry, "arcane_jammer", new PotionMagicEffect(true, 0xcf4aa2,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_arcane_jammer")));
+
+		registerPotion(registry, "mind_trick", new PotionMagicEffect(true, 0x601683,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_mind_trick")));
+
+		registerPotion(registry, "mind_control", new PotionMagicEffect(true, 0x320b44,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_mind_control")));
+
+		registerPotion(registry, "font_of_mana", new PotionMagicEffect(false, 0xffe5bb,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_font_of_mana")).setBeneficial());
+
+		registerPotion(registry, "fear", new PotionMagicEffect(true, 0xbd0100,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_fear")));
+		
+		registerPotion(registry, "curse_of_soulbinding", new Curse(true, 0x0f000f,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_curse_of_soulbinding")){
+			@Override // We're not removing any attributes, but it's called when we want it to be so...
+			public void removeAttributesModifiersFromEntity(EntityLivingBase entity, net.minecraft.entity.ai.attributes.AbstractAttributeMap attributeMapIn, int amplifier){
+				// TODO: Hmmmm...
+			}
+		});
+		
+		registerPotion(registry, "paralysis", new PotionMagicEffectParticles(true, 0,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_paralysis")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){
+				ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
+			}
+		});
+		
+		registerPotion(registry, "muffle", new PotionMagicEffect(false, 0x4464d9,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_muffle")).setBeneficial());
+
+		registerPotion(registry, "ward", new PotionMagicEffect(false, 0xc991d0,
+				new ResourceLocation(Wizardry.MODID, "potion_icon_ward")).setBeneficial());
+
+		registerPotion(registry, "slow_time", new PotionSlowTime(false, 0x5be3bb).setBeneficial());
 	}
 
 }

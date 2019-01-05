@@ -26,20 +26,17 @@ public final class WizardryEnchantments {
 
 	// All of these have custom classes, so the unlocalised name (referred to simply as 'name' for enchantments) is
 	// dealt with inside those classes.
-	public static final Enchantment magic_sword = new EnchantmentMagicSword().setRegistryName(Wizardry.MODID,
-			"magic_sword");
-	public static final Enchantment magic_bow = new EnchantmentTimed().setRegistryName(Wizardry.MODID, "magic_bow");
-	public static final Enchantment flaming_weapon = new EnchantmentTimed().setRegistryName(Wizardry.MODID,
-			"flaming_weapon");
-	public static final Enchantment freezing_weapon = new EnchantmentTimed().setRegistryName(Wizardry.MODID,
-			"freezing_weapon");
+	public static final Enchantment magic_sword = null;
+	public static final Enchantment magic_bow = null;
+	public static final Enchantment flaming_weapon = null;
+	public static final Enchantment freezing_weapon = null;
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Enchantment> event){
-		event.getRegistry().register(magic_sword);
-		event.getRegistry().register(magic_bow);
-		event.getRegistry().register(flaming_weapon);
-		event.getRegistry().register(freezing_weapon);
+		event.getRegistry().register(new EnchantmentMagicSword().setRegistryName(Wizardry.MODID, "magic_sword"));
+		event.getRegistry().register(new EnchantmentTimed().setRegistryName(Wizardry.MODID, "magic_bow"));
+		event.getRegistry().register(new EnchantmentTimed().setRegistryName(Wizardry.MODID, "flaming_weapon"));
+		event.getRegistry().register(new EnchantmentTimed().setRegistryName(Wizardry.MODID, "freezing_weapon"));
 	}
 
 }

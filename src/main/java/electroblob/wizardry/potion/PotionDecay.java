@@ -3,10 +3,10 @@ package electroblob.wizardry.potion;
 import java.util.List;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.entity.construct.EntityDecay;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,12 +21,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
-public class PotionDecay extends Potion {
-
-	private static final ResourceLocation ICON = new ResourceLocation(Wizardry.MODID, "textures/gui/decay_icon.png");
+public class PotionDecay extends PotionMagicEffect {
 
 	public PotionDecay(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour);
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_decay.png"));
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
 		this.setPotionName("potion." + Wizardry.MODID + ":decay");
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED,
@@ -46,20 +44,6 @@ public class PotionDecay extends Potion {
 		target.attackEntityFrom(DamageSource.WITHER, 1);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderInventoryEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc){
-		mc.renderEngine.bindTexture(ICON);
-		WizardryUtilities.drawTexturedRect(x + 6, y + 7, 0, 0, 18, 18, 18, 18);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void renderHUDEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc, float alpha){
-		mc.renderEngine.bindTexture(ICON);
-		WizardryUtilities.drawTexturedRect(x + 3, y + 3, 0, 0, 18, 18, 18, 18);
-	}
-	
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 		

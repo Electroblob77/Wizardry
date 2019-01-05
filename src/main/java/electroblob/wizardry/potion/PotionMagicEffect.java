@@ -1,7 +1,6 @@
 package electroblob.wizardry.potion;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.client.DrawingUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -9,15 +8,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-/** Class for all potions that work on events only. */
+/**
+ * As of Wizardry 4.2, this class is used by all of wizardry's potions. Potions that work solely on events
+ * instantiate this class directly, all other potions extend it.
+ */
 public class PotionMagicEffect extends Potion {
 
-	private static final ResourceLocation ICONS = new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons.png");
-	private final int textureIndex;
+	private final ResourceLocation texture;
 
-	public PotionMagicEffect(boolean isBadEffect, int liquidColour, int textureIndex){
+	public PotionMagicEffect(boolean isBadEffect, int liquidColour, ResourceLocation texture){
 		super(isBadEffect, liquidColour);
-		this.textureIndex = textureIndex;
+		this.texture = texture;
 	}
 
 	@Override
@@ -28,17 +29,20 @@ public class PotionMagicEffect extends Potion {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderInventoryEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc){
-		mc.renderEngine.bindTexture(ICONS);
-		WizardryUtilities.drawTexturedRect(x + 6, y + 7, 18 * (textureIndex % 4), 18 * (textureIndex / 4), 18, 18, 72,
-				72);
+		drawIcon(x + 6, y + 7, effect, mc);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void renderHUDEffect(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc, float alpha){
-		mc.renderEngine.bindTexture(ICONS);
-		WizardryUtilities.drawTexturedRect(x + 3, y + 3, 18 * (textureIndex % 4), 18 * (textureIndex / 4), 18, 18, 72,
-				72);
+		net.minecraft.client.renderer.GlStateManager.color(1, 1, 1, alpha);
+		drawIcon(x + 3, y + 3, effect, mc);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	protected void drawIcon(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc){
+		mc.renderEngine.bindTexture(texture);
+		DrawingUtils.drawTexturedRect(x, y, 0, 0, 18, 18, 18, 18);
 	}
 
 }
