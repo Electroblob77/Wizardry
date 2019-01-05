@@ -26,7 +26,7 @@ public class ItemArcaneTome extends Item {
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-		if (isInCreativeTab(tab)) {
+		if(tab == WizardryTabs.WIZARDRY){ // Don't use isInCreativeTab here.
 			for(int i = 1; i < Tier.values().length; i++){
 				list.add(new ItemStack(this, 1, i));
 			}
