@@ -6,7 +6,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-class GuiButtonInvisible extends GuiButton {
+public class GuiButtonInvisible extends GuiButton {
 
 	public GuiButtonInvisible(int id, int x, int y, int width, int height){
 		super(id, x, y, width, height, "");
