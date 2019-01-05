@@ -19,6 +19,7 @@ import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.client.MixedFontRenderer;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.item.ItemWand;
@@ -27,7 +28,6 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -217,51 +217,6 @@ public class GuiSpellDisplay {
 		if(!discovered) name = "#" + name + "#";
 		
 		return name;
-	}
-	
-	/**
-	 * Draws the given string at the given position, scaling it if it does not fit within the given width.
-	 * @param font A {@code FontRenderer} object.
-	 * @param text The text to display.
-	 * @param x The x position of the top-left corner of the text.
-	 * @param y The y position of the top-left corner of the text.
-	 * @param scale The scale that the text should be if it does not exceed the maximum width.
-	 * @param colour The colour to render the text in, supports translucency.
-	 * @param width The maximum width of the text. <b>This is not scaled; you should pass in the width of the actual
-	 * area of the screen in which the text needs to fit.</b>
-	 * @param centre Whether to adjust the y position such that the centre of the text lines up with where its centre
-	 * would be if it was not scaled (automatically or manually).
-	 * @param alignR True to right-align the text, false for normal left alignment.
-	 */
-	private static void drawScaledStringToWidth(FontRenderer font, String text, float x, float y, float scale, int colour, float width, boolean centre, boolean alignR){
-		
-		float textWidth = font.getStringWidth(text) * scale;
-		float textHeight = font.FONT_HEIGHT * scale;
-		
-		if(textWidth > width){
-			scale *= width/textWidth;
-		}else if(alignR){ // Alignment makes no difference if the string fills the entire width
-			x += width - textWidth;
-		}
-		
-		if(centre) y += (font.FONT_HEIGHT - textHeight)/2;
-		
-		drawScaledTranslucentString(font, text, x, y, scale, colour);
-	}
-	
-	/** Draws the given string at the given position, scaling the text by the specified factor. Also enables blending to
-	 * render text in semitransparent colours (e.g. 0x88ffffff). */
-	private static void drawScaledTranslucentString(FontRenderer font, String text, float x, float y, float scale, int colour){
-		
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		GlStateManager.scale(scale, scale, scale);
-		// Because we scaled it, the coordinates have to be scaled inversely
-		x /= scale;
-		y /= scale;
-		font.drawStringWithShadow(text, x, y, colour);
-		GlStateManager.disableBlend();
-		GlStateManager.popMatrix();
 	}
 	
 	@SubscribeEvent
@@ -501,7 +456,7 @@ public class GuiSpellDisplay {
 			// y is upside-down so this is the other way round
 			int y1 = flipY && mirrorY ? y + spellIconInsetY : y - spellIconInsetY - SPELL_ICON_SIZE;
 			
-			WizardryUtilities.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
+			DrawingUtils.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
 
 			// Background of spell hud
 			mc.renderEngine.bindTexture(texture);
@@ -510,7 +465,7 @@ public class GuiSpellDisplay {
 			y1 = flipY && mirrorY ? y : y - height;
 			// The 128 here is a uv value, not a dimension, and hence is left as a hardcoded number.
 			// TODO: Since the HUD is wider than it is tall, perhaps the creative mode texture should be in the bottom half instead of the right half?
-			WizardryUtilities.drawTexturedFlippedRect(x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			DrawingUtils.drawTexturedFlippedRect(x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
 
 			// Cooldown bar
 			if(!creativeMode && cooldownBarProgress > 0 && (showCooldownWhenFull || cooldownBarProgress < 1)){
@@ -523,7 +478,7 @@ public class GuiSpellDisplay {
 				int u = cooldownBarX; // This doesn't change, even when cooldownBarMirrorX is true, because it should
 				int v = height;		  // always start with the left-hand in the actual texture file
 				
-				WizardryUtilities.drawTexturedFlippedRect(x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+				DrawingUtils.drawTexturedFlippedRect(x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
 			}
 
 			GlStateManager.popMatrix();
@@ -574,11 +529,11 @@ public class GuiSpellDisplay {
 				float yNext = y1 + cascadeOffsetY; // No need to account for flipY because next is always below.
 				float maxWidthPrev = maxWidth + (flipY ? -1 : 1) * cascadeOffsetX;
 				float maxWidthNext = maxWidth - (flipY ? -1 : 1) * cascadeOffsetX;
-				int nextPrevClr = makeTranslucent(0xffffff, SPELL_NAME_OPACITY);
+				int nextPrevClr = DrawingUtils.makeTranslucent(0xffffff, SPELL_NAME_OPACITY);
 				
-				drawScaledStringToWidth(font, prevSpellName, xPrev, yPrev, SPELL_NAME_SCALE, nextPrevClr, maxWidthPrev, true, flipX && mirrorX);
-				drawScaledStringToWidth(font, spellName, x1, y1, 1, 0xffffffff, maxWidth, true, flipX && mirrorX);
-				drawScaledStringToWidth(font, nextSpellName, xNext, yNext, SPELL_NAME_SCALE, nextPrevClr, maxWidthNext, true, flipX && mirrorX);
+				DrawingUtils.drawScaledStringToWidth(font, prevSpellName, xPrev, yPrev, SPELL_NAME_SCALE, nextPrevClr, maxWidthPrev, true, flipX && mirrorX);
+				DrawingUtils.drawScaledStringToWidth(font, spellName, x1, y1, 1, 0xffffffff, maxWidth, true, flipX && mirrorX);
+				DrawingUtils.drawScaledStringToWidth(font, nextSpellName, xNext, yNext, SPELL_NAME_SCALE, nextPrevClr, maxWidthNext, true, flipX && mirrorX);
 				
 			}else{ // Switching spells
 				
@@ -593,20 +548,20 @@ public class GuiSpellDisplay {
 				float maxWidthNext = maxWidth - (flipY ? -1 : 1) * cascadeOffsetX * (1 - animationProgress);
 				float scalePrev = SPELL_NAME_SCALE + (1 - SPELL_NAME_SCALE) * (1 - animationProgress);
 				float scaleNext = SPELL_NAME_SCALE + (1 - SPELL_NAME_SCALE) * (animationProgress);
-				int clrPrev = makeTranslucent(0xffffff, SPELL_NAME_OPACITY + (1 - SPELL_NAME_OPACITY) * (1 - animationProgress));
-				int clrNext = makeTranslucent(0xffffff, SPELL_NAME_OPACITY + (1 - SPELL_NAME_OPACITY) * animationProgress);
+				int clrPrev = DrawingUtils.makeTranslucent(0xffffff, SPELL_NAME_OPACITY + (1 - SPELL_NAME_OPACITY) * (1 - animationProgress));
+				int clrNext = DrawingUtils.makeTranslucent(0xffffff, SPELL_NAME_OPACITY + (1 - SPELL_NAME_OPACITY) * animationProgress);
 				
 				if(reverse){ // Switching to previous spell
 					
 					// Only renders the next spell and the current one
-					drawScaledStringToWidth(font, spellName, xPrev, yPrev, scalePrev, clrPrev, maxWidthPrev, true, flipX && mirrorX);
-					drawScaledStringToWidth(font, nextSpellName, xNext, yNext, scaleNext, clrNext, maxWidthNext, true, flipX && mirrorX);
+					DrawingUtils.drawScaledStringToWidth(font, spellName, xPrev, yPrev, scalePrev, clrPrev, maxWidthPrev, true, flipX && mirrorX);
+					DrawingUtils.drawScaledStringToWidth(font, nextSpellName, xNext, yNext, scaleNext, clrNext, maxWidthNext, true, flipX && mirrorX);
 					
 				}else{ // Switching to next spell
 					
 					// Only renders the previous spell and the current one
-					drawScaledStringToWidth(font, prevSpellName, xPrev, yPrev, scalePrev, clrPrev, maxWidthPrev, true, flipX && mirrorX);
-					drawScaledStringToWidth(font, spellName, xNext, yNext, scaleNext, clrNext, maxWidthNext, true, flipX && mirrorX);
+					DrawingUtils.drawScaledStringToWidth(font, prevSpellName, xPrev, yPrev, scalePrev, clrPrev, maxWidthPrev, true, flipX && mirrorX);
+					DrawingUtils.drawScaledStringToWidth(font, spellName, xNext, yNext, scaleNext, clrNext, maxWidthNext, true, flipX && mirrorX);
 					
 				}
 			}

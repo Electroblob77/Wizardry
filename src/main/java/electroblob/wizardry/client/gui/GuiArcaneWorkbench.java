@@ -84,7 +84,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		// Main inventory
-		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSizeNoTip, ySize);
+		DrawingUtils.drawTexturedRect(guiLeft, guiTop, 0, 0, MAIN_GUI_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 		// Changing slots
 		for(int i = 0; i < ContainerArcaneWorkbench.CRYSTAL_SLOT; i++){
@@ -122,7 +122,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						.bindTexture(discovered ? spell.element.getIcon() : Element.MAGIC.getIcon());
 
 				// Renders the little element icon
-				WizardryUtilities.drawTexturedRect(guiLeft + xSizeNoTip + 5, guiTop + 34 + 10 * i++, 8, 8);
+				DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + 5, guiTop + 34 + 10 * i++, 8, 8);
 			}
 
 			int x = 0;

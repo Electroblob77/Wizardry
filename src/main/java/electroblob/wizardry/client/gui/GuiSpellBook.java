@@ -46,10 +46,10 @@ public class GuiSpellBook extends GuiScreen {
 
 		// Draws spell illustration on opposite page, underneath the book so it shows through the hole.
 		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
-		WizardryUtilities.drawTexturedRect(xPos + 145, yPos + 20, 0, 0, 128, 128, 128, 128);
-
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		WizardryUtilities.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
+		DrawingUtils.drawTexturedRect(xPos + 146, yPos + 20, 0, 0, 128, 128, 128, 128);
+		
+		DrawingUtils.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
 
 		super.drawScreen(par1, par2, par3);
 
