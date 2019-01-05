@@ -57,6 +57,14 @@ dependencies {
 
 }
 
+task deobfJar(type: Jar, dependsOn: 'jar') {
+    from "build/source/main"
+    classifier "dev"
+}
+artifacts {
+    archives deobfJar
+}
+
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
