@@ -46,57 +46,47 @@ public class GuiSpellBook extends GuiScreen {
 
 		// Draws spell illustration on opposite page, underneath the book so it shows through the hole.
 		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
-		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		DrawingUtils.drawTexturedRect(xPos + 146, yPos + 20, 0, 0, 128, 128, 128, 128);
 		
+		Minecraft.getMinecraft().renderEngine.bindTexture(textures.get(spell.tier));
 		DrawingUtils.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
 
 		super.drawScreen(par1, par2, par3);
 
 		if(discovered){
-			this.fontRenderer.drawString(spell.getDisplayName(), xPos + 17, yPos + 14, 0);
-			this.fontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 25, 0x777777);
+			this.fontRenderer.drawString(spell.getDisplayName(), xPos + 17, yPos + 15, 0);
+			this.fontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 26, 0x777777);
 		}else{
 			this.mc.standardGalacticFontRenderer.drawString(SpellGlyphData.getGlyphName(spell, player.world), xPos + 17,
-					yPos + 14, 0);
-			this.mc.standardGalacticFontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 25,
+					yPos + 15, 0);
+			this.mc.standardGalacticFontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 26,
 					0x777777);
 		}
 
-		this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 34, 0);
+		this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 35, 0);
 
 		if(spell.tier == Tier.BASIC){
 			// Basic is usually white but this doesn't show up.
-			this.fontRenderer.drawString("Tier: \u00A77" + Tier.BASIC.getDisplayName(), xPos + 17, yPos + 44, 0);
+			this.fontRenderer.drawString("Tier: \u00A77" + Tier.BASIC.getDisplayName(), xPos + 17, yPos + 45, 0);
 		}else{
-			this.fontRenderer.drawString("Tier: " + spell.tier.getDisplayNameWithFormatting(), xPos + 17, yPos + 44,
-					0);
+			this.fontRenderer.drawString("Tier: " + spell.tier.getDisplayNameWithFormatting(), xPos + 17, yPos + 45, 0);
 		}
 
 		String element = "Element: " + spell.element.getFormattingCode() + spell.element.getDisplayName();
 		if(!discovered) element = "Element: ?";
-		this.fontRenderer.drawString(element, xPos + 17, yPos + 56, 0);
+		this.fontRenderer.drawString(element, xPos + 17, yPos + 57, 0);
 
 		String manaCost = "Mana Cost: " + spell.cost;
 		if(spell.isContinuous) manaCost = "Mana Cost: " + spell.cost + "/second";
 		if(!discovered) manaCost = "Mana Cost: ?";
-		this.fontRenderer.drawString(manaCost, xPos + 17, yPos + 68, 0);
+		this.fontRenderer.drawString(manaCost, xPos + 17, yPos + 69, 0);
 
 		if(discovered){
-			this.fontRenderer.drawSplitString(spell.getDescription(), xPos + 17, yPos + 82, 118, 0);
+			this.fontRenderer.drawSplitString(spell.getDescription(), xPos + 17, yPos + 83, 118, 0);
 		}else{
 			this.mc.standardGalacticFontRenderer.drawSplitString(
-					SpellGlyphData.getGlyphDescription(spell, player.world), xPos + 17, yPos + 82, 118, 0);
+					SpellGlyphData.getGlyphDescription(spell, player.world), xPos + 17, yPos + 83, 118, 0);
 		}
-
-		/* // Word wrapping int charNumber = 0; int lineNumber = 0;
-		 * 
-		 * while(charNumber < spell.desc.length()){ int lineLength = 0; String line; if(spell.desc.length() - charNumber
-		 * > 22){ for(int i = charNumber; i < charNumber+23; i++){ if(spell.desc.charAt(i) == ' '){ lineLength = i -
-		 * charNumber; } } line = spell.desc.substring(charNumber, charNumber + lineLength); }else{ line =
-		 * spell.desc.substring(charNumber, spell.desc.length()); charNumber = spell.desc.length(); }
-		 * this.fontRendererObj.drawString("\u00A7o" + line, xPos+17, yPos+82+10*lineNumber, 0);
-		 * charNumber+=(lineLength+1); lineNumber++; } */
 	}
 
 	public void initGui(){
