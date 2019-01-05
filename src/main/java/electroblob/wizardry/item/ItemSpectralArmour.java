@@ -23,7 +23,7 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 
 	@Override
 	public int getBaseDuration(){
-		return 1200;
+		return 1800;
 	}
 
 	@Override

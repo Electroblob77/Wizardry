@@ -19,7 +19,7 @@ public class ItemSpectralPickaxe extends ItemPickaxe implements IConjuredItem {
 
 	@Override
 	public int getBaseDuration(){
-		return 600;
+		return 1200;
 	}
 
 	@Override
