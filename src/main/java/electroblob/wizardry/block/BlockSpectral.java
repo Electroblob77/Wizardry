@@ -60,14 +60,6 @@ public class BlockSpectral extends BlockContainer {
 	@Override
 	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random random){
 		
-		// Middle of block
-		ParticleBuilder.create(Type.DUST)
-		.pos(pos.getX() + random.nextDouble(), pos.getY() + random.nextDouble(), pos.getZ() + random.nextDouble())
-		.lifetime((int)(16.0D / (Math.random() * 0.8D + 0.2D)))
-		.colour(0.4f + random.nextFloat() * 0.2f, 0.6f + random.nextFloat() * 0.4f, 0.6f + random.nextFloat() * 0.4f)
-		.shaded(true).spawn(world);
-		
-		// Top surface
 		for(int i=0; i<2; i++){
 			ParticleBuilder.create(Type.DUST)
 			.pos(pos.getX() + random.nextDouble(), pos.getY() + random.nextDouble(), pos.getZ() + random.nextDouble())
