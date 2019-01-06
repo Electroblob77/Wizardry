@@ -35,9 +35,12 @@ public final class DamageSafetyChecker {
 	private static int attacksThisTick = 0;
 
 	/** The number of calls per loaded entity after which damage will be reassigned. */
-	private static final int EXCESSIVE_CALL_THRESHOLD = 50;
+	// It's a fair bet that if an entity is being damaged 15 times in a single tick, then something is wrong!
+	// Based on the crash report in issue #72, there were approximately 38 calls before the error was thrown.
+	// The number of calls will vary depending on the stack size and possibly what else is happening at the time.
+ 	private static final int EXCESSIVE_CALL_THRESHOLD = 15;
 	/** The number of calls per loaded entity after which damage will be cancelled entirely. */
-	private static final int EXCESSIVE_CALL_LIMIT = 100;
+	private static final int EXCESSIVE_CALL_LIMIT = 25;
 
 	/**
 	 * Attacks the specified target with specified damage source and damage amount, checking for the blacklist and
