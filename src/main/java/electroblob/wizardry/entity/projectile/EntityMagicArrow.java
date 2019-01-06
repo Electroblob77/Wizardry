@@ -395,7 +395,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 					this.onBlockHit(raytraceresult);
 
 					if(this.stuckInBlock.getMaterial() != Material.AIR){
-						this.stuckInBlock.getBlock().onEntityCollidedWithBlock(this.world, raytraceresult.getBlockPos(),
+						this.stuckInBlock.getBlock().onEntityCollision(this.world, raytraceresult.getBlockPos(),
 								this.stuckInBlock, this);
 					}
 				}

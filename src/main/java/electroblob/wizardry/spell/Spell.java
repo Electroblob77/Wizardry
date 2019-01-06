@@ -398,7 +398,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	public static Spell get(String name){
 		ResourceLocation key = new ResourceLocation(name);
-		if(key.getResourceDomain().equals("minecraft")) key = new ResourceLocation(Wizardry.MODID, name);
+		if(key.getNamespace().equals("minecraft")) key = new ResourceLocation(Wizardry.MODID, name);
 		return ((ForgeRegistry<Spell>)registry).getValue(key);
 	}
 

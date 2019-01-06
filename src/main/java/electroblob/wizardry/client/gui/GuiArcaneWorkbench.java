@@ -53,6 +53,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	@Override
 	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_){
 
+		this.drawDefaultBackground();
+
 		// Tests if there is a wand in the workbench and edits the positioning accordingly
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack() && this.inventorySlots
 				.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getStack().getItem() instanceof ItemWand){

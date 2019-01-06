@@ -53,7 +53,7 @@ public final class WizardryBlocks {
 	 */
 	public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block){
 		block.setRegistryName(Wizardry.MODID, name);
-		block.setUnlocalizedName(block.getRegistryName().toString());
+		block.setTranslationKey(block.getRegistryName().toString());
 		registry.register(block);
 	}
 

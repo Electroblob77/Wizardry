@@ -36,7 +36,7 @@ public class BlockSpectral extends BlockContainer {
 
 	// Replaces getRenderBlockPass
 	@Override
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 

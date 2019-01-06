@@ -40,7 +40,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 			GlStateManager.scale((float)tileentity.timer / 10, (float)tileentity.timer / 10,
 					(float)tileentity.timer / 10);
 		}
-		if(tileentity.timer > tileentity.maxTimer - 10){
+		if(tileentity.timer > tileentity.maxTimer - 10 && tileentity.timer <= tileentity.maxTimer){
 			GlStateManager.scale((float)(tileentity.maxTimer - tileentity.timer) / 10,
 					(float)(tileentity.maxTimer - tileentity.timer) / 10,
 					(float)(tileentity.maxTimer - tileentity.timer) / 10);

@@ -92,24 +92,20 @@ public class CommandViewAllies extends CommandBase {
 
 		if(WizardData.get(player) != null){
 
-			String string = "";
+			Object playerList = null;
 			Set<String> names = WizardData.get(player).allyNames;
 
 			if(!names.isEmpty()){
-				for(String name : names){
-					string = string + name + ", ";
-				}
-				// Cuts the last " ," off of the string.
-				string = string.substring(0, string.length() - 2);
+				playerList = joinNiceStringFromCollection(names);
 			}else{
-				string = I18n.format("commands." + Wizardry.MODID + ":allies.none");
+				playerList = new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.none");
 			}
 
 			if(executeAsOtherPlayer){
 				sender.sendMessage(
-						new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list_other", player.getName(), string));
+						new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list_other", player.getName(), playerList));
 			}else{
-				sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list", string));
+				sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list", playerList));
 			}
 		}
 	}

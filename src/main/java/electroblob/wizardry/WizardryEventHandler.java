@@ -51,6 +51,7 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -200,7 +201,8 @@ public final class WizardryEventHandler {
 
 			// Ice Shroud
 			if(event.getEntityLiving().isPotionActive(WizardryPotions.ice_shroud)
-					&& !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
+					&& !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving())
+					&& !(event.getEntityLiving() instanceof FakePlayer))
 				attacker.addPotionEffect(new PotionEffect(WizardryPotions.frost, 100, 0));
 
 			// Static Aura

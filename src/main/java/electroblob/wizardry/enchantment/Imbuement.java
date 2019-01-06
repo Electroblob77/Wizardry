@@ -1,7 +1,9 @@
 package electroblob.wizardry.enchantment;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import com.google.common.collect.Iterables;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.spell.FreezingWeapon;
@@ -10,11 +12,15 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -55,11 +61,18 @@ public interface Imbuement {
 		if(stack.isItemEnchanted()){
 			// No need to check what enchantments the item has, since remove() does nothing if the element does not
 			// exist.
-			Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-			// Removes the magic weapon enchantments from the enchantment map
-			enchantments.entrySet().removeIf(entry -> entry.getKey() instanceof Imbuement);
-			// Applies the new enchantment map to the item
-			EnchantmentHelper.setEnchantments(enchantments, stack);
+			NBTTagList enchantmentList = stack.getItem() == Items.ENCHANTED_BOOK ?
+					ItemEnchantedBook.getEnchantments(stack) : stack.getEnchantmentTagList();
+			// Check all enchantments of the item
+			Iterator<NBTBase> enchantmentIt = enchantmentList.iterator();
+			while(enchantmentIt.hasNext()){
+				NBTTagCompound enchantmentTag = (NBTTagCompound) enchantmentIt.next();
+				Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"));
+				// If the item contains a magic weapon enchantment, remove it from the item
+				if(enchantment instanceof Imbuement){
+					enchantmentIt.remove();
+				}
+			}
 		}
 	}
 
@@ -70,18 +83,23 @@ public interface Imbuement {
 			// Still not sure if it's better to set stacks in slots or modify the itemstack list directly, but I would
 			// imagine it's the former.
 			for(Slot slot : event.getContainer().inventorySlots){
-				if(slot.getStack().getItem() instanceof ItemEnchantedBook){
+				ItemStack slotStack = slot.getStack();
+				if(slotStack.getItem() instanceof ItemEnchantedBook){
 					// We don't care about the level of the enchantments
-					Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(slot.getStack());
+					NBTTagList enchantmentList = ItemEnchantedBook.getEnchantments(slotStack);
 					// Removes all imbuements
-					if(enchantments.keySet().removeIf(e -> e instanceof Imbuement)){
-						// If any imbuements were removed, replaces the enchantments on the book with the new ones, or
-						// deletes the book entirely if there are none left.
-						if(enchantments.isEmpty()){
-							slot.putStack(ItemStack.EMPTY);
+					if(Iterables.removeIf(enchantmentList, tag -> {
+						NBTTagCompound enchantmentTag = (NBTTagCompound) tag;
+						return Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"))
+								instanceof Imbuement;
+					})){
+						// If any imbuements were removed, inform about the removal of the enchantment(s), or
+						// delete the book entirely if there are none left.
+						if(enchantmentList.isEmpty()){
+							slot.putStack(ItemStack.EMPTY); // NOTE: Will need changing in 1.11
 							Wizardry.logger.info("Deleted enchanted book with illegal enchantments");
 						}else{
-							EnchantmentHelper.setEnchantments(enchantments, slot.getStack());
+							// Inform about enchantment removal
 							Wizardry.logger.info("Removed illegal enchantments from enchanted book");
 						}
 					}

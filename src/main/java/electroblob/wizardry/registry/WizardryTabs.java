@@ -31,7 +31,7 @@ public final class WizardryTabs {
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public ItemStack getTabIconItem(){
+		public ItemStack createIcon(){
 			return new ItemStack(WizardryItems.wizard_handbook);
 		}
 
@@ -47,7 +47,7 @@ public final class WizardryTabs {
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public ItemStack getTabIconItem(){
+		public ItemStack createIcon(){
 			return new ItemStack(WizardryItems.spell_book);
 		}
 

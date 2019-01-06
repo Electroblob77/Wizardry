@@ -335,7 +335,7 @@ public final class WizardryItems {
 	// It now makes sense to have the name first, since it's shorter than an entire item declaration.
 	public static void registerItem(IForgeRegistry<Item> registry, String name, Item item, boolean setTabIcon){
 		item.setRegistryName(Wizardry.MODID, name);
-		item.setUnlocalizedName(item.getRegistryName().toString());
+		item.setTranslationKey(item.getRegistryName().toString());
 		registry.register(item);
 
 		if(setTabIcon && item.getCreativeTab() instanceof CreativeTabSorted){
