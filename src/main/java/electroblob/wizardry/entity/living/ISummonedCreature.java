@@ -10,6 +10,7 @@ import com.google.common.base.Predicate;
 
 import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.IndirectMinionDamage;
@@ -383,8 +384,10 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData {
 
 				// For some reason Minecraft calculates knockback relative to DamageSource#getTrueSource. In vanilla this
 				// is unnoticeable, but it looks a bit weird with summoned creatures involved - so this fixes that.
-				if(WizardryUtilities.attackEntityWithoutKnockback(event.getEntity(), newSource, event.getAmount())){
-					// Using event.getSource().getTrueSource() as this means the target is knocked back from the minion
+				// Damage safety checker falls back to the original damage source, so it behaves as if the creature has
+				// no summoner.
+				if(DamageSafetyChecker.attackEntitySafely(event.getEntity(), newSource, event.getAmount(), event.getSource(), false)){
+					// Uses event.getSource().getTrueSource() as this means the target is knocked back from the minion
 					WizardryUtilities.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
 					((ISummonedCreature)event.getSource().getTrueSource()).onSuccessfulAttack(event.getEntityLiving());
 					// If the target revenge-targeted the summoner, make it revenge-target the minion instead

@@ -15,6 +15,7 @@ import electroblob.wizardry.entity.EntityShield;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
+import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.packet.PacketCastContinuousSpell;
 import electroblob.wizardry.packet.PacketPlayerSync;
 import electroblob.wizardry.packet.PacketTransportation;
@@ -344,7 +345,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * Damages all creatures soulbound to this player by the given amount, and removes from the list any that no longer
 	 * exist.
 	 */
-	public void damageAllSoulboundCreatures(float damage){
+	public void damageAllSoulboundCreatures(float damage, String originalSourceName){
 
 		for(Iterator<UUID> iterator = this.soulboundCreatures.iterator(); iterator.hasNext();){
 
@@ -354,8 +355,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 			if(entity instanceof EntityLivingBase){
 				// Retaliatory effect
-				if(entity.attackEntityFrom(MagicDamage.causeDirectMagicDamage(this.player, DamageType.MAGIC, true),
-						damage)){
+				if(DamageSafetyChecker.attackEntitySafely(entity, MagicDamage.causeDirectMagicDamage(this.player,
+						DamageType.MAGIC, true), damage, originalSourceName)){
 					// Sound only plays if the damage succeeds
 					player.playSound(SoundEvents.ENTITY_WITHER_HURT, 1.0F, player.world.rand.nextFloat() * 0.2F + 1.0F);
 				}

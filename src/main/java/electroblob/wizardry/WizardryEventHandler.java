@@ -7,6 +7,7 @@ import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.Spells;
@@ -17,8 +18,6 @@ import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.FreezingWeapon;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
@@ -40,6 +39,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -217,9 +217,9 @@ public final class WizardryEventHandler {
 							attacker.getEntityBoundingBox().minY + attacker.height, attacker.posZ);
 				}
 
-				attacker.attackEntityFrom(
-						MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.SHOCK, true), 4.0f);
-				attacker.playSound(WizardrySounds.SPELL_SPARK, 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
+				DamageSafetyChecker.attackEntitySafely(attacker, MagicDamage.causeDirectMagicDamage(event.getEntityLiving(),
+						DamageType.SHOCK, true), 4.0f, event.getSource().getDamageType());
+				attacker.playSound(WizardrySounds.SPELL_STATIC_AURA_RETALIATE, 1.0F, world.rand.nextFloat() * 0.4F + 1.5F);
 			}
 		}
 

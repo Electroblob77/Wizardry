@@ -67,7 +67,7 @@ public class CurseOfSoulbinding extends SpellRay {
 						&& ((IElementalDamage)event.getSource()).isRetaliatory())){
 			WizardData data = WizardData.get((EntityPlayer)event.getEntityLiving());
 			if(data != null){
-				data.damageAllSoulboundCreatures(event.getAmount());
+				data.damageAllSoulboundCreatures(event.getAmount(), event.getSource().getDamageType());
 			}
 		}
 	}

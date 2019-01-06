@@ -4,6 +4,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.SpellType;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -62,7 +63,7 @@ public class ShadowWard extends Spell {
 				// For some reason this isn't working, so I've reverted to plain old magic damage for now.
 				//event.getEntityLiving().attackEntityFrom(
 				//		MagicDamage.causeDirectMagicDamage(event.getSource().getTrueSource(), DamageType.MAGIC, true), event.getAmount() * 0.5f);
-				event.getEntityLiving().attackEntityFrom(DamageSource.MAGIC, event.getAmount() * 0.5f);
+				DamageSafetyChecker.attackEntitySafely(event.getEntity(), DamageSource.MAGIC, event.getAmount() * 0.5f, event.getSource().getDamageType());
 				((EntityLivingBase)event.getSource().getTrueSource()).attackEntityFrom(
 						MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.MAGIC, true), event.getAmount() * 0.5f);
 			}
