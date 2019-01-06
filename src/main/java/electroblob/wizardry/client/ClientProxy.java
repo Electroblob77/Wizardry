@@ -306,11 +306,6 @@ public class ClientProxy extends CommonProxy {
 			IBlockState block, BlockPos pos){
 		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// , world.rand.nextInt(6)));
 	}
-	
-	@Override
-	public void spawnEntityParticle(World world, Entity entity, int maxAge, float r, float g, float b){
-		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBuff(world, entity, maxAge, r, g, b, world.rand.nextBoolean()));
-	}
 
 	// SECTION Packet Handlers
 	// ===============================================================================================================
