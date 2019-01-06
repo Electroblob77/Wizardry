@@ -65,6 +65,11 @@ public class BlockTransportationStone extends Block {
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
+	
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
+		return side == EnumFacing.DOWN;
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
