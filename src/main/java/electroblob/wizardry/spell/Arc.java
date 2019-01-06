@@ -39,8 +39,9 @@ public class Arc extends SpellRay {
 	
 			// This is a lot neater than it was, thanks to the damage type system.
 			if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
-				if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
-						this.getNameForTranslationFormatted()));
+				if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
+						new TextComponentTranslation("spell.resist",
+						target.getName(), this.getNameForTranslationFormatted()), true);
 			}else{
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
 						BASE_DAMAGE * modifiers.get(SpellModifiers.POTENCY));

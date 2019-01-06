@@ -96,8 +96,9 @@ public class ChainLightning extends SpellRay {
 	private void electrocute(World world, Entity caster, Entity origin, Entity target, float damage){
 
 		if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
-			if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
-					this.getNameForTranslationFormatted()));
+			if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
+					new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()),
+					true);
 		}else{
 			target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
 		}

@@ -57,7 +57,7 @@ public class Clairvoyance extends Spell {
 			if(caster.dimension == properties.getClairvoyanceDimension()){
 				if(properties.getClairvoyanceLocation() != null){
 
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".searching"));
+					if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".searching"), true);
 
 					EntityZombie arbitraryZombie = new EntityZombie(world){
 						@Override
@@ -96,13 +96,13 @@ public class Clairvoyance extends Spell {
 						}
 					}
 
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".outofrange"));
+					if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".outofrange"), true);
 
 				}else{
-					if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".undefined"));
+					if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".undefined"), true);
 				}
 			}else{
-				if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".wrongdimension"));
+				if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".wrongdimension"), true);
 			}
 		}
 
@@ -158,8 +158,8 @@ public class Clairvoyance extends Spell {
 					properties.setClairvoyancePoint(pos, event.getWorld().provider.getDimension());
 
 					if(!event.getWorld().isRemote){
-						event.getEntityPlayer().sendMessage(
-								new TextComponentTranslation("spell." + Spells.clairvoyance.getUnlocalisedName() + ".confirm", Spells.clairvoyance.getNameForTranslationFormatted()));
+						event.getEntityPlayer().sendStatusMessage(
+								new TextComponentTranslation("spell." + Spells.clairvoyance.getUnlocalisedName() + ".confirm", Spells.clairvoyance.getNameForTranslationFormatted()), true);
 					}
 
 					event.setCanceled(true);

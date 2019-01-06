@@ -54,8 +54,8 @@ public class Slime extends SpellRay {
 		if(WizardryUtilities.isLiving(target) && !(target instanceof EntityMagicSlime)){
 
 			if(target instanceof EntitySlime){
-				if(!world.isRemote) caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
-						this.getNameForTranslationFormatted()));
+				if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
+						new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
 			}else{
 
 				if(target instanceof EntitySkeleton && caster instanceof EntityPlayer)

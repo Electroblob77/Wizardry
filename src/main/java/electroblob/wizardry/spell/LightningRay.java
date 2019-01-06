@@ -62,9 +62,9 @@ public class LightningRay extends SpellRay {
 		if(WizardryUtilities.isLiving(target)){
 
 			if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
-				if(!world.isRemote && ticksInUse == 1)
-					caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
-							this.getNameForTranslationFormatted()));
+				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer)
+					((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
+							this.getNameForTranslationFormatted()), true);
 			}else{
 				WizardryUtilities.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),

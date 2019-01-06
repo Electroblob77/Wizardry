@@ -67,8 +67,9 @@ public class Firestorm extends SpellRay {
 		if(target instanceof EntityLivingBase){
 
 			if(MagicDamage.isEntityImmune(DamageType.FIRE, target)){
-				if(!world.isRemote && ticksInUse == 1) caster.sendMessage(new TextComponentTranslation("spell.resist",
-						target.getName(), this.getNameForTranslationFormatted()));
+				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer) ((EntityPlayer)caster)
+				.sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
+						this.getNameForTranslationFormatted()), true);
 			}else{
 				target.setFire((int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)));
 				WizardryUtilities.attackEntityWithoutKnockback(target,
