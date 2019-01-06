@@ -49,7 +49,7 @@ public class CommonProxy {
 
 	public void initGuiBits(){}
 	
-	public void registerResourceReloadListener(){}
+	public void registerResourceReloadListeners(){}
 
 	// SECTION Particles
 	// ===============================================================================================================

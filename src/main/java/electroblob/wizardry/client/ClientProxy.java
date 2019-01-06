@@ -172,15 +172,15 @@ public class ClientProxy extends CommonProxy {
 	public void initGuiBits(){
 		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"),
 				Minecraft.getMinecraft().renderEngine, false);
-		GuiWizardHandbook.initDisplayRecipes();
 	}
 	
 	@Override
-	public void registerResourceReloadListener(){
+	public void registerResourceReloadListeners(){
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 		if(manager instanceof IReloadableResourceManager){
 		    ((IReloadableResourceManager)manager).registerReloadListener(GuiSpellDisplay::loadSkins);
-		}
+		    ((IReloadableResourceManager)manager).registerReloadListener(GuiWizardHandbook::loadHandbookFile);
+		} 
 	}
 
 	// SECTION Misc
