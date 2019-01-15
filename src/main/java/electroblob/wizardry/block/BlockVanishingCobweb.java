@@ -24,8 +24,9 @@ public class BlockVanishingCobweb extends BlockContainer {
 		super(material);
 	}
 
+	@Override
 	@SideOnly(Side.CLIENT)
-	public BlockRenderLayer getBlockLayer(){
+	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.CUTOUT;
 	}
 
