@@ -261,7 +261,7 @@ public final class WizardryItems {
 
 	/**
 	 * Sets both the registry and unlocalised names of the given item, then registers it with the given registry. Use
-	 * this instead of {@link Item#setRegistryName(String)} and {@link Item#setUnlocalizedName(String)} during
+	 * this instead of {@link Item#setRegistryName(String)} and {@link Item#setTranslationKey(String)} during
 	 * construction, for convenience and consistency.
 	 * 
 	 * @param registry The registry to register the given item to.

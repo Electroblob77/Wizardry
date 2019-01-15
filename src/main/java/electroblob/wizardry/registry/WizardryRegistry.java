@@ -5,8 +5,6 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.EntityArc;
 import electroblob.wizardry.entity.EntityMeteor;
 import electroblob.wizardry.entity.EntityShield;
@@ -64,16 +62,15 @@ import electroblob.wizardry.entity.projectile.EntitySparkBomb;
 import electroblob.wizardry.entity.projectile.EntityThunderbolt;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
+import electroblob.wizardry.recipe.RecipeRechargeWithFlask;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
 import electroblob.wizardry.tileentity.TileEntityPlayerSave;
 import electroblob.wizardry.tileentity.TileEntityStatue;
 import electroblob.wizardry.tileentity.TileEntityTimer;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Biomes;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
@@ -87,8 +84,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
 /**
@@ -251,31 +246,9 @@ public final class WizardryRegistry {
 		
 		FurnaceRecipes.instance().addSmeltingRecipeForBlock(WizardryBlocks.crystal_ore, new ItemStack(WizardryItems.magic_crystal), 0.5f);
 		
-		// Mana flask recipes
-		
-		ItemStack manaFlaskStack = new ItemStack(WizardryItems.mana_flask);
-		
-		ItemStack miscWandStack;
+		// Mana flask recipe
+		registry.register(new RecipeRechargeWithFlask().setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/eb_rechargeable_with_flask")));
 
-		for(Element element : Element.values()){
-			for(Tier tier : Tier.values()){
-				miscWandStack = new ItemStack(WizardryUtilities.getWand(tier, element), 1, OreDictionary.WILDCARD_VALUE);
-				registry.register(new ShapelessOreRecipe(null, miscWandStack, miscWandStack, manaFlaskStack){
-					@Override public boolean isDynamic(){ return true; } // Stops it appearing in the recipe book
-				}.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_wand_" + element.getUnlocalisedName() + "_" + tier.getUnlocalisedName())));
-			}
-		}
-
-		ItemStack miscArmourStack;
-
-		for(Element element : Element.values()){
-			for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
-				miscArmourStack = new ItemStack(WizardryUtilities.getArmour(element, slot), 1, OreDictionary.WILDCARD_VALUE);
-				registry.register(new ShapelessOreRecipe(null, miscArmourStack, miscArmourStack, manaFlaskStack){
-					@Override public boolean isDynamic(){ return true; } // Stops it appearing in the recipe book
-				}.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/flask_armour_" + element.getUnlocalisedName() + "_" + slot.getName())));
-			}
-		}
 	}
 
 }

@@ -1,0 +1,3 @@
+@javax.annotation.ParametersAreNonnullByDefault
+@mcp.MethodsReturnNonnullByDefault
+package electroblob.wizardry.recipe;
