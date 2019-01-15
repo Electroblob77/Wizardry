@@ -8,7 +8,6 @@ import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.ItemWand;
-import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryEnchantments;
@@ -33,9 +32,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.ContainerPlayer;
-import net.minecraft.inventory.ContainerWorkbench;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.PotionEffect;
@@ -289,24 +285,6 @@ public final class WizardryEventHandler {
 			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
 
 			if(player.world.isRemote) hackilyFixContinuousSpellCasting(player);
-
-			// Mana flask crafting
-			if(player.openContainer instanceof ContainerWorkbench){
-				
-				IInventory craftMatrix = ((ContainerWorkbench)player.openContainer).craftMatrix;
-				ItemStack output = ((ContainerWorkbench)player.openContainer).craftResult.getStackInSlot(0);
-				processManaFlaskCrafting(craftMatrix, output);
-				
-			}else if(player.openContainer instanceof ContainerPlayer){
-				
-				IInventory craftMatrix = ((ContainerPlayer)player.openContainer).craftMatrix;
-				ItemStack output = ((ContainerPlayer)player.openContainer).craftResult.getStackInSlot(0);
-				// Unfortunately I have no choice but to call this method every tick when the player isn't using another
-				// inventory, since the only thing tracking whether the player is looking at their inventory is the GUI
-				// itself, which is client-side only.
-				processManaFlaskCrafting(craftMatrix, output);
-			}
-
 		}
 
 		if(event.getEntityLiving().world.isRemote){
@@ -401,50 +379,4 @@ public final class WizardryEventHandler {
 			}
 		}
 	}
-
-	private static void processManaFlaskCrafting(IInventory craftMatrix, ItemStack output){
-
-		// Charges wand using mana flask. It is here rather than in the crafting handler so the result displays
-		// the proper damage before it is actually crafted.
-
-		boolean flag = false;
-		ItemStack wand = ItemStack.EMPTY;
-		ItemStack armour = ItemStack.EMPTY;
-
-		for(int i = 0; i < craftMatrix.getSizeInventory(); i++){
-			
-			ItemStack itemstack = craftMatrix.getStackInSlot(i);
-
-			if(itemstack.getItem() == WizardryItems.mana_flask){
-				flag = true;
-			}
-
-			if(itemstack.getItem() instanceof ItemWand){
-				wand = itemstack;
-			}
-
-			if(itemstack.getItem() instanceof ItemWizardArmour){
-				armour = itemstack;
-			}
-		}
-
-		if(output.getItem() instanceof ItemWand && flag && !wand.isEmpty()){
-			output.setTagCompound((wand.getTagCompound()));
-			if(wand.getItemDamage() - Constants.MANA_PER_FLASK < 0){
-				output.setItemDamage(0);
-			}else{
-				output.setItemDamage(wand.getItemDamage() - Constants.MANA_PER_FLASK);
-			}
-		}
-
-		if(output.getItem() instanceof ItemWizardArmour && flag && !armour.isEmpty()){
-			output.setTagCompound((armour.getTagCompound()));
-			if(armour.getItemDamage() - Constants.MANA_PER_FLASK < 0){
-				output.setItemDamage(0);
-			}else{
-				output.setItemDamage(wand.getItemDamage() - Constants.MANA_PER_FLASK);
-			}
-		}
-	}
-
 }

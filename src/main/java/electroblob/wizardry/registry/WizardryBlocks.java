@@ -60,11 +60,11 @@ public final class WizardryBlocks {
 
 	/**
 	 * Sets both the registry and unlocalised names of the given block, then registers it with the given registry. Use
-	 * this instead of {@link Block#setRegistryName(String)} and {@link Block#setUnlocalizedName(String)} during
+	 * this instead of {@link Block#setRegistryName(String)} and {@link Block#setTranslationKey(String)} during
 	 * construction, for convenience and consistency.
 	 * 
 	 * @param registry The registry to register the given block to.
-	 * @param item The block to register.
+	 * @param block The block to register.
 	 * @param name The name of the block, without the mod ID or the .name stuff. The registry name will be
 	 *        {@code ebwizardry:[name]}. The unlocalised name will be {@code tile.ebwizardry:[name].name}.
 	 */
