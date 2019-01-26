@@ -1,8 +1,8 @@
 package electroblob.wizardry.util;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.EnumSet;
 import java.util.Map;
 
 import electroblob.wizardry.entity.living.EntityBlazeMinion;
@@ -68,7 +68,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	/** The name of the damagesource for indirect magic damage from the wizardry mod. */
 	public static final String INDIRECT_MAGIC_DAMAGE = "indirect_wizardry_magic";
 	// Technically, I don't need to specify that the classes in this map must extend entity, but it's good practice to.
-	private static final Map<Class<? extends Entity>, DamageType[]> immunityMapping = new HashMap<Class<? extends Entity>, DamageType[]>();
+	private static final Map<Class<? extends Entity>, EnumSet<DamageType>> immunityMapping = new HashMap<>();
 
 	private final DamageType type;
 	private final boolean isRetaliatory;
@@ -149,23 +149,25 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	public static boolean isEntityImmune(DamageType type, Entity entity){
 
 		if(type == DamageType.FIRE && entity.isImmuneToFire()) return true;
+		EnumSet immunities = immunityMapping.get(entity.getClass());
 
-		DamageType[] immunities = MagicDamage.immunityMapping.get(entity.getClass());
-
-		return immunities != null && Arrays.asList(immunities).contains(type);
+		return immunities != null && immunities.contains(type);
 	}
 
 	/** Registers the given type of entity as immune to all of the passed in damage types. */
 	public static void setEntityImmunities(Class<? extends Entity> entityType, DamageType... immunities){
-		immunityMapping.put(entityType, immunities);
+		EnumSet<DamageType> immunitySet = EnumSet.noneOf(DamageType.class);
+		Collections.addAll(immunitySet, immunities);
+		immunityMapping.put(entityType, immunitySet);
 	}
 
 	/** Adds the passed in damage type to the list of damage types to which the given entity is immune. */
 	public static void addEntityImmunity(Class<? extends Entity> entityType, DamageType immunity){
-		List<DamageType> immunities = Arrays.asList(immunityMapping.get(entityType));
-		immunities.add(immunity);
-		// Apparently putting 0 here works just fine.
-		immunityMapping.put(entityType, immunities.toArray(new DamageType[0]));
+		EnumSet<DamageType> immunitySet = immunityMapping.get(entityType);
+		if (immunitySet == null) immunitySet = EnumSet.of(immunity);
+		else immunitySet.add(immunity);
+
+		immunityMapping.put(entityType, immunitySet);
 	}
 
 	/**
