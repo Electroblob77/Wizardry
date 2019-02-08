@@ -1,7 +1,7 @@
 # License
 This repository is copyright © Electroblob 2018. The following license is provided to allow you to creatively contribute to and improve the repository.
 
-This license applies only to the source code, assets and wiki pages present in this repository. The compiled mod (available at https://minecraft.curseforge.com/projects/electroblobs-wizardry) comes under its own separate license, see the aforementioned webpage for details.
+This license applies only to the source code, assets and wiki pages present in this repository. The compiled mod (available at https://minecraft.curseforge.com/projects/electroblobs-wizardry) comes under its own separate license, see the aforementioned webpage for details. By downloading, running, forking, contributing to or otherwise interacting with this repository, you agree to the license set out below.
 
 TL;DR: Do what you want with this repo on Github, but ask me first if you want to put it anywhere else or publish your version. Don't try and make money off the repo or anything in it. I'm not responsible if the code breaks things, and if you help me out by submitting a PR, I can use and modify the contents of that PR as long as I give you credit. (This brief summary is non-binding and does not override or replace the full license below.)
 
