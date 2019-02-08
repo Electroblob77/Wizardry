@@ -37,7 +37,7 @@ In addition to private use as set out in section 1, you are free to fork this re
 
 ### 3. Distribution
 
-Distribution, in whole or in part, of compiled versions of wizardry, and distribution of the source code anywhere except on Github, modified or otherwise, is forbidden without advance written permission from Electroblob. Electroblob reserves the right to refuse or withdraw such permission at any time.
+Distribution of this repository anywhere except on Github, in whole or in part, modified or otherwise, is forbidden without advance written permission from Electroblob. Electroblob reserves the right to refuse or withdraw such permission at any time.
 
 ### 4. Commercial use
 
