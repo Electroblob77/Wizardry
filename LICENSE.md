@@ -27,7 +27,7 @@ TL;DR: Do what you want with this repo on Github, but ask me first if you want t
 
 ### 1. Warranty and usage
 
-This repository, the source code for the Minecraft modification Electroblob's Wizardry ('Wizardry'), is provided in the hope that it will be useful and/or educational. You are free to download and modify this repository for personal use only. See section 2 for details regarding public sharing of this repository.
+This repository, the source code for the Minecraft modification Electroblob's Wizardry ('Wizardry'), is provided in the hope that it will be useful and/or educational. You are free to download and modify this repository for personal use. See section 2 for details regarding public sharing of this repository.
 
 THIS REPOSITORY IS PROVIDED AS-IS WITH NO WARRANTIES, IMPLIED OR OTHERWISE. ELECTROBLOB TAKES NO RESPONSIBILITY FOR ANY DAMAGES INCURRED BY THE USE OR MISUSE OF THIS REPOSITORY.
 
