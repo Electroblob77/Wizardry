@@ -35,8 +35,9 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 					switch(message.controlType){
 
 					case APPLY_BUTTON:
-
-						((ContainerArcaneWorkbench)player.openContainer).onApplyButtonPressed(player);
+						if(player.openContainer instanceof ContainerArcaneWorkbench) {
+							((ContainerArcaneWorkbench)player.openContainer).onApplyButtonPressed(player);
+						}
 						break;
 
 					case NEXT_SPELL_KEY:
