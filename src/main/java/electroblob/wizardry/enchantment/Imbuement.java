@@ -1,10 +1,6 @@
 package electroblob.wizardry.enchantment;
 
 import java.util.Iterator;
-import java.util.Map;
-
-import com.google.common.collect.Iterables;
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.spell.FreezingWeapon;
 import net.minecraft.enchantment.Enchantment;
@@ -13,8 +9,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerChest;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
@@ -24,7 +18,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -71,38 +64,6 @@ public interface Imbuement {
 				// If the item contains a magic weapon enchantment, remove it from the item
 				if(enchantment instanceof Imbuement){
 					enchantmentIt.remove();
-				}
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onPlayerOpenContainerEvent(PlayerContainerEvent event){
-		// Brute-force fix to stop enchanted books in dungeon chests from having imbuements on them.
-		if(event.getContainer() instanceof ContainerChest){
-			// Still not sure if it's better to set stacks in slots or modify the itemstack list directly, but I would
-			// imagine it's the former.
-			for(Slot slot : event.getContainer().inventorySlots){
-				ItemStack slotStack = slot.getStack();
-				if(slotStack.getItem() instanceof ItemEnchantedBook){
-					// We don't care about the level of the enchantments
-					NBTTagList enchantmentList = ItemEnchantedBook.getEnchantments(slotStack);
-					// Removes all imbuements
-					if(Iterables.removeIf(enchantmentList, tag -> {
-						NBTTagCompound enchantmentTag = (NBTTagCompound) tag;
-						return Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"))
-								instanceof Imbuement;
-					})){
-						// If any imbuements were removed, inform about the removal of the enchantment(s), or
-						// delete the book entirely if there are none left.
-						if(enchantmentList.isEmpty()){
-							slot.putStack(ItemStack.EMPTY); // NOTE: Will need changing in 1.11
-							Wizardry.logger.info("Deleted enchanted book with illegal enchantments");
-						}else{
-							// Inform about enchantment removal
-							Wizardry.logger.info("Removed illegal enchantments from enchanted book");
-						}
-					}
 				}
 			}
 		}
