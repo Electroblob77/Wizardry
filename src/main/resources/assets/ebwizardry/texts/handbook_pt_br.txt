@@ -1,0 +1,225 @@
+PAGEBREAK
+LINEBREAK
+
+
+
+
+O Manual do Mago
+
+
+
+por Electroblob
+PAGEBREAK
+Introdução
+--------------------
+
+Saudações, mago! Este livro explica os muitos caminhos do arcano e como usá-los.
+
+Se você perder este livro, pode obter um novo, craftando um livro com um cristal mágico.
+PAGEBREAK
+Conteúdo
+--------------------
+PAGEBREAK
+SECTION Iniciando
+Iniciando
+--------------------
+Para começar com wizardry, você precisará de algumas coisas:
+
+- Uma varinha mágica, craftada com uma pepita de ouro, um graveto, e um cristal mágico.
+
+- Uma mesa de trabalho arcana, craftada com 3 pedras, 1 bloco de lápis-lazuli, 2 cristais mágicos, 2 pepitas de ouro e 1 tapete roxo.
+
+- Um livro de feitiços. Estes podem ser encontrados em baús, dropados como saque, comprados de magos, ou você pode fazer um feitiço de principiante, um míssil mágico, com um livro e 4 cristais mágicos.
+
+Você também precisará de um monte a mais de cristais mágicos para abastecer sua varinha com mana.
+PAGEBREAK
+SECTION Mana
+Mana
+--------------------
+Mana é a energia arcana que dá aos magos seus poderes. Ela se manifesta em cristais naturais, que podem ser encontrados em rochas subterrâneas. As varinhas podem armazenar mana dentro delas e esta mana é canalizada para as magias que você conjura. Feitiços diferentes custam diferentes quantidades de mana, dependendo de quão poderosos eles são e por quanto tempo duram.
+
+Passe o mouse sobre uma varinha para ver quanto mana está armazenada nela.
+IMAGE CRYSTAL
+LINEBREAK
+
+
+
+
+
+
+                    Magia
+ Minério de Cristal   Cristal
+PAGEBREAK
+SECTION Varinhas
+Varinhas
+--------------------
+A varinha é o acessório preferido para um mago. Com ela, você pode conjurar qualquer feitiço provido desde que a varinha possa conter seu poder (consulte Níveis para uma explicação mais detalhada).
+Varinhas vêm em diversas variedades diferentes mas você quase certamente começará com uma varinha mágica básica.
+
+Ao segurar uma varinha, uma pequena tela de aviso irá aparecerá no canto da tela. Isto indica o feitiço que está atualmente selecionado junto com uma representação pictórica dele, e, se a feitiço foi conjurado, uma barra de recarga indicando o tempo até que a feitiço possa ser conjurado novamente.
+PAGEBREAK
+SECTION Feitiços
+Feitiços
+--------------------
+Uma varinha é inútil sem feitiços para conjurar com ela. Magias são gravadas em duas formas: em livros, que são permanentes, e em pergaminhos, que são temporários.
+
+Os livros de feitiços são de pouca utilidade sozinhos; ao invés disso eles são usados para vincular o feitiço que eles contêm para varinhas. Livros de feitiços podem ser encontrados em todo o mundo e não demorará muito para você encontrar um. Quando você encontrar um, você pode passar o mouse sobre o livro de feitiços para ver informações básicas sobre o feitiço de relance. Você também pode clicar com o botão direito do mouse enquanto segura um livro de feitiços para ler informações mais detalhadas sobre o feitiço.
+
+Os pergaminhos, por outro lado, servem a um propósito diferente: clicar com o botão direito do mouse enquanto você segura um, lançará o feitiço que está vinculado a ele, destruindo o pergaminho no processo. Como os livros de feitiços, os pergaminhos podem ser encontrados em todo o mundo, mas você também pode criá-los criando um pergaminho em branco a partir de um pedaço de papel e de uma sequencia de caracteres. Você pode então vincular um feitiço ao pergaminho usando mesa de trabalho arcano, mas somente se você tiver conhecimento desse feitiço. Fazer isso consumirá um número de cristais mágicos igual ao custo de mana da magia (arredondado para o MANA_PER_CRYSTAL mais próximo).
+
+Para o olho destreinado, as runas mágicas com as quais as magias são escritas são ilegíveis. Para identificar um feitiço, você pode, é claro, conjurar e ver o que acontece - embora isso possa causar efeitos colaterais indesejados, e muitos feitiços precisam de certas condições para funcionar. Uma opção mais segura e confiável é usar um pergaminho de identificação, que pode ser encontrado em baús ou comprado de um mago. Clicar com o botão direito enquanto segura um, irá identificar o primeiro livro de feitiços desconhecido ou rolar em sua barra de inventário, consumindo o pergaminho de identificação.
+
+Os pergaminhos são bastante úteis quando você precisa usar uma mágica uma ou duas vezes em uma determinada missão, mas não quer que ela ocupe um espaço na sua varinha. Deve-se notar, no entanto, que os pergaminhos são, na melhor das hipóteses, um método ineficiente de lançar feitiços.
+PAGEBREAK
+SECTION Mesa de Trabalho Arcana
+Mesa de Trabalho Arcana
+--------------------
+A mesa de trabalho arcana é um bloco de aparência semelhante à mesa de encantamento, onde você pode carregar, atualizar e vincular feitiços para sua varinha. Simplesmente coloque-o em qualquer lugar e clique com o botão direito, e você verá um igu como o da direita.
+PAGEBREAK
+IMAGE WORKBENCH
+LINEBREAK
+
+
+
+
+
+
+
+
+
+
+
+
+
+ A Mesa de Trabalho Arcana
+PAGEBREAK
+SECTION Vinculando Feitiços
+Vinculando Feitiços
+--------------------
+Para vincular um feitiço para a sua varinha, basta colocar sua varinha no espaço central da bancada, em seguida, coloque o livro de feitiços em um dos espaços circundantes e pressione Aplicar. Você pode vincular até cinco feitiços a uma varinha de uma só vez, embora isso possa ser aumentado com atualizações de sintonização. Ao segurar uma varinha, você pode alternar entre as mágicas com as teclas de NEXT_SPELL_KEY e PREVIOUS_SPELL_KEY (elas podem ser alteradas em opções -> controles). Você também pode alternar feitiços rolando a roda do mouse enquanto se esgueira.
+
+SECTION Carregamento de Varinhas
+Carregamento de Varinhas
+--------------------
+Para carregar sua varinha, coloque a varinha no espaço central da mesa de trabalho arcana e coloque alguns cristais mágicos na parte superior dos dois espaços à esquerda e, em seguida, pressione aplicar. Cada cristal é no valor de MANA_PER_CRYSTAL, e a varinha só aceita o que precisa, para que você possa manter um suprimento de cristais na mesa de trabalho para quando precisar deles. No entanto, tenha em mente que a varinha só pode receber um número inteiro de cristais, portanto, se a varinha precisar, por exemplo, de mais 30 mana, MANA_PER_CRYSTAL_MINUS_30 de mana será perdida ao carregá-la. Todas as varinhas terão um número exato de cristais para carregar se estiverem vazias, a menos que tenham uma atualização de armazenamento aplicada.
+
+SECTION Atualizando Varinhas
+Atualizando sua varinha
+--------------------
+Para atualizar sua varinha, você precisará de um tomo de arcana do nível apropriado (consulte Níveis) ou de uma atualização especial de varinha. Ambos podem ser encontrados como saque ou comprados de um mago. Para atualizar sua varinha, coloque-a no espaço central e a atualização na parte inferior dos dois espaços à esquerda e, em seguida, pressione aplicar.
+
+Atualizações na varinha especial melhoram um aspecto particular de uma varinha. Cada tipo de atualização pode acumular até três vezes, e o número total de atualizações que uma varinha pode levar depende do seu nível. Atualizações não podem ser removidas.
+PAGEBREAK
+SECTION Flores e Frascos
+Flores e Frascos
+--------------------
+Você provavelmente vai encontrar curiosas flores brilhantes que crescem na natureza de tempos em tempos. Estas são flores de cristal, uma fonte natural de mana. Elas podem ser colhidas e craftadas para extrair o mana dos cristais.
+
+Precisa recarregar sua varinha em movimento? Sem problemas! O mana agora pode ser engarrafado. Simplesmente crafteie um frasco de mana com uma frasco de vidro e oito cristais mágicos e leve-o com você. Quando você precisar usá-lo, simplesmente crafteie-o com sua varinha e ele restaurará parte da carga. Este processo consumirá o frasco. Alguma mana é perdida durante o engarrafamento.
+PAGEBREAK
+SECTION Níveis
+Níveis
+--------------------
+As varinhas e as magias vêm em quatro níveis: BASIC_COLOURnovatoRESET_COLOUR, APPRENTICE_COLOURaprendizRESET_COLOUR, ADVANCED_COLOURavançado RESET_COLOURe MASTER_COLOURmestreRESET_COLOUR. Cada nível é mais poderoso que o anterior.
+
+Varinhas BASIC_COLOURNovata RESET_COLOURsão as que podem ser craftadas. Elas têm até BASIC_MAX_CHARGE de mana e só podem conjurar feitiços de novato. Os feitiços de novato são simples o suficiente para serem conjurados por qualquer um e geralmente não custam muita mana. Isso não significa necessariamente que elas são inúteis em níveis mais altos; seu baixo custo torna alguns feitiços de novato úteis mesmo quando você tem acesso a feitiços mestres.
+
+Varinhas APPRENTICE_COLOURAprendiz RESET_COLOURsão o próximo nível acima de varinhas novatos. Elas têm até APPRENTICE_MAX_CHARGE de mana e podem conjurar feitiços de aprendiz e novato. Os feitiços de aprendiz são um pouco mais impressionantes do que os feitiços de novato, mas geralmente custam mais.
+
+Varinhas ADVANCED_COLOURAvançada RESET_COLOURsão bastante raras e são muito mais poderosas. Elas podem conjurar todas as magias, exceto feitiços mestre, e segurar ADVANCED_MAX_CHARGE de mana. Magias avançadas podem conceder poderes sobrenaturais, como invisibilidade, e causar pequenos estragos em inimigos..
+
+Varinhas MASTER_COLOURMestre RESET_COLOURsão as varinhas mais poderosas em existência. Elas seguram até MASTER_MAX_CHARGE de mana e podem conjurar qualquer feitiço. Os livros de feitiços são muito raros e os feitiços podem causar completa devastação não apenas para os inimigos, mas até mesmo para o próprio mundo. Use com cuidado.
+PAGEBREAK
+SECTION Elementos
+Elementos
+--------------------
+Feitiços pertencem a elementos diferentes, que descrevem a natureza do feitiço e também têm vantagens quando usadas com certas varinhas.
+
+FIRE_COLOURFogo
+Talvez o elemento mais destrutivo, o fogo diz respeito ao ardente, lava e explosões. Um poderoso piromante lançará o inferno sobre seus inimigos e provavelmente incendiará o mundo no processo. A maioria dos feitiços de ataque de fogo atearam fogo ao alvo, causando dano contínuo ao longo do tempo. No entanto, tenha cuidado com o fato de que as magias de fogo podem não ter efeito nos mobs inferiores.
+
+ICE_COLOURGelo
+O elemento de gelo é feito de tudo que é frio. Os feitiços de geada geralmente reduzem a velocidade dos inimigos ou os congelam completamente, e são especialmente eficazes em criaturas de fogo. A magia do gelo pode ser igualmente útil fora do combate, como o congelamento da água para atravessar um rio.
+
+LIGHTNING_COLOURRelâmpago
+Este elemento diz respeito a relâmpagos, tempestades e o clima. Um poderoso mago da tempestade é uma força a ser considerada, e alguns possuem a habilidade de chamar os raios à vontade. Magias de raios frequentemente danificam vários inimigos de uma só vez e geralmente buscam seu alvo, tornando-os um ataque efetivo contra qualquer mob... mas cuidado com creepers.
+
+NECROMANCY_COLOURNecromancia
+A necromancia é o elemento da escuridão, do caos e dos mortos-vivos. Os necromantes são misteriosos e muitas vezes considerados maus, embora isso geralmente não seja o caso. Magias de necromancia são comumente usadas para convocar criaturas para lutar por você ou até mesmo dobrar a vontade de seus inimigos.
+
+EARTH_COLOURTerra
+O elemento da terra está focado no mundo natural: animais, plantas, o vento e coisas semelhantes. A magia da terra é diversa e assume uma grande variedade de formas, desde envenenar inimigos até libertar a fúria do tempo. Feitiços de terra são uma mistura de ataque, defesa e utilidade.
+
+SORCERY_COLOURFeitiçaria
+A feitiçaria é o elemento de força e mudança. Os feiticeiros manipulam a luz, a gravidade e até a própria realidade para atender às suas necessidades. Os feitiços de feitiçaria podem ser usados, entre outras coisas, para conceder aos seu conjurador poderes mágicos ou mover objetos para sua vontade.
+
+HEALING_COLOURCura
+O elemento de cura está relacionado à defesa e regeneração. Os curandeiros procuram proteger-se e aos seus aliados o máximo possível e, como tal, podem ser adversários muito difíceis. Embora geralmente não seja usado como ataque, a luz purificadora de alguns feitiços de cura causará danos consideráveis aos mortos-vivos. Feitiços de cura são indispensáveis quando em combate.
+
+As fronteiras entre os diferentes elementos nem sempre são distintas, e alguns feitiços carregam características de outros elementos do que os seus.
+
+Se você for sortudo, você pode encontrar uma varinha elemental. Essas varinhas permitem que você conjure magias do elemento certo para obter mais potência do que o normal.
+PAGEBREAK
+SECTION Armadura Mágica
+Armadura Mágica
+--------------------
+Como um mago, você precisará de algo para protegê-lo das criaturas que você luta. Nenhuma armadura comum vai fazer mesmo. Para aproveitar ao máximo seus feitiços, você precisará de armadura de mago: chapéu, roupas, calças e botas. Ao contrário da armadura comum, estas não serão quebradas. Em vez disso, eles usam energia arcana para proteger o usuário. Isso, claro, significa que eles devem ser carregadas com cristais mágicos, assim como as varinhas. Felizmente, essas roupas não consomem muito mana. Carregue-as como faria com uma varinha na bancada arcana ou com um frasco de mana, mas tenha cuidado - se ficarem sem mana, você se achará indefeso.
+
+Você pode obter armadura de mago, criando-a de seda mágica, obtida ao estar craftando linha com um cristal mágico.
+
+Aqueles magos que se dedicam à prática de um elemento às vezes usam roupas especiais que concedem bônus para aquele elemento. Conjuntos completos de tais roupas são muito procurados entre os magos e não são fáceis de encontrar.
+
+A lenda fala de um selo arcano usado pelos magos mais poderosos para melhorar sua armadura.
+PAGEBREAK
+SECTION Magos e Torres
+Magos e Torres
+--------------------
+Não temais - não és o único praticante de magia neste mundo. Em suas viagens, você pode encontrar torres altas com telhados pontiagudos. Estas são as residências dos colegas magos. Uma vida de solidão pode tornar os magos um pouco amuados, às vezes, mas eles são geralmente pessoas amigáveis que estão dispostos a compartilhar seus conhecimentos com você - ainda que por um preço. Espere pagar metais e pedras preciosas e, em troca, você receberá muitas maravilhas misteriosas. Se, no entanto, é um feitiço mestre que você procura, você precisará falar com um especialista.
+
+Infelizmente, existem alguns magos por aí que não recebem visitantes. Esses magos são tipicamente rejeitados e são hostis a qualquer um que cruze seu caminho. Aborde esses indivíduos com cautela e esteja preparado para se defender contra magias poderosas. Derrote-os, no entanto, e o conhecimento deles é seu para ser tomado.
+PAGEBREAK
+SECTION Receitas de Craftagem
+Receitas de Craftagem
+--------------------
+PAGEBREAK
+PAGEBREAK
+Receitas de Craftagem
+--------------------
+PAGEBREAK
+PAGEBREAK
+Receitas de Craftagem
+--------------------
+PAGEBREAK
+PAGEBREAK
+Receitas de Craftagem
+--------------------
+PAGEBREAK
+PAGEBREAK
+Créditos
+--------------------
+Electroblob's Wizardry
+Versão VERSION
+Para Minecraft MCVERSION
+
+Projetado, codificado e texturizado por Electroblob
+
+Agradecimentos a Minecraft Forge e MCP, sem os quais este mod não teria sido possível.
+
+Obrigado também ao Minecraft modding community, que sempre tem uma resposta aos meus problemas de modificação!
+
+Em adição, Eu gostaria de agradecer as seguintes pessoas por suas contribuições para o mod:
+
+Código:
+
+- Corail31
+- 12foo
+- Shadows-of-Fire
+- HellFirePvP
+
+Traduções:
+
+- Russian: VilagVil
+- Spanish and Mexican Spanish: MadWrist
+- Chinese: ZHENGLOC and dragon-evol
+
+Efeito de som do Raio de Relâmpago de OhhWowProductions
