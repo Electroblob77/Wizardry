@@ -10,6 +10,8 @@ When submitting an issue, I would be grateful if you could follow these few guid
 
 - Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem!
 
+- Make sure your wizardry and Forge versions are both up-to-date for the game version you are using.
+
 - There's no need to put 'tags' in square brackets in the issue title, I'll put proper github issue tags on it which will also help organise it. You can use them to search for issues too!
 
 - Don't close an issue unless it has actually been fixed or is no longer relevant - otherwise I might not end up fixing it at all! Usually I'll take care of closing issues anyway, so you don't have to worry about it.
