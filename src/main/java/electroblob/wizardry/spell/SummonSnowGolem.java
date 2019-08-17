@@ -1,9 +1,5 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
@@ -18,7 +14,9 @@ import net.minecraft.world.World;
 public class SummonSnowGolem extends Spell {
 
 	public SummonSnowGolem(){
-		super("summon_snow_golem", Tier.APPRENTICE, Element.ICE, SpellType.MINION, 15, 20, EnumAction.BOW, false);
+		super("summon_snow_golem", EnumAction.BOW, false);
+		this.soundValues(1, 1, 0.4f);
+		addProperties(SpellMinion.SUMMON_RADIUS);
 	}
 
 	@Override
@@ -43,7 +41,7 @@ public class SummonSnowGolem extends Spell {
 			}
 		}
 		
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7f, 1 + 0.4f * world.rand.nextFloat());
+		playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 

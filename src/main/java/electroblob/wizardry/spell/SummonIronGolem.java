@@ -1,15 +1,11 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -18,19 +14,24 @@ import net.minecraft.world.World;
 public class SummonIronGolem extends Spell {
 
 	public SummonIronGolem(){
-		super("summon_iron_golem", Tier.MASTER, Element.SORCERY, SpellType.MINION, 175, 400, EnumAction.BOW, false);
+		super("summon_iron_golem", EnumAction.BOW, false);
+		addProperties(SpellMinion.SUMMON_RADIUS);
+		soundValues(1, 1.1f, 0.2f);
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
+		BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, getProperty(SpellMinion.SUMMON_RADIUS).intValue(),
+				getProperty(SpellMinion.SUMMON_RADIUS).intValue());
+
 		if(pos == null) return false;
 
 		if(!world.isRemote){
 			
 			EntityIronGolem golem = new EntityIronGolem(world);
 			golem.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+			golem.setPlayerCreated(true);
 			world.spawnEntity(golem);
 			
 		}else{
@@ -43,7 +44,7 @@ public class SummonIronGolem extends Spell {
 			}
 		}
 
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 1, 1 + 0.2f * world.rand.nextFloat());
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 

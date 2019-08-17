@@ -35,7 +35,7 @@ public class SlotWorkbenchItem extends Slot {
 
 	@Override
 	public int getSlotStackLimit(){
-		return 1;
+		return 16;
 	}
 
 	@Override

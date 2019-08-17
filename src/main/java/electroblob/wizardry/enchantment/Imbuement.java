@@ -1,12 +1,10 @@
 package electroblob.wizardry.enchantment;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.google.common.collect.Iterables;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.spell.FreezingWeapon;
+import electroblob.wizardry.spell.ImbueWeapon;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +13,6 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -27,6 +24,8 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Iterator;
 
 /**
  * Interface for temporary enchantments that last for a certain duration ('imbuements'). This interface allows
@@ -59,8 +58,7 @@ public interface Imbuement {
 	/** Removes all imbuements from the given itemstack. */
 	static void removeImbuements(ItemStack stack){
 		if(stack.isItemEnchanted()){
-			// No need to check what enchantments the item has, since remove() does nothing if the element does not
-			// exist.
+			// No need to check what enchantments the item has, since remove() does nothing if the element does not exist
 			NBTTagList enchantmentList = stack.getItem() == Items.ENCHANTED_BOOK ?
 					ItemEnchantedBook.getEnchantments(stack) : stack.getEnchantmentTagList();
 			// Check all enchantments of the item
@@ -96,7 +94,7 @@ public interface Imbuement {
 						// If any imbuements were removed, inform about the removal of the enchantment(s), or
 						// delete the book entirely if there are none left.
 						if(enchantmentList.isEmpty()){
-							slot.putStack(ItemStack.EMPTY); // NOTE: Will need changing in 1.11
+							slot.putStack(ItemStack.EMPTY);
 							Wizardry.logger.info("Deleted enchanted book with illegal enchantments");
 						}else{
 							// Inform about enchantment removal
@@ -122,9 +120,9 @@ public interface Imbuement {
 
 				ItemStack bow = archer.getHeldItemMainhand();
 
-				if(!(bow.getItem() instanceof ItemBow)){
+				if(!ImbueWeapon.isBow(bow.getItem())){
 					bow = archer.getHeldItemOffhand();
-					if(!(bow.getItem() instanceof ItemBow)) return;
+					if(!ImbueWeapon.isBow(bow.getItem())) return;
 				}
 
 				// Taken directly from ItemBow, so it works exactly the same as the power enchantment.

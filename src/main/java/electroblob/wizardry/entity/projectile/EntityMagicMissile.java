@@ -1,24 +1,25 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityMagicMissile extends EntityMagicArrow {
-	
-	/** The number of ticks the magic missile flies for before vanishing; effectively determines its range. */
-	private static final int LIFETIME = 12;
 
 	/** Creates a new magic missile in the given world. */
 	public EntityMagicMissile(World world){
 		super(world);
 	}
 
-	@Override public double getDamage(){ return 4; }
+	@Override public double getDamage(){ return Spells.magic_missile.getProperty(Spell.DAMAGE).floatValue(); }
+
+	@Override public int getLifetime(){ return 12; }
 
 	@Override public boolean doGravity(){ return false; }
 
@@ -26,8 +27,8 @@ public class EntityMagicMissile extends EntityMagicArrow {
 
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
-		this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
-		if(this.world.isRemote) spawnImpactParticles();
+		this.playSound(WizardrySounds.ENTITY_MAGIC_MISSILE_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		if(this.world.isRemote) ParticleBuilder.create(Type.FLASH).pos(posX, posY, posZ).clr(1, 1, 0.65f).spawn(world);
 	}
 	
 	@Override
@@ -41,10 +42,6 @@ public class EntityMagicMissile extends EntityMagicArrow {
 
 	@Override
 	public void tickInAir(){
-
-		if(this.ticksExisted > LIFETIME){
-			this.setDead();
-		}
 
 		if(this.world.isRemote){
 			ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)

@@ -1,0 +1,10 @@
+{
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "ebwizardry:medium_mana_flask"
+            }
+        }
+    }
+}

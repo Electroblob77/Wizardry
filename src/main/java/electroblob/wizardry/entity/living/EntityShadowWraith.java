@@ -1,22 +1,15 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.Collections;
-import java.util.List;
-
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.*;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -24,6 +17,9 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Collections;
+import java.util.List;
 
 public class EntityShadowWraith extends EntitySummonedCreature implements ISpellCaster {
 
@@ -96,17 +92,17 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 
 	@Override
 	protected SoundEvent getAmbientSound(){
-		return SoundEvents.ENTITY_BLAZE_AMBIENT;
+		return WizardrySounds.ENTITY_SHADOW_WRAITH_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source){
-		return SoundEvents.ENTITY_BLAZE_HURT;
+		return WizardrySounds.ENTITY_SHADOW_WRAITH_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound(){
-		return SoundEvents.ENTITY_BLAZE_DEATH;
+		return WizardrySounds.ENTITY_SHADOW_WRAITH_DEATH;
 	}
 
 	@Override
@@ -135,7 +131,7 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 	public void onLivingUpdate(){
 
 		if(this.rand.nextInt(24) == 0){
-			this.playSound(SoundEvents.BLOCK_PORTAL_AMBIENT, 1.0F + this.rand.nextFloat(),
+			this.playSound(WizardrySounds.ENTITY_SHADOW_WRAITH_NOISE, 1.0F + this.rand.nextFloat(),
 					this.rand.nextFloat() * 0.7F + 0.3F);
 		}
 

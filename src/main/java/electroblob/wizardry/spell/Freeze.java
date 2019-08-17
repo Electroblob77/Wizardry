@@ -1,12 +1,7 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.living.EntityBlazeMinion;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -17,33 +12,33 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class Freeze extends SpellRay {
-	
-	/** The base duration of the frostbite effect appled by this spell. */
-	private static final int BASE_DURATION = 200;
-	/** The base damage dealt to entities vulnerable to frost. */
-	private static final float BASE_DAMAGE = 3;
 
 	public Freeze(){
-		super("freeze", Tier.BASIC, Element.ICE, SpellType.ATTACK, 5, 10, false, 10, WizardrySounds.SPELL_ICE);
+		super("freeze", false, EnumAction.NONE);
 		this.soundValues(1, 1.4f, 0.4f);
+		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
+		this.hitLiquids(true);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(WizardryUtilities.isLiving(target)){
 
-			if(target instanceof EntityBlaze || target instanceof EntityMagmaCube || target instanceof EntityBlazeMinion){
+			if(target instanceof EntityBlaze || target instanceof EntityMagmaCube){
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.FROST),
-						BASE_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
+						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			}
 
 			if(MagicDamage.isEntityImmune(DamageType.FROST, target)){
@@ -51,11 +46,12 @@ public class Freeze extends SpellRay {
 						new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
 			}else{
 				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
-						(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 1));
+						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+						getProperty(EFFECT_STRENGTH).intValue()));
 			}
 
 			if(target.isBurning()) target.extinguish();
-			
+
 			return true;
 		}
 		
@@ -63,24 +59,27 @@ public class Freeze extends SpellRay {
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		
-		if(world.getBlockState(pos).getBlock() == Blocks.WATER && !world.isRemote){
-			world.setBlockState(pos, Blocks.ICE.getDefaultState());
-		}else if(world.getBlockState(pos).getBlock() == Blocks.LAVA && !world.isRemote){
-			world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
-		}else if(world.getBlockState(pos).getBlock() == Blocks.FLOWING_LAVA && !world.isRemote){
-			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
-		}else if(side == EnumFacing.UP && !world.isRemote && world.isSideSolid(pos, EnumFacing.UP)
-				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
-			world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+
+		if(WizardryUtilities.canDamageBlocks(caster, world)){
+
+			if(world.getBlockState(pos).getBlock() == Blocks.WATER && !world.isRemote){
+				world.setBlockState(pos, Blocks.ICE.getDefaultState());
+			}else if(world.getBlockState(pos).getBlock() == Blocks.LAVA && !world.isRemote){
+				world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+			}else if(world.getBlockState(pos).getBlock() == Blocks.FLOWING_LAVA && !world.isRemote){
+				world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+			}else if(side == EnumFacing.UP && !world.isRemote && world.isSideSolid(pos, EnumFacing.UP)
+					&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
+				world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
+			}
 		}
 		
 		return true; // Always succeeds if it hits a block
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 	

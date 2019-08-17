@@ -1,8 +1,5 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -17,11 +14,11 @@ import net.minecraft.world.World;
 public class None extends Spell {
 
 	public None(){
-		super("none", Tier.BASIC, Element.MAGIC, SpellType.UTILITY, 0, 0, EnumAction.NONE, false);
+		super("none", EnumAction.NONE, false);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 

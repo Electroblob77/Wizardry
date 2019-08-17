@@ -1,0 +1,24 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "necromancy",
+  "type": "attack",
+  "cost": 35,
+  "chargeup": 0,
+  "cooldown": 75,
+  "base_properties": {
+    "range": 10,
+    "effect_duration": 200,
+    "damage_interval": 30
+  }
+}

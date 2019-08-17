@@ -1,13 +1,9 @@
 package electroblob.wizardry.spell;
 
-import java.util.function.Function;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
@@ -16,11 +12,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.function.Function;
 
 /**
  * Generic superclass for all spells which conjure constructs (i.e. instances of {@link EntityMagicConstruct}) at an
@@ -29,40 +26,69 @@ import net.minecraft.world.World;
  * instantiation of this class is sufficient to create a construct spell; if something extra needs to be done, such as
  * particle spawning, then methods can be overridden (perhaps using an anonymous class) to add the required functionality.
  * It is encouraged, however, to put extra functionality in the construct entity class instead whenever possible.
- * <p>
+ * <p></p>
+ * Properties added by this type of spell: {@link Spell#RANGE}, {@link Spell#DURATION} (if the construct is not
+ * permanent)
+ * <p></p>
  * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastByNPCs()}
- * <p>
- * By default, this type of spell does not require a packet to be sent. {@link Spell#doesSpellRequirePacket()}
+ * <p></p>
+ * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * <p></p>
+ * By default, this type of spell does not require a packet to be sent. {@link Spell#requiresPacket()}
  * 
  * @author Electroblob
  * @since Wizardry 4.2
  * @see SpellConstruct
  */
 public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellConstruct<T> {
-	
-	/** The base range of this spell. */
-	protected final double baseRange;
 
-	public SpellConstructRanged(String name, Tier tier, Element element, SpellType type, int cost, int cooldown,
-			Function<World, T> constructFactory, int baseDuration, double baseRange, SoundEvent sound){
-		this(Wizardry.MODID, name, tier, element, type, cost, cooldown, constructFactory, baseDuration, baseRange, sound);
+	/** Whether liquids count as blocks when raytracing. Defaults to false. */
+	protected boolean hitLiquids = false;
+	/** Whether to ignore uncollidable blocks when raytracing. Defaults to false. */
+	protected boolean ignoreUncollidables = false;
+
+	public SpellConstructRanged(String name, Function<World, T> constructFactory, boolean permanent){
+		this(Wizardry.MODID, name, constructFactory, permanent);
 	}
 
-	public SpellConstructRanged(String modID, String name, Tier tier, Element element, SpellType type, int cost, int cooldown,
-			Function<World, T> constructFactory, int baseDuration, double baseRange, SoundEvent sound){
-		super(modID, name, tier, element, type, cost, cooldown, EnumAction.NONE, constructFactory, baseDuration, sound);
-		this.baseRange = baseRange;
+	public SpellConstructRanged(String modID, String name, Function<World, T> constructFactory, boolean permanent){
+		super(modID, name, EnumAction.NONE, constructFactory, permanent);
+		this.addProperties(RANGE);
 	}
 
-	@Override public boolean doesSpellRequirePacket(){ return false; }
+	/**
+	 * Sets whether liquids count as blocks when raytracing.
+	 * @param hitLiquids Whether to hit liquids when raytracing. If this is false, the spell will pass through
+	 * liquids as if they weren't there.
+	 * @return The spell instance, allowing this method to be chained onto the constructor.
+	 */
+	public Spell hitLiquids(boolean hitLiquids){
+		this.hitLiquids = hitLiquids;
+		return this;
+	}
+
+	/**
+	 * Sets whether uncollidable blocks are ignored when raytracing.
+	 * @param ignoreUncollidables Whether to hit uncollidable blocks when raytracing. If this is false, the spell will
+	 * pass through uncollidable blocks as if they weren't there.
+	 * @return The spell instance, allowing this method to be chained onto the constructor.
+	 */
+	public Spell ignoreUncollidables(boolean ignoreUncollidables){
+		this.ignoreUncollidables = ignoreUncollidables;
+		return this;
+	}
+
+	@Override public boolean requiresPacket(){ return false; }
 
 	@Override public boolean canBeCastByNPCs(){ return true; }
+	
+	@Override public boolean canBeCastByDispensers() { return true; }
 	
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		double range = baseRange * modifiers.get(WizardryItems.range_upgrade);
-		RayTraceResult rayTrace = WizardryUtilities.standardBlockRayTrace(world, caster, range, false);
+		double range = getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade);
+		RayTraceResult rayTrace = RayTracer.standardBlockRayTrace(world, caster, range, hitLiquids, ignoreUncollidables, false);
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK && (rayTrace.sideHit == EnumFacing.UP ||
 				!requiresFloor)){
@@ -73,7 +99,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				double y = rayTrace.hitVec.y;
 				double z = rayTrace.hitVec.z;
 				
-				if(!spawnConstruct(world, x, y, z, caster, modifiers)) return false;
+				if(!spawnConstruct(world, x, y, z, rayTrace.sideHit, caster, modifiers)) return false;
 			}
 			
 		}else if(!requiresFloor){
@@ -86,7 +112,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() + look.y * range;
 				double z = caster.posZ + look.z * range;
 				
-				if(!spawnConstruct(world, x, y, z, caster, modifiers)) return false;
+				if(!spawnConstruct(world, x, y, z, null, caster, modifiers)) return false;
 			}
 			
 		}else{
@@ -94,7 +120,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 		}
 		
 		caster.swingArm(hand);
-		if(sound != null) WizardryUtilities.playSoundAtPlayer(caster, sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 
@@ -102,7 +128,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
 			SpellModifiers modifiers){
 
-		double range = baseRange * modifiers.get(WizardryItems.range_upgrade);
+		double range = getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade);
 		
 		if(target != null && caster.getDistance(target) <= range){
 
@@ -111,23 +137,63 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				double x = target.posX;
 				double y = target.posY;
 				double z = target.posZ;
+
+				EnumFacing side = null;
 				
 				// If the target is not on the ground but the construct must be placed on the floor, searches for the
 				// floor under the caster and returns false if it does not find one within 3 blocks.
 				if(!target.onGround && requiresFloor){
-					y = WizardryUtilities.getNearestFloorLevel(world, new BlockPos(x, y, z), 3);
-					if(y < 0) return false;
+					Integer floor = WizardryUtilities.getNearestFloor(world, new BlockPos(x, y, z), 3);
+					if(floor == null) return false;
+					y = floor;
+					side = EnumFacing.UP;
 				}
 				
-				if(!spawnConstruct(world, x, y, z, caster, modifiers)) return false;
+				if(!spawnConstruct(world, x, y, z, side, caster, modifiers)) return false;
 			}
 			
 			caster.swingArm(hand);
-			if(sound != null) caster.playSound(sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			return true;
 		}
 
 		return false;
+	}
+	
+	@Override
+	public boolean cast(World world, double x, double y, double z, EnumFacing direction, int ticksInUse, int duration, SpellModifiers modifiers){
+		
+		double range = getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade);
+		Vec3d origin = new Vec3d(x, y, z);
+		Vec3d endpoint = origin.add(new Vec3d(direction.getDirectionVec()).scale(range));
+		RayTraceResult rayTrace = world.rayTraceBlocks(origin, endpoint, hitLiquids, ignoreUncollidables, false);
+
+		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK && (rayTrace.sideHit == EnumFacing.UP ||
+				!requiresFloor)){
+			
+			if(!world.isRemote){
+				
+				double x1 = rayTrace.hitVec.x;
+				double y1 = rayTrace.hitVec.y;
+				double z1 = rayTrace.hitVec.z;
+				
+				if(!spawnConstruct(world, x1, y1, z1, rayTrace.sideHit, null, modifiers)) return false;
+			}
+			
+		}else if(!requiresFloor){
+			
+			if(!world.isRemote){
+				
+				if(!spawnConstruct(world, endpoint.x, endpoint.y, endpoint.z, null, null, modifiers)) return false;
+			}
+			
+		}else{
+			return false;
+		}
+
+		// This MUST be the coordinates of the actual dispenser, so we need to offset it
+		this.playSound(world, x - direction.getXOffset(), y - direction.getYOffset(), z - direction.getZOffset(), ticksInUse, duration, modifiers);
+		return true;
 	}
 
 }

@@ -1,11 +1,12 @@
 package electroblob.wizardry.entity.projectile;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.UUID;
-
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
@@ -23,22 +24,23 @@ import net.minecraft.network.play.server.SPacketChangeGameState;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * This class was copied from EntityArrow in the 1.7.10 update as part of the overhaul and major cleanup of the code for
  * the projectiles. It provides a unifying superclass for all <b>directed</b> projectiles (i.e. not spherical stuff like
  * snowballs), namely magic missile, ice shard, force arrow, lightning arrow and dart. All spherical projectiles should
  * extend {@link EntityMagicProjectile}.
- * <p>
+ * <p></p>
  * This class handles saving of the damage multiplier and all shared logic. Methods are provided which are triggered at
  * useful points during the entity update cycle as well as a few getters for various properties. Override any of these
  * to change the behaviour (no need to call super for any of them).
@@ -46,7 +48,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @since Wizardry 1.0
  * @author Electroblob
  */
+// TODO: Might be a good idea to have this implement IEntityOwnable as well
 public abstract class EntityMagicArrow extends Entity implements IProjectile, IEntityAdditionalSpawnData {
+
+	public static final double LAUNCH_Y_OFFSET = 0.1;
+	public static final int SEEKING_TIME = 15;
 
 	private int blockX = -1;
 	private int blockY = -1;
@@ -81,14 +87,14 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	
 	// Initialiser methods
 	
-	/** Sets the shooter of the projectile to the given caster, positions the projctile at the given caster's eyes and 
+	/** Sets the shooter of the projectile to the given caster, positions the projectile at the given caster's eyes and
 	 * aims it in the direction they are looking with the given speed. */
 	public void aim(EntityLivingBase caster, float speed){
 		
 		this.setCaster(caster);
 		
-		this.setLocationAndAngles(caster.posX, caster.posY + (double)caster.getEyeHeight(), caster.posZ,
-				caster.rotationYaw, caster.rotationPitch);
+		this.setLocationAndAngles(caster.posX, caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET,
+				caster.posZ, caster.rotationYaw, caster.rotationPitch);
 		
 		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
 		this.posY -= 0.10000000149011612D;
@@ -106,7 +112,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		this.shoot(this.motionX, this.motionY, this.motionZ, speed * 1.5F, 1.0F);
 	}
 
-	/** Sets the shooter of the projectile to the given caster, positions the projctile at the given caster's eyes and 
+	/** Sets the shooter of the projectile to the given caster, positions the projectile at the given caster's eyes and
 	 * aims it at the given target with the given speed. The trajectory will be altered slightly by a random amount
 	 * determined by the aimingError parameter. For reference, skeletons set this to 10 on easy, 6 on normal and 2 on hard
 	 * difficulty. */
@@ -114,7 +120,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		
 		this.setCaster(caster);
 
-		this.posY = caster.posY + (double)caster.getEyeHeight() - 0.1d;
+		this.posY = caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
 		double dx = target.posX - caster.posX;
 		double dy = this.doGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - this.posY
 				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - this.posY;
@@ -140,6 +146,10 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
 	/** Subclasses must override this to set their own base damage. */
 	public abstract double getDamage();
+
+	/** Returns the maximum flight time in ticks before this projectile disappears, or -1 if it can continue
+	 * indefinitely until it hits something. This should be constant. */
+	public abstract int getLifetime();
 
 	/** Override this to specify the damage type dealt. Defaults to {@link DamageType#MAGIC}. */
 	public DamageType getDamageType(){
@@ -167,6 +177,16 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		return false;
 	}
 
+	/**
+	 * Returns the seeking strength of this projectile, or the maximum distance from a target the projectile can be
+	 * heading for that will make it curve towards that target. By default, this is 2 if the caster is wearing a ring
+	 * of attraction, otherwise it is 0.
+	 */
+	public float getSeekingStrength(){
+		return getCaster() instanceof EntityPlayer && ItemArtefact.isArtefactActive((EntityPlayer)getCaster(),
+				WizardryItems.ring_seeking) ? 2 : 0;
+	}
+
 	// Setters and getters
 
 	/** Sets the amount of knockback the projectile applies when it hits a mob. */
@@ -184,7 +204,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	}
 
 	public void setCaster(EntityLivingBase entity){
-		caster = new WeakReference<EntityLivingBase>(entity);
+		caster = new WeakReference<>(entity);
 	}
 	
 	// Methods triggered during the update cycle
@@ -211,10 +231,15 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
 		super.onUpdate();
 
+		// Projectile disappears after its lifetime (if it has one) has elapsed
+		if(getLifetime() >=0 && this.ticksExisted > getLifetime()){
+			this.setDead();
+		}
+
 		if(this.getCaster() == null && this.casterUUID != null){
 			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
 			if(entity instanceof EntityLivingBase){
-				this.caster = new WeakReference<EntityLivingBase>((EntityLivingBase)entity);
+				this.caster = new WeakReference<>((EntityLivingBase)entity);
 			}
 		}
 
@@ -323,8 +348,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 					if(this.getCaster() == null){
 						damagesource = DamageSource.causeThrownDamage(this, this);
 					}else{
-						damagesource = MagicDamage.causeIndirectMagicDamage(this,
-								(EntityLivingBase)this.getCaster(), this.getDamageType()).setProjectile();
+						damagesource = MagicDamage.causeIndirectMagicDamage(this, this.getCaster(), this.getDamageType()).setProjectile();
 					}
 
 					if(raytraceresult.entityHit.attackEntityFrom(damagesource,
@@ -347,11 +371,9 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 							}
 
 							// Thorns enchantment
-							if(this.getCaster() != null
-									&& this.getCaster() instanceof EntityLivingBase){
+							if(this.getCaster() != null){
 								EnchantmentHelper.applyThornEnchantments(entityHit, this.getCaster());
-								EnchantmentHelper.applyArthropodEnchantments((EntityLivingBase)this.getCaster(),
-										entityHit);
+								EnchantmentHelper.applyArthropodEnchantments(this.getCaster(), entityHit);
 							}
 
 							if(this.getCaster() != null && raytraceresult.entityHit != this.getCaster()
@@ -397,6 +419,29 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 					if(this.stuckInBlock.getMaterial() != Material.AIR){
 						this.stuckInBlock.getBlock().onEntityCollision(this.world, raytraceresult.getBlockPos(),
 								this.stuckInBlock, this);
+					}
+				}
+			}
+
+			// Seeking
+			if(getSeekingStrength() > 0){
+
+				Vec3d velocity = new Vec3d(motionX, motionY, motionZ);
+
+				RayTraceResult hit = RayTracer.rayTrace(world, this.getPositionVector(),
+						this.getPositionVector().add(velocity.scale(SEEKING_TIME)), getSeekingStrength(), false,
+						true, false, EntityLivingBase.class, RayTracer.ignoreEntityFilter(null));
+
+				if(hit != null && hit.entityHit != null){
+
+					if(AllyDesignationSystem.isValidTarget(getCaster(), hit.entityHit)){
+
+						Vec3d direction = new Vec3d(hit.entityHit.posX, hit.entityHit.posY + hit.entityHit.height/2,
+								hit.entityHit.posZ).subtract(this.getPositionVector()).normalize().scale(velocity.length());
+
+						motionX = motionX + 2 * (direction.x - motionX) / SEEKING_TIME;
+						motionY = motionY + 2 * (direction.y - motionY) / SEEKING_TIME;
+						motionZ = motionZ + 2 * (direction.z - motionZ) / SEEKING_TIME;
 					}
 				}
 			}
@@ -510,8 +555,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		tag.setShort("zTile", (short)this.blockZ);
 		tag.setShort("life", (short)this.ticksInGround);
 		if(this.stuckInBlock != null){
-			ResourceLocation resourcelocation = (ResourceLocation)Block.REGISTRY
-					.getNameForObject(this.stuckInBlock.getBlock());
+			ResourceLocation resourcelocation = Block.REGISTRY.getNameForObject(this.stuckInBlock.getBlock());
 			tag.setString("inTile", resourcelocation == null ? "" : resourcelocation.toString());
 		}
 		tag.setByte("inData", (byte)this.inData);
@@ -529,7 +573,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		this.blockY = tag.getShort("yTile");
 		this.blockZ = tag.getShort("zTile");
 		this.ticksInGround = tag.getShort("life");
-		// Commented out for now because there's some funny stuff going on with blockstates and metadata.
+		// Commented out for now because there's some funny stuff going on with blockstates and id.
 		// this.stuckInBlock = Block.getBlockById(tag.getByte("inTile") & 255);
 		this.inData = tag.getByte("inData") & 255;
 		this.arrowShake = tag.getByte("shake") & 255;
@@ -545,7 +589,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 
 	@Override
 	public void readSpawnData(ByteBuf buffer){
-		if(buffer.isReadable()) this.caster = new WeakReference<EntityLivingBase>(
+		if(buffer.isReadable()) this.caster = new WeakReference<>(
 				(EntityLivingBase)this.world.getEntityByID(buffer.readInt()));
 	}
 
@@ -564,6 +608,11 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 	@SideOnly(Side.CLIENT)
 	public float getShadowSize(){
 		return 0.0F;
+	}
+	
+	@Override
+	public SoundCategory getSoundCategory(){
+		return WizardrySounds.SPELLS;
 	}
 
 	@Override

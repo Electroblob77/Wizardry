@@ -8,9 +8,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticlePath extends ParticleWizardry {
 
@@ -32,6 +31,11 @@ public class ParticlePath extends ParticleWizardry {
 		this.shaded = false;
 		this.canCollide = false;
 		this.setRBGColorF(1, 1, 1);
+	}
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
 	}
 
 	@Override

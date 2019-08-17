@@ -1,54 +1,56 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class IceStatue extends SpellRay {
 
-	private static final int BASE_DURATION = 400;
-
 	public IceStatue(){
-		super("ice_statue", Tier.APPRENTICE, Element.ICE, SpellType.ATTACK, 15, 40, false, 10, WizardrySounds.SPELL_ICE);
+		super("ice_statue", false, EnumAction.NONE);
 		this.soundValues(1, 1.4f, 0.4f);
+		addProperties(EFFECT_DURATION);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected SoundEvent[] createSounds(){
+		return createSoundsWithSuffixes("shoot", "freeze");
+	}
+
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-					(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)))){
-				
-				target.playSound(WizardrySounds.SPELL_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
-				return true;
+					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+
+				//target.playSound(WizardrySounds.SPELL_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}
 		}
 		
+		return true;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		return false;
-	}
-
-	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
 	

@@ -1,13 +1,9 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.constants.Constants;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
@@ -15,16 +11,15 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class FlamingWeapon extends Spell {
 
 	public FlamingWeapon(){
-		super("flaming_weapon", Tier.ADVANCED, Element.FIRE, SpellType.UTILITY, 35, 70, EnumAction.BOW, false);
+		super("flaming_weapon", EnumAction.BOW, false);
+		addProperties(EFFECT_DURATION);
 	}
 
 	@Override
@@ -36,17 +31,17 @@ public class FlamingWeapon extends Spell {
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
 
-				if((stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemBow)
+				if((ImbueWeapon.isSword(stack.getItem()) || ImbueWeapon.isBow(stack.getItem()))
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.flaming_weapon)){
 					// The enchantment level as determined by the damage multiplier. The + 0.5f is so that
 					// weird float processing doesn't incorrectly round it down.
 					stack.addEnchantment(WizardryEnchantments.flaming_weapon,
 							modifiers.get(SpellModifiers.POTENCY) == 1.0f ? 1
 									: (int)((modifiers.get(SpellModifiers.POTENCY) - 1.0f)
-											/ Constants.DAMAGE_INCREASE_PER_TIER + 0.5f));
+											/ Constants.POTENCY_INCREASE_PER_TIER + 0.5f));
 
 					WizardData.get(caster).setImbuementDuration(WizardryEnchantments.flaming_weapon,
-							(int)(900 * modifiers.get(WizardryItems.duration_upgrade)));
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 
 					if(world.isRemote){
 						for(int i=0; i<10; i++){
@@ -57,7 +52,7 @@ public class FlamingWeapon extends Spell {
 						}
 					}
 
-					WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+					this.playSound(world, caster, ticksInUse, -1, modifiers);
 					return true;
 
 				}

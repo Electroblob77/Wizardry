@@ -1,24 +1,19 @@
 package electroblob.wizardry.potion;
 
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.entity.construct.EntityDecay;
 import electroblob.wizardry.registry.WizardryPotions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber
 public class PotionDecay extends PotionMagicEffect {
@@ -40,8 +35,8 @@ public class PotionDecay extends PotionMagicEffect {
 	}
 
 	@Override
-	public void performEffect(EntityLivingBase target, int strength){
-		target.attackEntityFrom(DamageSource.WITHER, 1);
+	public void performEffect(EntityLivingBase host, int strength){
+		host.attackEntityFrom(DamageSource.WITHER, 1);
 	}
 
 	@SubscribeEvent

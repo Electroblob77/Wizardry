@@ -2,10 +2,8 @@ package electroblob.wizardry.client.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class GuiButtonInvisible extends GuiButton {
 
 	public GuiButtonInvisible(int id, int x, int y, int width, int height){

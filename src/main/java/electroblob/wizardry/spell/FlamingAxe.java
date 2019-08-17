@@ -1,19 +1,16 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class FlamingAxe extends SpellConjuration {
 
 	public FlamingAxe(){
-		super("flaming_axe", Tier.ADVANCED, Element.FIRE, SpellType.UTILITY, 45, 50, WizardryItems.flaming_axe, SoundEvents.ENTITY_BLAZE_SHOOT);
+		super("flaming_axe", WizardryItems.flaming_axe);
+		addProperties(DAMAGE, BURN_DURATION);
 	}
 	
 	@Override

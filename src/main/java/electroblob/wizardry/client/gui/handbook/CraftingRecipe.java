@@ -1,43 +1,38 @@
 package electroblob.wizardry.client.gui.handbook;
 
+import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import electroblob.wizardry.client.DrawingUtils;
-import electroblob.wizardry.spell.Mine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.recipebook.GuiRecipeBook;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.stats.RecipeBook;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class CraftingRecipe {
 
-	static final int WIDTH = 111, HEIGHT = 56;
+	static final int BORDER = 7;
+	static final int TEXTURE_INSET_X = 40, TEXTURE_INSET_Y = 190;
+	static final int WIDTH = 121, HEIGHT = 66;
 
 	// Final fields are mandatory, the rest are optional
-	private final ResourceLocation location;
+	private final ResourceLocation[] locations;
 	// Derived fields, not specifically defined in JSON
-	private IRecipe recipe;
+	private List<IRecipe> recipes;
 	private final Set<int[]> instances = new HashSet<>();
 
-	private CraftingRecipe(ResourceLocation location){
-		this.location = location;
+	private CraftingRecipe(ResourceLocation[] locations){
+		this.locations = locations;
 	}
 
 	/**
@@ -60,9 +55,14 @@ class CraftingRecipe {
 	 * the recipes aren't necessarily loaded at that point. */
 	void load(){
 
-		this.recipe = CraftingManager.getRecipe(location);
+		recipes = new ArrayList<>(locations.length);
 
-		if(recipe == null) throw new JsonSyntaxException("No such recipe: " + location);
+		for(ResourceLocation location : locations){
+
+			IRecipe recipe = CraftingManager.getRecipe(location);
+			if(recipe == null) throw new JsonSyntaxException("No such recipe: " + location);
+			recipes.add(recipe);
+		}
 	}
 
 	/**
@@ -75,9 +75,12 @@ class CraftingRecipe {
 	 * @param top          The y coordinate of the top of the GUI.
 	 */
 	void draw(FontRenderer font, RenderItem itemRenderer, int doublePage, int left, int top){
+
+		int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE)/2000;
+
 		for(int[] instance : instances){
 			if(GuiWizardHandbook.singleToDoublePage(instance[0]) == doublePage){
-				renderCraftingRecipe(font, itemRenderer, left + instance[1], top + instance[2], this.recipe);
+				renderCraftingRecipe(font, itemRenderer, left + instance[1], top + instance[2], recipes.get(index % recipes.size()));
 			}
 		}
 	}
@@ -92,9 +95,12 @@ class CraftingRecipe {
 	 * @param top          The y coordinate of the top of the GUI.
 	 */
 	void drawTooltips(GuiWizardHandbook gui, FontRenderer font, RenderItem itemRenderer, int doublePage, int left, int top, int mouseX, int mouseY){
+
+		int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE)/2000;
+
 		for(int[] instance : instances){
 			if(GuiWizardHandbook.singleToDoublePage(instance[0]) == doublePage){
-				renderCraftingTooltips(gui, itemRenderer, left + instance[1], top + instance[2], mouseX, mouseY, this.recipe);
+				renderCraftingTooltips(gui, itemRenderer, left + instance[1], top + instance[2], mouseX, mouseY, recipes.get(index % recipes.size()));
 			}
 		}
 	}
@@ -103,15 +109,16 @@ class CraftingRecipe {
 	 * Parses the given JSON object and constructs a new {@code Image} from it, setting all the relevant fields
 	 * and references.
 	 *
-	 * @param json A JSON object representing the image to be constructed. This must contain at least a "location"
+	 * @param json A JSON object representing the image to be constructed. This must contain at least a "locations"
 	 *             string.
 	 * @return The resulting {@code Image} object.
 	 * @throws JsonSyntaxException if at any point the JSON object is found to be invalid.
 	 */
 	static CraftingRecipe fromJson(JsonObject json){
 
-		ResourceLocation location = new ResourceLocation(JsonUtils.getString(json, "location"));
-		return new CraftingRecipe(location);
+		ResourceLocation[] locations = Streams.stream(JsonUtils.getJsonArray(json, "locations"))
+				.map(je -> new ResourceLocation(je.getAsString())).toArray(ResourceLocation[]::new);
+		return new CraftingRecipe(locations);
 	}
 
 	static void populate(Map<String, CraftingRecipe> map, JsonObject json){
@@ -135,17 +142,15 @@ class CraftingRecipe {
 		GlStateManager.color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(GuiWizardHandbook.texture);
 
-		DrawingUtils.drawTexturedRect(x - 2, y - 2, 60, 190, WIDTH, HEIGHT, 512, 256);
+		DrawingUtils.drawTexturedRect(x, y, TEXTURE_INSET_X, TEXTURE_INSET_Y, WIDTH, HEIGHT, GuiWizardHandbook.TEXTURE_WIDTH, GuiWizardHandbook.TEXTURE_HEIGHT);
 
 		GlStateManager.pushMatrix();
 		RenderHelper.enableGUIStandardItemLighting();
 		GlStateManager.disableLighting();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.enableColorMaterial();
-		GlStateManager.enableLighting();
 		itemRenderer.zLevel = 100.0F;
 
-		// TODO: There may be a better way of doing this
 		int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE)/2000;
 
 		int i = 0;
@@ -155,8 +160,8 @@ class CraftingRecipe {
 			if(ingredient != Ingredient.EMPTY){
 				ItemStack stack = ingredient.getMatchingStacks()[index % ingredient.getMatchingStacks().length];
 				if(!stack.isEmpty()){
-					itemRenderer.renderItemAndEffectIntoGUI(stack, x + 18 * (i%3), y + 18 * (i/3));
-					itemRenderer.renderItemOverlays(font, stack, x + 18 * (i%3), y + 18 * (i/3));
+					itemRenderer.renderItemAndEffectIntoGUI(stack, x + BORDER + 18 * (i%3), y + BORDER + 18 * (i/3));
+					itemRenderer.renderItemOverlays(font, stack, x + BORDER + 18 * (i%3), y + BORDER + 18 * (i/3));
 				}
 			}
 
@@ -164,16 +169,15 @@ class CraftingRecipe {
 		}
 
 		if(!result.isEmpty()){
-			itemRenderer.renderItemAndEffectIntoGUI(result, x + 86, y + 18);
-			itemRenderer.renderItemOverlays(font, result, x + 86, y + 18);
+			itemRenderer.renderItemAndEffectIntoGUI(result, x + BORDER + 86, y + BORDER + 18);
+			itemRenderer.renderItemOverlays(font, result, x + BORDER + 86, y + BORDER + 18);
 		}
 
 		GlStateManager.popMatrix();
-		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.disableColorMaterial();
 		itemRenderer.zLevel = 0.0F;
-		//RenderHelper.enableStandardItemLighting();
+		RenderHelper.disableStandardItemLighting();
 
 	}
 
@@ -187,9 +191,7 @@ class CraftingRecipe {
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.enableColorMaterial();
 		itemRenderer.zLevel = 0.0F;
-		GlStateManager.disableLighting();
 
-		// TODO: There may be a better way of doing this
 		int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE)/2000;
 
 		int i = 0;
@@ -198,7 +200,7 @@ class CraftingRecipe {
 
 			if(ingredient != Ingredient.EMPTY){
 				ItemStack stack = ingredient.getMatchingStacks()[index % ingredient.getMatchingStacks().length];
-				if(!stack.isEmpty() && isPointInRegion(x + 18 * (i%3), y + 18 * (i/3), 16, 16, mouseX, mouseY)){
+				if(!stack.isEmpty() && isPointInRegion(x + BORDER + 18 * (i%3), y + BORDER + 18 * (i/3), 16, 16, mouseX, mouseY)){
 					gui.renderToolTip(stack, mouseX, mouseY);
 				}
 			}
@@ -206,15 +208,14 @@ class CraftingRecipe {
 			i++;
 		}
 
-		if(!result.isEmpty() && isPointInRegion(x + 86, y + 18, 16, 16, mouseX, mouseY)){
+		if(!result.isEmpty() && isPointInRegion(x + BORDER + 86, y + BORDER + 18, 16, 16, mouseX, mouseY)){
 			gui.renderToolTip(result, mouseX, mouseY);
 		}
 
 		GlStateManager.popMatrix();
-		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		GlStateManager.disableColorMaterial();
-		RenderHelper.enableStandardItemLighting();
+		RenderHelper.disableStandardItemLighting();
 
 	}
 

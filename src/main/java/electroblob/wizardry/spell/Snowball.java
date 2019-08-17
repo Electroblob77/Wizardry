@@ -1,25 +1,24 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntitySnowball;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class Snowball extends Spell {
 
 	public Snowball(){
-		super("snowball", Tier.BASIC, Element.ICE, SpellType.ATTACK, 1, 1, EnumAction.NONE, false);
+		super("snowball", EnumAction.NONE, false);
+		addProperties(RANGE);
+		soundValues(0.5f, 0.4f, 0.2f);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 
@@ -27,13 +26,18 @@ public class Snowball extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		if(!world.isRemote){
+			// Trajectory calculation - see SpellProjectile for a more detailed explanation
+			float g = 0.03f;
+			float launchHeight = caster.getEyeHeight();
+			float range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
+			float velocity = MathHelper.sqrt(MathHelper.sqrt(g*g * (launchHeight*launchHeight + range*range)) - g*launchHeight);
+
 			EntitySnowball snowball = new EntitySnowball(world, caster);
-			snowball.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, 1.5f, 1.0f);
+			snowball.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, velocity, 1.0f);
 			world.spawnEntity(snowball);
 		}
 
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F,
-				0.4F / (world.rand.nextFloat() * 0.4F + 0.8F));
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		caster.swingArm(hand);
 		return true;
 	}

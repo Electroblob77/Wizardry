@@ -20,6 +20,11 @@ public class TileEntityMagicLight extends TileEntityTimer {
 	}
 
 	@Override
+	public boolean shouldRenderInPass(int pass){
+		return pass == 1;
+	}
+
+	@Override
 	public void update(){
 
 		if(randomiser.length > 0 && randomiser[0] == -1){

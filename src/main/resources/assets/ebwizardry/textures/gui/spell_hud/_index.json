@@ -62,5 +62,17 @@
 	"compass": {
 		"texture": "ebwizardry:gui/spell_hud/compass",
 		"metadata": "ebwizardry:gui/spell_hud/compass"
+	},
+	"mahogany": {
+		"texture": "ebwizardry:gui/spell_hud/mahogany",
+		"metadata": "ebwizardry:gui/spell_hud/mahogany"
+	},
+	"oceanic": {
+		"texture": "ebwizardry:gui/spell_hud/oceanic",
+		"metadata": "ebwizardry:gui/spell_hud/oceanic"
+	},
+	"planks": {
+		"texture": "ebwizardry:gui/spell_hud/planks",
+		"metadata": "ebwizardry:gui/spell_hud/planks"
 	}
 }

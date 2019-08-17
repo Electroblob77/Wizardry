@@ -7,10 +7,12 @@
     ],
     "key": {
         "z": {
-            "item": "ebwizardry:magic_crystal"
+            "item": "ebwizardry:magic_crystal",
+			"data": 0
         }
     },
     "result": {
-        "item": "ebwizardry:crystal_block"
+        "item": "ebwizardry:crystal_block",
+		"data": 0
     }
 }

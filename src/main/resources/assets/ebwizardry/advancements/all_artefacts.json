@@ -1,0 +1,647 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:all_artefacts"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:all_artefacts.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:amulet_resurrection"
+        },
+		"frame": "challenge"
+    },
+    "parent": "ebwizardry:artefact",
+    "criteria": {
+		"ring_condensing": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_condensing"
+					}
+				]
+			}
+		},
+		"ring_siphoning": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_siphoning"
+					}
+				]
+			}
+		},
+		"ring_battlemage": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_battlemage"
+					}
+				]
+			}
+		},
+		"ring_combustion": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_combustion"
+					}
+				]
+			}
+		},
+		"ring_fire_melee": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_fire_melee"
+					}
+				]
+			}
+		},
+		"ring_fire_biome": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_fire_biome"
+					}
+				]
+			}
+		},
+		"ring_disintegration": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_disintegration"
+					}
+				]
+			}
+		},
+		"ring_ice_melee": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_ice_melee"
+					}
+				]
+			}
+		},
+		"ring_ice_biome": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_ice_biome"
+					}
+				]
+			}
+		},
+		"ring_arcane_frost": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_arcane_frost"
+					}
+				]
+			}
+		},
+		"ring_shattering": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_shattering"
+					}
+				]
+			}
+		},
+		"ring_lightning_melee": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_lightning_melee"
+					}
+				]
+			}
+		},
+		"ring_storm": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_storm"
+					}
+				]
+			}
+		},
+		"ring_seeking": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_seeking"
+					}
+				]
+			}
+		},
+		"ring_hammer": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_hammer"
+					}
+				]
+			}
+		},
+		"ring_soulbinding": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_soulbinding"
+					}
+				]
+			}
+		},
+		"ring_leeching": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_leeching"
+					}
+				]
+			}
+		},
+		"ring_necromancy_melee": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_necromancy_melee"
+					}
+				]
+			}
+		},
+		"ring_mind_control": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_mind_control"
+					}
+				]
+			}
+		},
+		"ring_poison": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_poison"
+					}
+				]
+			}
+		},
+		"ring_earth_melee": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_earth_melee"
+					}
+				]
+			}
+		},
+		"ring_earth_biome": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_earth_biome"
+					}
+				]
+			}
+		},
+		"ring_full_moon": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_full_moon"
+					}
+				]
+			}
+		},
+		"ring_extraction": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_extraction"
+					}
+				]
+			}
+		},
+		"ring_mana_return": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_mana_return"
+					}
+				]
+			}
+		},
+		"ring_blockwrangler": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_blockwrangler"
+					}
+				]
+			}
+		},
+		"ring_conjurer": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_conjurer"
+					}
+				]
+			}
+		},
+		"ring_defender": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_defender"
+					}
+				]
+			}
+		},
+		"ring_paladin": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_paladin"
+					}
+				]
+			}
+		},
+		"ring_interdiction": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_interdiction"
+					}
+				]
+			}
+		},
+		"amulet_arcane_defence": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_arcane_defence"
+					}
+				]
+			}
+		},
+		"amulet_warding": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_warding"
+					}
+				]
+			}
+		},
+		"amulet_wisdom": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_wisdom"
+					}
+				]
+			}
+		},
+		"amulet_fire_protection": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_fire_protection"
+					}
+				]
+			}
+		},
+		"amulet_fire_cloaking": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_fire_cloaking"
+					}
+				]
+			}
+		},
+		"amulet_ice_immunity": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_ice_immunity"
+					}
+				]
+			}
+		},
+		"amulet_ice_protection": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_ice_protection"
+					}
+				]
+			}
+		},
+		"amulet_potential": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_potential"
+					}
+				]
+			}
+		},
+		"amulet_channeling": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_channeling"
+					}
+				]
+			}
+		},
+		"amulet_lich": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_lich"
+					}
+				]
+			}
+		},
+		"amulet_wither_immunity": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_wither_immunity"
+					}
+				]
+			}
+		},
+		"amulet_glide": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_glide"
+					}
+				]
+			}
+		},
+		"amulet_banishing": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_banishing"
+					}
+				]
+			}
+		},
+		"amulet_anchoring": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_anchoring"
+					}
+				]
+			}
+		},
+		"amulet_recovery": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_recovery"
+					}
+				]
+			}
+		},
+		"amulet_transience": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_transience"
+					}
+				]
+			}
+		},
+		"amulet_resurrection": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_resurrection"
+					}
+				]
+			}
+		},
+		"amulet_auto_shield": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_auto_shield"
+					}
+				]
+			}
+		},
+		"charm_haggler": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_haggler"
+					}
+				]
+			}
+		},
+		"charm_experience_tome": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_experience_tome"
+					}
+				]
+			}
+		},
+		"charm_auto_smelt": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_auto_smelt"
+					}
+				]
+			}
+		},
+		"charm_lava_walking": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_lava_walking"
+					}
+				]
+			}
+		},
+		"charm_storm": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_storm"
+					}
+				]
+			}
+		},
+		"charm_minion_health": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_minion_health"
+					}
+				]
+			}
+		},
+		"charm_minion_variants": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_minion_variants"
+					}
+				]
+			}
+		},
+		"charm_flight": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_flight"
+					}
+				]
+			}
+		},
+		"charm_growth": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_growth"
+					}
+				]
+			}
+		},
+		"charm_abseiling": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_abseiling"
+					}
+				]
+			}
+		},
+		"charm_silk_touch": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_silk_touch"
+					}
+				]
+			}
+		},
+		"charm_stop_time": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_stop_time"
+					}
+				]
+			}
+		},
+		"charm_light": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_light"
+					}
+				]
+			}
+		},
+		"charm_transportation": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_transportation"
+					}
+				]
+			}
+		},
+		"charm_feeding": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_feeding"
+					}
+				]
+			}
+		}
+    }
+}

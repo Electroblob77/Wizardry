@@ -1,19 +1,20 @@
 package electroblob.wizardry.constants;
 
-import java.util.Random;
-
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Random;
+
 public enum Tier {
 
-	BASIC(700, 3, 12, new Style().setColor(TextFormatting.WHITE), "basic"),
-	APPRENTICE(1000, 5, 5, new Style().setColor(TextFormatting.AQUA), "apprentice"),
-	ADVANCED(1500, 7, 2, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
-	MASTER(2500, 9, 1, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
+	NOVICE(700, 3, 12, 0, new Style().setColor(TextFormatting.WHITE), "novice"),
+	APPRENTICE(1000, 5, 5, 6000, new Style().setColor(TextFormatting.AQUA), "apprentice"),
+	ADVANCED(1500, 7, 2, 9000, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
+	MASTER(2500, 9, 1, 15000, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
 
 	/** Maximum mana a wand of this tier can store. */
 	public final int maxCharge;
@@ -23,29 +24,59 @@ public enum Tier {
 	public final int upgradeLimit;
 	/** The weight given to this tier in the standard weighting. */
 	public final int weight;
+	/** The progression required for a wand to be upgraded to this tier. */
+	public final int progression;
 	/** The colour of text associated with this tier. */
 	// Changed to a Style object for consistency.
 	private final Style colour;
 
 	private final String unlocalisedName;
 
-	private Tier(int maxCharge, int upgradeLimit, int weight, Style colour, String name){
+	Tier(int maxCharge, int upgradeLimit, int weight, int progression, Style colour, String name){
 		this.maxCharge = maxCharge;
 		this.level = ordinal();
 		this.upgradeLimit = upgradeLimit;
 		this.weight = weight;
+		this.progression = progression;
 		this.colour = colour;
 		this.unlocalisedName = name;
 	}
 
+	/** Returns the tier with the given name, or throws an {@link java.lang.IllegalArgumentException} if no such
+	 * tier exists. */
+	public static Tier fromName(String name){
+
+		for(Tier tier : values()){
+			if(tier.unlocalisedName.equals(name)) return tier;
+		}
+
+		throw new IllegalArgumentException("No such tier with unlocalised name: " + name);
+	}
+
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return I18n.format("tier." + unlocalisedName);
+		return net.minecraft.client.resources.I18n.format("tier." + unlocalisedName);
+	}
+
+	/**
+	 * Returns a {@code TextComponentTranslation} which will be translated to the display name of the tier, without
+	 * formatting (i.e. not coloured).
+	 */
+	public TextComponentTranslation getNameForTranslation(){
+		return new TextComponentTranslation("tier." + unlocalisedName);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.getFormattingCode() + I18n.format("tier." + unlocalisedName);
+		return this.getFormattingCode() + net.minecraft.client.resources.I18n.format("tier." + unlocalisedName);
+	}
+
+	/**
+	 * Returns a {@code TextComponentTranslation} which will be translated to the display name of the tier, with
+	 * formatting (i.e. coloured).
+	 */
+	public ITextComponent getNameForTranslationFormatted(){
+		return new TextComponentTranslation("tier." + unlocalisedName).setStyle(this.colour);
 	}
 
 	public String getUnlocalisedName(){

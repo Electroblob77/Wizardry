@@ -1,6 +1,8 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -14,7 +16,9 @@ public class EntityLightningArrow extends EntityMagicArrow {
 		super(world);
 	}
 
-	@Override public double getDamage(){ return 7.0d; }
+	@Override public double getDamage(){ return Spells.lightning_arrow.getProperty(Spell.DAMAGE).doubleValue(); }
+
+	@Override public int getLifetime(){ return 20; }
 
 	@Override public DamageType getDamageType(){ return DamageType.SHOCK; }
 
@@ -31,26 +35,22 @@ public class EntityLightningArrow extends EntityMagicArrow {
 			}
 		}
 		
-		this.playSound(WizardrySounds.SPELL_SPARK, 1.0F, 1.0F);
-	@Override
-	public void onBlockHit(RayTraceResult hit){
-		if(this.world.isRemote){
-			Vec3d vec = hit.hitVec.add(new Vec3d(hit.sideHit.getDirectionVec()).scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET));
-			ParticleBuilder.create(Type.SCORCH).pos(vec).face(hit.sideHit).clr(0.4f, 0.8f, 1).scale(0.6f).spawn(world);
-		}
+		this.playSound(WizardrySounds.ENTITY_LIGHTNING_ARROW_HIT, 1.0F, 1.0F);
 	}
+	
+//	@Override
+//	public void onBlockHit(RayTraceResult hit){
+//		if(this.world.isRemote){
+//			Vec3d vec = hit.hitVec.add(new Vec3d(hit.sideHit.getDirectionVec()).scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET));
+//			ParticleBuilder.create(Type.SCORCH).pos(vec).face(hit.sideHit).clr(0.4f, 0.8f, 1).scale(0.6f).spawn(world);
+//		}
+//	}
 
 	@Override
 	public void tickInAir(){
-
-		if(this.ticksExisted > 20){
-			this.setDead();
-		}
-
 		if(world.isRemote){
 			ParticleBuilder.create(Type.SPARK).pos(posX, posY, posZ).spawn(world);
 		}
-
 	}
 
 	@Override

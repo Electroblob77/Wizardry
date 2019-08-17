@@ -1,21 +1,16 @@
 package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 @Mod.EventBusSubscriber
 public class PotionFrost extends PotionMagicEffect implements ICustomPotionParticles {

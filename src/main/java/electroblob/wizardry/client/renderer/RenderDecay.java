@@ -1,7 +1,5 @@
 package electroblob.wizardry.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityDecay;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -12,6 +10,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderDecay extends Render<EntityDecay> {
 

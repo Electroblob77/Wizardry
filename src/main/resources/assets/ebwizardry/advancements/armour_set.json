@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:armour_set"
+            "translate": "advancement.ebwizardry:armour_set"
         },
         "description": {
-            "translate": "advancement.wizardry:armour_set.desc"
+            "translate": "advancement.ebwizardry:armour_set.desc"
         },
         "icon": {
             "item": "ebwizardry:wizard_hat"
@@ -12,8 +12,24 @@
     },
     "parent": "ebwizardry:arcane_initiate",
     "criteria": {
-        "criteria_0": {
-            "trigger": "ebwizardry:trigger_armour_set"
+        "wizard_hat": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:wizard_hat"
+                    },
+                    {
+                        "item": "ebwizardry:wizard_robe"
+                    },
+                    {
+                        "item": "ebwizardry:wizard_leggings"
+                    },
+                    {
+                        "item": "ebwizardry:wizard_boots"
+                    }
+                ]
+            }
         }
     }
 }

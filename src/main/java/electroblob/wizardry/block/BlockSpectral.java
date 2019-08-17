@@ -1,13 +1,11 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.tileentity.TileEntityTimer;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -24,10 +22,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-// For future reference - extend BlockContainer whenever possible because it has methods for removing tile entities on
-// block break.
+import java.util.Random;
+
 @Mod.EventBusSubscriber
-public class BlockSpectral extends BlockContainer {
+public class BlockSpectral extends Block implements ITileEntityProvider {
 
 	public BlockSpectral(Material material){
 		super(material);
@@ -74,6 +72,11 @@ public class BlockSpectral extends BlockContainer {
 	@Override
 	public int getPackedLightmapCoords(IBlockState state, IBlockAccess source, BlockPos pos){
 		return 15;
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state){
+		return true;
 	}
 
 	@Override

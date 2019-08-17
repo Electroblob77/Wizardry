@@ -1,36 +1,14 @@
 package electroblob.wizardry.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import electroblob.wizardry.entity.living.EntityBlazeMinion;
-import electroblob.wizardry.entity.living.EntityIceGiant;
-import electroblob.wizardry.entity.living.EntityIceWraith;
-import electroblob.wizardry.entity.living.EntityLightningWraith;
-import electroblob.wizardry.entity.living.EntityPhoenix;
-import electroblob.wizardry.entity.living.EntityShadowWraith;
-import electroblob.wizardry.entity.living.EntitySkeletonMinion;
-import electroblob.wizardry.entity.living.EntitySpiderMinion;
-import electroblob.wizardry.entity.living.EntityStormElemental;
-import electroblob.wizardry.entity.living.EntityZombieMinion;
+import electroblob.wizardry.entity.living.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
-import net.minecraft.entity.monster.EntityBlaze;
-import net.minecraft.entity.monster.EntityCaveSpider;
-import net.minecraft.entity.monster.EntityGhast;
-import net.minecraft.entity.monster.EntityMagmaCube;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntitySnowman;
-import net.minecraft.entity.monster.EntitySpider;
-import net.minecraft.entity.monster.EntityWitherSkeleton;
-import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.monster.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
+
+import java.util.*;
 
 // A note on the use of the vanilla damagesources:
 // When using indirect damage sources, the SECOND argument is the original entity (i.e. the caster), and the
@@ -47,12 +25,12 @@ import net.minecraft.util.EntityDamageSource;
 
 /**
  * <i>"Ouch, that hurt!"</i>
- * <p>
+ * <p></p>
  * As of wizardry 1.1, this class has replaced the damagesource-related methods in WizardryUtilities, allowing a
  * {@link DamageType} to be specified with the damage. The main reason for this is so that damage sources can fit with
  * the vanilla behaviour on armour enchantments and such like whilst still being classified as wizardry damage for the
  * purposes of friendly fire, etc.
- * <p>
+ * <p></p>
  * <i> In the future, there is scope for an entirely standalone mod based on this idea. Perhaps 'Elemental Damage' could
  * be a config-only mod which allows its users to define any number of specific damage types, then give any creature a
  * resistance, immunity or vulnerability to each, as well as being able to specify the sources for each type, such as
@@ -71,7 +49,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	/** The name of the damagesource for indirect magic damage from the wizardry mod. */
 	public static final String INDIRECT_MAGIC_DAMAGE = "indirect_wizardry_magic";
 	// Technically, I don't need to specify that the classes in this map must extend entity, but it's good practice to.
-	private static final Map<Class<? extends Entity>, DamageType[]> immunityMapping = new HashMap<Class<? extends Entity>, DamageType[]>();
+	private static final Map<Class<? extends Entity>, DamageType[]> immunityMapping = new HashMap<>();
 
 	private final DamageType type;
 	private final boolean isRetaliatory;
@@ -82,29 +60,29 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * them.
 	 */
 	public enum DamageType {
-		/** Generic magic damage from the wizardry mod. Like vanilla magic damage, except it doesn't bypass armour. */
+		/** Generic magic damage from wizardry. Like vanilla magic damage, except it doesn't bypass armour. */
 		MAGIC,
-		/** Fire damage from the wizardry mod. Counts as fire damage in the vanilla system, so is blocked by any mobs
+		/** Fire damage from wizardry. Counts as fire damage in the vanilla system, so is blocked by any mobs
 		 * that are immune to fire and entities with the fire resistance effect, and is affected by the fire protection
 		 * enchantment. */
 		FIRE,
-		/** Frost (ice) damage from the wizardry mod. Snow golems, ice wraiths and ice giants are immune. */
+		/** Frost (ice) damage from wizardry. Snow golems, ice wraiths and ice giants are immune. */
 		FROST,
-		/** Shock (lightning) damage from the wizardry mod. Lightning wraiths and storm elementals are immune. */
+		/** Shock (lightning) damage from wizardry. Lightning wraiths and storm elementals are immune. */
 		SHOCK,
-		/** Wither damage from the wizardry mod. Withers, wither skeletons and shadow wraiths are immune. */
+		/** Wither damage from wizardry. Withers, wither skeletons and shadow wraiths are immune. */
 		WITHER,
-		/** Poison damage from the wizardry mod. Spiders, cave spiders and undead mobs are immune. */
+		/** Poison damage from wizardry. Spiders, cave spiders and undead mobs are immune. */
 		POISON,
-		/** Force damage from the wizardry mod. */ // Insubstantial creatures (ghast, shadow wraith, etc.) are immune?
+		/** Force damage from wizardry. */ // Insubstantial creatures (ghast, shadow wraith, etc.) are immune?
 		FORCE,
-		/** Blast damage from the wizardry mod. Affected by the blast protection enchantment. */
+		/** Blast damage from wizardry. Affected by the blast protection enchantment. */
 		BLAST,
-		/** Radiant damage from the wizardry mod. */
-		RADIANT;
+		/** Radiant damage from wizardry. */
+		RADIANT
 	}
 
-	static{
+	static {
 		// Of course, the entities that are immune to fire already are since there's a vanilla system for that, but
 		// they're included here anyway for completeness and in case anyone wants to check if an entity is immune to
 		// an unspecified element for reasons other than dealing damage.
@@ -118,6 +96,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 		setEntityImmunities(EntityStormElemental.class, DamageType.FIRE, DamageType.SHOCK);
 		setEntityImmunities(EntityWither.class, DamageType.FIRE, DamageType.WITHER);
 		setEntityImmunities(EntitySnowman.class, DamageType.FROST);
+		setEntityImmunities(EntityPolarBear.class, DamageType.FROST);
 		setEntityImmunities(EntityIceWraith.class, DamageType.FROST);
 		setEntityImmunities(EntityIceGiant.class, DamageType.FROST);
 		setEntityImmunities(EntityLightningWraith.class, DamageType.SHOCK);
@@ -165,7 +144,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 
 	/** Adds the passed in damage type to the list of damage types to which the given entity is immune. */
 	public static void addEntityImmunity(Class<? extends Entity> entityType, DamageType immunity){
-		List<DamageType> immunities = immunityMapping.get(entityType) == null ? new ArrayList<DamageType>()
+		List<DamageType> immunities = immunityMapping.get(entityType) == null ? new ArrayList<>()
 				: Arrays.asList(immunityMapping.get(entityType));
 		immunities.add(immunity);
 		// Apparently putting 0 here works just fine.
@@ -178,7 +157,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * not bypass armour and has a player as the source (rather than nothing). It is still classed as magic damage (for
 	 * the record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
 	 * isRetaliatory defaults to false.
-	 * <p>
+	 * <p></p>
 	 * Now that this is its own class, this static method is largely redundant, but it's not worth refactoring the
 	 * entire mod just to get rid of this method and use the constructor instead.
 	 * 
@@ -186,7 +165,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * @param type The type that this damage belongs to; used for resistances and wand perks. Use
 	 *        {@link DamageType#MAGIC} for regular, non-elemental magic damage (sometimes you might not want an element
 	 *        even though the spell has one - for example, not all necromancy spells are 'withery', so some of them
-	 *        might reasonably affect creatures that are ususally immune to wither effects).
+	 *        might reasonably affect creatures that are usually immune to wither effects).
 	 * @return A damagesource object of type EntityDamageSource
 	 */
 	public static DamageSource causeDirectMagicDamage(Entity caster, DamageType type){
@@ -198,7 +177,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * types to allow things to distinguish between magic and regular melee/swords. Unlike DamageSource.MAGIC, it does
 	 * not bypass armour and has a player as the source (rather than nothing). It is still classed as magic damage (for
 	 * the record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
-	 * <p>
+	 * <p></p>
 	 * Now that this is its own class, this static method is largely redundant, but it's not worth refactoring the
 	 * entire mod just to get rid of this method and use the constructor instead.
 	 * 
@@ -206,7 +185,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * @param type The type that this damage belongs to; used for resistances and wand perks. Use
 	 *        {@link DamageType#MAGIC} for regular, non-elemental magic damage (sometimes you might not want an element
 	 *        even though the spell has one - for example, not all necromancy spells are 'withery', so some of them
-	 *        might reasonably affect creatures that are ususally immune to wither effects).
+	 *        might reasonably affect creatures that are usually immune to wither effects).
 	 * @param isRetaliatory whether this damage source came from a retaliatory attack; prevents infinite loops occurring
 	 *        when two entities damage each other with retaliatory effects.
 	 * @return A damagesource object of type EntityDamageSource
@@ -221,7 +200,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * DamageSource.causeIndirectMagicDamage, it does not bypass armour. It is still classed as magic damage (for the
 	 * record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
 	 * isRetaliatory defaults to false.
-	 * <p>
+	 * <p></p>
 	 * Now that this is its own class, this static method is largely redundant, but it's not worth refactoring the
 	 * entire mod just to get rid of this method and use the constructor instead.
 	 * 
@@ -230,7 +209,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * @param type The type that this damage belongs to; used for resistances and wand perks. Use
 	 *        {@link DamageType#MAGIC} for regular, non-elemental magic damage (sometimes you might not want an element
 	 *        even though the spell has one - for example, not all necromancy spells are 'withery', so some of them
-	 *        might reasonably affect creatures that are ususally immune to wither effects).
+	 *        might reasonably affect creatures that are usually immune to wither effects).
 	 * @return A damagesource object of type EntityDamageSourceIndirect
 	 */
 	public static DamageSource causeIndirectMagicDamage(Entity magic, Entity caster, DamageType type){
@@ -242,7 +221,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * types to allow things to distinguish between magic and regular arrows/throwables. Unlike
 	 * DamageSource.causeIndirectMagicDamage, it does not bypass armour. It is still classed as magic damage (for the
 	 * record, all this does in vanilla is make witches 85% resistant to it - but that seems kinda right anyway).
-	 * <p>
+	 * <p></p>
 	 * Now that this is its own class, this static method is largely redundant, but it's not worth refactoring the
 	 * entire mod just to get rid of this method and use the constructor instead.
 	 * 
@@ -251,7 +230,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * @param type The type that this damage belongs to; used for resistances and wand perks. Use
 	 *        {@link DamageType#MAGIC} for regular, non-elemental magic damage (sometimes you might not want an element
 	 *        even though the spell has one - for example, not all necromancy spells are 'withery', so some of them
-	 *        might reasonably affect creatures that are ususally immune to wither effects).
+	 *        might reasonably affect creatures that are usually immune to wither effects).
 	 * @param isRetaliatory whether this damage source came from a retaliatory attack; prevents infinite loops occurring
 	 *        when two entities damage each other with retaliatory effects.
 	 * @return A damagesource object of type EntityDamageSourceIndirect

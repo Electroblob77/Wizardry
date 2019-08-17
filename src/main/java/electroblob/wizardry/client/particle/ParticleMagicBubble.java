@@ -1,10 +1,8 @@
 package electroblob.wizardry.client.particle;
 
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class ParticleMagicBubble extends ParticleWizardry {
 
 	public ParticleMagicBubble(World world, double x, double y, double z){

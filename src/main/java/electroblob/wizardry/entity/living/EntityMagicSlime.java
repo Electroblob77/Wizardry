@@ -1,16 +1,11 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
-
+import electroblob.wizardry.registry.WizardrySounds;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -22,21 +17,21 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.UUID;
+
 /** As of Wizardry 1.2, this is now an ISummonedCreature like the rest of them, and it extends EntitySlime. */
 public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 
 	// Field implementations
 	private int lifetime = 200;
-	private WeakReference<EntityLivingBase> casterReference;
 	private UUID casterUUID;
 
 	// Setter + getter implementations
 	@Override public int getLifetime(){ return lifetime; }
 	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
-	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
-	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
-	@Override public UUID getCasterUUID(){ return casterUUID; }
-	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
+	@Override public UUID getOwnerId(){ return casterUUID; }
+	@Override public void setOwnerId(UUID uuid){ this.casterUUID = uuid; }
 
 	public EntityMagicSlime(World world){
 		super(world);
@@ -57,7 +52,7 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 		super(world);
 		this.setPosition(target.posX, target.posY, target.posZ);
 		this.startRiding(target);
-		this.casterReference = new WeakReference<EntityLivingBase>(caster);
+		this.setOwnerId(caster.getUniqueID());
 		this.setSlimeSize(2, false); // Needs to be called before setting the experience value to 0
 		this.experienceValue = 0;
 		this.lifetime = lifetime;
@@ -83,8 +78,8 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 			this.world.spawnParticle(EnumParticleTypes.SLIME, x, y, z, (x - this.posX) * 2, (y - this.posY) * 2,
 					(z - this.posZ) * 2);
 		}
-		this.playSound(SoundEvents.ENTITY_SLIME_ATTACK, 2.5f, 0.6f);
-		this.playSound(SoundEvents.ENTITY_FIREWORK_BLAST_FAR, 1.0f, 0.5f);
+		this.playSound(WizardrySounds.ENTITY_MAGIC_SLIME_SPLAT, 2.5f, 0.6f);
+		this.playSound(WizardrySounds.ENTITY_MAGIC_SLIME_EXPLODE, 1.0f, 0.5f);
 	}
 
 	@Override
@@ -127,7 +122,7 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 				this.getRidingEntity().attackEntityFrom(DamageSource.MAGIC, 1);
 				((EntityLivingBase)this.getRidingEntity())
 						.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 20, 2));
-				this.playSound(SoundEvents.ENTITY_SLIME_ATTACK, 1.0f, 1.0f);
+				this.playSound(WizardrySounds.ENTITY_MAGIC_SLIME_ATTACK, 1.0f, 1.0f);
 				this.squishAmount = 0.5F;
 			}
 		}else{
@@ -174,7 +169,10 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 	@Override protected Item getDropItem(){ return null; }
 	@Override protected ResourceLocation getLootTable(){ return null; }
 	@Override public boolean canPickUpLoot(){ return false; }
+
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override protected boolean canDespawn(){
+		return getCaster() == null && getOwnerId() == null;
+	}
 
 }

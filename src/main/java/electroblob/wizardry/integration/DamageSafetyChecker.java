@@ -57,8 +57,8 @@ public final class DamageSafetyChecker {
 	 *                           This allows wizardry to request that users add it to the blacklist.
 	 * @param fallback The fallback damage source for when excessive looping is detected. This <b>must not</b> be the
 	 *                 same as the re-applied source, or this method is pointless! Usually it will be more general.
-	 * @param knockback True to apply knockback as normal, false to use the knockback-free methods in WizardryUtilities.
-	 * {@link WizardryUtilities#attackEntityWithoutKnockback(Entity, DamageSource, float)}.
+	 * @param knockback True to apply knockback as normal, false to use the knockback-free methods in WizardryUtilities
+	 * (see {@link WizardryUtilities#attackEntityWithoutKnockback(Entity, DamageSource, float)}).
 	 */
 	public static boolean attackEntitySafely(Entity target, DamageSource source, float damage,
 											 String originalSourceName, DamageSource fallback, boolean knockback){
@@ -67,6 +67,7 @@ public final class DamageSafetyChecker {
 			if(originalSourceName.equals(sourceName)){
 				// Blacklist behaviour
 				// Same as fallback behaviour, but without the log message
+				// No harm in still incrementing the counter
 				attacksThisTick++;
 				return knockback ? target.attackEntityFrom(fallback, damage)
 						: WizardryUtilities.attackEntityWithoutKnockback(target, fallback, damage);
@@ -99,8 +100,9 @@ public final class DamageSafetyChecker {
 
 	/**
 	 * See {@link DamageSafetyChecker#attackEntitySafely(Entity, DamageSource, float, String, DamageSource, boolean)}.
-	 * This version is for when the original source is used as a fallback, i.e. when a damage source is being replaced
-	 * for technical reasons (e.g. summoned creatures) rather than as part of a game mechanic (e.g. shadow ward).
+	 * This version is for when the source being replaced is used as a fallback, i.e. when a damage source is being
+	 * replaced for technical reasons (e.g. summoned creatures) rather than as part of a game mechanic (e.g. shadow ward).
+	 * This means that if excessive looping is detected, the code will work as if the event was never intercepted.
 	 */
 	public static boolean attackEntitySafely(Entity target, DamageSource source, float damage, DamageSource originalSource, boolean knockback){
 		return attackEntitySafely(target, source, damage, originalSource.getDamageType(), originalSource, knockback);
@@ -122,9 +124,9 @@ public final class DamageSafetyChecker {
 		boolean vanillaName = VANILLA_DAMAGE_NAMES.contains(originalSourceName);
 
 		if(aborted){
-			Wizardry.logger.warn("Entity attack excessive call limit exceeded, aborting entity damage entirely!");
+			Wizardry.logger.warn("SoundLoopSpellEntity attack excessive call limit reached, aborting entity damage entirely!");
 		}else{
-			Wizardry.logger.warn("Entity attack excessive call threshold exceeded, substituting for non-entity-based " +
+			Wizardry.logger.warn("SoundLoopSpellEntity attack excessive call threshold reached, substituting for non-entity-based " +
 					"damage to avert a crash.");
 		}
 

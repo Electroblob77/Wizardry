@@ -1,8 +1,5 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -10,15 +7,9 @@ import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -27,22 +18,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.Village;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature {
 
 	// Field implementations
-	private int lifetime = 600;
-	private WeakReference<EntityLivingBase> casterReference;
+	private int lifetime = -1;
 	private UUID casterUUID;
 
 	// Setter + getter implementations
 	@Override public int getLifetime(){ return lifetime; }
 	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
-	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
-	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
-	@Override public UUID getCasterUUID(){ return casterUUID; }
-	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
+	@Override public UUID getOwnerId(){ return casterUUID; }
+	@Override public void setOwnerId(UUID uuid){ this.casterUUID = uuid; }
 
 	/** Creates a new ice giant in the given world. */
 	public EntityIceGiant(World world){
@@ -91,7 +82,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 	@Override
 	public void onDespawn(){
-		this.playSound(WizardrySounds.SPELL_FREEZE, 1.0f, 1.0f);
+		this.playSound(WizardrySounds.ENTITY_ICE_GIANT_DESPAWN, 1.0f, 1.0f);
 		this.spawnParticleEffect();
 	}
 	
@@ -126,7 +117,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 		this.applyEnchantments(this, target);
 
-		this.playSound(SoundEvents.ENTITY_IRONGOLEM_ATTACK, 1.0F, 1.0F);
+		this.playSound(WizardrySounds.ENTITY_ICE_GIANT_ATTACK, 1.0F, 1.0F);
 	}
 
 	@Override
@@ -160,8 +151,16 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 	@Override protected Item getDropItem(){ return null; }
 	@Override protected ResourceLocation getLootTable(){ return null; }
 	@Override public boolean canPickUpLoot(){ return false; }
+
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override protected boolean canDespawn(){
+		return getCaster() == null && getOwnerId() == null;
+	}
+
+	@Override
+	public boolean getCanSpawnHere(){
+		return this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
+	}
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -182,7 +181,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 	@Override
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getCaster() != null;
+		return Wizardry.settings.summonedCreatureNames && getCaster() != null;
 	}
 
 }

@@ -1,6 +1,7 @@
 {
     "pools": [
         {
+            "name": "wizardry",
             "conditions": [
                 {
                     "condition": "killed_by_player"
@@ -19,7 +20,12 @@
                     "weight": 1,
                     "functions": [
                         {
-                            "function": "ebwizardry:random_spell"
+                            "function": "ebwizardry:random_spell",
+                            "tiers": [
+                                "novice",
+                                "apprentice",
+                                "advanced"
+                            ]
                         }
                     ]
                 }

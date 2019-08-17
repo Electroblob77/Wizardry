@@ -1,24 +1,23 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.world.EnumDifficulty;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 /**
  * Interface for entities that can cast spells. Mainly intended for use by wizard-type entities, but can be implemented
  * by any subclass of EntityLiving. Designed to be as flexible as possible - ranging from the simplest use of giving an
  * entity a specific spell as an attack, to a complex AI which selects different spell types depending on the situation.
  * The only restriction is that the spells must be castable by NPCs.
- * <p>
+ * <p></p>
  * This is intended for entities that use {@link EntityAIAttackSpell}. If so, all the spell casting code (including
  * packets) is handled by that class, and all the implementor needs to do is decide which spell(s) to select.
- * <p>
+ * <p></p>
  * This class also allows Wizardry to do all the syncing necessary for continuous spell casting. All the implementor
  * needs to do is store the actual fields involved.
  */

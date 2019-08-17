@@ -1,10 +1,12 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.registry.WizardryAdvancementTriggers;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.spell.Tornado;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -15,14 +17,17 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityTornado extends EntityMagicConstruct {
 
@@ -45,62 +50,68 @@ public class EntityTornado extends EntityMagicConstruct {
 
 		super.onUpdate();
 
+		double radius = Spells.tornado.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+
 		if(this.ticksExisted % 120 == 1 && world.isRemote){
 			// Repeat is false so that the sound fades out when the tornado does rather than stopping suddenly
-			Wizardry.proxy.playMovingSound(this, WizardrySounds.SPELL_LOOP_WIND, 1.0f, 1.0f, false);
+			Wizardry.proxy.playMovingSound(this, WizardrySounds.ENTITY_TORNADO_AMBIENT, WizardrySounds.SPELLS, 1.0f, 1.0f, false);
 		}
 
 		this.move(MoverType.SELF, velX, motionY, velZ);
 
 		BlockPos pos = new BlockPos(this);
-		int y = WizardryUtilities.getNearestFloorLevelC(world, pos.up(3), 5);
-		pos = new BlockPos(pos.getX(), y, pos.getZ());
+		Integer y = WizardryUtilities.getNearestSurface(world, pos.up(3), EnumFacing.UP, 5, true, WizardryUtilities.SurfaceCriteria.NOT_AIR_TO_AIR);
 
-		if(this.world.getBlockState(pos).getMaterial() == Material.LAVA){
-			// Fire tornado!
-			this.setFire(5);
+		if(y != null){
+
+			pos = new BlockPos(pos.getX(), y, pos.getZ());
+
+			if(this.world.getBlockState(pos).getMaterial() == Material.LAVA){
+				// Fire tornado!
+				this.setFire(5);
+			}
 		}
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(4.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
+
+				if(target instanceof EntityPlayer && ((getCaster() instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
+						|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
+					continue;
+				}
 
 				if(this.isValidTarget(target)){
 
 					double velY = target.motionY;
 
-					double dx = this.posX - target.posX > 0 ? 0.5 - (this.posX - target.posX) / 8
-							: -0.5 - (this.posX - target.posX) / 8;
-					double dz = this.posZ - target.posZ > 0 ? 0.5 - (this.posZ - target.posZ) / 8
-							: -0.5 - (this.posZ - target.posZ) / 8;
+					// TODO: This doesn't seem right...
+					double dx = (this.posX - target.posX > 0 ? 0.5 : -0.5) - (this.posX - target.posX) * 0.125;
+					double dz = (this.posZ - target.posZ > 0 ? 0.5 : -0.5) - (this.posZ - target.posZ) * 0.125;
 
 					if(this.isBurning()){
-						target.setFire(4);
+						target.setFire(4); // Just a fun Easter egg so no properties here!
 					}
 
+					float damage = Spells.tornado.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier;
+
 					if(this.getCaster() != null){
-						target.attackEntityFrom(
-								MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC),
-								1 * damageMultiplier);
+						target.attackEntityFrom( MagicDamage.causeIndirectMagicDamage(this, getCaster(),
+								DamageType.MAGIC), damage);
 					}else{
-						target.attackEntityFrom(DamageSource.MAGIC, 1 * damageMultiplier);
+						target.attackEntityFrom(DamageSource.MAGIC, damage);
 					}
 
 					target.motionX = dx;
-					target.motionY = velY + 0.2;
+					target.motionY = velY + Spells.tornado.getProperty(Tornado.UPWARD_ACCELERATION).floatValue();
 					target.motionZ = dz;
 
 					// Player motion is handled on that player's client so needs packets
 					if(target instanceof EntityPlayerMP){
 						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
-					}
-
-					// The 'Not Again...' achievement
-					if(target instanceof EntityPig && WizardryUtilities.getRider(target) instanceof EntityPlayer){
-						WizardryAdvancementTriggers.pig_tornado.triggerFor((EntityPlayer)WizardryUtilities.getRider(target));
 					}
 				}
 			}
@@ -114,38 +125,43 @@ public class EntityTornado extends EntityMagicConstruct {
 
 				BlockPos pos1 = new BlockPos(blockX, this.posY + 3, blockZ);
 
-				int blockY = WizardryUtilities.getNearestFloorLevelC(world, pos1, 5) - 1;
+				Integer blockY = WizardryUtilities.getNearestSurface(world, pos1, EnumFacing.UP, 5, true, WizardryUtilities.SurfaceCriteria.NOT_AIR_TO_AIR);
 
-				pos1 = new BlockPos(pos1.getX(), blockY, pos1.getZ());
+				if(blockY != null){
 
-				IBlockState block = this.world.getBlockState(pos1);
+					blockY--;
 
-				// If the block it found was air or something it can't pick up, it makes a best guess based on the
-				// biome.
-				if(!canTornadoPickUpBitsOf(block)){
-					block = world.getBiome(pos1).topBlock;
-				}
+					pos1 = new BlockPos(pos1.getX(), blockY, pos1.getZ());
 
-				Wizardry.proxy.spawnTornadoParticle(world, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ,
-						yPos / 3 + 0.5d, 100, block, pos1);
-				Wizardry.proxy.spawnTornadoParticle(world, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ,
-						yPos / 3 + 0.5d, 100, block, pos1);
-				
-				// Sometimes spawns leaf particles if the block is leaves, or snow particles if the block is snow
-				if(this.rand.nextInt(3) == 0){
+					IBlockState block = this.world.getBlockState(pos1);
 
-					Type type = null;
-			
-					if(block.getMaterial() == Material.LEAVES) type = Type.LEAF;
-					if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW) type = Type.SNOW;
-					
-					if(type != null){
-						double yPos1 = rand.nextDouble() * 8;
-						ParticleBuilder.create(type)
-						.pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
-								this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d))
-						.time(40 + rand.nextInt(10))
-						.spawn(world);
+					// If the block it found was air or something it can't pick up, it makes a best guess based on the biome
+					if(!canTornadoPickUpBitsOf(block)){
+						block = world.getBiome(pos1).topBlock;
+					}
+
+					Wizardry.proxy.spawnTornadoParticle(world, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ,
+							yPos / 3 + 0.5d, 100, block, pos1);
+					Wizardry.proxy.spawnTornadoParticle(world, this.posX, this.posY + yPos, this.posZ, this.velX, this.velZ,
+							yPos / 3 + 0.5d, 100, block, pos1);
+
+					// Sometimes spawns leaf particles if the block is leaves, or snow particles if the block is snow
+					if(this.rand.nextInt(3) == 0){
+
+						ResourceLocation type = null;
+
+						if(block.getMaterial() == Material.LEAVES) type = Type.LEAF;
+						if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW)
+							type = Type.SNOW;
+
+						if(type != null){
+							double yPos1 = rand.nextDouble() * 8;
+							ParticleBuilder.create(type)
+									.pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
+											this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d))
+									.time(40 + rand.nextInt(10))
+									.spawn(world);
+						}
 					}
 				}
 			}

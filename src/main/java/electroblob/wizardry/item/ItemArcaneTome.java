@@ -1,11 +1,8 @@
 package electroblob.wizardry.item;
 
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryTabs;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
@@ -14,6 +11,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 public class ItemArcaneTome extends Item {
 
@@ -54,7 +53,12 @@ public class ItemArcaneTome extends Item {
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag showAdvanced){
+	public void addInformation(ItemStack stack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag showAdvanced){
+
+		if(stack.getItemDamage() < 1){
+			return; // If something's up with the metadata it will display a 'generic' tome of arcana with no info
+		}
+
 		Tier tier = Tier.values()[stack.getItemDamage()];
 		Tier tier2 = Tier.values()[stack.getItemDamage() - 1];
 		tooltip.add(tier.getDisplayNameWithFormatting());

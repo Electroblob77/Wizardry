@@ -5,6 +5,7 @@ import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
@@ -49,6 +50,16 @@ public class BlockArcaneWorkbench extends BlockContainer {
 	@Override
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state){
+		return false;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face){
+		return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

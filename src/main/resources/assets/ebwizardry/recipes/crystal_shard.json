@@ -1,0 +1,13 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "ebwizardry:magic_crystal",
+			"data": 0
+        }
+    ],
+    "result": {
+        "item": "ebwizardry:crystal_shard",
+		"count": 9
+    }
+}

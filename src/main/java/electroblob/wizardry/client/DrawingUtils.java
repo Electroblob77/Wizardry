@@ -1,19 +1,13 @@
 package electroblob.wizardry.client;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Utility class containing some useful static methods for drawing GUIs. Previously these were spread across the main
@@ -23,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @since Wizardry 4.2
  * @see MixedFontRenderer
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public final class DrawingUtils {
 
 	/**
@@ -128,6 +122,31 @@ public final class DrawingUtils {
 		buffer.pos((x), (y), 0).tex(u, v).endVertex();
 		
 		tessellator.draw();
+	}
+
+	/**
+	 * Mixes the two given opaque colours in the proportion specified.
+	 * @param colour1 The first colour to mix, as a 6-digit hexadecimal.
+	 * @param colour2 The second colour to mix, as a 6-digit hexadecimal.
+	 * @param proportion The proportion of the second colour; will be clamped to between 0 and 1.
+	 * @return The resulting colour, as a 6-digit hexadecimal.
+	 */
+	public static int mix(int colour1, int colour2, float proportion){
+
+		proportion = MathHelper.clamp(proportion, 0, 1);
+
+		int r1 = colour1 >> 16 & 255;
+		int g1 = colour1 >> 8 & 255;
+		int b1 = colour1 & 255;
+		int r2 = colour2 >> 16 & 255;
+		int g2 = colour2 >> 8 & 255;
+		int b2 = colour2 & 255;
+
+		int r = (int)(r1 + (r2-r1) * proportion);
+		int g = (int)(g1 + (g2-g1) * proportion);
+		int b = (int)(b1 + (b2-b1) * proportion);
+
+		return (r << 16) + (g << 8) + b;
 	}
 
 	/**

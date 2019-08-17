@@ -22,6 +22,16 @@ public class WizardryPacketHandler {
 		registerMessage(PacketClairvoyance.class, PacketClairvoyance.Message.class);
 		registerMessage(PacketSyncSettings.class, PacketSyncSettings.Message.class);
 		registerMessage(PacketNPCCastSpell.class, PacketNPCCastSpell.Message.class);
+		registerMessage(PacketDispenserCastSpell.class, PacketDispenserCastSpell.Message.class);
+		registerMessage(PacketSpellProperties.class, PacketSpellProperties.Message.class);
+		registerMessage(PacketSyncAdvancements.class, PacketSyncAdvancements.Message.class);
+		registerMessage(PacketRequestAdvancementSync.class, PacketRequestAdvancementSync.Message.class);
+		registerMessage(PacketEndSlowTime.class, PacketEndSlowTime.Message.class);
+		registerMessage(PacketResurrection.class, PacketResurrection.Message.class);
+		registerMessage(PacketCastSpellAtPos.class, PacketCastSpellAtPos.Message.class);
+		registerMessage(PacketEmitterData.class, PacketEmitterData.Message.class);
+		registerMessage(PacketPossession.class, PacketPossession.Message.class);
+		registerMessage(PacketConquerShrine.class, PacketConquerShrine.Message.class);
 	}
 
 	private static int nextPacketId = 0;

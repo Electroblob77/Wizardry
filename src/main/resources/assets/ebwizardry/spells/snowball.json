@@ -1,0 +1,22 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "novice",
+  "element": "ice",
+  "type": "attack",
+  "cost": 1,
+  "chargeup": 0,
+  "cooldown": 1,
+  "base_properties": {
+    "range": 15
+  }
+}

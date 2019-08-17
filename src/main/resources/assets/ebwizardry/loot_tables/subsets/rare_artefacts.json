@@ -1,0 +1,145 @@
+{
+	"pools": [
+		{
+			"name": "rare_artefacts",
+			"rolls": 1,
+			"entries": [
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_condensing",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_battlemage",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_disintegration",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_shattering",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_storm",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_soulbinding",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_leeching",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_mind_control",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_poison",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_full_moon",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_blockwrangler",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_conjurer",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_defender",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_arcane_defence",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_wisdom",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_fire_cloaking",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_potential",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_anchoring",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_transience",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_auto_shield",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_haggler",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_auto_smelt",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_storm",
+                    "weight": 1
+                },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_minion_variants",
+					"weight": 1
+				},
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_flight",
+                    "weight": 1
+                },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_abseiling",
+					"weight": 1
+				},
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_light",
+                    "weight": 1
+                }
+			]
+		}
+	]
+}

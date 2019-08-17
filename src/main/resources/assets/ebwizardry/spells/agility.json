@@ -1,0 +1,25 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "apprentice",
+  "element": "sorcery",
+  "type": "buff",
+  "cost": 20,
+  "chargeup": 0,
+  "cooldown": 40,
+  "base_properties": {
+    "speed_duration": 600,
+    "speed_strength": 1,
+    "jump_boost_duration": 600,
+    "jump_boost_strength": 1
+  }
+}

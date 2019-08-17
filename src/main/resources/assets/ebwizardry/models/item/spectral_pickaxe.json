@@ -2,5 +2,62 @@
     "parent": "item/handheld",
     "textures": {
         "layer0": "ebwizardry:items/spectral_pickaxe"
-    }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "conjuring": 1
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_0"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.125
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_1"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.25
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_2"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.375
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_3"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.5
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_4"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.625
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_5"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.75
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_6"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.875
+            },
+            "model": "ebwizardry:item/spectral_pickaxe_conjuring_7"
+        }
+    ]
 }

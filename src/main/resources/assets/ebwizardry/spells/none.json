@@ -1,0 +1,20 @@
+{
+	"enabled": {
+		"book": true,
+		"scroll": true,
+		"wands": true,
+		"npcs": true,
+		"dispensers": true,
+		"commands": true,
+		"treasure": true,
+		"trades": true,
+		"looting": true
+	},
+	"tier": "novice",
+	"element": "magic",
+	"type": "utility",
+	"cost": 0,
+	"chargeup": 0,
+	"cooldown": 0,
+	"base_properties": {}
+}

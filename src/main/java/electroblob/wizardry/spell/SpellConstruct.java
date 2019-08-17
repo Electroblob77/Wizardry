@@ -1,13 +1,6 @@
 package electroblob.wizardry.spell;
 
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
@@ -16,9 +9,13 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * Generic superclass for all spells which conjure constructs (i.e. instances of {@link EntityMagicConstruct}).
@@ -26,13 +23,17 @@ import net.minecraft.world.World;
  * instantiation of this class is sufficient to create a construct spell; if something extra needs to be done, such as
  * particle spawning, then methods can be overridden (perhaps using an anonymous class) to add the required functionality.
  * It is encouraged, however, to put extra functionality in the construct entity class instead whenever possible.
- * <p>
+ * <p></p>
  * This class spawns the construct entity at the caster's feet, like ring of fire and healing aura. Use
  * {@link SpellConstructRanged} (which extends this class) for spells that spawn constructs at an aimed-at position.
- * <p>
+ * <p></p>
+ * Properties added by this type of spell: {@link Spell#DURATION} (if the construct is not permanent)
+ * <p></p>
  * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastByNPCs()}
- * <p>
- * By default, this type of spell does not require a packet to be sent. {@link Spell#doesSpellRequirePacket()}
+ * <p></p>
+ * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * <p></p>
+ * By default, this type of spell does not require a packet to be sent. {@link Spell#requiresPacket()}
  * 
  * @author Electroblob
  * @since Wizardry 4.2
@@ -42,52 +43,29 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	
 	/** A factory that creates construct entities. */
 	protected final Function<World, T> constructFactory;
-	/** The base lifetime of the construct created by this spell, or -1 if the construct does not despawn. */
-	protected final int baseDuration;
-	/** The sound that gets played when this spell is cast, or null if the spell plays no sound. */
-	@Nullable
-	protected final SoundEvent sound;
-	
-	/** The volume of the sound played when this spell is cast. Defaults to 1. */
-	protected float volume = 1;
-	/** The pitch of the sound played when this spell is cast. Defaults to 1. */
-	protected float pitch = 1;
-	/** The pitch variation of the sound played when this spell is cast. Defaults to 0. */
-	protected float pitchVariation = 0;
+	/** Whether the construct lasts indefinitely, i.e. does not disappear after a set time. */
+	protected final boolean permanent;
 	/** Whether the construct must be spawned on the ground. Defaults to false. */
 	protected boolean requiresFloor = false;
 	/** Whether constructs spawned by this spell may overlap. Defaults to false. */
 	protected boolean allowOverlap = false;
 
-	public SpellConstruct(String name, Tier tier, Element element, SpellType type, int cost, int cooldown, EnumAction action, Function<World, T> constructFactory, int baseDuration, SoundEvent sound){
-		this(Wizardry.MODID, name, tier, element, type, cost, cooldown, action, constructFactory, baseDuration, sound);
+	public SpellConstruct(String name, EnumAction action, Function<World, T> constructFactory, boolean permanent){
+		this(Wizardry.MODID, name, action, constructFactory, permanent);
 	}
 
-	public SpellConstruct(String modID, String name, Tier tier, Element element, SpellType type, int cost, int cooldown, EnumAction action, Function<World, T> constructFactory, int baseDuration, SoundEvent sound){
-		super(modID, name, tier, element, type, cost, cooldown, action, false);
+	public SpellConstruct(String modID, String name, EnumAction action, Function<World, T> constructFactory, boolean permanent){
+		super(modID, name, action, false);
 		this.constructFactory = constructFactory;
-		this.baseDuration = baseDuration;
-		this.sound = sound;
+		this.permanent = permanent;
+		if(!permanent) this.addProperties(DURATION);
 	}
 	
-	/**
-	 * Sets the sound parameters for this spell.
-	 * @param volume The volume of the sound, relative to 1.
-	 * @param pitch The pitch of the sound, relative to 1.
-	 * @param pitchVariation The pitch variation. The pitch will be set to a random value within this range either side
-	 * of the set pitch value.
-	 * @return The spell instance, allowing this method to be chained onto the constructor.
-	 */
-	public SpellConstruct<T> soundValues(float volume, float pitch, float pitchVariation) {
-		this.volume = volume;
-		this.pitch = pitch;
-		this.pitchVariation = pitchVariation;
-		return this;
-	}
-
-	@Override public boolean doesSpellRequirePacket(){ return false; }
+	@Override public boolean requiresPacket(){ return false; }
 
 	@Override public boolean canBeCastByNPCs(){ return true; }
+	
+	@Override public boolean canBeCastByDispensers() { return true; }
 	
 	/**
 	 * Sets whether the construct must be spawned on the ground.
@@ -114,8 +92,9 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 		
 		if(caster.onGround || !requiresFloor){
-			if(!spawnConstruct(world, caster.posX, caster.posY, caster.posZ, caster, modifiers)) return false;
-			if(sound != null) WizardryUtilities.playSoundAtPlayer(caster, sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+			if(!spawnConstruct(world, caster.posX, caster.posY, caster.posZ, caster.onGround ? EnumFacing.UP : null,
+					caster, modifiers)) return false;
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			return true;
 		}
 
@@ -127,10 +106,31 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 
 		if(target != null){
 			if(caster.onGround || !requiresFloor){
-				if(!spawnConstruct(world, caster.posX, caster.posY, caster.posZ, caster, modifiers)) return false;
-				if(sound != null) caster.playSound(sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+				if(!spawnConstruct(world, caster.posX, caster.posY, caster.posZ, caster.onGround ? EnumFacing.UP : null,
+						caster, modifiers)) return false;
+				this.playSound(world, caster, ticksInUse, -1, modifiers);
 				return true;
 			}
+		}
+
+		return false;
+	}
+	
+	@Override
+	public boolean cast(World world, double x, double y, double z, EnumFacing direction, int ticksInUse, int duration, SpellModifiers modifiers){
+
+		Integer floor = (int)y;
+
+		if(requiresFloor){
+			floor = WizardryUtilities.getNearestFloor(world, new BlockPos(x, y, z), 1);
+			direction = EnumFacing.UP;
+		}
+
+		if(floor != null){
+			if(!spawnConstruct(world, x, floor, z, direction, null, modifiers)) return false;
+			// This MUST be the coordinates of the actual dispenser, so we need to offset it
+			this.playSound(world, x - direction.getXOffset(), y - direction.getYOffset(), z - direction.getZOffset(), ticksInUse, duration, modifiers);
+			return true;
 		}
 
 		return false;
@@ -143,27 +143,30 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	 * @param x The x coordinate to spawn the construct at.
 	 * @param y The y coordinate to spawn the construct at.
 	 * @param z The z coordinate to spawn the construct at.
+	 * @param side The side of a block that was hit, or null if the construct is being spawned in mid-air (only happens
+	 *             if {@link SpellConstruct#requiresFloor} is true).
 	 * @param caster The EntityLivingBase that cast this spell.
 	 * @param modifiers The modifiers with which the spell was cast.
 	 * @return false to cause the spell to fail, true to continue with casting.
 	 */
-	protected boolean spawnConstruct(World world, double x, double y, double z, EntityLivingBase caster, SpellModifiers modifiers){
+	protected boolean spawnConstruct(World world, double x, double y, double z, @Nullable EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 		
 		if(!world.isRemote){
-			// Creates a new constuct using the supplied factory
+			// Creates a new construct using the supplied factory
 			T construct = constructFactory.apply(world);
 			// Sets the position of the construct (and initialises its bounding box)
 			construct.setPosition(x, y, z);
+			// Sets the various parameters
+			construct.setCaster(caster);
+			construct.lifetime = permanent ? -1 : (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
+			construct.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
+			addConstructExtras(construct, side, caster, modifiers);
 			// Prevents overlapping of multiple constructs of the same type. Since we have an instance here this is
 			// very simple. The trade-off is that we have to create the entity before the spell fails, but unless
 			// world.spawnEntity(...) is called, its scope is limited to this method so it should be fine.
-			if(!allowOverlap && !world.getEntitiesWithinAABB(construct.getClass(), caster.getEntityBoundingBox()).isEmpty()) return false;
-			// Sets the various parameters
-			construct.setCaster(caster);
-			construct.lifetime = baseDuration == -1 ? -1 : (int)(baseDuration * modifiers.get(WizardryItems.duration_upgrade));
-			construct.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
-			addConstructExtras(construct, caster, modifiers);
-			// Spawns the construct in the world 
+			// Needs to be last in case addConstructExtras modifies the bounding box
+			if(!allowOverlap && !world.getEntitiesWithinAABB(construct.getClass(), construct.getEntityBoundingBox()).isEmpty()) return false;
+			// Spawns the construct in the world
 			world.spawnEntity(construct);
 		}
 		
@@ -175,11 +178,13 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	 * extra methods on the spawned entity. This method is only called server-side so cannot be used to spawn particles
 	 * directly.
 	 * @param construct The entity being spawned.
-	 * @param caster The caster of this spell.
+	 * @param side The side of a block that was hit, or null if the construct is being spawned in mid-air (only happens
+	 *             if {@link SpellConstruct#requiresFloor} is true).
+	 * @param caster The caster of this spell, or null if it was cast by a dispenser.
 	 * @param modifiers The modifiers this spell was cast with.
 	 */
 	// This is the reason this class is generic: it allows subclasses to do whatever they want to their specific entity,
 	// without needing to cast to it.
-	protected void addConstructExtras(T construct, EntityLivingBase caster, SpellModifiers modifiers){}
+	protected void addConstructExtras(T construct, EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){}
 
 }

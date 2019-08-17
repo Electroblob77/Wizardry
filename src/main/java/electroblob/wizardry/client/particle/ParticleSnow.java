@@ -6,9 +6,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticleSnow extends ParticleWizardry {
 
@@ -24,7 +23,7 @@ public class ParticleSnow extends ParticleWizardry {
 		this.canCollide = true;
 		this.setMaxAge(40 + rand.nextInt(10));
 		// Produces a variety of light blues and whites
-		this.setRBGColorF(0.9f + 0.1f * world.rand.nextFloat(), 0.95f + 0.05f * world.rand.nextFloat(), 1);
+		this.setRBGColorF(0.9f + 0.1f * random.nextFloat(), 0.95f + 0.05f * random.nextFloat(), 1);
 	}
 	
 	@SubscribeEvent

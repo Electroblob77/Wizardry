@@ -1,13 +1,12 @@
 package electroblob.wizardry.client.particle;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 public class ParticleBeam extends ParticleTargeted {
 	
@@ -17,10 +16,15 @@ public class ParticleBeam extends ParticleTargeted {
 	public ParticleBeam(World world, double x, double y, double z){
 		super(world, x, y, z); // Does not have a texture!
 		this.setRBGColorF(1, 1, 1);
-		this.setMaxAge(1);
+		this.setMaxAge(0);
 		this.particleScale = 1;
 	}
-	
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
+	}
+
 	@Override
 	public int getFXLayer(){
 		return 3;
@@ -31,7 +35,7 @@ public class ParticleBeam extends ParticleTargeted {
 		
 		float scale = this.particleScale;
 		
-		if(this.particleMaxAge > 1){
+		if(this.particleMaxAge > 0){
 			float ageFraction = (particleAge + partialTicks - 1)/particleMaxAge;
 			// Squaring this makes it look smoother than a linear shrinking effect
 			scale = this.particleScale * (1 - ageFraction*ageFraction);

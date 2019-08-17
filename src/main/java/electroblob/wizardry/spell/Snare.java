@@ -1,8 +1,5 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.tileentity.TileEntityPlayerSave;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -11,26 +8,28 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Snare extends SpellRay {
 
 	public Snare(){
-		super("snare", Tier.BASIC, Element.EARTH, SpellType.ATTACK, 10, 10, false, 10, SoundEvents.BLOCK_GRASS_PLACE);
+		super("snare", false, EnumAction.NONE);
 		this.soundValues(1, 1.4f, 0.4f);
-		this.ignoreEntities(true);
+		this.ignoreLivingEntities(true);
+		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(side == EnumFacing.UP && world.isSideSolid(pos, EnumFacing.UP)
 				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
@@ -47,7 +46,7 @@ public class Snare extends SpellRay {
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 	

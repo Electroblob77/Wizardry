@@ -1,10 +1,8 @@
 package electroblob.wizardry.client.particle;
 
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class ParticleDust extends ParticleWizardry {
 
 	public ParticleDust(World world, double x, double y, double z){
@@ -24,7 +22,7 @@ public class ParticleDust extends ParticleWizardry {
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
-		// this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		this.move(this.motionX, this.motionY, this.motionZ);
 
 		if(this.particleMaxAge-- <= 0){
 			this.setExpired();

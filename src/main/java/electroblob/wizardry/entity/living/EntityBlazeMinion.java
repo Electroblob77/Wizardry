@@ -1,8 +1,5 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
 import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -16,13 +13,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature {
 
 	// Field implementations
-	private int lifetime = 600;
-	private WeakReference<EntityLivingBase> casterReference;
+	private int lifetime = -1;
 	private UUID casterUUID;
 
 	// Setter + getter implementations
@@ -37,22 +36,12 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	}
 
 	@Override
-	public WeakReference<EntityLivingBase> getCasterReference(){
-		return casterReference;
-	}
-
-	@Override
-	public void setCasterReference(WeakReference<EntityLivingBase> reference){
-		casterReference = reference;
-	}
-
-	@Override
-	public UUID getCasterUUID(){
+	public UUID getOwnerId(){
 		return casterUUID;
 	}
 
 	@Override
-	public void setCasterUUID(UUID uuid){
+	public void setOwnerId(UUID uuid){
 		this.casterUUID = uuid;
 	}
 
@@ -65,13 +54,13 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	// EntityBlaze overrides
 
 	// This particular override is pretty standard: let the superclass handle basic AI like swimming, but replace its
-	// targeting system with one that targets hostile mobs and takes the ADS into account.
+	// targeting system with one that targets hostile mobs and takes the AllyDesignationSystem into account.
 	@Override
 	protected void initEntityAI(){
 		super.initEntityAI();
 		this.targetTasks.taskEntries.clear();
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class,
 				0, false, true, this.getTargetSelector()));
 	}
 
@@ -142,8 +131,16 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	@Override protected Item getDropItem(){ return null; }
 	@Override protected ResourceLocation getLootTable(){ return null; }
 	@Override public boolean canPickUpLoot(){ return false; }
+
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override protected boolean canDespawn(){
+		return getCaster() == null && getOwnerId() == null;
+	}
+
+	@Override
+	public boolean getCanSpawnHere(){
+		return this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
+	}
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -163,6 +160,6 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	@Override
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getCaster() != null;
+		return Wizardry.settings.summonedCreatureNames && getCaster() != null;
 	}
 }

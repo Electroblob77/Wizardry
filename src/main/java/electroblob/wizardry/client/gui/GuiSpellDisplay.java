@@ -1,30 +1,17 @@
 package electroblob.wizardry.client.gui;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import electroblob.wizardry.Settings;
-import electroblob.wizardry.SpellGlyphData;
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.client.MixedFontRenderer;
-import electroblob.wizardry.constants.Constants;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.data.SpellGlyphData;
+import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WandHelper;
@@ -37,13 +24,21 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class GuiSpellDisplay {
@@ -53,8 +48,9 @@ public class GuiSpellDisplay {
 	/** A map which stores all loaded HUD skin objects. This gets wiped on resource pack reload and repopulated with
 	 * mappings as specified by {@code _index.json} (these stack between resource packs). The keys in the map correspond
 	 * to the keys in {@code _index.json}, and are sorted in that order, with skins belonging to resource packs sorted
-	 * from lowest to highest priority. The skins in the base mod will therefore always be first. */
-	private static final Map<String, Skin> skins = new LinkedHashMap<>(12); // 12 is the number of skins packaged with the mod
+	 * from lowest to highest priority. The skins in the base mod will therefore always be first. (It should be noted,
+	 * however, that in the gui itself the skins are always sorted in alphabetical order for some reason.) */
+	private static final Map<String, Skin> skins = new LinkedHashMap<>(14); // 14 is the number of skins packaged with the mod
 	
 	private static final Gson gson = new Gson();
 
@@ -66,6 +62,9 @@ public class GuiSpellDisplay {
 	private static final float SPELL_NAME_SCALE = 0.5f;
 	/** Opacity of the next/previous spell names, as a fraction. */
 	private static final float SPELL_NAME_OPACITY = 0.3f;
+
+	private static final int HALF_HOTBAR_WIDTH = 97; // Half the width of the hotbar, plus a bit for clearance
+	private static final int OFFHAND_SLOT_WIDTH = 29; // Width of the offhand slot plus the gap between it and the hotbar
 	
 	/** Controls the spell switching animation. Positive when switching to the next spell, negative when switching to
 	 * the previous spell. Decremented in magnitude by 1 each tick until it reaches 0 again. */
@@ -103,14 +102,18 @@ public class GuiSpellDisplay {
 
 		EntityPlayer player = mc.player;
 
+		if(player.isSpectator()) return; // Spectators shouldn't have the spell HUD!
+
 		// If the player has a wand in each hand, only displays for the one in the main hand.
 
 		ItemStack wand = player.getHeldItemMainhand();
+		boolean mainHand = true;
 
-		if(!(wand.getItem() instanceof ItemWand)){
+		if(!(wand.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)wand.getItem()).showSpellHUD(player, wand))){
 			wand = player.getHeldItemOffhand();
-			// If the player isn't holding a wand, then nothing else needs to be done.
-			if(!(wand.getItem() instanceof ItemWand)) return;
+			mainHand = false;
+			// If the player isn't holding a spellcasting item that shows the HUD, then nothing else needs to be done.
+			if(!(wand.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)wand.getItem()).showSpellHUD(player, wand))) return;
 		}
 
 		int width = event.getResolution().getScaledWidth();
@@ -118,6 +121,11 @@ public class GuiSpellDisplay {
 
 		boolean flipX = Wizardry.settings.spellHUDPosition.flipX;
 		boolean flipY = Wizardry.settings.spellHUDPosition.flipY;
+
+		if(Wizardry.settings.spellHUDPosition.dynamic){
+			// ............. | This bit is true if the wand is on the left, false if it is on the right
+			flipX = flipX == ((mainHand ? player.getPrimaryHand() : player.getPrimaryHand().opposite()) == EnumHandSide.LEFT);
+		}
 		
 		Skin skin = skins.get(Wizardry.settings.spellHUDSkin);
 		
@@ -134,13 +142,32 @@ public class GuiSpellDisplay {
 				return;
 			}
 		}
+
+		GlStateManager.pushMatrix();
 		
 		// 'Origin' of the spell hud (bottom left corner of the actual texture, always in the corner of the screen)
 		int x = flipX ? width : 0;
 		int y = flipY ? 0: height;
 
+		// The space available to render the spell HUD
+		float xSpace = (float)(width/2 - HALF_HOTBAR_WIDTH);
+		if(!player.getHeldItemOffhand().isEmpty()
+				// Tests whether the offhand slot is rendered on the same side of the hotbar as the spell HUD
+				&& (player.getPrimaryHand() == EnumHandSide.LEFT) == flipX){
+			xSpace -= OFFHAND_SLOT_WIDTH;
+		}
+
+		// If the skin is at the bottom and the screen width is too small, scale it to avoid the hotbar and offhand
+		if(!flipY && skin.getWidth() > xSpace){ // width/2 - 91 - 29 taken from GuiInGame line 547
+			float scale = xSpace / skin.getWidth();
+			GlStateManager.scale(scale, scale, 1);
+			x = MathHelper.ceil(x/scale);
+			y = MathHelper.ceil(y/scale);
+		}
+
 		Spell spell = WandHelper.getCurrentSpell(wand);
 		int cooldown = WandHelper.getCurrentCooldown(wand);
+		int maxCooldown = WandHelper.getCurrentMaxCooldown(wand);
 
 		if(event.getType() == RenderGameOverlayEvent.ElementType.TEXT){
 			
@@ -155,16 +182,9 @@ public class GuiSpellDisplay {
 
 		}else if(event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR){
 
-			float cooldownMultiplier = 1.0f - WandHelper.getUpgradeLevel(wand, WizardryItems.cooldown_upgrade) * Constants.COOLDOWN_REDUCTION_PER_LEVEL;
-
-			if(player.isPotionActive(WizardryPotions.font_of_mana)){
-				// Dividing by this rather than setting it takes upgrades and font of mana into account simultaneously
-				cooldownMultiplier /= 2 + player.getActivePotionEffect(WizardryPotions.font_of_mana).getAmplifier();
-			}
-
 			boolean discovered = true;
 
-			if(!player.capabilities.isCreativeMode && WizardData.get(player) != null){
+			if(!player.isCreative() && WizardData.get(player) != null){
 				discovered = WizardData.get(player).hasSpellBeenDiscovered(spell);
 			}
 			
@@ -172,31 +192,23 @@ public class GuiSpellDisplay {
 
 			float progress = 1;
 			// Doesn't really matter what progress is when in creative, but we might as well avoid the calculation.
-			if(!player.capabilities.isCreativeMode && !spell.isContinuous){
+			if(!player.isCreative() && !spell.isContinuous){
 				// Subtracted partial tick time to make it smoother
-				progress = (spell.cooldown * cooldownMultiplier - (float)cooldown + event.getPartialTicks())
-						/(spell.cooldown * cooldownMultiplier);
+				progress = maxCooldown == 0 ? 1 : (maxCooldown - (float)cooldown + event.getPartialTicks()) / maxCooldown;
 			}
 			
-			skin.drawBackground(x, y, flipX, flipY, icon, progress, player.capabilities.isCreativeMode);
+			skin.drawBackground(x, y, flipX, flipY, icon, progress, player.isCreative());
 			
 		}
+
+		GlStateManager.popMatrix();
 	}
 	
 	/**
-	 * Makes the given opaque colour translucent with the given opacity.
-	 * @param colour An integer colour code, should be a 6-digit hexadecimal (i.e. opaque).
-	 * @param opacity The opacity to apply to the given colour, as a fraction between 0 and 1.
-	 * @return The resulting integer colour code, which will be an 8-digit hexadecimal.
-	 */
-	private static int makeTranslucent(int colour, float opacity){
-		return colour + ((int)(0xff * opacity * 0x01000000));
-	}
-	
-	/** Gets the name of the given spell, with formatted added according to its cooldown and whether the given player
+	 * Gets the name of the given spell, with formatting added according to its cooldown and whether the given player
 	 * has discovered it.
 	 * @param spell The spell to get the name of.
-	 * @param The player to test for having discovered the given spell.
+	 * @param player The player to test for having discovered the given spell.
 	 * @param cooldown The spell's current cooldown.
 	 * @return The spell name, with relevant formatting added, for use with the {@link MixedFontRenderer}.
 	 */
@@ -204,12 +216,12 @@ public class GuiSpellDisplay {
 		
 		boolean discovered = true;
 
-		if(!player.capabilities.isCreativeMode && WizardData.get(player) != null){
+		if(!player.isCreative() && WizardData.get(player) != null){
 			discovered = WizardData.get(player).hasSpellBeenDiscovered(spell);
 		}
 		
 		// Makes spells greyed out if they are in cooldown or if the player has the arcane jammer effect
-		String format = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78" : spell.element.getFormattingCode();
+		String format = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78" : spell.getElement().getFormattingCode();
 		if(!discovered) format = "\u00A79";
 		
 		String name = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
@@ -274,10 +286,15 @@ public class GuiSpellDisplay {
 		}
 	}
 	
-	/** Instances of this class represent individual HUD skins, complete with texture and all necessary metadata. This
+	/**
+	 * Instances of this class represent individual HUD skins, complete with texture and all necessary metadata. This
 	 * class serves to separate the logic behind the spell HUD from its actual rendering.
 	 * All information and processing done within this class relates only to the actual drawing; spells and such like
-	 * must be queried outside of this class and fed into the methods as appropriate. */
+	 * must be queried outside of this class and fed into the methods as appropriate.
+	 * 
+	 * @author Electroblob
+	 * @since Wizardry 4.2
+	 */
 	public static class Skin {
 		
 		/** The texture file for this skin. */

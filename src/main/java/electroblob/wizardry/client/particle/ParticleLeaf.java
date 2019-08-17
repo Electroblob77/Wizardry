@@ -6,9 +6,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticleLeaf extends ParticleWizardry {
 
@@ -24,7 +23,7 @@ public class ParticleLeaf extends ParticleWizardry {
 		this.particleGravity = 0;
 		this.canCollide = true;
 		// Produces a variety of browns and greens
-		this.setRBGColorF(0.1f + 0.3f * world.rand.nextFloat(), 0.5f + 0.3f * world.rand.nextFloat(), 0.1f);
+		this.setRBGColorF(0.1f + 0.3f * random.nextFloat(), 0.5f + 0.3f * random.nextFloat(), 0.1f);
 	}
 	
 	@Override

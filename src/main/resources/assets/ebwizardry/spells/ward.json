@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "novice",
+  "element": "healing",
+  "type": "buff",
+  "cost": 5,
+  "chargeup": 0,
+  "cooldown": 30,
+  "base_properties": {
+    "ward_duration": 600,
+    "ward_strength": 0
+  }
+}

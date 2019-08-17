@@ -1,54 +1,80 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.data.IStoredVariable;
+import electroblob.wizardry.data.Persistence;
+import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
+
 @Mod.EventBusSubscriber
 public class CurseOfSoulbinding extends SpellRay {
 
+	public static final IStoredVariable<Set<UUID>> TARGETS_KEY = new IStoredVariable.StoredVariable<>("soulboundCreatures",
+			s -> NBTExtras.listToNBT(s, NBTUtil::createUUIDTag),
+			// For some reason gradle screams at me unless I explicitly declare the type of t here, despite IntelliJ being fine without it
+			(NBTTagList t) -> new HashSet<>(NBTExtras.NBTToList(t, NBTUtil::getUUIDFromTag)),
+			// Curse of soulbinding is lifted when the caster dies, but not when they switch dimensions.
+			Persistence.DIMENSION_CHANGE);
+
 	public CurseOfSoulbinding(){
-		super("curse_of_soulbinding", Tier.ADVANCED, Element.NECROMANCY, SpellType.ATTACK, 35, 100, false, 10, SoundEvents.ENTITY_WITHER_SPAWN);
+		super("curse_of_soulbinding", false, EnumAction.NONE);
 		this.soundValues(1, 1.1f, 0.2f);
+		WizardData.registerStoredVariables(TARGETS_KEY);
 	}
-	
+
 	@Override public boolean canBeCastByNPCs() { return false; }
+	// You can't damage a dispenser so this would be nonsense!
+	@Override public boolean canBeCastByDispensers() { return false; }
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target) && caster instanceof EntityPlayer
-				&& WizardData.get((EntityPlayer)caster) != null){
-			// Return false if soulbinding failed (e.g. if the target is already soulbound)
-			if(!WizardData.get((EntityPlayer)caster).soulbind((EntityLivingBase)target)) return false;
+		if(WizardryUtilities.isLiving(target) && caster instanceof EntityPlayer){
+			WizardData data = WizardData.get((EntityPlayer)caster);
+			if(data != null){
+				// Return false if soulbinding failed (e.g. if the target is already soulbound)
+				if(getSoulboundCreatures(data).add(target.getUniqueID())){
+					// This will actually run out in the end, but only if you leave Minecraft running for 3.4 years
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.curse_of_soulbinding, Integer.MAX_VALUE));
+				}else{
+					return false;
+				}
+			}
 		}
 		
 		return true;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
 	
@@ -65,11 +91,41 @@ public class CurseOfSoulbinding extends SpellRay {
 		if(!event.getEntity().world.isRemote && event.getEntityLiving() instanceof EntityPlayer
 				&& !event.getSource().isUnblockable() && !(event.getSource() instanceof IElementalDamage
 						&& ((IElementalDamage)event.getSource()).isRetaliatory())){
-			WizardData data = WizardData.get((EntityPlayer)event.getEntityLiving());
+
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+			WizardData data = WizardData.get(player);
+
 			if(data != null){
-				data.damageAllSoulboundCreatures(event.getAmount(), event.getSource().getDamageType());
+
+				for(Iterator<UUID> iterator = getSoulboundCreatures(data).iterator(); iterator.hasNext();){
+
+					Entity entity = WizardryUtilities.getEntityByUUID(player.world, iterator.next());
+
+					if(entity == null) iterator.remove();
+
+					if(entity instanceof EntityLivingBase){
+						// Retaliatory effect
+						if(DamageSafetyChecker.attackEntitySafely(entity, MagicDamage.causeDirectMagicDamage(player,
+								MagicDamage.DamageType.MAGIC, true), event.getAmount(), event.getSource().getDamageType(),
+								DamageSource.MAGIC, false)){
+							// Sound only plays if the damage succeeds
+							entity.playSound(WizardrySounds.SPELL_CURSE_OF_SOULBINDING_RETALIATE, 1.0F, player.world.rand.nextFloat() * 0.2F + 1.0F);
+						}
+					}
+				}
+
 			}
 		}
+	}
+
+	public static Set<UUID> getSoulboundCreatures(WizardData data){
+
+		if(data.getVariable(TARGETS_KEY) == null){
+			Set<UUID> result = new HashSet<>();
+			data.setVariable(TARGETS_KEY, result);
+			return result;
+
+		}else return data.getVariable(TARGETS_KEY);
 	}
 
 }

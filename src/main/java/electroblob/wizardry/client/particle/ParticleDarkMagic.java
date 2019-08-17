@@ -3,10 +3,8 @@ package electroblob.wizardry.client.particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class ParticleDarkMagic extends ParticleWizardry {
 
 	/** Base spell texture index */

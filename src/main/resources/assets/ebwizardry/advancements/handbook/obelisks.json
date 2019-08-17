@@ -1,0 +1,10 @@
+{
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:visit_structure",
+            "conditions": {
+                "structure_type": "obelisk"
+            }
+        }
+    }
+}

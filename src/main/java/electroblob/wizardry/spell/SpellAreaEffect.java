@@ -1,67 +1,36 @@
 package electroblob.wizardry.spell;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.List;
+
+/** [NYI] */
 public abstract class SpellAreaEffect extends Spell {
 	
 	// TODO: This class doesn't really work as it is right now, it needs rethinking. The aim is to try and have all the
 	// different casting methods call a single (abstract) positional method to do the actual AoE.
-	
-	/** The base radius of this spell's area of effect. */
-	protected final double baseRadius;
-	/** The sound that gets played when this spell is cast. */
-	@Nullable
-	protected final SoundEvent sound;
-	
+
 	/** The average number of particles to spawn per block in this spell's area of effect. */
 	protected float particleDensity = 0.65f;
-	/** The volume of the sound played when this spell is cast. Defaults to 1. */
-	protected float volume = 1;
-	/** The pitch of the sound played when this spell is cast. Defaults to 1. */
-	protected float pitch = 1;
-	/** The pitch variation of the sound played when this spell is cast. Defaults to 0. */
-	protected float pitchVariation = 0;
-
-	public SpellAreaEffect(String name, Tier tier, Element element, SpellType type, int cost, int cooldown, EnumAction action, double baseRadius, SoundEvent sound){
-		this(Wizardry.MODID, name, tier, element, type, cost, cooldown, action, baseRadius, sound);
-	}
-
-	public SpellAreaEffect(String modID, String name, Tier tier, Element element, SpellType type, int cost, int cooldown, EnumAction action, double baseRadius, SoundEvent sound){
-		super(modID, name, tier, element, type, cost, cooldown, action, false);
-		this.baseRadius = baseRadius;
-		this.sound = sound;
-	}
 	
-	/**
-	 * Sets the sound parameters for this spell.
-	 * @param volume 
-	 * @param pitch
-	 * @param pitchVariation
-	 * @return The spell instance, allowing this method to be chained onto the constructor.
-	 */
-	public SpellAreaEffect soundValues(float volume, float pitch, float pitchVariation) {
-		this.volume = volume;
-		this.pitch = pitch;
-		this.pitchVariation = pitchVariation;
-		return this;
-	} 
+	public SpellAreaEffect(String name, EnumAction action){
+		this(Wizardry.MODID, name, action);
+	}
+
+	public SpellAreaEffect(String modID, String name, EnumAction action){
+		super(modID, name, action, false);
+		this.addProperties(EFFECT_RADIUS);
+	}
 	
 	/**
 	 * Sets the number of particles to spawn per block for this spell.
@@ -76,10 +45,10 @@ public abstract class SpellAreaEffect extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 		
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
-				baseRadius * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(getProperty(EFFECT_RADIUS).floatValue()
+				* modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
 		
-		targets.removeIf(target -> !WizardryUtilities.isValidTarget(caster, target));
+		targets.removeIf(target -> !AllyDesignationSystem.isValidTarget(caster, target));
 		
 		for(EntityLivingBase target : targets){
 			affectEntity(world, caster, target, modifiers);
@@ -89,7 +58,7 @@ public abstract class SpellAreaEffect extends Spell {
 			spawnParticleEffect(world, caster, modifiers);
 		}
 		
-		if(sound != null) WizardryUtilities.playSoundAtPlayer(caster, sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 		
 	}
@@ -107,13 +76,13 @@ public abstract class SpellAreaEffect extends Spell {
 	 * Called to spawn the spell's particle effect. By default, this generates a set of random points within the spell's
 	 * area of effect and calls {@link SpellAreaEffect#spawnParticle(World, double, double, double)} at each to spawn
 	 * the individual particles. Only called client-side. Override to add a custom particle effect.
-	 * @param world
-	 * @param caster
-	 * @param modifiers
-	 */
+	 * @param world The world to spawn the particles in.
+	 * @param caster The caster of the spell.
+	 * @param modifiers The modifiers the spell was cast with.
+ 	 */
 	protected void spawnParticleEffect(World world, EntityLivingBase caster, SpellModifiers modifiers){
 		
-		double maxRadius = baseRadius * modifiers.get(WizardryItems.blast_upgrade);
+		double maxRadius = getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade);
 		int particleCount = (int)Math.round(particleDensity * Math.PI * maxRadius * maxRadius);
 		
 		for(int i=0; i<particleCount; i++){

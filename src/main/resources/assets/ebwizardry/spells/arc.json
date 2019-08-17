@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "novice",
+  "element": "lightning",
+  "type": "attack",
+  "cost": 5,
+  "chargeup": 0,
+  "cooldown": 15,
+  "base_properties": {
+    "damage": 3,
+    "range": 8
+  }
+}

@@ -1,11 +1,14 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityDart extends EntityMagicArrow {
@@ -15,7 +18,7 @@ public class EntityDart extends EntityMagicArrow {
 		super(world);
 	}
 
-	@Override public double getDamage(){ return 4; }
+	@Override public double getDamage(){ return Spells.dart.getProperty(Spell.DAMAGE).doubleValue(); }
 
 	@Override public boolean doGravity(){ return true; }
 
@@ -24,13 +27,14 @@ public class EntityDart extends EntityMagicArrow {
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
 		// Adds a weakness effect to the target.
-		entityHit.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 1, false, false));
-		this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		entityHit.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, Spells.dart.getProperty(Spell.EFFECT_DURATION).intValue(),
+				Spells.dart.getProperty(Spell.EFFECT_STRENGTH).intValue(), false, false));
+		this.playSound(WizardrySounds.ENTITY_DART_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}
 
 	@Override
-	public void onBlockHit(){
-		this.playSound(SoundEvents.ENTITY_ARROW_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+	public void onBlockHit(RayTraceResult hit){
+		this.playSound(WizardrySounds.ENTITY_DART_HIT_BLOCK, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}
 
 	@Override
@@ -51,4 +55,8 @@ public class EntityDart extends EntityMagicArrow {
 	@Override
 	protected void entityInit(){}
 
+	@Override
+	public int getLifetime(){
+		return -1;
+	}
 }

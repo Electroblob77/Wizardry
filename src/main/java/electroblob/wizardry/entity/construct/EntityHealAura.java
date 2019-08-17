@@ -1,8 +1,8 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -10,9 +10,14 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class EntityHealAura extends EntityMagicConstruct {
+
+	// TODO: Implement blast modifiers
 
 	public EntityHealAura(World world){
 		super(world);
@@ -24,7 +29,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 	public void onUpdate(){
 
 		if(this.ticksExisted % 25 == 1){
-			this.playSound(WizardrySounds.SPELL_LOOP_SPARKLE, 0.1f, 1.0f);
+			this.playSound(WizardrySounds.ENTITY_HEAL_AURA_AMBIENT, 0.1f, 1.0f);
 		}
 
 		super.onUpdate();
@@ -46,9 +51,9 @@ public class EntityHealAura extends EntityMagicConstruct {
 						if(this.getCaster() != null){
 							target.attackEntityFrom(
 									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT),
-									1 * damageMultiplier);
+									Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
 						}else{
-							target.attackEntityFrom(DamageSource.MAGIC, 1 * damageMultiplier);
+							target.attackEntityFrom(DamageSource.MAGIC, Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
 						}
 
 						// Removes knockback
@@ -58,16 +63,16 @@ public class EntityHealAura extends EntityMagicConstruct {
 					}
 
 				}else if(target.getHealth() < target.getMaxHealth() && this.ticksExisted % 5 == 0){
-					target.heal(1 * damageMultiplier);
+					target.heal(Spells.healing_aura.getProperty(Spell.HEALTH).floatValue() * damageMultiplier);
 				}
 			}
 		}else{
 			for(int i=1; i<3; i++){
 				float brightness = 0.5f + (rand.nextFloat() * 0.5f);
 				double radius = rand.nextDouble() * 2.0;
-				double angle = rand.nextDouble() * Math.PI * 2;
+				float angle = rand.nextFloat() * (float)Math.PI * 2;;
 				ParticleBuilder.create(Type.SPARKLE)
-				.pos(this.posX + radius * Math.cos(angle), this.posY, this.posZ + radius * Math.sin(angle))
+				.pos(this.posX + radius * MathHelper.cos(angle), this.posY, this.posZ + radius * MathHelper.sin(angle))
 				.vel(0, 0.05, 0)
 				.time(48 + this.rand.nextInt(12))
 				.clr(1.0f, 1.0f, brightness)

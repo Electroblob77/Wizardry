@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
  * Items that implement this interface may be placed in the central slot of the arcane workbench as long as
  * {@link IWorkbenchItem#canPlace(ItemStack)} returns true. The number of spell book slots displayed is also specified
  * using {@link IWorkbenchItem#getSpellSlotCount(ItemStack)}.
- * <p>
+ * <p></p>
  * Items that implement this interface define what happens if they are in the central slot of the arcane workbench and
  * the apply button is pressed, in {@link IWorkbenchItem#onApplyButtonPressed(EntityPlayer, Slot, Slot, Slot, Slot[])}.
  * This is a core part of the arcane workbench refactoring in version 4.2 and allows for custom spell casting items and
@@ -52,5 +52,13 @@ public interface IWorkbenchItem {
 	 * @return True if anything changed, false if not.
 	 */
 	boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks);
+
+	/**
+	 * Returns whether the tooltip (dark grey box) should be drawn when this item is in an arcane workbench. Only
+	 * called client-side.
+	 * @param stack The itemstack to query.
+	 * @return True if the workbench tooltip should be shown, false if not.
+	 */
+	boolean showTooltip(ItemStack stack);
 	
 }

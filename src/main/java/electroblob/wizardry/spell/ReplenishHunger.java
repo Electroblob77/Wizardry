@@ -1,9 +1,5 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,9 +8,13 @@ import net.minecraft.world.World;
 
 public class ReplenishHunger extends SpellBuff {
 
+	public static final String HUNGER_POINTS = "hunger_points";
+	public static final String SATURATION_MODIFIER = "saturation_modifier";
+
 	public ReplenishHunger(){
-		super("replenish_hunger", Tier.APPRENTICE, Element.HEALING, SpellType.BUFF, 10, 30, WizardrySounds.SPELL_HEAL, 1, 0.7f, 0.3f);
+		super("replenish_hunger", 1, 0.7f, 0.3f);
 		this.soundValues(0.7f, 1.2f, 0.4f);
+		addProperties(HUNGER_POINTS, SATURATION_MODIFIER);
 	}
 	
 	@Override public boolean canBeCastByNPCs(){ return false; }
@@ -28,9 +28,9 @@ public class ReplenishHunger extends SpellBuff {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		if(caster.getFoodStats().needFood()){
-			int foodAmount = (int)(4 * modifiers.get(SpellModifiers.POTENCY));
+			int foodAmount = (int)(getProperty(HUNGER_POINTS).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			// Fixed issue #6: Changed to addStats, since setFoodLevel is client-side only
-			caster.getFoodStats().addStats(foodAmount, foodAmount * 0.1f);
+			caster.getFoodStats().addStats(foodAmount, getProperty(SATURATION_MODIFIER).floatValue());
 			return super.cast(world, caster, hand, ticksInUse, modifiers);
 		}
 		

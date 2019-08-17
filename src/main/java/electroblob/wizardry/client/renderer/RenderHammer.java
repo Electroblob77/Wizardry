@@ -19,11 +19,13 @@ public class RenderHammer extends Render<EntityHammer> {
 	}
 
 	@Override
-	public void doRender(EntityHammer entity, double x, double y, double z, float f, float f1){
+	public void doRender(EntityHammer entity, double x, double y, double z, float yaw, float partialTicks){
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y + 1.5, z);
 		GlStateManager.rotate(180, 0F, 0F, 1F);
+		GlStateManager.rotate(yaw, 0, 1, 0);
+		GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0, 0, 1);
 
 		this.bindTexture(texture);
 

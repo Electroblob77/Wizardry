@@ -1,7 +1,5 @@
 package electroblob.wizardry.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityIceSpike;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -12,6 +10,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderIceSpike extends Render<EntityIceSpike> {
 
@@ -23,13 +22,14 @@ public class RenderIceSpike extends Render<EntityIceSpike> {
 	}
 
 	@Override
-	public void doRender(EntityIceSpike entity, double x, double y, double z, float fa, float partialTickTime){
+	public void doRender(EntityIceSpike entity, double x, double y, double z, float yaw, float partialTickTime){
 
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate((float)x, (float)y, (float)z);
-		// Apparently, disabling lighting... doesn't disable lighting. Or at least, you can still set the brightness
-		// with setLightmapTextureCoords.
+		GlStateManager.rotate(entity.rotationYaw - 90.0F, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(entity.rotationPitch - 90, 0.0F, 0.0F, 1.0F);
+
 		GlStateManager.disableLighting();
 
 		int j = entity.getBrightnessForRender();

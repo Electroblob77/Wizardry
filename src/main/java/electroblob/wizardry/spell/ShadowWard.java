@@ -1,24 +1,20 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,8 +23,27 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod.EventBusSubscriber
 public class ShadowWard extends Spell {
 
+	public static final String REFLECTED_FRACTION = "reflected_fraction";
+
 	public ShadowWard(){
-		super("shadow_ward", Tier.ADVANCED, Element.NECROMANCY, SpellType.DEFENCE, 10, 0, EnumAction.BLOCK, true);
+		super("shadow_ward", EnumAction.BLOCK, true);
+		addProperties(REFLECTED_FRACTION);
+		soundValues(0.6f, 1, 0);
+	}
+
+	@Override
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
+	}
+
+	@Override
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
+
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
 	}
 
 	@Override
@@ -42,7 +57,7 @@ public class ShadowWard extends Spell {
 		}
 
 		if(ticksInUse % 50 == 0){
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_PORTAL_AMBIENT, 0.6f, 1.5f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 		}
 
 		return true;
@@ -50,22 +65,24 @@ public class ShadowWard extends Spell {
 
 	@SubscribeEvent
 	public static void onLivingAttackEvent(LivingAttackEvent event){
+		
 		if(event.getSource() != null && event.getSource().getTrueSource() instanceof EntityLivingBase){
-			// There used to be a check that the target was a player here, but I don't see any reason for it.
-			ItemStack wand = event.getEntityLiving().getActiveItemStack();
 
-			if(wand.getItemDamage() < wand.getMaxDamage() && wand.getItem() instanceof ItemWand
-					&& WandHelper.getCurrentSpell(wand) instanceof ShadowWard && !event.getSource().isUnblockable()
+			if(WizardryUtilities.isCasting(event.getEntityLiving(), Spells.shadow_ward) && !event.getSource().isUnblockable()
 					&& !(event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory())){
 
 				event.setCanceled(true);
+
+				float reflectedFraction = MathHelper.clamp(Spells.shadow_ward.getProperty(REFLECTED_FRACTION).floatValue(), 0, 1);
+
 				// Now we can preserve the original damage source (sort of) as long as we make it retaliatory.
 				// For some reason this isn't working, so I've reverted to plain old magic damage for now.
 				//event.getEntityLiving().attackEntityFrom(
 				//		MagicDamage.causeDirectMagicDamage(event.getSource().getTrueSource(), DamageType.MAGIC, true), event.getAmount() * 0.5f);
-				DamageSafetyChecker.attackEntitySafely(event.getEntity(), DamageSource.MAGIC, event.getAmount() * 0.5f, event.getSource().getDamageType());
-				((EntityLivingBase)event.getSource().getTrueSource()).attackEntityFrom(
-						MagicDamage.causeDirectMagicDamage(event.getEntityLiving(), DamageType.MAGIC, true), event.getAmount() * 0.5f);
+				DamageSafetyChecker.attackEntitySafely(event.getEntity(), DamageSource.MAGIC, event.getAmount()
+						* (1 - reflectedFraction), event.getSource().getDamageType());
+				event.getSource().getTrueSource().attackEntityFrom(MagicDamage.causeDirectMagicDamage(
+						event.getEntityLiving(), DamageType.MAGIC, true), event.getAmount() * reflectedFraction);
 			}
 		}
 	}

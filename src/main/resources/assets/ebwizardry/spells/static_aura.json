@@ -1,0 +1,24 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "lightning",
+  "type": "defence",
+  "cost": 40,
+  "chargeup": 0,
+  "cooldown": 250,
+  "base_properties": {
+    "static_aura_duration": 600,
+    "static_aura_strength": 0,
+    "damage": 4
+  }
+}

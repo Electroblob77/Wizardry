@@ -1,41 +1,43 @@
  package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.construct.EntityEarthquake;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
+ import electroblob.wizardry.entity.construct.EntityEarthquake;
+ import electroblob.wizardry.registry.WizardryItems;
+ import electroblob.wizardry.util.SpellModifiers;
+ import electroblob.wizardry.util.WizardryUtilities;
+ import net.minecraft.block.Block;
+ import net.minecraft.block.state.IBlockState;
+ import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.item.EnumAction;
+ import net.minecraft.util.EnumFacing;
+ import net.minecraft.util.EnumParticleTypes;
+ import net.minecraft.world.World;
 
-public class Earthquake extends SpellConstruct<EntityEarthquake> {
+ public class Earthquake extends SpellConstruct<EntityEarthquake> {
+
+	public static final String SPREAD_SPEED = "spread_speed";
 
 	public Earthquake(){
-		super("earthquake", Tier.MASTER, Element.EARTH, SpellType.ATTACK, 75, 250, EnumAction.NONE, EntityEarthquake::new, -1, WizardrySounds.SPELL_EARTHQUAKE);
+		super("earthquake", EnumAction.NONE, EntityEarthquake::new, true);
 		this.soundValues(2, 1, 0);
 		this.overlap(true);
 		this.floor(true);
+		addProperties(EFFECT_RADIUS, SPREAD_SPEED);
 	}
 	
 	// This one spawns particles
-	@Override public boolean doesSpellRequirePacket(){ return true; }
+	@Override public boolean requiresPacket(){ return true; }
 	
 	@Override
-	protected void addConstructExtras(EntityEarthquake construct, EntityLivingBase caster, SpellModifiers modifiers){
-		construct.lifetime = (int)(20 * modifiers.get(WizardryItems.blast_upgrade));
+	protected void addConstructExtras(EntityEarthquake construct, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
+		// Calculates the lifetime based on the base radius and spread speed
+		// Also overwrites the -1 lifetime set due to permanent being true
+		construct.lifetime = (int)(getProperty(EFFECT_RADIUS).floatValue()/getProperty(SPREAD_SPEED).floatValue()
+				* modifiers.get(WizardryItems.blast_upgrade));
 	}
 	
 	@Override
-	protected boolean spawnConstruct(World world, double x, double y, double z, EntityLivingBase caster, SpellModifiers modifiers){
+	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 		
-		// TODO: Couldn't this be moved to EntityEarthquake?
 		if(world.isRemote){
 
 			world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, caster.posX,
@@ -49,15 +51,13 @@ public class Earthquake extends SpellConstruct<EntityEarthquake> {
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
 
 				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
-				if(block != null){
-					world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY,
-							particleZ, particleX - caster.posX, 0, particleZ - caster.posZ,
-							Block.getStateId(block));
-				}
+				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY,
+						particleZ, particleX - caster.posX, 0, particleZ - caster.posZ,
+						Block.getStateId(block));
 			}
 		}
 		
-		return super.spawnConstruct(world, x, y, z, caster, modifiers);
+		return super.spawnConstruct(world, x, y, z, side, caster, modifiers);
 	}
 
 }

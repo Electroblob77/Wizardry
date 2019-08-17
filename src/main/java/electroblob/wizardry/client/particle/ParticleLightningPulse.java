@@ -6,9 +6,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticleLightningPulse extends ParticleWizardry {
 
@@ -27,7 +26,12 @@ public class ParticleLightningPulse extends ParticleWizardry {
 		this.pitch = 90;
 		this.yaw = 0;
 	}
-	
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
+	}
+
 	@SubscribeEvent
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
 		for(ResourceLocation texture : TEXTURES){

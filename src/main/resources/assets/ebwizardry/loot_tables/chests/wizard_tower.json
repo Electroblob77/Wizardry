@@ -9,7 +9,7 @@
             "entries": [
 				{
                     "type": "loot_table",
-                    "name": "ebwizardry:subsets/novice_wands",
+                    "name": "ebwizardry:subsets/elemental_crystals",
                     "weight": 3
                 },
 				{
@@ -20,7 +20,7 @@
 				{
                     "type": "loot_table",
                     "name": "ebwizardry:subsets/arcane_tomes",
-                    "weight": 6
+                    "weight": 4
                 },
 				{
                     "type": "loot_table",
@@ -47,17 +47,26 @@
                     "weight": 20,
                     "functions": [
                         {
-                            "function": "ebwizardry:random_spell"
+                            "function": "ebwizardry:random_spell",
+                            "undiscovered_bias": 0.3
                         }
                     ]
                 },
                 {
                     "type": "item",
                     "name": "ebwizardry:scroll",
-                    "weight": 10,
+                    "weight": 7,
                     "functions": [
                         {
-                            "function": "ebwizardry:random_spell"
+                            "function": "ebwizardry:random_spell",
+                            "undiscovered_bias": 0.3
+                        },
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 5
+                            }
                         }
                     ]
                 },

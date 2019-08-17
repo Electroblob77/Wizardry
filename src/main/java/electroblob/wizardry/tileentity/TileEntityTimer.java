@@ -22,11 +22,10 @@ public class TileEntityTimer extends TileEntity implements ITickable {
 
 	@Override
 	public void update(){
+
 		timer++;
-		if(!this.world.isRemote){
-			// System.out.println("Timer: " + timer + "/" + maxTimer);
-		}
-		if(timer > maxTimer && !this.world.isRemote){// && this.world.getBlockId(xCoord, yCoord, zCoord) ==
+
+		if(maxTimer > 0 && timer > maxTimer && !this.world.isRemote){// && this.world.getBlockId(xCoord, yCoord, zCoord) ==
 														// Wizardry.magicLight.blockID){
 			if(this.getBlockType() instanceof BlockVanishingCobweb){
 				// destroyBlock breaks the block as if broken by a player, with sound and particles.

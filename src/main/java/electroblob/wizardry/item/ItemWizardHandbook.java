@@ -1,13 +1,8 @@
 package electroblob.wizardry.item;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.registry.WizardryTabs;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,6 +10,9 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class ItemWizardHandbook extends Item {
 
@@ -28,7 +26,7 @@ public class ItemWizardHandbook extends Item {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag flag) {
 		tooltip.add(
 				"\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_handbook.desc", AUTHOR));
 	}

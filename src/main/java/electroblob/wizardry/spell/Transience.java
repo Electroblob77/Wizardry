@@ -1,48 +1,60 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
 public class Transience extends Spell {
 
+	/** A {@code ResourceLocation} representing the shader file used when under the effects of transience. */
+	public static final ResourceLocation SHADER = new ResourceLocation(Wizardry.MODID, "shaders/post/transience.json");
+
 	public Transience(){
-		super("transience", Tier.ADVANCED, Element.HEALING, SpellType.BUFF, 50, 100, EnumAction.BOW, false);
+		super("transience", EnumAction.BOW, false);
+		addProperties(EFFECT_DURATION);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
-		return false;
+	public boolean requiresPacket(){
+		return true;
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
+		if(world.isRemote && caster == net.minecraft.client.Minecraft.getMinecraft().player){
+			if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
+			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
+		}
+
 		if(!caster.isPotionActive(WizardryPotions.transience)){
+
 			if(!world.isRemote){
-				caster.addPotionEffect(new PotionEffect(WizardryPotions.transience,
-						(int)(400 * modifiers.get(WizardryItems.duration_upgrade)), 0));
-				caster.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY,
-						(int)(400 * modifiers.get(WizardryItems.duration_upgrade)), 0, false, false));
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+
+				int duration = (int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
+
+				caster.addPotionEffect(new PotionEffect(WizardryPotions.transience, duration, 0));
+				caster.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, duration, 0, false, false));
+
+				this.playSound(world, caster, ticksInUse, duration, modifiers);
 			}
+
 			return true;
 		}
 		return false;
@@ -53,7 +65,7 @@ public class Transience extends Spell {
 		if(event.getSource() != null){
 			// Prevents all blockable damage while transience is active
 			if(event.getEntityLiving().isPotionActive(WizardryPotions.transience)
-					&& !event.getSource().isUnblockable()){
+					&& event.getSource() != DamageSource.OUT_OF_WORLD){
 				event.setCanceled(true);
 			}
 			// Prevents transient entities from causing any damage
@@ -65,20 +77,19 @@ public class Transience extends Spell {
 	}
 
 	@SubscribeEvent
-	public static void onBlockPlaceEvent(BlockEvent.PlaceEvent event){
-		// Prevents transient players from placing blocks
-		if(event.getPlayer().isPotionActive(WizardryPotions.transience)){
+	public static void onPlayerInteractEvent(PlayerInteractEvent event){
+		// Prevents transient players from interacting with the world in any way
+		if(event.isCancelable() && event.getEntityPlayer().isPotionActive(WizardryPotions.transience)){
 			event.setCanceled(true);
-			return;
 		}
 	}
 
 	@SubscribeEvent
-	public static void onBlockBreakEvent(BlockEvent.BreakEvent event){
-		// Prevents transient players from breaking blocks
-		if(event.getPlayer().isPotionActive(WizardryPotions.transience)){
-			event.setCanceled(true);
-			return;
+	public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event){
+		if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == WizardryPotions.transience
+				&& event.getEntity() == net.minecraft.client.Minecraft.getMinecraft().player){
+			if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
+			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
 		}
 	}
 

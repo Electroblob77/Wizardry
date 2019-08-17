@@ -1,13 +1,15 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
@@ -16,7 +18,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class EntityBlackHole extends EntityMagicConstruct {
+	
+	private static final double SUCTION_STRENGTH = 0.075;
 
 	public int[] randomiser;
 	public int[] randomiser2;
@@ -69,42 +75,49 @@ public class EntityBlackHole extends EntityMagicConstruct {
 		}
 
 		if(this.lifetime - this.ticksExisted == 75){
-			this.playSound(SoundEvents.BLOCK_PORTAL_TRIGGER, 1.5f, 1.0f);
+			this.playSound(WizardrySounds.ENTITY_BLACK_HOLE_VANISH, 1.5f, 1.0f);
 		}else if(this.ticksExisted % 80 == 1 && this.ticksExisted + 80 < this.lifetime){
-			this.playSound(SoundEvents.BLOCK_PORTAL_AMBIENT, 1.5f, 1.0f);
+			this.playSound(WizardrySounds.ENTITY_BLACK_HOLE_AMBIENT, 1.5f, 1.0f);
 		}
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(6.0d, this.posX, this.posY,
-				this.posZ, this.world);
-
 		if(!this.world.isRemote){
+
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(6.0d, this.posX, this.posY,
+					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
 
 				if(this.isValidTarget(target)){
 
-					// Sucks the target in
-					if(this.posX > target.posX && target.motionX < 1){
-						target.motionX += 0.1;
-					}else if(this.posX < target.posX && target.motionX > -1){
-						target.motionX -= 0.1;
-					}
+					// If the target can't be moved, it isn't sucked in but is still damaged if it gets too close
+					if(!(target instanceof EntityPlayer && ((getCaster() instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
+							|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)))){
 
-					if(this.posY > target.posY && target.motionY < 1){
-						target.motionY += 0.1;
-					}else if(this.posY < target.posY && target.motionY > -1){
-						target.motionY -= 0.1;
-					}
+						WizardryUtilities.undoGravity(target);
 
-					if(this.posZ > target.posZ && target.motionZ < 1){
-						target.motionZ += 0.1;
-					}else if(this.posZ < target.posZ && target.motionZ > -1){
-						target.motionZ -= 0.1;
-					}
+						// Sucks the target in
+						if(this.posX > target.posX && target.motionX < 1){
+							target.motionX += SUCTION_STRENGTH;
+						}else if(this.posX < target.posX && target.motionX > -1){
+							target.motionX -= SUCTION_STRENGTH;
+						}
 
-					// Player motion is handled on that player's client so needs packets
-					if(target instanceof EntityPlayerMP){
-						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+						if(this.posY > target.posY && target.motionY < 1){
+							target.motionY += SUCTION_STRENGTH;
+						}else if(this.posY < target.posY && target.motionY > -1){
+							target.motionY -= SUCTION_STRENGTH;
+						}
+
+						if(this.posZ > target.posZ && target.motionZ < 1){
+							target.motionZ += SUCTION_STRENGTH;
+						}else if(this.posZ < target.posZ && target.motionZ > -1){
+							target.motionZ -= SUCTION_STRENGTH;
+						}
+
+						// Player motion is handled on that player's client so needs packets
+						if(target instanceof EntityPlayerMP){
+							((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+						}
 					}
 
 					if(this.getDistance(target) <= 2){
@@ -126,6 +139,11 @@ public class EntityBlackHole extends EntityMagicConstruct {
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double distance){
 		return true;
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass){
+		return pass == 1;
 	}
 
 }

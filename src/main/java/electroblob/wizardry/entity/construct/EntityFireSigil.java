@@ -1,15 +1,18 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityFireSigil extends EntityMagicConstruct {
 
@@ -38,16 +41,18 @@ public class EntityFireSigil extends EntityMagicConstruct {
 
 					target.attackEntityFrom(this.getCaster() != null
 							? MagicDamage.causeIndirectMagicDamage(this, this.getCaster(), DamageType.FIRE)
-							: DamageSource.MAGIC, 6);
+							: DamageSource.MAGIC, Spells.fire_sigil.getProperty(Spell.DAMAGE).floatValue()
+							* damageMultiplier);
 
 					// Removes knockback
 					target.motionX = velX;
 					target.motionY = velY;
 					target.motionZ = velZ;
 
-					if(!MagicDamage.isEntityImmune(DamageType.FIRE, target)) target.setFire(10);
+					if(!MagicDamage.isEntityImmune(DamageType.FIRE, target))
+						target.setFire(Spells.fire_sigil.getProperty(Spell.BURN_DURATION).intValue());
 
-					this.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
+					this.playSound(WizardrySounds.ENTITY_FIRE_SIGIL_TRIGGER, 1, 1);
 
 					// The trap is destroyed once triggered.
 					this.setDead();
@@ -55,9 +60,9 @@ public class EntityFireSigil extends EntityMagicConstruct {
 			}
 		}else if(this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble() * 0.3;
-			double angle = rand.nextDouble() * Math.PI * 2;
-			world.spawnParticle(EnumParticleTypes.FLAME, this.posX + radius * Math.cos(angle), this.posY + 0.1,
-					this.posZ + radius * Math.sin(angle), 0, 0, 0);
+			float angle = rand.nextFloat() * (float)Math.PI * 2;;
+			world.spawnParticle(EnumParticleTypes.FLAME, this.posX + radius * MathHelper.cos(angle), this.posY + 0.1,
+					this.posZ + radius * MathHelper.sin(angle), 0, 0, 0);
 		}
 	}
 

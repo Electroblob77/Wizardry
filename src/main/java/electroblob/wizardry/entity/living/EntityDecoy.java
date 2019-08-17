@@ -1,10 +1,7 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -99,18 +96,19 @@ public class EntityDecoy extends EntitySummonedCreature {
 		return false;
 	}
 
-	@Override
-	public void writeSpawnData(ByteBuf data){
-		super.writeSpawnData(data);
-		if(this.getCaster() != null) data.writeInt(this.getCaster().getEntityId());
-	}
-
-	@Override
-	public void readSpawnData(ByteBuf data){
-		super.readSpawnData(data);
-		if(!data.isReadable()) return;
-		this.setCasterReference(
-				new WeakReference<EntityLivingBase>((EntityLivingBase)this.world.getEntityByID(data.readInt())));
-	}
+	// TESTME: Why was this here? It gets done in ISummonedCreature anyway
+//	@Override
+//	public void writeSpawnData(ByteBuf data){
+//		super.writeSpawnData(data);
+//		if(this.getCaster() != null) data.writeInt(this.getCaster().getEntityId());
+//	}
+//
+//	@Override
+//	public void readSpawnData(ByteBuf data){
+//		super.readSpawnData(data);
+//		if(!data.isReadable()) return;
+//		this.setCasterReference(
+//				new WeakReference<EntityLivingBase>((EntityLivingBase)this.world.getEntityByID(data.readInt())));
+//	}
 
 }

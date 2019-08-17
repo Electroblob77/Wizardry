@@ -3,6 +3,7 @@ package electroblob.wizardry.packet;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.packet.PacketNPCCastSpell.Message;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumHand;
@@ -52,10 +53,10 @@ public class PacketNPCCastSpell implements IMessageHandler<Message, IMessage> {
 		public Message(){
 		}
 
-		public Message(int casterID, int targetID, EnumHand hand, int spellID, SpellModifiers modifiers){
+		public Message(int casterID, int targetID, EnumHand hand, Spell spell, SpellModifiers modifiers){
 			this.casterID = casterID;
 			this.targetID = targetID;
-			this.spellID = spellID;
+			this.spellID = spell.networkID();
 			this.modifiers = modifiers;
 			this.hand = hand == null ? EnumHand.MAIN_HAND : hand;
 		}

@@ -1,9 +1,12 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -16,19 +19,22 @@ public class EntityFirebolt extends EntityMagicProjectile {
 
 	@Override
 	protected void onImpact(RayTraceResult rayTrace){
+		
 		Entity entityHit = rayTrace.entityHit;
 
 		if(entityHit != null){
-			float damage = 5 * damageMultiplier;
+
+			float damage = Spells.firebolt.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier;
 
 			entityHit.attackEntityFrom(
 					MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.FIRE).setProjectile(),
 					damage);
 
-			if(!MagicDamage.isEntityImmune(DamageType.FIRE, entityHit)) entityHit.setFire(5);
+			if(!MagicDamage.isEntityImmune(DamageType.FIRE, entityHit))
+				entityHit.setFire(Spells.firebolt.getProperty(Spell.BURN_DURATION).intValue());
 		}
 
-		this.playSound(SoundEvents.BLOCK_LAVA_POP, 2, 0.8f + rand.nextFloat() * 0.3f);
+		this.playSound(WizardrySounds.ENTITY_FIREBOLT_HIT, 2, 0.8f + rand.nextFloat() * 0.3f);
 
 		// Particle effect
 		if(world.isRemote){
@@ -47,16 +53,20 @@ public class EntityFirebolt extends EntityMagicProjectile {
 		super.onUpdate();
 
 		if(world.isRemote){
-			for(int i = 0; i < 4; i++){
-				world.spawnParticle(EnumParticleTypes.FLAME, this.posX + rand.nextFloat() * 0.2 - 0.1,
-						this.posY + this.height / 2 + rand.nextFloat() * 0.2 - 0.1,
-						this.posZ + rand.nextFloat() * 0.2 - 0.1, 0, 0, 0);
+			ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE, this).time(14).spawn(world);
+
+			if(this.ticksExisted > 1){ // Don't spawn particles behind where it started!
+				double x = posX - motionX/2 + rand.nextFloat() * 0.2 - 0.1;
+				double y = posY + this.height/2 - motionY/2 + rand.nextFloat() * 0.2 - 0.1;
+				double z = posZ - motionZ/2 + rand.nextFloat() * 0.2 - 0.1;
+				ParticleBuilder.create(ParticleBuilder.Type.MAGIC_FIRE).pos(x, y, z).time(14).spawn(world);
 			}
 		}
+	}
 
-		if(this.ticksExisted > 8){
-			this.setDead();
-		}
+	@Override
+	public int getLifetime(){
+		return 6;
 	}
 
 	@Override

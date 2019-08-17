@@ -1,37 +1,55 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class Whirlwind extends SpellRay {
 
+	public static final String REPULSION_VELOCITY = "repulsion_velocity";
+
 	public Whirlwind(){
-		super("whirlwind", Tier.APPRENTICE, Element.EARTH, SpellType.DEFENCE, 10, 15, false, 10, WizardrySounds.SPELL_ICE);
+		super("whirlwind", false, EnumAction.NONE);
 		this.soundValues(0.8f, 0.7f, 0.2f);
+		addProperties(REPULSION_VELOCITY);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+
+		if(target instanceof EntityPlayer && ((caster instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
+				|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
+
+			if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
+					new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
+			return false;
+		}
+
 		// Left as EntityLivingBase because why not be able to move armour stands around?
 		if(target instanceof EntityLivingBase){
+			
+			Vec3d vec = target.getPositionVector().add(0, target.getEyeHeight(), 0).subtract(origin).normalize();
 
 			if(!world.isRemote){
 
-				target.motionX = caster.getLookVec().x * 2;
-				target.motionY = caster.getLookVec().y * 2 + 1;
-				target.motionZ = caster.getLookVec().z * 2;
+				float velocity = getProperty(REPULSION_VELOCITY).floatValue() * modifiers.get(SpellModifiers.POTENCY);
+
+				target.motionX = vec.x * velocity;
+				target.motionY = vec.y * velocity + 1;
+				target.motionZ = vec.z * velocity;
 
 				// Player motion is handled on that player's client so needs packets
 				if(target instanceof EntityPlayerMP){
@@ -40,15 +58,14 @@ public class Whirlwind extends SpellRay {
 			}
 
 			if(world.isRemote){
+				
+				double distance = target.getDistance(origin.x, origin.y, origin.z);
+				
 				for(int i = 0; i < 10; i++){
-					double x = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().x * caster.getDistance(target) * 0.5);
-					double y = (double)(caster.getEntityBoundingBox().minY + caster.getEyeHeight() + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().y * caster.getDistance(target) * 0.5);
-					double z = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().z * caster.getDistance(target) * 0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, caster.getLookVec().x,
-							caster.getLookVec().y, caster.getLookVec().z);
+					double x = origin.x + world.rand.nextDouble() - 0.5 + vec.x * distance * 0.5;
+					double y = origin.y + world.rand.nextDouble() - 0.5 + vec.y * distance * 0.5;
+					double z = origin.z + world.rand.nextDouble() - 0.5 + vec.z * distance * 0.5;
+					world.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, vec.x, vec.y, vec.z);
 				}
 			}
 			
@@ -59,12 +76,12 @@ public class Whirlwind extends SpellRay {
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 

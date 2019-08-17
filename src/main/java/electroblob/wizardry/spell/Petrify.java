@@ -1,9 +1,6 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -12,42 +9,43 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Petrify extends SpellRay {
 
-	private static final int BASE_DURATION = 900;
+	// This is more descriptive and more accurate than the standard "effect_duration" in this case
+	public static final String MINIMUM_EFFECT_DURATION = "minimum_effect_duration";
 
 	public Petrify(){
-		super("petrify", Tier.ADVANCED, Element.SORCERY, SpellType.ATTACK, 40, 100, false, 10, SoundEvents.ENTITY_WITHER_SPAWN);
+		super("petrify", false, EnumAction.NONE);
 		this.soundValues(1, 1.1f, 0.2f);
+		addProperties(MINIMUM_EFFECT_DURATION);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.petrified_stone).convertToStatue((EntityLiving)target,
-					(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)))){
-				
-				return true;
+					(int)(getProperty(MINIMUM_EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 			}
 		}
 		
+		return true;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		return false;
-	}
-
-	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
 	

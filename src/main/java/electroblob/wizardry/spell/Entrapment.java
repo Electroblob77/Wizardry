@@ -1,8 +1,5 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.construct.EntityBubble;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
@@ -13,21 +10,25 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class Entrapment extends SpellRay {
 
+	public static final String DAMAGE_INTERVAL = "damage_interval";
+
 	public Entrapment(){
-		super("entrapment", Tier.ADVANCED, Element.NECROMANCY, SpellType.ATTACK, 35, 75, false, 10, SoundEvents.ENTITY_WITHER_SHOOT);
+		super("entrapment", false, EnumAction.NONE);
 		this.soundValues(1, 0.85f, 0.3f);
+		addProperties(EFFECT_DURATION, DAMAGE_INTERVAL);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(WizardryUtilities.isLiving(target)){
 			
@@ -38,7 +39,7 @@ public class Entrapment extends SpellRay {
 				EntityBubble bubble = new EntityBubble(world);
 				bubble.setPosition(target.posX, target.posY, target.posZ);
 				bubble.setCaster(caster);
-				bubble.lifetime = ((int)(200 * modifiers.get(WizardryItems.duration_upgrade)));
+				bubble.lifetime = ((int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 				bubble.isDarkOrb = true;
 				bubble.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
 				
@@ -51,12 +52,12 @@ public class Entrapment extends SpellRay {
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
 	

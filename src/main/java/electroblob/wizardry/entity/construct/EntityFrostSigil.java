@@ -1,9 +1,9 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -12,7 +12,10 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityFrostSigil extends EntityMagicConstruct {
 
@@ -38,12 +41,15 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 					
 					WizardryUtilities.attackEntityWithoutKnockback(target, this.getCaster() != null
 							? MagicDamage.causeIndirectMagicDamage(this, this.getCaster(), DamageType.FROST)
-							: DamageSource.MAGIC, 8);
+							: DamageSource.MAGIC, Spells.frost_sigil.getProperty(Spell.DAMAGE).floatValue()
+							* damageMultiplier);
 
 					if(!MagicDamage.isEntityImmune(DamageType.FROST, target))
-						target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 200, 1));
+						target.addPotionEffect(new PotionEffect(WizardryPotions.frost,
+								Spells.frost_sigil.getProperty(Spell.EFFECT_DURATION).intValue(),
+								Spells.frost_sigil.getProperty(Spell.EFFECT_STRENGTH).intValue()));
 
-					this.playSound(WizardrySounds.SPELL_FREEZE, 1.0f, 1.0f);
+					this.playSound(WizardrySounds.ENTITY_FROST_SIGIL_TRIGGER, 1.0f, 1.0f);
 
 					// The trap is destroyed once triggered.
 					this.setDead();
@@ -51,9 +57,9 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 			}
 		}else if(this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble() * 0.3;
-			double angle = rand.nextDouble() * Math.PI * 2;
+			float angle = rand.nextFloat() * (float)Math.PI * 2;;
 			ParticleBuilder.create(Type.SNOW)
-			.pos(this.posX + radius * Math.cos(angle), this.posY + 0.1, this.posZ + radius * Math.sin(angle))
+			.pos(this.posX + radius * MathHelper.cos(angle), this.posY + 0.1, this.posZ + radius * MathHelper.sin(angle))
 			.vel(0, 0, 0) // Required since default for snow is not stationary
 			.spawn(world);
 		}

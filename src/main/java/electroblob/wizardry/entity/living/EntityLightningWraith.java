@@ -1,15 +1,12 @@
 package electroblob.wizardry.entity.living;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -75,9 +72,21 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 		return this.getFlag(0);
 	}
 
+	@Override
+	public boolean getCanSpawnHere(){
+		// Only spawns in the specified dimensions, during thunderstorms
+		if(!world.isThundering()) return false;
+
+		for(int id : Wizardry.settings.mobSpawnDimensions){
+			if(this.dimension == id) return super.getCanSpawnHere() && this.isValidLightLevel();
+		}
+
+		return false;
+	}
+
 	/**
 	 * Copied straight from EntityBlaze.AIFireballAttack, with the only changes being replacement of fireball spawning
-	 * with a one-liner call to WizardryRegistry.arc.cast(...) and the removal of redundant local variables.
+	 * with a one-liner call to WizardryLoot.arc.cast(...) and the removal of redundant local variables.
 	 */
 	static class AILightningAttack extends EntityAIBase {
 
@@ -111,6 +120,7 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 		public void updateTask(){
 			--this.attackTime;
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
+			if(entitylivingbase == null) return; // Dynamic stealth breaks things, let's un-break them
 			double d0 = this.blaze.getDistanceSq(entitylivingbase);
 
 			if(d0 < 4.0D){
@@ -139,7 +149,6 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 					if(this.attackStep > 1){
 						// Proof, if it were at all needed, of the elegance and versatility of the spell system.
 						Spells.arc.cast(this.blaze.world, this.blaze, EnumHand.MAIN_HAND, 0, entitylivingbase, new SpellModifiers());
-						// TODO: Decide if an event should be fired here. I'm guessing no.
 					}
 				}
 

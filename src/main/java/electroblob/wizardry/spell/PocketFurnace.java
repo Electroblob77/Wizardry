@@ -1,29 +1,31 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+
 public class PocketFurnace extends Spell {
 
+	public static final String ITEMS_SMELTED = "items_smelted";
+
 	public PocketFurnace(){
-		super("pocket_furnace", Tier.APPRENTICE, Element.FIRE, SpellType.UTILITY, 30, 40, EnumAction.BOW, false);
+		super("pocket_furnace", EnumAction.BOW, false);
+		addProperties(ITEMS_SMELTED);
+		soundValues(1, 0.75f, 0);
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		int usesLeft = 5;
+		int usesLeft = (int)(getProperty(ITEMS_SMELTED).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
 		ItemStack stack, result;
 
@@ -31,11 +33,14 @@ public class PocketFurnace extends Spell {
 
 			stack = caster.inventory.getStackInSlot(i);
 
-			if(!stack.isEmpty()){
+			if(!stack.isEmpty() && !world.isRemote){
 
 				result = FurnaceRecipes.instance().getSmeltingResult(stack);
 
-				if(!result.isEmpty()){
+				if(!result.isEmpty() && !(result.getItem() instanceof ItemTool) && !(result.getItem() instanceof ItemSword)
+						&& !(result.getItem() instanceof ItemArmor)
+						&& !Arrays.asList(Wizardry.settings.pocketFurnaceItemBlacklist).contains(result.getItem().getRegistryName())){
+
 					if(stack.getCount() <= usesLeft){
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.getCount(), result.getItemDamage());
 						if(WizardryUtilities.doesPlayerHaveItem(caster, result.getItem())){
@@ -55,7 +60,7 @@ public class PocketFurnace extends Spell {
 			}
 		}
 
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, 1, 0.75f);
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 		if(world.isRemote){
 			for(int i = 0; i < 10; i++){

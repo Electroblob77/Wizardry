@@ -1,7 +1,6 @@
 package electroblob.wizardry.potion;
 
-import java.util.stream.Collectors;
-
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.world.World;
@@ -10,16 +9,23 @@ import net.minecraftforge.event.entity.living.PotionColorCalculationEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.stream.Collectors;
+
 /**
- * Interface for potion effects that spawn custom particles instead of (or as well as) the vanilla 'swirly' particles.
- * To hide the vanilla 'swirly' particles, set the potion's liquid colour to 0 (black). By default, potions that implement
- * this interface no longer mix their colour with other potions.
+ * Interface for potion effects that spawn custom particles instead of (or as well as) the vanilla 'swirly' particles.<br>
+ * <br>
+ * To hide the vanilla 'swirly' particles, set the potion's liquid colour to 0 (black). By default, potions that
+ * implement this interface do not mix their colour with other potions.<br>
+ * <br>
+ * Potions that implement this interface also implement {@link ISyncedPotion} since any custom particles require syncing
+ * to disappear correctly when the effect ends; if syncing is not required, override
+ * {@link ISyncedPotion#shouldSync(EntityLivingBase)} to return false.
  * 
  * @author Electroblob
  * @since Wizardry 1.2
  */
 @Mod.EventBusSubscriber
-public interface ICustomPotionParticles {
+public interface ICustomPotionParticles extends ISyncedPotion {
 
 	/**
 	 * Called from the event handler to spawn a <b>single</b> custom potion particle. To get an instance of
@@ -65,4 +71,5 @@ public interface ICustomPotionParticles {
 				p -> !(p instanceof ICustomPotionParticles && !((ICustomPotionParticles)p).shouldMixColour()))
 				.collect(Collectors.toList())));
 	}
+
 }

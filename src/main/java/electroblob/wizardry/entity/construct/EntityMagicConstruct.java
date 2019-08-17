@@ -1,38 +1,38 @@
 package electroblob.wizardry.entity.construct;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+import java.util.UUID;
+
 /**
  * This class is for all inanimate magical constructs which are not projectiles. It was made from scratch to provide a
  * unifying superclass for black hole, blizzard, tornado and a few others which all share some characteristics. The
- * EntityPlayer instance of the caster, the lifetime and the damage multiplier are stored and synced here.
- * <p>
+ * caster UUID, lifetime and damage multiplier are stored here, and lifetime is also synced here.
+ * <p></p>
  * When extending this class, override both constructors. Generally speaking, subclasses of this class are areas of
  * effect which deal damage or apply effects over time.
  * 
  * @since Wizardry 1.0
  */
-public abstract class EntityMagicConstruct extends Entity implements IEntityAdditionalSpawnData {
+public abstract class EntityMagicConstruct extends Entity implements IEntityOwnable, IEntityAdditionalSpawnData {
 
-	/** The entity that created this construct */
-	private WeakReference<EntityLivingBase> caster;
-
-	/**
-	 * The UUID of the caster. Note that this is only for loading purposes; during normal updates the actual entity
-	 * instance is stored (so that getEntityByUUID is not called constantly), so this will not always be synced (this is
-	 * why it is private).
-	 */
+	/** The UUID of the caster. As of Wizardry 4.2, this <b>is</b> synced, and rather than storing the caster
+	 * instance via a weak reference, it is fetched from the UUID each time it is needed in
+	 * {@link EntityMagicConstruct#getCaster()}. */
 	private UUID casterUUID;
 
 	/**
@@ -61,13 +61,6 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 	}
 
 	public void onUpdate(){
-
-		if(this.getCaster() == null && this.casterUUID != null){
-			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
-			if(entity instanceof EntityLivingBase){
-				this.caster = new WeakReference<EntityLivingBase>((EntityLivingBase)entity);
-			}
-		}
 
 		if(this.ticksExisted > lifetime && lifetime != -1){
 			this.despawn();
@@ -118,25 +111,51 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityAddi
 		lifetime = data.readInt();
 	}
 
+	@Nullable
+	@Override
+	public UUID getOwnerId(){
+		return casterUUID;
+	}
+
+	@Nullable
+	@Override
+	public Entity getOwner(){
+		return getCaster(); // Delegate to getCaster
+	}
+
 	/**
 	 * Returns the EntityLivingBase that created this construct, or null if it no longer exists. Cases where the entity
 	 * may no longer exist are: entity died or was deleted, mob despawned, player logged out, entity teleported to
 	 * another dimension, or this construct simply had no caster in the first place.
 	 */
-	public EntityLivingBase getCaster(){
-		return caster == null ? null : caster.get();
+	@Nullable
+	public EntityLivingBase getCaster(){ // Kept despite the above method because it returns an EntityLivingBase
+
+		Entity entity = WizardryUtilities.getEntityByUUID(world, getOwnerId());
+
+		if(entity != null && !(entity instanceof EntityLivingBase)){ // Should never happen
+			Wizardry.logger.warn("{} has a non-living owner!", this);
+			entity = null;
+		}
+
+		return (EntityLivingBase)entity;
 	}
 	
-	public void setCaster(EntityLivingBase caster){
-		this.caster = new WeakReference<EntityLivingBase>(caster);
+	public void setCaster(@Nullable EntityLivingBase caster){
+		this.casterUUID = caster == null ? null : caster.getUniqueID();
 	}
 
 	/**
-	 * Shorthand for {@link WizardryUtilities#isValidTarget(Entity, Entity)}, with the owner of this construct as the
+	 * Shorthand for {@link AllyDesignationSystem#isValidTarget(Entity, Entity)}, with the owner of this construct as the
 	 * attacker. Also allows subclasses to override it if they wish to do so.
 	 */
 	public boolean isValidTarget(Entity target){
-		return WizardryUtilities.isValidTarget(this.getCaster(), target);
+		return AllyDesignationSystem.isValidTarget(this.getCaster(), target);
+	}
+	
+	@Override
+	public SoundCategory getSoundCategory(){
+		return WizardrySounds.SPELLS;
 	}
 
 	@Override

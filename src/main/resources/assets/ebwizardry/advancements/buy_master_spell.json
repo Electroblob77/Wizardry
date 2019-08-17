@@ -1,13 +1,13 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:buy_master_spell"
+            "translate": "advancement.ebwizardry:buy_master_spell"
         },
         "description": {
-            "translate": "advancement.wizardry:buy_master_spell.desc"
+            "translate": "advancement.ebwizardry:buy_master_spell.desc"
         },
         "icon": {
-            "item": "ebwizardry:spell_book"
+            "item": "ebwizardry:astral_diamond"
         },
 		"frame": "goal"
     },

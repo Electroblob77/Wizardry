@@ -1,57 +1,51 @@
 package electroblob.wizardry.loot;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSyntaxException;
-
+import com.google.gson.*;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.SpellProperties;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Loot function that allows spell books and scrolls to select a random spell based on the standard weighting.
- * Automatically discounts continuous spells when the item in question is a scroll. Can be used as-is with no
- * parameters, but several optional parameters are available for those wishing to customise further:
- * <p>
+ * Can be used as-is with no parameters, but several optional parameters are available for those wishing to customise further:
+ * <p></p>
  * - <b>spells</b>: A list of spells to choose from. Defaults to all enabled spells.<br>
  * - <b>ignore_weighting</b>: true to ignore the standard weighting and just pick a completely random spell. Defaults to
  * false.<br>
+ * - <b>undiscovered_bias</b>: A number between 0 and 1 representing the bias towards undiscovered spells, with 0
+ * being no bias and 1 meaning spells are guaranteed to be undiscovered.<br>
  * - <b>tiers</b>: A list of tiers to choose from. Defaults to all tiers.<br>
  * - <b>elements</b>: A list of elements to choose from. Defaults to all elements.
- * <p>
+ * <p></p>
  * This class is effectively a loot table-friendly replacement for the standard weighting method in WizardryUtilities
  * which was the basis of all the old loot systems (not counting wizard trades, which were - and still are - completely
  * separate).
- * <p>
+ * <p></p>
  * Since spells are stored as metadata, this <i>could</i> be done by having an entry for each tier and letting it pick a
  * random spell from that tier by setting the metadata to a random value in the range of values that correspond to that
  * tier. However, this creates a two-fold problem: firstly, not all spells are in tier order, and secondly, if spells
  * are added via addon mods the entries would have to be updated manually with the new numbers.
- * <p>
+ * <p></p>
  * (This reasoning is similar to that for the enchant_randomly function in vanilla Minecraft, since you can specify NBT
  * data in loot tables, but using NBT in this way would be incredibly verbose and inflexible, hence the loot function.)
- * 
- * @see WizardryUtilities#getStandardWeightedRandomSpellId(Random, boolean)
+ *
  * @author Electroblob
  * @since Wizardry 1.2
  */
@@ -62,14 +56,16 @@ public class RandomSpell extends LootFunction {
 
 	private final List<Spell> spells;
 	private final boolean ignoreWeighting;
+	private final float undiscoveredBias;
 	private final List<Tier> tiers;
 	private final List<Element> elements;
 
-	protected RandomSpell(LootCondition[] conditions, List<Spell> spells, boolean ignoreWeighting, List<Tier> tiers,
-			List<Element> elements){
+	protected RandomSpell(LootCondition[] conditions, List<Spell> spells, boolean ignoreWeighting,
+						  float undiscoveredBias, List<Tier> tiers, List<Element> elements){
 		super(conditions);
 		this.spells = spells;
 		this.ignoreWeighting = ignoreWeighting;
+		this.undiscoveredBias = undiscoveredBias;
 		this.tiers = tiers;
 		this.elements = elements;
 	}
@@ -99,8 +95,8 @@ public class RandomSpell extends LootFunction {
 
 		// Elements aren't weighted
 		if(elements == null || elements.isEmpty()){
-			// Element can only be MAGIC if tier is BASIC
-			if(tier == Tier.BASIC){
+			// Element can only be MAGIC if tier is NOVICE
+			if(tier == Tier.NOVICE){
 				element = Element.values()[random.nextInt(Element.values().length)];
 			}else{
 				Element[] elements = ArrayUtils.removeElement(Element.values(), Element.MAGIC);
@@ -114,15 +110,17 @@ public class RandomSpell extends LootFunction {
 
 		// Here's a thought: does randomly selecting the element beforehand (as opposed to leaving it null and letting
 		// the spell randomiser use any element) change the overall outcome at all?
-		List<Spell> spellsList = Spell.getSpells(new Spell.TierElementFilter(tier, element));
-		if(stack.getItem() instanceof ItemScroll) spellsList.retainAll(Spell.getSpells(Spell.nonContinuousSpells));
+		List<Spell> spellsList = Spell.getSpells(new Spell.TierElementFilter(tier, element, SpellProperties.Context.TREASURE));
 
-		// Ensures the tier chosen actually has spells in it, and if not uses BASIC instead. BASIC always has at least
+		if(stack.getItem() instanceof ItemScroll) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.SCROLL));
+		if(stack.getItem() instanceof ItemSpellBook) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
+
+		// Ensures the tier chosen actually has spells in it, and if not uses NOVICE instead. NOVICE always has at least
 		// the NONE spell since this spell cannot be disabled.
-		// NOTE: Commented out for now because it will interfere with the ability to specify tiers and elements.
+		// Commented out for now because it will interfere with the ability to specify tiers and elements.
 		// To be honest, I may as well just say that if you disable enough spells to make this important, you deserve
 		// less loot!
-		/* if(spells.isEmpty()){ spellsList = Spell.getSpells(new Spell.TierElementFilter(EnumTier.BASIC, null));
+		/* if(spells.isEmpty()){ spellsList = Spell.getSpells(new Spell.TierElementFilter(EnumTier.NOVICE, null));
 		 * if(stack.getItem() instanceof ItemScroll) spellsList.retainAll(Spell.getSpells(Spell.nonContinuousSpells));
 		 * } */
 
@@ -130,12 +128,30 @@ public class RandomSpell extends LootFunction {
 			spellsList.retainAll(spells);
 		}
 
+		// This method is badly-named, loot chests pass a player through too, not just mobs
+		// (And WHY does it only return an entity?! The underlying field is always a player so I'm casting it anyway)
+		EntityPlayer player = (EntityPlayer)context.getKillerPlayer();
+
+		// Remove either the undiscovered spells or the discovered ones, depending on the bias
+		if(undiscoveredBias > 0 && player != null){
+
+			WizardData data = WizardData.get(player);
+
+			int discoveredCount = (int)spellsList.stream().filter(data::hasSpellBeenDiscovered).count();
+			// If none have been discovered or they've all been discovered, don't bother!
+			if(discoveredCount > 0 && discoveredCount < spellsList.size()){
+				// Kinda unintuitive but it's very neat!
+				boolean keepDiscovered = random.nextFloat() < 0.5f + 0.5f * undiscoveredBias;
+				spellsList.removeIf(s -> keepDiscovered != data.hasSpellBeenDiscovered(s));
+			}
+		}
+
 		if(spellsList.isEmpty()){
 			Wizardry.logger.warn("Tried to apply the random_spell loot function to an item, but no enabled spells"
 					+ "matched the criteria specified. Substituting placeholder (metadata 0) item.");
 			stack.setItemDamage(0);
 		}else{
-			stack.setItemDamage(spellsList.get(random.nextInt(spellsList.size())).id());
+			stack.setItemDamage(spellsList.get(random.nextInt(spellsList.size())).metadata());
 		}
 
 		return stack;
@@ -162,6 +178,8 @@ public class RandomSpell extends LootFunction {
 
 			object.addProperty("ignore_weighting", function.ignoreWeighting);
 
+			object.addProperty("undiscovered_bias", function.undiscoveredBias);
+
 			if(function.tiers != null && !function.tiers.isEmpty()){
 
 				JsonArray jsonarray = new JsonArray();
@@ -178,7 +196,7 @@ public class RandomSpell extends LootFunction {
 				JsonArray jsonarray = new JsonArray();
 
 				for(Element element : function.elements){
-					jsonarray.add(new JsonPrimitive(element.getUnlocalisedName()));
+					jsonarray.add(new JsonPrimitive(element.getName()));
 				}
 
 				object.add("elements", jsonarray);
@@ -194,8 +212,7 @@ public class RandomSpell extends LootFunction {
 
 			if(object.has("spells")){
 
-				// Vanilla Minecraft calls Lists.<T>newArrayList() here, which is completely pointless.
-				spells = new ArrayList<Spell>();
+				spells = new ArrayList<>();
 
 				// Importantly, it is necessary to specify a default (the new JsonArray) here because otherwise the
 				// parameter will be mandatory, and the game will crash if it isn't present.
@@ -215,50 +232,43 @@ public class RandomSpell extends LootFunction {
 
 			boolean ignoreWeighting = JsonUtils.getBoolean(object, "ignore_weighting", false);
 
+			float undiscoveredBias = JsonUtils.getFloat(object, "undiscovered_bias", 0);
+
 			if(object.has("tiers")){
 
-				// Vanilla Minecraft calls Lists.<T>newArrayList() here, which is completely pointless.
-				tiers = new ArrayList<Tier>();
+				tiers = new ArrayList<>();
 
-				jsonarray: for(JsonElement element : JsonUtils.getJsonArray(object, "tiers", new JsonArray())){
+				for(JsonElement element : JsonUtils.getJsonArray(object, "tiers", new JsonArray())){
 
 					String string = JsonUtils.getString(element, "tier");
 
-					// IDEA: If it is necessary to get tiers by name elsewhere in the future, move this to EnumTier.
-					for(Tier tier : Tier.values()){
-						if(tier.getUnlocalisedName().equals(string)){
-							tiers.add(tier);
-							continue jsonarray;
-						}
+					try {
+						tiers.add(Tier.fromName(string));
+					}catch(IllegalArgumentException e){
+						// If the string does not match any of the tiers, throws an exception.
+						throw new JsonSyntaxException("Unknown tier \'" + string + "\'");
 					}
-					// If the string does not match any of the tiers, throws an exception.
-					throw new JsonSyntaxException("Unknown tier \'" + string + "\'");
 				}
 			}
 
 			if(object.has("elements")){
 
-				// Vanilla Minecraft calls Lists.<T>newArrayList() here, which is completely pointless.
-				elements = new ArrayList<Element>();
+				elements = new ArrayList<>();
 
-				jsonarray: for(JsonElement jelement : JsonUtils.getJsonArray(object, "elements", new JsonArray())){
+				for(JsonElement jelement : JsonUtils.getJsonArray(object, "elements", new JsonArray())){
 
 					String string = JsonUtils.getString(jelement, "element");
 
-					// IDEA: If it is necessary to get elements by name elsewhere in the future, move this to
-					// EnumElement.
-					for(Element element : Element.values()){
-						if(element.getUnlocalisedName().equals(string)){
-							elements.add(element);
-							continue jsonarray;
-						}
+					try {
+						elements.add(Element.fromName(string));
+					}catch(IllegalArgumentException e){
+						// If the string does not match any of the elements, throws an exception.
+						throw new JsonSyntaxException("Unknown element \'" + string + "\'");
 					}
-					// If the string does not match any of the elements, throws an exception.
-					throw new JsonSyntaxException("Unknown element \'" + string + "\'");
 				}
 			}
 
-			return new RandomSpell(conditions, spells, ignoreWeighting, tiers, elements);
+			return new RandomSpell(conditions, spells, ignoreWeighting, undiscoveredBias, tiers, elements);
 		}
 	}
 

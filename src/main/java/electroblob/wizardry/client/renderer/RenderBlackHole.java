@@ -1,22 +1,18 @@
 package electroblob.wizardry.client.renderer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityBlackHole;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class RenderBlackHole extends Render<EntityBlackHole> {
 
@@ -81,21 +77,21 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 			int sliceAngle = 20 + a;
 
-			double x1 = scale * Math.sin((blackhole.ticksExisted + 40 * j) * (Math.PI / 180));
-			// double y1 = 0.7*Math.cos((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
-			double z1 = scale * Math.cos((blackhole.ticksExisted + 40 * j) * (Math.PI / 180));
+			double x1 = scale * MathHelper.sin((blackhole.ticksExisted + 40 * j) * ((float)Math.PI / 180f));
+			// double y1 = 0.7*MathHelper.cos((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
+			double z1 = scale * MathHelper.cos((blackhole.ticksExisted + 40 * j) * ((float)Math.PI / 180));
 
-			double x2 = scale * Math.sin((blackhole.ticksExisted + 40 * j - sliceAngle) * (Math.PI / 180));
-			// double y2 = 0.7*Math.sin((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
-			double z2 = scale * Math.cos((blackhole.ticksExisted + 40 * j - sliceAngle) * (Math.PI / 180));
+			double x2 = scale * MathHelper.sin((blackhole.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
+			// double y2 = 0.7*MathHelper.sin((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
+			double z2 = scale * MathHelper.cos((blackhole.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
 
-			double absoluteX = x1 * Math.cos(31 * b);
-			double absoluteY = z1 * Math.sin(31 * a) + x1 * Math.cos(31 * a) * Math.sin(31 * b);
-			double absoluteZ = z1 * Math.cos(31 * a);
+			double absoluteX = x1 * MathHelper.cos(31 * b);
+			double absoluteY = z1 * MathHelper.sin(31 * a) + x1 * MathHelper.cos(31 * a) * MathHelper.sin(31 * b);
+			double absoluteZ = z1 * MathHelper.cos(31 * a);
 
-			double absoluteX2 = x2 * Math.cos(31 * b);
-			double absoluteY2 = z2 * Math.sin(31 * a) + x2 * Math.cos(31 * a) * Math.sin(31 * b);
-			double absoluteZ2 = z2 * Math.cos(31 * a);
+			double absoluteX2 = x2 * MathHelper.cos(31 * b);
+			double absoluteY2 = z2 * MathHelper.sin(31 * a) + x2 * MathHelper.cos(31 * a) * MathHelper.sin(31 * b);
+			double absoluteZ2 = z2 * MathHelper.cos(31 * a);
 			/* buffer.begin(0, DefaultVertexFormats.POSITION_TEX);
 			 * 
 			 * tessellator.setColorOpaque(255, 255, 255); GL11.glPointSize(5);

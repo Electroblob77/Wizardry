@@ -1,8 +1,5 @@
 package electroblob.wizardry.packet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketGlyphData.Message;
 import io.netty.buffer.ByteBuf;
@@ -10,6 +7,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <b>[Server -> Client]</b> This packet is sent each time a player joins a world to synchronise the client-side spell
@@ -23,12 +23,7 @@ public class PacketGlyphData implements IMessageHandler<Message, IMessage> {
 		if(ctx.side.isClient()){
 			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
 			// methods any more than necessary.
-			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable(){
-				@Override
-				public void run(){
-					Wizardry.proxy.handleGlyphDataPacket(message);
-				}
-			});
+			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> Wizardry.proxy.handleGlyphDataPacket(message));
 		}
 
 		return null;
@@ -52,8 +47,8 @@ public class PacketGlyphData implements IMessageHandler<Message, IMessage> {
 
 		@Override
 		public void fromBytes(ByteBuf buf){
-			names = new ArrayList<String>();
-			descriptions = new ArrayList<String>();
+			names = new ArrayList<>();
+			descriptions = new ArrayList<>();
 			while(buf.isReadable()){
 				names.add(ByteBufUtils.readUTF8String(buf));
 				descriptions.add(ByteBufUtils.readUTF8String(buf));

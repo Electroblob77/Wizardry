@@ -1,25 +1,34 @@
 package electroblob.wizardry.client.gui;
 
-import org.lwjgl.input.Keyboard;
-
-import electroblob.wizardry.SpellGlyphData;
-import electroblob.wizardry.WizardData;
+import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.data.SpellGlyphData;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Keyboard;
+
+import java.util.Map;
 
 public class GuiSpellBook extends GuiScreen {
 
 	private int xSize, ySize;
 	private Spell spell;
 
-	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/spellbook.png");
+	private static final Map<Tier, ResourceLocation> textures = ImmutableMap.of(
+			Tier.NOVICE, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_novice.png"),
+			Tier.APPRENTICE, 	new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_apprentice.png"),
+			Tier.ADVANCED, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_advanced.png"),
+			Tier.MASTER, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_master.png"));
 
 	public GuiSpellBook(Spell spell){
 		super();
@@ -39,45 +48,47 @@ public class GuiSpellBook extends GuiScreen {
 		EntityPlayer player = Minecraft.getMinecraft().player;
 
 		boolean discovered = true;
-		if(Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode && WizardData.get(player) != null
+		if(Wizardry.settings.discoveryMode && !player.isCreative() && WizardData.get(player) != null
 				&& !WizardData.get(player).hasSpellBeenDiscovered(spell)){
 			discovered = false;
 		}
+
+		GlStateManager.color(1, 1, 1, 1); // Just in case
 
 		// Draws spell illustration on opposite page, underneath the book so it shows through the hole.
 		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
 		DrawingUtils.drawTexturedRect(xPos + 146, yPos + 20, 0, 0, 128, 128, 128, 128);
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures.get(spell.tier));
+		Minecraft.getMinecraft().renderEngine.bindTexture(textures.get(spell.getTier()));
 		DrawingUtils.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
 
 		super.drawScreen(par1, par2, par3);
 
 		if(discovered){
 			this.fontRenderer.drawString(spell.getDisplayName(), xPos + 17, yPos + 15, 0);
-			this.fontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 26, 0x777777);
+			this.fontRenderer.drawString(spell.getType().getDisplayName(), xPos + 17, yPos + 26, 0x777777);
 		}else{
 			this.mc.standardGalacticFontRenderer.drawString(SpellGlyphData.getGlyphName(spell, player.world), xPos + 17,
 					yPos + 15, 0);
-			this.mc.standardGalacticFontRenderer.drawString(spell.type.getDisplayName(), xPos + 17, yPos + 26,
+			this.mc.standardGalacticFontRenderer.drawString(spell.getType().getDisplayName(), xPos + 17, yPos + 26,
 					0x777777);
 		}
 
-		this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 35, 0);
+		//this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 35, 0);
 
-		if(spell.tier == Tier.BASIC){
+		if(spell.getTier() == Tier.NOVICE){
 			// Basic is usually white but this doesn't show up.
-			this.fontRenderer.drawString("Tier: \u00A77" + Tier.BASIC.getDisplayName(), xPos + 17, yPos + 45, 0);
+			this.fontRenderer.drawString("Tier: \u00A77" + Tier.NOVICE.getDisplayName(), xPos + 17, yPos + 45, 0);
 		}else{
-			this.fontRenderer.drawString("Tier: " + spell.tier.getDisplayNameWithFormatting(), xPos + 17, yPos + 45, 0);
+			this.fontRenderer.drawString("Tier: " + spell.getTier().getDisplayNameWithFormatting(), xPos + 17, yPos + 45, 0);
 		}
 
-		String element = "Element: " + spell.element.getFormattingCode() + spell.element.getDisplayName();
+		String element = "Element: " + spell.getElement().getFormattingCode() + spell.getElement().getDisplayName();
 		if(!discovered) element = "Element: ?";
 		this.fontRenderer.drawString(element, xPos + 17, yPos + 57, 0);
 
-		String manaCost = "Mana Cost: " + spell.cost;
-		if(spell.isContinuous) manaCost = "Mana Cost: " + spell.cost + "/second";
+		String manaCost = "Mana Cost: " + spell.getCost();
+		if(spell.isContinuous) manaCost = "Mana Cost: " + spell.getCost() + "/second";
 		if(!discovered) manaCost = "Mana Cost: ?";
 		this.fontRenderer.drawString(manaCost, xPos + 17, yPos + 69, 0);
 
@@ -93,10 +104,18 @@ public class GuiSpellBook extends GuiScreen {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		this.buttonList.clear();
+		
+		this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(WizardrySounds.MISC_BOOK_OPEN, 1));
 	}
 
 	public void onGuiClosed(){
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
 	}
+
+	@Override
+	public boolean doesGuiPauseGame(){
+		return Wizardry.settings.booksPauseGame;
+	}
+
 }

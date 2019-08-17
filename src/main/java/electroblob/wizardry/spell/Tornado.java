@@ -1,23 +1,25 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.entity.construct.EntityTornado;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
+import net.minecraft.util.EnumFacing;
 
 public class Tornado extends SpellConstruct<EntityTornado> {
 
+	public static final String SPEED = "speed";
+	public static final String UPWARD_ACCELERATION = "upward_acceleration";
+
 	public Tornado(){
-		super("tornado", Tier.ADVANCED, Element.EARTH, SpellType.ATTACK, 35, 80, EnumAction.NONE, EntityTornado::new, 200, WizardrySounds.SPELL_ICE);
+		super("tornado", EnumAction.NONE, EntityTornado::new, false);
+		addProperties(EFFECT_RADIUS, SPEED, DAMAGE, UPWARD_ACCELERATION);
 	}
 
 	@Override
-	protected void addConstructExtras(EntityTornado construct, EntityLivingBase caster, SpellModifiers modifiers){
-		construct.setHorizontalVelocity(caster.getLookVec().x / 3, caster.getLookVec().z / 3);
+	protected void addConstructExtras(EntityTornado construct, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
+		float speed = getProperty(SPEED).floatValue();
+		construct.setHorizontalVelocity(caster.getLookVec().x * speed, caster.getLookVec().z * speed);
 	}
 
 }

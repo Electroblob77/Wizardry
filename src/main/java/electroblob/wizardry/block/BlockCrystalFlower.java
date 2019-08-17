@@ -1,7 +1,5 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -18,6 +16,8 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Random;
 
 // Extending BlockBush allows me to remove nearly everything from this class.
 @Mod.EventBusSubscriber

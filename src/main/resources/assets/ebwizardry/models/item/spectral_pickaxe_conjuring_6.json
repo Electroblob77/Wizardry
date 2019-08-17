@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "ebwizardry:items/spectral_pickaxe_conjuring_6"
+    }
+}

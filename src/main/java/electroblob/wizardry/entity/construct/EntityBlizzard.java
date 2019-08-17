@@ -1,9 +1,9 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -13,6 +13,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityBlizzard extends EntityMagicConstruct {
 
@@ -25,14 +27,18 @@ public class EntityBlizzard extends EntityMagicConstruct {
 	public void onUpdate(){
 
 		if(this.ticksExisted % 120 == 1){
-			this.playSound(WizardrySounds.SPELL_LOOP_WIND, 1.0f, 1.0f);
+			this.playSound(WizardrySounds.ENTITY_BLIZZARD_AMBIENT, 1.0f, 1.0f);
 		}
 
 		super.onUpdate();
 
+		// This is a good example of why you might define a spell base property without necessarily using it in the
+		// spell - in fact, blizzard doesn't even have a spell class (yet)
+		double radius = Spells.blizzard.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(3.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
@@ -59,7 +65,7 @@ public class EntityBlizzard extends EntityMagicConstruct {
 			for(int i=1; i<12; i++){
 				double speed = (rand.nextBoolean() ? 1 : -1) * 0.1 + 0.05 * rand.nextDouble();
 				ParticleBuilder.create(Type.SNOW).pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ).vel(0, 0, 0)
-				.time(100).scale(2).spin(rand.nextDouble() * 2.5 + 0.5, speed).spawn(world);
+				.time(100).scale(2).spin(rand.nextDouble() * (radius - 0.5) + 0.5, speed).spawn(world);
 			}
 		}
 	}

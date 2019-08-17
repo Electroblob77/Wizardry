@@ -1,14 +1,11 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.tileentity.TileEntityTimer;
+import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
@@ -19,18 +16,21 @@ import net.minecraft.world.World;
 public class Light extends Spell {
 
 	public Light(){
-		super("light", Tier.BASIC, Element.SORCERY, SpellType.UTILITY, 5, 15, EnumAction.NONE, false);
+		super("light", EnumAction.NONE, false);
+		addProperties(RANGE, DURATION);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.standardBlockRayTrace(world, caster, 4, false);
+		double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
+
+		RayTraceResult rayTrace = RayTracer.standardBlockRayTrace(world, caster, range, false);
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 
@@ -41,20 +41,21 @@ public class Light extends Spell {
 				if(!world.isRemote){
 					world.setBlockState(pos, WizardryBlocks.magic_light.getDefaultState());
 					if(world.getTileEntity(pos) instanceof TileEntityTimer){
-						((TileEntityTimer)world.getTileEntity(pos))
-								.setLifetime((int)(600 * modifiers.get(WizardryItems.duration_upgrade)));
+						int lifetime = ItemArtefact.isArtefactActive(caster, WizardryItems.charm_light) ? -1
+								: (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
+						((TileEntityTimer)world.getTileEntity(pos)).setLifetime(lifetime);
 					}
 				}
 
 				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+				this.playSound(world, caster, ticksInUse, -1, modifiers);
 				return true;
 			}
 		}else{
 
-			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().x * 4);
-			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().y * 4);
-			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().z * 4);
+			int x = (int)(Math.floor(caster.posX) + caster.getLookVec().x * range);
+			int y = (int)(Math.floor(caster.posY) + caster.eyeHeight + caster.getLookVec().y * range);
+			int z = (int)(Math.floor(caster.posZ) + caster.getLookVec().z * range);
 
 			BlockPos pos = new BlockPos(x, y, z);
 
@@ -62,12 +63,13 @@ public class Light extends Spell {
 				if(!world.isRemote){
 					world.setBlockState(pos, WizardryBlocks.magic_light.getDefaultState());
 					if(world.getTileEntity(pos) instanceof TileEntityTimer){
-						((TileEntityTimer)world.getTileEntity(pos))
-								.setLifetime((int)(600 * modifiers.get(WizardryItems.duration_upgrade)));
+						int lifetime = ItemArtefact.isArtefactActive(caster, WizardryItems.charm_light) ? -1
+								: (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
+						((TileEntityTimer)world.getTileEntity(pos)).setLifetime(lifetime);
 					}
 				}
 				caster.swingArm(hand);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+				this.playSound(world, caster, ticksInUse, -1, modifiers);
 				return true;
 			}
 		}

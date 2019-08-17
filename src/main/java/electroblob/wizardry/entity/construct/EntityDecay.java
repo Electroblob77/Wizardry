@@ -1,16 +1,19 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityDecay extends EntityMagicConstruct {
 
@@ -29,7 +32,7 @@ public class EntityDecay extends EntityMagicConstruct {
 		super.onUpdate();
 
 		if(this.rand.nextInt(700) == 0 && this.ticksExisted + 100 < lifetime)
-			this.playSound(SoundEvents.BLOCK_LAVA_AMBIENT, 0.2F + rand.nextFloat() * 0.2F,
+			this.playSound(WizardrySounds.ENTITY_DECAY_AMBIENT, 0.2F + rand.nextFloat() * 0.2F,
 					0.6F + rand.nextFloat() * 0.15F);
 
 		if(!this.world.isRemote){
@@ -41,18 +44,19 @@ public class EntityDecay extends EntityMagicConstruct {
 					// damaged each tick.
 					// In this case, we do want particles to be shown.
 					if(!target.isPotionActive(WizardryPotions.decay))
-						target.addPotionEffect(new PotionEffect(WizardryPotions.decay, lifetime, 0));
+						target.addPotionEffect(new PotionEffect(WizardryPotions.decay,
+								Spells.decay.getProperty(Spell.EFFECT_DURATION).intValue(), 0));
 				}
 			}
 			
 		}else if(this.rand.nextInt(15) == 0){
 			
 			double radius = rand.nextDouble() * 0.8;
-			double angle = rand.nextDouble() * Math.PI * 2;
+			float angle = rand.nextFloat() * (float)Math.PI * 2;
 			float brightness = rand.nextFloat() * 0.4f;
 			
 			ParticleBuilder.create(Type.DARK_MAGIC)
-			.pos(this.posX + radius * Math.cos(angle), this.posY, this.posZ + radius * Math.sin(angle))
+			.pos(this.posX + radius * MathHelper.cos(angle), this.posY, this.posZ + radius * MathHelper.sin(angle))
 			.clr(brightness, 0, brightness + 0.1f)
 			.spawn(world);
 		}

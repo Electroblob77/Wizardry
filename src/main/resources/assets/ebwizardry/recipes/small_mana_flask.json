@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "yyy",
+        "yxy",
+        "yyy"
+    ],
+    "key": {
+        "x": {
+            "item": "minecraft:glass_bottle"
+        },
+        "y": {
+			"item": "ebwizardry:crystal_shard"
+		}
+    },
+    "result": {
+        "item": "ebwizardry:small_mana_flask"
+    }
+}

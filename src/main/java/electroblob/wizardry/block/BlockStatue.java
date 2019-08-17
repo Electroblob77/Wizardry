@@ -1,11 +1,9 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
 import electroblob.wizardry.tileentity.TileEntityStatue;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -21,12 +19,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockStatue extends BlockContainer {
+import java.util.Random;
+
+public class BlockStatue extends Block implements ITileEntityProvider {
 
 	private boolean isIce;
-	
+
 	/** The NBT tag name for storing the petrified flag (used for rendering) in the target's tag compound. */
-	public static final String NBT_KEY = "petrified";
+	public static final String PETRIFIED_NBT_KEY = "petrified";
+	/** The NBT tag name for storing the frozen flag (used for rendering) in the target's tag compound. */
+	public static final String FROZEN_NBT_KEY = "frozen";
 
 	public BlockStatue(Material material){
 		super(material);
@@ -111,6 +113,11 @@ public class BlockStatue extends BlockContainer {
 	}
 
 	@Override
+	public boolean hasTileEntity(IBlockState state){
+		return true;
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world, int metadata){
 		return new TileEntityStatue(this.isIce);
 	}
@@ -150,7 +157,7 @@ public class BlockStatue extends BlockContainer {
 
 			// This is only when position == 1 because world.destroyBlock calls this function for the other blocks.
 			if(tileentity != null && tileentity.position == 1 && tileentity.creature != null){
-				tileentity.creature.getEntityData().removeTag(BlockStatue.NBT_KEY);
+				tileentity.creature.getEntityData().removeTag(BlockStatue.PETRIFIED_NBT_KEY);
 				tileentity.creature.isDead = false;
 				world.spawnEntity(tileentity.creature);
 			}
@@ -198,7 +205,7 @@ public class BlockStatue extends BlockContainer {
 				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
 			}
 			
-			if(!this.isIce) entity.getEntityData().setBoolean(NBT_KEY, true);
+			entity.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
 			entity.setDead();
 			return true;
 		}
@@ -216,8 +223,8 @@ public class BlockStatue extends BlockContainer {
 			if(world.getTileEntity(pos.up()) instanceof TileEntityStatue){
 				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(entity, 2, 2);
 			}
-			
-			if(!this.isIce) entity.getEntityData().setBoolean(NBT_KEY, true);
+
+			entity.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
 			entity.setDead();
 			return true;
 		}
@@ -241,8 +248,8 @@ public class BlockStatue extends BlockContainer {
 			if(world.getTileEntity(pos.up(2)) instanceof TileEntityStatue){
 				((TileEntityStatue)world.getTileEntity(pos.up(2))).setCreatureAndPart(entity, 3, 3);
 			}
-			
-			if(!this.isIce) entity.getEntityData().setBoolean(NBT_KEY, true);
+
+			entity.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
 			entity.setDead();
 			return true;
 		}

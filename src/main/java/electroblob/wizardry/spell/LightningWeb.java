@@ -1,146 +1,138 @@
 package electroblob.wizardry.spell;
 
-import java.util.List;
-
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class LightningWeb extends SpellRay {
-	
-	private static final float PRIMARY_DAMAGE = 5;
-	private static final float SECONDARY_DAMAGE = 4;
-	private static final float TERTIARY_DAMAGE = 3;
+import java.util.List;
 
-	private static final double PRIMARY_RANGE = 10;
-	private static final double SECONDARY_RANGE = 5;
-	private static final double TERTIARY_RANGE = 5;
-	
-	private static final int SECONDARY_MAX_TARGETS = 5;
-	private static final int TERTIARY_MAX_TARGETS = 2; // This is per secondary target, giving 10 in total
+public class LightningWeb extends SpellRay {
+
+	public static final String PRIMARY_DAMAGE = "primary_damage";
+	public static final String SECONDARY_DAMAGE = "secondary_damage";
+	public static final String TERTIARY_DAMAGE = "tertiary_damage";
+
+	public static final String SECONDARY_RANGE = "secondary_range";
+	public static final String TERTIARY_RANGE = "tertiary_range";
+
+	public static final String SECONDARY_MAX_TARGETS = "secondary_max_targets";
+	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public LightningWeb(){
-		super("lightning_web", Tier.MASTER, Element.LIGHTNING, SpellType.ATTACK, 15, 0, true, PRIMARY_RANGE, null);
-	}
-	
-	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		// TODO: Temporary solution until I implement a better continuous sound system
-		boolean flag = super.cast(world, caster, hand, ticksInUse, modifiers);
-		if(flag){
-			if(ticksInUse == 1){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1, 1);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1, 1);
-			}
-		}
-		return flag;
+		super("lightning_web", true, EnumAction.NONE);
+		this.aimAssist(0.6f);
+		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,
+				SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		boolean flag = super.cast(world, caster, hand, ticksInUse, target, modifiers);
-		if(flag){
-			if(ticksInUse == 1){
-				caster.playSound(WizardrySounds.SPELL_LIGHTNING, 1, 1);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				caster.playSound(WizardrySounds.SPELL_LOOP_LIGHTNING, 1, 1);
-			}
-		}
-		return flag;
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
+	}
+
+	@Override
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
+
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
 	}
 	
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(WizardryUtilities.isLiving(target)){
-			
-			electrocute(world, caster, caster, target, PRIMARY_DAMAGE * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
+
+			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
+					* modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 			
 			// Secondary chaining effect
 
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(SECONDARY_RANGE,
-					target.posX, target.posY + target.height / 2, target.posZ, world);
+			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+					getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
+					target.posZ, world);
 			
 			secondaryTargets.remove(target);
 			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
-			secondaryTargets.removeIf(e -> !WizardryUtilities.isValidTarget(caster, e));
-			if(secondaryTargets.size() > SECONDARY_MAX_TARGETS) secondaryTargets = secondaryTargets.subList(0, SECONDARY_MAX_TARGETS);
+			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
+			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
+				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
 
 			for(EntityLivingBase secondaryTarget : secondaryTargets){
 
-				electrocute(world, caster, target, secondaryTarget,
-						SECONDARY_DAMAGE * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
+				electrocute(world, caster, target.getPositionVector().add(0, target.height/2, 0), secondaryTarget,
+						getProperty(SECONDARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(TERTIARY_RANGE,
-						secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height / 2,
-						secondaryTarget.posZ, world);
+				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+						getProperty(TERTIARY_RANGE).floatValue(), secondaryTarget.posX,
+						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 				
 				tertiaryTargets.remove(target);
 				tertiaryTargets.removeAll(secondaryTargets);
 				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
-				tertiaryTargets.removeIf(e -> !WizardryUtilities.isValidTarget(caster, e));
-				if(tertiaryTargets.size() > TERTIARY_MAX_TARGETS) tertiaryTargets = tertiaryTargets.subList(0, TERTIARY_MAX_TARGETS);
+				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
+				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
+					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
 
 				for(EntityLivingBase tertiaryTarget : tertiaryTargets){
-					electrocute(world, caster, secondaryTarget, tertiaryTarget,
-							TERTIARY_DAMAGE * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
+					electrocute(world, caster, secondaryTarget.getPositionVector().add(0, secondaryTarget.height/2, 0),
+							tertiaryTarget, getProperty(TERTIARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 				}
 			}
 		}
 		
+		return true;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		return false;
-	}
-
-	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		// This is a nice example of when onMiss is used for more than just returning a boolean
 		if(world.isRemote){
-			
-			if(caster != null) origin = origin.subtract(0, Y_OFFSET, 0);
-			
-			double freeRange = 0.8 * baseRange; // The arc does not reach full range when it has a free end
-			Vec3d endpoint = origin.add(direction.scale(freeRange));
-			
-			ParticleBuilder.create(Type.BEAM).entity(caster).clr(0.2f, 0.6f, 1)
-			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(endpoint).spawn(world);
-			
-			if(ticksInUse % 2 == 0){
 
-				ParticleBuilder.create(Type.LIGHTNING).entity(caster)
-				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(endpoint).spawn(world);
-				
+			// The arc does not reach full range when it has a free end
+			double freeRange = 0.8 * getRange(world, origin, direction, caster, ticksInUse, modifiers);
+
+			if(caster != null){
+				ParticleBuilder.create(Type.BEAM).entity(caster).pos(origin.subtract(caster.getPositionVector()))
+						.length(freeRange).clr(0.2f, 0.6f, 1).spawn(world);
+			}else{
+				ParticleBuilder.create(Type.BEAM).pos(origin).target(origin.add(direction.scale(freeRange)))
+						.clr(0.2f, 0.6f, 1).spawn(world);
+			}
+
+			if(ticksInUse % 4 == 0){
+				if(caster != null){
+					ParticleBuilder.create(Type.LIGHTNING).entity(caster).pos(origin.subtract(caster.getPositionVector()))
+							.length(freeRange).spawn(world);
+				}else{
+					ParticleBuilder.create(Type.LIGHTNING).pos(origin).target(origin.add(direction.scale(freeRange))).spawn(world);
+				}
 			}
 		}
 		
 		return true;
 	}
 	
-	private void electrocute(World world, Entity caster, Entity origin, Entity target, float damage, int ticksInUse){
+	private void electrocute(World world, Entity caster, Vec3d origin, Entity target, float damage, int ticksInUse){
 
 		if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
 			if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer)

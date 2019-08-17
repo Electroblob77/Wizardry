@@ -1,9 +1,7 @@
 package electroblob.wizardry.item;
 
-import javax.annotation.Nullable;
-
 import electroblob.wizardry.Wizardry;
-import net.minecraft.client.Minecraft;
+import electroblob.wizardry.registry.Spells;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,20 +15,18 @@ import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 
 	public ItemSpectralBow(){
 		super();
-		setMaxDamage(getBaseDuration());
+		setMaxDamage(1200);
 		setNoRepair();
 		setCreativeTab(null);
 		this.addPropertyOverride(new ResourceLocation("pull"), new IItemPropertyGetter(){
@@ -40,7 +36,6 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 					return 0.0F;
 				}else{
 					ItemStack itemstack = entityIn.getActiveItemStack();
-					// Mojang, observe - hardcoding item references into their own classes is NOT good Java.
 					return itemstack.getItem() == ItemSpectralBow.this
 							? (float)(stack.getMaxItemUseDuration() - entityIn.getItemInUseCount()) / 20.0F
 							: 0.0F;
@@ -54,6 +49,7 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 						: 0.0F;
 			}
 		});
+		addAnimationPropertyOverrides();
 	}
 
 	@Override
@@ -64,13 +60,8 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 	}
 
 	@Override
-	public int getBaseDuration(){
-		return 1200;
-	}
-
-	@Override
 	public int getMaxDamage(ItemStack stack){
-		return this.getMaxDamageFromNBT(stack);
+		return this.getMaxDamageFromNBT(stack, Spells.conjure_bow);
 	}
 
 	@Override
@@ -78,27 +69,38 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 	// onUpdate() and removing the workaround that involved WizardData and all sorts of crazy stuff.
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged){
 
-		// TODO: For some reason there used to be an && here instead of an ||, which makes me wonder if there's a weird
-		// fix I did that needs removing.
 		if(!oldStack.isEmpty() || !newStack.isEmpty()){
 			// We only care about the situation where we specifically want the animation NOT to play.
 			if(oldStack.getItem() == newStack.getItem() && !slotChanged
 			// This code should only run on the client side, so using Minecraft is ok.
-					&& !Minecraft.getMinecraft().player.isHandActive())
+					&& !net.minecraft.client.Minecraft.getMinecraft().player.isHandActive())
 				return false;
 		}
 
 		return super.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
 	}
 
+	// Copied fixes from ItemWand made possible by recently-added Forge hooks
+
+	@Override
+	public boolean canContinueUsing(ItemStack oldStack, ItemStack newStack){
+		// Ignore durability changes
+		if(ItemStack.areItemsEqualIgnoreDurability(oldStack, newStack)) return true;
+		return super.canContinueUsing(oldStack, newStack);
+	}
+
+	@Override
+	public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack){
+		// Ignore durability changes
+		if(ItemStack.areItemsEqualIgnoreDurability(oldStack, newStack)) return false;
+		return super.shouldCauseBlockBreakReset(oldStack, newStack);
+	}
+
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
 		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
-		// Can't damage it whilst in use because for some reason it causes the item use to constantly reset.
-		if(!(entity instanceof EntityLivingBase) || !((EntityLivingBase)entity).isHandActive()){
-			stack.setItemDamage(damage + 1);
-		}
+		stack.setItemDamage(damage + 1);
 	}
 
 	// The following two methods re-route the displayed durability through the proxies in order to override the pausing
@@ -145,19 +147,29 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 		return 0;
 	}
 
+	@Override
+	public boolean isEnchantable(ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book){
+		return false;
+	}
+
 	// Cannot be dropped
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player){
 		return false;
 	}
 
-	@Override
-	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
-		// player.getItemInUseMaxCount() is named incorrectly; you only have to look at the method to see what it really
-		// does.
-		if(stack.getItemDamage() + player.getItemInUseMaxCount() > stack.getMaxDamage())
-			player.replaceItemInInventory(player.getActiveHand() == EnumHand.MAIN_HAND ? 98 : 99, ItemStack.EMPTY);
-	}
+//	@Override
+//	public void onUsingTick(ItemStack stack, EntityLivingBase player, int count){
+//		// player.getItemInUseMaxCount() is named incorrectly; you only have to look at the method to see what it really
+//		// does.
+//		if(stack.getItemDamage() + player.getItemInUseMaxCount() > stack.getMaxDamage())
+//			player.replaceItemInInventory(player.getActiveHand() == EnumHand.MAIN_HAND ? 98 : 99, ItemStack.EMPTY);
+//	}
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase entity, int timeLeft){
@@ -205,10 +217,12 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 
 					entityarrow.pickupStatus = EntityArrow.PickupStatus.DISALLOWED;
 
+					entityarrow.setDamage(entityarrow.getDamage() * IConjuredItem.getDamageMultiplier(stack));
+
 					world.spawnEntity(entityarrow);
 				}
 
-				world.playSound((EntityPlayer)null, entityplayer.posX, entityplayer.posY, entityplayer.posZ,
+				world.playSound(null, entityplayer.posX, entityplayer.posY, entityplayer.posZ,
 						SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F,
 						1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 

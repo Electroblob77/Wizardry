@@ -1,17 +1,19 @@
 package electroblob.wizardry.entity.projectile;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class EntityForceOrb extends EntityBomb {
 	
@@ -20,11 +22,16 @@ public class EntityForceOrb extends EntityBomb {
 	}
 
 	@Override
+	public int getLifetime(){
+		return -1;
+	}
+
+	@Override
 	protected void onImpact(RayTraceResult par1RayTraceResult){
 
 		if(par1RayTraceResult.entityHit != null){
 			// This is if the force orb gets a direct hit
-			this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+			this.playSound(WizardrySounds.ENTITY_FORCE_ORB_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 		}
 
 		// Particle effect
@@ -41,10 +48,10 @@ public class EntityForceOrb extends EntityBomb {
 
 			// 2 gives a cool flanging effect!
 			float pitch = this.rand.nextFloat() * 0.2F + 0.3F;
-			this.playSound(SoundEvents.ENTITY_FIREWORK_BLAST, 1.5F, pitch);
-			this.playSound(SoundEvents.ENTITY_FIREWORK_BLAST, 1.5F, pitch - 0.01f);
+			this.playSound(WizardrySounds.ENTITY_FORCE_ORB_HIT_BLOCK, 1.5F, pitch);
+			this.playSound(WizardrySounds.ENTITY_FORCE_ORB_HIT_BLOCK, 1.5F, pitch - 0.01f);
 
-			double blastRadius = 4.0d * blastMultiplier;
+			double blastRadius = Spells.force_orb.getProperty(Spell.BLAST_RADIUS).floatValue() * blastMultiplier;
 
 			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(blastRadius, this.posX,
 					this.posY, this.posZ, this.world);
@@ -59,7 +66,7 @@ public class EntityForceOrb extends EntityBomb {
 					double dz = this.posZ - target.posZ > 0 ? -0.5 - (this.posZ - target.posZ) / 8
 							: 0.5 - (this.posZ - target.posZ) / 8;
 
-					float damage = 4 * damageMultiplier;
+					float damage = Spells.force_orb.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier;
 
 					target.attackEntityFrom(
 							MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.BLAST), damage);

@@ -1,12 +1,8 @@
 package electroblob.wizardry.command;
 
-import java.util.List;
-import java.util.Set;
-
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -17,6 +13,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
+import java.util.Set;
 
 public class CommandViewAllies extends CommandBase {
 
@@ -75,10 +74,12 @@ public class CommandViewAllies extends CommandBase {
 			if(player != sender && sender instanceof EntityPlayer
 					&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
 				// Displays a chat message if a non-op tries to view another player's allies.
-				TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
-						"commands." + Wizardry.MODID + ":allies.permission");
-				TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
-				player.sendMessage(TextComponentTranslation2);
+				if(server.sendCommandFeedback()){
+					TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
+							"commands." + Wizardry.MODID + ":allies.permission");
+					TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
+					player.sendMessage(TextComponentTranslation2);
+				}
 				return;
 			}
 
@@ -101,6 +102,7 @@ public class CommandViewAllies extends CommandBase {
 				playerList = new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.none");
 			}
 
+			// Ignore sendCommandFeedback here since that's the entire point of this command
 			if(executeAsOtherPlayer){
 				sender.sendMessage(
 						new TextComponentTranslation("commands." + Wizardry.MODID + ":allies.list_other", player.getName(), playerList));

@@ -1,0 +1,24 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "lightning",
+  "type": "attack",
+  "cost": 25,
+  "chargeup": 0,
+  "cooldown": 75,
+  "base_properties": {
+    "effect_radius": 3,
+    "damage": 8,
+    "repulsion_velocity": 0.8
+  }
+}

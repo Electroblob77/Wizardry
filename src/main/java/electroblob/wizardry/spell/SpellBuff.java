@@ -1,29 +1,27 @@
 package electroblob.wizardry.spell;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Triple;
-
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Generic superclass for all spells which buff their caster.
@@ -31,66 +29,70 @@ import net.minecraft.world.World;
  * instantiation of this class is sufficient to create a buff spell; if something extra needs to be done, such as
  * applying a non-potion buff, then methods can be overridden (perhaps using an anonymous class) to add the required
  * functionality.
- * <p>
+ * <p></p>
+ * Properties added by this type of spell: {@link SpellBuff#getDurationKey(Potion)}, {@link SpellBuff#getStrengthKey(Potion)}
+ * <p></p>
  * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastByNPCs()}
- * <p>
- * By default, this type of spell requires a packet to be sent. {@link Spell#doesSpellRequirePacket()}
+ * <p></p>
+ * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * <p></p>
+ * By default, this type of spell requires a packet to be sent. {@link Spell#requiresPacket()}
  * 
  * @author Electroblob
  * @since Wizardry 4.2
  */
 public class SpellBuff extends Spell {
 	
-	/** An array of triples representing the parameters of the status effects that this spell applies to its caster.
-	 * These are of the form [effect, base duration, base amplifier]. */
-	protected final Triple<Potion, Integer, Integer>[] effects;
-	/** A set of all the different potions (status effects) that this spell applies to its caster. */
-	protected final Set<Potion> potionSet;
-	/** The sound that gets played when this spell is cast. */
-	protected final SoundEvent sound;
+	/** An array of factories for the status effects that this spell applies to its caster. The effect factory
+	 * avoids the issue of the potions being registered after the spell. */
+	protected final Supplier<Potion>[] effects;
+	/** A set of all the different potions (status effects) that this spell applies to its caster. Loaded during
+	 * init(). */
+	protected Set<Potion> potionSet;
 	/** The RGB colour values of the particles spawned when this spell is cast. */
 	protected final float r, g, b;
 	
-	/** The volume of the sound played when this spell is cast. Defaults to 1. */
-	protected float volume = 1;
-	/** The pitch of the sound played when this spell is cast. Defaults to 1. */
-	protected float pitch = 1;
-	/** The pitch variation of the sound played when this spell is cast. Defaults to 0. */
-	protected float pitchVariation = 0;
-	/** The number of sparkle particles spawned when this spell is cast. Defualts to 10. */
+	/** The number of sparkle particles spawned when this spell is cast. Defaults to 10. */
 	protected float particleCount = 10;
 
 	@SafeVarargs
-	public SpellBuff(String name, Tier tier, Element element, SpellType type, int cost, int cooldown, SoundEvent sound, float r, float g, float b, Triple<Potion, Integer, Integer>... effects){
-		this(Wizardry.MODID, name, tier, element, type, cost, cooldown, sound, r, g, b, effects);
+	public SpellBuff(String name, float r, float g, float b, Supplier<Potion>... effects){
+		this(Wizardry.MODID, name, r, g, b, effects);
 	}
 
 	@SafeVarargs
-	public SpellBuff(String modID, String name, Tier tier, Element element, SpellType type, int cost, int cooldown, SoundEvent sound, float r, float g, float b, Triple<Potion, Integer, Integer>... effects){
-		super(modID, name, tier, element, type, cost, cooldown, EnumAction.BOW, false);
-		this.sound = sound;
+	public SpellBuff(String modID, String name, float r, float g, float b, Supplier<Potion>... effects){
+		super(modID, name, EnumAction.BOW, false);
 		this.effects = effects;
 		this.r = r;
 		this.g = g;
 		this.b = b;
-		// Pretty sure this is better than iterating over (or streaming) all the elements each time the spell is cast.
-		this.potionSet = Arrays.stream(effects).map(Triple::getLeft).collect(Collectors.toSet());
 	}
-	
-	/**
-	 * Sets the sound parameters for this spell.
-	 * @param volume 
-	 * @param pitch
-	 * @param pitchVariation
-	 * @return The spell instance, allowing this method to be chained onto the constructor.
-	 */
-	public SpellBuff soundValues(float volume, float pitch, float pitchVariation) {
-		this.volume = volume;
-		this.pitch = pitch;
-		this.pitchVariation = pitchVariation;
-		return this;
+
+	@Override
+	public void init(){
+		// Loads the potion set
+		this.potionSet = Arrays.stream(effects).map(Supplier::get).collect(Collectors.toSet());
+
+		for(Potion potion : potionSet){
+			// I don't like having this for all buff spells when some potions aren't affected by amplifiers
+			// TODO: Find a way of only adding the strength key if the potion is affected by amplifiers (dynamically if possible)
+			// BrewingRecipeRegistry#getOutput might be a good place to start
+			addProperties(getStrengthKey(potion));
+			if(!potion.isInstant()) addProperties(getDurationKey(potion));
+		}
 	}
-	
+
+	// Potion-specific equivalent to defining the identifiers as constants
+
+	protected static String getDurationKey(Potion potion){
+		return potion.getRegistryName().getPath() + "_duration";
+	}
+
+	protected static String getStrengthKey(Potion potion){
+		return potion.getRegistryName().getPath() + "_strength";
+	}
+
 	/**
 	 * Sets the number of sparkle particles spawned when this spell is cast.
 	 * @param particleCount The number of particles.
@@ -102,13 +104,15 @@ public class SpellBuff extends Spell {
 	}
 	
 	@Override public boolean canBeCastByNPCs(){ return true; }
+	
+	@Override public boolean canBeCastByDispensers() { return true; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		
-		if(!this.applyEffects(caster, modifiers)) return false;
+		// Only return on the server side or the client probably won't spawn particles
+		if(!this.applyEffects(caster, modifiers) && !world.isRemote) return false;
 		if(world.isRemote) this.spawnParticles(world, caster, modifiers);
-		WizardryUtilities.playSoundAtPlayer(caster, sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 	
@@ -116,9 +120,38 @@ public class SpellBuff extends Spell {
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
 		// Wizards can only cast a buff spell if they don't already have its effects.
 		if(caster.getActivePotionMap().keySet().containsAll(potionSet)) return false;
-		if(!this.applyEffects(caster, modifiers)) return false;
+		// Only return on the server side or the client probably won't spawn particles
+		if(!this.applyEffects(caster, modifiers) && !world.isRemote) return false;
 		if(world.isRemote) this.spawnParticles(world, caster, modifiers);
-		caster.playSound(sound, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
+		return true;
+	}
+	
+	@Override
+	public boolean cast(World world, double x, double y, double z, EnumFacing direction, int ticksInUse, int duration, SpellModifiers modifiers){
+		// Gets a 1x1x1 bounding box corresponding to the block in front of the dispenser
+		AxisAlignedBB boundingBox = new AxisAlignedBB(new BlockPos(x, y, z));
+		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, boundingBox);
+		
+		float distance = -1;
+		EntityLivingBase nearestEntity = null;
+		// Finds the nearest entity within the bounding box
+		for(EntityLivingBase entity : entities){
+			float newDistance = (float)entity.getDistance(x, y, z);
+			if(distance == -1 || newDistance < distance){
+				distance = newDistance;
+				nearestEntity = entity;
+			}
+		}
+		
+		if(nearestEntity == null) return false;
+
+		// Only return on the server side or the client probably won't spawn particles
+		if(!this.applyEffects(nearestEntity, modifiers) && !world.isRemote) return false;
+		if(world.isRemote) this.spawnParticles(world, nearestEntity, modifiers);
+		// This MUST be the coordinates of the actual dispenser, so we need to offset it
+		this.playSound(world, x - direction.getXOffset(), y - direction.getYOffset(), z - direction.getZOffset(), ticksInUse, duration, modifiers);
+
 		return true;
 	}
 	
@@ -128,13 +161,33 @@ public class SpellBuff extends Spell {
 	 * Returns a boolean to allow subclasses to cause the spell to fail if for some reason the effect cannot be applied
 	 * (for example, {@link Heal} fails if the caster is on full health). */
 	protected boolean applyEffects(EntityLivingBase caster, SpellModifiers modifiers){
-		// TODO: Find a good way (if any) of implementing potency modifiers
-		for(Triple<Potion, Integer, Integer> effect : effects){
-			caster.addPotionEffect(new PotionEffect(effect.getLeft(), (int)(effect.getMiddle()
-					* modifiers.get(WizardryItems.duration_upgrade)), effect.getRight(), false, false));
+		// This will generate 0 for novice and apprentice, and 1 for advanced and master
+		// TODO: Once we've found a way of detecting if amplifiers actually affect the potion type, implement it here.
+		int bonusAmplifier = getBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
+
+		for(Potion potion : potionSet){
+			caster.addPotionEffect(new PotionEffect(potion, potion.isInstant() ? 1 :
+					(int)(getProperty(getDurationKey(potion)).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+					(int)getProperty(getStrengthKey(potion)).floatValue() + bonusAmplifier,
+					false, true));
 		}
 		
 		return true;
+	}
+
+	/** Returns the number to be added to the potion amplifier(s) based on the given potency modifier. Override
+	 * to define custom modifier handling. Delegates to {@link SpellBuff#getStandardBonusAmplifier(float)} by
+	 * default. */
+	protected int getBonusAmplifier(float potencyModifier){
+		return getStandardBonusAmplifier(potencyModifier);
+	}
+
+	/** Returns a number to be added to potion amplifiers based on the given potency modifier. This method uses
+	 * a standard calculation which results in zero extra levels for novice and apprentice wands and one extra
+	 * level for advanced and master wands (this generally seems to give about the right weight to potency
+	 * modifiers). This is public static because it is useful in a variety of places. */
+	public static int getStandardBonusAmplifier(float potencyModifier){
+		return (int)((potencyModifier - 1) / 0.4);
 	}
 	
 	/** Spawns buff particles around the caster. Override to add a custom particle effect. Only called client-side. */

@@ -1,0 +1,27 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "ice",
+  "type": "attack",
+  "cost": 30,
+  "chargeup": 0,
+  "cooldown": 75,
+  "base_properties": {
+    "range": 20,
+    "effect_radius": 2.5,
+    "ice_spike_count": 18,
+    "damage": 5,
+    "effect_duration": 100,
+    "effect_strength": 0
+  }
+}

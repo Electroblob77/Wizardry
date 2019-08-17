@@ -1,0 +1,6 @@
+{
+    "parent": "item/bow",
+    "textures": {
+        "layer0": "ebwizardry:items/spectral_bow_conjuring_1"
+    }
+}

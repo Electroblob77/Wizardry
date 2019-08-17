@@ -1,9 +1,5 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -11,100 +7,90 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class LightningRay extends SpellRay {
-	
-	private static final float BASE_DAMAGE = 3;
 
 	public LightningRay(){
-		super("lightning_ray", Tier.APPRENTICE, Element.LIGHTNING, SpellType.ATTACK, 5, 0, true, 10, null);
-	}
-	
-	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		// TODO: Temporary solution until I implement a better continuous sound system
-		boolean flag = super.cast(world, caster, hand, ticksInUse, modifiers);
-		if(flag){
-			if(ticksInUse == 1){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1, 1);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1, 1);
-			}
-		}
-		return flag;
+		super("lightning_ray", true, EnumAction.NONE);
+		this.aimAssist(0.6f);
+		addProperties(DAMAGE);
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		boolean flag = super.cast(world, caster, hand, ticksInUse, target, modifiers);
-		if(flag){
-			if(ticksInUse == 1){
-				caster.playSound(WizardrySounds.SPELL_LIGHTNING, 1, 1);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				caster.playSound(WizardrySounds.SPELL_LOOP_LIGHTNING, 1, 1);
-			}
-		}
-		return flag;
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
+
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
+	}
+
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+
 		if(WizardryUtilities.isLiving(target)){
 
 			if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
 				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer)
 					((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
 							this.getNameForTranslationFormatted()), true);
-			}else{
+			// This now only damages in line with the maxHurtResistantTime. Some mods don't play nicely and fiddle
+			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
+			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
 				WizardryUtilities.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-						BASE_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
+						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			}
 			
 			if(world.isRemote){
-				
+
 				if(ticksInUse % 3 == 0) ParticleBuilder.create(Type.LIGHTNING).entity(caster)
 				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
-				
+
 				// Particle effect
 				for(int i=0; i<5; i++){
 					ParticleBuilder.create(Type.SPARK, target).spawn(world);
 				}
 			}
-			
-			return true;
 		}
-		
+
+		return true;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		return false;
-	}
-
-	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		// This is a nice example of when onMiss is used for more than just returning a boolean
 		if(world.isRemote && ticksInUse % 4 == 0){
-			
-			if(caster != null) origin = origin.subtract(0, Y_OFFSET, 0);
-			
-			double freeRange = 0.8 * baseRange; // The arc does not reach full range when it has a free end
-			Vec3d endpoint = origin.add(direction.scale(freeRange));
-			
-			ParticleBuilder.create(Type.LIGHTNING).entity(caster)
-			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(endpoint).spawn(world);
+
+			// The arc does not reach full range when it has a free end
+			double freeRange = 0.8 * getRange(world, origin, direction, caster, ticksInUse, modifiers);
+
+			if(caster != null){
+				ParticleBuilder.create(Type.LIGHTNING).entity(caster).pos(origin.subtract(caster.getPositionVector()))
+						.length(freeRange).spawn(world);
+			}else{
+				ParticleBuilder.create(Type.LIGHTNING).pos(origin).target(origin.add(direction.scale(freeRange))).spawn(world);
+			}
 		}
 		
 		return true;

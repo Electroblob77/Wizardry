@@ -1,8 +1,7 @@
 package electroblob.wizardry.entity.living;
 
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -16,7 +15,6 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -33,6 +31,10 @@ import net.minecraft.world.World;
 public class EntitySpiritHorse extends EntityHorse {
 
 	private int idleTimer = 0;
+
+	private int dispelTimer = 0;
+
+	private static final int DISPEL_TIME = 10;
 
 	public EntitySpiritHorse(World par1World){
 		super(par1World);
@@ -93,19 +95,13 @@ public class EntitySpiritHorse extends EntityHorse {
 
 		// Allows the owner (but not other players) to dispel the spirit horse using a wand (shift-clicking, because
 		// clicking mounts the horse in this case).
-		if(itemstack.getItem() instanceof ItemWand && this.getOwner() == player && player.isSneaking()){
+		if(itemstack.getItem() instanceof ISpellCastingItem && this.getOwner() == player && player.isSneaking()){
 			// Prevents accidental double clicking.
 			if(this.ticksExisted > 20){
+
+				this.dispelTimer++;
 				
-				this.spawnAppearParticles();
-				
-				this.setDead();
-				
-				if(WizardData.get(player) != null){
-					WizardData.get(player).hasSpiritHorse = false;
-				}
-				
-				this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
+				this.playSound(WizardrySounds.ENTITY_SPIRIT_HORSE_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 				// This is necessary to prevent the wand's spell being cast when performing this action.
 				return true;
 			}
@@ -124,17 +120,6 @@ public class EntitySpiritHorse extends EntityHorse {
 		}
 	}
 
-	@Override
-	public void onDeath(DamageSource par1DamageSource){
-
-		super.onDeath(par1DamageSource);
-
-		// Allows player to summon another spirit horse once this one has died.
-		if(this.getOwner() instanceof EntityPlayer && WizardData.get((EntityPlayer)this.getOwner()) != null){
-			WizardData.get((EntityPlayer)this.getOwner()).hasSpiritHorse = false;
-		}
-	}
-
 	// I wrote this one!
 	private EntityLivingBase getOwner(){
 
@@ -148,10 +133,20 @@ public class EntitySpiritHorse extends EntityHorse {
 		}
 	}
 
+	public float getOpacity(){
+		return 1 - (float)dispelTimer/DISPEL_TIME;
+	}
+
 	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
+
+		if(dispelTimer > 0){
+			if(dispelTimer++ > DISPEL_TIME){
+				this.setDead();
+			}
+		}
 
 		// Adds a dust particle effect
 		if(this.world.isRemote){
@@ -170,17 +165,9 @@ public class EntitySpiritHorse extends EntityHorse {
 
 		if(this.idleTimer > 200){
 			
-			if(this.world.isRemote){
-				this.spawnAppearParticles();
-			}
+			this.playSound(WizardrySounds.ENTITY_SPIRIT_HORSE_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 			
-			this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
-			// Allows player to summon another spirit horse once this one has disappeared.
-			if(this.getOwner() instanceof EntityPlayer && WizardData.get((EntityPlayer)this.getOwner()) != null){
-				WizardData.get((EntityPlayer)this.getOwner()).hasSpiritHorse = false;
-			}
-			
-			this.setDead();
+			this.dispelTimer++;
 		}
 	}
 
@@ -213,7 +200,7 @@ public class EntitySpiritHorse extends EntityHorse {
 	@Override
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getOwner() != null;
+		return Wizardry.settings.summonedCreatureNames && getOwner() != null;
 	}
 
 }

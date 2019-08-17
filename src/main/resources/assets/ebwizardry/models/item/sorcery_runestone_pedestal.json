@@ -1,0 +1,9 @@
+{
+    "parent": "ebwizardry:item/runestone_pedestal_item",
+    "textures": {
+        "side": "ebwizardry:blocks/runestone_pedestal_sorcery",
+        "top": "ebwizardry:blocks/runestone_sorcery_0",
+        "bottom": "ebwizardry:blocks/runestone_sorcery_0",
+        "overlay": "ebwizardry:blocks/runestone_pedestal_sorcery_overlay"
+    }
+}

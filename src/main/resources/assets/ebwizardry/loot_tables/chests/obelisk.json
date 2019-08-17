@@ -1,0 +1,195 @@
+{
+    "pools": [
+        {
+			"name": "high_value",
+            "rolls": {
+                "min": 1,
+                "max": 1
+            },
+            "entries": [
+				{
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/arcane_tomes",
+                    "weight": 3
+                },
+				{
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/wand_upgrades",
+                    "weight": 2
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:spell_book",
+                    "weight": 20,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "tiers": [
+                                "novice",
+                                "apprentice",
+                                "advanced"
+                            ],
+                            "undiscovered_bias": 0.3
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:scroll",
+                    "weight": 7,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "tiers": [
+                                "novice",
+                                "apprentice",
+                                "advanced"
+                            ],
+                            "undiscovered_bias": 0.3
+                        },
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:identification_scroll",
+                    "weight": 3
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:gold_nugget",
+                    "weight": 5,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:emerald",
+                    "weight": 1
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:grand_crystal",
+                    "weight": 1
+                }
+            ]
+        },
+        {
+            "name": "low_value",
+            "rolls": {
+                "min": 3,
+                "max": 5
+            },
+            "entries": [
+                {
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/elemental_crystals",
+                    "weight": 1
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:magic_crystal",
+                    "weight": 5,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 4
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:firebomb",
+                    "weight": 4
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:poison_bomb",
+                    "weight": 4
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:smoke_bomb",
+                    "weight": 4
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:spark_bomb",
+                    "weight": 4
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:book",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 2
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:string",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "minecraft:paper",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:crystal_shard",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 5
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

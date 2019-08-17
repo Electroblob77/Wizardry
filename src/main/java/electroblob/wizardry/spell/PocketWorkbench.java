@@ -2,12 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
@@ -16,11 +11,11 @@ import net.minecraft.world.World;
 public class PocketWorkbench extends Spell {
 
 	public PocketWorkbench(){
-		super("pocket_workbench", Tier.APPRENTICE, Element.SORCERY, SpellType.UTILITY, 30, 40, EnumAction.BOW, false);
+		super("pocket_workbench", EnumAction.BOW, false);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 
@@ -33,7 +28,7 @@ public class PocketWorkbench extends Spell {
 					(int)caster.posY, (int)caster.posZ);
 		}
 
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1, 1);
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 		return true;
 	}

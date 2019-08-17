@@ -1,22 +1,17 @@
 package electroblob.wizardry.command;
 
-import java.util.List;
-
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.NumberInvalidException;
-import net.minecraft.command.PlayerNotFoundException;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+
+import java.util.List;
 
 public class CommandSetAlly extends CommandBase {
 
@@ -85,10 +80,12 @@ public class CommandSetAlly extends CommandBase {
 				if(allyOf != sender && sender instanceof EntityPlayer
 						&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
 					// Displays a chat message if a non-op tries to modify another player's allies.
-					TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
-							"commands." + Wizardry.MODID + ":ally.permission");
-					TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
-					allyOf.sendMessage(TextComponentTranslation2);
+					if(server.sendCommandFeedback()){
+						TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(
+								"commands." + Wizardry.MODID + ":ally.permission");
+						TextComponentTranslation2.getStyle().setColor(TextFormatting.RED);
+						allyOf.sendMessage(TextComponentTranslation2);
+					}
 					return;
 				}
 
@@ -102,15 +99,17 @@ public class CommandSetAlly extends CommandBase {
 
 			if(allyOf == ally) throw new NumberInvalidException("commands." + Wizardry.MODID + ":ally.self");
 
-			if(WizardData.get(allyOf) != null){
-				String string = WizardData.get(allyOf).toggleAlly(ally) ? "add" : "remove";
-				if(executeAsOtherPlayer){
-					sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":ally." + string + "ally",
-							ally.getName(), allyOf.getName()));
-					// In this case, the player whose allies have been modified is also notified.
-					allyOf.sendMessage(new TextComponentTranslation("item.wand." + string + "ally", ally.getName()));
-				}else{
-					sender.sendMessage(new TextComponentTranslation("item.wand." + string + "ally", ally.getName()));
+			if(server.sendCommandFeedback()){
+				if(WizardData.get(allyOf) != null){
+					String string = WizardData.get(allyOf).toggleAlly(ally) ? "add" : "remove";
+					if(executeAsOtherPlayer){
+						sender.sendMessage(new TextComponentTranslation("commands." + Wizardry.MODID + ":ally." + string + "ally",
+								ally.getName(), allyOf.getName()));
+						// In this case, the player whose allies have been modified is also notified.
+						allyOf.sendMessage(new TextComponentTranslation("item.wand." + string + "ally", ally.getName()));
+					}else{
+						sender.sendMessage(new TextComponentTranslation("item.wand." + string + "ally", ally.getName()));
+					}
 				}
 			}
 

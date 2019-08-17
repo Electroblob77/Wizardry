@@ -1,25 +1,26 @@
 package electroblob.wizardry.spell;
 
-import java.util.Random;
-
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 public class InvokeWeather extends Spell {
 
+	public static final String THUNDERSTORM_CHANCE = "thunderstorm_chance";
+
 	public InvokeWeather(){
-		super("invoke_weather", Tier.ADVANCED, Element.LIGHTNING, SpellType.UTILITY, 30, 100, EnumAction.BOW, false);
+		super("invoke_weather", EnumAction.BOW, false);
+		addProperties(THUNDERSTORM_CHANCE);
+		soundValues(0.5f, 1, 0);
 	}
 
 	@Override
@@ -32,20 +33,21 @@ public class InvokeWeather extends Spell {
 				int standardWeatherTime = (300 + (new Random()).nextInt(600)) * 20;
 				
 				if(world.isRaining()){
-					caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".sun"));
+					caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".sun"), true);
 					world.getWorldInfo().setCleanWeatherTime(standardWeatherTime);
 					world.getWorldInfo().setRainTime(0);
 					world.getWorldInfo().setThunderTime(0);
 					world.getWorldInfo().setRaining(false);
 					world.getWorldInfo().setThundering(false);
 				}else{
-					caster.sendMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".rain"));
+					caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".rain"), true);
 					world.getWorldInfo().setCleanWeatherTime(0);
 					world.getWorldInfo().setRainTime(standardWeatherTime);
 					world.getWorldInfo().setThunderTime(standardWeatherTime);
 					world.getWorldInfo().setRaining(true);
-					// 1/3 chance for a thunderstorm
-					world.getWorldInfo().setThundering(world.rand.nextInt(3) == 0);
+					// Thunderstorm is guaranteed if the caster has a bottled thundercloud charm equipped
+					world.getWorldInfo().setThundering(ItemArtefact.isArtefactActive(caster, WizardryItems.charm_storm)
+							|| world.rand.nextFloat() < getProperty(THUNDERSTORM_CHANCE).floatValue());
 				}
 			}
 
@@ -58,7 +60,7 @@ public class InvokeWeather extends Spell {
 				}
 			}
 
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_LIGHTNING_THUNDER, 0.5f, 1.0f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			return true;
 		}
 		

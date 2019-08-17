@@ -1,16 +1,20 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityThunderbolt extends EntityMagicProjectile {
+
+	public static final String KNOCKBACK_STRENGTH = "knockback_strength";
 
 	public EntityThunderbolt(World par1World){
 		super(par1World);
@@ -27,17 +31,19 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 
 		if(entityHit != null){
 
-			float damage = 3 * damageMultiplier;
+			float damage = Spells.thunderbolt.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier;
 
 			entityHit.attackEntityFrom(
 					MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK).setProjectile(),
 					damage);
 
+			float knockbackStrength = Spells.thunderbolt.getProperty(KNOCKBACK_STRENGTH).floatValue();
+
 			// Knockback
-			entityHit.addVelocity(this.motionX * 0.2, this.motionY * 0.2, this.motionZ * 0.2);
+			entityHit.addVelocity(this.motionX * knockbackStrength, this.motionY * knockbackStrength, this.motionZ * knockbackStrength);
 		}
 
-		this.playSound(SoundEvents.ENTITY_FIREWORK_LARGE_BLAST, 1.4F, 0.5f + this.rand.nextFloat() * 0.1F);
+		this.playSound(WizardrySounds.ENTITY_THUNDERBOLT_HIT, 1.4F, 0.5f + this.rand.nextFloat() * 0.1F);
 
 		// Particle effect
 		if(world.isRemote){
@@ -60,10 +66,11 @@ public class EntityThunderbolt extends EntityMagicProjectile {
 						this.posZ + rand.nextFloat() * 0.2 - 0.1, 0, 0, 0);
 			}
 		}
-
-		if(this.ticksExisted > 8){
-			this.setDead();
-		}
 	}
-	
+
+	@Override
+	public int getLifetime(){
+		return 8;
+	}
+
 }

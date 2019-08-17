@@ -3,16 +3,13 @@
   "modid" : "ebwizardry",
   "name" : "Electroblob's Wizardry",
   "version" : "4.2.0",
+  "mcversion" : "1.12.2",
   "url" : "https://minecraft.curseforge.com/projects/electroblobs-wizardry",
-  "credits" : "Designed, coded and textured by Electroblob. Code contributed by: Corail31, 12foo, Shadows-of-Fire. Translators: MadWrist (Spanish, Mexican Spanish), VilagVil (Russian).",
-  "authors" : [
+  "credits" : "\nDesigned, coded and textured by Electroblob.\nCode contributed by: Corail31, 12foo, Shadows-of-Fire, Tora-B, Avatair, Aeronica.\nTranslators: MadWrist (Spanish, Mexican Spanish), VilagVil & kellixon (Russian), Hahdrim (French), lorrampi (Brazilian Portuguese), ZHENGLOC & dragon-evol (Chinese), shejery & rewi_wire (Korean).",
+  "authorList" : [
     "Electroblob"
   ],
   "description" : "Electroblob's Wizardry adds an rpg-style system of magic spells to Minecraft with the aim of being as playable as possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master the arcane!",
-  "logoFile" : "assets/ebwizardry/textures/gui/logo.png",
-  "updateUrl" : "",
-  "parent" : "",
-  "screenshots": [
-  ]
+  "logoFile" : "assets/ebwizardry/textures/gui/logo.png"
 }
 ]

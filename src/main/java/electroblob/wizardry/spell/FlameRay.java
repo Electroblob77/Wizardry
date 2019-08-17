@@ -1,10 +1,6 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -12,55 +8,45 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class FlameRay extends SpellRay {
-	
-	private static final float BASE_DAMAGE = 3;
-	/** The base duration for which entities are set on fire by this spell. */
-	private static final int BASE_DURATION = 10;
 
 	public FlameRay(){
-		super("flame_ray", Tier.APPRENTICE, Element.FIRE, SpellType.ATTACK, 5, 0, true, 10, null);
+		super("flame_ray", true, EnumAction.NONE);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
+		addProperties(DAMAGE, BURN_DURATION);
+		this.soundValues(1.5f, 1, 0);
+	}
+
+	// The following three methods serve as a good example of how to implement continuous spell sounds (hint: it's easy)
+
+	@Override
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
 	}
 	
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		// TODO: Temporary solution until I implement a better continuous sound system
-		boolean flag = super.cast(world, caster, hand, ticksInUse, modifiers);
-		if(flag){
-			if(ticksInUse % 16 == 0){
-				if(ticksInUse == 0) WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_FIRE, 0.5f, 1.0f);
-			}
-		}
-		return flag;
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		boolean flag = super.cast(world, caster, hand, ticksInUse, target, modifiers);
-		if(flag){
-			if(ticksInUse % 16 == 0){
-				if(ticksInUse == 0) caster.playSound(SoundEvents.ENTITY_BLAZE_SHOOT, 1, 1);
-				caster.playSound(WizardrySounds.SPELL_LOOP_FIRE, 0.5f, 1.0f);
-			}
-		}
-		return flag;
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		// Fire can damage armour stands
 		if(target instanceof EntityLivingBase){
 
@@ -68,33 +54,33 @@ public class FlameRay extends SpellRay {
 				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer) ((EntityPlayer)caster)
 				.sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
 						this.getNameForTranslationFormatted()), true);
-			}else{
-				target.setFire((int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)));
+			// This now only damages in line with the maxHurtResistantTime. Some mods don't play nicely and fiddle
+			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
+			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
+				target.setFire((int)(getProperty(BURN_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 				WizardryUtilities.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.FIRE),
-						BASE_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
+						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			}
-			
-			return true;
 		}
 		
+		return true;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		return false;
-	}
-
-	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
 	
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
-		ParticleBuilder.create(Type.MAGIC_FIRE).pos(x, y, z).vel(vx, vy, vz).spawn(world);
-		ParticleBuilder.create(Type.MAGIC_FIRE).pos(x, y, z).vel(vx, vy, vz).spawn(world);
+		ParticleBuilder.create(Type.MAGIC_FIRE).pos(x, y, z).vel(vx, vy, vz).collide(true).spawn(world);
+		ParticleBuilder.create(Type.MAGIC_FIRE).pos(x, y, z).vel(vx, vy, vz).collide(true).spawn(world);
 	}
 
 }

@@ -1,10 +1,6 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
@@ -14,7 +10,7 @@ import net.minecraft.world.World;
 public class FrostAxe extends SpellConjuration {
 
 	public FrostAxe(){
-		super("frost_axe", Tier.ADVANCED, Element.ICE, SpellType.UTILITY, 45, 50, WizardryItems.frost_axe, WizardrySounds.SPELL_ICE);
+		super("frost_axe", WizardryItems.frost_axe);
 	}
 
 	@Override

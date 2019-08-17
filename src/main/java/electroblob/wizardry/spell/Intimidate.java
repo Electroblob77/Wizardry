@@ -1,10 +1,5 @@
 package electroblob.wizardry.spell;
 
-import java.util.List;
-
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -13,11 +8,9 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathPoint;
@@ -29,17 +22,22 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+
 @Mod.EventBusSubscriber
 public class Intimidate extends Spell {
 
 	/** The NBT tag name for storing the feared entity's UUID in the target's tag compound. */
 	public static final String NBT_KEY = "fearedEntity";
-	
-	private static final double BASE_RANGE = 8;
-	private static final int BASE_DURATION = 600;
+
+	// These aren't spell properties because they're part fo the actual potion effect, not the spell itself.
+	// However, the avoid distance can be modified using the potion amplifier.
+	private static final double BASE_AVOID_DISTANCE = 16;
+	private static final double AVOID_DISTANCE_PER_LEVEL = 4;
 
 	public Intimidate(){
-		super("intimidate", Tier.APPRENTICE, Element.NECROMANCY, SpellType.ATTACK, 20, 100, EnumAction.BOW, false);
+		super("intimidate", EnumAction.BOW, false);
+		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
@@ -48,19 +46,21 @@ public class Intimidate extends Spell {
 		if(!world.isRemote){
 
 			List<EntityCreature> entities = WizardryUtilities.getEntitiesWithinRadius(
-					BASE_RANGE * modifiers.get(WizardryItems.range_upgrade), caster.posX, caster.posY, caster.posZ,
-					world, EntityCreature.class);
+					getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.range_upgrade),
+					caster.posX, caster.posY, caster.posZ, world, EntityCreature.class);
 
 			for(EntityCreature target : entities){
+				// Why do we need this here?
+				//runAway(target, caster);
 
-				runAway(target, caster);
+				int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
 
 				NBTTagCompound entityNBT = target.getEntityData();
 				if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
 
-				((EntityLiving)target).addPotionEffect(new PotionEffect(WizardryPotions.fear,
-						(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 0));
-
+				target.addPotionEffect(new PotionEffect(WizardryPotions.fear,
+						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+						getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
 			}
 
 		}else{
@@ -71,7 +71,7 @@ public class Intimidate extends Spell {
 				ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.9f, 0.1f, 0).spawn(world);
 			}
 		}
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERDRAGON_GROWL, 1.0f, 1.0f);
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 
@@ -81,13 +81,14 @@ public class Intimidate extends Spell {
 	 * 
 	 * @param target The entity running away
 	 * @param caster The entity that is being run away from
+	 * @param distance How far the entity will run from the caster
 	 * @return True if a new path was found and set, false if not.
 	 */
-	public static boolean runAway(EntityCreature target, EntityLivingBase caster){
+	public static boolean runAway(EntityCreature target, EntityLivingBase caster, double distance){
 
-		if(target.getDistance(caster) < 16){
+		if(target.getDistance(caster) < distance){
 
-			Vec3d Vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(target, 16, 7,
+			Vec3d Vec3d = RandomPositionGenerator.findRandomTargetBlockAwayFrom(target, (int)distance, (int)(distance/2),
 					new Vec3d(caster.posX, caster.posY, caster.posZ));
 
 			if(Vec3d == null){
@@ -95,15 +96,14 @@ public class Intimidate extends Spell {
 
 			}else{
 				// In both cases it is necessary to check if the entity already has a path so it doesn't change
-				// direction
-				// every tick, unless that path is towards the caster.
+				// direction every tick, unless that path is towards the caster.
 				// Path path = target.getNavigator().getPathToXYZ(Vec3d.xCoord, Vec3d.yCoord, Vec3d.zCoord);
 
 				boolean flag = true;
 
 				if(!target.getNavigator().noPath()){
 					PathPoint point = target.getNavigator().getPath().getFinalPathPoint();
-					if(point != null) flag = caster.getDistance(point.x, point.y, point.z) < 16;
+					if(point != null) flag = caster.getDistance(point.x, point.y, point.z) < distance;
 				}
 				// Has a built in mind trick effect because for whatever reason this makes it work with skeletons.
 				target.setAttackTarget(null);
@@ -129,7 +129,9 @@ public class Intimidate extends Spell {
 				Entity caster = WizardryUtilities.getEntityByUUID(creature.world, entityNBT.getUniqueId(NBT_KEY));
 
 				if(caster instanceof EntityLivingBase){
-					runAway(creature, (EntityLivingBase)caster);
+					double distance = BASE_AVOID_DISTANCE + AVOID_DISTANCE_PER_LEVEL
+							* event.getEntityLiving().getActivePotionEffect(WizardryPotions.fear).getAmplifier();
+					runAway(creature, (EntityLivingBase)caster, distance);
 				}
 			}
 		}

@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "novice",
+  "element": "fire",
+  "type": "attack",
+  "cost": 5,
+  "chargeup": 0,
+  "cooldown": 10,
+  "base_properties": {
+    "range": 10,
+    "burn_duration": 10
+  }
+}

@@ -2,6 +2,7 @@ package electroblob.wizardry.packet;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketCastSpell.Message;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -26,12 +27,7 @@ public class PacketCastSpell implements IMessageHandler<Message, IMessage> {
 		if(ctx.side.isClient()){
 			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
 			// methods any more than necessary.
-			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable(){
-				@Override
-				public void run(){
-					Wizardry.proxy.handleCastSpellPacket(message);
-				}
-			});
+			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> Wizardry.proxy.handleCastSpellPacket(message));
 		}
 
 		return null;
@@ -52,10 +48,10 @@ public class PacketCastSpell implements IMessageHandler<Message, IMessage> {
 		public Message(){
 		}
 
-		public Message(int casterID, EnumHand hand, int spellID, SpellModifiers modifiers){
+		public Message(int casterID, EnumHand hand, Spell spell, SpellModifiers modifiers){
 
 			this.casterID = casterID;
-			this.spellID = spellID;
+			this.spellID = spell.networkID();
 			this.modifiers = modifiers;
 			this.hand = hand == null ? EnumHand.MAIN_HAND : hand;
 		}

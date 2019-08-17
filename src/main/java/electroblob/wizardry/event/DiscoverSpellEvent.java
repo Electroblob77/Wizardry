@@ -6,6 +6,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 
+import javax.annotation.Nullable;
+
 /**
  * DiscoverSpellEvent is fired when a player discovers a spell by any method.<br>
  * <br>
@@ -41,13 +43,30 @@ public class DiscoverSpellEvent extends PlayerEvent {
 
 	public enum Source {
 		/** Signifies that the spell was discovered by trying to cast it. */
-		CASTING,
+		CASTING("casting"),
 		/** Signifies that the spell was discovered using a scroll of identification. */
-		IDENTIFICATION_SCROLL,
+		IDENTIFICATION_SCROLL("identification_scroll"),
 		/** Signifies that the spell was discovered using commands. */
-		COMMAND,
+		COMMAND("command"),
+		/** Signifies that the spell was discovered by purchasing it from a wizard. */
+		PURCHASE("purchase"),
 		/** Signifies that the spell was discovered by some other means. */
-		OTHER
+		OTHER("other");
+
+		String name;
+
+		Source(String name){
+			this.name = name;
+		}
+
+		/** Returns the spell discovery source with the given name, or null if no such source exists. */
+		@Nullable
+		public static Source byName(String name){
+			for(Source source : values()){
+				if(source.name.equals(name)) return source;
+			}
+			return null;
+		}
 	}
 
 }

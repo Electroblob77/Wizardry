@@ -1,15 +1,15 @@
 package electroblob.wizardry.entity;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.spell.Meteor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,6 +20,7 @@ public class EntityMeteor extends EntityFallingBlock {
 	 * The entity blast multiplier.
 	 */
 	public float blastMultiplier;
+	private boolean damageBlocks;
 
 	public EntityMeteor(World world){
 		super(world);
@@ -27,11 +28,12 @@ public class EntityMeteor extends EntityFallingBlock {
 		this.setSize(0.98F, 0.98F);
 	}
 
-	public EntityMeteor(World world, double x, double y, double z, float blastMultiplier){
+	public EntityMeteor(World world, double x, double y, double z, float blastMultiplier, boolean damageBlocks){
 		super(world, x, y, z, WizardryBlocks.meteor.getDefaultState());
 		this.motionY = -1.0D;
 		this.setFire(200);
 		this.blastMultiplier = blastMultiplier;
+		this.damageBlocks = damageBlocks;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class EntityMeteor extends EntityFallingBlock {
 	public void onUpdate(){
 
 		if(this.ticksExisted % 16 == 1 && world.isRemote){
-			Wizardry.proxy.playMovingSound(this, WizardrySounds.SPELL_LOOP_FIRE, 3.0f, 1.0f, false);
+			Wizardry.proxy.playMovingSound(this, WizardrySounds.ENTITY_METEOR_FALLING, WizardrySounds.SPELLS, 3.0f, 1.0f, false);
 		}
 
 		// You'd think the best way to do this would be to call super and do all the exploding stuff in fall() instead.
@@ -66,21 +68,9 @@ public class EntityMeteor extends EntityFallingBlock {
 				this.motionX *= 0.699999988079071D;
 				this.motionZ *= 0.699999988079071D;
 				this.motionY *= -0.5D;
-				this.world.createExplosion(this, this.posX, this.posY, this.posZ, 2.0f * blastMultiplier, true);
-				for(int i1 = -3; i1 < 4; i1++){
-					for(int j1 = -3; j1 < 4; j1++){
-						int y = WizardryUtilities.getNearestFloorLevelB(this.world,
-								new BlockPos(this.posX + i1, this.posY, this.posZ + j1), 7);
-						// System.out.println(y);
-						double dist = this.getDistance((int)this.posX + i1, y, (int)this.posZ + j1);
-						// Randomised with weighting so that the nearer the block the more likely it is to be set on
-						// fire.
-						if(y != -1 && rand.nextInt((int)dist * 2 + 1) < 3 && dist < 4){
-							this.world.setBlockState(new BlockPos(this.posX + i1, y, this.posZ + j1),
-									Blocks.FIRE.getDefaultState());
-						}
-					}
-				}
+				this.world.newExplosion(this, this.posX, this.posY, this.posZ,
+						Spells.meteor.getProperty(Meteor.BLAST_STRENGTH).floatValue() * blastMultiplier,
+						damageBlocks, damageBlocks);
 				this.setDead();
 			}
 		}
@@ -123,12 +113,19 @@ public class EntityMeteor extends EntityFallingBlock {
 	public void readEntityFromNBT(NBTTagCompound nbttagcompound){
 		super.readEntityFromNBT(nbttagcompound);
 		blastMultiplier = nbttagcompound.getFloat("blastMultiplier");
+		damageBlocks = nbttagcompound.getBoolean("damageBlocks");
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbttagcompound){
 		super.writeEntityToNBT(nbttagcompound);
 		nbttagcompound.setFloat("blastMultiplier", blastMultiplier);
+		nbttagcompound.setBoolean("damageBlocks", damageBlocks);
+	}
+	
+	@Override
+	public SoundCategory getSoundCategory(){
+		return WizardrySounds.SPELLS;
 	}
 
 }

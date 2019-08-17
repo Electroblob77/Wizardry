@@ -1,0 +1,26 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "apprentice",
+  "element": "fire",
+  "type": "projectile",
+  "cost": 15,
+  "chargeup": 0,
+  "cooldown": 25,
+  "base_properties": {
+    "range": 10,
+    "direct_damage": 5,
+    "splash_damage": 3,
+    "blast_radius": 3,
+    "burn_duration": 7
+  }
+}

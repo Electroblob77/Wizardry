@@ -1,8 +1,5 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
 import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +9,7 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -19,22 +17,22 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class EntityZombieMinion extends EntityZombie implements ISummonedCreature {
 
 	// Field implementations
-	private int lifetime = 600;
-	private WeakReference<EntityLivingBase> casterReference;
+	private int lifetime = -1;
 	private UUID casterUUID;
 
 	// Setter + getter implementations
 	@Override public int getLifetime(){ return lifetime; }
 	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
-	@Override public WeakReference<EntityLivingBase> getCasterReference(){ return casterReference; }
-	@Override public void setCasterReference(WeakReference<EntityLivingBase> reference){ casterReference = reference; }
-	@Override public UUID getCasterUUID(){ return casterUUID; }
-	@Override public void setCasterUUID(UUID uuid){ this.casterUUID = uuid; }
+	@Override public UUID getOwnerId(){ return casterUUID; }
+	@Override public void setOwnerId(UUID uuid){ this.casterUUID = uuid; }
 
 	/** Creates a new zombie minion in the given world. */
 	public EntityZombieMinion(World world){
@@ -42,13 +40,13 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 		this.experienceValue = 0;
 	}
 
-	// EntityZombie overrides (EntityZombie is a long class so there are lots of these)
+	// EntityZombie overrides (EntityZombie is a complex class so there are lots of these)
 
 	@Override
 	protected void applyEntityAI(){
 		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class,
 				0, false, true, this.getTargetSelector()));
 	}
 
@@ -57,6 +55,7 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty){} // They don't have equipment!
 	@Override public void onKillEntity(EntityLivingBase entityLivingIn){} // Turns villagers to zombies in EntityZombie
 	@Override public void setChildSize(boolean isChild){}
+	@Override protected ItemStack getSkullDrop(){ return ItemStack.EMPTY; }
 
 	// Implementations
 
@@ -121,8 +120,16 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override protected Item getDropItem(){ return null; }
 	@Override protected ResourceLocation getLootTable(){ return null; }
 	@Override public boolean canPickUpLoot(){ return false; }
+
 	// This vanilla method has nothing to do with the custom despawn() method.
-	@Override protected boolean canDespawn(){ return false; }
+	@Override protected boolean canDespawn(){
+		return getCaster() == null && getOwnerId() == null;
+	}
+
+	@Override
+	public boolean getCanSpawnHere(){
+		return this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
+	}
 
 	@Override
 	public boolean canAttackClass(Class<? extends EntityLivingBase> entityType){
@@ -143,7 +150,7 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getCaster() != null;
+		return Wizardry.settings.summonedCreatureNames && getCaster() != null;
 	}
 
 }

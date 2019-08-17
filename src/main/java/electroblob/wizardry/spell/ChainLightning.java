@@ -1,79 +1,81 @@
 package electroblob.wizardry.spell;
 
-import java.util.List;
-
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.EntityArc;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class ChainLightning extends SpellRay {
 
-	private static final float PRIMARY_DAMAGE = 10;
-	private static final float SECONDARY_DAMAGE = 8;
-	private static final float TERTIARY_DAMAGE = 6;
+	public static final String PRIMARY_DAMAGE = "primary_damage";
+	public static final String SECONDARY_DAMAGE = "secondary_damage";
+	public static final String TERTIARY_DAMAGE = "tertiary_damage";
 
-	private static final double PRIMARY_RANGE = 10;
-	private static final double SECONDARY_RANGE = 5;
-	private static final double TERTIARY_RANGE = 5;
+	public static final String SECONDARY_RANGE = "secondary_range";
+	public static final String TERTIARY_RANGE = "tertiary_range";
 
-	private static final int SECONDARY_MAX_TARGETS = 5;
-	private static final int TERTIARY_MAX_TARGETS = 2; // This is per secondary target, giving 10 in total
+	public static final String SECONDARY_MAX_TARGETS = "secondary_max_targets";
+	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public ChainLightning(){
-		super("chain_lightning", Tier.ADVANCED, Element.LIGHTNING, SpellType.ATTACK, 25, 50, false, PRIMARY_RANGE, null);
+		super("chain_lightning", false, EnumAction.NONE);
+		this.aimAssist(0.6f);
+		this.soundValues(1, 1.7f, 0.2f);
+		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,
+				SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
 		// Anything can be attacked with the initial arc, because the player has control over where it goes. If they
 		// hit a minion or an ally, it's their problem!
 		if(WizardryUtilities.isLiving(target)){
 
-			electrocute(world, caster, caster, target, PRIMARY_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
+			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
+					* modifiers.get(SpellModifiers.POTENCY));
 
 			// Secondary chaining effect
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(SECONDARY_RANGE,
-					target.posX, target.posY + target.height / 2, target.posZ, world);
+			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+					getProperty(SECONDARY_RANGE).doubleValue(), target.posX, target.posY + target.height / 2, target.posZ, world);
 
 			secondaryTargets.remove(target);
 			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
-			secondaryTargets.removeIf(e -> !WizardryUtilities.isValidTarget(caster, e));
-			if(secondaryTargets.size() > SECONDARY_MAX_TARGETS) secondaryTargets = secondaryTargets.subList(0, SECONDARY_MAX_TARGETS);
+			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
+			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
+				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
 
 			for(EntityLivingBase secondaryTarget : secondaryTargets){
 
-				electrocute(world, caster, target, secondaryTarget,
-						SECONDARY_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
+				electrocute(world, caster, target.getPositionVector().add(0, target.height/2, 0), secondaryTarget,
+						getProperty(SECONDARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(TERTIARY_RANGE,
-						secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height / 2,
-						secondaryTarget.posZ, world);
+				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+						getProperty(TERTIARY_RANGE).doubleValue(), secondaryTarget.posX,
+						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 
 				tertiaryTargets.remove(target);
 				tertiaryTargets.removeAll(secondaryTargets);
 				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
-				tertiaryTargets.removeIf(e -> !WizardryUtilities.isValidTarget(caster, e));
-				if(tertiaryTargets.size() > TERTIARY_MAX_TARGETS) tertiaryTargets = tertiaryTargets.subList(0, TERTIARY_MAX_TARGETS);
+				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
+				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
+					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
 
 				for(EntityLivingBase tertiaryTarget : tertiaryTargets){
-					electrocute(world, caster, secondaryTarget, tertiaryTarget,
-							TERTIARY_DAMAGE * modifiers.get(SpellModifiers.POTENCY));
+					electrocute(world, caster, secondaryTarget.getPositionVector().add(0, secondaryTarget.height/2, 0),
+							tertiaryTarget, getProperty(TERTIARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 				}
 			}
 
@@ -84,16 +86,16 @@ public class ChainLightning extends SpellRay {
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
-	private void electrocute(World world, Entity caster, Entity origin, Entity target, float damage){
+	private void electrocute(World world, Entity caster, Vec3d origin, Entity target, float damage){
 
 		if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
 			if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
@@ -111,7 +113,7 @@ public class ChainLightning extends SpellRay {
 			ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
 		}
 
-		target.playSound(WizardrySounds.SPELL_SPARK, 1, 1.5f + 0.4f * world.rand.nextFloat());
+		//target.playSound(WizardrySounds.SPELL_SPARK, 1, 1.5f + 0.4f * world.rand.nextFloat());
 	}
 
 }

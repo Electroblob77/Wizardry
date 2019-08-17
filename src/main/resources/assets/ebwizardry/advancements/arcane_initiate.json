@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:arcane_initiate"
+            "translate": "advancement.ebwizardry:arcane_initiate"
         },
         "description": {
-            "translate": "advancement.wizardry:arcane_initiate.desc"
+            "translate": "advancement.ebwizardry:arcane_initiate.desc"
         },
         "icon": {
             "item": "ebwizardry:magic_wand"

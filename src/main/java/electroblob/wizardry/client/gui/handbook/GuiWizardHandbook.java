@@ -3,6 +3,7 @@ package electroblob.wizardry.client.gui.handbook;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.client.DrawingUtils;
@@ -11,34 +12,28 @@ import electroblob.wizardry.client.gui.handbook.GuiButtonTurnPage.Type;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.packet.PacketRequestAdvancementSync;
+import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardrySounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.multiplayer.ClientAdvancementManager;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.JsonUtils;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * GUI class for the wizard's handbook. Like any GUI class, this is instantiated each time the book is opened. As of
@@ -54,7 +49,6 @@ import java.util.List;
  * @see Image
  * @see CraftingRecipe
  */
-@Mod.EventBusSubscriber
 public class GuiWizardHandbook extends GuiScreen {
 
 	private static final ResourceLocation DEFAULT = new ResourceLocation(Wizardry.MODID, "texts/handbook_en_us.json");
@@ -71,6 +65,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 	static final String IMAGE_TAG = "image";
 	static final String RECIPE_TAG = "recipe";
+	static final String RULER_TAG = "ruler";
 
 	static final Map<String, String> FORMAT_TAGS = new HashMap<>();
 
@@ -79,6 +74,8 @@ public class GuiWizardHandbook extends GuiScreen {
 
 	/** The dimensions of the rendered GUI area. */
 	static final int GUI_WIDTH = 288, GUI_HEIGHT = 180;
+	/** The dimensions of the GUI texture itself. */
+	static final int TEXTURE_WIDTH = 512, TEXTURE_HEIGHT = 256;
 	/** The dimensions of the area of a single page in which text can be drawn. */
 	static final int PAGE_WIDTH = 120, PAGE_HEIGHT = 140;
 	/** The distance of the text from the top outside corner of each page. */
@@ -107,12 +104,12 @@ public class GuiWizardHandbook extends GuiScreen {
 	 * The <b>double-page</b> number where the bookmark is currently set, <b>relative to the section stored in
 	 * {@link GuiWizardHandbook#bookmarkSection}</b>. Static because it persists when the book is closed.
 	 */
-	private static int bookmarkPage = 1;
+	private static int bookmarkPage = 0;
 	/**
-	 * A reference to the section in which the bookmark is currently set. Static because it persists when the book is
-	 * closed. Storing a section means the bookmark doesn't change location when new sections are unlocked.
+	 * The key corresponding to the section in which the bookmark is currently set. Static because it persists when the
+	 * book is closed. Storing a section means the bookmark doesn't change location when new sections are unlocked.
 	 */
-	private static Section bookmarkSection;
+	private static String bookmarkSection;
 
 	// Buttons
 	private GuiButton bookmark, next, previous, nextSection, previousSection, menu;
@@ -164,19 +161,6 @@ public class GuiWizardHandbook extends GuiScreen {
 	 */
 	static final Map<String, CraftingRecipe> recipes = new HashMap<>();
 
-	static String rulerText = "--------------------"; // Assigned here as a fallback
-
-	private static final List<Pair<ItemStack, NonNullList<NonNullList<ItemStack>>>> RECIPES = new ArrayList<>();
-
-	// Reflection
-
-	static final Field ADVANCEMENT_TO_PROGRESS;
-
-	static {
-		// TODO: Obf field name
-		ADVANCEMENT_TO_PROGRESS = ReflectionHelper.findField(ClientAdvancementManager.class, "advancementToProgress");
-	}
-
 	/**
 	 * Adds a format tag to the handbook. All occurrences of the given tag string preceded by a # will be replaced with
 	 * the result of the given value string on GUI load. The value string, therefore, can be anything that should be
@@ -193,9 +177,9 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		addFormatTag("next_spell_key", ClientProxy.NEXT_SPELL.getDisplayName());
 		addFormatTag("previous_spell_key", ClientProxy.PREVIOUS_SPELL.getDisplayName());
-		addFormatTag("mana_per_crystal_minus_30", "" + (Constants.MANA_PER_CRYSTAL - 30));
+		addFormatTag("example_charging_loss", "" + (Constants.MANA_PER_CRYSTAL - 30));
 		addFormatTag("mana_per_crystal", "" + Constants.MANA_PER_CRYSTAL);
-		addFormatTag("novice_max_charge", "" + Tier.BASIC.maxCharge);
+		addFormatTag("novice_max_charge", "" + Tier.NOVICE.maxCharge);
 		addFormatTag("apprentice_max_charge", "" + Tier.APPRENTICE.maxCharge);
 		addFormatTag("advanced_max_charge", "" + Tier.ADVANCED.maxCharge);
 		addFormatTag("master_max_charge", "" + Tier.MASTER.maxCharge);
@@ -264,12 +248,14 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
+		GlStateManager.color(1, 1, 1, 1);
+
 		// Main background
-		DrawingUtils.drawTexturedRect(left, top, 0, 0, GUI_WIDTH, GUI_HEIGHT, 512, 256);
+		DrawingUtils.drawTexturedRect(left, top, 0, 0, GUI_WIDTH, GUI_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 		// First page background
 		if(currentPage == 0){
-			DrawingUtils.drawTexturedRect(left, top, 368, 0, GUI_WIDTH / 2, GUI_HEIGHT, 512, 256);
+			DrawingUtils.drawTexturedRect(left, top, 368, 0, GUI_WIDTH / 2, GUI_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 			previous.visible = false;
 			previousSection.visible = false; // Not worth testing if we're in the first section every frame
 			menu.visible = false;
@@ -281,7 +267,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 		// Last page background
 		if(currentPage == singleToDoublePage(pageCount)){
-			DrawingUtils.drawTexturedFlippedRect(left + GUI_WIDTH / 2, top, 368, 0, GUI_WIDTH / 2, GUI_HEIGHT, 512, 256, true, false);
+			DrawingUtils.drawTexturedFlippedRect(left + GUI_WIDTH / 2, top, 368, 0, GUI_WIDTH / 2, GUI_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT, true, false);
 			next.visible = false;
 			nextSection.visible = false;
 		}else{
@@ -302,9 +288,10 @@ public class GuiWizardHandbook extends GuiScreen {
 		}
 
 		// Main content
+		contentsList.values().forEach(c -> { if(c.section.isUnlocked()) c.draw(fontRenderer, currentPage, left, top); } );
+		sections.values().forEach(s -> { if(s.isUnlocked()) s.draw(fontRenderer, currentPage, left, top); } );
+		// These only get populated if the sections are unlocked so no checks are necessary
 		images.values().forEach(i -> i.draw(fontRenderer, currentPage, left, top));
-		contentsList.values().forEach(c -> c.draw(fontRenderer, currentPage, left, top));
-		sections.values().forEach(s -> s.draw(fontRenderer, currentPage, left, top));
 		recipes.values().forEach(r -> r.draw(fontRenderer, itemRender, currentPage, left, top));
 
 		// Buttons
@@ -314,14 +301,15 @@ public class GuiWizardHandbook extends GuiScreen {
 		GlStateManager.color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
-		if(currentPage == singleToDoublePage(bookmarkSection.startPage) + bookmarkPage){
+		if(currentPage == singleToDoublePage(sections.get(bookmarkSection).startPage) + bookmarkPage){
+			// If the current page is the bookmarked page, the (invisible) bookmark button is disabled
 			bookmark.visible = false;
-			DrawingUtils.drawTexturedRect(left + 138, top, 299, 0, 11, 191, 512, 256);
+			DrawingUtils.drawTexturedRect(left + 138, top, 299, 0, 11, 191, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 		}else{
 			bookmark.visible = true;
-			bookmark.x = left + (currentPage > singleToDoublePage(bookmarkSection.startPage) + bookmarkPage ? 130 : 147);
+			bookmark.x = left + (currentPage > singleToDoublePage(sections.get(bookmarkSection).startPage) + bookmarkPage ? 130 : 147);
 			DrawingUtils.drawTexturedRect(bookmark.x, top,
-					bookmark.isMouseOver() ? 310 : 288, 0, 11, 191, 512, 256);
+					bookmark.isMouseOver() ? 310 : 288, 0, 11, 191, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 		}
 
 		// Recipe tooltips
@@ -426,8 +414,6 @@ public class GuiWizardHandbook extends GuiScreen {
 			JsonElement je = gson.fromJson(reader, JsonElement.class);
 			JsonObject json = je.getAsJsonObject();
 
-			rulerText = JsonUtils.getString(json, "ruler_text");
-
 			JsonUtils.getJsonObject(json, "colours").entrySet().forEach(e -> colours.put(e.getKey(),
 					Color.decode(e.getValue().getAsString()).getRGB()));
 
@@ -443,10 +429,12 @@ public class GuiWizardHandbook extends GuiScreen {
 				return;
 			}
 
-			// Attempts to find a suitable place to put the bookmark to start with
-			bookmarkSection = sections.get("introduction");
-			if(bookmarkSection == null) bookmarkSection = sectionList.get(0);
+			bookmarkSection = JsonUtils.getString(json, "bookmark_start_section");
+			if(!sections.containsKey(bookmarkSection)) throw new JsonSyntaxException("Section with id " + bookmarkSection + " is undefined");
 		}
+
+		// The first resource load on startup is done before the packet handler is loaded
+		if(WizardryPacketHandler.net != null) WizardryPacketHandler.net.sendToServer(new PacketRequestAdvancementSync.Message());
 	}
 
 	/**
@@ -459,6 +447,8 @@ public class GuiWizardHandbook extends GuiScreen {
 	 * @return The handbook JSON file, as an IResource, or null if it was not found.
 	 */
 	private static IResource getHandbookResource(IResourceManager manager){
+
+		// TODO: Implement resource pack stacking to allow addon mods and texture packs to add/overwrite content
 
 		IResource handbookFile = null;
 
@@ -507,12 +497,15 @@ public class GuiWizardHandbook extends GuiScreen {
 
 				if(currentSection != null){
 
-					int index = sectionList.indexOf(currentSection);
+					List<Section> visibleSections = new ArrayList<>(sectionList);
+					visibleSections.removeIf(s -> !s.isUnlocked());
 
-					if(button == nextSection && index + 1 < sections.size()){
-						currentPage = singleToDoublePage(sectionList.get(index + 1).startPage);
+					int index = visibleSections.indexOf(currentSection);
+
+					if(button == nextSection && index + 1 < visibleSections.size()){
+						currentPage = singleToDoublePage(visibleSections.get(index + 1).startPage);
 					}else if(index > 0){
-						currentPage = singleToDoublePage(sectionList.get(index - 1).startPage);
+						currentPage = singleToDoublePage(visibleSections.get(index - 1).startPage);
 					}
 				}
 
@@ -520,7 +513,7 @@ public class GuiWizardHandbook extends GuiScreen {
 				currentPage = singleToDoublePage(sections.get("main_contents").startPage);
 
 			}else if(button == bookmark && bookmarkSection != null){
-				currentPage = singleToDoublePage(bookmarkSection.startPage) + bookmarkPage;
+				currentPage = singleToDoublePage(sections.get(bookmarkSection).startPage) + bookmarkPage;
 
 			}else{
 				if(button instanceof GuiButtonHyperlink.Internal){
@@ -540,12 +533,12 @@ public class GuiWizardHandbook extends GuiScreen {
 
 				this.selectedButton = bookmark;
 
-				for(Section section : sections.values()){
+				for(String key : sections.keySet()){
 					// The bookmark is assumed to bookmark the left-hand page
-					if(section.containsPage(doubleToSinglePage(bookmarkPage, false))) bookmarkSection = section;
+					if(sections.get(key).containsPage(doubleToSinglePage(currentPage, false))) bookmarkSection = key;
 				}
 
-				bookmarkPage = currentPage - singleToDoublePage(bookmarkSection.startPage);
+				bookmarkPage = currentPage - singleToDoublePage(sections.get(bookmarkSection).startPage);
 			}
 		}else{
 			super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -558,9 +551,14 @@ public class GuiWizardHandbook extends GuiScreen {
 		super.renderToolTip(stack, x, y);
 	}
 
-	@SubscribeEvent
-	public static void onAdvancementEvent(AdvancementEvent event){
-		sections.values().forEach(s -> s.onAdvancement(event.getEntityPlayer(), event.getAdvancement()));
+	@Override
+	public boolean doesGuiPauseGame(){
+		return Wizardry.settings.booksPauseGame;
+	}
+
+
+	public static void updateUnlockStatus(boolean showToasts, ResourceLocation... completedAdvancements){
+		sections.values().forEach(s -> s.updateUnlockStatus(showToasts, completedAdvancements));
 	}
 
 }

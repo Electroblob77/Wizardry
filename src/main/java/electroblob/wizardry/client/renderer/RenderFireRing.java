@@ -1,7 +1,5 @@
 package electroblob.wizardry.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.entity.construct.EntityFireRing;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -15,6 +13,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderFireRing extends Render<EntityFireRing> {
 

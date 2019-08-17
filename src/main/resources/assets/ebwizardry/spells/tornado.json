@@ -1,0 +1,26 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "earth",
+  "type": "attack",
+  "cost": 35,
+  "chargeup": 0,
+  "cooldown": 80,
+  "base_properties": {
+    "duration": 200,
+    "speed": 0.33,
+    "effect_radius": 4,
+    "damage": 1,
+    "upward_acceleration": 0.2
+  }
+}

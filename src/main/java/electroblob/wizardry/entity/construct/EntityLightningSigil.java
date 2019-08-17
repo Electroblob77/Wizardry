@@ -1,8 +1,8 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -10,9 +10,14 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class EntityLightningSigil extends EntityMagicConstruct {
+
+	public static final String SECONDARY_MAX_TARGETS = "secondary_max_targets";
 
 	public EntityLightningSigil(World world){
 		super(world);
@@ -42,22 +47,24 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 
 				// Only works if target is actually damaged to account for hurtResistantTime
 				if(target.attackEntityFrom(getCaster() != null ? MagicDamage.causeIndirectMagicDamage(this, getCaster(),
-						DamageType.SHOCK) : DamageSource.MAGIC, 6)){
+						DamageType.SHOCK) : DamageSource.MAGIC, Spells.lightning_sigil.getProperty(Spell.DIRECT_DAMAGE)
+						.floatValue() * damageMultiplier)){
 
 					// Removes knockback
 					target.motionX = velX;
 					target.motionY = velY;
 					target.motionZ = velZ;
 
-					this.playSound(WizardrySounds.SPELL_SPARK, 1.0f, 1.0f);
+					this.playSound(WizardrySounds.ENTITY_LIGHTNING_SIGIL_TRIGGER, 1.0f, 1.0f);
 
 					// Secondary chaining effect
-					double seekerRange = 5.0d;
+					double seekerRange = Spells.lightning_sigil.getProperty(Spell.EFFECT_RADIUS).doubleValue();
 
 					List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
 							target.posX, target.posY + target.height / 2, target.posZ, world);
 
-					for(int j = 0; j < Math.min(secondaryTargets.size(), 3); j++){
+					for(int j = 0; j < Math.min(secondaryTargets.size(),
+							Spells.lightning_sigil.getProperty(SECONDARY_MAX_TARGETS).floatValue()); j++){
 
 						EntityLivingBase secondaryTarget = secondaryTargets.get(j);
 
@@ -73,11 +80,12 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 										secondaryTarget.posZ);
 							}
 
-							secondaryTarget.playSound(WizardrySounds.SPELL_SPARK, 1.0F,
+							secondaryTarget.playSound(WizardrySounds.ENTITY_LIGHTNING_SIGIL_TRIGGER, 1.0F,
 									world.rand.nextFloat() * 0.4F + 1.5F);
 
 							secondaryTarget.attackEntityFrom(
-									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.SHOCK), 4);
+									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.SHOCK),
+									Spells.lightning_sigil.getProperty(Spell.SPLASH_DAMAGE).floatValue() * damageMultiplier);
 						}
 
 					}
@@ -89,9 +97,9 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 
 		if(this.world.isRemote && this.rand.nextInt(15) == 0){
 			double radius = 0.5 + rand.nextDouble() * 0.3;
-			double angle = rand.nextDouble() * Math.PI * 2;
+			float angle = rand.nextFloat() * (float)Math.PI * 2;;
 			ParticleBuilder.create(Type.SPARK)
-			.pos(this.posX + radius * Math.cos(angle), this.posY + 0.1, this.posZ + radius * Math.sin(angle))
+			.pos(this.posX + radius * MathHelper.cos(angle), this.posY + 0.1, this.posZ + radius * MathHelper.sin(angle))
 			.spawn(world);
 		}
 	}

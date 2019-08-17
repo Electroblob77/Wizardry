@@ -1,6 +1,5 @@
 package electroblob.wizardry.potion;
 
-import electroblob.wizardry.client.DrawingUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -42,7 +41,7 @@ public class PotionMagicEffect extends Potion {
 	@SideOnly(Side.CLIENT)
 	protected void drawIcon(int x, int y, PotionEffect effect, net.minecraft.client.Minecraft mc){
 		mc.renderEngine.bindTexture(texture);
-		DrawingUtils.drawTexturedRect(x, y, 0, 0, 18, 18, 18, 18);
+		electroblob.wizardry.client.DrawingUtils.drawTexturedRect(x, y, 0, 0, 18, 18, 18, 18);
 	}
 
 }

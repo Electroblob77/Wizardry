@@ -8,9 +8,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticleScorch extends ParticleWizardry {
 
@@ -27,7 +26,12 @@ public class ParticleScorch extends ParticleWizardry {
 		this.setRBGColorF(0, 0, 0);
 		this.shaded = false;
 	}
-	
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
+	}
+
 	@Override
 	public void setRBGColorF(float r, float g, float b){
 		super.setRBGColorF(r, g, b);
@@ -48,7 +52,7 @@ public class ParticleScorch extends ParticleWizardry {
 		
 		// Fading
 		if(this.particleAge > this.particleMaxAge/2){
-			this.setAlphaF(1 - ((float)this.particleAge - (float)(this.particleMaxAge/2)) / (float)this.particleMaxAge);
+			this.setAlphaF(1 - ((float)this.particleAge - this.particleMaxAge/2f) / (this.particleMaxAge/2f));
 		}
 		
 		EnumFacing facing = EnumFacing.fromAngle(yaw);

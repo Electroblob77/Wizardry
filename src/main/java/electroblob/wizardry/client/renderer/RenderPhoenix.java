@@ -1,7 +1,5 @@
 package electroblob.wizardry.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.model.ModelPhoenix;
 import electroblob.wizardry.entity.living.EntityPhoenix;
@@ -10,10 +8,9 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class RenderPhoenix extends RenderLiving<EntityPhoenix> {
 
 	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/entity/phoenix.png");

@@ -1,15 +1,12 @@
 package electroblob.wizardry.client.particle;
 
-import java.util.Random;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 public class ParticleLightning extends ParticleTargeted {
 	
@@ -28,10 +25,6 @@ public class ParticleLightning extends ParticleTargeted {
 	/** Number of ticks to wait before the arc changes shape again. */
 	private static final int UPDATE_PERIOD = 1;
 
-	/** A random long value used by the renderer as a seed to generate its vertices from, ensuring they remain the same
-	 * across multiple frames. Not synced. */
-	public final long seed;
-	
 	public ParticleLightning(World world, double x, double y, double z){
 		super(world, x, y, z); // Does not have a texture!
 		seed = this.rand.nextLong();
@@ -39,7 +32,12 @@ public class ParticleLightning extends ParticleTargeted {
 		this.setMaxAge(3);
 		this.particleScale = 1;
 	}
-	
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
+	}
+
 	@Override
 	public int getFXLayer(){
 		return 3;
@@ -67,7 +65,7 @@ public class ParticleLightning extends ParticleTargeted {
 			// Creates a random from the arc's seed field + the number of ticks it has existed/the update period.
 			// By using a seed, we can ensure the vertex positions and forks are identical a) for each layer, even
 			// though they are rendered sequentially, and b) across many frames (and ticks, if updateTime > 1).
-			Random random = new Random(this.seed + this.particleAge/UPDATE_PERIOD);
+			random.setSeed(this.seed + this.particleAge/UPDATE_PERIOD);
 
 			// numberOfSegments-1 because the last segment is handled separately.
 			for(int i=0; i<numberOfSegments-1; i++){

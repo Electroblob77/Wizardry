@@ -1,9 +1,9 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.entity.projectile.EntitySmokeBomb;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.registry.WizardryTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -23,15 +23,15 @@ public class ItemSmokeBomb extends Item {
 
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(!player.capabilities.isCreativeMode){
+		if(!player.isCreative()){
 			stack.shrink(1);
 		}
 
-		player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		player.playSound(WizardrySounds.ENTITY_SMOKE_BOMB_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if(!world.isRemote){
 			EntitySmokeBomb smokebomb = new EntitySmokeBomb(world);
-			smokebomb.aim(player, 1.5f);
+			smokebomb.aim(player, 1);
 			world.spawnEntity(smokebomb);
 		}
 

@@ -1,8 +1,8 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.List;
-
 import electroblob.wizardry.spell.Spell;
+
+import java.util.List;
 
 /**
  * [NYI] Interface for entities that can select between spells based on their current circumstances, to be used in

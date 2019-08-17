@@ -1,8 +1,5 @@
 package electroblob.wizardry.packet;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketClairvoyance.Message;
 import io.netty.buffer.ByteBuf;
@@ -11,6 +8,9 @@ import net.minecraft.pathfinding.PathPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <b>[Server -> Client]</b> This packet is sent when a player casts the clairvoyance spell to allow pathing to chunks

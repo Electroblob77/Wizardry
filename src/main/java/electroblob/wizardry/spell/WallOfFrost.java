@@ -1,83 +1,69 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.tileentity.TileEntityStatue;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
-import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class WallOfFrost extends SpellRay {
 
-	private static final int BASE_DURATION = 600;
+	private static final int MINIMUM_PLACEMENT_RANGE = 2;
 	
 	public WallOfFrost(){
-		super("wall_of_frost", Tier.MASTER, Element.ICE, SpellType.UTILITY, 15, 0, true, 10, null);
+		super("wall_of_frost", true, EnumAction.NONE);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
-	}
-	
-	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		// TODO: Temporary solution until I implement a better continuous sound system
-		boolean flag = super.cast(world, caster, hand, ticksInUse, modifiers);
-		if(flag){
-			if(ticksInUse % 12 == 0){
-				if(ticksInUse == 0) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 0.5f, 1);
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_ICE, 0.5f, 1);
-			}
-		}
-		return flag;
+		addProperties(DURATION);
+		soundValues(0.5f, 1, 0);
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		boolean flag = super.cast(world, caster, hand, ticksInUse, target, modifiers);
-		if(flag){
-			if(ticksInUse % 12 == 0){
-				if(ticksInUse == 0) caster.playSound(WizardrySounds.SPELL_ICE, 0.5f, 1);
-				caster.playSound(WizardrySounds.SPELL_LOOP_ICE, 0.5f, 1);
-			}
-		}
-		return flag;
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
+
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
+	}
+
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		// Wall of frost now freezes entities solid too!
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-					(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)))){
+					(int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 				
-				target.playSound(WizardrySounds.SPELL_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
-				return true;
+				target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}
 		}
 		
-		return false;
+		return true;
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
-		
-		// IDEA: Use frosted ice instead of ice statue blocks
-		
-		if(!world.isRemote){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+
+		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
 
 			// Stops the ice being placed floating above snow and grass. Directions other than up included for
 			// completeness.
@@ -86,20 +72,16 @@ public class WallOfFrost extends SpellRay {
 				pos = pos.offset(side.getOpposite());
 			}
 
-			if(caster.getDistance(pos.getX(), pos.getY(), pos.getZ()) > 2
-					&& world.getBlockState(pos).getBlock() != WizardryBlocks.ice_statue){
+			if(origin.squareDistanceTo(pos.getX(), pos.getY(), pos.getZ()) > MINIMUM_PLACEMENT_RANGE * MINIMUM_PLACEMENT_RANGE
+					&& world.getBlockState(pos).getBlock() != WizardryBlocks.ice_statue && world.getBlockState(pos).getBlock() != WizardryBlocks.dry_frosted_ice){
 
 				pos = pos.offset(side);
 				
-				int duration = (int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade));
+				int duration = (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 
 				if(WizardryUtilities.canBlockBeReplaced(world, pos)){
-					
-					world.setBlockState(pos, WizardryBlocks.ice_statue.getDefaultState());
-					
-					if(world.getTileEntity(pos) instanceof TileEntityStatue){
-						((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
-					}
+					world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
+					world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 				}
 
 				// Builds a 2 block high wall if it hits the ground
@@ -107,12 +89,8 @@ public class WallOfFrost extends SpellRay {
 					pos = pos.offset(side);
 
 					if(WizardryUtilities.canBlockBeReplaced(world, pos)){
-						
-						world.setBlockState(pos, WizardryBlocks.ice_statue.getDefaultState());
-						
-						if(world.getTileEntity(pos) instanceof TileEntityStatue){
-							((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
-						}
+						world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
+						world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 					}
 				}
 			}
@@ -122,7 +100,7 @@ public class WallOfFrost extends SpellRay {
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
 	

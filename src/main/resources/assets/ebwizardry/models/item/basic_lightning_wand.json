@@ -1,6 +1,0 @@
-{
-    "parent": "item/handheld",
-    "textures": {
-        "layer0": "ebwizardry:items/wand_basic_lightning"
-    }
-}

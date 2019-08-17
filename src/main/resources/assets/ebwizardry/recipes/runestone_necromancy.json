@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "zzz",
+        "zyz",
+        "zzz"
+    ],
+    "key": {
+        "y": {
+            "item": "ebwizardry:magic_crystal",
+			"data": 4
+        },
+        "z": {
+            "type": "forge:ore_dict",
+            "ore": "stone"
+        }
+    },
+    "result": {
+        "item": "ebwizardry:runestone",
+		"data": 4,
+        "count": 8
+    }
+}

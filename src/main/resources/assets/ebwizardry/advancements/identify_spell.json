@@ -1,19 +1,22 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:identify_spell"
+            "translate": "advancement.ebwizardry:identify_spell"
         },
         "description": {
-            "translate": "advancement.wizardry:identify_spell.desc"
+            "translate": "advancement.ebwizardry:identify_spell.desc"
         },
         "icon": {
             "item": "ebwizardry:identification_scroll"
         }
     },
-    "parent": "ebwizardry:arcane_initiate",
+    "parent": "ebwizardry:discover_spell",
     "criteria": {
         "criteria_0": {
-            "trigger": "ebwizardry:trigger_identify_spell"
+            "trigger": "ebwizardry:discover_spell",
+            "conditions": {
+                "source": "identification_scroll"
+            }
         }
     }
 }

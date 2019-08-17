@@ -1,13 +1,13 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityPlayerSave;
+import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -25,8 +25,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-// TODO: Apparently you shouldn't extend BlockContainer. I feel like BlockArcaneWorkbench should, but what about the rest?
-public class BlockSnare extends BlockContainer {
+import java.util.Random;
+
+public class BlockSnare extends Block implements ITileEntityProvider {
 
 	private static final AxisAlignedBB AABB = new AxisAlignedBB(0.0f, 0.0f, 0.0f, 1.0f, 0.0625f, 1.0f);
 
@@ -58,10 +59,14 @@ public class BlockSnare extends BlockContainer {
 
 				TileEntityPlayerSave tileentity = (TileEntityPlayerSave)world.getTileEntity(pos);
 
-				if(WizardryUtilities.isValidTarget(tileentity.getCaster(), entity)){
-					((EntityLivingBase)entity).attackEntityFrom(
-							MagicDamage.causeDirectMagicDamage(tileentity.getCaster(), DamageType.MAGIC), 6);
-					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 100, 2));
+				if(AllyDesignationSystem.isValidTarget(tileentity.getCaster(), entity)){
+
+					entity.attackEntityFrom(MagicDamage.causeDirectMagicDamage(tileentity.getCaster(), DamageType.MAGIC),
+							Spells.snare.getProperty(Spell.DAMAGE).floatValue());
+
+					((EntityLivingBase)entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS,
+							Spells.snare.getProperty(Spell.EFFECT_DURATION).intValue(),
+							Spells.snare.getProperty(Spell.EFFECT_STRENGTH).intValue()));
 
 					world.destroyBlock(pos, false);
 				}

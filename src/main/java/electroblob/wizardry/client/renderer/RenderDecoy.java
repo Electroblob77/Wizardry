@@ -1,8 +1,5 @@
 package electroblob.wizardry.client.renderer;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.EntityDecoy;
 import net.minecraft.client.model.ModelBiped;
@@ -12,10 +9,11 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+//@SideOnly(Side.CLIENT)
 public class RenderDecoy extends RenderBiped<EntityDecoy> {
 
 	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");

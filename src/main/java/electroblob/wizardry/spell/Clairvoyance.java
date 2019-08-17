@@ -1,21 +1,17 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.data.IStoredVariable;
+import electroblob.wizardry.data.Persistence;
+import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.misc.WizardryPathFinder;
 import electroblob.wizardry.packet.PacketClairvoyance;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryPathFinder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,23 +35,30 @@ public class Clairvoyance extends Spell {
 	/** The number of ticks it takes each path particle to move from one path point to the next. */
 	public static final int PARTICLE_MOVEMENT_INTERVAL = 45;
 
+	public static final IStoredVariable<BlockPos> LOCATION_KEY = IStoredVariable.StoredVariable.ofBlockPos("clairvoyancePos", Persistence.ALWAYS);
+	public static final IStoredVariable<Integer> DIMENSION_KEY = IStoredVariable.StoredVariable.ofInt("clairvoyanceDimension", Persistence.ALWAYS);
+
 	public Clairvoyance(){
-		super("clairvoyance", Tier.APPRENTICE, Element.SORCERY, SpellType.UTILITY, 20, 100, EnumAction.BOW, false);
+		super("clairvoyance", EnumAction.BOW, false);
+		addProperties(RANGE, DURATION);
+		WizardData.registerStoredVariables(LOCATION_KEY, DIMENSION_KEY);
 	}
 
-	@Override
-	public boolean doesSpellRequirePacket(){
-		return false;
-	}
+	@Override public boolean canBeCastByNPCs() { return false; }
+	@Override public boolean canBeCastByDispensers() { return false; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		WizardData properties = WizardData.get(caster);
+		WizardData data = WizardData.get(caster);
 
-		if(properties != null && !caster.isSneaking()){
-			if(caster.dimension == properties.getClairvoyanceDimension()){
-				if(properties.getClairvoyanceLocation() != null){
+		if(data != null && !caster.isSneaking()){
+
+			Integer dimension = data.getVariable(DIMENSION_KEY);
+			BlockPos location = data.getVariable(LOCATION_KEY);
+
+			if(dimension != null && caster.dimension == dimension){
+				if(location != null){
 
 					if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".searching"), true);
 
@@ -66,16 +69,15 @@ public class Clairvoyance extends Spell {
 						}
 					};
 					arbitraryZombie.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE)
-							.setBaseValue(256 * modifiers.get(WizardryItems.range_upgrade));
+							.setBaseValue(getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade));
 					arbitraryZombie.setPosition(caster.posX, caster.posY, caster.posZ);
 					arbitraryZombie.setPathPriority(PathNodeType.WATER, 0.0F);
 					arbitraryZombie.onGround = true;
 
-					BlockPos destination = properties.getClairvoyanceLocation();
-
 					WizardryPathFinder pathfinder = new WizardryPathFinder(arbitraryZombie.getNavigator().getNodeProcessor());
 
-					Path path = pathfinder.findPath(world, arbitraryZombie, destination, 256 * modifiers.get(WizardryItems.range_upgrade));
+					Path path = pathfinder.findPath(world, arbitraryZombie, location,
+							getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade));
 
 					if(path != null && path.getFinalPathPoint() != null){
 
@@ -83,9 +85,9 @@ public class Clairvoyance extends Spell {
 						int y = path.getFinalPathPoint().y;
 						int z = path.getFinalPathPoint().z;
 
-						if(x == destination.getX() && y == destination.getY() && z == destination.getZ()){
+						if(x == location.getX() && y == location.getY() && z == location.getZ()){
 
-							WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+							this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 							if(!world.isRemote && caster instanceof EntityPlayerMP){
 								WizardryPacketHandler.net.sendTo(new PacketClairvoyance.Message(path, modifiers.get(WizardryItems.duration_upgrade)),
@@ -107,12 +109,15 @@ public class Clairvoyance extends Spell {
 		}
 
 		// Fixes the problem with the sound not playing for the client of the caster.
-		if(world.isRemote) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+		if(world.isRemote) this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 		return false;
 	}
 
 	public static void spawnPathPaticles(World world, Path path, float durationMultiplier){
+
+		// A bit annoying that we have to use the reference here but there's no easy way around it
+		float duration = Spells.clairvoyance.getProperty(DURATION).floatValue();
 
 		PathPoint point, nextPoint;
 
@@ -127,7 +132,7 @@ public class Clairvoyance extends Spell {
 					(nextPoint.x - point.x) / (float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.y - point.y) / (float)PARTICLE_MOVEMENT_INTERVAL,
 					(nextPoint.z - point.z) / (float)PARTICLE_MOVEMENT_INTERVAL)
-			.time((int)(1800 * durationMultiplier)).clr(0, 1, 0.3f).spawn(world);
+			.time((int)(duration * durationMultiplier)).clr(0, 1, 0.3f).spawn(world);
 
 			path.incrementPathIndex();
 			path.incrementPathIndex();
@@ -136,7 +141,7 @@ public class Clairvoyance extends Spell {
 		point = path.getFinalPathPoint();
 
 		ParticleBuilder.create(Type.PATH).pos(point.x + 0.5, point.y + 0.5, point.z + 0.5)
-		.time((int)(1800 * durationMultiplier)).clr(1, 1, 1).spawn(world);
+		.time((int)(duration * durationMultiplier)).clr(1f, 1f, 1f).spawn(world);
 	}
 
 	@SubscribeEvent
@@ -145,17 +150,19 @@ public class Clairvoyance extends Spell {
 		if(event.getEntityPlayer().isSneaking()){
 
 			// The event now has an ItemStack, which greatly simplifies hand-related stuff.
-			ItemStack wand = event.getItemStack();
+			ItemStack stack = event.getItemStack();
 
-			if(wand.getItem() instanceof ItemWand && WandHelper.getCurrentSpell(wand) instanceof Clairvoyance){
+			if(stack.getItem() instanceof ISpellCastingItem
+					&& ((ISpellCastingItem)stack.getItem()).getCurrentSpell(stack) instanceof Clairvoyance){
 
-				WizardData properties = WizardData.get(event.getEntityPlayer());
+				WizardData data = WizardData.get(event.getEntityPlayer());
 
-				if(properties != null){
-					// THIS is why BlockPos is a thing - in 1.7.10 this requires a clumsy switch statement.
+				if(data != null){
+
 					BlockPos pos = event.getPos().offset(event.getFace());
 
-					properties.setClairvoyancePoint(pos, event.getWorld().provider.getDimension());
+					data.setVariable(LOCATION_KEY, pos);
+					data.setVariable(DIMENSION_KEY, event.getWorld().provider.getDimension());
 
 					if(!event.getWorld().isRemote){
 						event.getEntityPlayer().sendStatusMessage(

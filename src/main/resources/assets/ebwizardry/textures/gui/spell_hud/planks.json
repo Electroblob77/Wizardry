@@ -1,0 +1,33 @@
+{
+	"name": "Planks",
+	"description": "'Look, it doesn't have to look pretty, it just has to work, okay?'",
+	"width": 128,
+	"height": 43,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 42,
+		"y": 20
+	},
+	"spell_cascade_offset": {
+		"x": 0,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 43,
+		"y": 2,
+		"length": 75,
+		"height": 4,
+		"mirror": {
+			"x": true,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

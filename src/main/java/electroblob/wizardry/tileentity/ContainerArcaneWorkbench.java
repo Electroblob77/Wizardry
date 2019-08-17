@@ -1,17 +1,14 @@
 package electroblob.wizardry.tileentity;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.SpellBindEvent;
 import electroblob.wizardry.item.IWorkbenchItem;
-import electroblob.wizardry.item.ItemArcaneTome;
-import electroblob.wizardry.item.ItemArmourUpgrade;
 import electroblob.wizardry.item.ItemSpellBook;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -20,6 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class ContainerArcaneWorkbench extends Container {
 
@@ -42,20 +42,21 @@ public class ContainerArcaneWorkbench extends Container {
 		ItemStack wand = tileentity.getStackInSlot(CENTRE_SLOT);
 
 		for(int i = 0; i < 8; i++){
-			Slot slot = new SlotItemList(tileentity, i, -999, -999, 1, WizardryItems.spell_book);
+			Slot slot = new SlotItemClassList(tileentity, i, -999, -999, 1, ItemSpellBook.class);
 			this.addSlotToContainer(slot);
 		}
 
-		this.addSlotToContainer(new SlotItemList(tileentity, CRYSTAL_SLOT, 8, 88, 64, WizardryItems.magic_crystal))
+		this.addSlotToContainer(new SlotItemList(tileentity, CRYSTAL_SLOT, 13, 101, 64,
+				WizardryItems.magic_crystal, WizardryItems.crystal_shard, WizardryItems.grand_crystal))
 				.setBackgroundName(EMPTY_SLOT_CRYSTAL.toString());
 
 		this.addSlotToContainer(new SlotWorkbenchItem(tileentity, CENTRE_SLOT, 80, 64, this));
 
-		Set<Item> upgrades = new HashSet<Item>(WandHelper.getSpecialUpgrades()); // Can't be done statically.
+		Set<Item> upgrades = new HashSet<>(WandHelper.getSpecialUpgrades()); // Can't be done statically.
 		upgrades.add(WizardryItems.arcane_tome);
 		upgrades.add(WizardryItems.armour_upgrade);
 
-		this.addSlotToContainer(new SlotItemList(tileentity, UPGRADE_SLOT, 8, 106, 1, upgrades.toArray(new Item[0])))
+		this.addSlotToContainer(new SlotItemList(tileentity, UPGRADE_SLOT, 147, 17, 1, upgrades.toArray(new Item[0])))
 				.setBackgroundName(EMPTY_SLOT_UPGRADE.toString());
 
 		for(int x = 0; x < 9; x++){
@@ -142,9 +143,9 @@ public class ContainerArcaneWorkbench extends Container {
 					for(int i = 0; i < spellSlots; i++){
 						
 						float angle = i * (2 * (float)Math.PI)/spellSlots;
-						int x = centreX + (int)(Math.round(SLOT_RADIUS * MathHelper.sin(angle)));
+						int x = centreX + Math.round(SLOT_RADIUS * MathHelper.sin(angle));
 						// -cos because +y is downwards
-						int y = centreY + (int)(Math.round(SLOT_RADIUS * -MathHelper.cos(angle)));
+						int y = centreY + Math.round(SLOT_RADIUS * -MathHelper.cos(angle));
 						
 						showSlot(i, x, y);
 					}
@@ -159,17 +160,22 @@ public class ContainerArcaneWorkbench extends Container {
 		}
 
 		// FIXME: It only seems to be syncing correctly when a stack is put into the slot, not taken out.
-		// This is because markDirty isn't called in the tileentity, I think.
+		// 		  This is because markDirty isn't called in the tileentity, I think.
 		this.tileentity.sync();
 	}
 
+	// FIXME: Shift-clicking a stack of special upgrades when in the arcane workbench causes the whole stack to be
+	//		  transferred when it should be just one (this is a bug with vanilla as well - try putting a stack of
+	//		  bottles into a brewing stand). I have at least made it so only one gets used now, so it has no impact on
+	//		  the game.
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int clickedSlotId){
 
 		ItemStack remainder = ItemStack.EMPTY;
-		Slot slot = (Slot)this.inventorySlots.get(clickedSlotId);
+		Slot slot = this.inventorySlots.get(clickedSlotId);
 
 		if(slot != null && slot.getHasStack()){
+
 			ItemStack stack = slot.getStack(); // The stack that was there originally
 			remainder = stack.copy(); // A copy of that stack
 
@@ -189,14 +195,13 @@ public class ContainerArcaneWorkbench extends Container {
 				if(stack.getItem() instanceof ItemSpellBook){
 					minSlotId = 0;
 					maxSlotId = CRYSTAL_SLOT - 1;
-				}else if(stack.getItem() == WizardryItems.magic_crystal){
+				}else if(getSlot(CRYSTAL_SLOT).isItemValid(stack)){
 					minSlotId = CRYSTAL_SLOT;
 					maxSlotId = CRYSTAL_SLOT;
-				}else if(stack.getItem() instanceof IWorkbenchItem){
+				}else if(getSlot(CENTRE_SLOT).isItemValid(stack)){
 					minSlotId = CENTRE_SLOT;
 					maxSlotId = CENTRE_SLOT;
-				}else if(stack.getItem() instanceof ItemArcaneTome || stack.getItem() instanceof ItemArmourUpgrade
-						|| WandHelper.isWandUpgrade(stack.getItem())){
+				}else if(getSlot(UPGRADE_SLOT).isItemValid(stack)){
 					minSlotId = UPGRADE_SLOT;
 					maxSlotId = UPGRADE_SLOT;
 				}else{
@@ -257,8 +262,10 @@ public class ContainerArcaneWorkbench extends Container {
 			
 			if(((IWorkbenchItem)centre.getStack().getItem())
 				.onApplyButtonPressed(player, centre, this.getSlot(CRYSTAL_SLOT), this.getSlot(UPGRADE_SLOT), spellBooks)){
-				
-				// Probably don't need to do anything here, unless we're going to use packets to control the animation
+
+				if(player instanceof EntityPlayerMP){
+					WizardryAdvancementTriggers.arcane_workbench.trigger((EntityPlayerMP)player, centre.getStack());
+				}
 			}
 		}
 	}

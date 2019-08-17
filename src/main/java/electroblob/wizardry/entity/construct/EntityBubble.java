@@ -1,14 +1,14 @@
 package electroblob.wizardry.entity.construct;
 
-import java.lang.ref.WeakReference;
-
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Entrapment;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.lang.ref.WeakReference;
 
 @Mod.EventBusSubscriber
 public class EntityBubble extends EntityMagicConstruct {
@@ -46,7 +48,7 @@ public class EntityBubble extends EntityMagicConstruct {
 		if((this.rider == null || this.rider.get() == null)
 				&& WizardryUtilities.getRider(this) instanceof EntityLivingBase
 				&& !WizardryUtilities.getRider(this).isDead){
-			this.rider = new WeakReference<EntityLivingBase>((EntityLivingBase)WizardryUtilities.getRider(this));
+			this.rider = new WeakReference<>((EntityLivingBase)WizardryUtilities.getRider(this));
 		}
 
 		// Prevents dismounting
@@ -62,7 +64,8 @@ public class EntityBubble extends EntityMagicConstruct {
 
 		if(isDarkOrb){
 
-			if(WizardryUtilities.getRider(this) != null && this.ticksExisted % 30 == 0){
+			if(WizardryUtilities.getRider(this) != null
+					&& this.ticksExisted % Spells.entrapment.getProperty(Entrapment.DAMAGE_INTERVAL).intValue() == 0){
 				if(this.getCaster() != null){
 					WizardryUtilities.getRider(this).attackEntityFrom(
 							MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC),
@@ -81,16 +84,16 @@ public class EntityBubble extends EntityMagicConstruct {
 						(this.rand.nextDouble() - 0.5D) * 2.0D);
 			}
 			if(lifetime - this.ticksExisted == 75){
-				this.playSound(SoundEvents.BLOCK_PORTAL_TRIGGER, 1.5f, 1.0f);
+				this.playSound(WizardrySounds.ENTITY_ENTRAPMENT_VANISH, 1.5f, 1.0f);
 			}else if(this.ticksExisted % 100 == 1 && this.ticksExisted < 150){
-				this.playSound(SoundEvents.BLOCK_PORTAL_AMBIENT, 1.5f, 1.0f);
+				this.playSound(WizardrySounds.ENTITY_ENTRAPMENT_AMBIENT, 1.5f, 1.0f);
 			}
 		}
 
 		// Bubble bursts if the entity is hurt (see event handler) or killed, or if the bubble has existed for more than
 		// 10 seconds.
 		if(WizardryUtilities.getRider(this) == null && this.ticksExisted > 1){
-			if(!this.isDarkOrb) this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1.5f, 1.0f);
+			if(!this.isDarkOrb) this.playSound(WizardrySounds.ENTITY_BUBBLE_POP, 1.5f, 1.0f);
 			this.setDead();
 		}
 	}
@@ -100,7 +103,7 @@ public class EntityBubble extends EntityMagicConstruct {
 		if(WizardryUtilities.getRider(this) != null){
 			((EntityLivingBase)WizardryUtilities.getRider(this)).dismountEntity(this);
 		}
-		if(!this.isDarkOrb) this.playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1.5f, 1.0f);
+		if(!this.isDarkOrb) this.playSound(WizardrySounds.ENTITY_BUBBLE_POP, 1.5f, 1.0f);
 		super.despawn();
 	}
 
@@ -133,7 +136,7 @@ public class EntityBubble extends EntityMagicConstruct {
 		// Bursts bubble when the creature inside takes damage
 		if(event.getEntityLiving().getRidingEntity() instanceof EntityBubble
 				&& !((EntityBubble)event.getEntityLiving().getRidingEntity()).isDarkOrb){
-			event.getEntityLiving().getRidingEntity().playSound(SoundEvents.ENTITY_ITEM_PICKUP, 1.5f, 1.0f);
+			event.getEntityLiving().getRidingEntity().playSound(WizardrySounds.ENTITY_BUBBLE_POP, 1.5f, 1.0f);
 			event.getEntityLiving().getRidingEntity().setDead();
 		}
 	}

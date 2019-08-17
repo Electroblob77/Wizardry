@@ -4,16 +4,105 @@
             "item": "ebwizardry:apprentice_wand"
         },
         "title": {
-            "translate": "advancement.wizardry:apprentice"
+            "translate": "advancement.ebwizardry:apprentice"
         },
         "description": {
-            "translate": "advancement.wizardry:apprentice.desc"
+            "translate": "advancement.ebwizardry:apprentice.desc"
         }
     },
     "parent": "ebwizardry:arcane_initiate",
     "criteria": {
-        "criteria_0": {
-            "trigger": "ebwizardry:trigger_apprentice"
+        "magic": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_wand"
+                    }
+                ]
+            }
+        },
+        "fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_fire_wand"
+                    }
+                ]
+            }
+        },
+        "ice": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_ice_wand"
+                    }
+                ]
+            }
+        },
+        "lightning": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_lightning_wand"
+                    }
+                ]
+            }
+        },
+        "necromancy": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_necromancy_wand"
+                    }
+                ]
+            }
+        },
+        "earth": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_earth_wand"
+                    }
+                ]
+            }
+        },
+        "sorcery": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_sorcery_wand"
+                    }
+                ]
+            }
+        },
+        "healing": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:apprentice_healing_wand"
+                    }
+                ]
+            }
         }
-    }
+    },
+    "requirements": [
+        [
+            "magic",
+            "fire",
+            "ice",
+            "lightning",
+            "necromancy",
+            "earth",
+            "sorcery",
+            "healing"
+        ]
+    ]
 }

@@ -27,6 +27,7 @@ class Contents {
 
 	// Final fields are mandatory, the rest are optional
 	final String id;
+	final Section section;
 	private boolean hyperlinks = true;
 	private boolean pageNumbers = true;
 	private String separator = ".";
@@ -37,10 +38,14 @@ class Contents {
 
 	private final List<Section> entries;
 
-	private Contents(String id){
+	private List<Section> visibleEntries;
+
+	private Contents(String id, Section section){
 		this.id = id;
+		this.section = section;
 		this.entries = new ArrayList<>();
 		this.buttons = new ArrayList<>();
+		this.visibleEntries = new ArrayList<>();
 	}
 
 	/** Returns an unmodifiable, flattened collection of all the buttons in this contents. */
@@ -83,26 +88,29 @@ class Contents {
 
 		for(int page : visiblePages){
 
-			if(page >= 0 && page < entries.size() / maxLineNumber + 1){
+			if(page >= 0 && page < visibleEntries.size() / maxLineNumber + 1){
 
 				int x = left + (GuiWizardHandbook.isRightPage(startPage + page) ? GuiWizardHandbook.GUI_WIDTH - GuiWizardHandbook.TEXT_INSET_X - GuiWizardHandbook.PAGE_WIDTH : GuiWizardHandbook.TEXT_INSET_X);
 				int y = top + GuiWizardHandbook.TEXT_INSET_Y + startLine * font.FONT_HEIGHT;
 
-				for(Section entry : this.entries){
+				for(Section entry : this.visibleEntries){
 
-					int nameWidth = font.getStringWidth(entry.title);
+					if(entry.isUnlocked()){
 
-					String dotsAndNumber = " " + entry.startPage;
+						int nameWidth = font.getStringWidth(entry.title);
 
-					while(font.getStringWidth(dotsAndNumber) < GuiWizardHandbook.PAGE_WIDTH - nameWidth - 2){
-						dotsAndNumber = separator + dotsAndNumber;
+						String dotsAndNumber = " " + entry.startPage;
+
+						while(font.getStringWidth(dotsAndNumber) < GuiWizardHandbook.PAGE_WIDTH - nameWidth - 2){
+							dotsAndNumber = separator + dotsAndNumber;
+						}
+
+						font.drawString(dotsAndNumber, x + GuiWizardHandbook.PAGE_WIDTH - font.getStringWidth(dotsAndNumber), y, DrawingUtils.BLACK, false);
+
+						if(!hyperlinks) font.drawString(entry.title, x, y, DrawingUtils.BLACK, false);
+
+						y += font.FONT_HEIGHT;
 					}
-
-					font.drawString(dotsAndNumber, x + GuiWizardHandbook.PAGE_WIDTH - font.getStringWidth(dotsAndNumber), y, DrawingUtils.BLACK, false);
-
-					if(!hyperlinks) font.drawString(entry.title, x, y, DrawingUtils.BLACK, false);
-
-					y += font.FONT_HEIGHT;
 				}
 			}
 		}
@@ -124,6 +132,10 @@ class Contents {
 
 		this.buttons.clear();
 
+		this.visibleEntries = new ArrayList<>(entries); // Need to copy the collection first!
+
+		this.visibleEntries.removeIf(s -> !s.isUnlocked());
+
 		if(hyperlinks){
 
 			// FONT_HEIGHT may change between fonts, so this is calculated here. With the default font it's 14.
@@ -134,12 +146,12 @@ class Contents {
 
 			List<GuiButton> list = new ArrayList<>(maxLineNumber);
 
-			for(Section entry : this.entries){
+			for(Section entry : this.visibleEntries){
 
 				int x = GuiWizardHandbook.isRightPage(startPage) ? left + GuiWizardHandbook.GUI_WIDTH - GuiWizardHandbook.TEXT_INSET_X - GuiWizardHandbook.PAGE_WIDTH : left + GuiWizardHandbook.TEXT_INSET_X;
 				int y = top + GuiWizardHandbook.TEXT_INSET_Y + startLine * font.FONT_HEIGHT;
 
-				list.add(new GuiButtonHyperlink.Internal(0, x, y, font, entry.title, entry, 0, ""));
+				list.add(new GuiButtonHyperlink.Internal(0, x, y, font, entry.title, entry, 0, "", maxLineNumber-startLine, GuiWizardHandbook.isRightPage(startPage)));
 
 				startLine++;
 
@@ -156,21 +168,22 @@ class Contents {
 
 		// Returning this is kind of trivial at the moment but if we ever wanted to add a header or something,
 		// it would be more useful.
-		return entries.size();
+		return visibleEntries.size();
 	}
 
 	/**
 	 * Parses the given JSON object and constructs a new {@code Contents} from it, setting all the relevant fields
 	 * and references.
 	 *
+	 * @param parent The parent section for this contents.
 	 * @param json A JSON object representing the contents to be constructed. This must contain at least an "id"
 	 *             string.
 	 * @return The resulting {@code Contents} object.
 	 * @throws JsonSyntaxException if at any point the JSON object is found to be invalid.
 	 */
-	static Contents fromJson(JsonObject json){
+	static Contents fromJson(Section parent, JsonObject json){
 
-		Contents contents = new Contents(JsonUtils.getString(json, "id"));
+		Contents contents = new Contents(JsonUtils.getString(json, "id"), parent);
 
 		contents.hyperlinks = JsonUtils.getBoolean(json, "hyperlinks", true);
 		contents.pageNumbers = JsonUtils.getBoolean(json, "page_numbers", true);

@@ -1,26 +1,18 @@
 package electroblob.wizardry.client.particle;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class ParticleBuff extends ParticleWizardry {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/particle/buff.png");
@@ -28,13 +20,19 @@ public class ParticleBuff extends ParticleWizardry {
 	
 	public ParticleBuff(World world, double x, double y, double z){
 		super(world, x, y, z);
-		this.setVelocity(0, 0.27, 0); // Approximately what it was before
-		this.mirror = world.rand.nextBoolean();
+		this.setVelocity(0, 0.162, 0); // Approximately what it was before
+		this.mirror = random.nextBoolean();
 		this.setMaxAge(15);
 		this.setGravity(false);
 		this.canCollide = false;
 	}
-	
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
+	}
+
+
 	@Override
 	public void onUpdate(){
 		super.onUpdate();
@@ -59,13 +57,12 @@ public class ParticleBuff extends ParticleWizardry {
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ,
 			float rotationYZ, float rotationXY, float rotationXZ){
+
+		// Copied from ParticleWizardry, needs to be here since we're not calling super
+		updateEntityLinking(partialTicks);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
-		
-		float scale = 0.6f;
-		GlStateManager.scale(scale, scale, scale);
-		if(mirror) GlStateManager.scale(-1, 1, 1);
 		
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
@@ -94,31 +91,29 @@ public class ParticleBuff extends ParticleWizardry {
 
 		buffer.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-		// I'm pretty sure these were always static.
-		Particle.interpPosX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * (double)partialTicks;
-		Particle.interpPosY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * (double)partialTicks;
-		Particle.interpPosZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * (double)partialTicks;
-
 		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
 		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
 		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
-		
+
 		// Increases from 0 to 1 in steps of 0.125 evenly throughout the particle's lifetime
 		float f = 0.875f - 0.125f * MathHelper.floor((float)this.particleAge/(float)this.particleMaxAge * 8 - 0.000001f);
 		float g = f + 0.125f;
 		float hrepeat = 1;
-		float yScale = 0.7f;
+		float scale = 0.6f;
+		float yScale = 0.7f * scale;
+		float dx = mirror ? -scale : scale;
+		float dz = scale;
 		
-		buffer.pos(x-1, y-yScale, z-1).tex(0, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x-1, y+yScale, z-1).tex(0, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x+1, y-yScale, z-1).tex(0.25*hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x+1, y+yScale, z-1).tex(0.25*hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x+1, y-yScale, z+1).tex(0.5*hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x+1, y+yScale, z+1).tex(0.5*hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x-1, y-yScale, z+1).tex(0.75*hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x-1, y+yScale, z+1).tex(0.75*hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x-1, y-yScale, z-1).tex(hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
-		buffer.pos(x-1, y+yScale, z-1).tex(hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x-dx, y-yScale, z-dz).tex(0, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x-dx, y+yScale, z-dz).tex(0, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x+dx, y-yScale, z-dz).tex(0.25*hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x+dx, y+yScale, z-dz).tex(0.25*hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x+dx, y-yScale, z+dz).tex(0.5*hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x+dx, y+yScale, z+dz).tex(0.5*hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x-dx, y-yScale, z+dz).tex(0.75*hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x-dx, y+yScale, z+dz).tex(0.75*hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x-dx, y-yScale, z-dz).tex(hrepeat, g).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
+		buffer.pos(x-dx, y+yScale, z-dz).tex(hrepeat, f).color(particleRed, particleGreen, particleBlue, particleAlpha).endVertex();
 
 		Tessellator.getInstance().draw();
 		

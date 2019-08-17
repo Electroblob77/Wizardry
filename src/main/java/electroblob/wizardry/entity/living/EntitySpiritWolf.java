@@ -1,29 +1,17 @@
 package electroblob.wizardry.entity.living;
 
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIFollowOwner;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILeapAtTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIOwnerHurtByTarget;
-import net.minecraft.entity.ai.EntityAIOwnerHurtTarget;
-import net.minecraft.entity.ai.EntityAISit;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -37,9 +25,12 @@ import net.minecraft.world.World;
  */
 public class EntitySpiritWolf extends EntityWolf {
 
-	public EntitySpiritWolf(World par1World){
+	private int dispelTimer = 0;
 
-		super(par1World);
+	private static final int DISPEL_TIME = 10;
+
+	public EntitySpiritWolf(World world){
+		super(world);
 		this.experienceValue = 0;
 	}
 
@@ -58,18 +49,6 @@ public class EntitySpiritWolf extends EntityWolf {
 		this.targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this));
 		this.targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this));
 		this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, true, new Class[0]));
-	}
-
-	@Override
-	public void onDeath(DamageSource source){
-
-		// Allows player to summon another spirit wolf once this one has died.
-		// NOTE: This has been known to work incorrectly.
-		if(this.getOwner() instanceof EntityPlayer && WizardData.get((EntityPlayer)this.getOwner()) != null){
-			WizardData.get((EntityPlayer)this.getOwner()).hasSpiritWolf = false;
-		}
-
-		super.onDeath(source);
 	}
 
 	@Override
@@ -92,11 +71,21 @@ public class EntitySpiritWolf extends EntityWolf {
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).spawn(world);
 		}
 	}
+
+	public float getOpacity(){
+		return 1 - (float)dispelTimer/DISPEL_TIME;
+	}
 	
 	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
+
+		if(dispelTimer > 0){
+			if(dispelTimer++ > DISPEL_TIME){
+				this.setDead();
+			}
+		}
 
 		// Adds a dust particle effect
 		if(this.world.isRemote){
@@ -116,21 +105,13 @@ public class EntitySpiritWolf extends EntityWolf {
 
 			// Allows the owner (but not other players) to dispel the spirit wolf using a
 			// wand.
-			if(stack.getItem() instanceof ItemWand && this.getOwner() == player && player.isSneaking()){
+			if(stack.getItem() instanceof ISpellCastingItem && this.getOwner() == player && player.isSneaking()){
 				// Prevents accidental double clicking.
 				if(this.ticksExisted > 20){
 					
-					if(this.world.isRemote){
-						this.spawnAppearParticles();
-					}
+					this.dispelTimer++;
 					
-					this.setDead();
-					
-					if(WizardData.get(player) != null){
-						WizardData.get(player).hasSpiritWolf = false;
-					}
-					
-					this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
+					this.playSound(WizardrySounds.ENTITY_SPIRIT_WOLF_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 					// This is necessary to prevent the wand's spell being cast when performing this
 					// action.
 					return true;
@@ -181,7 +162,7 @@ public class EntitySpiritWolf extends EntityWolf {
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking
 		// directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getOwner() != null;
+		return Wizardry.settings.summonedCreatureNames && getOwner() != null;
 	}
 
 }

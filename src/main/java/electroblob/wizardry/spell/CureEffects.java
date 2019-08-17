@@ -1,25 +1,36 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 
 public class CureEffects extends SpellBuff {
 
 	public CureEffects(){
-		super("cure_effects", Tier.APPRENTICE, Element.HEALING, SpellType.DEFENCE, 25, 40, WizardrySounds.SPELL_HEAL, 0.8f, 0.8f, 1);
+		super("cure_effects", 0.8f, 0.8f, 1);
 		this.soundValues(0.7f, 1.2f, 0.4f);
 	}
 	
 	@Override
 	protected boolean applyEffects(EntityLivingBase caster, SpellModifiers modifiers){
-		
+
 		if(!caster.getActivePotionEffects().isEmpty()){
-			caster.clearActivePotions();
-			return true;
+
+			ItemStack milk = new ItemStack(Items.MILK_BUCKET);
+
+			boolean flag = false;
+
+			for(PotionEffect effect : caster.getActivePotionEffects()){
+				// The PotionEffect version (as opposed to Potion) does not call cleanup callbacks
+				if(effect.isCurativeItem(milk)){
+					caster.removePotionEffect(effect.getPotion());
+					flag = true;
+				}
+			}
+			
+			return flag;
 		}
 		
 		return false;

@@ -1,11 +1,7 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
@@ -15,9 +11,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
@@ -26,16 +24,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
 public class MindTrick extends SpellRay {
-	
-	private static final int BASE_DURATION = 300;
 
 	public MindTrick(){
-		super("mind_trick", Tier.BASIC, Element.NECROMANCY, SpellType.ATTACK, 10, 40, false, 8, WizardrySounds.SPELL_DEFLECTION);
+		super("mind_trick", false, EnumAction.NONE);
 		this.soundValues(0.7f, 1, 0.4f);
+		addProperties(EFFECT_DURATION);
 	}
 
 	@Override
-	protected boolean onEntityHit(World world, Entity target, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(WizardryUtilities.isLiving(target)){
 
@@ -44,13 +41,13 @@ public class MindTrick extends SpellRay {
 				if(target instanceof EntityPlayer){
 
 					((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.NAUSEA,
-							(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 0));
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)), 0));
 
 				}else if(target instanceof EntityLiving){
 
 					((EntityLiving)target).setAttackTarget(null);
 					((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.mind_trick,
-							(int)(BASE_DURATION * modifiers.get(WizardryItems.duration_upgrade)), 0));
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)), 0));
 				}
 				
 			}else{
@@ -68,12 +65,12 @@ public class MindTrick extends SpellRay {
 	}
 
 	@Override
-	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	protected boolean onMiss(World world, EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 

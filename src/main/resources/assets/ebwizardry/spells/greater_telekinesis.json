@@ -1,0 +1,25 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "sorcery",
+  "type": "utility",
+  "cost": 10,
+  "chargeup": 0,
+  "cooldown": 0,
+  "base_properties": {
+    "range": 8,
+    "hold_range": 5,
+    "throw_velocity": 0.15,
+    "damage": 4
+  }
+}

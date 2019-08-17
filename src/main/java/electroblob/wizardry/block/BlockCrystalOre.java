@@ -1,7 +1,5 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
 import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -12,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class BlockCrystalOre extends Block {
 

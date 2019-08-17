@@ -6,9 +6,8 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ParticleSpark extends ParticleWizardry {
 
@@ -25,14 +24,18 @@ public class ParticleSpark extends ParticleWizardry {
 		this.canCollide = false;
 		this.setMaxAge(3); // Lifetime defaults to 3 (and is very unlikely to be changed)
 	}
-	
+
+	@Override
+	public boolean shouldDisableDepth(){
+		return true;
+	}
+
 	// May no longer be necessary, ParticleManager seems to enable blending now
 
 //	@Override
 //	public void applyGLStateChanges(){
 //		GlStateManager.enableBlend();
 //		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//		// TESTME: Are these two actually necessary?
 //		GlStateManager.disableLighting();
 //		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 //	}

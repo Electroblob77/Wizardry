@@ -1,18 +1,16 @@
 package electroblob.wizardry.client.model;
 
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3f;
-
 import electroblob.wizardry.entity.living.EntityIceGiant;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
+
+//@SideOnly(Side.CLIENT)
 public class ModelIceGiant extends ModelBase {
 	/** The head model for the iron golem. */
 	public ModelRenderer iceGiantHead;

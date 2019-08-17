@@ -1,0 +1,8 @@
+{
+    "parent": "ebwizardry:block/runestone",
+    "textures": {
+        "side": "ebwizardry:blocks/runestone_necromancy_0",
+        "rune": "ebwizardry:blocks/runestone_necromancy_3",
+        "overlay": "ebwizardry:blocks/runestone_necromancy_3_overlay"
+    }
+}

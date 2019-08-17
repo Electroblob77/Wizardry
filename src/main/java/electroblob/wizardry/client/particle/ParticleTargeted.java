@@ -1,23 +1,28 @@
 package electroblob.wizardry.client.particle;
 
-import javax.annotation.Nullable;
-
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nullable;
 
 /** Superclass for particles with a second target entity or target position. */
 public abstract class ParticleTargeted extends ParticleWizardry {
-	
+
 	protected double targetX;
 	protected double targetY;
 	protected double targetZ;
+	protected double targetVelX;
+	protected double targetVelY;
+	protected double targetVelZ;
+
+	protected double length;
 
 	/** The target this particle is linked to. The particle will stretch to touch this entity. */
 	@Nullable
@@ -33,43 +38,83 @@ public abstract class ParticleTargeted extends ParticleWizardry {
 		this.targetY = y;
 		this.targetZ = z;
 	}
+
+	@Override
+	public void setTargetVelocity(double vx, double vy, double vz){
+		this.targetVelX = vx;
+		this.targetVelY = vy;
+		this.targetVelZ = vz;
+	}
 	
 	@Override
 	public void setTargetEntity(Entity target){
 		this.target = target;
 	}
-	
+
+	@Override
+	public void setLength(double length){
+		this.length = length;
+	}
+
+	@Override
+	public void onUpdate(){
+
+		super.onUpdate();
+
+		if(!Double.isNaN(targetVelX) && !Double.isNaN(targetVelY) && !Double.isNaN(targetVelZ)){
+			this.targetX += this.targetVelX;
+			this.targetY += this.targetVelY;
+			this.targetZ += this.targetVelZ;
+		}
+	}
+
 	@Override
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float rotationX, float rotationZ, float rotationYZ,
 			float rotationXY, float rotationXZ){
-		
+
+		// Copied from ParticleWizardry, needs to be here since we're not calling super
+		updateEntityLinking(partialTicks);
+
+		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
+		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
+		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
+
 		if(this.target != null){
-			this.targetX = this.target.posX;
-			this.targetY = this.target.getEntityBoundingBox().minY + target.height/2;
-			this.targetZ = this.target.posZ;
+
+			this.targetX = this.target.prevPosX + (this.target.posX - this.target.prevPosX) * partialTicks;
+			double correction = this.target.getEntityBoundingBox().minY - this.target.posY;
+			this.targetY = this.target.prevPosY + (this.target.posY - this.target.prevPosY) * partialTicks
+					+ target.height/2 + correction;
+			this.targetZ = this.target.prevPosZ + (this.target.posZ - this.target.prevPosZ) * partialTicks;
+
+		}else if(this.entity != null && this.length > 0){
+
+			Vec3d look = entity.getLook(partialTicks).scale(length);
+			this.targetX = x + look.x;
+			this.targetY = y + look.y;
+			this.targetZ = z + look.z;
 		}
 		
 		if(Double.isNaN(targetX) || Double.isNaN(targetY) || Double.isNaN(targetZ)){
 			Wizardry.logger.warn("Attempted to render a targeted particle, but neither its target entity nor target"
-					+ "position was set!");
+					+ "position was set, and it either had no length assigned or was not linked to an entity!");
 			return;
 		}
 		
-		// I'm pretty sure these were always static.
-		interpPosX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * (double)partialTicks;
-		interpPosY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * (double)partialTicks;
-		interpPosZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * (double)partialTicks;
-
-		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
-		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
-		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
-		
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
+		GlStateManager.translate(x - interpPosX, y - interpPosY, z - interpPosZ);
 
-		double dx = this.targetX - this.posX;
-		double dy = this.targetY - this.posY;
-		double dz = this.targetZ - this.posZ;
+		double dx = this.targetX - x;
+		double dy = this.targetY - y;
+		double dz = this.targetZ - z;
+
+		// No need for previous tick target positions and all that stuff since this is the only place they're used
+		// and interpolating like this works just as well
+		if(!Double.isNaN(targetVelX) && !Double.isNaN(targetVelY) && !Double.isNaN(targetVelZ)){
+			dx += partialTicks * this.targetVelX;
+			dy += partialTicks * this.targetVelY;
+			dz += partialTicks * this.targetVelZ;
+		}
 
 		// The distance from origin to endpoint
 		double length = Math.sqrt(dx*dx+dy*dy+dz*dz);
@@ -87,12 +132,12 @@ public abstract class ParticleTargeted extends ParticleWizardry {
 		
 		GlStateManager.popMatrix();
 	}
-	
+
 	/** Called from {@link ParticleTargeted#renderParticle(BufferBuilder, Entity, float, float, float, float, float, float)},
 	 * once the appropriate calculations and transformations have been applied, to actually render the particle. Subclasses
 	 * override this <i>instead</i> of overriding {@code renderParticle} directly, and inside render the particle <b>along
 	 * the z-axis, starting at (0, 0, 0)</b> - it will be translated and rotated automatically.
-	 * <p>
+	 * <p></p>
 	 * <i>N.B. Other than transformations, no GL state changes are applied; these should be done within this method.</i>
 	 * 
 	 * @param tessellator A reference to the tessellator, for convenience.

@@ -97,9 +97,9 @@ public class ModelWizard extends ModelBiped {
 		setRotation(Shape13, 0F, 0F, 0F);
 
 		// Makes head bits move with head
-		// bipedHead.addChild(Shape5);
+		// bipedHead.addChild(hatSegment4);
 		bipedHead.addChild(beard);
-		// bipedHead.addChild(Shape7);
+		// bipedHead.addChild(hatSegment6);
 		// bipedHead.addChild(Shape8);
 		// bipedHead.addChild(Shape9);
 		// bipedHead.addChild(Shape10);
@@ -116,8 +116,8 @@ public class ModelWizard extends ModelBiped {
 	/* public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 	 * super.render(entity, f, f1, f2, f3, f4, f5); setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 	 * bipedRightLeg.render(f5); bipedLeftLeg.render(f5); bipedBody.render(f5); bipedLeftArm.render(f5);
-	 * bipedRightArm.render(f5); bipedHead.render(f5); Shape5.render(f5); Shape8.render(f5); Shape9.render(f5);
-	 * Shape10.render(f5); Shape7.render(f5); Shape11.render(f5); Shape12.render(f5); Shape6.render(f5);
+	 * bipedRightArm.render(f5); bipedHead.render(f5); hatSegment4.render(f5); Shape8.render(f5); Shape9.render(f5);
+	 * Shape10.render(f5); hatSegment6.render(f5); Shape11.render(f5); Shape12.render(f5); hatSegment5.render(f5);
 	 * Shape13.render(f5); } */
 	private void setRotation(ModelRenderer model, float x, float y, float z){
 		model.rotateAngleX = x;

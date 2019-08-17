@@ -1,0 +1,115 @@
+{
+	"pools": [
+		{
+			"name": "uncommon_artefacts",
+			"rolls": 1,
+			"entries": [
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_siphoning",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_fire_melee",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_fire_biome",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_ice_melee",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_ice_biome",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_lightning_melee",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_necromancy_melee",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_earth_melee",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_earth_biome",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_extraction",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:ring_paladin",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_warding",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_fire_protection",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_ice_protection",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_channeling",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_lich",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_banishing",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_recovery",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_minion_health",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_growth",
+                    "weight": 1
+                },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_feeding",
+					"weight": 1
+				}
+			]
+		}
+	]
+}

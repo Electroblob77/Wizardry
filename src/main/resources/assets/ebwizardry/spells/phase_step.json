@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "sorcery",
+  "type": "utility",
+  "cost": 35,
+  "chargeup": 0,
+  "cooldown": 40,
+  "base_properties": {
+    "range": 8,
+    "wall_thickness": 1
+  }
+}

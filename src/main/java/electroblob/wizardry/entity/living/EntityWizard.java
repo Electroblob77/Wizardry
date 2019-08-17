@@ -1,70 +1,37 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-
-import javax.annotation.Nullable;
-
 import com.google.common.base.Predicate;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.event.DiscoverSpellEvent;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.ItemSpellBook;
-import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryAdvancementTriggers;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.misc.WildcardTradeList;
+import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WildcardTradeList;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.*;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.INpc;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityAIWatchClosest2;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.nbt.*;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -73,6 +40,7 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.BlockEvent;
@@ -82,6 +50,9 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 @Mod.EventBusSubscriber
 public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISpellCaster, IEntityAdditionalSpawnData {
@@ -150,7 +121,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			// If the target is valid and not invisible...
 			if(entity != null && !entity.isInvisible()
-					&& WizardryUtilities.isValidTarget(EntityWizard.this, entity)){
+					&& AllyDesignationSystem.isValidTarget(EntityWizard.this, entity)){
 
 				// ... and is a mob, a summoned creature ...
 				if((entity instanceof IMob || entity instanceof ISummonedCreature
@@ -247,7 +218,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Copied from EntityVillager
 		if(!this.world.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20){
             this.livingSoundTime = -this.getTalkInterval();
-            this.playSound(stack.isEmpty() ? SoundEvents.ENTITY_VILLAGER_NO : SoundEvents.ENTITY_VILLAGER_YES, this.getSoundVolume(), this.getSoundPitch());
+            this.playSound(stack.isEmpty() ? WizardrySounds.ENTITY_WIZARD_NO : WizardrySounds.ENTITY_WIZARD_YES, this.getSoundVolume(), this.getSoundPitch());
         }
 	}
 
@@ -267,14 +238,35 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Apparently nothing goes here, and nothing's here in EntityVillager either...
 	}
 
+	// TESTME: Should this be getName instead?
 	@Override
 	public ITextComponent getDisplayName(){
+		
+		if(this.hasCustomName()){
+            return super.getDisplayName();
+        }
+		
 		return this.getElement().getWizardName();
 	}
 
 	@Override
 	protected boolean canDespawn(){
 		return false;
+	}
+	
+	@Override
+	protected SoundEvent getAmbientSound(){
+		return this.isTrading() ? WizardrySounds.ENTITY_WIZARD_TRADING : WizardrySounds.ENTITY_WIZARD_AMBIENT;
+	}
+
+	@Override
+	protected SoundEvent getHurtSound(DamageSource source){
+		return WizardrySounds.ENTITY_WIZARD_HURT;
+	}
+
+	@Override
+	protected SoundEvent getDeathSound(){
+		return WizardrySounds.ENTITY_WIZARD_DEATH;
 	}
 
 	@Override
@@ -301,14 +293,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			// Heal particles TODO: Change this so it uses the heal spell directly
 			if(world.isRemote){
-				for(int i=0; i<10; i++){
-					double x = (double)((float)this.posX + rand.nextFloat() * 2 - 1.0F);
-					// Apparently the client side spawns the particles 1 block higher than it should... hence the -
-					// 0.5F.
-					double y = (double)((float)this.posY - 0.5F + rand.nextFloat());
-					double z = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
-					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1F, 0).clr(1, 1, 0.3f).spawn(world);
-				}
+				ParticleBuilder.spawnHealParticles(world, this);
 			}else{
 				if(this.getHealth() < 10){
 					// Wizards heal themseselves more often if they have low health
@@ -317,7 +302,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					this.setHealCooldown(400);
 				}
 
-				this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
+				this.playSound(Spells.heal.getSounds()[0], 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 			}
 		}
 
@@ -370,8 +355,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Spell.get(spells[3]).getDisplayName()));
 
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
-		if(player.capabilities.isCreativeMode && stack.getItem() instanceof ItemSpellBook){
-			Spell spell = Spell.get(stack.getItemDamage());
+		if(player.isCreative() && stack.getItem() instanceof ItemSpellBook){
+			Spell spell = Spell.byMetadata(stack.getItemDamage());
 			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
 				// The set(...) method returns the element that was replaced - neat!
 				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
@@ -407,11 +392,10 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 		nbt.setInteger("element", this.getElement().ordinal());
 		nbt.setInteger("skin", this.textureIndex);
-		nbt.setTag("spells", WizardryUtilities.listToNBT(spells, spell -> new NBTTagInt(spell.id())));
+		nbt.setTag("spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
 
 		if(this.towerBlocks != null && this.towerBlocks.size() > 0){
-			nbt.setTag("towerBlocks",
-					WizardryUtilities.listToNBT(this.towerBlocks, pos -> new NBTTagLong(pos.toLong())));
+			nbt.setTag("towerBlocks", NBTExtras.listToNBT(this.towerBlocks, NBTUtil::createPosTag));
 		}
 	}
 
@@ -427,11 +411,17 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 		this.setElement(Element.values()[nbt.getInteger("element")]);
 		this.textureIndex = nbt.getInteger("skin");
-		this.spells = (List<Spell>)WizardryUtilities.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
-				(NBTTagInt tag) -> Spell.get(tag.getInt()));
+		this.spells = (List<Spell>)NBTExtras.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
+				(NBTTagInt tag) -> Spell.byMetadata(tag.getInt()));
 
-		this.towerBlocks = new HashSet<BlockPos>(WizardryUtilities.NBTToList(
-				nbt.getTagList("towerBlocks", NBT.TAG_LONG), (NBTTagLong tag) -> BlockPos.fromLong(tag.getLong())));
+		NBTTagList tagList = nbt.getTagList("towerBlocks", NBT.TAG_LONG);
+		if(!tagList.isEmpty()){
+			this.towerBlocks = new HashSet<>(NBTExtras.NBTToList(tagList, NBTUtil::getPosFromTag));
+		}else{
+			// Fallback to old packed long format
+			this.towerBlocks = new HashSet<>(NBTExtras.NBTToList(nbt.getTagList("towerBlocks", NBT.TAG_LONG),
+					(NBTTagLong tag) -> BlockPos.fromLong(tag.getLong())));
+		}
 	}
 
 	@Override
@@ -439,20 +429,42 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 		merchantrecipe.incrementToolUses();
 		this.livingSoundTime = -this.getTalkInterval();
-		this.playSound(SoundEvents.ENTITY_VILLAGER_YES, this.getSoundVolume(), this.getSoundPitch());
+		this.playSound(WizardrySounds.ENTITY_WIZARD_YES, this.getSoundVolume(), this.getSoundPitch());
 
-		// Achievements
 		if(this.getCustomer() != null){
+
+			// Achievements
 			WizardryAdvancementTriggers.wizard_trade.triggerFor(this.getCustomer());
 
-			if(merchantrecipe.getItemToSell().getItem() instanceof ItemSpellBook
-					&& Spell.get(merchantrecipe.getItemToSell().getItemDamage()).tier == Tier.MASTER){
-				WizardryAdvancementTriggers.buy_master_spell.triggerFor(this.getCustomer());
+			if(merchantrecipe.getItemToSell().getItem() instanceof ItemSpellBook){
+
+				Spell spell = Spell.byMetadata(merchantrecipe.getItemToSell().getItemDamage());
+
+				if(spell.getTier() == Tier.MASTER) WizardryAdvancementTriggers.buy_master_spell.triggerFor(this.getCustomer());
+
+				// Spell discovery (a lot of this is the same as in the event handler)
+				WizardData data = WizardData.get(this.getCustomer());
+
+				if(data != null){
+
+					if(!MinecraftForge.EVENT_BUS.post(new DiscoverSpellEvent(this.getCustomer(), spell,
+							DiscoverSpellEvent.Source.PURCHASE)) && data.discoverSpell(spell)){
+
+						data.sync();
+
+						if(!world.isRemote && !this.getCustomer().isCreative() && Wizardry.settings.discoveryMode){
+							// Sound and text only happen server-side, in survival, with discovery mode on
+							WizardryUtilities.playSoundAtPlayer(this.getCustomer(), WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
+							this.getCustomer().sendMessage(new TextComponentTranslation("spell.discover",
+									spell.getNameForTranslationFormatted()));
+						}
+					}
+				}
 			}
 		}
 
 		// Changed to a 4 in 5 chance of unlocking a new recipe.
-		if(this.rand.nextInt(5) > 0){
+		if(this.rand.nextInt(5) > 0 || ItemArtefact.isArtefactActive(customer, WizardryItems.charm_haggler)){
 			this.timeUntilReset = 40;
 			this.updateRecipes = true;
 
@@ -500,7 +512,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			boolean itemAlreadySold = true;
 
-			Tier tier = Tier.BASIC;
+			Tier tier = Tier.NOVICE;
 
 			while(itemAlreadySold){
 
@@ -515,7 +527,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 				double tierIncreaseChance = 0.5 + 0.04 * (Math.max(this.trades.size() - 4, 0));
 
-				tier = Tier.BASIC;
+				tier = Tier.NOVICE;
 
 				if(rand.nextDouble() < tierIncreaseChance){
 					tier = Tier.APPRENTICE;
@@ -545,8 +557,10 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			// Don't know how it can ever be empty here, but it's a failsafe.
 			if(itemToSell.isEmpty()) return;
 
-			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier),
-					new ItemStack(WizardryItems.magic_crystal, tier.ordinal() * 3 + 1 + rand.nextInt(4)), itemToSell));
+			ItemStack secondItemToBuy = tier == Tier.MASTER ? new ItemStack(WizardryItems.astral_diamond)
+					: new ItemStack(WizardryItems.magic_crystal, tier.ordinal() * 3 + 1 + rand.nextInt(4));
+
+			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), secondItemToBuy, itemToSell));
 		}
 
 		Collections.shuffle(merchantrecipelist);
@@ -555,27 +569,31 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			this.trades = new WildcardTradeList();
 		}
 
-		for(int j1 = 0; j1 < merchantrecipelist.size(); ++j1){
-			this.trades.add(merchantrecipelist.get(j1));
-		}
+		this.trades.addAll(merchantrecipelist);
 	}
 
 	// TODO: Switch all of this over to some kind of loot pool system?
 
 	private ItemStack getRandomPrice(Tier tier){
-		ItemStack itemstack = ItemStack.EMPTY;
-		switch(this.rand.nextInt(3)){
-		case 0:
-			itemstack = new ItemStack(Items.GOLD_INGOT, (tier.ordinal() + 1) * 8 - 1 + rand.nextInt(6));
-			break;
-		case 1:
-			itemstack = new ItemStack(Items.DIAMOND, (tier.ordinal() + 1) * 4 - 2 + rand.nextInt(3));
-			break;
-		case 2:
-			itemstack = new ItemStack(Items.EMERALD, (tier.ordinal() + 1) * 6 - 1 + rand.nextInt(3));
-			break;
+
+		Map<ResourceLocation, Integer> map = Wizardry.settings.currencyItems;
+		// This isn't that efficient but it's not called very often really so it doesn't matter
+		ResourceLocation itemName = map.keySet().toArray(new ResourceLocation[0])[rand.nextInt(map.size())];
+		Item item = Item.REGISTRY.getObject(itemName);
+		int value;
+
+		if(item == null){
+			Wizardry.logger.warn("Invalid item in currency items: {}", itemName);
+			item = Items.EMERALD; // Fallback item
+			value = 6;
+		}else{
+			value = map.get(itemName);
 		}
-		return itemstack;
+
+		// ((tier.ordinal() + 1) * 16 + rand.nextInt(6)) gives a 'value' for the item being bought
+		// This is then divided by the value of the currency item to give a price
+		// The absolute maximum stack size that can result from this calculation (with value = 1) is 64.
+		return new ItemStack(item, (8 + tier.ordinal() * 16 + rand.nextInt(9)) / value);
 	}
 
 	private ItemStack getRandomItemOfTier(Tier tier){
@@ -583,32 +601,36 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		int randomiser;
 
 		// All enabled spells of the given tier
-		List<Spell> spells = Spell.getSpells(new Spell.TierElementFilter(tier, null));
+		List<Spell> spells = Spell.getSpells(new Spell.TierElementFilter(tier, null, SpellProperties.Context.TRADES));
 		// All enabled spells of the given tier that match this wizard's element
-		List<Spell> specialismSpells = Spell.getSpells(new Spell.TierElementFilter(tier, this.getElement()));
+		List<Spell> specialismSpells = Spell.getSpells(new Spell.TierElementFilter(tier, this.getElement(), SpellProperties.Context.TRADES));
+
+		// Wizards don't sell scrolls
+		spells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
+		specialismSpells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
 
 		// This code is sooooooo much neater with the new filter system!
 		switch(tier){
 
-		case BASIC:
+		case NOVICE:
 			randomiser = rand.nextInt(5);
 			if(randomiser < 4 && !spells.isEmpty()){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
 					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).id());
+					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
 				}
 			}else{
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
 					// has an element.
-					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
+					return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
 				}else{
 					return new ItemStack(
-							WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
+							WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}
 
@@ -619,18 +641,18 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
 					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).id());
+					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
 					// has an element.
-					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
+					return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
 				}else{
 					return new ItemStack(
-							WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
+							WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}else if(randomiser < 8){
 				return new ItemStack(WizardryItems.arcane_tome, 1, 1);
@@ -639,10 +661,10 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// This means it is more likely for armour sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryUtilities.getArmour(this.getElement(), slot));
+					return new ItemStack(WizardryItems.getArmour(this.getElement(), slot));
 				}else{
 					return new ItemStack(
-							WizardryUtilities.getArmour(Element.values()[rand.nextInt(Element.values().length)], slot));
+							WizardryItems.getArmour(Element.values()[rand.nextInt(Element.values().length)], slot));
 				}
 			}else{
 				// Don't need to check for discovery mode here since it is done above
@@ -656,18 +678,18 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
 					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).id());
+					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// This means it is more likely for wands sold to be of the same element as the wizard if the wizard
 					// has an element.
-					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
+					return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
 				}else{
 					return new ItemStack(
-							WizardryUtilities.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
+							WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}else if(randomiser < 8){
 				return new ItemStack(WizardryItems.arcane_tome, 1, 2);
@@ -684,12 +706,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			if(randomiser < 5 && this.getElement() != Element.MAGIC && !specialismSpells.isEmpty()){
 				// Master spells can only be sold by a specialist in that element.
 				return new ItemStack(WizardryItems.spell_book, 1,
-						specialismSpells.get(rand.nextInt(specialismSpells.size())).id());
+						specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// Master elemental wands can only be sold by a specialist in that element.
-					return new ItemStack(WizardryUtilities.getWand(tier, this.getElement()));
+					return new ItemStack(WizardryItems.getWand(tier, this.getElement()));
 				}else{
 					return new ItemStack(WizardryItems.master_wand);
 				}
@@ -718,7 +740,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 		// Adds armour.
 		for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
-			this.setItemStackToSlot(slot, new ItemStack(WizardryUtilities.getArmour(element, slot)));
+			this.setItemStackToSlot(slot, new ItemStack(WizardryItems.getArmour(element, slot)));
 		}
 
 		// Default chance is 0.085f, for reference.
@@ -728,11 +750,16 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// All wizards know magic missile, even if it is disabled.
 		spells.add(Spells.magic_missile);
 
-		Tier maxTier = populateSpells(spells, element, 3, rand);
+		Tier maxTier = populateSpells(spells, element, false, 3, rand);
 
 		// Now done after the spells so it can take the tier into account.
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND,
-				new ItemStack(WizardryUtilities.getWand(maxTier, element)));
+		ItemStack wand = new ItemStack(WizardryItems.getWand(maxTier, element));
+		ArrayList<Spell> list = new ArrayList<>(spells);
+		list.add(Spells.heal);
+		WandHelper.setSpells(wand, list.toArray(new Spell[5]));
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, wand);
+
+		this.setHealCooldown(50);
 
 		return livingdata;
 	}
@@ -747,14 +774,14 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	 * @param random A random number generator to use.
 	 * @return The tier of the highest-tier spell that was added to the list.
 	 */
-	static Tier populateSpells(List<Spell> spells, Element e, int n, Random random){
+	static Tier populateSpells(List<Spell> spells, Element e, boolean master, int n, Random random){
 
 		// This is the tier of the highest tier spell added.
-		Tier maxTier = Tier.BASIC;
+		Tier maxTier = Tier.NOVICE;
 
 		List<Spell> npcSpells = Spell.getSpells(Spell.npcSpells);
 
-		for(int i = 0; i < 3; i++){
+		for(int i = 0; i < n; i++){
 
 			Tier tier;
 			// If the wizard has no element, it picks a random one each time.
@@ -764,17 +791,19 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			// Uses its own special weighting
 			if(randomiser < 10){
-				tier = Tier.BASIC;
+				tier = Tier.NOVICE;
 			}else if(randomiser < 16){
 				tier = Tier.APPRENTICE;
-			}else{
+			}else if(randomiser < 19 || !master){
 				tier = Tier.ADVANCED;
+			}else{
+				tier = Tier.MASTER;
 			}
 
 			if(tier.ordinal() > maxTier.ordinal()) maxTier = tier;
 
 			// Finds all the spells of the chosen tier and element
-			List<Spell> list = Spell.getSpells(new Spell.TierElementFilter(tier, element));
+			List<Spell> list = Spell.getSpells(new Spell.TierElementFilter(tier, element, SpellProperties.Context.NPCS));
 			// Keeps only spells which can be cast by NPCs
 			list.retainAll(npcSpells);
 			// Removes spells that the wizard already has
@@ -828,12 +857,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		this.towerBlocks = blocks;
 	}
 
-	/**
-	 * Tests whether the block at the given coordinates is part of this wizard's tower.
-	 * 
-	 * @param pos
-	 * @return
-	 */
+	/** Tests whether the block at the given coordinates is part of this wizard's tower. */
 	public boolean isBlockPartOfTower(BlockPos pos){
 		if(this.towerBlocks == null) return false;
 		// Uses .equals() rather than == so this will work fine.

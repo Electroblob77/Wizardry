@@ -8,7 +8,6 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,10 +23,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemScroll extends Item {
+public class ItemScroll extends Item implements ISpellCastingItem {
 	
 	/** The maximum number of ticks a continuous spell scroll can be cast for (by holding the use item button). */
-	// TODO: Make this configurable
 	public static final int CASTING_TIME = 120;
 
 	public ItemScroll(){
@@ -36,14 +34,24 @@ public class ItemScroll extends Item {
 		setMaxStackSize(16);
 		setCreativeTab(WizardryTabs.SPELLS);
 	}
+	
+	@Override
+	public Spell getCurrentSpell(ItemStack stack){
+		return Spell.byMetadata(stack.getItemDamage());
+	}
+
+	@Override
+	public boolean showSpellHUD(EntityPlayer player, ItemStack stack){
+		return false;
+	}
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
 		if(tab == WizardryTabs.SPELLS){
 			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
-			// is not required, only the id.
+			// is not required, only the metadata.
 			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
-				// i+1 is used so that the metadata ties up with the id() method. In other words, the none spell has id
+				// i+1 is used so that the metadata ties up with the metadata() method. In other words, the none spell has metadata
 				// 0 and since this is not used as a spell book the metadata starts at 1.
 				list.add(new ItemStack(this, 1, i + 1));
 			}
@@ -83,54 +91,25 @@ public class ItemScroll extends Item {
 
 		ItemStack stack = player.getHeldItem(hand);
 
-		Spell spell = Spell.get(stack.getItemDamage());
+		Spell spell = Spell.byMetadata(stack.getItemDamage());
 		// By default, scrolls have no modifiers - but with the event system, they could be added.
 		SpellModifiers modifiers = new SpellModifiers();
 
-		// If anything stops the spell working at this point, nothing else happens.
-		if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(player, spell, modifiers, Source.SCROLL))){
-			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
-		}
-
-		// Now we can cast continuous spells with scrolls!
-		if(spell.isContinuous){
-			if(!player.isHandActive()){
-				player.setActiveHand(hand);
-				return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
-			}
-		}else{
-
-			if(!world.isRemote){
-
-				if(spell.cast(world, player, hand, 0, new SpellModifiers())){
-
-					MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.SCROLL));
-
-					if(spell.doesSpellRequirePacket()){
-						// Sends a packet to all players in dimension to tell them to spawn particles.
-						IMessage msg = new PacketCastSpell.Message(player.getEntityId(), hand, spell.id(), modifiers);
-						WizardryPacketHandler.net.sendToDimension(msg, world.provider.getDimension());
-					}
-
-					// Scrolls are consumed upon successful use in survival mode
-					if(!player.capabilities.isCreativeMode) stack.shrink(1);
-
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+		if(canCast(stack, spell, player, hand, 0, modifiers)){
+			// Now we can cast continuous spells with scrolls!
+			if(spell.isContinuous){
+				if(!player.isHandActive()){
+					player.setActiveHand(hand);
+					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
-
-				// This else if check was bugging me for AGES! I can't believe I didn't compare to ItemWand before.
-			}else if(!spell.doesSpellRequirePacket()){
-				// Client-inconsistent spell casting. This code only runs client-side.
-				if(spell.cast(world, player, hand, 0, modifiers)){
-					// This is all that needs to happen, because everything above works fine on just the server side.
-					MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(player, spell, modifiers, Source.SCROLL));
-					return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+			}else{
+				if(cast(stack, spell, player, hand, 0, modifiers)){
+					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}
 		}
 
-		return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
-
+		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 	
 	// For continuous spells. The count argument actually decrements by 1 each tick.
@@ -141,31 +120,68 @@ public class ItemScroll extends Item {
 
 			EntityPlayer player = (EntityPlayer)user;
 
-			Spell spell = Spell.get(stack.getItemDamage());
+			Spell spell = Spell.byMetadata(stack.getItemDamage());
 			// By default, scrolls have no modifiers - but with the event system, they could be added.
 			SpellModifiers modifiers = new SpellModifiers();
 			int castingTick = stack.getMaxItemUseDuration() - count;
 
-			if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(Source.SCROLL, spell, player, modifiers, castingTick)))
-				return;
-
 			// Continuous spells (these must check if they can be cast each tick since the mana changes)
-			if(spell.isContinuous){
-
-				if(spell.cast(player.world, player, player.getActiveHand(), castingTick, modifiers)){
-
-					if(castingTick == 0)
-						MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.SCROLL, spell, player, modifiers));
-				}
+			// In theory the spell is always continuous here but just in case it isn't...
+			if(spell.isContinuous && canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
+				cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
+			}else{
+				// Scrolls normally work on the max use duration so this isn't ever reached by wizardry, but if the
+				// casting was interrupted by SpellCastEvent.Tick it will be used
+				player.stopActiveHand();
 			}
 		}
+	}
+
+	@Override
+	public boolean canCast(ItemStack stack, Spell spell, EntityPlayer caster, EnumHand hand, int castingTick, SpellModifiers modifiers){
+		// Even neater!
+		if(castingTick == 0){
+			return !MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(Source.SCROLL, spell, caster, modifiers));
+		}else{
+			return !MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(Source.SCROLL, spell, caster, modifiers, castingTick));
+		}
+	}
+
+	@Override
+	public boolean cast(ItemStack stack, Spell spell, EntityPlayer caster, EnumHand hand, int castingTick, SpellModifiers modifiers){
+
+		World world = caster.world;
+
+		if(world.isRemote && !spell.isContinuous && spell.requiresPacket()) return false;
+
+		if(spell.cast(world, caster, hand, castingTick, modifiers)){
+
+			if(castingTick == 0) MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.SCROLL, spell, caster, modifiers));
+
+			if(!world.isRemote){
+
+				// Continuous spells never require packets so don't rely on the requiresPacket method to specify it
+				if(!spell.isContinuous && spell.requiresPacket()){
+					// Sends a packet to all players in dimension to tell them to spawn particles.
+					IMessage msg = new PacketCastSpell.Message(caster.getEntityId(), hand, spell, modifiers);
+					WizardryPacketHandler.net.sendToDimension(msg, world.provider.getDimension());
+				}
+
+				// Scrolls are consumed upon successful use in survival mode
+				if(!spell.isContinuous && !caster.isCreative()) stack.shrink(1);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft){
 		// Consumes a continuous spell scroll when a player in survival mode stops using it.
-		if(Spell.get(stack.getItemDamage()).isContinuous
-				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).capabilities.isCreativeMode)){
+		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
+				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
 			stack.shrink(1);
 		}
 	}
@@ -173,8 +189,8 @@ public class ItemScroll extends Item {
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase user){
 		// Consumes a continuous spell scroll when the casting elapses whilst in use by a player in survival mode.
-		if(Spell.get(stack.getItemDamage()).isContinuous
-				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).capabilities.isCreativeMode)){
+		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
+				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
 			stack.shrink(1);
 		}
 		
@@ -183,7 +199,7 @@ public class ItemScroll extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public FontRenderer getFontRenderer(ItemStack stack){
+	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
 	}
 }
