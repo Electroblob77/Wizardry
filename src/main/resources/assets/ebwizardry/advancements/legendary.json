@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:legendary"
+            "translate": "advancement.ebwizardry:legendary"
         },
         "description": {
-            "translate": "advancement.wizardry:legendary.desc"
+            "translate": "advancement.ebwizardry:legendary.desc"
         },
         "icon": {
             "item": "ebwizardry:armour_upgrade"

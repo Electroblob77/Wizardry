@@ -1,16 +1,16 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:wizard_trade"
+            "translate": "advancement.ebwizardry:wizard_trade"
         },
         "description": {
-            "translate": "advancement.wizardry:wizard_trade.desc"
+            "translate": "advancement.ebwizardry:wizard_trade.desc"
         },
         "icon": {
             "item": "minecraft:emerald"
         }
     },
-    "parent": "ebwizardry:arcane_initiate",
+    "parent": "ebwizardry:wizard_tower",
     "criteria": {
         "criteria_0": {
             "trigger": "ebwizardry:trigger_wizard_trade"

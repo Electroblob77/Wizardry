@@ -1,20 +1,1393 @@
 {
     "display": {
         "icon": {
-            "item": "ebwizardry:wizard_handbook"
+            "item": "ebwizardry:spell_book"
         },
         "title": {
-            "translate": "advancement.wizardry:all_spells"
+            "translate": "advancement.ebwizardry:all_spells"
         },
         "description": {
-            "translate": "advancement.wizardry:all_spells.desc"
+            "translate": "advancement.ebwizardry:all_spells.desc"
         },
-		"frame": "challenge"
+        "frame": "challenge"
     },
     "parent": "ebwizardry:master",
     "criteria": {
-        "criteria_0": {
-            "trigger": "ebwizardry:trigger_all_spells"
+        "agility": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "agility"
+                }
+            }
+        },
+        "arc": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "arc"
+                }
+            }
+        },
+        "arcane_jammer": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "arcane_jammer"
+                }
+            }
+        },
+        "arcane_lock": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "arcane_lock"
+                }
+            }
+        },
+        "arrow_rain": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "arrow_rain"
+                }
+            }
+        },
+        "banish": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "banish"
+                }
+            }
+        },
+        "black_hole": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "black_hole"
+                }
+            }
+        },
+        "blink": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "blink"
+                }
+            }
+        },
+        "blizzard": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "blizzard"
+                }
+            }
+        },
+        "bubble": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "bubble"
+                }
+            }
+        },
+        "chain_lightning": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "chain_lightning"
+                }
+            }
+        },
+        "charge": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "charge"
+                }
+            }
+        },
+        "clairvoyance": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "clairvoyance"
+                }
+            }
+        },
+        "cobwebs": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "cobwebs"
+                }
+            }
+        },
+        "combustion_rune": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "combustion_rune"
+                }
+            }
+        },
+        "conjure_armour": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "conjure_armour"
+                }
+            }
+        },
+        "conjure_block": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "conjure_block"
+                }
+            }
+        },
+        "conjure_bow": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "conjure_bow"
+                }
+            }
+        },
+        "conjure_pickaxe": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "conjure_pickaxe"
+                }
+            }
+        },
+        "conjure_sword": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "conjure_sword"
+                }
+            }
+        },
+        "containment": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "containment"
+                }
+            }
+        },
+        "cure_effects": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "cure_effects"
+                }
+            }
+        },
+        "curse_of_enfeeblement": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "curse_of_enfeeblement"
+                }
+            }
+        },
+        "curse_of_soulbinding": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "curse_of_soulbinding"
+                }
+            }
+        },
+        "curse_of_undeath": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "curse_of_undeath"
+                }
+            }
+        },
+        "darkness_orb": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "darkness_orb"
+                }
+            }
+        },
+        "darkvision": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "darkvision"
+                }
+            }
+        },
+        "dart": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "dart"
+                }
+            }
+        },
+        "decay": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "decay"
+                }
+            }
+        },
+        "decoy": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "decoy"
+                }
+            }
+        },
+        "detonate": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "detonate"
+                }
+            }
+        },
+        "diamondflesh": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "diamondflesh"
+                }
+            }
+        },
+        "disintegration": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "disintegration"
+                }
+            }
+        },
+        "divination": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "divination"
+                }
+            }
+        },
+        "dragon_fireball": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "dragon_fireball"
+                }
+            }
+        },
+        "earthquake": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "earthquake"
+                }
+            }
+        },
+        "empowering_presence": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "empowering_presence"
+                }
+            }
+        },
+        "entrapment": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "entrapment"
+                }
+            }
+        },
+        "evade": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "evade"
+                }
+            }
+        },
+        "fireball": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "fireball"
+                }
+            }
+        },
+        "firebolt": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "firebolt"
+                }
+            }
+        },
+        "firebomb": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "firebomb"
+                }
+            }
+        },
+        "fire_resistance": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "fire_resistance"
+                }
+            }
+        },
+        "fire_sigil": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "fire_sigil"
+                }
+            }
+        },
+        "fireskin": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "fireskin"
+                }
+            }
+        },
+        "fire_breath": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "fire_breath"
+                }
+            }
+        },
+        "flame_ray": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "flame_ray"
+                }
+            }
+        },
+        "flaming_axe": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "flaming_axe"
+                }
+            }
+        },
+        "flaming_weapon": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "flaming_weapon"
+                }
+            }
+        },
+        "flight": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "flight"
+                }
+            }
+        },
+        "font_of_mana": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "font_of_mana"
+                }
+            }
+        },
+        "font_of_vitality": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "font_of_vitality"
+                }
+            }
+        },
+        "force_arrow": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "force_arrow"
+                }
+            }
+        },
+        "forcefield": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "forcefield"
+                }
+            }
+        },
+        "force_orb": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "force_orb"
+                }
+            }
+        },
+        "forests_curse": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "forests_curse"
+                }
+            }
+        },
+        "forest_of_thorns": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "forest_of_thorns"
+                }
+            }
+        },
+        "freeze": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "freeze"
+                }
+            }
+        },
+        "freezing_weapon": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "freezing_weapon"
+                }
+            }
+        },
+        "frost_axe": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "frost_axe"
+                }
+            }
+        },
+        "frost_ray": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "frost_ray"
+                }
+            }
+        },
+        "frost_sigil": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "frost_sigil"
+                }
+            }
+        },
+        "frost_step": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "frost_step"
+                }
+            }
+        },
+        "glide": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "glide"
+                }
+            }
+        },
+        "grapple": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "grapple"
+                }
+            }
+        },
+        "greater_fireball": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "greater_fireball"
+                }
+            }
+        },
+        "greater_heal": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "greater_heal"
+                }
+            }
+        },
+        "greater_telekinesis": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "greater_telekinesis"
+                }
+            }
+        },
+        "greater_ward": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "greater_ward"
+                }
+            }
+        },
+        "group_heal": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "group_heal"
+                }
+            }
+        },
+        "growth_aura": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "growth_aura"
+                }
+            }
+        },
+        "hailstorm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "hailstorm"
+                }
+            }
+        },
+        "heal": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "heal"
+                }
+            }
+        },
+        "heal_ally": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "heal_ally"
+                }
+            }
+        },
+        "healing_aura": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "healing_aura"
+                }
+            }
+        },
+        "homing_spark": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "homing_spark"
+                }
+            }
+        },
+        "iceball": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "iceball"
+                }
+            }
+        },
+        "ice_age": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_age"
+                }
+            }
+        },
+        "ice_charge": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_charge"
+                }
+            }
+        },
+        "ice_lance": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_lance"
+                }
+            }
+        },
+        "ice_shard": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_shard"
+                }
+            }
+        },
+        "ice_shroud": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_shroud"
+                }
+            }
+        },
+        "ice_spikes": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_spikes"
+                }
+            }
+        },
+        "ice_statue": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ice_statue"
+                }
+            }
+        },
+        "ignite": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ignite"
+                }
+            }
+        },
+        "imbue_weapon": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "imbue_weapon"
+                }
+            }
+        },
+        "intimidate": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "intimidate"
+                }
+            }
+        },
+        "invigorating_presence": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "invigorating_presence"
+                }
+            }
+        },
+        "invisibility": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "invisibility"
+                }
+            }
+        },
+        "invoke_weather": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "invoke_weather"
+                }
+            }
+        },
+        "ironflesh": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ironflesh"
+                }
+            }
+        },
+        "leap": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "leap"
+                }
+            }
+        },
+        "levitation": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "levitation"
+                }
+            }
+        },
+        "life_drain": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "life_drain"
+                }
+            }
+        },
+        "light": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "light"
+                }
+            }
+        },
+        "lightning_arrow": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_arrow"
+                }
+            }
+        },
+        "lightning_bolt": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_bolt"
+                }
+            }
+        },
+        "lightning_disc": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_disc"
+                }
+            }
+        },
+        "lightning_hammer": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_hammer"
+                }
+            }
+        },
+        "lightning_pulse": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_pulse"
+                }
+            }
+        },
+        "lightning_ray": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_ray"
+                }
+            }
+        },
+        "lightning_sigil": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_sigil"
+                }
+            }
+        },
+        "lightning_web": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "lightning_web"
+                }
+            }
+        },
+        "magic_missile": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "magic_missile"
+                }
+            }
+        },
+        "metamorphosis": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "metamorphosis"
+                }
+            }
+        },
+        "meteor": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "meteor"
+                }
+            }
+        },
+        "mind_control": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "mind_control"
+                }
+            }
+        },
+        "mind_trick": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "mind_trick"
+                }
+            }
+        },
+        "mine": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "mine"
+                }
+            }
+        },
+        "muffle": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "muffle"
+                }
+            }
+        },
+        "oakflesh": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "oakflesh"
+                }
+            }
+        },
+        "paralysis": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "paralysis"
+                }
+            }
+        },
+        "petrify": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "petrify"
+                }
+            }
+        },
+        "phase_step": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "phase_step"
+                }
+            }
+        },
+        "plague_of_darkness": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "plague_of_darkness"
+                }
+            }
+        },
+        "pocket_furnace": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "pocket_furnace"
+                }
+            }
+        },
+        "pocket_workbench": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "pocket_workbench"
+                }
+            }
+        },
+        "poison": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "poison"
+                }
+            }
+        },
+        "poison_bomb": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "poison_bomb"
+                }
+            }
+        },
+        "possession": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "possession"
+                }
+            }
+        },
+        "ray_of_purification": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ray_of_purification"
+                }
+            }
+        },
+        "remove_curse": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "remove_curse"
+                }
+            }
+        },
+        "replenish_hunger": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "replenish_hunger"
+                }
+            }
+        },
+        "resurrection": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "resurrection"
+                }
+            }
+        },
+        "reversal": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "reversal"
+                }
+            }
+        },
+        "ring_of_fire": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ring_of_fire"
+                }
+            }
+        },
+        "satiety": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "satiety"
+                }
+            }
+        },
+        "shadow_ward": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "shadow_ward"
+                }
+            }
+        },
+        "shield": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "shield"
+                }
+            }
+        },
+        "shockwave": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "shockwave"
+                }
+            }
+        },
+        "shulker_bullet": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "shulker_bullet"
+                }
+            }
+        },
+        "silverfish_swarm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "silverfish_swarm"
+                }
+            }
+        },
+        "sixth_sense": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "sixth_sense"
+                }
+            }
+        },
+        "slime": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "slime"
+                }
+            }
+        },
+        "slow_time": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "slow_time"
+                }
+            }
+        },
+        "smoke_bomb": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "smoke_bomb"
+                }
+            }
+        },
+        "snare": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "snare"
+                }
+            }
+        },
+        "snowball": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "snowball"
+                }
+            }
+        },
+        "spark_bomb": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "spark_bomb"
+                }
+            }
+        },
+        "spectral_pathway": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "spectral_pathway"
+                }
+            }
+        },
+        "speed_time": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "speed_time"
+                }
+            }
+        },
+        "spider_swarm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "spider_swarm"
+                }
+            }
+        },
+        "static_aura": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "static_aura"
+                }
+            }
+        },
+        "summon_blaze": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_blaze"
+                }
+            }
+        },
+        "summon_ice_giant": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_ice_giant"
+                }
+            }
+        },
+        "summon_ice_wraith": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_ice_wraith"
+                }
+            }
+        },
+        "summon_iron_golem": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_iron_golem"
+                }
+            }
+        },
+        "summon_lightning_wraith": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_lightning_wraith"
+                }
+            }
+        },
+        "summon_phoenix": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_phoenix"
+                }
+            }
+        },
+        "summon_shadow_wraith": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_shadow_wraith"
+                }
+            }
+        },
+        "summon_skeleton": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_skeleton"
+                }
+            }
+        },
+        "summon_skeleton_legion": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_skeleton_legion"
+                }
+            }
+        },
+        "summon_snow_golem": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_snow_golem"
+                }
+            }
+        },
+        "summon_spirit_horse": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_spirit_horse"
+                }
+            }
+        },
+        "summon_spirit_wolf": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_spirit_wolf"
+                }
+            }
+        },
+        "summon_storm_elemental": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_storm_elemental"
+                }
+            }
+        },
+        "summon_wither_skeleton": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_wither_skeleton"
+                }
+            }
+        },
+        "summon_zombie": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_zombie"
+                }
+            }
+        },
+        "telekinesis": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "telekinesis"
+                }
+            }
+        },
+        "thunderbolt": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "thunderbolt"
+                }
+            }
+        },
+        "thunderstorm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "thunderstorm"
+                }
+            }
+        },
+        "tornado": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "tornado"
+                }
+            }
+        },
+        "transience": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "transience"
+                }
+            }
+        },
+        "transportation": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "transportation"
+                }
+            }
+        },
+        "vanishing_box": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "vanishing_box"
+                }
+            }
+        },
+        "vex_swarm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "vex_swarm"
+                }
+            }
+        },
+        "wall_of_frost": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "wall_of_frost"
+                }
+            }
+        },
+        "ward": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "ward"
+                }
+            }
+        },
+        "water_breathing": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "water_breathing"
+                }
+            }
+        },
+        "whirlwind": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "whirlwind"
+                }
+            }
+        },
+        "wither": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "wither"
+                }
+            }
+        },
+        "wither_skull": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "wither_skull"
+                }
+            }
         }
     }
 }

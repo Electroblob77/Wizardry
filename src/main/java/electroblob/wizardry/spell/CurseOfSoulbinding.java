@@ -1,70 +1,88 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.data.IStoredVariable;
+import electroblob.wizardry.data.Persistence;
+import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.ParticleBuilder.Type;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
+
 @Mod.EventBusSubscriber
-public class CurseOfSoulbinding extends Spell {
+public class CurseOfSoulbinding extends SpellRay {
+
+	public static final IStoredVariable<Set<UUID>> TARGETS_KEY = new IStoredVariable.StoredVariable<>("soulboundCreatures",
+			s -> NBTExtras.listToNBT(s, NBTUtil::createUUIDTag),
+			// For some reason gradle screams at me unless I explicitly declare the type of t here, despite IntelliJ being fine without it
+			(NBTTagList t) -> new HashSet<>(NBTExtras.NBTToList(t, NBTUtil::getUUIDFromTag)),
+			// Curse of soulbinding is lifted when the caster dies, but not when they switch dimensions.
+			Persistence.DIMENSION_CHANGE);
 
 	public CurseOfSoulbinding(){
-		super(Tier.ADVANCED, 35, Element.NECROMANCY, "curse_of_soulbinding", SpellType.ATTACK, 100, EnumAction.NONE,
-				false);
+		super("curse_of_soulbinding", false, EnumAction.NONE);
+		this.soundValues(1, 1.1f, 0.2f);
+		WizardData.registerStoredVariables(TARGETS_KEY);
+	}
+
+	@Override public boolean canBeCastByNPCs() { return false; }
+	// You can't damage a dispenser so this would be nonsense!
+	@Override public boolean canBeCastByDispensers() { return false; }
+
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target) && caster instanceof EntityPlayer){
+			WizardData data = WizardData.get((EntityPlayer)caster);
+			if(data != null){
+				// Return false if soulbinding failed (e.g. if the target is already soulbound)
+				if(getSoulboundCreatures(data).add(target.getUniqueID())){
+					// This will actually run out in the end, but only if you leave Minecraft running for 3.4 years
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.curse_of_soulbinding, Integer.MAX_VALUE));
+				}else{
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+		return false;
+	}
 
-		Vec3d look = caster.getLookVec();
-
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade));
-
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY
-				&& WizardryUtilities.isLiving(rayTrace.entityHit) && WizardData.get(caster) != null){
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
-			if(!WizardData.get(caster).soulbind(target)) return false;
-		}
-
-		if(world.isRemote){
-			for(int i = 1; i < (int)(25 * modifiers.get(WizardryItems.range_upgrade)); i += 2){
-				// I figured it out! when on client side, entityplayer.posY is at the eyes, not the feet!
-				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				// world.spawnParticle("mobSpell", x1, y1, z1, -1*look.xCoord, -1*look.yCoord, -1*look.zCoord);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
-						0.4f, 0.0f, 0.0f);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world, x1, y1, z1, 0.0d, 0.0d, 0.0d, 0,
-						0.1f, 0.0f, 0.0f);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0.0d, 0.0d, 0.0d,
-						12 + world.rand.nextInt(8), 1.0f, 0.8f, 1.0f);
-			}
-		}
-
-		caster.swingArm(hand);
-		WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_WITHER_SPAWN, 1.0F,
-				world.rand.nextFloat() * 0.2F + 1.0F);
+	@Override
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
+	}
+	
+	@Override
+	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.4f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.1f, 0, 0).spawn(world);
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).time(12 + world.rand.nextInt(8)).clr(1, 0.8f, 1).spawn(world);
 	}
 
 	@SubscribeEvent
@@ -73,11 +91,41 @@ public class CurseOfSoulbinding extends Spell {
 		if(!event.getEntity().world.isRemote && event.getEntityLiving() instanceof EntityPlayer
 				&& !event.getSource().isUnblockable() && !(event.getSource() instanceof IElementalDamage
 						&& ((IElementalDamage)event.getSource()).isRetaliatory())){
-			WizardData data = WizardData.get((EntityPlayer)event.getEntityLiving());
+
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+			WizardData data = WizardData.get(player);
+
 			if(data != null){
-				data.damageAllSoulboundCreatures(event.getAmount());
+
+				for(Iterator<UUID> iterator = getSoulboundCreatures(data).iterator(); iterator.hasNext();){
+
+					Entity entity = WizardryUtilities.getEntityByUUID(player.world, iterator.next());
+
+					if(entity == null) iterator.remove();
+
+					if(entity instanceof EntityLivingBase){
+						// Retaliatory effect
+						if(DamageSafetyChecker.attackEntitySafely(entity, MagicDamage.causeDirectMagicDamage(player,
+								MagicDamage.DamageType.MAGIC, true), event.getAmount(), event.getSource().getDamageType(),
+								DamageSource.MAGIC, false)){
+							// Sound only plays if the damage succeeds
+							entity.playSound(WizardrySounds.SPELL_CURSE_OF_SOULBINDING_RETALIATE, 1.0F, player.world.rand.nextFloat() * 0.2F + 1.0F);
+						}
+					}
+				}
+
 			}
 		}
+	}
+
+	public static Set<UUID> getSoulboundCreatures(WizardData data){
+
+		if(data.getVariable(TARGETS_KEY) == null){
+			Set<UUID> result = new HashSet<>();
+			data.setVariable(TARGETS_KEY, result);
+			return result;
+
+		}else return data.getVariable(TARGETS_KEY);
 	}
 
 }

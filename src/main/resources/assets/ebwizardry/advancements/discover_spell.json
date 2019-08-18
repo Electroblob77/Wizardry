@@ -1,0 +1,22 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:discover_spell"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:discover_spell.desc"
+        },
+        "icon": {
+            "item": "minecraft:paper"
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:discover_spell",
+            "conditions": {
+                "source": "casting"
+            }
+        }
+    }
+}

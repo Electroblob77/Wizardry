@@ -1,10 +1,10 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:root"
+            "translate": "advancement.ebwizardry:root"
         },
         "description": {
-            "translate": "advancement.wizardry:root.desc"
+            "translate": "advancement.ebwizardry:root.desc"
         },
         "show_toast": false,
         "announce_to_chat": false,

@@ -1,162 +1,98 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class FrostRay extends Spell {
+public class FrostRay extends SpellRay {
 
 	public FrostRay(){
-		super(Tier.APPRENTICE, 5, Element.ICE, "frost_ray", SpellType.ATTACK, 0, EnumAction.NONE, true);
+		super("frost_ray", true, EnumAction.NONE);
+		this.particleVelocity(1);
+		this.particleSpacing(0.5);
+		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
+	}
 
-		Vec3d look = caster.getLookVec();
+	@Override
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade));
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
+	}
+	
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target)){
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && WizardryUtilities.isLiving(rayTrace.entityHit)){
-
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
-
-			if(target.isBurning()){
-				target.extinguish();
-			}
+			if(target.isBurning()) target.extinguish();
 
 			if(MagicDamage.isEntityImmune(DamageType.FROST, target)){
-				if(!world.isRemote && ticksInUse == 1) caster.sendMessage(new TextComponentTranslation("spell.resist",
-						target.getName(), this.getNameForTranslationFormatted()));
-			}else{
-				// For frost ray the entity can move slightly, unlike freeze.
-				target.addPotionEffect(new PotionEffect(WizardryPotions.frost,
-						(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), 0));
+				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer) ((EntityPlayer)caster)
+				.sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
+						this.getNameForTranslationFormatted()), true);
+			// This now only damages in line with the maxHurtResistantTime. Some mods don't play nicely and fiddle
+			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
+			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
+				// For frost ray the entity can move slightly, unlike freeze
+				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
+						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+						getProperty(EFFECT_STRENGTH).intValue()));
 
-				float baseDamage = target instanceof EntityBlaze || target instanceof EntityMagmaCube ? 6.0f : 3.0f;
-				WizardryUtilities.attackEntityWithoutKnockback(target,
-						MagicDamage.causeDirectMagicDamage(caster, DamageType.FROST),
-						baseDamage * modifiers.get(SpellModifiers.DAMAGE));
+				float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
+				if(target instanceof EntityBlaze || target instanceof EntityMagmaCube) damage *= 2;
+				
+				WizardryUtilities.attackEntityWithoutKnockback(target, MagicDamage.causeDirectMagicDamage(caster,
+						DamageType.FROST), damage);
 
 			}
 		}
-
-		if(world.isRemote){
-			for(int i = 0; i < 20; i++){
-				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-						look.x * modifiers.get(WizardryItems.range_upgrade),
-						look.y * modifiers.get(WizardryItems.range_upgrade),
-						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 0.4f,
-						0.6f, 1.0f);
-
-				x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-						+ world.rand.nextFloat() / 5 - 0.1f;
-				z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-						look.x * modifiers.get(WizardryItems.range_upgrade),
-						look.y * modifiers.get(WizardryItems.range_upgrade),
-						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 1.0f,
-						1.0f, 1.0f);
-			}
-		}
-
-		if(ticksInUse % 12 == 0){
-			if(ticksInUse == 0) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 0.5F, 1.0f);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_ICE, 0.5F, 1.0f);
-		}
+		
 		return true;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
-			SpellModifiers modifiers){
-
-		if(target != null){
-
-			Vec3d vec = new Vec3d(target.posX - caster.posX, target.posY - caster.posY, target.posZ - caster.posZ)
-					.normalize();
-
-			if(target.isBurning()){
-				target.extinguish();
-			}
-
-			if(!MagicDamage.isEntityImmune(DamageType.FROST, target)){
-				// For frost ray the entity can move slightly, unlike freeze.
-				target.addPotionEffect(new PotionEffect(WizardryPotions.frost,
-						(int)(200 * modifiers.get(WizardryItems.duration_upgrade)), 0));
-
-				float baseDamage = target instanceof EntityBlaze || target instanceof EntityMagmaCube ? 6.0f : 3.0f;
-				WizardryUtilities.attackEntityWithoutKnockback(target,
-						MagicDamage.causeDirectMagicDamage(caster, DamageType.FROST),
-						baseDamage * modifiers.get(SpellModifiers.DAMAGE));
-
-			}
-
-			if(world.isRemote){
-				for(int i = 0; i < 20; i++){
-					double x1 = caster.posX + vec.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-					double y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2
-							+ world.rand.nextFloat() / 5 - 0.1f;
-					double z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-							vec.x * modifiers.get(WizardryItems.range_upgrade),
-							vec.y * modifiers.get(WizardryItems.range_upgrade),
-							vec.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 0.4f,
-							0.6f, 1.0f);
-
-					x1 = caster.posX + vec.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-					y1 = caster.posY + caster.getEyeHeight() - 0.4f + vec.y * i / 2 + world.rand.nextFloat() / 5
-							- 0.1f;
-					z1 = caster.posZ + vec.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-							vec.x * modifiers.get(WizardryItems.range_upgrade),
-							vec.y * modifiers.get(WizardryItems.range_upgrade),
-							vec.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 1.0f,
-							1.0f, 1.0f);
-				}
-			}
-
-			if(ticksInUse % 12 == 0){
-				if(ticksInUse == 0) caster.playSound(WizardrySounds.SPELL_ICE, 0.5F, 1.0f);
-				caster.playSound(WizardrySounds.SPELL_LOOP_ICE, 0.5F, 1.0f);
-			}
-
-			return true;
-		}
-
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
+	}
+	
+	@Override
+	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
+		float brightness = world.rand.nextFloat();
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(12))
+		.clr(0.4f + 0.6f * brightness, 0.6f + 0.4f*brightness, 1).collide(true).spawn(world);
+		ParticleBuilder.create(Type.SNOW).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(12)).collide(true).spawn(world);
 	}
 
 }

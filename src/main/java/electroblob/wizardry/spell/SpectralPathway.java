@@ -1,11 +1,7 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.tileentity.TileEntityTimer;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -19,13 +15,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class SpectralPathway extends Spell {
+	
+	/** The base length of the conjured bridge, in blocks. */
+	public static final String LENGTH = "length";
 
 	public SpectralPathway(){
-		super(Tier.ADVANCED, 40, Element.SORCERY, "spectral_pathway", SpellType.UTILITY, 300, EnumAction.BOW, false);
+		super("spectral_pathway", EnumAction.BOW, false);
+		addProperties(LENGTH, DURATION);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 
@@ -44,8 +44,6 @@ public class SpectralPathway extends Spell {
 
 		if(!world.isRemote){
 
-			int baseLength = 15;
-
 			// Gets the coordinates of the nearest block intersection to the player's feet.
 			// Remember that a block always takes the coordinates of its northwestern corner.
 			BlockPos origin = new BlockPos(Math.round(caster.posX), (int)caster.getEntityBoundingBox().minY - 1,
@@ -53,7 +51,7 @@ public class SpectralPathway extends Spell {
 
 			int startPoint = direction.getAxisDirection() == AxisDirection.POSITIVE ? -1 : 0;
 
-			for(int i = 0; i < (int)(baseLength * modifiers.get(WizardryItems.range_upgrade)); i++){
+			for(int i = 0; i < (int)(getProperty(LENGTH).floatValue() * modifiers.get(WizardryItems.range_upgrade)); i++){
 				// If either a block gets placed or one has already been placed, flag is set to true.
 				flag = placePathwayBlockIfPossible(world, origin.offset(direction, startPoint + i),
 						modifiers.get(WizardryItems.duration_upgrade)) || flag;
@@ -63,17 +61,17 @@ public class SpectralPathway extends Spell {
 						modifiers.get(WizardryItems.duration_upgrade)) || flag;
 			}
 		}
-		// TODO: There may be some client/server discrepancies here.
-		WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION_LARGE, 1.0f, 1.0f);
+
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 		return flag;
 	}
 
-	private static boolean placePathwayBlockIfPossible(World world, BlockPos pos, float durationMultiplier){
-		if(WizardryUtilities.canBlockBeReplacedB(world, pos)){
+	private boolean placePathwayBlockIfPossible(World world, BlockPos pos, float durationMultiplier){
+		if(WizardryUtilities.canBlockBeReplaced(world, pos, true)){
 			world.setBlockState(pos, WizardryBlocks.spectral_block.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityTimer){
-				((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(1200 * durationMultiplier));
+				((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(getProperty(DURATION).floatValue() * durationMultiplier));
 			}
 			return true;
 		}

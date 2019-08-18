@@ -1,0 +1,6 @@
+{
+    "parent": "block/cross",
+    "textures": {
+        "cross": "ebwizardry:blocks/thorns_upper_3"
+    }
+}

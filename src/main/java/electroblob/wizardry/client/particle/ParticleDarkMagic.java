@@ -1,27 +1,20 @@
 package electroblob.wizardry.client.particle;
 
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class ParticleDarkMagic extends Particle {
+//@SideOnly(Side.CLIENT)
+public class ParticleDarkMagic extends ParticleWizardry {
 
 	/** Base spell texture index */
 	private int baseSpellTextureIndex = 128;
 
-	public ParticleDarkMagic(World par1World, double par2, double par4, double par6, double par8, double par10,
-			double par12, float r, float g, float b){
-		super(par1World, par2, par4, par6, par8, par10, par12);
+	public ParticleDarkMagic(World world, double x, double y, double z){
+		super(world, x, y, z);
+		
 		this.motionY *= 0.20000000298023224D;
-
-		this.particleRed = r;
-		this.particleGreen = g;
-		this.particleBlue = b;
-
+		this.setRBGColorF(1, 1, 1);
 		this.particleScale *= 0.75F;
 		this.particleMaxAge = (int)(8.0D / (Math.random() * 0.8D + 0.2D));
 		this.canCollide = true;
@@ -43,9 +36,7 @@ public class ParticleDarkMagic extends Particle {
 		super.renderParticle(buffer, entity, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 	}
 
-	/**
-	 * Called to update the entity's position/logic.
-	 */
+	@Override
 	public void onUpdate(){
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;

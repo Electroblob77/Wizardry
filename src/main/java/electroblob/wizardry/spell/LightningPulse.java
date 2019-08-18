@@ -1,35 +1,36 @@
 package electroblob.wizardry.spell;
 
-import java.util.List;
-
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.construct.EntityLightningPulse;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class LightningPulse extends Spell {
 
+	public static final String REPULSION_VELOCITY = "repulsion_velocity";
+
 	public LightningPulse(){
-		super(Tier.ADVANCED, 25, Element.LIGHTNING, "lightning_pulse", SpellType.ATTACK, 75, EnumAction.NONE, false);
+		super("lightning_pulse", EnumAction.NONE, false);
+		addProperties(EFFECT_RADIUS, DAMAGE, REPULSION_VELOCITY);
+		this.soundValues(2, 1, 0);
 	}
+	
+	// TODO: NPC casting support
 
 	@Override
-	public boolean doesSpellRequirePacket(){
-		return false;
+	protected SoundEvent[] createSounds(){
+		return createSoundsWithSuffixes("spark", "explosion");
 	}
 
 	@Override
@@ -38,13 +39,14 @@ public class LightningPulse extends Spell {
 		if(caster.onGround){
 
 			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
-					3.0d * modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
+					getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade),
+					caster.posX, caster.posY, caster.posZ, world);
 
 			for(EntityLivingBase target : targets){
-				if(WizardryUtilities.isValidTarget(caster, target)){
-					// Damage is 4 hearts no matter where the target is.
+				if(AllyDesignationSystem.isValidTarget(caster, target)){
+					// Base damage is 4 hearts no matter where the target is.
 					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-							8 * modifiers.get(SpellModifiers.DAMAGE));
+							getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
 					if(!world.isRemote){
 
@@ -55,9 +57,9 @@ public class LightningPulse extends Spell {
 						dx /= vectorLength;
 						dz /= vectorLength;
 
-						target.motionX = 0.8 * dx;
+						target.motionX = getProperty(REPULSION_VELOCITY).floatValue() * dx;
 						target.motionY = 0;
-						target.motionZ = 0.8 * dz;
+						target.motionZ = getProperty(REPULSION_VELOCITY).floatValue() * dz;
 
 						// Player motion is handled on that player's client so needs packets
 						if(target instanceof EntityPlayerMP){
@@ -66,15 +68,15 @@ public class LightningPulse extends Spell {
 					}
 				}
 			}
-			if(!world.isRemote){
-				EntityLightningPulse lightningpulse = new EntityLightningPulse(world, caster.posX,
-						caster.getEntityBoundingBox().minY, caster.posZ, caster, 7,
-						modifiers.get(SpellModifiers.DAMAGE));
-				world.spawnEntity(lightningpulse);
+			
+			if(world.isRemote){
+				ParticleBuilder.create(Type.LIGHTNING_PULSE).pos(caster.posX, caster.getEntityBoundingBox().minY
+						+ WizardryUtilities.ANTI_Z_FIGHTING_OFFSET, caster.posZ)
+				.scale(modifiers.get(WizardryItems.blast_upgrade)).spawn(world);
 			}
+			
 			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0f, 1.0f);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_SHOCKWAVE, 2.0f, 1.0f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			return true;
 		}
 		return false;

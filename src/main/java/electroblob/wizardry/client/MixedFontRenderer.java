@@ -5,15 +5,13 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Font renderer that renders parts of strings surrounded by '#' (without quotes) in the SGA instead of normal text.
  * 
  * @since Wizardry 1.1
  */
-@SideOnly(Side.CLIENT)
+//@SideOnly(Side.CLIENT)
 public class MixedFontRenderer extends FontRenderer {
 
 	public MixedFontRenderer(GameSettings p_i1035_1_, ResourceLocation p_i1035_2_, TextureManager p_i1035_3_,

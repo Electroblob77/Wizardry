@@ -40,20 +40,20 @@ public class WizardryGuiHandler implements IGuiHandler {
 		if(id == ARCANE_WORKBENCH){
 			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 			if(tileEntity instanceof TileEntityArcaneWorkbench){
-				return new electroblob.wizardry.client.GuiArcaneWorkbench(player.inventory,
+				return new electroblob.wizardry.client.gui.GuiArcaneWorkbench(player.inventory,
 						(TileEntityArcaneWorkbench)tileEntity);
 			}
 		}else if(id == WIZARD_HANDBOOK && (player.getHeldItemMainhand().getItem() instanceof ItemWizardHandbook
 				|| player.getHeldItemOffhand().getItem() instanceof ItemWizardHandbook)){
-			return new electroblob.wizardry.client.GuiWizardHandbook();
+			return new electroblob.wizardry.client.gui.handbook.GuiWizardHandbook();
 		}else if(id == SPELL_BOOK){
 			if(player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
-				return new electroblob.wizardry.client.GuiSpellBook(Spell.get(player.getHeldItemMainhand().getItemDamage()));
+				return new electroblob.wizardry.client.gui.GuiSpellBook(Spell.byMetadata(player.getHeldItemMainhand().getItemDamage()));
 			}else if(player.getHeldItemOffhand().getItem() instanceof ItemSpellBook){
-				return new electroblob.wizardry.client.GuiSpellBook(Spell.get(player.getHeldItemOffhand().getItemDamage()));
+				return new electroblob.wizardry.client.gui.GuiSpellBook(Spell.byMetadata(player.getHeldItemOffhand().getItemDamage()));
 			}
 		}else if(id == PORTABLE_CRAFTING){
-			return new electroblob.wizardry.client.GuiPortableCrafting(player.inventory, world, new BlockPos(x, y, z));
+			return new electroblob.wizardry.client.gui.GuiPortableCrafting(player.inventory, world, new BlockPos(x, y, z));
 		}
 		return null;
 	}

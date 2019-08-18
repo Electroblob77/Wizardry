@@ -1,9 +1,6 @@
 package electroblob.wizardry.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
@@ -11,23 +8,29 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+
 /**
+ * <i>"Never fear, {@code WandHelper} is here!"</i>
+ * <p></p>
  * Much like {@link net.minecraft.enchantment.EnchantmentHelper EnchantmentHelper}, this class has some static methods
  * which allow cleaner and more concise interaction with the wand NBT data, which is quite a complex structure. Such
  * interaction previously resulted in rather verbose and repetitive code which was hard to read and even harder to
  * debug! For example, this class allowed {@link electroblob.wizardry.item.ItemWand ItemWand} to be shortened by about
  * 80 lines. In addition, by having all the various null checks and array size checks in one place, the chance of
  * accidental errors due to forgetting to check these things is greatly reduced.
- * <p>
+ * <p></p>
  * Note that these methods contain no game logic at all; they are purely for interacting with the NBT data. Conversely,
  * you should never need to access the wand's NBT data directly when using this class, but the keys are public in the
  * unlikely case that this is necessary.
- * <p>
+ * <p></p>
  * Also note that none of the methods in this class actually check that the given ItemStack contains an ItemWand; you
  * can, for example, pass in a stack of snowballs without causing problems, but that is of course pointless! However, if
  * you have your own spell casting item (which doesn't extend ItemWand), this setup means you can still use this class
  * to manage its NBT structure.
- * <p>
+ * <p></p>
  * All <b>get</b> methods in this class return some kind of default if the passed-in wand stack has no nbt data. See
  * individual method descriptions for more details.<br>
  * All <b>set</b> methods in this class create a new nbt data for the passed-in wand if it has none, before doing
@@ -43,11 +46,13 @@ public final class WandHelper {
 	public static final String SPELL_ARRAY_KEY = "spells";
 	public static final String SELECTED_SPELL_KEY = "selectedSpell";
 	public static final String COOLDOWN_ARRAY_KEY = "cooldown";
+	public static final String MAX_COOLDOWN_ARRAY_KEY = "maxCooldown";
 	public static final String UPGRADES_KEY = "upgrades";
+	public static final String PROGRESSION_KEY = "progression";
 
 	private static final HashMap<Item, String> upgradeMap = new HashMap<Item, String>();
 
-	static{
+	static {
 		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
 		upgradeMap.put(WizardryItems.storage_upgrade, "storage");
 		upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");
@@ -56,7 +61,10 @@ public final class WandHelper {
 		upgradeMap.put(WizardryItems.cooldown_upgrade, "cooldown");
 		upgradeMap.put(WizardryItems.blast_upgrade, "blast");
 		upgradeMap.put(WizardryItems.attunement_upgrade, "attunement");
+		upgradeMap.put(WizardryItems.melee_upgrade, "melee");
 	}
+
+	// =================================================== Spells ===================================================
 
 	/**
 	 * Returns an array containing the spells currently bound to the given wand. As of Wizardry 1.1, this array is not
@@ -74,7 +82,7 @@ public final class WandHelper {
 			spells = new Spell[spellIDs.length];
 
 			for(int i = 0; i < spellIDs.length; i++){
-				spells[i] = Spell.get(spellIDs[i]);
+				spells[i] = Spell.byMetadata(spellIDs[i]);
 			}
 		}
 
@@ -92,7 +100,7 @@ public final class WandHelper {
 		int[] spellIDs = new int[spells.length];
 
 		for(int i = 0; i < spells.length; i++){
-			spellIDs[i] = spells[i] != null ? spells[i].id() : Spells.none.id();
+			spellIDs[i] = spells[i] != null ? spells[i].metadata() : Spells.none.metadata();
 		}
 
 		wand.getTagCompound().setIntArray(SPELL_ARRAY_KEY, spellIDs);
@@ -114,50 +122,90 @@ public final class WandHelper {
 
 		return Spells.none;
 	}
+	
+	/** Returns the spell after the currently selected spell for the given wand, or the 'none' spell if the wand has no
+	 * spell data. */
+	public static Spell getNextSpell(ItemStack wand){
+
+		Spell[] spells = getSpells(wand);
+		int index = getNextSpellIndex(wand);
+
+		if(index >= 0 && index < spells.length){
+			return spells[index];
+		}
+
+		return Spells.none;
+	}
+	
+	/** Returns the spell before the currently selected spell for the given wand, or the 'none' spell if the wand has no
+	 * spell data. */
+	public static Spell getPreviousSpell(ItemStack wand){
+
+		Spell[] spells = getSpells(wand);
+		int index = getPreviousSpellIndex(wand);
+
+		if(index >= 0 && index < spells.length){
+			return spells[index];
+		}
+
+		return Spells.none;
+	}
 
 	/** Selects the next spell in this wand's list of spells. */
 	public static void selectNextSpell(ItemStack wand){
 		// 5 here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
-		if(getSpells(wand).length < 0) setSpells(wand, new Spell[5]);
+		if(getSpells(wand).length < 0) setSpells(wand, new Spell[ItemWand.BASE_SPELL_SLOTS]);
 
 		if(wand.getTagCompound() != null){
-
-			int numberOfSpells = getSpells(wand).length;
-			int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
-
-			// Greater than or equal to so that if attunement upgrades are somehow removed by NBT modification it just
-			// resets.
-			if(selectedSpell >= numberOfSpells - 1){
-				selectedSpell = 0;
-			}else{
-				selectedSpell++;
-			}
-
-			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, selectedSpell);
-
+			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, getNextSpellIndex(wand));
 		}
 	}
 
 	/** Selects the previous spell in this wand's list of spells. */
 	public static void selectPreviousSpell(ItemStack wand){
-
 		// 5 here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
-		if(getSpells(wand).length < 0) setSpells(wand, new Spell[5]);
-		// This cannot possibly be null here, and yet I am getting an NPE...
+		if(getSpells(wand).length < 0) setSpells(wand, new Spell[ItemWand.BASE_SPELL_SLOTS]);
+
 		if(wand.getTagCompound() != null){
-
-			int numberOfSpells = getSpells(wand).length;
-			int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
-
-			if(selectedSpell <= 0){
-				selectedSpell = numberOfSpells - 1;
-			}else{
-				selectedSpell--;
-			}
-
-			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, selectedSpell);
+			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, getPreviousSpellIndex(wand));
 		}
 	}
+	
+	private static int getNextSpellIndex(ItemStack wand){
+
+		if(wand.getTagCompound() == null) wand.setTagCompound(new NBTTagCompound());
+		
+		int numberOfSpells = getSpells(wand).length;
+		int spellIndex = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+		
+		// Greater than or equal to so that if attunement upgrades are somehow removed by NBT modification it just
+		// resets.
+		if(spellIndex >= numberOfSpells - 1){
+			spellIndex = 0;
+		}else{
+			spellIndex++;
+		}
+		
+		return spellIndex;
+	}
+	
+	private static int getPreviousSpellIndex(ItemStack wand){
+
+		if(wand.getTagCompound() == null) wand.setTagCompound(new NBTTagCompound());
+		
+		int numberOfSpells = getSpells(wand).length;
+		int spellIndex = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+
+		if(spellIndex <= 0){
+			spellIndex = numberOfSpells - 1;
+		}else{
+			spellIndex--;
+		}
+
+		return spellIndex;
+	}
+
+	// ================================================== Cooldowns ==================================================
 
 	/**
 	 * Returns an array of the cooldowns for each spell bound to the given wand. As of Wizardry 1.1, this array is not
@@ -176,7 +224,8 @@ public final class WandHelper {
 		return cooldowns;
 	}
 
-	/** Sets the given wand's cooldown array. The array can be anywhere between 5 and 8 (inclusive) in length. */
+	/** Sets the given wand's cooldown array. The array can be anywhere between 5 and 8 (inclusive) in length.
+	 * Unlike {@link WandHelper#setCurrentCooldown(ItemStack, int)}, this will <b>not</b> set the max cooldowns. */
 	public static void setCooldowns(ItemStack wand, int[] cooldowns){
 
 		if(wand.getTagCompound() == null) wand.setTagCompound((new NBTTagCompound()));
@@ -208,8 +257,30 @@ public final class WandHelper {
 		// Don't need to check if the tag compound is null since the above check is equivalent.
 		return cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)];
 	}
+	
+	/** Returns the given wand's cooldown for the spell after the currently selected spell, or 0 if the wand has no
+	 * cooldown data. */
+	public static int getNextCooldown(ItemStack wand){
 
-	/** Sets the given wand's cooldown for the currently selected spell. */
+		int[] cooldowns = getCooldowns(wand);
+
+		if(cooldowns.length == 0) return 0;
+		// Don't need to check if the tag compound is null since the above check is equivalent.
+		return cooldowns[getNextSpellIndex(wand)];
+	}
+	
+	/** Returns the given wand's cooldown for the spell before the currently selected spell, or 0 if the wand has no
+	 * cooldown data. */
+	public static int getPreviousCooldown(ItemStack wand){
+
+		int[] cooldowns = getCooldowns(wand);
+
+		if(cooldowns.length == 0) return 0;
+		// Don't need to check if the tag compound is null since the above check is equivalent.
+		return cooldowns[getPreviousSpellIndex(wand)];
+	}
+
+	/** Sets the given wand's cooldown for the currently selected spell. Will also set the maximum cooldown. */
 	public static void setCurrentCooldown(ItemStack wand, int cooldown){
 
 		if(wand.getTagCompound() == null) wand.setTagCompound((new NBTTagCompound()));
@@ -223,7 +294,51 @@ public final class WandHelper {
 		cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)] = cooldown;
 
 		setCooldowns(wand, cooldowns);
+
+		int[] maxCooldowns = getMaxCooldowns(wand);
+
+		if(maxCooldowns.length == 0) maxCooldowns = new int[getSpells(wand).length];
+
+		maxCooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)] = cooldown;
+
+		setMaxCooldowns(wand, maxCooldowns);
 	}
+
+	/**
+	 * Returns an array of the max cooldowns for each spell bound to the given wand. If the wand has no cooldown data,
+	 * returns an array of length 0.
+	 */
+	public static int[] getMaxCooldowns(ItemStack wand){
+
+		int[] cooldowns = new int[0];
+
+		if(wand.getTagCompound() != null){
+
+			return wand.getTagCompound().getIntArray(MAX_COOLDOWN_ARRAY_KEY);
+		}
+
+		return cooldowns;
+	}
+
+	/** Sets the given wand's cooldown array. The array can be anywhere between 5 and 8 (inclusive) in length. */
+	public static void setMaxCooldowns(ItemStack wand, int[] cooldowns){
+
+		if(wand.getTagCompound() == null) wand.setTagCompound((new NBTTagCompound()));
+
+		wand.getTagCompound().setIntArray(MAX_COOLDOWN_ARRAY_KEY, cooldowns);
+	}
+
+	/** Returns the given wand's max cooldown for the currently selected spell, or 0 if the wand has no cooldown data. */
+	public static int getCurrentMaxCooldown(ItemStack wand){
+
+		int[] cooldowns = getMaxCooldowns(wand);
+
+		if(cooldowns.length == 0) return 0;
+		// Don't need to check if the tag compound is null since the above check is equivalent.
+		return cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)];
+	}
+
+	// ================================================== Upgrades ==================================================
 
 	/**
 	 * Returns the number of upgrades of the given type that have been applied to the given wand, or 0 if the wand has
@@ -258,7 +373,8 @@ public final class WandHelper {
 
 	/**
 	 * Applies the given upgrade to the given wand, or in other words increases the level for that upgrade by 1. This
-	 * does <b>not</b> account for the individual or total upgrade stack limits.
+	 * does <b>not</b> account for the individual or total upgrade stack limits or any special behaviour; it only deals
+	 * with the NBT data.
 	 */
 	public static void applyUpgrade(ItemStack wand, Item upgrade){
 
@@ -313,4 +429,28 @@ public final class WandHelper {
 			throw new IllegalArgumentException("Duplicate wand upgrade identifier: " + identifier);
 		upgradeMap.put(upgrade, identifier);
 	}
+
+	// ================================================= Progression =================================================
+
+	/** Sets the given wand's progression to the given value. */
+	public static void setProgression(ItemStack wand, int progression){
+
+		if(wand.getTagCompound() == null) wand.setTagCompound((new NBTTagCompound()));
+
+		wand.getTagCompound().setInteger(PROGRESSION_KEY, progression);
+	}
+
+	/** Returns the progression value for the given wand, or 0 if the wand has no data. */
+	public static int getProgression(ItemStack wand){
+
+		if(wand.getTagCompound() == null) return 0;
+
+		return wand.getTagCompound().getInteger(PROGRESSION_KEY);
+	}
+
+	/** Adds the given amount of progression to this wand's progression value. */
+	public static void addProgression(ItemStack wand, int progression){
+		setProgression(wand, getProgression(wand) + progression);
+	}
+
 }

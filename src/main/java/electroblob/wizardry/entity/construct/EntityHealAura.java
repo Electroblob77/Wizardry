@@ -1,18 +1,23 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
-import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class EntityHealAura extends EntityMagicConstruct {
+
+	// TODO: Implement blast modifiers
 
 	public EntityHealAura(World world){
 		super(world);
@@ -20,25 +25,18 @@ public class EntityHealAura extends EntityMagicConstruct {
 		this.width = 5.0f;
 	}
 
-	public EntityHealAura(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
-		this.height = 1.0f;
-		this.width = 5.0f;
-	}
-
+	@Override
 	public void onUpdate(){
 
 		if(this.ticksExisted % 25 == 1){
-			this.playSound(WizardrySounds.SPELL_LOOP_SPARKLE, 0.1f, 1.0f);
+			this.playSound(WizardrySounds.ENTITY_HEAL_AURA_AMBIENT, 0.1f, 1.0f);
 		}
 
 		super.onUpdate();
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5d, this.posX, this.posY,
-					this.posZ, this.world);
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 
@@ -53,9 +51,9 @@ public class EntityHealAura extends EntityMagicConstruct {
 						if(this.getCaster() != null){
 							target.attackEntityFrom(
 									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT),
-									1 * damageMultiplier);
+									Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
 						}else{
-							target.attackEntityFrom(DamageSource.MAGIC, 1 * damageMultiplier);
+							target.attackEntityFrom(DamageSource.MAGIC, Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
 						}
 
 						// Removes knockback
@@ -65,24 +63,25 @@ public class EntityHealAura extends EntityMagicConstruct {
 					}
 
 				}else if(target.getHealth() < target.getMaxHealth() && this.ticksExisted % 5 == 0){
-					target.heal(1 * damageMultiplier);
+					target.heal(Spells.healing_aura.getProperty(Spell.HEALTH).floatValue() * damageMultiplier);
 				}
 			}
 		}else{
-			for(int i = 1; i < 3; i++){
+			for(int i=1; i<3; i++){
 				float brightness = 0.5f + (rand.nextFloat() * 0.5f);
 				double radius = rand.nextDouble() * 2.0;
-				double angle = rand.nextDouble() * Math.PI * 2;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX + radius * Math.cos(angle),
-						this.posY, this.posZ + radius * Math.sin(angle), 0, 0.05f, 0, 48 + this.rand.nextInt(12), 1.0f,
-						1.0f, brightness);
+				float angle = rand.nextFloat() * (float)Math.PI * 2;;
+				ParticleBuilder.create(Type.SPARKLE)
+				.pos(this.posX + radius * MathHelper.cos(angle), this.posY, this.posZ + radius * MathHelper.sin(angle))
+				.vel(0, 0.05, 0)
+				.time(48 + this.rand.nextInt(12))
+				.clr(1.0f, 1.0f, brightness)
+				.spawn(world);
 			}
 		}
 	}
 
-	/**
-	 * Return whether this entity should be rendered as on fire.
-	 */
+	@Override
 	public boolean canRenderOnFire(){
 		return false;
 	}

@@ -18,7 +18,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 
 	public EntityLiving creature;
 	private NBTTagCompound entityCompound;
-	private String entityName;
+	private ResourceLocation entityName;
 	private float entityYawHead;
 	private float entityYawOffset;
 	public boolean isIce;
@@ -95,8 +95,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 
 		// System.out.println(entityName);
 		if(this.creature == null && entityName != null){
-			this.creature = (EntityLiving)EntityList.createEntityByIDFromName(new ResourceLocation(this.entityName),
-					this.world);
+			this.creature = (EntityLiving)EntityList.createEntityByIDFromName(this.entityName, this.world);
 			if(this.creature != null){
 				this.creature.readFromNBT(entityCompound);
 				this.creature.rotationYawHead = this.entityYawHead;
@@ -133,7 +132,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 		position = tagCompound.getInteger("position");
 		parts = tagCompound.getInteger("parts");
 		entityCompound = tagCompound.getCompoundTag("entity");
-		entityName = tagCompound.getString("entityName");
+		entityName = new ResourceLocation(tagCompound.getString("entityName"));
 		timer = tagCompound.getInteger("timer");
 		lifetime = tagCompound.getInteger("lifetime");
 		isIce = tagCompound.getBoolean("isIce");
@@ -149,7 +148,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 		entityCompound = new NBTTagCompound();
 		if(creature != null){
 			creature.writeToNBT(entityCompound);
-			tagCompound.setString("entityName", EntityList.getEntityString(creature));
+			tagCompound.setString("entityName", EntityList.getKey(creature).toString());
 			tagCompound.setFloat("entityYawHead", creature.rotationYawHead);
 			tagCompound.setFloat("entityYawOffset", creature.renderYawOffset);
 		}

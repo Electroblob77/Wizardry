@@ -1,12 +1,8 @@
 package electroblob.wizardry.loot;
 
-import java.util.List;
-import java.util.Random;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.item.ItemSpellBook;
@@ -17,6 +13,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Loot function that allows spell books to select a random spell from the spells used by the ISpellCaster that dropped
@@ -40,7 +39,7 @@ public class WizardSpell extends LootFunction {
 		if(context.getLootedEntity() instanceof ISpellCaster){
 			List<Spell> spells = ((ISpellCaster)context.getLootedEntity()).getSpells();
 			spells.remove(Spells.magic_missile); // Can't drop magic missile
-			stack.setItemDamage(spells.get(random.nextInt(spells.size())).id());
+			stack.setItemDamage(spells.get(random.nextInt(spells.size())).metadata());
 		}else{
 			Wizardry.logger.warn("Applying the wizard_spell loot function to an entity that isn't a spell caster.");
 		}

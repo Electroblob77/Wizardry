@@ -3,14 +3,11 @@ package electroblob.wizardry.entity.living;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -25,12 +22,9 @@ public class EntityIceWraith extends EntityBlazeMinion {
 	/** The version from EntityLivingBase is only used in onLivingUpdate, so it can safely be copied. */
 	private int jumpTicks;
 
+	/** Creates a new ice wraith in the given world. */
 	public EntityIceWraith(World world){
 		super(world);
-	}
-
-	public EntityIceWraith(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		this.isImmuneToFire = false;
 	}
 
@@ -50,9 +44,13 @@ public class EntityIceWraith extends EntityBlazeMinion {
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX - 0.5d + rand.nextDouble(),
-						this.posY + this.height / 2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0,
-						0.05f, 0, 20 + rand.nextInt(10), brightness, brightness + 0.1f, 1.0f);
+				ParticleBuilder.create(Type.SPARKLE)
+				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(),
+						this.posZ - 0.5d + rand.nextDouble())
+				.vel(0, 0.05f, 0)
+				.time(20 + rand.nextInt(10))
+				.clr(brightness, brightness + 0.1f, 1.0f)
+				.spawn(world);
 			}
 		}
 	}
@@ -65,7 +63,7 @@ public class EntityIceWraith extends EntityBlazeMinion {
 		}
 
 		if(this.rand.nextInt(24) == 0){
-			this.playSound(WizardrySounds.SPELL_LOOP_WIND, 0.3F + this.rand.nextFloat() / 4,
+			this.playSound(WizardrySounds.ENTITY_ICE_WRAITH_AMBIENT, 0.3F + this.rand.nextFloat() / 4,
 					this.rand.nextFloat() * 0.7F + 1.4F);
 		}
 
@@ -180,14 +178,24 @@ public class EntityIceWraith extends EntityBlazeMinion {
 	@Override
 	public boolean isBurning(){
 		// Uses the datawatcher on both sides because fire is private to Entity (and I'm not using reflection here).
-		// TESTME: This should work, but there may be some issues with updating, so if it doesn't work, copy the
+		// This should work, but there may be some issues with updating, so if it doesn't work, copy the
 		// version from Entity and use reflection to access the fire field.
 		return this.getFlag(0);
 	}
 
+	@Override
+	public boolean getCanSpawnHere(){
+		// Only spawns in the specified dimensions
+		for(int id : Wizardry.settings.mobSpawnDimensions){
+			if(this.dimension == id) return super.getCanSpawnHere() && this.isValidLightLevel();
+		}
+
+		return false;
+	}
+
 	/**
 	 * Copied straight from EntityBlaze.AIFireballAttack, with the only changes being replacement of fireball spawning
-	 * with a one-liner call to WizardryRegistry.iceShard.cast(...) and the removal of redundant local variables.
+	 * with a one-liner call to WizardryLoot.iceShard.cast(...) and the removal of redundant local variables.
 	 */
 	static class AIIceShardAttack extends EntityAIBase {
 
@@ -200,35 +208,28 @@ public class EntityIceWraith extends EntityBlazeMinion {
 			this.setMutexBits(3);
 		}
 
-		/**
-		 * Returns whether the EntityAIBase should begin execution.
-		 */
+		@Override
 		public boolean shouldExecute(){
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
 			return entitylivingbase != null && entitylivingbase.isEntityAlive();
 		}
 
-		/**
-		 * Execute a one shot task or start executing a continuous task
-		 */
+		@Override
 		public void startExecuting(){
 			this.attackStep = 0;
 		}
 
-		/**
-		 * Resets the task
-		 */
+		@Override
 		public void resetTask(){
 			// This might be called setOnFire, but what it really controls is whether the wraith is in attack mode.
 			this.blaze.setOnFire(false);
 		}
 
-		/**
-		 * Updates the task
-		 */
+		@Override
 		public void updateTask(){
 			--this.attackTime;
 			EntityLivingBase entitylivingbase = this.blaze.getAttackTarget();
+			if(entitylivingbase == null) return; // Dynamic stealth breaks things, let's un-break them
 			double d0 = this.blaze.getDistanceSq(entitylivingbase);
 
 			if(d0 < 4.0D){
@@ -258,7 +259,6 @@ public class EntityIceWraith extends EntityBlazeMinion {
 						// Proof, if it were at all needed, of the elegance and versatility of the spell system.
 						Spells.ice_shard.cast(this.blaze.world, this.blaze, EnumHand.MAIN_HAND, 0, entitylivingbase,
 								new SpellModifiers());
-						// TODO: Decide if an event should be fired here. I'm guessing no.
 					}
 				}
 

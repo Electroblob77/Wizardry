@@ -1,23 +1,17 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -30,7 +24,8 @@ public class FreezingWeapon extends Spell {
 	public static final String FREEZING_ARROW_NBT_KEY = "frostLevel";
 
 	public FreezingWeapon(){
-		super(Tier.ADVANCED, 35, Element.ICE, "freezing_weapon", SpellType.UTILITY, 70, EnumAction.BOW, false);
+		super("freezing_weapon", EnumAction.BOW, false);
+		addProperties(EFFECT_DURATION);
 	}
 
 	@Override
@@ -42,30 +37,28 @@ public class FreezingWeapon extends Spell {
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
 
-				if((stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemBow)
+				if((ImbueWeapon.isSword(stack.getItem()) || ImbueWeapon.isBow(stack.getItem()))
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.freezing_weapon)){
 					// The enchantment level as determined by the damage multiplier. The + 0.5f is so that
 					// weird float processing doesn't incorrectly round it down.
 					stack.addEnchantment(WizardryEnchantments.freezing_weapon,
-							modifiers.get(SpellModifiers.DAMAGE) == 1.0f ? 1
-									: (int)((modifiers.get(SpellModifiers.DAMAGE) - 1.0f)
-											/ Constants.DAMAGE_INCREASE_PER_TIER + 0.5f));
+							modifiers.get(SpellModifiers.POTENCY) == 1.0f ? 1
+									: (int)((modifiers.get(SpellModifiers.POTENCY) - 1.0f)
+											/ Constants.POTENCY_INCREASE_PER_TIER + 0.5f));
 
 					WizardData.get(caster).setImbuementDuration(WizardryEnchantments.freezing_weapon,
-							(int)(900 * modifiers.get(WizardryItems.duration_upgrade)));
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 
 					if(world.isRemote){
-						for(int i = 0; i < 10; i++){
-							double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
-							double y1 = (double)((float)WizardryUtilities.getPlayerEyesPos(caster) - 0.5F
-									+ world.rand.nextFloat());
-							double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
-							Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1, 0, 0.1F, 0,
-									48 + world.rand.nextInt(12), 0.9f, 0.7f, 1.0f);
+						for(int i=0; i<10; i++){
+							double x = caster.posX + world.rand.nextDouble() * 2 - 1;
+							double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+							double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
+							ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(0.9f, 0.7f, 1).spawn(world);
 						}
 					}
 
-					WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1.0f, 1.0f);
+					this.playSound(world, caster, ticksInUse, -1, modifiers);
 					return true;
 
 				}

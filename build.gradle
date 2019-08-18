@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "4.1.4"
+version = "4.2.0" // There, it matches semver, happy now? (I am just gonna rename the file afterwards, you know that right?)
 group= "electroblob.wizardry"// http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ElectroblobsWizardry"
 
@@ -20,8 +20,30 @@ compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
+repositories {
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "modmaven.k-4u.nl"
+    }
+    flatDir {
+        // evErYthINg hAS tO Be a mAVeN rEPoSiTOrY... (to use deobfProvided, for some reason)
+        // The lack of documentation is actually quite impressive, see the following threads:
+        // http://www.minecraftforge.net/forum/topic/44262-solved-how-to-build-mod-with-dependencies/
+        // https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/mapping-and-modding-tutorials/2866817-setting-up-dependencies-in-minecraft-forge-with
+        // http://www.minecraftforge.net/forum/topic/44534-adding-dependencies-to-a-forge-project/
+        dirs "libsfordeobf" // Don't use libs or forge will think you have duplicate mods
+    }
+
+}
+
 minecraft {
-    version = "1.12.2-14.23.2.2611"
+    version = "1.12.2-14.23.5.2814"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -38,6 +60,17 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
+
+    // compile against the JEI API but do not include it at runtime
+    deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+    // at runtime, use the full JEI jar
+    runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+
+    //deobfProvided "baubles:baubles-1.12:1.5.2:api" // #ihavenoideawhatimdoing #itjustworks
+    //runtime "baubles:baubles-1.12:1.5.2" // If in doubt, copy what already works
+
+    //deobfProvided "antiqueatlas:antiqueatlas-1.12.2:4.5.1:src"
+    //runtime "antiqueatlas:antiqueatlas-1.12.2:4.5.1"
       
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env

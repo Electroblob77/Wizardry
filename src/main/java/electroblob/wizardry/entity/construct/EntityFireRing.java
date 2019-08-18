@@ -1,26 +1,23 @@
 package electroblob.wizardry.entity.construct;
 
-import java.util.List;
-
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class EntityFireRing extends EntityMagicConstruct {
 
-	public EntityFireRing(World par1World){
-		super(par1World);
-		this.height = 1.0f;
-		this.width = 5.0f;
-	}
+	// TODO: Implement blast modifiers
 
-	public EntityFireRing(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
+	public EntityFireRing(World world){
+		super(world);
 		this.height = 1.0f;
 		this.width = 5.0f;
 	}
@@ -28,7 +25,7 @@ public class EntityFireRing extends EntityMagicConstruct {
 	public void onUpdate(){
 
 		if(this.ticksExisted % 40 == 1){
-			this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 4.0f, 0.7f);
+			this.playSound(WizardrySounds.ENTITY_FIRE_RING_AMBIENT, 4.0f, 0.7f);
 		}
 
 		super.onUpdate();
@@ -48,14 +45,15 @@ public class EntityFireRing extends EntityMagicConstruct {
 
 					if(!MagicDamage.isEntityImmune(DamageType.FIRE, target)){
 
-						target.setFire(10);
+						target.setFire(Spells.ring_of_fire.getProperty(Spell.BURN_DURATION).intValue());
+
+						float damage = Spells.ring_of_fire.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier;
 
 						if(this.getCaster() != null){
-							target.attackEntityFrom(
-									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.FIRE),
-									1 * damageMultiplier);
+							target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(),
+									DamageType.FIRE), damage);
 						}else{
-							target.attackEntityFrom(DamageSource.MAGIC, 1 * damageMultiplier);
+							target.attackEntityFrom(DamageSource.MAGIC, damage);
 						}
 					}
 

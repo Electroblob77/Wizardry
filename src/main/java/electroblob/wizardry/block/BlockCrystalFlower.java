@@ -1,10 +1,8 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryBlocks;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -18,6 +16,8 @@ import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Random;
 
 // Extending BlockBush allows me to remove nearly everything from this class.
 @Mod.EventBusSubscriber
@@ -41,10 +41,10 @@ public class BlockCrystalFlower extends BlockBush {
 	@Override
 	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random random){
 		if(world.isRemote && random.nextBoolean()){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, pos.getX() + random.nextDouble(),
-					pos.getY() + random.nextDouble() / 2 + 0.5, pos.getZ() + random.nextDouble(), 0d, 0.01, 0d,
-					20 + random.nextInt(10), 0.5f + (random.nextFloat() / 2), 0.5f + (random.nextFloat() / 2),
-					0.5f + (random.nextFloat() / 2));
+			ParticleBuilder.create(Type.SPARKLE)
+			.pos(pos.getX() + random.nextDouble(), pos.getY() + random.nextDouble() / 2 + 0.5, pos.getZ() + random.nextDouble()).vel(0, 0.01, 0)
+					.time(20 + random.nextInt(10)).clr(0.5f + (random.nextFloat() / 2), 0.5f + (random.nextFloat() / 2),
+					0.5f + (random.nextFloat() / 2)).spawn(world);
 		}
 	}
 

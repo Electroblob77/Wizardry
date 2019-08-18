@@ -1,0 +1,6 @@
+{
+    "parent": "item/handheld",
+    "textures": {
+        "layer0": "ebwizardry:items/frost_axe_conjuring_4"
+    }
+}

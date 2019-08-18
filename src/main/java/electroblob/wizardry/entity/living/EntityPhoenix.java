@@ -1,9 +1,7 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.Collections;
-import java.util.List;
-
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -13,7 +11,6 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
@@ -22,23 +19,23 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
+import java.util.List;
+
 public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaster {
 
 	private double AISpeed = 0.5;
 
 	// Can attack for 7 seconds, then must cool down for 3.
-	private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 60, 140);
+	private EntityAIAttackSpell<EntityPhoenix> spellAttackAI = new EntityAIAttackSpell<>(this, AISpeed, 15f, 60, 140);
 
 	private Spell continuousSpell;
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.flame_ray);
 
+	/** Creates a new phoenix in the given world. */
 	public EntityPhoenix(World world){
 		super(world);
-	}
-
-	public EntityPhoenix(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		this.isImmuneToFire = true;
 		this.height = 2.0f;
 		// For some reason this can't be in initEntityAI
@@ -100,17 +97,17 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 
 	@Override
 	protected SoundEvent getAmbientSound(){
-		return SoundEvents.ENTITY_BLAZE_AMBIENT;
+		return WizardrySounds.ENTITY_PHOENIX_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source){
-		return SoundEvents.ENTITY_BLAZE_HURT;
+		return WizardrySounds.ENTITY_PHOENIX_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound(){
-		return SoundEvents.ENTITY_BLAZE_DEATH;
+		return WizardrySounds.ENTITY_PHOENIX_DEATH;
 	}
 
 	@Override
@@ -147,9 +144,9 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	public void onLivingUpdate(){
 
 		// Makes the phoenix hover.
-		int floorLevel = WizardryUtilities.getNearestFloorLevel(world, new BlockPos(this), 4);
+		Integer floorLevel = WizardryUtilities.getNearestFloor(world, new BlockPos(this), 4);
 
-		if(this.posY - floorLevel > 3){
+		if(floorLevel == null || this.posY - floorLevel > 3){
 			this.motionY = -0.1;
 		}else if(this.posY - floorLevel < 2){
 			this.motionY = 0.1;
@@ -159,13 +156,13 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 
 		// Living sound
 		if(this.rand.nextInt(24) == 0){
-			this.playSound(SoundEvents.BLOCK_FIRE_AMBIENT, 1.0F + this.rand.nextFloat(),
+			this.playSound(WizardrySounds.ENTITY_PHOENIX_BURN, 1.0F + this.rand.nextFloat(),
 					this.rand.nextFloat() * 0.7F + 0.3F);
 		}
 
 		// Flapping sound effect
 		if(this.ticksExisted % 22 == 0){
-			this.playSound(SoundEvents.ENTITY_ENDERDRAGON_FLAP, 1.0F, 1.0f);
+			this.playSound(WizardrySounds.ENTITY_PHOENIX_FLAP, 1.0F, 1.0f);
 		}
 
 		for(int i = 0; i < 2; i++){
@@ -185,8 +182,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	}
 
 	@Override
-	public void fall(float distance, float damageMultiplier){
-	} // Immune to fall damage
+	public void fall(float distance, float damageMultiplier){} // Immune to fall damage
 
 	@Override
 	public boolean isBurning(){

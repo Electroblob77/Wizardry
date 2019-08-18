@@ -1,103 +1,115 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class WallOfFrost extends Spell {
+public class WallOfFrost extends SpellRay {
 
+	private static final int MINIMUM_PLACEMENT_RANGE = 2;
+	
 	public WallOfFrost(){
-		super(Tier.MASTER, 15, Element.ICE, "wall_of_frost", SpellType.UTILITY, 0, EnumAction.NONE, true);
+		super("wall_of_frost", true, EnumAction.NONE);
+		this.particleVelocity(1);
+		this.particleSpacing(0.5);
+		addProperties(DURATION);
+		soundValues(0.5f, 1, 0);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
+	}
 
-		// IDEA: Use frosted ice instead of ice statue
+	@Override
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
 
-		Vec3d look = caster.getLookVec();
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
+	}
 
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(10 * modifiers.get(WizardryItems.range_upgrade), world,
-				caster, true);
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+		// Wall of frost now freezes entities solid too!
+		if(target instanceof EntityLiving && !world.isRemote){
+			// Unchecked cast is fine because the block is a static final field
+			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
+					(int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+				
+				target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
+			}
+		}
+		
+		return true;
+	}
 
-		if(rayTrace != null && !world.isRemote){
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-			BlockPos pos = rayTrace.getBlockPos();
+		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
 
 			// Stops the ice being placed floating above snow and grass. Directions other than up included for
 			// completeness.
 			if(WizardryUtilities.canBlockBeReplaced(world, pos)){
 				// Moves the blockpos back into the block
-				pos = pos.offset(rayTrace.sideHit.getOpposite());
+				pos = pos.offset(side.getOpposite());
 			}
 
-			if(caster.getDistance(pos.getX(), pos.getY(), pos.getZ()) > 2
-					&& world.getBlockState(pos).getBlock() != WizardryBlocks.ice_statue){
+			if(origin.squareDistanceTo(pos.getX(), pos.getY(), pos.getZ()) > MINIMUM_PLACEMENT_RANGE * MINIMUM_PLACEMENT_RANGE
+					&& world.getBlockState(pos).getBlock() != WizardryBlocks.ice_statue && world.getBlockState(pos).getBlock() != WizardryBlocks.dry_frosted_ice){
 
-				pos = pos.offset(rayTrace.sideHit);
+				pos = pos.offset(side);
+				
+				int duration = (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 
 				if(WizardryUtilities.canBlockBeReplaced(world, pos)){
-					world.setBlockState(pos, WizardryBlocks.ice_statue.getDefaultState());
+					world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
+					world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 				}
 
 				// Builds a 2 block high wall if it hits the ground
-				if(rayTrace.sideHit == EnumFacing.UP){
-					pos = pos.offset(rayTrace.sideHit);
+				if(side == EnumFacing.UP){
+					pos = pos.offset(side);
 
 					if(WizardryUtilities.canBlockBeReplaced(world, pos)){
-						world.setBlockState(pos, WizardryBlocks.ice_statue.getDefaultState());
+						world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
+						world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 					}
 				}
 			}
 		}
-
-		for(int i = 0; i < 20; i++){
-
-			if(world.isRemote){
-
-				double x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				double y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-						+ world.rand.nextFloat() / 5 - 0.1f;
-				double z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-						look.x * modifiers.get(WizardryItems.range_upgrade),
-						look.y * modifiers.get(WizardryItems.range_upgrade),
-						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 0.4f,
-						0.6f, 1.0f);
-
-				x1 = caster.posX + look.x * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				y1 = WizardryUtilities.getPlayerEyesPos(caster) - 0.4f + look.y * i / 2
-						+ world.rand.nextFloat() / 5 - 0.1f;
-				z1 = caster.posZ + look.z * i / 2 + world.rand.nextFloat() / 5 - 0.1f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, x1, y1, z1,
-						look.x * modifiers.get(WizardryItems.range_upgrade),
-						look.y * modifiers.get(WizardryItems.range_upgrade),
-						look.z * modifiers.get(WizardryItems.range_upgrade), 8 + world.rand.nextInt(12), 1.0f,
-						1.0f, 1.0f);
-			}
-		}
-
-		if(ticksInUse % 12 == 0){
-			if(ticksInUse == 0) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 0.5F, 1.0f);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_ICE, 0.5F, 1.0f);
-		}
-
+		
 		return true;
+	}
+
+	@Override
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
+		return true;
+	}
+	
+	@Override
+	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
+		float brightness = world.rand.nextFloat();
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(12))
+		.clr(0.4f + 0.6f * brightness, 0.6f + 0.4f*brightness, 1).spawn(world);
+		ParticleBuilder.create(Type.SNOW).pos(x, y, z).vel(vx, vy, vz).time(8 + world.rand.nextInt(12)).spawn(world);
 	}
 
 }

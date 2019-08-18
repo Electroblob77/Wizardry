@@ -19,12 +19,7 @@ public class PacketTransportation implements IMessageHandler<Message, IMessage> 
 		if(ctx.side.isClient()){
 			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
 			// methods any more than necessary.
-			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable(){
-				@Override
-				public void run(){
-					Wizardry.proxy.handleTransportationPacket(message);
-				}
-			});
+			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> Wizardry.proxy.handleTransportationPacket(message));
 		}
 
 		return null;

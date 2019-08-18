@@ -21,13 +21,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		if(ctx.side.isClient()){
 			// Using a fully qualified name is a good course of action here; we don't really want to clutter the proxy
 			// any more than necessary.
-			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(new Runnable(){
-				@Override
-				public void run(){
-					copySettings(message);
-				}
-			});
-
+			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> copySettings(message));
 		}
 
 		return null;
@@ -35,16 +29,14 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 
 	private static void copySettings(Message message){
 		Wizardry.settings.discoveryMode = message.settings.discoveryMode;
-		// Wizardry.settings.maxSpellCommandMultiplier = message.settings.maxSpellCommandMultiplier;
-		// Wizardry.settings.castCommandName = message.settings.castCommandName;
-		// Wizardry.settings.discoverspellCommandName = message.settings.discoverspellCommandName;
-		// Wizardry.settings.allyCommandName = message.settings.allyCommandName;
-		// Wizardry.settings.alliesCommandName = message.settings.alliesCommandName;
+		Wizardry.settings.creativeBypassesArcaneLock = message.settings.creativeBypassesArcaneLock;
+		Wizardry.settings.slowTimeAffectsPlayers = message.settings.slowTimeAffectsPlayers;
+		Wizardry.settings.forfeitChance = message.settings.forfeitChance;
 	}
 
 	public static class Message implements IMessage {
 
-		/** EntityID of the caster */
+		/** Instance of wizardry's settings object */
 		public Settings settings;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
@@ -62,21 +54,17 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings = new Settings();
 			// The order is important
 			settings.discoveryMode = buf.readBoolean();
-			// settings.maxSpellCommandMultiplier = buf.readDouble();
-			// settings.castCommandName = ByteBufUtils.readUTF8String(buf);
-			// settings.discoverspellCommandName = ByteBufUtils.readUTF8String(buf);
-			// settings.allyCommandName = ByteBufUtils.readUTF8String(buf);
-			// settings.alliesCommandName = ByteBufUtils.readUTF8String(buf);
+			settings.creativeBypassesArcaneLock = buf.readBoolean();
+			settings.slowTimeAffectsPlayers = buf.readBoolean();
+			settings.forfeitChance = buf.readFloat();
 		}
 
 		@Override
 		public void toBytes(ByteBuf buf){
 			buf.writeBoolean(settings.discoveryMode);
-			// buf.writeDouble(settings.maxSpellCommandMultiplier);
-			// ByteBufUtils.writeUTF8String(buf, settings.castCommandName);
-			// ByteBufUtils.writeUTF8String(buf, settings.discoverspellCommandName);
-			// ByteBufUtils.writeUTF8String(buf, settings.allyCommandName);
-			// ByteBufUtils.writeUTF8String(buf, settings.alliesCommandName);
+			buf.writeBoolean(settings.creativeBypassesArcaneLock);
+			buf.writeBoolean(settings.slowTimeAffectsPlayers);
+			buf.writeFloat((float)settings.forfeitChance); // Configs don't have floats but this can only be 0-1 anyway
 		}
 	}
 }

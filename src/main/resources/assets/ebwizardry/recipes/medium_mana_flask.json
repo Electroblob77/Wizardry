@@ -1,0 +1,50 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "yyy",
+        "yxy",
+        "yyy"
+    ],
+    "key": {
+        "x": {
+            "item": "minecraft:glass_bottle"
+        },
+        "y": [
+            {
+				"item": "ebwizardry:magic_crystal",
+				"data": 0
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 1
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 2
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 3
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 4
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 5
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 6
+			},
+			{
+				"item": "ebwizardry:magic_crystal",
+				"data": 7
+			}
+        ]
+    },
+    "result": {
+        "item": "ebwizardry:medium_mana_flask"
+    }
+}

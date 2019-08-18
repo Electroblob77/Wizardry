@@ -1,12 +1,18 @@
 package electroblob.wizardry.packet;
 
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.packet.PacketControlInput.Message;
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.spell.Possession;
+import electroblob.wizardry.spell.Resurrection;
 import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
-import electroblob.wizardry.util.WandHelper;
+import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -22,45 +28,100 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 			final EntityPlayerMP player = ctx.getServerHandler().player;
 
-			player.getServerWorld().addScheduledTask(new Runnable(){
+			player.getServerWorld().addScheduledTask(() -> {
 
-				public void run(){
+				ItemStack wand = player.getHeldItemMainhand();
 
-					ItemStack wand = player.getHeldItemMainhand();
+				if(!(wand.getItem() instanceof ISpellCastingItem)){
+					wand = player.getHeldItemOffhand();
+				}
 
-					if(!(wand.getItem() instanceof ItemWand)){
-						wand = player.getHeldItemOffhand();
-					}
+				switch(message.controlType){
 
-					switch(message.controlType){
+				case APPLY_BUTTON:
 
-					case APPLY_BUTTON:
-
+					if(!(player.openContainer instanceof ContainerArcaneWorkbench)){
+						Wizardry.logger.warn("Received a PacketControlInput, but the player that sent it was not " +
+								"currently using an arcane workbench. This should not happen!");
+					}else{
 						((ContainerArcaneWorkbench)player.openContainer).onApplyButtonPressed(player);
-						break;
-
-					case NEXT_SPELL_KEY:
-
-						if(wand.getItem() instanceof ItemWand){
-
-							WandHelper.selectNextSpell(wand);
-							// This line fixes the bug with continuous spells casting when they shouldn't be
-							player.stopActiveHand();
-						}
-
-						break;
-
-					case PREVIOUS_SPELL_KEY:
-
-						if(wand.getItem() instanceof ItemWand){
-
-							WandHelper.selectPreviousSpell(wand);
-							// This line fixes the bug with continuous spells casting when they shouldn't be
-							player.stopActiveHand();
-						}
-
-						break;
 					}
+
+					break;
+
+				case NEXT_SPELL_KEY:
+
+					if(wand.getItem() instanceof ISpellCastingItem){
+
+						((ISpellCastingItem)wand.getItem()).selectNextSpell(wand);
+						// This line fixes the bug with continuous spells casting when they shouldn't be
+						player.stopActiveHand();
+					}
+
+					break;
+
+				case PREVIOUS_SPELL_KEY:
+
+					if(wand.getItem() instanceof ISpellCastingItem){
+
+						((ISpellCastingItem)wand.getItem()).selectPreviousSpell(wand);
+						// This line fixes the bug with continuous spells casting when they shouldn't be
+						player.stopActiveHand();
+					}
+
+					break;
+
+				case RESURRECT_BUTTON:
+
+					if(player.isDead && Resurrection.getRemainingWaitTime(player.deathTime) == 0){
+
+						ItemStack stack = WizardryUtilities.getHotbar(player).stream()
+								.filter(s -> Resurrection.canStackResurrect(s, player)).findFirst().orElse(null);
+
+						if(stack != null){
+							// This should suffice, since this is the only way a player can cast resurrection when dead!
+							((ISpellCastingItem)stack.getItem()).cast(stack, Spells.resurrection, player, EnumHand.MAIN_HAND, 0, new SpellModifiers());
+							break;
+						}
+					}
+
+					Wizardry.logger.warn("Received a resurrect button packet, but the player that sent it was not" +
+							" currently able to resurrect. This should not happen!");
+
+					break;
+
+				case CANCEL_RESURRECT:
+
+					if(player.world.getGameRules().getBoolean("keepInventory")) break; // Shouldn't even receive this
+
+					if(player.isDead){
+
+						ItemStack stack = WizardryUtilities.getHotbar(player).stream()
+								.filter(s -> Resurrection.canStackResurrect(s, player)).findFirst().orElse(null);
+
+						if(stack != null){
+							player.dropItem(stack, true, false);
+							player.inventory.deleteStack(stack); // Might as well
+							break;
+						}
+
+						Wizardry.logger.warn("Received a cancel resurrect packet, but the player that sent it was not" +
+								" holding a wand with the resurrection spell. This should not happen!");
+					}
+
+					Wizardry.logger.warn("Received a cancel resurrect packet, but the player that sent it was not" +
+							" currently dead. This should not happen!");
+
+					break;
+
+				case POSSESSION_PROJECTILE:
+
+					if(!Possession.isPossessing(player)) Wizardry.logger.warn("Received a possession projectile packet, " +
+							"but the player that sent it is not currently possessing anything!");
+
+					Possession.shootProjectile(player);
+
+					break;
 				}
 			});
 		}
@@ -68,8 +129,8 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 		return null;
 	}
 
-	public static enum ControlType {
-		APPLY_BUTTON, NEXT_SPELL_KEY, PREVIOUS_SPELL_KEY;
+	public enum ControlType {
+		APPLY_BUTTON, NEXT_SPELL_KEY, PREVIOUS_SPELL_KEY, RESURRECT_BUTTON, CANCEL_RESURRECT, POSSESSION_PROJECTILE
 	}
 
 	public static class Message implements IMessage {

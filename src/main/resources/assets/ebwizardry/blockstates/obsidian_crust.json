@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "age=0": { "model": "ebwizardry:obsidian_crust_0" },
+        "age=1": { "model": "ebwizardry:obsidian_crust_1" },
+        "age=2": { "model": "ebwizardry:obsidian_crust_2" },
+        "age=3": { "model": "ebwizardry:obsidian_crust_3" }
+    }
+}

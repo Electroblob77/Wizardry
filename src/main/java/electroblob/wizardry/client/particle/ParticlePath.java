@@ -1,69 +1,47 @@
 package electroblob.wizardry.client.particle;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.spell.Clairvoyance;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-public class ParticlePath extends ParticleCustomTexture {
+//@SideOnly(Side.CLIENT)
+@Mod.EventBusSubscriber(Side.CLIENT)
+public class ParticlePath extends ParticleWizardry {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID,
-			"textures/particle/path_particles.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "particle/path");
 
 	private final double originX, originY, originZ;
 
-	public ParticlePath(World world, double x, double y, double z, double vx, double vy, double vz, float r, float g,
-			float b){
-		super(world, x, y, z, vx, vy, vz);
-		this.setRBGColorF(r, g, b);
+	public ParticlePath(World world, double x, double y, double z){
+		
+		super(world, x, y, z, TEXTURE); // This particle only has 1 texture
+		
 		this.originX = x;
 		this.originY = y;
 		this.originZ = z;
-	}
-
-	public ParticlePath(World world, double x, double y, double z, double vx, double vy, double vz, float r, float g,
-			float b, int maxAge){
-		super(world, x, y, z, vx, vy, vz, maxAge);
-		this.setRBGColorF(r, g, b);
-		this.originX = x;
-		this.originY = y;
-		this.originZ = z;
-	}
-
-	@Override
-	public void init(){
-		this.setParticleTextureIndex(0);
+		
 		// Set to a constant to remove the randomness from Particle.
 		this.particleScale = 1.25f;
 		this.particleGravity = 0;
-		this.fullBrightness = true;
+		this.shaded = false;
 		this.canCollide = false;
+		this.setRBGColorF(1, 1, 1);
 	}
 
 	@Override
-	public ResourceLocation getTexture(){
-		return TEXTURE;
-	}
-
-	@Override
-	protected int getXFrames(){
-		return 1;
-	}
-
-	@Override
-	protected int getYFrames(){
-		return 1;
+	public boolean shouldDisableDepth(){
+		return true;
 	}
 
 	@Override
 	public void onUpdate(){
+		
+		super.onUpdate();
 
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
@@ -89,19 +67,10 @@ public class ParticlePath extends ParticleCustomTexture {
 		}
 
 	}
-
-	@Override
-	public void applyGLStateChanges(){
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		// TESTME: Are these two actually necessary?
-		GlStateManager.disableLighting();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+	
+	@SubscribeEvent
+	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
+		event.getMap().registerSprite(TEXTURE);
 	}
-
-	@Override
-	public void undoGLStateChanges(){
-		GlStateManager.disableBlend();
-		GlStateManager.enableLighting();
-	}
+	
 }

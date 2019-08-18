@@ -1,31 +1,30 @@
 package electroblob.wizardry.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import electroblob.wizardry.event.SpellCastEvent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
+ * <i>"{@code SpellModifiers} - modify all the things!"</i>
+ * <p></p>
  * Object that wraps any number of spell modifiers into one, allowing for expandability within the Spell#cast methods.
- * This class is essentially a glorified {@link Map} which can be written to and read from a {@link ByteBuf}. It is
- * possible to calculate spell modifiers from wand NBT within the cast methods, but this is cumbersome and does not
- * allow the modifiers to be sent to the client, which is sometimes necessary (for example, detonate needs to know about
- * range modifiers on the client side or the particles wouldn't show outside of the base range).
- * <p>
+ * This class is essentially a glorified {@link Map} which can be written to and read from a {@link ByteBuf}.
+ * <p></p>
  * Most external interaction with SpellModifiers objects will be in {@link SpellCastEvent.Pre}, where you can add
  * additional modifiers to them if desired for use with your own spells, or modify the existing ones. If you have added
  * a wand upgrade, this is <b>not</b> done automatically for you; you will have to do it yourself (for the simple reason
  * that not all wand upgrades affect spells). SpellModifiers objects are <i>mutable</i>, so you can simply change the
  * values they contain to modify the spell.
- * <p>
- * To use a SpellModifiers object within the <code>Spell.cast</code> methods, simply retrieve the desired multiplier
- * using {@link SpellModifiers#get(Item)} for wand upgrades, or {@link SpellModifiers#get(String)} if the multiplier is
+ * <p></p>
+ * To use a SpellModifiers object within the <code>Spell.cast</code> methods, simply retrieve the desired modifier
+ * using {@link SpellModifiers#get(Item)} for wand upgrades, or {@link SpellModifiers#get(String)} if the modifier is
  * not from a wand upgrade.
  * 
  * @author Electroblob
@@ -38,20 +37,39 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 // fly.
 public final class SpellModifiers {
 
-	/** Constant string identifier for the damage modifier. All the other modifiers in Wizardry have items. */
-	public static final String DAMAGE = "damage";
+	/** Constant string identifier for the potency modifier. */
+	public static final String POTENCY = "potency";
+	/** Constant string identifier for the mana cost modifier. */
+	public static final String COST = "cost";
+	/** Constant string identifier for the wand progression modifier. */
+	public static final String PROGRESSION = "progression";
 
-	private Map<String, Float> multiplierMap;
-	private Map<String, Float> syncedMultiplierMap;
+	private final Map<String, Float> multiplierMap;
+	private final Map<String, Float> syncedMultiplierMap;
 
 	/**
 	 * Creates an empty SpellModifiers object. All calls to <code>get(...)</code> on an empty SpellModifiers object will
 	 * return a value of 1.
 	 */
 	public SpellModifiers(){
-		multiplierMap = new HashMap<String, Float>();
-		syncedMultiplierMap = new HashMap<String, Float>();
+		multiplierMap = new HashMap<>();
+		syncedMultiplierMap = new HashMap<>();
 	}
+
+//	/** Returns a deep copy of this {@code SpellModifiers} object. */
+//	@Override
+//	public SpellModifiers clone(){
+//		SpellModifiers clone;
+//		try {
+//			clone = (SpellModifiers)super.clone();
+//		}catch(CloneNotSupportedException e){
+//			Wizardry.logger.error("Whaaaaat?!", e);
+//			return null;
+//		}
+//		clone.multiplierMap = new HashMap<>(this.multiplierMap);
+//		clone.syncedMultiplierMap = new HashMap<>(this.syncedMultiplierMap);
+//		return clone;
+//	}
 
 	/**
 	 * Adds the given multiplier to this SpellModifiers object, using the string identifier that the given wand upgrade
@@ -107,6 +125,31 @@ public final class SpellModifiers {
 		return value == null ? 1 : value;
 	}
 
+	// Not sure this really makes sense with the current system, it may just be better to keep it how it is
+//	/**
+//	 * Returns the <i>level</i> of upgrade (i.e. number of upgrades or wand tier) that would be required to
+//	 * generate a modifier with the given key. <i>This does not necessarily mean that was how this modifier was
+//	 * applied; and the returned value may not be a whole number if commands were involved.</i>
+//	 */
+//	public float level(String key){
+//		return 0;
+//	}
+
+	/**
+	 * Returns an amplified version of the multiplier corresponding to the given string key. An <i>amplified</i>
+	 * modifier is the original modifier <i>scaled about 1</i> - for example, amplifying by 2 would produce the
+	 * following results:<br>
+	 * 1.3 -> 1.6<br>
+	 * 2 -> 3<br>
+	 * 0.7 -> 0.4<br>
+	 * 1 -> 1<br>
+	 * (In other words, the modifier is decreased by 1, multiplied by the scalar and then increased by 1 again.)<br>
+	 * <b>N.B. This does not change the stored modifier.</b>
+	 */
+	public float amplified(String key, float scalar){
+		return (get(key) - 1) * scalar + 1;
+	}
+
 	/**
 	 * Returns an unmodifiable map of the modifiers stored in this SpellModifiers object. Useful for iterating through
 	 * the modifiers.
@@ -137,14 +180,17 @@ public final class SpellModifiers {
 			buf.writeFloat(entry.getValue());
 		}
 	}
+	
+	// These two don't use the Map <-> NBT methods in WizardryUtilities because it's better to use the strings as keys
+	// themselves rather than storing them separately.
 
 	/**
 	 * Creates a new SpellModifiers object from the given NBTTagCompound. The NBTTagCompound should have 1 or more float
 	 * tags, which will be stored as modifiers under the same name as the tag. For example, the following NBT tag (in
-	 * command syntax) will create a SpellModifiers object with a damage modifier of 1.5 and a range modifier of 2:
-	 * <p>
+	 * command syntax) represents a SpellModifiers object with a damage modifier of 1.5 and a range modifier of 2:
+	 * <p></p>
 	 * <code>{damage:1.5, range:2}</code>
-	 * <p>
+	 * <p></p>
 	 * Note that needsSyncing is set to true for all returned modifiers.
 	 */
 	public static SpellModifiers fromNBT(NBTTagCompound nbt){
@@ -153,6 +199,23 @@ public final class SpellModifiers {
 			modifiers.set(key, nbt.getFloat(key), true);
 		}
 		return modifiers;
+	}
+	
+	/**
+	 * Creates a new NBTTagCompound for this SpellModifiers object. The NBTTagCompound will have a float tags for each
+	 * modifier, which will be stored using the modifier names as keys. For example, the following NBT tag (in
+	 * command syntax) represents a SpellModifiers object with a damage modifier of 1.5 and a range modifier of 2:
+	 * <p></p>
+	 * <code>{damage:1.5, range:2}</code>
+	 * <p></p>
+	 * Note that information about syncing of modifiers is discarded.
+	 */
+	public NBTTagCompound toNBT(){
+		NBTTagCompound nbt = new NBTTagCompound();
+		for(Entry<String, Float> entry : multiplierMap.entrySet()){
+			nbt.setFloat(entry.getKey(), entry.getValue());
+		}
+		return nbt;
 	}
 
 }

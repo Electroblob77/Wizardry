@@ -1,158 +1,98 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.EntityArc;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class LightningRay extends Spell {
+public class LightningRay extends SpellRay {
 
 	public LightningRay(){
-		super(Tier.APPRENTICE, 5, Element.LIGHTNING, "lightning_ray", SpellType.ATTACK, 0, EnumAction.NONE, true);
+		super("lightning_ray", true, EnumAction.NONE);
+		this.aimAssist(0.6f);
+		addProperties(DAMAGE);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade), 2.0f);
-
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && WizardryUtilities.isLiving(rayTrace.entityHit)){
-			Entity target = rayTrace.entityHit;
-			if(!world.isRemote){
-				// This statement means the arc only spawns every other tick.
-				if(ticksInUse % 2 == 0){
-
-					EntityArc arc = new EntityArc(world);
-					// The look vec stuff performs a translation on the start point to line it up with the wand.
-					// EDIT: removed due to 1st/3rd person render differences.
-					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ, target.posX,
-							target.posY + target.height / 2, target.posZ);
-
-					arc.lifetime = 1;
-
-					world.spawnEntity(arc);
-				}
-
-				if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
-					if(!world.isRemote && ticksInUse == 1)
-						caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
-								this.getNameForTranslationFormatted()));
-				}else{
-					WizardryUtilities.attackEntityWithoutKnockback(target,
-							MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-							3.0f * modifiers.get(SpellModifiers.DAMAGE));
-				}
-
-			}else{
-				for(int i = 0; i < 5; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-							target.posX + world.rand.nextFloat() - 0.5,
-							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
-							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-				}
-			}
-
-			if(ticksInUse == 1){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0F, 1.0f);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1.0F, 1.0f);
-			}
-
-			return true;
-
-		}else{
-			if(!world.isRemote){
-				// This statement means the arc only spawns every other tick.
-				if(ticksInUse % 2 == 0){
-
-					EntityArc arc = new EntityArc(world);
-
-					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ,
-							caster.posX + caster.getLookVec().x * 8,
-							caster.posY + caster.eyeHeight + caster.getLookVec().y * 8,
-							caster.posZ + caster.getLookVec().z * 8);
-
-					arc.lifetime = 1;
-
-					world.spawnEntity(arc);
-				}
-			}
-
-			if(ticksInUse == 1){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0F, 1.0f);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1.0F, 1.0f);
-			}
-
-			return true;
-		}
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
-			SpellModifiers modifiers){
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
 
-		if(target != null){
-			if(!world.isRemote){
-				// This statement means the arc only spawns every other tick.
-				if(ticksInUse % 2 == 0){
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
+	}
 
-					EntityArc arc = new EntityArc(world);
-					// The look vec stuff performs a translation on the start point to line it up with the wand.
-					// EDIT: removed due to 1st/3rd person render differences.
-					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ, target.posX,
-							target.posY + target.height / 2, target.posZ);
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-					arc.lifetime = 1;
+		if(WizardryUtilities.isLiving(target)){
 
-					world.spawnEntity(arc);
-				}
-
+			if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
+				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer)
+					((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
+							this.getNameForTranslationFormatted()), true);
+			// This now only damages in line with the maxHurtResistantTime. Some mods don't play nicely and fiddle
+			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
+			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
 				WizardryUtilities.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-						3.0f * modifiers.get(SpellModifiers.DAMAGE));
+						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
+			}
+			
+			if(world.isRemote){
 
-			}else{
-				for(int i = 0; i < 5; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-							target.posX + world.rand.nextFloat() - 0.5,
-							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
-							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
+				if(ticksInUse % 3 == 0) ParticleBuilder.create(Type.LIGHTNING).entity(caster)
+				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
+
+				// Particle effect
+				for(int i=0; i<5; i++){
+					ParticleBuilder.create(Type.SPARK, target).spawn(world);
 				}
 			}
-
-			if(ticksInUse == 1){
-				caster.playSound(WizardrySounds.SPELL_LIGHTNING, 1.0F, 1.0f);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				caster.playSound(WizardrySounds.SPELL_LOOP_LIGHTNING, 1.0F, 1.0f);
-			}
-
-			return true;
 		}
 
+		return true;
+	}
+
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
+		// This is a nice example of when onMiss is used for more than just returning a boolean
+		if(world.isRemote && ticksInUse % 4 == 0){
+
+			// The arc does not reach full range when it has a free end
+			double freeRange = 0.8 * getRange(world, origin, direction, caster, ticksInUse, modifiers);
+
+			if(caster != null){
+				ParticleBuilder.create(Type.LIGHTNING).entity(caster).pos(origin.subtract(caster.getPositionVector()))
+						.length(freeRange).spawn(world);
+			}else{
+				ParticleBuilder.create(Type.LIGHTNING).pos(origin).target(origin.add(direction.scale(freeRange))).spawn(world);
+			}
+		}
+		
 		return true;
 	}
 

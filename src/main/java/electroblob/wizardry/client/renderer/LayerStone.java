@@ -1,11 +1,7 @@
 package electroblob.wizardry.client.renderer;
 
-import java.util.Map.Entry;
-
-import org.lwjgl.opengl.GL11;
-
+import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.client.ClientProxy;
-import electroblob.wizardry.spell.Petrify;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
@@ -21,6 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Layer used to render the stone texture on a petrified creature. Handles dynamic tiling of the stone texture.
@@ -36,16 +33,14 @@ public class LayerStone implements LayerRenderer<EntityLivingBase> {
 	private static final ResourceLocation texture = new ResourceLocation("textures/blocks/stone.png");
 
 	public static void initialiseLayers(){
-		for(Entry<Class<? extends Entity>, Render<? extends Entity>> entry : Minecraft.getMinecraft()
-				.getRenderManager().entityRenderMap.entrySet()){
+
+		for(Render<? extends Entity> renderer : Minecraft.getMinecraft().getRenderManager().entityRenderMap.values()){
 			// Because the zombie classes are now split properly, their renderers play nicely like everything else.
-			if(entry.getValue() instanceof RenderLivingBase){
+			if(renderer instanceof RenderLivingBase){
 				// Adds a stone layer to all the living entity renderers in the game. Whether it is actually rendered
 				// is decided in doRenderLayer below on a per-entity basis.
-				((RenderLivingBase<?>)entry.getValue()).addLayer(new LayerStone((RenderLivingBase<?>)entry.getValue()));
+				((RenderLivingBase<?>)renderer).addLayer(new LayerStone((RenderLivingBase<?>)renderer));
 			}
-			// NOTE: May have to do some special stuff for players if they are to be added; see
-			// Minecraft.getMinecraft().getRenderManager().getSkinMap()
 		}
 	}
 
@@ -53,12 +48,15 @@ public class LayerStone implements LayerRenderer<EntityLivingBase> {
 		this.renderer = renderer;
 		this.model = renderer.getMainModel();
 	}
+	
+	// FIXME: Does not work with zombie pigmen, I have no idea why.
+	// I believe the issue is with the TESR actually, since LayerFrost works fine
 
 	@Override
 	public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks,
 			float ageInTicks, float netHeadYaw, float headPitch, float scale){
 
-		if(entity.getEntityData().getBoolean(Petrify.NBT_KEY)){
+		if(entity.getEntityData().getBoolean(BlockStatue.PETRIFIED_NBT_KEY)){
 
 			GlStateManager.enableLighting();
 			int i = this.getBlockBrightnessForEntity(entity, partialTicks);
@@ -106,7 +104,6 @@ public class LayerStone implements LayerRenderer<EntityLivingBase> {
 
 		GlStateManager.pushMatrix();
 		// Enables tiling (Also used for guardian beam, beacon beam and ender crystal beam)
-		// TODO: Backport this improvement
 		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
 		GlStateManager.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
 

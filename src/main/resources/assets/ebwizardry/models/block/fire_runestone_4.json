@@ -1,0 +1,8 @@
+{
+    "parent": "ebwizardry:block/runestone",
+    "textures": {
+        "side": "ebwizardry:blocks/runestone_fire_0",
+        "rune": "ebwizardry:blocks/runestone_fire_4",
+        "overlay": "ebwizardry:blocks/runestone_fire_4_overlay"
+    }
+}

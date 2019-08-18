@@ -43,7 +43,12 @@
                     "type": "item",
                     "name": "ebwizardry:attunement_upgrade",
                     "weight": 1
-                }
+                },
+				{
+					"type": "item",
+					"name": "ebwizardry:melee_upgrade",
+					"weight": 1
+				}
 			]
 		}
 	]

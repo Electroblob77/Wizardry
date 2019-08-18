@@ -1,17 +1,17 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:max_out_wand"
+            "translate": "advancement.ebwizardry:max_out_wand"
         },
         "description": {
-            "translate": "advancement.wizardry:max_out_wand.desc"
+            "translate": "advancement.ebwizardry:max_out_wand.desc"
         },
         "icon": {
             "item": "ebwizardry:arcane_tome"
         },
 		"frame": "goal"
     },
-    "parent": "ebwizardry:special_upgrade",
+    "parent": "ebwizardry:master",
     "criteria": {
         "criteria_0": {
             "trigger": "ebwizardry:trigger_max_out_wand"

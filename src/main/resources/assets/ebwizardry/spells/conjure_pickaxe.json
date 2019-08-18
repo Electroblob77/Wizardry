@@ -1,0 +1,22 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "apprentice",
+  "element": "sorcery",
+  "type": "utility",
+  "cost": 25,
+  "chargeup": 0,
+  "cooldown": 50,
+  "base_properties": {
+    "item_lifetime": 1200
+  }
+}

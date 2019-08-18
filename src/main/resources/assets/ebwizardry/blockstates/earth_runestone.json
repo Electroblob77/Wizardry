@@ -1,0 +1,31 @@
+{
+	"forge_marker": 1,
+    "variants": {
+		"normal": [
+			{ "model": "ebwizardry:earth_runestone_1", "uvlock": true },
+			{ "model": "ebwizardry:earth_runestone_1", "uvlock": true, "y": 90 },
+			{ "model": "ebwizardry:earth_runestone_1", "uvlock": true, "y": 180 },
+			{ "model": "ebwizardry:earth_runestone_1", "uvlock": true, "y": 270 },
+			{ "model": "ebwizardry:earth_runestone_1", "uvlock": true, "x": 90 },
+			{ "model": "ebwizardry:earth_runestone_1", "uvlock": true, "x": 270 },
+			{ "model": "ebwizardry:earth_runestone_2", "uvlock": true },
+			{ "model": "ebwizardry:earth_runestone_2", "uvlock": true, "y": 90 },
+			{ "model": "ebwizardry:earth_runestone_2", "uvlock": true, "y": 180 },
+			{ "model": "ebwizardry:earth_runestone_2", "uvlock": true, "y": 270 },
+			{ "model": "ebwizardry:earth_runestone_2", "uvlock": true, "x": 90 },
+			{ "model": "ebwizardry:earth_runestone_2", "uvlock": true, "x": 270 },
+			{ "model": "ebwizardry:earth_runestone_3", "uvlock": true },
+			{ "model": "ebwizardry:earth_runestone_3", "uvlock": true, "y": 90 },
+			{ "model": "ebwizardry:earth_runestone_3", "uvlock": true, "y": 180 },
+			{ "model": "ebwizardry:earth_runestone_3", "uvlock": true, "y": 270 },
+			{ "model": "ebwizardry:earth_runestone_3", "uvlock": true, "x": 90 },
+			{ "model": "ebwizardry:earth_runestone_3", "uvlock": true, "x": 270 },
+			{ "model": "ebwizardry:earth_runestone_4", "uvlock": true },
+			{ "model": "ebwizardry:earth_runestone_4", "uvlock": true, "y": 90 },
+			{ "model": "ebwizardry:earth_runestone_4", "uvlock": true, "y": 180 },
+			{ "model": "ebwizardry:earth_runestone_4", "uvlock": true, "y": 270 },
+			{ "model": "ebwizardry:earth_runestone_4", "uvlock": true, "x": 90 },
+			{ "model": "ebwizardry:earth_runestone_4", "uvlock": true, "x": 270 }
+		]
+    }
+}

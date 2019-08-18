@@ -1,0 +1,24 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "fire",
+  "type": "attack",
+  "cost": 45,
+  "chargeup": 0,
+  "cooldown": 50,
+  "base_properties": {
+    "range": 16,
+    "max_damage": 12,
+    "blast_radius": 3
+  }
+}

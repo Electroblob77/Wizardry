@@ -173,7 +173,7 @@ Niveles
 Las varitas y los hechizos vienen en cuatro niveles: BASIC_COLOURBasicoRESET_COLOUR, APPRENTICE_COLOURAprendizRESET_COLOUR, ADVANCED_COLOURAvanzadoRESET_COLOUR y MASTER_COLOURMaestroRESET_COLOUR. Cada nivel es mejor que el anterior.
 
 Las varitas BASIC_COLOURBasico RESET_COLOURson las que pueden ser crafteadas. Almacenan
-BASIC_MAX_CHARGE mana, y solo pueden lanzar hechizos basicos. Hechizos basicos son suficientemente simples para ser lanzados por cualquiera y no usan mucho mana. Esto 
+BASIC_MAX_CHARGE mana, y solo pueden lanzar hechizos basicos. Hechizos basicos son suficientemente simples para ser lanzados por cualquiera y no usan mucho mana. Esto
 no significa que son inservibles en niveles mas altos, sin embargo; su costo pequeno
 hace que algunos hechizos basicos sean utiles cuando tienes acceso a hechizos maestros.
 

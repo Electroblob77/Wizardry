@@ -1,15 +1,12 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -22,14 +19,15 @@ import net.minecraft.world.World;
 public class Blink extends Spell {
 
 	public Blink(){
-		super(Tier.APPRENTICE, 15, Element.SORCERY, "blink", SpellType.UTILITY, 25, EnumAction.NONE, false);
+		super("blink", EnumAction.NONE, false);
+		addProperties(RANGE);
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.rayTrace(25 * modifiers.get(WizardryItems.range_upgrade), world,
-				caster, false);
+		RayTraceResult rayTrace = RayTracer.standardBlockRayTrace(world, caster,
+				getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade), false);
 
 		// It's worth noting that on the client side, the cast() method only gets called if the server side
 		// cast method succeeded, so you need not check any conditions for spawning particles.
@@ -43,14 +41,17 @@ public class Blink extends Spell {
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx, dy, dz, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 			}
+			
+			// Can't be bothered to route this through the proxies!
+			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
 		}
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 
 			BlockPos pos = rayTrace.getBlockPos();
 
-			// Can't teleport onto the ceiling.
-			if(rayTrace.sideHit == EnumFacing.DOWN) return false;
+			// Leave space for the player's head
+			if(rayTrace.sideHit == EnumFacing.DOWN) pos = pos.down();
 
 			// This means stuff like snow layers is ignored, meaning when on snow-covered ground the player does
 			// not teleport 1 block above the ground.
@@ -58,7 +59,7 @@ public class Blink extends Spell {
 				pos = pos.down();
 			}
 
-			pos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
+			pos = pos.offset(rayTrace.sideHit);
 
 			// Prevents the player from teleporting into blocks and suffocating.
 			if(world.getBlockState(pos).getMaterial().blocksMovement()
@@ -67,11 +68,11 @@ public class Blink extends Spell {
 			}
 
 			// Plays before and after so it is heard from both positions
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 			if(!world.isRemote) caster.setPositionAndUpdate(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
-			WizardryUtilities.playSoundAtPlayer(caster, SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			caster.swingArm(hand);
 			return true;
 		}
@@ -83,14 +84,14 @@ public class Blink extends Spell {
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
 			SpellModifiers modifiers){
 
-		double angle = Math.atan2(target.posZ - caster.posZ, target.posX - caster.posX)
-				+ world.rand.nextDouble() * Math.PI;
+		float angle = (float)(Math.atan2(target.posZ - caster.posZ, target.posX - caster.posX)
+				+ world.rand.nextDouble() * Math.PI);
 		double radius = caster.getDistance(target.posX, target.getEntityBoundingBox().minY, target.posZ)
 				+ world.rand.nextDouble() * 3.0d;
 
-		int x = MathHelper.floor(target.posX + Math.sin(angle) * radius);
-		int z = MathHelper.floor(target.posZ - Math.cos(angle) * radius);
-		int y = WizardryUtilities.getNearestFloorLevel(world, new BlockPos(caster), (int)radius);
+		int x = MathHelper.floor(target.posX + MathHelper.sin(angle) * radius);
+		int z = MathHelper.floor(target.posZ - MathHelper.cos(angle) * radius);
+		Integer y = WizardryUtilities.getNearestFloor(world, new BlockPos(caster), (int)radius);
 
 		// It's worth noting that on the client side, the cast() method only gets called if the server side
 		// cast method succeeded, so you need not check any conditions for spawning particles.
@@ -106,7 +107,7 @@ public class Blink extends Spell {
 			}
 		}
 
-		if(y > -1){
+		if(y != null){
 
 			// This means stuff like snow layers is ignored, meaning when on snow-covered ground the caster does
 			// not teleport 1 block above the ground.
@@ -120,13 +121,13 @@ public class Blink extends Spell {
 			}
 
 			// Plays before and after so it is heard from both positions
-			caster.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 
 			if(!world.isRemote){
 				caster.setPositionAndUpdate(x + 0.5, y + 1, z + 0.5);
 			}
 
-			caster.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0f);
+			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			caster.swingArm(hand);
 			return true;
 		}

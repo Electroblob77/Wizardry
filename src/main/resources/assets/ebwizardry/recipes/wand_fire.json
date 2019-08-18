@@ -1,0 +1,25 @@
+{
+    "type": "forge:ore_shaped",
+    "pattern": [
+        "  z",
+        " y ",
+        "x  "
+    ],
+    "key": {
+        "x": {
+            "type": "forge:ore_dict",
+			"ore": "nuggetGold"
+        },
+        "y": {
+            "type": "forge:ore_dict",
+			"ore": "stickWood"
+        },
+        "z": {
+            "item": "ebwizardry:magic_crystal",
+			"data": 1
+        }
+    },
+    "result": {
+        "item": "ebwizardry:novice_fire_wand"
+    }
+}

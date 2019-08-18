@@ -1,9 +1,7 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.IGrowable;
@@ -15,14 +13,18 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class GrowthAura extends Spell {
 
 	public GrowthAura(){
-		super(Tier.APPRENTICE, 20, Element.EARTH, "growth_aura", SpellType.UTILITY, 50, EnumAction.NONE, false);
+		super("growth_aura", EnumAction.NONE, false);
+		addProperties(EFFECT_RADIUS);
+		soundValues(0.7f, 1.2f, 0.2f);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 
@@ -31,45 +33,43 @@ public class GrowthAura extends Spell {
 
 		boolean flag = false;
 
-		for(int i = -2; i < 1; i++){
+		List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(),
+				getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade));
 
-			for(int j = -1; j < 2; j++){
+		for(BlockPos pos : sphere){
 
-				int x = (int)caster.posX + i;
-				int y = WizardryUtilities.getNearestFloorLevelC(world,
-						new BlockPos(caster.posX + i, caster.posY, caster.posZ + j), 2) - 1;
-				int z = (int)caster.posZ + j;
+			IBlockState state = world.getBlockState(pos);
 
-				BlockPos pos = new BlockPos(x, y, z);
+			if(state.getBlock() instanceof IGrowable){
 
-				if(y > -1 && caster.getDistance(x, y, z) <= 2){
+				IGrowable plant = (IGrowable)state.getBlock();
 
-					IBlockState state = world.getBlockState(pos);
+				if(plant.canGrow(world, pos, state, world.isRemote)){
 
-					if(state.getBlock() instanceof IGrowable){
-
-						IGrowable igrowable = (IGrowable)state.getBlock();
-
-						if(igrowable.canGrow(world, pos, state, world.isRemote)){
-
-							if(!world.isRemote){
-								if(igrowable.canUseBonemeal(world, world.rand, pos, state)){
-									igrowable.grow(world, world.rand, pos, state);
+					if(!world.isRemote){
+						if(plant.canUseBonemeal(world, world.rand, pos, state)){
+							if(world.rand.nextFloat() < 0.35f && ItemArtefact.isArtefactActive(caster, WizardryItems.charm_growth)){
+								while(plant.canGrow(world, pos, state, false)){
+									plant.grow(world, world.rand, pos, state);
+									state = world.getBlockState(pos); // Update the state with the new one
+									plant = (IGrowable)state.getBlock(); // Update the block with the new one
 								}
 							}else{
-								// Yes, it's meant to be 0, and it automatically changes it to 15.
-								ItemDye.spawnBonemealParticles(world, pos, 0);
+								plant.grow(world, world.rand, pos, state);
 							}
-
-							flag = true;
 						}
+					}else{
+						// Yes, it's meant to be 0, and it automatically changes it to 15.
+						ItemDye.spawnBonemealParticles(world, pos, 0);
 					}
+
+					flag = true;
 				}
 			}
 		}
 
-		if(flag) WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
-				world.rand.nextFloat() * 0.4F + 1.0F);
+		if(flag) this.playSound(world, caster, ticksInUse, -1, modifiers);
+
 		return flag;
 	}
 

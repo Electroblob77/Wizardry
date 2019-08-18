@@ -1,16 +1,16 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:defeat_evil_wizard"
+            "translate": "advancement.ebwizardry:defeat_evil_wizard"
         },
         "description": {
-            "translate": "advancement.wizardry:defeat_evil_wizard.desc"
+            "translate": "advancement.ebwizardry:defeat_evil_wizard.desc"
         },
         "icon": {
             "item": "ebwizardry:wizard_boots_necromancy"
         }
     },
-    "parent": "ebwizardry:wizard_trade",
+    "parent": "ebwizardry:arcane_initiate",
     "criteria": {
         "criteria_0": {
             "trigger": "minecraft:player_killed_entity",

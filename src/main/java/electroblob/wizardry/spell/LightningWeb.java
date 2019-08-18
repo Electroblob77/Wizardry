@@ -1,220 +1,162 @@
 package electroblob.wizardry.spell;
 
-import java.util.List;
-
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
-import electroblob.wizardry.entity.EntityArc;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class LightningWeb extends Spell {
+import java.util.List;
+
+public class LightningWeb extends SpellRay {
+
+	public static final String PRIMARY_DAMAGE = "primary_damage";
+	public static final String SECONDARY_DAMAGE = "secondary_damage";
+	public static final String TERTIARY_DAMAGE = "tertiary_damage";
+
+	public static final String SECONDARY_RANGE = "secondary_range";
+	public static final String TERTIARY_RANGE = "tertiary_range";
+
+	public static final String SECONDARY_MAX_TARGETS = "secondary_max_targets";
+	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public LightningWeb(){
-		super(Tier.MASTER, 15, Element.LIGHTNING, "lightning_web", SpellType.ATTACK, 0, EnumAction.NONE, true);
+		super("lightning_web", true, EnumAction.NONE);
+		this.aimAssist(0.6f);
+		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,
+				SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected SoundEvent[] createSounds(){
+		return this.createContinuousSpellSounds();
+	}
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade), 2.0f);
+	@Override
+	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, entity, ticksInUse);
+	}
 
-		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.ENTITY && WizardryUtilities.isLiving(rayTrace.entityHit)){
+	@Override
+	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
+		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
+	}
+	
+	@Override
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+		
+		if(WizardryUtilities.isLiving(target)){
 
-			Entity target = rayTrace.entityHit;
-
-			if(!world.isRemote){
-
-				// This statement means the arc only spawns every other tick.
-				if(ticksInUse % 2 == 0){
-					EntityArc arc = new EntityArc(world);
-					// The look vec stuff performs a translation on the start point to line it up with the wand.
-					// EDIT: removed due to 1st/3rd person render differences.
-					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ, target.posX,
-							target.posY + target.height / 2, target.posZ);
-					arc.lifetime = 1;
-					world.spawnEntity(arc);
-				}
-
-				if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
-					if(!world.isRemote && ticksInUse == 1)
-						caster.sendMessage(new TextComponentTranslation("spell.resist", target.getName(),
-								this.getNameForTranslationFormatted()));
-				}else{
-					// This motion stuff removes knockback, which is desirable for continuous spells.
-					double motionX = target.motionX;
-					double motionY = target.motionY;
-					double motionZ = target.motionZ;
-
-					target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-							5.0f * modifiers.get(SpellModifiers.DAMAGE));
-
-					target.motionX = motionX;
-					target.motionY = motionY;
-					target.motionZ = motionZ;
-				}
-			}else{
-				for(int i = 0; i < 5; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-							target.posX + world.rand.nextFloat() - 0.5,
-							target.getEntityBoundingBox().minY + target.height / 2 + world.rand.nextFloat() * 2 - 1,
-							target.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-				}
-			}
-
+			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
+					* modifiers.get(SpellModifiers.POTENCY), ticksInUse);
+			
 			// Secondary chaining effect
-			double seekerRange = 5.0d;
 
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
-					target.posX, target.posY + target.height / 2, target.posZ, world);
-			// This is a MUCH better way of filtering the secondary targets!
+			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+					getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
+					target.posZ, world);
+			
 			secondaryTargets.remove(target);
-			if(secondaryTargets.size() > 5) secondaryTargets = secondaryTargets.subList(0, 5);
+			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
+			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
+				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
 
 			for(EntityLivingBase secondaryTarget : secondaryTargets){
 
-				if(WizardryUtilities.isValidTarget(caster, secondaryTarget)){
+				electrocute(world, caster, target.getPositionVector().add(0, target.height/2, 0), secondaryTarget,
+						getProperty(SECONDARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 
-					if(!world.isRemote){
-						// This statement means the arc only spawns every other tick.
-						if(ticksInUse % 2 == 0){
-							EntityArc arc = new EntityArc(world);
-							arc.setEndpointCoords(target.posX, target.posY + 1.2, target.posZ, secondaryTarget.posX,
-									secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ);
-							arc.lifetime = 1;
-							world.spawnEntity(arc);
-						}
+				// Tertiary chaining effect
 
-						if(MagicDamage.isEntityImmune(DamageType.SHOCK, secondaryTarget)){
-							if(!world.isRemote && ticksInUse == 1)
-								caster.sendMessage(new TextComponentTranslation("spell.resist",
-										secondaryTarget.getName(), this.getNameForTranslationFormatted()));
-						}else{
-							// This motion stuff removes knockback, which is desirable for continuous spells.
-							double motionX = secondaryTarget.motionX;
-							double motionY = secondaryTarget.motionY;
-							double motionZ = secondaryTarget.motionZ;
+				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+						getProperty(TERTIARY_RANGE).floatValue(), secondaryTarget.posX,
+						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
+				
+				tertiaryTargets.remove(target);
+				tertiaryTargets.removeAll(secondaryTargets);
+				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
+				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
+					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
 
-							secondaryTarget.attackEntityFrom(
-									MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-									4.0f * modifiers.get(SpellModifiers.DAMAGE));
-
-							secondaryTarget.motionX = motionX;
-							secondaryTarget.motionY = motionY;
-							secondaryTarget.motionZ = motionZ;
-						}
-					}else{
-						for(int i = 0; i < 5; i++){
-							Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-									secondaryTarget.posX + world.rand.nextFloat() - 0.5,
-									secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2
-											+ world.rand.nextFloat() * 2 - 1,
-									secondaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-						}
-					}
-
-					// Tertiary chaining effect
-
-					List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
-							secondaryTarget.posX, secondaryTarget.posY + secondaryTarget.height / 2,
-							secondaryTarget.posZ, world);
-					tertiaryTargets.remove(target);
-					tertiaryTargets.removeAll(secondaryTargets);
-					if(tertiaryTargets.size() > 2) tertiaryTargets = tertiaryTargets.subList(0, 2);
-
-					for(EntityLivingBase tertiaryTarget : tertiaryTargets){
-
-						if(WizardryUtilities.isValidTarget(caster, tertiaryTarget)){
-
-							if(!world.isRemote){
-								// This statement means the arc only spawns every other tick.
-								if(ticksInUse % 2 == 0){
-									EntityArc arc = new EntityArc(world);
-									arc.setEndpointCoords(secondaryTarget.posX, secondaryTarget.posY + 1.2,
-											secondaryTarget.posZ, tertiaryTarget.posX,
-											tertiaryTarget.posY + tertiaryTarget.height / 2, tertiaryTarget.posZ);
-									arc.lifetime = 1;
-									world.spawnEntity(arc);
-								}
-
-								if(MagicDamage.isEntityImmune(DamageType.SHOCK, tertiaryTarget)){
-									if(!world.isRemote && ticksInUse == 1)
-										caster.sendMessage(new TextComponentTranslation("spell.resist",
-												tertiaryTarget.getName(), this.getNameForTranslationFormatted()));
-								}else{
-									// This motion stuff removes knockback, which is desirable for continuous spells.
-									double motionX = tertiaryTarget.motionX;
-									double motionY = tertiaryTarget.motionY;
-									double motionZ = tertiaryTarget.motionZ;
-
-									tertiaryTarget.attackEntityFrom(
-											MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
-											3.0f * modifiers.get(SpellModifiers.DAMAGE));
-
-									tertiaryTarget.motionX = motionX;
-									tertiaryTarget.motionY = motionY;
-									tertiaryTarget.motionZ = motionZ;
-								}
-							}else{
-								for(int i = 0; i < 5; i++){
-									Wizardry.proxy.spawnParticle(WizardryParticleType.SPARK, world,
-											tertiaryTarget.posX + world.rand.nextFloat() - 0.5,
-											tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height / 2
-													+ world.rand.nextFloat() * 2 - 1,
-											tertiaryTarget.posZ + world.rand.nextFloat() - 0.5, 0, 0, 0, 3);
-								}
-							}
-						}
-					}
+				for(EntityLivingBase tertiaryTarget : tertiaryTargets){
+					electrocute(world, caster, secondaryTarget.getPositionVector().add(0, secondaryTarget.height/2, 0),
+							tertiaryTarget, getProperty(TERTIARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 				}
 			}
+		}
+		
+		return true;
+	}
 
-			if(ticksInUse == 1){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0F, 1.0f);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1.0F, 1.0f);
+	@Override
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
+		return false;
+	}
+
+	@Override
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
+		// This is a nice example of when onMiss is used for more than just returning a boolean
+		if(world.isRemote){
+
+			// The arc does not reach full range when it has a free end
+			double freeRange = 0.8 * getRange(world, origin, direction, caster, ticksInUse, modifiers);
+
+			if(caster != null){
+				ParticleBuilder.create(Type.BEAM).entity(caster).pos(origin.subtract(caster.getPositionVector()))
+						.length(freeRange).clr(0.2f, 0.6f, 1).spawn(world);
+			}else{
+				ParticleBuilder.create(Type.BEAM).pos(origin).target(origin.add(direction.scale(freeRange)))
+						.clr(0.2f, 0.6f, 1).spawn(world);
 			}
 
-			return true;
+			if(ticksInUse % 4 == 0){
+				if(caster != null){
+					ParticleBuilder.create(Type.LIGHTNING).entity(caster).pos(origin.subtract(caster.getPositionVector()))
+							.length(freeRange).spawn(world);
+				}else{
+					ParticleBuilder.create(Type.LIGHTNING).pos(origin).target(origin.add(direction.scale(freeRange))).spawn(world);
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	private void electrocute(World world, Entity caster, Vec3d origin, Entity target, float damage, int ticksInUse){
 
+		if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
+			if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer)
+				((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
+						this.getNameForTranslationFormatted()), true);
 		}else{
-			if(!world.isRemote){
-				// This statement means the arc only spawns every other tick.
-				if(ticksInUse % 2 == 0){
-					EntityArc arc = new EntityArc(world);
-					arc.setEndpointCoords(caster.posX, caster.posY + 1.2, caster.posZ,
-							caster.posX + caster.getLookVec().x * 8,
-							caster.posY + caster.eyeHeight + caster.getLookVec().y * 8,
-							caster.posZ + caster.getLookVec().z * 8);
-					arc.lifetime = 1;
-					// arc.setOffset(entityplayer.getLookVec().zCoord * 0.5, entityplayer.getLookVec().xCoord * 0.5);
-					world.spawnEntity(arc);
-				}
+			WizardryUtilities.attackEntityWithoutKnockback(target,
+					MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
+		}
+		
+		if(world.isRemote){
+			
+			ParticleBuilder.create(Type.BEAM).entity(caster).clr(0.2f, 0.6f, 1)
+			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
+			
+			if(ticksInUse % 3 == 0){
+				ParticleBuilder.create(Type.LIGHTNING).entity(caster)
+				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
 			}
 
-			if(ticksInUse == 1){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LIGHTNING, 1.0F, 1.0f);
-			}else if(ticksInUse > 0 && ticksInUse % 20 == 0){
-				WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_LOOP_LIGHTNING, 1.0F, 1.0f);
+			// Particle effect
+			for(int i=0; i<5; i++){
+				ParticleBuilder.create(Type.SPARK, target).spawn(world);
 			}
-
-			return true;
 		}
 	}
 

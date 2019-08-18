@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "master",
+  "element": "ice",
+  "type": "utility",
+  "cost": 15,
+  "chargeup": 0,
+  "cooldown": 0,
+  "base_properties": {
+    "duration": 600,
+    "range": 10
+  }
+}

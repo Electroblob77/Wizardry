@@ -1,0 +1,6 @@
+{
+	"forge_marker": 1,
+    "variants": {
+         "normal": { "model": "ebwizardry:healing_crystal_block" }
+    }
+}

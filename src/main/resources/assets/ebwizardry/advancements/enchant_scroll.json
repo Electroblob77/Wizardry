@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "ebwizardry:scroll"
+        },
+        "title": {
+            "translate": "advancement.ebwizardry:enchant_scroll"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:enchant_scroll.desc"
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:scroll"
+                }
+            }
+        }
+    }
+}

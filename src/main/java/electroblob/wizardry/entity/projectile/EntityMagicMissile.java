@@ -1,89 +1,63 @@
 package electroblob.wizardry.entity.projectile;
 
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryParticleType;
-import net.minecraft.entity.Entity;
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityMagicMissile extends EntityMagicArrow {
 
-	/** Basic shell constructor. Should only be used by the client. */
+	/** Creates a new magic missile in the given world. */
 	public EntityMagicMissile(World world){
 		super(world);
 	}
 
-	/**
-	 * Creates a projectile at position xyz in world, with no motion. Do not create a projectile with this constructor
-	 * and then call setVelocity() as that method is, bizarrely, client-side only.
-	 */
-	public EntityMagicMissile(World world, double x, double y, double z){
-		super(world, x, y, z);
-	}
+	@Override public double getDamage(){ return Spells.magic_missile.getProperty(Spell.DAMAGE).floatValue(); }
 
-	/**
-	 * Creates a projectile at the position of the caster, pointing at the given target. The trajectory seems to be
-	 * altered slightly by a random amount determined by the last parameter. For reference, skeletons set this to 10 on
-	 * easy, 6 on normal and 2 on hard difficulty.
-	 */
-	public EntityMagicMissile(World world, EntityLivingBase caster, Entity target, float speed, float aimingError,
-			float damageMultiplier){
-		super(world, caster, target, speed, aimingError, damageMultiplier);
-	}
+	@Override public int getLifetime(){ return 12; }
 
-	/**
-	 * Creates a projectile pointing in the direction the caster is looking, with the given speed. USE THIS CONSTRUCTOR
-	 * FOR NORMAL SPELLS.
-	 */
-	public EntityMagicMissile(World world, EntityLivingBase caster, float speed, float damageMultiplier){
-		super(world, caster, speed, damageMultiplier);
-	}
+	@Override public boolean doGravity(){ return false; }
+
+	@Override public boolean doDeceleration(){ return false; }
 
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
-		this.playSound(SoundEvents.ENTITY_GENERIC_HURT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		this.playSound(WizardrySounds.ENTITY_MAGIC_MISSILE_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+		if(this.world.isRemote) ParticleBuilder.create(Type.FLASH).pos(posX, posY, posZ).clr(1, 1, 0.65f).spawn(world);
+	}
+	
+	@Override
+	public void onBlockHit(RayTraceResult hit){
+		if(this.world.isRemote){
+			// Gets a position slightly away from the block hit so the particle doesn't get cut in half by the block face
+			Vec3d vec = hit.hitVec.add(new Vec3d(hit.sideHit.getDirectionVec()).scale(0.15));
+			ParticleBuilder.create(Type.FLASH).pos(vec).clr(1, 1, 0.65f).fade(0.85f, 0.5f, 0.8f).spawn(world);
+		}
 	}
 
 	@Override
 	public void tickInAir(){
 
-		if(this.ticksExisted > 20){
-			this.setDead();
-		}
-
 		if(this.world.isRemote){
-
-			if(this.ticksExisted % 2 == 1){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX, this.posY, this.posZ, 0, 0,
-						0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat() / 2), 0.5f + (rand.nextFloat() / 2),
-						0.5f + (rand.nextFloat() / 2));
-			}else{
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX, this.posY, this.posZ, 0, 0,
-						0, 20 + rand.nextInt(10), 0.5f + (rand.nextFloat() / 2), 0.5f + (rand.nextFloat() / 2),
-						0.5f + (rand.nextFloat() / 2));
+			ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)
+			.time(20 + rand.nextInt(10)).spawn(world);
+			
+			if(this.ticksExisted > 1){ // Don't spawn particles behind where it started!
+				double x = posX - motionX/2;
+				double y = posY - motionY/2;
+				double z = posZ - motionZ/2;
+				ParticleBuilder.create(Type.SPARKLE, rand, x, y, z, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)
+				.time(20 + rand.nextInt(10)).spawn(world);
 			}
 		}
 	}
 
 	@Override
-	public double getDamage(){
-		return 4.0d;
-	}
-
-	@Override
-	public boolean doGravity(){
-		return false;
-	}
-
-	@Override
-	public boolean doDeceleration(){
-		return false;
-	}
-
-	@Override
-	protected void entityInit(){
-
-	}
+	protected void entityInit(){ }
 
 }

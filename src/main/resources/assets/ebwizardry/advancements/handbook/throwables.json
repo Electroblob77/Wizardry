@@ -1,0 +1,14 @@
+{
+    "criteria": {
+        "criteria_0": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:firebomb"
+                    }
+                ]
+            }
+        }
+    }
+}

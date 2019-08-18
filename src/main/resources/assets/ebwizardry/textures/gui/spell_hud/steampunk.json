@@ -1,0 +1,33 @@
+{
+	"name": "Steampunk",
+	"description": "Magic, powered by steam!",
+	"width": 128,
+	"height": 45,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 43,
+		"y": 19
+	},
+	"spell_cascade_offset": {
+		"x": 3,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 57,
+		"y": 2,
+		"length": 62,
+		"height": 2,
+		"mirror": {
+			"x": true,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

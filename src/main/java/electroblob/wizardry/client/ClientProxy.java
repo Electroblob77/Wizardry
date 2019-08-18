@@ -1,147 +1,90 @@
 package electroblob.wizardry.client;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-
-import org.lwjgl.input.Keyboard;
-
 import electroblob.wizardry.CommonProxy;
-import electroblob.wizardry.SpellGlyphData;
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.audio.MovingSoundEntity;
+import electroblob.wizardry.client.audio.SoundLoop;
+import electroblob.wizardry.client.audio.SoundLoopSpell;
+import electroblob.wizardry.client.gui.GuiSpellDisplay;
+import electroblob.wizardry.client.gui.config.NamedBooleanEntry;
+import electroblob.wizardry.client.gui.config.SpellHUDSkinChooserEntry;
+import electroblob.wizardry.client.gui.handbook.GuiWizardHandbook;
 import electroblob.wizardry.client.model.ModelWizardArmour;
-import electroblob.wizardry.client.particle.ParticleBlizzard;
-import electroblob.wizardry.client.particle.ParticleDarkMagic;
-import electroblob.wizardry.client.particle.ParticleDust;
-import electroblob.wizardry.client.particle.ParticleGiantBubble;
-import electroblob.wizardry.client.particle.ParticleIce;
-import electroblob.wizardry.client.particle.ParticleLeaf;
-import electroblob.wizardry.client.particle.ParticleMagicFlame;
-import electroblob.wizardry.client.particle.ParticlePath;
-import electroblob.wizardry.client.particle.ParticleRotatingSparkle;
-import electroblob.wizardry.client.particle.ParticleSnow;
-import electroblob.wizardry.client.particle.ParticleSpark;
-import electroblob.wizardry.client.particle.ParticleSparkle;
-import electroblob.wizardry.client.particle.ParticleTornado;
-import electroblob.wizardry.client.renderer.LayerStone;
-import electroblob.wizardry.client.renderer.RenderArc;
-import electroblob.wizardry.client.renderer.RenderArcaneWorkbench;
-import electroblob.wizardry.client.renderer.RenderBlackHole;
-import electroblob.wizardry.client.renderer.RenderBlank;
-import electroblob.wizardry.client.renderer.RenderBubble;
-import electroblob.wizardry.client.renderer.RenderDecay;
-import electroblob.wizardry.client.renderer.RenderDecoy;
-import electroblob.wizardry.client.renderer.RenderEvilWizard;
-import electroblob.wizardry.client.renderer.RenderFireRing;
-import electroblob.wizardry.client.renderer.RenderForceArrow;
-import electroblob.wizardry.client.renderer.RenderHammer;
-import electroblob.wizardry.client.renderer.RenderIceGiant;
-import electroblob.wizardry.client.renderer.RenderIceSpike;
-import electroblob.wizardry.client.renderer.RenderLightningDisc;
-import electroblob.wizardry.client.renderer.RenderLightningPulse;
-import electroblob.wizardry.client.renderer.RenderMagicArrow;
-import electroblob.wizardry.client.renderer.RenderMagicLight;
-import electroblob.wizardry.client.renderer.RenderPhoenix;
-import electroblob.wizardry.client.renderer.RenderProjectile;
-import electroblob.wizardry.client.renderer.RenderSigil;
-import electroblob.wizardry.client.renderer.RenderSpiritHorse;
-import electroblob.wizardry.client.renderer.RenderSpiritWolf;
-import electroblob.wizardry.client.renderer.RenderStatue;
-import electroblob.wizardry.client.renderer.RenderWizard;
-import electroblob.wizardry.entity.EntityArc;
+import electroblob.wizardry.client.particle.*;
+import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
+import electroblob.wizardry.client.renderer.*;
+import electroblob.wizardry.command.SpellEmitter;
+import electroblob.wizardry.data.DispenserCastingData;
+import electroblob.wizardry.data.SpellEmitterData;
+import electroblob.wizardry.data.SpellGlyphData;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.EntityShield;
-import electroblob.wizardry.entity.construct.EntityArrowRain;
-import electroblob.wizardry.entity.construct.EntityBlackHole;
-import electroblob.wizardry.entity.construct.EntityBlizzard;
-import electroblob.wizardry.entity.construct.EntityBubble;
-import electroblob.wizardry.entity.construct.EntityDecay;
-import electroblob.wizardry.entity.construct.EntityEarthquake;
-import electroblob.wizardry.entity.construct.EntityFireRing;
-import electroblob.wizardry.entity.construct.EntityFireSigil;
-import electroblob.wizardry.entity.construct.EntityForcefield;
-import electroblob.wizardry.entity.construct.EntityFrostSigil;
-import electroblob.wizardry.entity.construct.EntityHailstorm;
-import electroblob.wizardry.entity.construct.EntityHammer;
-import electroblob.wizardry.entity.construct.EntityHealAura;
-import electroblob.wizardry.entity.construct.EntityIceSpike;
-import electroblob.wizardry.entity.construct.EntityLightningPulse;
-import electroblob.wizardry.entity.construct.EntityLightningSigil;
-import electroblob.wizardry.entity.construct.EntityTornado;
-import electroblob.wizardry.entity.living.EntityDecoy;
-import electroblob.wizardry.entity.living.EntityEvilWizard;
-import electroblob.wizardry.entity.living.EntityIceGiant;
-import electroblob.wizardry.entity.living.EntityIceWraith;
-import electroblob.wizardry.entity.living.EntityLightningWraith;
-import electroblob.wizardry.entity.living.EntityPhoenix;
-import electroblob.wizardry.entity.living.EntityShadowWraith;
-import electroblob.wizardry.entity.living.EntitySpiritHorse;
-import electroblob.wizardry.entity.living.EntitySpiritWolf;
-import electroblob.wizardry.entity.living.EntityStormElemental;
-import electroblob.wizardry.entity.living.EntityWizard;
-import electroblob.wizardry.entity.living.ISpellCaster;
-import electroblob.wizardry.entity.living.ISummonedCreature;
-import electroblob.wizardry.entity.projectile.EntityDarknessOrb;
-import electroblob.wizardry.entity.projectile.EntityDart;
-import electroblob.wizardry.entity.projectile.EntityFirebolt;
-import electroblob.wizardry.entity.projectile.EntityFirebomb;
-import electroblob.wizardry.entity.projectile.EntityForceArrow;
-import electroblob.wizardry.entity.projectile.EntityForceOrb;
-import electroblob.wizardry.entity.projectile.EntityIceCharge;
-import electroblob.wizardry.entity.projectile.EntityIceLance;
-import electroblob.wizardry.entity.projectile.EntityIceShard;
-import electroblob.wizardry.entity.projectile.EntityLightningArrow;
-import electroblob.wizardry.entity.projectile.EntityLightningDisc;
-import electroblob.wizardry.entity.projectile.EntityMagicMissile;
-import electroblob.wizardry.entity.projectile.EntityPoisonBomb;
-import electroblob.wizardry.entity.projectile.EntitySmokeBomb;
-import electroblob.wizardry.entity.projectile.EntitySpark;
-import electroblob.wizardry.entity.projectile.EntitySparkBomb;
-import electroblob.wizardry.entity.projectile.EntityThunderbolt;
+import electroblob.wizardry.entity.construct.*;
+import electroblob.wizardry.entity.living.*;
+import electroblob.wizardry.entity.projectile.*;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
+import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
-import electroblob.wizardry.packet.PacketCastContinuousSpell;
-import electroblob.wizardry.packet.PacketCastSpell;
-import electroblob.wizardry.packet.PacketNPCCastSpell;
-import electroblob.wizardry.packet.PacketPlayerSync.Message;
-import electroblob.wizardry.packet.PacketTransportation;
+import electroblob.wizardry.packet.*;
+import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.spell.Clairvoyance;
-import electroblob.wizardry.spell.None;
-import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.*;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
+import electroblob.wizardry.tileentity.TileEntityShrineCore;
 import electroblob.wizardry.tileentity.TileEntityStatue;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBlaze;
+import net.minecraft.client.renderer.entity.RenderHusk;
+import net.minecraft.client.renderer.entity.RenderSkeleton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.NumberSliderEntry;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import org.lwjgl.input.Keyboard;
+
+import java.lang.ref.WeakReference;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The client proxy for wizardry.
@@ -154,12 +97,18 @@ public class ClientProxy extends CommonProxy {
 	/** Static instance of the mixed font renderer */
 	public static MixedFontRenderer mixedFontRenderer;
 
+	/** Static particle factory map */
+	private static final Map<ResourceLocation, IWizardryParticleFactory> factories = new HashMap<>();
+
 	// Key Bindings
 	public static final KeyBinding NEXT_SPELL = new KeyBinding("key." + Wizardry.MODID + ".next_spell", Keyboard.KEY_N, "key.categories." + Wizardry.MODID);
 	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key." + Wizardry.MODID + ".previous_spell", Keyboard.KEY_B, "key.categories." + Wizardry.MODID);
 
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
+
+	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style)}). */
+	private static final int TOOLTIP_WRAP_WIDTH = 140;
 
 	// SECTION Registry
 	// ===============================================================================================================
@@ -176,15 +125,27 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void registerSpellHUD(){
-		MinecraftForge.EVENT_BUS.register(new GuiSpellDisplay(Minecraft.getMinecraft()));
-	}
-
-	@Override
 	public void initGuiBits(){
 		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"),
 				Minecraft.getMinecraft().renderEngine, false);
-		GuiWizardHandbook.initDisplayRecipes();
+	}
+	
+	@Override
+	public void registerResourceReloadListeners(){
+		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+		if(manager instanceof IReloadableResourceManager){
+			((IReloadableResourceManager)manager).registerReloadListener(GuiSpellDisplay::loadSkins);
+			((IReloadableResourceManager)manager).registerReloadListener(GuiWizardHandbook::loadHandbookFile);
+		}
+	}
+
+//	@Override
+//	public void registerSoundEventListener(){
+//		Minecraft.getMinecraft().getSoundHandler().addListener(ContinuousSpellSoundEntity::soundPlayed);
+//	}
+
+	public void registerAtlasMarkers(){
+		WizardryAntiqueAtlasIntegration.registerMarkers();
 	}
 
 	// SECTION Misc
@@ -194,6 +155,16 @@ public class ClientProxy extends CommonProxy {
 	public void setToNumberSliderEntry(Property property){
 		property.setConfigEntryClass(NumberSliderEntry.class);
 	}
+	
+	@Override
+	public void setToHUDChooserEntry(Property property){
+		property.setConfigEntryClass(SpellHUDSkinChooserEntry.class);
+	}
+
+	@Override
+	public void setToNamedBooleanEntry(Property property){
+		property.setConfigEntryClass(NamedBooleanEntry.class);
+	}
 
 	@Override
 	public World getTheWorld(){
@@ -201,12 +172,65 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void playMovingSound(Entity entity, SoundEvent sound, float volume, float pitch, boolean repeat){
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity(entity, sound, volume, pitch, repeat));
+	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity<>(entity, sound, category, volume, pitch, repeat));
+	}
+	
+	@Override
+	public void playSpellSoundLoop(EntityLivingBase entity, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch){
+		SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellEntity(start, loop, end, spell, entity, volume, pitch));
+	}
+
+	@Override
+	public void playSpellSoundLoop(World world, double x, double y, double z, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch, int duration){
+		if(duration == -1){
+			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellDispenser(start, loop, end, spell, world, x, y, z, volume, pitch));
+		}else{
+			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellPosTimed(start, loop, end, spell, duration, x, y, z, volume, pitch));
+		}
+	}
+
+	@Override
+	public Set<String> getSpellHUDSkins(){
+		return GuiSpellDisplay.getSkinKeys();
 	}
 
 	// SECTION Items
 	// ===============================================================================================================
+
+	@Override
+	public boolean shouldDisplayDiscovered(Spell spell, ItemStack stack){
+
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+
+		if(player == null) return false;
+
+		// Displayed recipe
+		if(Minecraft.getMinecraft().currentScreen instanceof GuiMerchant){
+			// It doesn't actually matter if the recipe is selected or not, since the itemstack will only ever
+			// match one of them anyway - and we'd have to reflect into GuiMerchant to get the selected recipe
+			MerchantRecipeList recipes = ((GuiMerchant)Minecraft.getMinecraft().currentScreen).getMerchant().getRecipes(player);
+			if(recipes != null && recipes.stream().anyMatch(r -> r.getItemToSell() == stack)){
+				// Spell books are always discovered when wizards are selling them
+				return true;
+			}
+		}
+
+		// Recipe output slot
+		// Required or players would be able to find out what the spell is without actually completing the trade
+		if(player.openContainer instanceof ContainerMerchant){
+
+			if(((ContainerMerchant)player.openContainer).getMerchantInventory().getStackInSlot(2) == stack){
+				return true;
+			}
+		}
+
+		if(!Wizardry.settings.discoveryMode) return true;
+		if(player.isCreative()) return true;
+		if(WizardData.get(player) != null && WizardData.get(player).hasSpellBeenDiscovered(spell)) return true;
+
+		return false;
+	}
 
 	@Override
 	public FontRenderer getFontRenderer(ItemStack stack){
@@ -216,12 +240,10 @@ public class ClientProxy extends CommonProxy {
 		if(stack.getItem() instanceof ItemWand){
 			spell = WandHelper.getCurrentSpell(stack);
 		}else if(stack.getItem() instanceof ItemSpellBook || stack.getItem() instanceof ItemScroll){
-			spell = Spell.get(stack.getItemDamage());
+			spell = Spell.byMetadata(stack.getItemDamage());
 		}
 
-		if(Minecraft.getMinecraft().player != null && Wizardry.settings.discoveryMode && WizardData.get(Minecraft.getMinecraft().player) != null
-				&& !Minecraft.getMinecraft().player.capabilities.isCreativeMode
-				&& !WizardData.get(Minecraft.getMinecraft().player).hasSpellBeenDiscovered(spell)){
+		if(!shouldDisplayDiscovered(spell, stack)){
 			return mixedFontRenderer;
 		}
 
@@ -231,16 +253,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public String getScrollDisplayName(ItemStack scroll){
 
-		// Displays [Empty slot] if spell is continuous.
-		Spell spell = Spell.get(scroll.getItemDamage());
-		if(spell.isContinuous) spell = Spells.none;
+		Spell spell = Spell.byMetadata(scroll.getItemDamage());
 
 		EntityPlayer player = Minecraft.getMinecraft().player;
 
 		boolean discovered = true;
 		// It seems that this method is called when the world is loading, before thePlayer has been initialised.
 		// If the player is null, the spell is assumed to be discovered.
-		if(player != null && Wizardry.settings.discoveryMode && !player.capabilities.isCreativeMode && WizardData.get(player) != null
+		if(player != null && Wizardry.settings.discoveryMode && !player.isCreative() && WizardData.get(player) != null
 				&& !WizardData.get(player).hasSpellBeenDiscovered(spell)){
 			discovered = false;
 		}
@@ -261,71 +281,59 @@ public class ClientProxy extends CommonProxy {
 		return super.getConjuredBowDurability(stack);
 	}
 
+	@Override
+	public void addMultiLineDescription(List<String> tooltip, String key, Style style){
+		String description = style.getFormattingCode() + I18n.format(key);
+		tooltip.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(description, TOOLTIP_WRAP_WIDTH));
+	}
+
 	// SECTION Particles
 	// ===============================================================================================================
 
+	/** Use {@link ParticleWizardry#registerParticle(ResourceLocation, IWizardryParticleFactory)}, this is internal. */
+	// I mean, it does exactly the same thing but I might want to make it do something else in future...
+	public static void addParticleFactory(ResourceLocation name, IWizardryParticleFactory factory){
+		factories.put(name, factory);
+	}
+
 	@Override
-	public void spawnParticle(WizardryParticleType type, World world, double x, double y, double z, double velX, double velY, double velZ, int maxAge,
-			float r, float g, float b, boolean doGravity, double radius){
-
-		// Colour values are now automatically clamped to between 0 and 1, as values outside this range seem to
-		// cause strange effects in 1.10 (or more specifically, particles that are bright pink!)
-		// TODO: This is a terrible dirty fix, but it'll do for now. Find a nicer way in future.
-		if(type != WizardryParticleType.MAGIC_FIRE) r = MathHelper.clamp(r, 0, 1);
-		g = MathHelper.clamp(g, 0, 1);
-		b = MathHelper.clamp(b, 0, 1);
-
-		switch(type){
-
-		case BLIZZARD:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleBlizzard(world, maxAge, x, z, radius, y));
-			break;
-		case BRIGHT_DUST:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, false));
-			break;
-		case DARK_MAGIC:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDarkMagic(world, x, y, z, velX, velY, velZ, r, g, b));
-			break;
-		case DUST:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleDust(world, x, y, z, velX, velY, velZ, r, g, b, true));
-			break;
-		case ICE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleIce(world, x, y, z, velX, velY, velZ, maxAge));
-			break;
-		case LEAF:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleLeaf(world, x, y, z, velX, velY, velZ, maxAge));
-			break;
-		case MAGIC_BUBBLE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleGiantBubble(world, x, y, z, velX, velY, velZ));
-			break;
-		case MAGIC_FIRE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleMagicFlame(world, x, y, z, velX, velY, velZ, maxAge, r == 0 ? 1 + world.rand.nextFloat() : r));
-			break;
-		case PATH:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticlePath(world, x, y, z, velX, velY, velZ, r, g, b, maxAge));
-			break;
-		case SNOW:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSnow(world, x, y, z, velX, velY, velZ));
-			break;
-		case SPARK:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSpark(world, x, y, z, velX, velY, velZ));
-			break;
-		case SPARKLE:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSparkle(world, x, y, z, velX, velY, velZ, r, g, b, maxAge, doGravity));
-			break;
-		case SPARKLE_ROTATING:
-			Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleRotatingSparkle(world, maxAge, x, z, radius, y, r, g, b));
-			break;
-		default:
-			break;
+	public void registerParticles(){
+		// I'll be a good programmer and use the API method rather than the one above. Lead by example, as they say...
+		ParticleWizardry.registerParticle(Type.BEAM, ParticleBeam::new);
+		ParticleWizardry.registerParticle(Type.BUFF, ParticleBuff::new);
+		ParticleWizardry.registerParticle(Type.DARK_MAGIC, ParticleDarkMagic::new);
+		ParticleWizardry.registerParticle(Type.DUST, ParticleDust::new);
+		ParticleWizardry.registerParticle(Type.FLASH, ParticleFlash::new);
+		ParticleWizardry.registerParticle(Type.ICE, ParticleIce::new);
+		ParticleWizardry.registerParticle(Type.LEAF, ParticleLeaf::new);
+		ParticleWizardry.registerParticle(Type.LIGHTNING, ParticleLightning::new);
+		ParticleWizardry.registerParticle(Type.LIGHTNING_PULSE, ParticleLightningPulse::new);
+		ParticleWizardry.registerParticle(Type.MAGIC_BUBBLE, ParticleMagicBubble::new);
+		ParticleWizardry.registerParticle(Type.MAGIC_FIRE, ParticleMagicFlame::new);
+		ParticleWizardry.registerParticle(Type.PATH, ParticlePath::new);
+		ParticleWizardry.registerParticle(Type.SCORCH, ParticleScorch::new);
+		ParticleWizardry.registerParticle(Type.SNOW, ParticleSnow::new);
+		ParticleWizardry.registerParticle(Type.SPARK, ParticleSpark::new);
+		ParticleWizardry.registerParticle(Type.SPARKLE, ParticleSparkle::new);
+		ParticleWizardry.registerParticle(Type.SPHERE, ParticleSphere::new);
+		ParticleWizardry.registerParticle(Type.SUMMON, ParticleSummon::new);
+		ParticleWizardry.registerParticle(Type.VINE, ParticleVine::new);
+	}
+	
+	@Override
+	public ParticleWizardry createParticle(ResourceLocation type, World world, double x, double y, double z){
+		IWizardryParticleFactory factory = factories.get(type);
+		if(factory == null){
+			Wizardry.logger.warn("Unrecognised particle type {} ! Ensure the particle is properly registered.", type);
+			return null;
 		}
+		return factory.createParticle(world, x, y, z);
 	}
 
 	@Override
 	public void spawnTornadoParticle(World world, double x, double y, double z, double velX, double velZ, double radius, int maxAge,
 			IBlockState block, BlockPos pos){
-		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// ,
-																																					// world.rand.nextInt(6)));
+		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// , world.rand.nextInt(6)));
 	}
 
 	// SECTION Packet Handlers
@@ -336,14 +344,12 @@ public class ClientProxy extends CommonProxy {
 
 		World world = Minecraft.getMinecraft().world;
 		Entity caster = world.getEntityByID(message.casterID);
-		Spell spell = Spell.get(message.spellID);
+		Spell spell = Spell.byNetworkID(message.spellID);
 		// Should always be true
 		if(caster instanceof EntityPlayer){
 
 			((EntityPlayer)caster).setActiveHand(message.hand);
 
-			// Duration isn't needed because it only ever affects things server-side, and anything that is
-			// seen client-side gets synced elsewhere.
 			spell.cast(world, (EntityPlayer)caster, message.hand, 0, message.modifiers);
 
 			Source source = Source.OTHER;
@@ -358,10 +364,25 @@ public class ClientProxy extends CommonProxy {
 
 			// No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
 			// The handler for this event now deals with discovery.
-			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post((EntityPlayer)caster, spell, message.modifiers, source));
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(source, spell, (EntityPlayer)caster, message.modifiers));
 
 		}else{
 			Wizardry.logger.warn("Recieved a PacketCastSpell, but the caster ID was not the ID of a player");
+		}
+	}
+
+	@Override
+	public void handleCastSpellAtPosPacket(PacketCastSpellAtPos.Message message){
+
+		World world = Minecraft.getMinecraft().world;
+		Spell spell = Spell.byNetworkID(message.spellID);
+
+		spell.cast(world, message.position.x, message.position.y, message.position.z, message.direction, 0, message.duration, message.modifiers);
+
+		MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.COMMAND, spell, world, message.position.x, message.position.y, message.position.z, message.direction, message.modifiers));
+
+		if(spell.isContinuous){
+			SpellEmitter.add(spell, world, message.position.x, message.position.y, message.position.z, message.direction, message.duration, message.modifiers);
 		}
 	}
 
@@ -370,7 +391,7 @@ public class ClientProxy extends CommonProxy {
 
 		World world = Minecraft.getMinecraft().world;
 		Entity caster = world.getEntityByID(message.casterID);
-		Spell spell = Spell.get(message.spellID);
+		Spell spell = Spell.byNetworkID(message.spellID);
 		// Should always be true
 		if(caster instanceof EntityPlayer){
 
@@ -380,7 +401,7 @@ public class ClientProxy extends CommonProxy {
 				if(data.isCasting()){
 					WizardData.get((EntityPlayer)caster).stopCastingContinuousSpell();
 				}else{
-					WizardData.get((EntityPlayer)caster).startCastingContinuousSpell(spell, message.modifiers);
+					WizardData.get((EntityPlayer)caster).startCastingContinuousSpell(spell, message.modifiers, message.duration);
 				}
 			}
 		}else{
@@ -394,7 +415,7 @@ public class ClientProxy extends CommonProxy {
 		World world = Minecraft.getMinecraft().world;
 		Entity caster = world.getEntityByID(message.casterID);
 		Entity target = message.targetID == -1 ? null : world.getEntityByID(message.targetID);
-		Spell spell = Spell.get(message.spellID);
+		Spell spell = Spell.byNetworkID(message.spellID);
 		// Should always be true
 		if(caster instanceof EntityLiving){
 
@@ -403,7 +424,7 @@ public class ClientProxy extends CommonProxy {
 				spell.cast(world, (EntityLiving)caster, message.hand, 0, (EntityLivingBase)target, message.modifiers);
 				// Again, no need to check if the spell succeeded, because the packet is only ever sent when it
 				// succeeds.
-				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post((EntityLiving)caster, spell, message.modifiers, Source.NPC));
+				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.NPC, spell, (EntityLiving)caster, message.modifiers));
 			}
 
 			if(caster instanceof ISpellCaster){
@@ -412,9 +433,40 @@ public class ClientProxy extends CommonProxy {
 					((EntityLiving)caster).setAttackTarget((EntityLivingBase)target);
 				}
 			}
-		}else{
+		}else if(caster != null){
 			Wizardry.logger.warn("Recieved a PacketNPCCastSpell, but the caster ID was not the ID of an EntityLiving");
 		}
+	}
+	
+	@Override
+	public void handleDispenserCastSpellPacket(PacketDispenserCastSpell.Message message){
+		
+		World world = Minecraft.getMinecraft().world;
+		
+		if(world.getTileEntity(message.pos) instanceof TileEntityDispenser){ // Should always be true
+			
+			Spell spell = Spell.byNetworkID(message.spellID);
+			
+			spell.cast(world, message.x, message.y, message.z, message.direction, 0, -1, message.modifiers);
+			// No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.DISPENSER, spell, world, message.x, message.y,
+					message.z, message.direction, message.modifiers));
+			
+			if(spell.isContinuous || spell instanceof None){
+				
+				DispenserCastingData data = DispenserCastingData.get((TileEntityDispenser)world.getTileEntity(message.pos));
+				
+				if(spell.isContinuous){
+					data.startCasting(spell, message.x, message.y, message.z, message.duration, message.modifiers);
+				}else{
+					data.stopCasting();
+				}
+			}
+			
+		}else{
+			Wizardry.logger.warn("Recieved a PacketDispenserCastSpell, but no tileEntity was found at the supplied location.");
+		}
+		
 	}
 
 	@Override
@@ -423,76 +475,148 @@ public class ClientProxy extends CommonProxy {
 		World world = Minecraft.getMinecraft().world;
 		Entity caster = world.getEntityByID(message.casterID);
 		// Moved from when the packet is sent to when it is received; fixes the sound not playing in first person.
-		caster.playSound(SoundEvents.BLOCK_PORTAL_TRAVEL, 1, 1);
+		caster.playSound(WizardrySounds.SPELL_TRANSPORTATION_TRAVEL, 1, 1);
 
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
-			double angle = world.rand.nextDouble() * Math.PI * 2;
-			double x = caster.posX + radius * Math.cos(angle);
+			float angle = world.rand.nextFloat() * (float)Math.PI * 2;
+			double x = caster.posX + radius * MathHelper.cos(angle);
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
-			double z = caster.posZ + radius * Math.sin(angle);
-			Minecraft.getMinecraft().effectRenderer
-					.addEffect(new ParticleSparkle(world, x, y, z, 0, 0.02, 0, 0.6f, 1.0f, 0.6f, 80 + world.rand.nextInt(10)));
+			double z = caster.posZ + radius * MathHelper.sin(angle);
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.02, 0).clr(0.6f, 1, 0.6f)
+			.time(80 + world.rand.nextInt(10)).spawn(world);
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
-			double angle = world.rand.nextDouble() * Math.PI * 2;
-			double x = caster.posX + radius * Math.cos(angle);
+			float angle = world.rand.nextFloat() * (float)Math.PI * 2;
+			double x = caster.posX + radius * MathHelper.cos(angle);
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
-			double z = caster.posZ + radius * Math.sin(angle);
+			double z = caster.posZ + radius * MathHelper.sin(angle);
 			world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x, y, z, 0, 0.02, 0);
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
-			double angle = world.rand.nextDouble() * Math.PI * 2;
-			double x = caster.posX + radius * Math.cos(angle);
+			float angle = world.rand.nextFloat() * (float)Math.PI * 2;
+			double x = caster.posX + radius * MathHelper.cos(angle);
 			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
-			double z = caster.posZ + radius * Math.sin(angle);
+			double z = caster.posZ + radius * MathHelper.sin(angle);
 			world.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, x, y, z, 0, 0.02, 0);
 		}
 	}
 
 	@Override
-	public void handlePlayerSyncPacket(Message message){
+	public void handlePlayerSyncPacket(PacketPlayerSync.Message message){
 
-		WizardData properties = WizardData.get(Minecraft.getMinecraft().player);
+		WizardData data = WizardData.get(Minecraft.getMinecraft().player);
 
-		if(properties != null){
+		if(data != null){
 
-			properties.spellsDiscovered = message.spellsDiscovered;
+			data.synchronisedRandom.setSeed(message.seed);
+			data.spellsDiscovered = message.spellsDiscovered;
+
+			message.spellData.forEach(data::setVariable);
 
 			if(message.selectedMinionID == -1){
-				properties.selectedMinion = null;
+				data.selectedMinion = null;
 			}else{
 				Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.selectedMinionID);
 
 				if(entity instanceof ISummonedCreature){
-					properties.selectedMinion = new WeakReference<ISummonedCreature>((ISummonedCreature)entity);
+					data.selectedMinion = new WeakReference<>((ISummonedCreature)entity);
 				}else{
-					properties.selectedMinion = null;
+					data.selectedMinion = null;
 				}
 			}
 		}
 	}
 
 	@Override
-	public void handleGlyphDataPacket(electroblob.wizardry.packet.PacketGlyphData.Message message){
+	public void handleGlyphDataPacket(PacketGlyphData.Message message){
 
 		SpellGlyphData data = SpellGlyphData.get(Minecraft.getMinecraft().world);
 
-		data.randomNames = new HashMap<Spell, String>();
-		data.randomDescriptions = new HashMap<Spell, String>();
+		data.randomNames = new HashMap<>();
+		data.randomDescriptions = new HashMap<>();
 
 		for(Spell spell : Spell.getSpells(Spell.allSpells)){
 			// -1 because the none spell isn't included
-			data.randomNames.put(spell, message.names.get(spell.id() - 1));
-			data.randomDescriptions.put(spell, message.descriptions.get(spell.id() - 1));
+			// This is a case where we must use the network ID, not the metadata
+			data.randomNames.put(spell, message.names.get(spell.networkID() - 1));
+			data.randomDescriptions.put(spell, message.descriptions.get(spell.networkID() - 1));
 		}
 	}
 
 	@Override
-	public void handleClairvoyancePacket(electroblob.wizardry.packet.PacketClairvoyance.Message message){
+	public void handleEmitterDataPacket(PacketEmitterData.Message message){
+		message.emitters.forEach(e -> e.setWorld(Minecraft.getMinecraft().world)); // Do this as soon as possible!
+		SpellEmitterData data = SpellEmitterData.get(Minecraft.getMinecraft().world);
+		// We shouldn't need to clear the emitters because when a player logs in or changes dimension the client world
+		// is wiped anyway, so the call to get() above should result in a fresh SpellEmitterData instance
+		message.emitters.forEach(data::add);
+	}
+
+	@Override
+	public void handleClairvoyancePacket(PacketClairvoyance.Message message){
 		Clairvoyance.spawnPathPaticles(Minecraft.getMinecraft().world, message.path, message.durationMultiplier);
+	}
+
+	@Override
+	public void handleAdvancementSyncPacket(PacketSyncAdvancements.Message message){
+		GuiWizardHandbook.updateUnlockStatus(message.showToasts, message.completedAdvancements);
+	}
+
+	@Override
+	public void handleEndSlowTimePacket(PacketEndSlowTime.Message message){
+		Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.hostID);
+		if(entity instanceof EntityLivingBase) PotionSlowTime.unblockNearbyEntities((EntityLivingBase)entity);
+		else Wizardry.logger.warn("Received a PacketEndSlowTime, but the entity ID did not match any living entity");
+	}
+
+	@Override
+	public void handleResurrectionPacket(PacketResurrection.Message message){
+		Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.playerID);
+		if(entity instanceof EntityPlayer){
+			((Resurrection)Spells.resurrection).resurrect((EntityPlayer)entity);
+			if(entity == Minecraft.getMinecraft().player){
+				Minecraft.getMinecraft().world.spawnEntity(entity);
+				Minecraft.getMinecraft().displayGuiScreen(null);
+			}
+		}
+		else Wizardry.logger.warn("Received a PacketResurrection, but the entity ID did not match any player");
+	}
+
+	@Override
+	public void handlePossessionPacket(PacketPossession.Message message){
+
+		Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.playerID);
+
+		if(entity instanceof EntityPlayer){
+
+			EntityPlayer player = (EntityPlayer)entity;
+
+			if(message.targetID == -1){
+				((Possession)Spells.possession).endPossession(player);
+			}else{
+				Entity target = Minecraft.getMinecraft().world.getEntityByID(message.targetID);
+				if(target instanceof EntityLiving){
+					((Possession)Spells.possession).possess(player, (EntityLiving)target, message.duration);
+					player.sendStatusMessage(new TextComponentTranslation("spell." + Spells.possession.getRegistryName()
+							+ ".success", Minecraft.getMinecraft().gameSettings.keyBindSneak.getDisplayName()), true);
+				}
+				else Wizardry.logger.warn("Received a PacketPossession, but the target ID did not match any living entity");
+			}
+		}
+		else Wizardry.logger.warn("Received a PacketPossession, but the player ID did not match any player");
+	}
+
+	public void handleConquerShrinePacket(PacketConquerShrine.Message message){
+
+		TileEntity tileEntity = Minecraft.getMinecraft().world.getTileEntity(new BlockPos(message.x, message.y, message.z));
+
+		if(tileEntity instanceof TileEntityShrineCore){
+			((TileEntityShrineCore)tileEntity).conquer();
+
+		}else Wizardry.logger.warn("Received a PacketConquerShrine, but there was no shrine core at the position sent");
 	}
 
 	// SECTION Rendering
@@ -507,6 +631,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void initialiseLayers(){
 		LayerStone.initialiseLayers();
+		LayerFrost.initialiseLayers();
 	}
 
 	@Override
@@ -515,6 +640,12 @@ public class ClientProxy extends CommonProxy {
 		// Minions
 		// Yet another advantage to the new system: turns out you don't even need to register the renderer if you
 		// just want the vanilla one for the mob you're extending.
+
+		// Luckily for us, the vanilla husk renderer is only parametrised to EntityZombie
+		RenderingRegistry.registerEntityRenderingHandler(EntityHuskMinion.class, RenderHusk::new);
+		// This now extends AbstractSkeleton so we need to bind the renderer ourselves
+		RenderingRegistry.registerEntityRenderingHandler(EntitySkeletonMinion.class, RenderSkeleton::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityStrayMinion.class, RenderStrayMinion::new);
 
 		// An anonymous class in a lambda expression! No point writing a separate class really, is there?
 		RenderingRegistry.registerEntityRenderingHandler(EntityLightningWraith.class, manager -> new RenderBlaze(manager){
@@ -549,15 +680,15 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityForceArrow.class, RenderForceArrow::new);
 
 		// Creatures
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritWolf.class, manager -> new RenderSpiritWolf(manager));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritHorse.class, manager -> new RenderSpiritHorse(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritWolf.class, RenderSpiritWolf::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpiritHorse.class, RenderSpiritHorse::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityWizard.class, RenderWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEvilWizard.class, RenderEvilWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecoy.class, RenderDecoy::new);
 
 		// Throwables
 		RenderingRegistry.registerEntityRenderingHandler(EntitySparkBomb.class,
-				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/entity/spark_bomb.png"), false));
+				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/spark_bomb.png"), false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFirebomb.class,
 				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/firebomb.png"), false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPoisonBomb.class,
@@ -576,21 +707,29 @@ public class ClientProxy extends CommonProxy {
 				manager -> new RenderLightningDisc(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 2.0f));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeBomb.class,
 				manager -> new RenderProjectile(manager, 0.6f, new ResourceLocation(Wizardry.MODID, "textures/items/smoke_bomb.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityEmber.class,
+				manager -> new RenderProjectile(manager, 0.15f, new ResourceLocation(Wizardry.MODID, "textures/entity/ember.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityMagicFireball.class,
+				manager -> new RenderProjectile(manager, 0.7f, new ResourceLocation(Wizardry.MODID, "textures/entity/fireball.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityLargeMagicFireball.class,
+				manager -> new RenderProjectile(manager, 1.5f, new ResourceLocation(Wizardry.MODID, "textures/entity/fireball.png"), false));
+		RenderingRegistry.registerEntityRenderingHandler(EntityIceball.class,
+				manager -> new RenderProjectile(manager, 0.7f, new ResourceLocation(Wizardry.MODID, "textures/entity/iceball.png"), false));
 
 		// Effects and constructs
-		RenderingRegistry.registerEntityRenderingHandler(EntityArc.class, RenderArc::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlackHole.class, RenderBlackHole::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShield.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBubble.class, RenderBubble::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityHammer.class, RenderHammer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceSpike.class, RenderIceSpike::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityForcefield.class, RenderForcefield::new);
+		//RenderingRegistry.registerEntityRenderingHandler(EntityContainmentField.class, RenderContainmentField::new);
 
 		// Stuff that doesn't render
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlizzard.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityTornado.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityArrowRain.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityShadowWraith.class, RenderBlank::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityForcefield.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityThunderbolt.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityStormElemental.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEarthquake.class, RenderBlank::new);
@@ -608,7 +747,8 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireRing.class,
 				manager -> new RenderFireRing(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/ring_of_fire.png"), 5.0f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecay.class, RenderDecay::new);
-		RenderingRegistry.registerEntityRenderingHandler(EntityLightningPulse.class, manager -> new RenderLightningPulse(manager, 8.0f));
+		RenderingRegistry.registerEntityRenderingHandler(EntityCombustionRune.class,
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/combustion_rune.png"), 2.0f, true));
 
 		// TESRs
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArcaneWorkbench.class, new RenderArcaneWorkbench());

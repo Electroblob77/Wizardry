@@ -1,40 +1,62 @@
 package electroblob.wizardry.entity.construct;
 
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityIceSpike extends EntityMagicConstruct {
+
+	private EnumFacing facing;
 
 	public EntityIceSpike(World world){
 		super(world);
 		this.setSize(0.5f, 1.0f);
 	}
 
-	public EntityIceSpike(World world, double x, double y, double z, EntityLivingBase caster, int lifetime,
-			float damageMultiplier){
-		super(world, x, y, z, caster, lifetime, damageMultiplier);
-		this.setSize(0.5f, 1.0f);
+	public void setFacing(EnumFacing facing){
+		this.facing = facing;
+		this.setRotation(-facing.getHorizontalAngle(), WizardryUtilities.getPitch(facing));
+		float yaw = (-facing.getHorizontalAngle()) * (float)Math.PI/180;
+		float pitch = (WizardryUtilities.getPitch(facing) - 90) * (float)Math.PI/180;
+		Vec3d min = new Vec3d(-width/2, 0, -width/2).rotatePitch(pitch).rotateYaw(yaw);
+		Vec3d max = new Vec3d(width/2, height, width/2).rotatePitch(pitch).rotateYaw(yaw);
+		this.setEntityBoundingBox(new AxisAlignedBB(this.getPositionVector().add(min), this.getPositionVector().add(max)));
 	}
 
+	public EnumFacing getFacing(){
+		return facing;
+	}
+
+	@Override
 	public void onUpdate(){
 
+		double extensionSpeed = 0;
+
 		if(lifetime - this.ticksExisted < 15){
-			this.motionY = -0.01 * (this.ticksExisted - (lifetime - 15));
+			extensionSpeed = -0.01 * (this.ticksExisted - (lifetime - 15));
 		}else if(lifetime - this.ticksExisted < 25){
-			this.motionY = 0;
+			extensionSpeed = 0;
 		}else if(lifetime - this.ticksExisted < 28){
-			this.motionY = 0.25;
+			extensionSpeed = 0.25;
 		}
 
-		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
+		if(facing != null){ // Will probably be null on the client side, but should never be on the server side
+			this.move(MoverType.SELF, this.facing.getXOffset() * extensionSpeed, this.facing.getYOffset() * extensionSpeed,
+					this.facing.getZOffset() * extensionSpeed);
+		}
 
-		if(lifetime - this.ticksExisted == 30) this.playSound(WizardrySounds.SPELL_ICE, 1, 2);
+		if(lifetime - this.ticksExisted == 30) this.playSound(WizardrySounds.ENTITY_ICE_SPIKE_EXTEND, 1, 2);
 
 		if(!this.world.isRemote){
 			for(Object entity : this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox())){
@@ -42,8 +64,10 @@ public class EntityIceSpike extends EntityMagicConstruct {
 					// Potion effect only gets added if the damage succeeded.
 					if(((EntityLivingBase)entity).attackEntityFrom(
 							MagicDamage.causeDirectMagicDamage(this.getCaster(), DamageType.FROST),
-							5 * this.damageMultiplier))
-						((EntityLivingBase)entity).addPotionEffect(new PotionEffect(WizardryPotions.frost, 100, 0));
+							Spells.ice_spikes.getProperty(Spell.DAMAGE).floatValue() * this.damageMultiplier))
+						((EntityLivingBase)entity).addPotionEffect(new PotionEffect(WizardryPotions.frost,
+								Spells.ice_spikes.getProperty(Spell.EFFECT_DURATION).intValue(),
+								Spells.ice_spikes.getProperty(Spell.EFFECT_STRENGTH).intValue()));
 				}
 			}
 		}
@@ -51,4 +75,8 @@ public class EntityIceSpike extends EntityMagicConstruct {
 		super.onUpdate();
 	}
 
+	@Override
+	public int getBrightnessForRender(){
+		return 15728880;
+	}
 }

@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "apprentice",
+  "element": "lightning",
+  "type": "projectile",
+  "cost": 15,
+  "chargeup": 0,
+  "cooldown": 20,
+  "base_properties": {
+    "range": 25,
+    "damage": 7
+  }
+}

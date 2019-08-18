@@ -20,6 +20,9 @@ build
 # other
 eclipse
 run
-misc
-libs
+logs
+/misc
+/libs
+libsfordeobf
+generated
 Thumbs.db

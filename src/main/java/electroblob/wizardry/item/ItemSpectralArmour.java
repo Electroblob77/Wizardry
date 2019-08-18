@@ -1,7 +1,6 @@
 package electroblob.wizardry.item;
 
-import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.renderer.GlStateManager;
+import electroblob.wizardry.registry.Spells;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,17 +17,12 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 	public ItemSpectralArmour(ArmorMaterial material, int renderIndex, EntityEquipmentSlot armourType){
 		super(material, renderIndex, armourType);
 		setCreativeTab(null);
-		setMaxDamage(getBaseDuration());
-	}
-
-	@Override
-	public int getBaseDuration(){
-		return 1200;
+		setMaxDamage(1200);
 	}
 
 	@Override
 	public int getMaxDamage(ItemStack stack){
-		return this.getMaxDamageFromNBT(stack);
+		return this.getMaxDamageFromNBT(stack, Spells.conjure_armour);
 	}
 
 	// Overridden to stop the enchantment trick making the name turn blue.
@@ -73,6 +67,16 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 		return 0;
 	}
 
+	@Override
+	public boolean isEnchantable(ItemStack stack){
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book){
+		return false;
+	}
+
 	// Cannot be dropped
 	@Override
 	public boolean onDroppedByPlayer(ItemStack item, EntityPlayer player){
@@ -89,14 +93,14 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
-			EntityEquipmentSlot armorSlot, ModelBiped _default){
-		GlStateManager.enableBlend();
-		GlStateManager.tryBlendFuncSeparate(
-			GlStateManager.SourceFactor.SRC_ALPHA,
-			GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-			GlStateManager.SourceFactor.ONE,
-			GlStateManager.DestFactor.ZERO
+	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
+			EntityEquipmentSlot armorSlot, net.minecraft.client.model.ModelBiped _default){
+		net.minecraft.client.renderer.GlStateManager.enableBlend();
+		net.minecraft.client.renderer.GlStateManager.tryBlendFuncSeparate(
+				net.minecraft.client.renderer.GlStateManager.SourceFactor.SRC_ALPHA,
+				net.minecraft.client.renderer.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+				net.minecraft.client.renderer.GlStateManager.SourceFactor.ONE,
+				net.minecraft.client.renderer.GlStateManager.DestFactor.ZERO
 		);
 		return super.getArmorModel(entityLiving, itemStack, armorSlot, _default);
 	}

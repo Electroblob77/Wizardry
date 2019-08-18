@@ -1,8 +1,5 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketNPCCastSpell;
@@ -18,18 +15,21 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Entity AI class for use by instances of {@link ISpellCaster}. This deals with pathing, the spell casting itself and
  * the attack cooldown. Also provides an automatic implementation of continuous spell casting using the methods
  * specified in {@code ISpellCaster}; all the entity class needs to do is implement those methods.
+ * @param <T> The type of entity that this AI belongs to; must both extend EntityLiving <i>and</i> implement ISpellCaster
  */
-public class EntityAIAttackSpell extends EntityAIBase {
+// Mmmm generics...
+public class EntityAIAttackSpell<T extends EntityLiving & ISpellCaster> extends EntityAIBase {
 
-	/** The entity the AI instance has been applied to. */
-	private final EntityLiving attacker;
-	/** The entity the AI instance has been applied to, but as an ISpellCaster. */
-	private final ISpellCaster caster;
-	/** The tagret to be attacked. */
+	/** The entity the AI instance has been applied to. Thanks to type parameters, methods from both EntityLiving and
+	 * ISummonedCreature may be invoked on this field. */
+	private final T attacker;
 	private EntityLivingBase target;
 	/**
 	 * Decremented each tick while greater than 0. When a spell is cast, this is set to that spell's cooldown plus the
@@ -65,23 +65,14 @@ public class EntityAIAttackSpell extends EntityAIBase {
 	 *        attacking, and also the amount that is added to the cooldown of the spell that has just been cast.
 	 * @param continuousSpellDuration The number of ticks that continuous spells will be cast for before cooling down.
 	 */
-	public EntityAIAttackSpell(ISpellCaster attacker, double speed, float maxDistance, int baseCooldown,
-			int continuousSpellDuration){
-
+	public EntityAIAttackSpell(T attacker, double speed, float maxDistance, int baseCooldown, int continuousSpellDuration){
 		this.cooldown = -1;
-
-		if(!(attacker instanceof EntityLiving)){
-			throw new IllegalArgumentException(
-					"Tried to create an EntityAICastSpell for an entity that isn't an EntityLiving");
-		}else{
-			this.caster = attacker;
-			this.attacker = (EntityLiving)attacker;
-			this.baseCooldown = baseCooldown;
-			this.continuousSpellDuration = continuousSpellDuration;
-			this.speed = speed;
-			this.maxAttackDistance = maxDistance * maxDistance;
-			this.setMutexBits(3);
-		}
+		this.attacker = attacker;
+		this.baseCooldown = baseCooldown;
+		this.continuousSpellDuration = continuousSpellDuration;
+		this.speed = speed;
+		this.maxAttackDistance = maxDistance * maxDistance;
+		this.setMutexBits(3);
 	}
 
 	@Override
@@ -112,11 +103,12 @@ public class EntityAIAttackSpell extends EntityAIBase {
 	}
 
 	private void setContinuousSpellAndNotify(Spell spell, SpellModifiers modifiers){
-		caster.setContinuousSpell(spell);
+		attacker.setContinuousSpell(spell);
 		WizardryPacketHandler.net.sendToAllAround(
 				new PacketNPCCastSpell.Message(attacker.getEntityId(), target == null ? -1 : target.getEntityId(),
-						EnumHand.MAIN_HAND, spell.id(), modifiers),
+						EnumHand.MAIN_HAND, spell, modifiers),
 				// Particles are usually only visible from 16 blocks away, so 128 is more than far enough.
+				// TODO: Why is this one a 128 block radius, whilst the other one is all in dimension?
 				new TargetPoint(attacker.dimension, attacker.posX, attacker.posY, attacker.posZ, 128));
 	}
 
@@ -151,11 +143,11 @@ public class EntityAIAttackSpell extends EntityAIBase {
 			if(distanceSq > (double)this.maxAttackDistance || !targetIsVisible
 			// ...or the spell is cancelled via events...
 					|| MinecraftForge.EVENT_BUS
-							.post(new SpellCastEvent.Tick(attacker, caster.getContinuousSpell(), caster.getModifiers(),
-									Source.NPC, this.continuousSpellDuration - this.continuousSpellTimer))
+							.post(new SpellCastEvent.Tick(Source.NPC, attacker.getContinuousSpell(), attacker,
+									attacker.getModifiers(), this.continuousSpellDuration - this.continuousSpellTimer))
 					// ...or the spell no longer succeeds...
-					|| !caster.getContinuousSpell().cast(attacker.world, attacker, EnumHand.MAIN_HAND,
-							this.continuousSpellDuration - this.continuousSpellTimer, target, caster.getModifiers())
+					|| !attacker.getContinuousSpell().cast(attacker.world, attacker, EnumHand.MAIN_HAND,
+							this.continuousSpellDuration - this.continuousSpellTimer, target, attacker.getModifiers())
 					// ...or the time has elapsed...
 					|| this.continuousSpellTimer == 0){
 
@@ -167,8 +159,8 @@ public class EntityAIAttackSpell extends EntityAIBase {
 
 			}else if(this.continuousSpellDuration - this.continuousSpellTimer == 1){
 				// On the first tick, if the spell did succeed, fire SpellCastEvent.Post.
-				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(attacker, caster.getContinuousSpell(),
-						caster.getModifiers(), Source.NPC));
+				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.NPC, attacker.getContinuousSpell(),
+						attacker, attacker.getModifiers()));
 			}
 
 		}else if(--this.cooldown == 0){
@@ -180,7 +172,7 @@ public class EntityAIAttackSpell extends EntityAIBase {
 			double dx = target.posX - attacker.posX;
 			double dz = target.posZ - attacker.posZ;
 
-			List<Spell> spells = new ArrayList<Spell>(caster.getSpells());
+			List<Spell> spells = new ArrayList<Spell>(attacker.getSpells());
 
 			if(spells.size() > 0){
 
@@ -194,7 +186,7 @@ public class EntityAIAttackSpell extends EntityAIBase {
 
 						spell = spells.get(attacker.world.rand.nextInt(spells.size()));
 
-						SpellModifiers modifiers = caster.getModifiers();
+						SpellModifiers modifiers = attacker.getModifiers();
 
 						if(spell != null && attemptCastSpell(spell, modifiers)){
 							// The spell worked, so we're done!
@@ -217,7 +209,7 @@ public class EntityAIAttackSpell extends EntityAIBase {
 	private boolean attemptCastSpell(Spell spell, SpellModifiers modifiers){
 
 		// If anything stops the spell working at this point, nothing else happens.
-		if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(attacker, spell, modifiers, Source.NPC))){
+		if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Pre(Source.NPC, spell, attacker, modifiers))){
 			return false;
 		}
 
@@ -230,16 +222,16 @@ public class EntityAIAttackSpell extends EntityAIBase {
 
 			}else{
 
-				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(attacker, spell, modifiers, Source.NPC));
+				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.NPC, spell, attacker, modifiers));
 
 				// For now, the cooldown is just added to the constant base cooldown. I think this
 				// is a reasonable way of doing things; it's certainly better than before.
-				this.cooldown = this.baseCooldown + spell.cooldown;
+				this.cooldown = this.baseCooldown + spell.getCooldown();
 
-				if(spell.doesSpellRequirePacket()){
+				if(spell.requiresPacket()){
 					// Sends a packet to all players in dimension to tell them to spawn particles.
 					IMessage msg = new PacketNPCCastSpell.Message(attacker.getEntityId(), target.getEntityId(),
-							EnumHand.MAIN_HAND, spell.id(), modifiers);
+							EnumHand.MAIN_HAND, spell, modifiers);
 					WizardryPacketHandler.net.sendToDimension(msg, attacker.world.provider.getDimension());
 				}
 			}

@@ -1,19 +1,108 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:master"
+            "translate": "advancement.ebwizardry:master"
         },
         "description": {
-            "translate": "advancement.wizardry:master.desc"
+            "translate": "advancement.ebwizardry:master.desc"
         },
         "icon": {
             "item": "ebwizardry:master_wand"
         }
     },
-    "parent": "ebwizardry:apprentice",
+    "parent": "ebwizardry:advanced",
     "criteria": {
-        "criteria_0": {
-            "trigger": "ebwizardry:trigger_master"
+        "magic": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_wand"
+                    }
+                ]
+            }
+        },
+        "fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_fire_wand"
+                    }
+                ]
+            }
+        },
+        "ice": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_ice_wand"
+                    }
+                ]
+            }
+        },
+        "lightning": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_lightning_wand"
+                    }
+                ]
+            }
+        },
+        "necromancy": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_necromancy_wand"
+                    }
+                ]
+            }
+        },
+        "earth": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_earth_wand"
+                    }
+                ]
+            }
+        },
+        "sorcery": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_sorcery_wand"
+                    }
+                ]
+            }
+        },
+        "healing": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:master_healing_wand"
+                    }
+                ]
+            }
         }
-    }
+    },
+    "requirements": [
+        [
+            "magic",
+            "fire",
+            "ice",
+            "lightning",
+            "necromancy",
+            "earth",
+            "sorcery",
+            "healing"
+        ]
+    ]
 }

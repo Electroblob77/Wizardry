@@ -1,23 +1,15 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -26,69 +18,28 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.Village;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature {
 
 	// Field implementations
-	private int lifetime = 600;
-	private WeakReference<EntityLivingBase> casterReference;
+	private int lifetime = -1;
 	private UUID casterUUID;
 
 	// Setter + getter implementations
-	@Override
-	public int getLifetime(){
-		return lifetime;
-	}
+	@Override public int getLifetime(){ return lifetime; }
+	@Override public void setLifetime(int lifetime){ this.lifetime = lifetime; }
+	@Override public UUID getOwnerId(){ return casterUUID; }
+	@Override public void setOwnerId(UUID uuid){ this.casterUUID = uuid; }
 
-	@Override
-	public void setLifetime(int lifetime){
-		this.lifetime = lifetime;
-	}
-
-	@Override
-	public WeakReference<EntityLivingBase> getCasterReference(){
-		return casterReference;
-	}
-
-	@Override
-	public void setCasterReference(WeakReference<EntityLivingBase> reference){
-		casterReference = reference;
-	}
-
-	@Override
-	public UUID getCasterUUID(){
-		return casterUUID;
-	}
-
-	@Override
-	public void setCasterUUID(UUID uuid){
-		this.casterUUID = uuid;
-	}
-
-	/**
-	 * Default shell constructor, only used by client. Lifetime defaults arbitrarily to 600, but this doesn't matter
-	 * because the client side entity immediately gets the lifetime value copied over to it by this class anyway. When
-	 * extending this class, you must override this constructor or Minecraft won't like it, but there's no need to do
-	 * anything inside it other than call super().
-	 */
+	/** Creates a new ice giant in the given world. */
 	public EntityIceGiant(World world){
 		super(world);
 		this.setSize(1.4F, 2.9F);
 		this.experienceValue = 0;
-	}
-
-	/**
-	 * Set lifetime to -1 to allow this creature to last forever. This constructor should be overridden when extending
-	 * this class (be sure to call super()) so that AI and other things can be added.
-	 */
-	public EntityIceGiant(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world);
-		this.setSize(1.4F, 2.9F);
-		this.setPosition(x, y, z);
-		this.casterReference = new WeakReference<EntityLivingBase>(caster);
-		this.experienceValue = 0;
-		this.lifetime = lifetime;
 	}
 
 	@Override
@@ -107,19 +58,9 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 	// EntityIronGolem overrides
 
-	@Override
-	protected void updateAITasks(){
-	} // Disables home-checking
-
-	@Override
-	public Village getVillage(){
-		return null;
-	}
-
-	@Override
-	public int getHoldRoseTick(){
-		return 0;
-	}
+	@Override protected void updateAITasks(){} // Disables home-checking
+	@Override public Village getVillage(){ return null; }
+	@Override public int getHoldRoseTick(){ return 0; }
 
 	// Implementations
 
@@ -136,18 +77,21 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 	@Override
 	public void onSpawn(){
+		this.spawnParticleEffect();
 	}
 
 	@Override
 	public void onDespawn(){
-		this.playSound(WizardrySounds.SPELL_FREEZE, 1.0f, 1.0f);
+		this.playSound(WizardrySounds.ENTITY_ICE_GIANT_DESPAWN, 1.0f, 1.0f);
+		this.spawnParticleEffect();
+	}
+	
+	private void spawnParticleEffect(){
 		if(this.world.isRemote){
 			for(int i = 0; i < 30; i++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, this.world,
-						this.posX - 1 + rand.nextDouble() * 2, this.posY + rand.nextDouble() * 3,
-						this.posZ - 1 + rand.nextDouble() * 2, 0, -0.02, 0, 12 + rand.nextInt(8), brightness,
-						brightness + 0.1f, 1.0f);
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, -0.02, 0).time(12 + rand.nextInt(8))
+				.clr(brightness, brightness + 0.1f, 1.0f).spawn(world);
 			}
 		}
 	}
@@ -158,9 +102,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 		super.onLivingUpdate();
 
 		if(this.world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.SNOW, this.world, this.posX - 1 + rand.nextDouble() * 2,
-					this.posY + rand.nextDouble() * 3, this.posZ - 1 + rand.nextDouble() * 2, 0, -0.02, 0,
-					40 + rand.nextInt(10));
+			ParticleBuilder.create(Type.SNOW, this).spawn(world);
 		}
 	}
 
@@ -175,7 +117,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 		this.applyEnchantments(this, target);
 
-		this.playSound(SoundEvents.ENTITY_IRONGOLEM_ATTACK, 1.0F, 1.0F);
+		this.playSound(WizardrySounds.ENTITY_ICE_GIANT_ATTACK, 1.0F, 1.0F);
 	}
 
 	@Override
@@ -204,35 +146,20 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 
 	// Recommended overrides
 
-	@Override
-	protected int getExperiencePoints(EntityPlayer player){
-		return 0;
+	@Override protected int getExperiencePoints(EntityPlayer player){ return 0; }
+	@Override protected boolean canDropLoot(){ return false; }
+	@Override protected Item getDropItem(){ return null; }
+	@Override protected ResourceLocation getLootTable(){ return null; }
+	@Override public boolean canPickUpLoot(){ return false; }
+
+	// This vanilla method has nothing to do with the custom despawn() method.
+	@Override protected boolean canDespawn(){
+		return getCaster() == null && getOwnerId() == null;
 	}
 
 	@Override
-	protected boolean canDropLoot(){
-		return false;
-	}
-
-	@Override
-	protected Item getDropItem(){
-		return null;
-	}
-
-	@Override
-	protected ResourceLocation getLootTable(){
-		return null;
-	}
-
-	@Override
-	public boolean canPickUpLoot(){
-		return false;
-	}
-
-	// This vanilla method has nothing to do with the custom onDespawn() method.
-	@Override
-	protected boolean canDespawn(){
-		return false;
+	public boolean getCanSpawnHere(){
+		return this.world.getDifficulty() != EnumDifficulty.PEACEFUL;
 	}
 
 	@Override
@@ -254,7 +181,7 @@ public class EntityIceGiant extends EntityIronGolem implements ISummonedCreature
 	@Override
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getCaster() != null;
+		return Wizardry.settings.summonedCreatureNames && getCaster() != null;
 	}
 
 }

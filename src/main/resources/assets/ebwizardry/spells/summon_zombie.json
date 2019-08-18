@@ -1,0 +1,24 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "novice",
+  "element": "necromancy",
+  "type": "minion",
+  "cost": 10,
+  "chargeup": 0,
+  "cooldown": 40,
+  "base_properties": {
+    "minion_lifetime": 600,
+    "minion_count": 1,
+    "summon_radius": 2
+  }
+}

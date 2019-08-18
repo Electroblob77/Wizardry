@@ -1,0 +1,33 @@
+{
+	"name": "Oceanic",
+	"description": "An ornate relic from a sunken civilisation.",
+	"width": 126,
+	"height": 39,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 43,
+		"y": 20
+	},
+	"spell_cascade_offset": {
+		"x": 1,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 43,
+		"y": 2,
+		"length": 79,
+		"height": 3,
+		"mirror": {
+			"x": false,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

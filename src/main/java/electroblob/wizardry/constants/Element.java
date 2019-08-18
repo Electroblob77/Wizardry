@@ -1,7 +1,7 @@
 package electroblob.wizardry.constants;
 
 import electroblob.wizardry.Wizardry;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
@@ -10,19 +10,18 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public enum Element {
+public enum Element implements IStringSerializable {
 
-	/**
-	 * The 'default' element, with {@link electroblob.wizardry.spell.MagicMissile MagicMissile} being its only spell.
-	 */
-	MAGIC(new Style().setColor(TextFormatting.GRAY), "simple", Wizardry.MODID),
-	FIRE(new Style().setColor(TextFormatting.DARK_RED), "fire", Wizardry.MODID),
-	ICE(new Style().setColor(TextFormatting.AQUA), "ice", Wizardry.MODID),
-	LIGHTNING(new Style().setColor(TextFormatting.DARK_AQUA), "lightning", Wizardry.MODID),
-	NECROMANCY(new Style().setColor(TextFormatting.DARK_PURPLE), "necromancy", Wizardry.MODID),
-	EARTH(new Style().setColor(TextFormatting.DARK_GREEN), "earth", Wizardry.MODID),
-	SORCERY(new Style().setColor(TextFormatting.GREEN), "sorcery", Wizardry.MODID),
-	HEALING(new Style().setColor(TextFormatting.YELLOW), "healing", Wizardry.MODID);
+	/** The 'default' element, with {@link electroblob.wizardry.registry.Spells#magic_missile magic missile} being its
+	 * only spell. */
+	MAGIC(new Style().setColor(TextFormatting.GRAY), "magic"),
+	FIRE(new Style().setColor(TextFormatting.DARK_RED), "fire"),
+	ICE(new Style().setColor(TextFormatting.AQUA), "ice"),
+	LIGHTNING(new Style().setColor(TextFormatting.DARK_AQUA), "lightning"),
+	NECROMANCY(new Style().setColor(TextFormatting.DARK_PURPLE), "necromancy"),
+	EARTH(new Style().setColor(TextFormatting.DARK_GREEN), "earth"),
+	SORCERY(new Style().setColor(TextFormatting.GREEN), "sorcery"),
+	HEALING(new Style().setColor(TextFormatting.YELLOW), "healing");
 
 	/** Display colour for this element */
 	private final Style colour;
@@ -31,16 +30,31 @@ public enum Element {
 	/** The {@link ResourceLocation} for this element's 8x8 icon (displayed in the arcane workbench GUI) */
 	private final ResourceLocation icon;
 
-	private Element(Style colour, String name, String modid){
+	Element(Style colour, String name){
+		this(colour, name, Wizardry.MODID);
+	}
+
+	Element(Style colour, String name, String modid){
 		this.colour = colour;
 		this.unlocalisedName = name;
 		this.icon = new ResourceLocation(modid, "textures/gui/element_icon_" + unlocalisedName + ".png");
 	}
 
+	/** Returns the element with the given name, or throws an {@link java.lang.IllegalArgumentException} if no such
+	 * element exists. */
+	public static Element fromName(String name){
+
+		for(Element element : values()){
+			if(element.unlocalisedName.equals(name)) return element;
+		}
+
+		throw new IllegalArgumentException("No such element with unlocalised name: " + name);
+	}
+
 	/** Returns the translated display name of this element, without formatting. */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return I18n.format("element." + getUnlocalisedName());
+		return net.minecraft.client.resources.I18n.format("element." + getName());
 	}
 
 	/** Returns the {@link Style} object representing the colour of this element. */
@@ -55,11 +69,12 @@ public enum Element {
 
 	/** Returns the translated display name for wizards of this element, shown in the trading GUI. */
 	public ITextComponent getWizardName(){
-		return new TextComponentTranslation("element." + getUnlocalisedName() + ".wizard");
+		return new TextComponentTranslation("element." + getName() + ".wizard");
 	}
 
-	/** Returns this element's unlocalised name. */
-	public String getUnlocalisedName(){
+	/** Returns this element's unlocalised name. Also used as the serialised string in block properties. */
+	@Override
+	public String getName(){
 		return unlocalisedName;
 	}
 

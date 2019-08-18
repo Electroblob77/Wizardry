@@ -1,53 +1,75 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.WizardData;
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.data.IStoredVariable;
+import electroblob.wizardry.data.Persistence;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.EntitySpiritWolf;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.WizardryUtilities.Operations;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.UUID;
+
 public class SummonSpiritWolf extends Spell {
 
+	/** The string identifier for the potency attribute modifier. */
+	private static final String POTENCY_ATTRIBUTE_MODIFIER = "potency";
+
+	public static final IStoredVariable<UUID> UUID_KEY = IStoredVariable.StoredVariable.ofUUID("spiritWolfUUID", Persistence.ALWAYS);
+
 	public SummonSpiritWolf(){
-		super(Tier.APPRENTICE, 25, Element.EARTH, "summon_spirit_wolf", SpellType.MINION, 100, EnumAction.BOW, false);
+		super("summon_spirit_wolf", EnumAction.BOW, false);
+		addProperties(SpellMinion.SUMMON_RADIUS);
+		soundValues(0.7f, 1.2f, 0.4f);
+		WizardData.registerStoredVariables(UUID_KEY);
 	}
 
 	@Override
-	public boolean doesSpellRequirePacket(){
+	public boolean requiresPacket(){
 		return false;
 	}
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		WizardData properties = WizardData.get(caster);
+		WizardData data = WizardData.get(caster);
 
-		if(!properties.hasSpiritWolf){
-			if(!world.isRemote){
+		if(!world.isRemote){
 
-				BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
-				if(pos == null) return false;
+			Entity oldWolf = WizardryUtilities.getEntityByUUID(world, data.getVariable(UUID_KEY));
 
-				EntitySpiritWolf wolf = new EntitySpiritWolf(world);
-				wolf.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-				wolf.setTamed(true);
-				wolf.setOwnerId(caster.getUniqueID());
-				world.spawnEntity(wolf);
-			}
-			properties.hasSpiritWolf = true;
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_HEAL, 0.7F,
-					world.rand.nextFloat() * 0.4F + 1.0F);
-			return true;
+			if(oldWolf != null) oldWolf.setDead();
+
+			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
+			if(pos == null) return false;
+
+			EntitySpiritWolf wolf = new EntitySpiritWolf(world);
+			wolf.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+			wolf.setTamed(true);
+			wolf.setOwnerId(caster.getUniqueID());
+			// Potency gives the wolf more strength AND more health
+			wolf.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).applyModifier(
+					new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.get(SpellModifiers.POTENCY) - 1, Operations.MULTIPLY_CUMULATIVE));
+			wolf.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(
+					new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.amplified(SpellModifiers.POTENCY, 1.5f) - 1, Operations.MULTIPLY_CUMULATIVE));
+			wolf.setHealth(wolf.getMaxHealth());
+
+			world.spawnEntity(wolf);
+
+			data.setVariable(UUID_KEY, wolf.getUniqueID());
 		}
-		return false;
+
+		this.playSound(world, caster, ticksInUse, -1, modifiers);
+		return true;
+
 	}
 
 }

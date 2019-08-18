@@ -1,0 +1,92 @@
+{
+    "criteria": {
+        "fire": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+						"data": 1
+                    }
+                ]
+            }
+        },
+        "ice": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+                        "data": 2
+                    }
+                ]
+            }
+        },
+        "lightning": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+                        "data": 3
+                    }
+                ]
+            }
+        },
+        "necromancy": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+                        "data": 4
+                    }
+                ]
+            }
+        },
+        "earth": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+                        "data": 5
+                    }
+                ]
+            }
+        },
+        "sorcery": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+                        "data": 6
+                    }
+                ]
+            }
+        },
+        "healing": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:magic_crystal",
+                        "data": 7
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "fire",
+            "ice",
+            "lightning",
+            "necromancy",
+            "earth",
+            "sorcery",
+            "healing"
+        ]
+    ]
+}

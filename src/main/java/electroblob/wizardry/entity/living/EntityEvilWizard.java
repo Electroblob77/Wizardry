@@ -1,11 +1,6 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.common.base.Predicate;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -15,30 +10,18 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAIRestrictOpenDoor;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest2;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -47,18 +30,28 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
+import javax.annotation.Nullable;
+import java.util.*;
+
 public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntityAdditionalSpawnData {
 
-	private EntityAIAttackSpell spellCastingAI = new EntityAIAttackSpell(this, 0.5D, 14.0F, 30, 50);
+	private EntityAIAttackSpell<EntityEvilWizard> spellCastingAI = new EntityAIAttackSpell<>(this, 0.5D, 14.0F, 30, 50);
 
 	public int textureIndex = 0;
 
-	public boolean hasTower = false;
+	/** True if this evil wizard was spawned as part of a structure (tower or shrine), false if it spawned naturally. */
+	public boolean hasStructure = false;
+
+	/** Stores the UUIDs of the other evil wizards spawned in the same group, if any. The wizard will not revenge-target
+	 * entities whose UUIDs are in this set. This is currently used only for shrines. */
+	public final Set<UUID> groupUUIDs = new HashSet<>();
 
 	/** The entity selector passed into the new AI methods. */
 	protected Predicate<Entity> targetSelector;
@@ -92,11 +85,12 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	protected void entityInit(){
 		super.entityInit();
 		this.dataManager.register(HEAL_COOLDOWN, -1);
-		this.dataManager.register(ELEMENT, 0);
+		this.dataManager.register(ELEMENT, -1);
 	}
 
 	@Override
 	protected void initEntityAI(){
+
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(5, new EntityAIOpenDoor(this, true));
@@ -104,34 +98,31 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		this.tasks.addTask(7, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
 		this.tasks.addTask(7, new EntityAIWander(this, 0.6D));
 
-		this.targetSelector = new Predicate<Entity>(){
+		this.targetSelector = entity -> {
 
-			public boolean apply(Entity entity){
+			// If the target is valid and not invisible...
+			if(entity != null && !entity.isInvisible()
+					&& AllyDesignationSystem.isValidTarget(EntityEvilWizard.this, entity)){
 
-				// If the target is valid and not invisible...
-				if(entity != null && !entity.isInvisible()
-						&& WizardryUtilities.isValidTarget(EntityEvilWizard.this, entity)){
-
-					// ... and is a player, a summoned creature, another (non-evil) wizard ...
-					if(entity instanceof EntityPlayer
-							|| (entity instanceof ISummonedCreature || entity instanceof EntityWizard
-					// ... or in the whitelist ...
-									|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
-											.contains(EntityList.getKey(entity.getClass())))
-									// ... and isn't in the blacklist ...
-									&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
-											.contains(EntityList.getKey(entity.getClass()))){
-						// ... it can be attacked.
-						return true;
-					}
+				// ... and is a player, a summoned creature, another (non-evil) wizard ...
+				if(entity instanceof EntityPlayer
+						|| (entity instanceof ISummonedCreature || entity instanceof EntityWizard
+				// ... or in the whitelist ...
+								|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
+										.contains(EntityList.getKey(entity.getClass())))
+								// ... and isn't in the blacklist ...
+								&& !Arrays.asList(Wizardry.settings.summonedCreatureTargetsBlacklist)
+										.contains(EntityList.getKey(entity.getClass()))){
+					// ... it can be attacked.
+					return true;
 				}
-
-				return false;
 			}
+
+			return false;
 		};
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
+		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class,
 				0, false, true, this.targetSelector));
 	}
 
@@ -151,7 +142,8 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	}
 
 	public Element getElement(){
-		return Element.values()[this.dataManager.get(ELEMENT)];
+		int n = this.dataManager.get(ELEMENT);
+		return n == -1 ? null : Element.values()[n];
 	}
 
 	public void setElement(Element element){
@@ -177,6 +169,22 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
 	}
+	
+	@Override
+	public int getAimingError(EnumDifficulty difficulty){
+		// Being more intelligent than skeletons, wizards are a little more accurate.
+		switch(difficulty){
+		case EASY: return 7;
+		case NORMAL: return 4;
+		case HARD: return 1;
+		default: return 7; // Peaceful counts as easy
+		}
+	}
+
+	@Override
+	public void setRevengeTarget(@Nullable EntityLivingBase target){
+		if(target == null || !groupUUIDs.contains(target.getUniqueID())) super.setRevengeTarget(target);
+	}
 
 	@Override
 	public void onLivingUpdate(){
@@ -199,26 +207,25 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 			// deathTime == 0 checks the wizard isn't currently dying
 		}else if(healCooldown == -1 && this.deathTime == 0){
 
-			// Heal particles
+			// Heal particles TODO: Change this so it uses the heal spell directly
 			if(world.isRemote){
-				for(int i = 0; i < 10; i++){
-					double d0 = (double)((float)this.posX + rand.nextFloat() * 2 - 1.0F);
+				for(int i=0; i<10; i++){
+					double x = (double)((float)this.posX + rand.nextFloat() * 2 - 1.0F);
 					// Apparently the client side spawns the particles 1 block higher than it should... hence the -
 					// 0.5F.
-					double d1 = (double)((float)this.posY - 0.5F + rand.nextFloat());
-					double d2 = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, d0, d1, d2, 0, 0.1F, 0,
-							48 + rand.nextInt(12), 1.0f, 1.0f, 0.3f);
+					double y = (double)((float)this.posY - 0.5F + rand.nextFloat());
+					double z = (double)((float)this.posZ + rand.nextFloat() * 2 - 1.0F);
+					ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1F, 0).clr(1, 1, 0.3f).spawn(world);
 				}
 			}else{
 				if(this.getHealth() < 10){
-					// Wizard heals himself more often if he has low health
+					// Wizards heal themselves more often if they have low health
 					this.setHealCooldown(150);
 				}else{
 					this.setHealCooldown(400);
 				}
 
-				this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
+				this.playSound(Spells.heal.getSounds()[0], 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 			}
 		}
 		if(healCooldown > 0){
@@ -237,9 +244,13 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// Spell.get(spells[3]).getDisplayName()));
 
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
-		if(player.capabilities.isCreativeMode && stack.getItem() instanceof ItemSpellBook){
-			if(this.spells.size() >= 4 && Spell.get(stack.getItemDamage()).canBeCastByNPCs()){
-				this.spells.set(rand.nextInt(3) + 1, Spell.get(stack.getItemDamage()));
+		if(player.isCreative() && stack.getItem() instanceof ItemSpellBook){
+			Spell spell = Spell.byMetadata(stack.getItemDamage());
+			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
+				// The set(...) method returns the element that was replaced - neat!
+				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
+						this.getDisplayName(), this.spells.set(rand.nextInt(3) + 1, spell).getNameForTranslationFormatted(),
+						spell.getNameForTranslationFormatted()));
 				return true;
 			}
 		}
@@ -252,8 +263,9 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("element", this.getElement().ordinal());
 		nbt.setInteger("skin", this.textureIndex);
-		nbt.setTag("spells", WizardryUtilities.listToNBT(spells, spell -> new NBTTagInt(spell.id())));
-		nbt.setBoolean("hasTower", this.hasTower);
+		nbt.setTag("spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
+		nbt.setBoolean("hasStructure", this.hasStructure);
+		nbt.setTag("groupUUIDs", NBTExtras.listToNBT(groupUUIDs, NBTUtil::createUUIDTag));
 	}
 
 	@Override
@@ -261,9 +273,10 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		super.readEntityFromNBT(nbt);
 		this.setElement(Element.values()[nbt.getInteger("element")]);
 		this.textureIndex = nbt.getInteger("skin");
-		this.spells = (List<Spell>)WizardryUtilities.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
-				(NBTTagInt tag) -> Spell.get(tag.getInt()));
-		this.hasTower = nbt.getBoolean("hasTower");
+		this.spells = (List<Spell>)NBTExtras.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
+				(NBTTagInt tag) -> Spell.byMetadata(tag.getInt()));
+		this.hasStructure = nbt.getBoolean("hasStructure");
+		this.groupUUIDs.addAll(NBTExtras.NBTToList(nbt.getTagList("groupUUIDs", NBT.TAG_COMPOUND), NBTUtil::getUUIDFromTag));
 	}
 	
 	@Override
@@ -274,7 +287,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public boolean getCanSpawnHere(){
 		// Evil wizards can only spawn in the specified dimensions
-		for(int id : Wizardry.settings.evilWizardDimensions){
+		for(int id : Wizardry.settings.mobSpawnDimensions){
 			if(this.dimension == id) return super.getCanSpawnHere();
 		}
 		
@@ -284,27 +297,27 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	protected boolean canDespawn(){
 		// Evil wizards can only despawn if they don't have a tower (i.e. if they spawned naturally at night)
-		return !this.hasTower;
+		return !this.hasStructure;
 	}
 
-	@Override
-	protected float getSoundPitch(){
-		return (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 0.6F;
-	}
+//	@Override
+//	protected float getSoundPitch(){
+//		return (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 0.6F;
+//	}
 
 	@Override
 	protected SoundEvent getAmbientSound(){
-		return SoundEvents.ENTITY_WITCH_AMBIENT;
+		return WizardrySounds.ENTITY_EVIL_WIZARD_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source){
-		return SoundEvents.ENTITY_WITCH_HURT;
+		return WizardrySounds.ENTITY_EVIL_WIZARD_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound(){
-		return SoundEvents.ENTITY_WITCH_DEATH;
+		return WizardrySounds.ENTITY_EVIL_WIZARD_DEATH;
 	}
 
 	// Although it *looks* like this is still called, in actual fact the only method that calls it is overridden in
@@ -323,7 +336,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// the dropRareDrop method because that would be just as rare as normal mobs; instead this is half as rare.
 		if(this.spells.size() > 0 && rand.nextInt(100) - lootingLevel < 5)
 			this.entityDropItem(new ItemStack(WizardryItems.spell_book, 1,
-					this.spells.get(1 + rand.nextInt(this.spells.size() - 1)).id()), 0);
+					this.spells.get(1 + rand.nextInt(this.spells.size() - 1)).metadata()), 0);
 	}
 
 	@Override
@@ -338,17 +351,19 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 
 		textureIndex = this.rand.nextInt(6);
 
-		if(rand.nextBoolean()){
-			this.setElement(Element.values()[rand.nextInt(Element.values().length - 1) + 1]);
-		}else{
-			this.setElement(Element.MAGIC);
+		if(getElement() == null){
+			if(rand.nextBoolean()){
+				this.setElement(Element.values()[rand.nextInt(Element.values().length - 1) + 1]);
+			}else{
+				this.setElement(Element.MAGIC);
+			}
 		}
 
 		Element element = this.getElement();
 
 		// Adds armour.
 		for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
-			this.setItemStackToSlot(slot, new ItemStack(WizardryUtilities.getArmour(element, slot)));
+			this.setItemStackToSlot(slot, new ItemStack(WizardryItems.getArmour(element, slot)));
 		}
 
 		// Default chance is 0.085f, for reference.
@@ -358,12 +373,12 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// All wizards know magic missile, even if it is disabled.
 		spells.add(Spells.magic_missile);
 
-		Tier maxTier = EntityWizard.populateSpells(spells, element, 3, rand);
+		Tier maxTier = EntityWizard.populateSpells(spells, element, hasStructure, 3, rand);
 
 		// Now done after the spells so it can take the tier into account. For evil wizards this is slightly different;
 		// it picks a random wand which is at least a high enough tier for the spells the wizard has.
 		Tier tier = Tier.values()[maxTier.ordinal() + rand.nextInt(Tier.values().length - maxTier.ordinal())];
-		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(WizardryUtilities.getWand(tier, element)));
+		this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(WizardryItems.getWand(tier, element)));
 
 		return data;
 	}

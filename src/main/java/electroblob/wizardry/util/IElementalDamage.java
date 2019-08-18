@@ -1,9 +1,7 @@
 package electroblob.wizardry.util;
 
-import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -43,10 +41,6 @@ public interface IElementalDamage {
 					&& ((IElementalDamage)event.getSource()).getType() == DamageType.SHOCK){
 				// Charges creepers when they are hit by shock damage
 				WizardryUtilities.chargeCreeper((EntityCreeper)event.getEntityLiving());
-				// Gives the player that caused the shock damage the 'It's Gonna Blow' achievement
-				if(event.getSource().getTrueSource() instanceof EntityPlayer){
-					WizardryAdvancementTriggers.charge_creeper.triggerFor((EntityPlayer)event.getSource().getTrueSource());
-				}
 			}
 		}
 	}

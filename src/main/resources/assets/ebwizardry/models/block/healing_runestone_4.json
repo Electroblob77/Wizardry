@@ -1,0 +1,8 @@
+{
+    "parent": "ebwizardry:block/runestone",
+    "textures": {
+        "side": "ebwizardry:blocks/runestone_healing_0",
+        "rune": "ebwizardry:blocks/runestone_healing_4",
+        "overlay": "ebwizardry:blocks/runestone_healing_4_overlay"
+    }
+}

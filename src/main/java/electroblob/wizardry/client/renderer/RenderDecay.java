@@ -1,7 +1,5 @@
 package electroblob.wizardry.client.renderer;
 
-import org.lwjgl.opengl.GL11;
-
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityDecay;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -12,6 +10,7 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public class RenderDecay extends Render<EntityDecay> {
 
@@ -44,7 +43,7 @@ public class RenderDecay extends Render<EntityDecay> {
 
 		GlStateManager.rotate(-90, 1, 0, 0);
 
-		float scale = 2 * Math.min(1, (float)(EntityDecay.LIFETIME - entity.ticksExisted) / 50f);
+		float scale = 2 * Math.min(1, (float)(entity.lifetime - entity.ticksExisted) / 50f);
 
 		GlStateManager.scale(scale, scale, scale);
 

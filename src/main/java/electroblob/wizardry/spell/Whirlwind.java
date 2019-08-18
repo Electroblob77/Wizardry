@@ -1,44 +1,55 @@
 package electroblob.wizardry.spell;
 
-import electroblob.wizardry.constants.Element;
-import electroblob.wizardry.constants.SpellType;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
-public class Whirlwind extends Spell {
+public class Whirlwind extends SpellRay {
+
+	public static final String REPULSION_VELOCITY = "repulsion_velocity";
 
 	public Whirlwind(){
-		super(Tier.APPRENTICE, 10, Element.EARTH, "whirlwind", SpellType.DEFENCE, 15, EnumAction.NONE, false);
+		super("whirlwind", false, EnumAction.NONE);
+		this.soundValues(0.8f, 0.7f, 0.2f);
+		addProperties(REPULSION_VELOCITY);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		RayTraceResult rayTrace = WizardryUtilities.standardEntityRayTrace(world, caster,
-				10 * modifiers.get(WizardryItems.range_upgrade));
+		if(target instanceof EntityPlayer && ((caster instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
+				|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
+
+			if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
+					new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
+			return false;
+		}
 
 		// Left as EntityLivingBase because why not be able to move armour stands around?
-		if(rayTrace != null && rayTrace.entityHit instanceof EntityLivingBase){
-			EntityLivingBase target = (EntityLivingBase)rayTrace.entityHit;
+		if(target instanceof EntityLivingBase){
+			
+			Vec3d vec = target.getPositionVector().add(0, target.getEyeHeight(), 0).subtract(origin).normalize();
 
 			if(!world.isRemote){
 
-				target.motionX = caster.getLookVec().x * 2;
-				target.motionY = caster.getLookVec().y * 2 + 1;
-				target.motionZ = caster.getLookVec().z * 2;
+				float velocity = getProperty(REPULSION_VELOCITY).floatValue() * modifiers.get(SpellModifiers.POTENCY);
+
+				target.motionX = vec.x * velocity;
+				target.motionY = vec.y * velocity + 1;
+				target.motionZ = vec.z * velocity;
 
 				// Player motion is handled on that player's client so needs packets
 				if(target instanceof EntityPlayerMP){
@@ -47,67 +58,31 @@ public class Whirlwind extends Spell {
 			}
 
 			if(world.isRemote){
+				
+				double distance = target.getDistance(origin.x, origin.y, origin.z);
+				
 				for(int i = 0; i < 10; i++){
-					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().x * caster.getDistance(target) * 0.5);
-					double y2 = (double)(WizardryUtilities.getPlayerEyesPos(caster) + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().y * caster.getDistance(target) * 0.5);
-					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().z * caster.getDistance(target) * 0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().x,
-							caster.getLookVec().y, caster.getLookVec().z);
-					// Minecraft.getMinecraft().effectRenderer.addEffect(new EntitySparkleFX(world, x2, y2, z2,
-					// entityplayer.getLookVec().xCoord, entityplayer.getLookVec().yCoord,
-					// entityplayer.getLookVec().zCoord, null, 1.0f, 1.0f, 0.8f, 10));
+					double x = origin.x + world.rand.nextDouble() - 0.5 + vec.x * distance * 0.5;
+					double y = origin.y + world.rand.nextDouble() - 0.5 + vec.y * distance * 0.5;
+					double z = origin.z + world.rand.nextDouble() - 0.5 + vec.z * distance * 0.5;
+					world.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, vec.x, vec.y, vec.z);
 				}
 			}
-			caster.swingArm(hand);
-			WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_ICE, 0.8F,
-					world.rand.nextFloat() * 0.2F + 0.6F);
+			
 			return true;
 		}
+		
 		return false;
 	}
 
 	@Override
-	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target,
-			SpellModifiers modifiers){
-
-		if(target != null){
-
-			if(!world.isRemote){
-				target.motionX = caster.getLookVec().x * 2;
-				target.motionY = caster.getLookVec().y * 2 + 1;
-				target.motionZ = caster.getLookVec().z * 2;
-
-				// Player motion is handled on that player's client so needs packets
-				if(target instanceof EntityPlayerMP){
-					((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
-				}
-			}
-			if(world.isRemote){
-				for(int i = 0; i < 10; i++){
-					double x2 = (double)(caster.posX + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().x * caster.getDistance(target) * 0.5);
-					double y2 = (double)(caster.posY + caster.getEyeHeight() + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().y * caster.getDistance(target) * 0.5);
-					double z2 = (double)(caster.posZ + world.rand.nextFloat() - 0.5F
-							+ caster.getLookVec().z * caster.getDistance(target) * 0.5);
-					world.spawnParticle(EnumParticleTypes.CLOUD, x2, y2, z2, caster.getLookVec().x,
-							caster.getLookVec().y, caster.getLookVec().z);
-				}
-			}
-			caster.swingArm(hand);
-			caster.playSound(WizardrySounds.SPELL_ICE, 0.8F, world.rand.nextFloat() * 0.2F + 0.6F);
-			return true;
-		}
-
+	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		return false;
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
-		return true;
+	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
+		return false;
 	}
 
 }

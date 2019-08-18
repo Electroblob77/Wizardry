@@ -1,0 +1,33 @@
+{
+	"name": "Classic",
+	"description": "The original spell HUD, for that nostalgic feel!",
+	"width": 128,
+	"height": 36,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 42,
+		"y": 17
+	},
+	"spell_cascade_offset": {
+		"x": 0,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 42,
+		"y": 0,
+		"length": 82,
+		"height": 6,
+		"mirror": {
+			"x": false,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

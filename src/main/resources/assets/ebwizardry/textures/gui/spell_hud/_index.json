@@ -1,0 +1,78 @@
+{
+	"default": {
+		"texture": "ebwizardry:gui/spell_hud/default",
+		"metadata": "ebwizardry:gui/spell_hud/default"
+	},
+	"classic": {
+		"texture": "ebwizardry:gui/spell_hud/classic",
+		"metadata": "ebwizardry:gui/spell_hud/classic"
+	},
+	"vanilla_style": {
+		"texture": "ebwizardry:gui/spell_hud/vanilla_style",
+		"metadata": "ebwizardry:gui/spell_hud/vanilla_style"
+	},
+	"redwood": {
+		"texture": "ebwizardry:gui/spell_hud/redwood",
+		"metadata": "ebwizardry:gui/spell_hud/redwood"
+	},
+	"silverwood": {
+		"texture": "ebwizardry:gui/spell_hud/silverwood",
+		"metadata": "ebwizardry:gui/spell_hud/silverwood"
+	},
+	"stone": {
+		"texture": "ebwizardry:gui/spell_hud/stone",
+		"metadata": "ebwizardry:gui/spell_hud/stone"
+	},
+	"sandstone": {
+		"texture": "ebwizardry:gui/spell_hud/sandstone",
+		"metadata": "ebwizardry:gui/spell_hud/sandstone"
+	},
+	"jungle": {
+		"texture": "ebwizardry:gui/spell_hud/jungle",
+		"metadata": "ebwizardry:gui/spell_hud/jungle"
+	},
+	"spell_book": {
+		"texture": "ebwizardry:gui/spell_hud/spell_book",
+		"metadata": "ebwizardry:gui/spell_hud/spell_book"
+	},
+	"minimal": {
+		"texture": "ebwizardry:gui/spell_hud/minimal",
+		"metadata": "ebwizardry:gui/spell_hud/minimal"
+	},
+	"no_icon": {
+		"texture": "ebwizardry:gui/spell_hud/no_icon",
+		"metadata": "ebwizardry:gui/spell_hud/no_icon"
+	},
+	"skyrim_style": {
+		"texture": "ebwizardry:gui/spell_hud/skyrim_style",
+		"metadata": "ebwizardry:gui/spell_hud/skyrim_style"
+	},
+	"futuristic": {
+		"texture": "ebwizardry:gui/spell_hud/futuristic",
+		"metadata": "ebwizardry:gui/spell_hud/futuristic"
+	},
+	"steampunk": {
+		"texture": "ebwizardry:gui/spell_hud/steampunk",
+		"metadata": "ebwizardry:gui/spell_hud/steampunk"
+	},
+	"dragon": {
+		"texture": "ebwizardry:gui/spell_hud/dragon",
+		"metadata": "ebwizardry:gui/spell_hud/dragon"
+	},
+	"compass": {
+		"texture": "ebwizardry:gui/spell_hud/compass",
+		"metadata": "ebwizardry:gui/spell_hud/compass"
+	},
+	"mahogany": {
+		"texture": "ebwizardry:gui/spell_hud/mahogany",
+		"metadata": "ebwizardry:gui/spell_hud/mahogany"
+	},
+	"oceanic": {
+		"texture": "ebwizardry:gui/spell_hud/oceanic",
+		"metadata": "ebwizardry:gui/spell_hud/oceanic"
+	},
+	"planks": {
+		"texture": "ebwizardry:gui/spell_hud/planks",
+		"metadata": "ebwizardry:gui/spell_hud/planks"
+	}
+}

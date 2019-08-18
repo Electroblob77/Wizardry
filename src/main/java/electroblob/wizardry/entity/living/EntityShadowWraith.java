@@ -1,22 +1,15 @@
 package electroblob.wizardry.entity.living;
 
-import java.util.Collections;
-import java.util.List;
-
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryParticleType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.*;
 import net.minecraft.init.MobEffects;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
@@ -25,22 +18,22 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Collections;
+import java.util.List;
+
 public class EntityShadowWraith extends EntitySummonedCreature implements ISpellCaster {
 
 	// TODO: This currently doesn't fly like it used to. Should it, or does it not matter?
 
 	private double AISpeed = 1.0;
 
-	private EntityAIAttackSpell spellAttackAI = new EntityAIAttackSpell(this, AISpeed, 15f, 30, 0);
+	private EntityAIAttackSpell<EntityShadowWraith> spellAttackAI = new EntityAIAttackSpell<EntityShadowWraith>(this, AISpeed, 15f, 30, 0);
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.darkness_orb);
 
+	/** Creates a new shadow wraith in the gievn world. */
 	public EntityShadowWraith(World world){
 		super(world);
-	}
-
-	public EntityShadowWraith(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
 		// For some reason this can't be in initEntityAI
 		this.tasks.addTask(0, this.spellAttackAI);
 	}
@@ -99,17 +92,17 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 
 	@Override
 	protected SoundEvent getAmbientSound(){
-		return SoundEvents.ENTITY_BLAZE_AMBIENT;
+		return WizardrySounds.ENTITY_SHADOW_WRAITH_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source){
-		return SoundEvents.ENTITY_BLAZE_HURT;
+		return WizardrySounds.ENTITY_SHADOW_WRAITH_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound(){
-		return SoundEvents.ENTITY_BLAZE_DEATH;
+		return WizardrySounds.ENTITY_SHADOW_WRAITH_DEATH;
 	}
 
 	@Override
@@ -128,9 +121,8 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = rand.nextFloat() * 0.4f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world, this.posX - 0.5d + rand.nextDouble(),
-						this.posY + this.height / 2 - 0.5d + rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble(), 0,
-						0.05f, 0, 20 + rand.nextInt(10), brightness, 0.0f, brightness);
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).time(20 + rand.nextInt(10))
+				.clr(brightness, 0.0f, brightness).spawn(world);
 			}
 		}
 	}
@@ -139,7 +131,7 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 	public void onLivingUpdate(){
 
 		if(this.rand.nextInt(24) == 0){
-			this.playSound(SoundEvents.BLOCK_PORTAL_AMBIENT, 1.0F + this.rand.nextFloat(),
+			this.playSound(WizardrySounds.ENTITY_SHADOW_WRAITH_NOISE, 1.0F + this.rand.nextFloat(),
 					this.rand.nextFloat() * 0.7F + 0.3F);
 		}
 
@@ -149,26 +141,25 @@ public class EntityShadowWraith extends EntitySummonedCreature implements ISpell
 		}
 
 		if(world.isRemote){
-			for(int i = 0; i < 2; i++){
+			
+			for(int i=0; i<2; i++){
+				
 				world.spawnParticle(EnumParticleTypes.PORTAL,
 						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
 						this.posY + this.rand.nextDouble() * (double)this.height,
 						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
+				
 				world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
 						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
 						this.posY + this.rand.nextDouble() * (double)this.height,
 						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0, 0);
+				
 				float brightness = rand.nextFloat() * 0.2f;
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-						this.posY + this.rand.nextDouble() * (double)this.height,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0, 0.05f, 0,
-						20 + rand.nextInt(10), brightness, 0.0f, brightness);
-				Wizardry.proxy.spawnParticle(WizardryParticleType.DARK_MAGIC, world,
-						this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width,
-						this.posY + this.rand.nextDouble() * (double)this.height,
-						this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, 0.0d, 0.0d, 0.0d, 0, 0.1f,
-						0.0f, 0.0f);
+				
+				ParticleBuilder.create(Type.SPARKLE, this).vel(0, 0.05, 0).time(20 + rand.nextInt(10))
+				.clr(brightness, 0.0f, brightness).spawn(world);
+				
+				ParticleBuilder.create(Type.DARK_MAGIC, this).clr(0.1f, 0.0f, 0.0f).spawn(world);
 			}
 		}
 

@@ -1,0 +1,33 @@
+{
+	"name": "Minimal",
+	"description": "A modern, sleek, minimalist look.",
+	"width": 128,
+	"height": 36,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 39,
+		"y": 16
+	},
+	"spell_cascade_offset": {
+		"x": 0,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 36,
+		"y": 1,
+		"length": 86,
+		"height": 2,
+		"mirror": {
+			"x": true,
+			"y": true
+		},
+		"show_when_full": false
+	}
+}

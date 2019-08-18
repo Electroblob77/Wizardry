@@ -1,16 +1,16 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:special_upgrade"
+            "translate": "advancement.ebwizardry:special_upgrade"
         },
         "description": {
-            "translate": "advancement.wizardry:special_upgrade.desc"
+            "translate": "advancement.ebwizardry:special_upgrade.desc"
         },
         "icon": {
             "item": "ebwizardry:condenser_upgrade"
         }
     },
-    "parent": "ebwizardry:arcane_initiate",
+    "parent": "ebwizardry:apprentice",
     "criteria": {
         "criteria_0": {
             "trigger": "ebwizardry:trigger_special_upgrade"

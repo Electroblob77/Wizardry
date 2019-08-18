@@ -1,10 +1,7 @@
 package electroblob.wizardry.entity.living;
 
-import java.lang.ref.WeakReference;
-
-import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryParticleType;
-import io.netty.buffer.ByteBuf;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -18,12 +15,14 @@ import net.minecraft.world.World;
 
 public class EntityDecoy extends EntitySummonedCreature {
 
+	/** Creates a new decoy in the given world. */
 	public EntityDecoy(World world){
 		super(world);
 	}
-
-	public EntityDecoy(World world, double x, double y, double z, EntityLivingBase caster, int lifetime){
-		super(world, x, y, z, caster, lifetime);
+	
+	@Override
+	public void setCaster(EntityLivingBase caster){
+		super.setCaster(caster);
 		this.setAlwaysRenderNameTag(caster instanceof EntityPlayer);
 	}
 
@@ -39,11 +38,17 @@ public class EntityDecoy extends EntitySummonedCreature {
 	@Override
 	public void onDespawn(){
 		super.onDespawn();
-		for(int i = 0; i < 20; i++){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, world,
-					this.posX + (this.rand.nextDouble() - 0.5) * this.width,
-					this.getEntityBoundingBox().minY + this.rand.nextDouble() * this.height,
-					this.posZ + (this.rand.nextDouble() - 0.5) * this.width, 0, 0, 0, 40, 0.2f, 1.0f, 0.8f);
+		
+		if(world.isRemote){
+			for(int i = 0; i < 20; i++){
+				ParticleBuilder.create(Type.DUST)
+				.pos(this.posX + (this.rand.nextDouble() - 0.5) * this.width, this.getEntityBoundingBox().minY
+						+ this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5) * this.width)
+				.time(40)
+				.clr(0.2f, 1.0f, 0.8f)
+				.shaded(true)
+				.spawn(world);
+			}
 		}
 	}
 
@@ -91,18 +96,19 @@ public class EntityDecoy extends EntitySummonedCreature {
 		return false;
 	}
 
-	@Override
-	public void writeSpawnData(ByteBuf data){
-		super.writeSpawnData(data);
-		if(this.getCaster() != null) data.writeInt(this.getCaster().getEntityId());
-	}
-
-	@Override
-	public void readSpawnData(ByteBuf data){
-		super.readSpawnData(data);
-		if(!data.isReadable()) return;
-		this.setCasterReference(
-				new WeakReference<EntityLivingBase>((EntityLivingBase)this.world.getEntityByID(data.readInt())));
-	}
+	// TESTME: Why was this here? It gets done in ISummonedCreature anyway
+//	@Override
+//	public void writeSpawnData(ByteBuf data){
+//		super.writeSpawnData(data);
+//		if(this.getCaster() != null) data.writeInt(this.getCaster().getEntityId());
+//	}
+//
+//	@Override
+//	public void readSpawnData(ByteBuf data){
+//		super.readSpawnData(data);
+//		if(!data.isReadable()) return;
+//		this.setCasterReference(
+//				new WeakReference<EntityLivingBase>((EntityLivingBase)this.world.getEntityByID(data.readInt())));
+//	}
 
 }

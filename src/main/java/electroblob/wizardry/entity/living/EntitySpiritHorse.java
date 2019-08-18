@@ -1,10 +1,10 @@
 package electroblob.wizardry.entity.living;
 
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.WizardryParticleType;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,7 +15,6 @@ import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -33,6 +32,10 @@ public class EntitySpiritHorse extends EntityHorse {
 
 	private int idleTimer = 0;
 
+	private int dispelTimer = 0;
+
+	private static final int DISPEL_TIME = 10;
+
 	public EntitySpiritHorse(World par1World){
 		super(par1World);
 	}
@@ -42,7 +45,7 @@ public class EntitySpiritHorse extends EntityHorse {
 		if(this.hasCustomName()){
 			return this.getCustomNameTag();
 		}else{
-			return I18n.translateToLocal("entity.wizardry.Spirit Horse.name");
+			return I18n.translateToLocal("entity.wizardry.spirit_horse.name");
 		}
 	}
 
@@ -92,21 +95,13 @@ public class EntitySpiritHorse extends EntityHorse {
 
 		// Allows the owner (but not other players) to dispel the spirit horse using a wand (shift-clicking, because
 		// clicking mounts the horse in this case).
-		if(itemstack.getItem() instanceof ItemWand && this.getOwner() == player && player.isSneaking()){
+		if(itemstack.getItem() instanceof ISpellCastingItem && this.getOwner() == player && player.isSneaking()){
 			// Prevents accidental double clicking.
 			if(this.ticksExisted > 20){
-				for(int i = 0; i < 15; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-							this.posX - this.width / 2 + this.rand.nextFloat() * width,
-							this.posY + this.height * this.rand.nextFloat() + 0.2f,
-							this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0,
-							48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
-				}
-				this.setDead();
-				if(WizardData.get(player) != null){
-					WizardData.get(player).hasSpiritHorse = false;
-				}
-				this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
+
+				this.dispelTimer++;
+				
+				this.playSound(WizardrySounds.ENTITY_SPIRIT_HORSE_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 				// This is necessary to prevent the wand's spell being cast when performing this action.
 				return true;
 			}
@@ -115,15 +110,13 @@ public class EntitySpiritHorse extends EntityHorse {
 
 		return super.processInteract(player, hand);
 	}
-
-	@Override
-	public void onDeath(DamageSource par1DamageSource){
-
-		super.onDeath(par1DamageSource);
-
-		// Allows player to summon another spirit horse once this one has died.
-		if(this.getOwner() instanceof EntityPlayer && WizardData.get((EntityPlayer)this.getOwner()) != null){
-			WizardData.get((EntityPlayer)this.getOwner()).hasSpiritHorse = false;
+	
+	private void spawnAppearParticles(){
+		for(int i=0; i<15; i++){
+			double x = this.posX - this.width / 2 + this.rand.nextFloat() * width;
+			double y = this.posY + this.height * this.rand.nextFloat() + 0.2f;
+			double z = this.posZ - this.width / 2 + this.rand.nextFloat() * width;
+			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).spawn(world);
 		}
 	}
 
@@ -140,17 +133,27 @@ public class EntitySpiritHorse extends EntityHorse {
 		}
 	}
 
+	public float getOpacity(){
+		return 1 - (float)dispelTimer/DISPEL_TIME;
+	}
+
 	@Override
 	public void onUpdate(){
 
 		super.onUpdate();
 
+		if(dispelTimer > 0){
+			if(dispelTimer++ > DISPEL_TIME){
+				this.setDead();
+			}
+		}
+
 		// Adds a dust particle effect
 		if(this.world.isRemote){
-			Wizardry.proxy.spawnParticle(WizardryParticleType.DUST, world,
-					this.posX - this.width / 2 + this.rand.nextFloat() * width,
-					this.posY + this.height * this.rand.nextFloat() + 0.2f,
-					this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0, 0, 0.8f, 0.8f, 1.0f);
+			double x = this.posX - this.width / 2 + this.rand.nextFloat() * width;
+			double y = this.posY + this.height * this.rand.nextFloat() + 0.2f;
+			double z = this.posZ - this.width / 2 + this.rand.nextFloat() * width;
+			ParticleBuilder.create(Type.DUST).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
 		}
 
 		// Spirit horse disappears a short time after being dismounted.
@@ -161,21 +164,10 @@ public class EntitySpiritHorse extends EntityHorse {
 		}
 
 		if(this.idleTimer > 200){
-			if(this.world.isRemote){
-				for(int i = 0; i < 15; i++){
-					Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-							this.posX - this.width / 2 + this.rand.nextFloat() * width,
-							this.posY + this.height * this.rand.nextFloat() + 0.2f,
-							this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0,
-							48 + this.rand.nextInt(12), 0.8f, 0.8f, 1.0f);
-				}
-			}
-			this.playSound(WizardrySounds.SPELL_HEAL, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
-			// Allows player to summon another spirit horse once this one has disappeared.
-			if(this.getOwner() instanceof EntityPlayer && WizardData.get((EntityPlayer)this.getOwner()) != null){
-				WizardData.get((EntityPlayer)this.getOwner()).hasSpiritHorse = false;
-			}
-			this.setDead();
+			
+			this.playSound(WizardrySounds.ENTITY_SPIRIT_HORSE_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
+			
+			this.dispelTimer++;
 		}
 	}
 
@@ -189,13 +181,7 @@ public class EntitySpiritHorse extends EntityHorse {
 
 		// Adds Particles on spawn. Due to client/server differences this cannot be done in the item.
 		if(this.world.isRemote){
-			for(int i = 0; i < 15; i++){
-				Wizardry.proxy.spawnParticle(WizardryParticleType.SPARKLE, world,
-						this.posX - this.width / 2 + this.rand.nextFloat() * width,
-						this.posY + this.height * this.rand.nextFloat() + 0.2f,
-						this.posZ - this.width / 2 + this.rand.nextFloat() * width, 0, 0, 0, 48 + this.rand.nextInt(12),
-						0.8f, 0.8f, 1.0f);
-			}
+			this.spawnAppearParticles();
 		}
 
 		return super.onInitialSpawn(difficulty, data);
@@ -214,7 +200,7 @@ public class EntitySpiritHorse extends EntityHorse {
 	@Override
 	public boolean hasCustomName(){
 		// If this returns true, the renderer will show the nameplate when looking directly at the entity
-		return Wizardry.settings.showSummonedCreatureNames && getOwner() != null;
+		return Wizardry.settings.summonedCreatureNames && getOwner() != null;
 	}
 
 }

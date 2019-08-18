@@ -1,0 +1,26 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "fire",
+  "type": "attack",
+  "cost": 35,
+  "chargeup": 0,
+  "cooldown": 40,
+  "base_properties": {
+    "range": 10,
+    "damage": 8,
+    "burn_duration": 10,
+    "ember_lifetime": 300,
+    "ember_count": 12
+  }
+}

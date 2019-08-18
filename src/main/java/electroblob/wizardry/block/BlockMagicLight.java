@@ -1,23 +1,31 @@
 package electroblob.wizardry.block;
 
+import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockMagicLight extends BlockContainer {
+public class BlockMagicLight extends Block implements ITileEntityProvider {
 
-	private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+	//private static final AxisAlignedBB AABB = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
 
-	public BlockMagicLight(Material par2Material){
-		super(par2Material);
+	public BlockMagicLight(Material material){
+		super(material);
 		this.setLightLevel(1.0f);
+		this.setBlockUnbreakable();
 	}
 
 	@Override
@@ -28,13 +36,38 @@ public class BlockMagicLight extends BlockContainer {
 	}
 
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-		return AABB;
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ){
+		// Let the player dispel any lights if they have the lantern charm, not just the permanent ones because that would be annoying!
+		if(player.getHeldItem(hand).getItem() instanceof ISpellCastingItem && ItemArtefact.isArtefactActive(player, WizardryItems.charm_light)){
+
+			world.setBlockToAir(pos);
+			return true;
+
+		}else{
+			return super.onBlockActivated(world, pos, state, player, hand, facing, hitX, hitY, hitZ);
+		}
 	}
+
+//	@Override
+//	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
+//		return AABB;
+//	}
 
 	@Override
 	public boolean isCollidable(){
-		return false;
+		// This method has nothing to do with entity movement, it's just for raytracing
+		return true;
+	}
+
+	@Override
+	public boolean addDestroyEffects(World world, BlockPos pos, net.minecraft.client.particle.ParticleManager manager){
+		if(world.getBlockState(pos).getBlock() == this) return true; // No break particles!
+		else return super.addDestroyEffects(world, pos, manager);
+	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState state){
+		return true;
 	}
 
 	@Override

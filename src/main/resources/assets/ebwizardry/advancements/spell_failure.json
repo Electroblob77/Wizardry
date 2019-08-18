@@ -1,0 +1,19 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:spell_failure"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:spell_failure.desc"
+        },
+        "icon": {
+            "item": "minecraft:pumpkin"
+        }
+    },
+    "parent": "ebwizardry:discover_spell",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:trigger_spell_failure"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "lightning",
+  "type": "attack",
+  "cost": 25,
+  "chargeup": 0,
+  "cooldown": 50,
+  "base_properties": {
+    "primary_damage": 10,
+    "secondary_damage": 8,
+    "tertiary_damage": 6,
+    "range": 10,
+    "secondary_range": 5,
+    "tertiary_range": 5,
+    "secondary_max_targets": 5,
+    "tertiary_max_targets": 2
+  }
+}

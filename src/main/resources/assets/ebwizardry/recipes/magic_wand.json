@@ -15,7 +15,8 @@
 			"ore": "stickWood"
         },
         "z": {
-            "item": "ebwizardry:magic_crystal"
+            "item": "ebwizardry:magic_crystal",
+			"data": 0
         }
     },
     "result": {

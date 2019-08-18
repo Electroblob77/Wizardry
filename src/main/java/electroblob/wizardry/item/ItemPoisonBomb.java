@@ -1,9 +1,9 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.entity.projectile.EntityPoisonBomb;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.registry.WizardryTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -23,16 +23,15 @@ public class ItemPoisonBomb extends Item {
 
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(!player.capabilities.isCreativeMode){
+		if(!player.isCreative()){
 			stack.shrink(1);
 		}
 
-		player.playSound(SoundEvents.ENTITY_SNOWBALL_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+		player.playSound(WizardrySounds.ENTITY_POISON_BOMB_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
 		if(!world.isRemote){
-			EntityPoisonBomb poisonbomb = new EntityPoisonBomb(world, player);
-			// This is the standard set of parameters for this method, used by snowballs and ender pearls.
-			poisonbomb.shoot(player, player.rotationPitch, player.rotationYaw, 0.0f, 1.5f, 1.0f);
+			EntityPoisonBomb poisonbomb = new EntityPoisonBomb(world);
+			poisonbomb.aim(player, 1);
 			world.spawnEntity(poisonbomb);
 		}
 

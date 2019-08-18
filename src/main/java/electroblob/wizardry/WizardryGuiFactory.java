@@ -1,11 +1,11 @@
 package electroblob.wizardry;
 
-import java.util.Set;
-
-import electroblob.wizardry.client.GuiConfigWizardry;
+import electroblob.wizardry.client.gui.config.GuiConfigWizardry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
+
+import java.util.Set;
 
 public class WizardryGuiFactory implements IModGuiFactory {
 

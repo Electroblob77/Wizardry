@@ -1,0 +1,33 @@
+{
+	"name": "Compass",
+	"description": "A curious artefact that once belonged to a powerful sorcerer. Definitely doesn't point north.",
+	"width": 128,
+	"height": 46,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 5,
+		"y": 5
+	},
+	"text_inset": {
+		"x": 49,
+		"y": 20
+	},
+	"spell_cascade_offset": {
+		"x": 1,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 44,
+		"y": 2,
+		"length": 77,
+		"height": 4,
+		"mirror": {
+			"x": false,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

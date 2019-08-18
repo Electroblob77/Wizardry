@@ -1,43 +1,26 @@
 package electroblob.wizardry.tileentity;
 
-import java.lang.ref.WeakReference;
-import java.util.UUID;
-
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 
-public class TileEntityPlayerSave extends TileEntity implements ITickable {
+import javax.annotation.Nullable;
+import java.util.UUID;
 
-	/** The entity that created this construct */
-	private WeakReference<EntityLivingBase> caster;
+public class TileEntityPlayerSave extends TileEntity {
 
-	/**
-	 * The UUID of the caster. Note that this is only for loading purposes; during normal updates the actual entity
-	 * instance is stored (so that getEntityByUUID is not called constantly), so this will not always be synced (this is
-	 * why it is private).
-	 */
+	/** The UUID of the caster. As of Wizardry 4.2, this <b>is</b> synced, and rather than storing the caster
+	 * instance via a weak reference, it is fetched from the UUID each time it is needed in
+	 * {@link TileEntityPlayerSave#getCaster()}. */
 	private UUID casterUUID;
 
+	public TileEntityPlayerSave(){}
+
 	public TileEntityPlayerSave(EntityLivingBase caster){
-		this.caster = new WeakReference<EntityLivingBase>(caster);
-	}
-
-	public TileEntityPlayerSave(){
-
-	}
-
-	@Override
-	public void update(){
-		if(this.getCaster() == null && this.casterUUID != null){
-			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
-			if(entity instanceof EntityLivingBase){
-				this.caster = new WeakReference<EntityLivingBase>((EntityLivingBase)entity);
-			}
-		}
+		this.casterUUID = caster.getUniqueID();
 	}
 
 	@Override
@@ -52,7 +35,7 @@ public class TileEntityPlayerSave extends TileEntity implements ITickable {
 		super.writeToNBT(tagCompound);
 
 		if(this.getCaster() != null){
-			tagCompound.setUniqueId("casterUUID", this.getCaster().getUniqueID());
+			tagCompound.setUniqueId("casterUUID", casterUUID);
 		}
 
 		return tagCompound;
@@ -63,12 +46,21 @@ public class TileEntityPlayerSave extends TileEntity implements ITickable {
 	 * may no longer exist are: entity died or was deleted, mob despawned, player logged out, entity teleported to
 	 * another dimension, or this construct simply had no caster in the first place.
 	 */
+	@Nullable
 	public EntityLivingBase getCaster(){
-		return caster == null ? null : caster.get();
+
+		Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
+
+		if(entity != null && !(entity instanceof EntityLivingBase)){ // Should never happen
+			Wizardry.logger.warn("{} has a non-living owner!", this);
+			entity = null;
+		}
+
+		return (EntityLivingBase)entity;
 	}
 
-	public void setCaster(EntityLivingBase caster){
-		this.caster = new WeakReference<EntityLivingBase>(caster);
+	public void setCaster(@Nullable EntityLivingBase caster){
+		this.casterUUID = caster == null ? null : caster.getUniqueID();
 	}
 
 }

@@ -1,0 +1,242 @@
+{
+    "criteria": {
+        "ice_wraith": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:ice_wraith"
+                }
+            }
+        },
+        "lightning_wraith": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:lightning_wraith"
+                }
+            }
+        },
+        "spirit_wolf": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:spirit_wolf"
+                }
+            }
+        },
+        "spirit_horse": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:spirit_horse"
+                }
+            }
+        },
+        "phoenix": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:phoenix"
+                }
+            }
+        },
+        "ice_giant": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:ice_giant"
+                }
+            }
+        },
+        "shadow_wraith": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:shadow_wraith"
+                }
+            }
+        },
+        "storm_elemental": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "ebwizardry:storm_elemental"
+                }
+            }
+        },
+        "silverfish_swarm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "silverfish_swarm"
+                }
+            }
+        },
+        "spider_swarm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "spider_swarm"
+                }
+            }
+        },
+        "vex_swarm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "vex_swarm"
+                }
+            }
+        },
+        "summon_blaze": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_blaze"
+                }
+            }
+        },
+        "summon_ice_giant": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_ice_giant"
+                }
+            }
+        },
+        "summon_ice_wraith": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_ice_wraith"
+                }
+            }
+        },
+        "summon_iron_golem": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_iron_golem"
+                }
+            }
+        },
+        "summon_lightning_wraith": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_lightning_wraith"
+                }
+            }
+        },
+        "summon_phoenix": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_phoenix"
+                }
+            }
+        },
+        "summon_shadow_wraith": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_shadow_wraith"
+                }
+            }
+        },
+        "summon_skeleton": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_skeleton"
+                }
+            }
+        },
+        "summon_skeleton_legion": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_skeleton_legion"
+                }
+            }
+        },
+        "summon_snow_golem": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_snow_golem"
+                }
+            }
+        },
+        "summon_spirit_horse": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_spirit_horse"
+                }
+            }
+        },
+        "summon_spirit_wolf": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_spirit_wolf"
+                }
+            }
+        },
+        "summon_storm_elemental": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_storm_elemental"
+                }
+            }
+        },
+        "summon_wither_skeleton": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_wither_skeleton"
+                }
+            }
+        },
+        "summon_zombie": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "summon_zombie"
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "ice_wraith",
+            "lightning_wraith",
+            "spirit_wolf",
+            "spirit_horse",
+            "phoenix",
+            "ice_giant",
+            "shadow_wraith",
+            "storm_elemental",
+            "silverfish_swarm",
+            "spider_swarm",
+            "vex_swarm",
+            "summon_blaze",
+            "summon_ice_giant",
+            "summon_ice_wraith",
+            "summon_iron_golem",
+            "summon_lightning_wraith",
+            "summon_phoenix",
+            "summon_shadow_wraith",
+            "summon_skeleton",
+            "summon_skeleton_legion",
+            "summon_snow_golem",
+            "summon_spirit_horse",
+            "summon_spirit_wolf",
+            "summon_storm_elemental",
+            "summon_wither_skeleton",
+            "summon_zombie"
+        ]
+    ]
+}

@@ -1,12 +1,16 @@
 package electroblob.wizardry.block;
 
-import java.util.Random;
-
-import electroblob.wizardry.WizardData;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryBlocks;
+import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.spell.Transportation;
+import electroblob.wizardry.util.Location;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -19,6 +23,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class BlockTransportationStone extends Block {
 
@@ -65,6 +73,11 @@ public class BlockTransportationStone extends Block {
 	public boolean isOpaqueCube(IBlockState state){
 		return false;
 	}
+	
+	@Override
+	public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side){
+		return side == EnumFacing.DOWN;
+	}
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -98,7 +111,7 @@ public class BlockTransportationStone extends Block {
 
 		ItemStack stack = player.getHeldItem(hand);
 
-		if(stack.getItem() instanceof ItemWand){
+		if(stack.getItem() instanceof ISpellCastingItem){
 			if(WizardData.get(player) != null){
 
 				WizardData data = WizardData.get(player);
@@ -107,17 +120,59 @@ public class BlockTransportationStone extends Block {
 					for(int z = -1; z <= 1; z++){
 						BlockPos pos1 = pos.add(x, 0, z);
 						if(testForCircle(world, pos1)){
-							data.setStoneCircleLocation(pos1, world.provider.getDimension());
-							if(!world.isRemote) player.sendMessage(
-									new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.confirm",
-											Spells.transportation.getNameForTranslationFormatted()));
+
+							Location here = new Location(pos1, player.dimension);
+
+							List<Location> locations = data.getVariable(Transportation.LOCATIONS_KEY);
+							if(locations == null) data.setVariable(Transportation.LOCATIONS_KEY, locations = new ArrayList<>(Transportation.MAX_REMEMBERED_LOCATIONS));
+
+							if(ItemArtefact.isArtefactActive(player, WizardryItems.charm_transportation)){
+
+								if(locations.contains(here)){
+									locations.remove(here);
+									if(!world.isRemote) player.sendStatusMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.forget", here.pos.getX(), here.pos.getY(), here.pos.getZ(), here.dimension), true);
+
+								}else{
+
+									locations.add(here);
+									if(!world.isRemote) player.sendStatusMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.remember", here.pos.getX(), here.pos.getY(), here.pos.getZ(), here.dimension), true);
+
+									if(locations.size() > Transportation.MAX_REMEMBERED_LOCATIONS){
+										Location removed = locations.remove(0);
+										if(!world.isRemote) player.sendStatusMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.forget", removed.pos.getX(), removed.pos.getY(), removed.pos.getZ(), removed.dimension), true);
+									}
+								}
+
+							}else{
+								if(locations.isEmpty()) locations.add(here);
+								else{
+									locations.remove(here); // Prevents duplicates
+									locations.set(locations.size() - 1, here);
+								}
+								if(!world.isRemote) player.sendStatusMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.confirm", Spells.transportation.getNameForTranslationFormatted()), true);
+							}
+
 							return true;
 						}
 					}
 				}
 
-				if(!world.isRemote)
-					player.sendMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.invalid"));
+				if(!world.isRemote){
+					player.sendStatusMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.invalid"), true);
+				}else{
+
+					BlockPos centre = findMostLikelyCircle(world, pos);
+					// Displays particles in the required shape
+					for(int x = -1; x <= 1; x++){
+						for(int z = -1; z <= 1; z++){
+							if(x == 0 && z == 0) continue;
+							ParticleBuilder.create(ParticleBuilder.Type.PATH)
+									.pos(WizardryUtilities.getCentre(centre).add(x, -0.3125, z)).clr(0x86ff65)
+									.time(200).scale(2).spawn(world);
+						}
+					}
+				}
+
 				return true;
 			}
 		}
@@ -131,12 +186,47 @@ public class BlockTransportationStone extends Block {
 
 		for(int x = -1; x <= 1; x++){
 			for(int z = -1; z <= 1; z++){
+				if(x == 0 && z == 0) continue;
 				if(world.getBlockState(pos.add(x, 0, z)).getBlock() != WizardryBlocks.transportation_stone){
-					if(x != 0 || z != 0) return false;
+					return false;
 				}
 			}
 		}
 
 		return true;
+	}
+
+	private static BlockPos findMostLikelyCircle(World world, BlockPos pos){
+
+		int bestSoFar = 0;
+		BlockPos result = null;
+
+		for(int x = -1; x <= 1; x++){
+			for(int z = -1; z <= 1; z++){
+				if(x == 0 && z == 0) continue;
+				BlockPos pos1 = pos.add(x, 0, z);
+				int n = getCircleCompleteness(world, pos1);
+				if(n > bestSoFar){
+					bestSoFar = n;
+					result = pos1;
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private static int getCircleCompleteness(World world, BlockPos pos){
+
+		int n = 0;
+
+		for(int x = -1; x <= 1; x++){
+			for(int z = -1; z <= 1; z++){
+				if(x == 0 && z == 0) continue;
+				if(world.getBlockState(pos.add(x, 0, z)).getBlock() == WizardryBlocks.transportation_stone) n++;
+			}
+		}
+
+		return n;
 	}
 }

@@ -1,13 +1,14 @@
 {
     "display": {
         "title": {
-            "translate": "advancement.wizardry:crystal"
+            "translate": "advancement.ebwizardry:crystal"
         },
         "description": {
-            "translate": "advancement.wizardry:crystal.desc"
+            "translate": "advancement.ebwizardry:crystal.desc"
         },
         "icon": {
-            "item": "ebwizardry:magic_crystal"
+            "item": "ebwizardry:magic_crystal",
+			"data": 0
         }
     },
     "parent": "ebwizardry:root",
@@ -17,7 +18,8 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "ebwizardry:magic_crystal"
+                        "item": "ebwizardry:magic_crystal",
+						"data": 0
                     }
                 ]
             }

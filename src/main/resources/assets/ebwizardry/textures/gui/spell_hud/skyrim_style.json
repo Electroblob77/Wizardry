@@ -1,0 +1,33 @@
+{
+	"name": "Skyrim-style",
+	"description": "A HUD skin in the styling of The Elder Scrolls V, for that Skyrim feel!",
+	"width": 128,
+	"height": 38,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 3,
+		"y": 3
+	},
+	"text_inset": {
+		"x": 42,
+		"y": 19
+	},
+	"spell_cascade_offset": {
+		"x": 0,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 44,
+		"y": 2,
+		"length": 79,
+		"height": 3,
+		"mirror": {
+			"x": true,
+			"y": false
+		},
+		"show_when_full": true
+	}
+}

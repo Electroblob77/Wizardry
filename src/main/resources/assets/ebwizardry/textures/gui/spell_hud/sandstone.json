@@ -1,0 +1,33 @@
+{
+	"name": "Sandstone",
+	"description": "Explore ancient ruins with this desert-themed skin!",
+	"width": 128,
+	"height": 37,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 42,
+		"y": 18
+	},
+	"spell_cascade_offset": {
+		"x": 0,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 41,
+		"y": 2,
+		"length": 82,
+		"height": 3,
+		"mirror": {
+			"x": false,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}
