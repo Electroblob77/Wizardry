@@ -707,6 +707,10 @@ public final class Settings {
 		towerRarity = property.getInt();
 		propOrder.add(property.getName());
 
+		// A bit of backwards-compatibility: predictably, people don't read my instructions and update without deleting
+		// the config, resulting in wizard towers generating everywhere - so let's update it for them!
+		if(towerRarity < 20) towerRarity = 600; // The old default was 8, which is outside the new allowed range
+
 		property = config.get(WORLDGEN_CATEGORY, "evilWizardChance", 0.2, "The chance for wizard towers to generate with an evil wizard and chest inside, instead of a friendly wizard.", 0, 1);
 		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_chance");
 		property.setRequiresWorldRestart(true);
