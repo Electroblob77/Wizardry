@@ -52,7 +52,7 @@ public interface ISyncedPotion {
 	@SubscribeEvent
 	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
 
-		if(event.getPotionEffect().getPotion() instanceof ISyncedPotion
+		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() instanceof ISyncedPotion
 				&& ((ISyncedPotion)event.getPotionEffect().getPotion()).shouldSync(event.getEntityLiving())){
 
 			if(!event.getEntityLiving().world.isRemote){
@@ -67,7 +67,7 @@ public interface ISyncedPotion {
 	@SubscribeEvent
 	public static void onPotionRemoveEvent(PotionEvent.PotionRemoveEvent event){
 
-		if(event.getPotionEffect().getPotion() instanceof ISyncedPotion
+		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() instanceof ISyncedPotion
 				&& ((ISyncedPotion)event.getPotionEffect().getPotion()).shouldSync(event.getEntityLiving())){
 
 			if(!event.getEntityLiving().world.isRemote){
