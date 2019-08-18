@@ -7,6 +7,7 @@ import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -285,11 +286,23 @@ public final class WizardryUtilities {
 		/** Surface criterion which defines a surface as the boundary between a block that cannot be moved through, and
 		 * a block that can be moved through or a tree block (log or leaves). Used for structure generation. */
 		SurfaceCriteria COLLIDABLE_IGNORING_TREES = basedOn((world, pos) ->
-				world.getBlockState(pos).getMaterial().blocksMovement()
-				&& !(world.getBlockState(pos).getBlock() instanceof BlockLog)
-				&& !(world.getBlockState(pos).getBlock().isLeaves(world.getBlockState(pos), world, pos)
-				&& !(world.getBlockState(pos).getBlock().isFoliage(world, pos))));
+				world.getBlockState(pos).getMaterial().blocksMovement() && !isTreeBlock(world, pos));
 
+	}
+
+	/**
+	 * Returns true if the block at the given position is a tree block (or other 'solid' vegetation, such as cacti).
+	 * Used for structure generation.
+	 * @param world The world the block is in
+	 * @param pos The position of the block to be tested
+	 * @return True if the given block is a tree block, false if not.
+	 */
+	public static boolean isTreeBlock(World world, BlockPos pos){
+		return world.getBlockState(pos).getBlock() instanceof BlockLog
+				|| world.getBlockState(pos).getBlock() instanceof BlockCactus
+				|| world.getBlockState(pos).getBlock().isLeaves(world.getBlockState(pos), world, pos)
+				|| world.getBlockState(pos).getBlock().isFoliage(world, pos)
+				|| Arrays.asList(Wizardry.settings.treeBlocks).contains(world.getBlockState(pos).getBlock().getRegistryName());
 	}
 
 	/**

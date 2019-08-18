@@ -327,8 +327,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 					Block below = world.getBlockState(pos.down()).getBlock();
 
 					if(block instanceof BlockLog){
-						if(below != Blocks.GRASS && below != Blocks.DIRT && !(below instanceof BlockLog) &&
-								!below.isLeaves(world.getBlockState(pos.down()), world, pos.down())){
+						if(below != Blocks.GRASS && below != Blocks.DIRT && !WizardryUtilities.isTreeBlock(world, pos.down())){
 							world.setBlockToAir(pos);
 							changed = true;
 						}

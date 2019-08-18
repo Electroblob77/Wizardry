@@ -67,6 +67,10 @@ public final class Settings {
 	/** The unlocalised name of the compatibility config category. */
 	public static final String COMPATIBILITY_CATEGORY = "compatibility";
 
+	private static final String[] DEFAULT_TREE_BLOCKS = {"dynamictrees:oakbranch", "dynamictrees:sprucebranch",
+			"dynamictrees:birchbranch", "dynamictrees:junglebranch", "dynamictrees:darkoakbranch",
+			"dynamictrees:acaciabranch", "dynamictrees:cactusbranch", "dynamictrees:leaves0", "dynamictrees:leaves1"};
+
 	private static final String[] DEFAULT_LOOT_INJECTION_LOCATIONS = {"minecraft:chests/simple_dungeon",
 			"minecraft:chests/abandoned_mineshaft", "minecraft:chests/desert_pyramid", "minecraft:chests/jungle_temple",
 			"minecraft:chests/stronghold_corridor", "minecraft:chests/stronghold_crossing",
@@ -119,6 +123,8 @@ public final class Settings {
 											new ResourceLocation(Wizardry.MODID, "shrine_5"),
 											new ResourceLocation(Wizardry.MODID, "shrine_6"),
 											new ResourceLocation(Wizardry.MODID, "shrine_7")};
+	/** <b>[Server-only]</b> List of solid blocks (usually trees) which are ignored by the structure generators. */
+	public ResourceLocation[] treeBlocks = toResourceLocations(DEFAULT_TREE_BLOCKS);
 	/** <b>[Server-only]</b> The chance for wizard towers to generate with an evil wizard and chest inside. */
 	public double evilWizardChance = 0.2;
 	/** <b>[Server-only]</b> List of dimension ids in which to generate crystal ore. */
@@ -770,6 +776,12 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_files");
 		property.setRequiresWorldRestart(true);
 		shrineFiles = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "treeBlocks", DEFAULT_TREE_BLOCKS, "List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".tree_blocks");
+		property.setRequiresWorldRestart(true);
+		treeBlocks = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "oreDimensions", new int[]{0}, "List of dimension ids in which crystal ore will generate. Note that removing the overworld (id 0) from this list will make the mod VERY difficult to play!");
