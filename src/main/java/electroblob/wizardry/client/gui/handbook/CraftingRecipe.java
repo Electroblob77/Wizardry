@@ -4,6 +4,7 @@ import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -17,6 +18,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 class CraftingRecipe {
@@ -60,8 +62,8 @@ class CraftingRecipe {
 		for(ResourceLocation location : locations){
 
 			IRecipe recipe = CraftingManager.getRecipe(location);
-			if(recipe == null) throw new JsonSyntaxException("No such recipe: " + location);
-			recipes.add(recipe);
+			if(recipe == null) Wizardry.logger.warn("The recipe {} used in the wizard's handbook does not exist, it will display a blank grid instead", location);
+			else recipes.add(recipe);
 		}
 	}
 
@@ -80,7 +82,7 @@ class CraftingRecipe {
 
 		for(int[] instance : instances){
 			if(GuiWizardHandbook.singleToDoublePage(instance[0]) == doublePage){
-				renderCraftingRecipe(font, itemRenderer, left + instance[1], top + instance[2], recipes.get(index % recipes.size()));
+				renderCraftingRecipe(font, itemRenderer, left + instance[1], top + instance[2], recipes.isEmpty() ? null : recipes.get(index % recipes.size()));
 			}
 		}
 	}
@@ -95,6 +97,8 @@ class CraftingRecipe {
 	 * @param top          The y coordinate of the top of the GUI.
 	 */
 	void drawTooltips(GuiWizardHandbook gui, FontRenderer font, RenderItem itemRenderer, int doublePage, int left, int top, int mouseX, int mouseY){
+
+		if(recipes.isEmpty()) return;
 
 		int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE)/2000;
 
@@ -135,50 +139,53 @@ class CraftingRecipe {
 		}
 	}
 
-	private static void renderCraftingRecipe(FontRenderer font, RenderItem itemRenderer, int x, int y, IRecipe recipe){
-
-		ItemStack result = recipe.getRecipeOutput();
+	private static void renderCraftingRecipe(FontRenderer font, RenderItem itemRenderer, int x, int y, @Nullable IRecipe recipe){
 
 		GlStateManager.color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(GuiWizardHandbook.texture);
 
 		DrawingUtils.drawTexturedRect(x, y, TEXTURE_INSET_X, TEXTURE_INSET_Y, WIDTH, HEIGHT, GuiWizardHandbook.TEXTURE_WIDTH, GuiWizardHandbook.TEXTURE_HEIGHT);
 
-		GlStateManager.pushMatrix();
-		RenderHelper.enableGUIStandardItemLighting();
-		GlStateManager.disableLighting();
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.enableColorMaterial();
-		itemRenderer.zLevel = 100.0F;
+		if(recipe != null){
 
-		int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE)/2000;
+			GlStateManager.pushMatrix();
+			RenderHelper.enableGUIStandardItemLighting();
+			GlStateManager.disableLighting();
+			GlStateManager.enableRescaleNormal();
+			GlStateManager.enableColorMaterial();
+			itemRenderer.zLevel = 100.0F;
 
-		int i = 0;
+			int index = (int)(Minecraft.getSystemTime() % Integer.MAX_VALUE) / 2000;
 
-		for(Ingredient ingredient : recipe.getIngredients()){
+			int i = 0;
 
-			if(ingredient != Ingredient.EMPTY){
-				ItemStack stack = ingredient.getMatchingStacks()[index % ingredient.getMatchingStacks().length];
-				if(!stack.isEmpty()){
-					itemRenderer.renderItemAndEffectIntoGUI(stack, x + BORDER + 18 * (i%3), y + BORDER + 18 * (i/3));
-					itemRenderer.renderItemOverlays(font, stack, x + BORDER + 18 * (i%3), y + BORDER + 18 * (i/3));
+			for(Ingredient ingredient : recipe.getIngredients()){
+
+				if(ingredient != Ingredient.EMPTY){
+					ItemStack stack = ingredient.getMatchingStacks()[index % ingredient.getMatchingStacks().length];
+					if(!stack.isEmpty()){
+						itemRenderer.renderItemAndEffectIntoGUI(stack, x + BORDER + 18 * (i % 3), y + BORDER + 18 * (i / 3));
+						itemRenderer.renderItemOverlays(font, stack, x + BORDER + 18 * (i % 3), y + BORDER + 18 * (i / 3));
+					}
 				}
+
+				i++;
 			}
 
-			i++;
+			ItemStack result = recipe.getRecipeOutput();
+
+			if(!result.isEmpty()){
+				itemRenderer.renderItemAndEffectIntoGUI(result, x + BORDER + 86, y + BORDER + 18);
+				itemRenderer.renderItemOverlays(font, result, x + BORDER + 86, y + BORDER + 18);
+			}
+
+			GlStateManager.popMatrix();
+			GlStateManager.enableDepth();
+			GlStateManager.disableColorMaterial();
+			itemRenderer.zLevel = 0.0F;
+			RenderHelper.disableStandardItemLighting();
+
 		}
-
-		if(!result.isEmpty()){
-			itemRenderer.renderItemAndEffectIntoGUI(result, x + BORDER + 86, y + BORDER + 18);
-			itemRenderer.renderItemOverlays(font, result, x + BORDER + 86, y + BORDER + 18);
-		}
-
-		GlStateManager.popMatrix();
-		GlStateManager.enableDepth();
-		GlStateManager.disableColorMaterial();
-		itemRenderer.zLevel = 0.0F;
-		RenderHelper.disableStandardItemLighting();
-
 	}
 
 	private static void renderCraftingTooltips(GuiWizardHandbook gui, RenderItem itemRenderer, int x, int y, int mouseX, int mouseY, IRecipe recipe){
