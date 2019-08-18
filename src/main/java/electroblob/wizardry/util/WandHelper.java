@@ -333,9 +333,13 @@ public final class WandHelper {
 
 		int[] cooldowns = getMaxCooldowns(wand);
 
-		if(cooldowns.length == 0) return 0;
-		// Don't need to check if the tag compound is null since the above check is equivalent.
-		return cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)];
+		if(wand.getTagCompound() == null) return 0;
+
+		int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+
+		if(cooldowns.length <= selectedSpell) return 0;
+
+		return cooldowns[selectedSpell];
 	}
 
 	// ================================================== Upgrades ==================================================
