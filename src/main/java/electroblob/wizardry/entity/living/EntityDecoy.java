@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 
 public class EntityDecoy extends EntitySummonedCreature {
 
+	// TODO: These guys need sounds!
+
 	/** Creates a new decoy in the given world. */
 	public EntityDecoy(World world){
 		super(world);

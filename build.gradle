@@ -37,7 +37,7 @@ repositories {
         // http://www.minecraftforge.net/forum/topic/44262-solved-how-to-build-mod-with-dependencies/
         // https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/mapping-and-modding-tutorials/2866817-setting-up-dependencies-in-minecraft-forge-with
         // http://www.minecraftforge.net/forum/topic/44534-adding-dependencies-to-a-forge-project/
-        dirs "libsfordeobf" // Don't use libs or forge will think you have duplicate mods
+        dirs "libsfordeobf" // Don't put src jars in libs or forge will think you have duplicate mods
     }
 
 }

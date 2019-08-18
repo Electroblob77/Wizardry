@@ -66,9 +66,6 @@ public class Wizardry {
 	// TODO: Have particles obey Minecraft's particle setting where appropriate
 	// (see https://github.com/RootsTeam/Embers/blob/master/src/main/java/teamroots/embers/particle/ParticleUtil.java)
 	// TODO: TileEntityArcaneWorkbench needs looking at, esp. regarding inventory and markDirty
-	// TODO: See what can be done with the illager spell sounds (and go over sounds in general)
-	// TODO: Fix possession
-	// TODO: Fix charge
 
 	/** Static instance of the {@link Settings} object for Wizardry. */
 	public static final Settings settings = new Settings();
