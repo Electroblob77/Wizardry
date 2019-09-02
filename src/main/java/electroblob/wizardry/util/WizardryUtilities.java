@@ -870,9 +870,10 @@ public final class WizardryUtilities {
 
 				ItemStack stack = caster.getHeldItem(caster.getActiveHand());
 
-				if(stack.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)stack.getItem()).getCurrentSpell(stack) == spell
-						&& ((ISpellCastingItem)stack.getItem()).canCast(stack, spell, (EntityPlayer)caster,
-						EnumHand.MAIN_HAND, 0, new SpellModifiers())){
+				if(stack.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)stack.getItem()).getCurrentSpell(stack) == spell){
+					// Don't do this, it interferes with stuff! We effectively already tested this with caster.isHandActive() anyway
+//						&& ((ISpellCastingItem)stack.getItem()).canCast(stack, spell, (EntityPlayer)caster,
+//						EnumHand.MAIN_HAND, 0, new SpellModifiers())){
 					return true;
 				}
 			}
