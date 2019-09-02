@@ -1,5 +1,6 @@
 package electroblob.wizardry.entity.construct;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -33,7 +34,8 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 
 					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue();
 
-					world.newExplosion(this.getCaster(), this.posX, this.posY, this.posZ, strength, true, true);
+					world.newExplosion(this.getCaster(), this.posX, this.posY, this.posZ, strength, true,
+							getCaster() != null && WizardryUtilities.canDamageBlocks(getCaster(), world));
 
 					// The trap is destroyed once triggered.
 					this.setDead();
