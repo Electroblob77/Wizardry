@@ -89,7 +89,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate wizard towers. */
 	public int[] towerDimensions = {0};
 	/** <b>[Server-only]</b> The rarity of wizard towers, used by the world generator. Larger numbers are rarer. */
-	public int towerRarity = 600;
+	public int towerRarity = 900;
 	/** <b>[Server-only]</b> List of structure file locations for wizard towers without loot chests. */
 	public ResourceLocation[] towerFiles = {new ResourceLocation(Wizardry.MODID, "wizard_tower_0"),
 											new ResourceLocation(Wizardry.MODID, "wizard_tower_1"),
@@ -103,7 +103,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate obelisks. */
 	public int[] obeliskDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of obelisks, used by the world generator. Larger numbers are rarer. */
-	public int obeliskRarity = 550;
+	public int obeliskRarity = 800;
 	/** <b>[Server-only]</b> List of structure file locations for obelisks. */
 	public ResourceLocation[] obeliskFiles = {new ResourceLocation(Wizardry.MODID, "obelisk_0"),
 												new ResourceLocation(Wizardry.MODID, "obelisk_1"),
@@ -113,7 +113,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate shrines. */
 	public int[] shrineDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of shrines, used by the world generator. Larger numbers are rarer. */
-	public int shrineRarity = 1000;
+	public int shrineRarity = 1500;
 	/** <b>[Server-only]</b> List of structure file locations for shrines. */
 	public ResourceLocation[] shrineFiles = {new ResourceLocation(Wizardry.MODID, "shrine_0"),
 											new ResourceLocation(Wizardry.MODID, "shrine_1"),
@@ -706,7 +706,7 @@ public final class Settings {
 		towerDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "towerRarity", 600, "Rarity of wizard towers. 1 in this many chunks will contain a wizard tower, meaning higher numbers are rarer.", 20, 5000);
+		property = config.get(WORLDGEN_CATEGORY, "towerRarity", 900, "Rarity of wizard towers. 1 in this many chunks will contain a wizard tower, meaning higher numbers are rarer.", 20, 5000);
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_rarity");
 		property.setRequiresWorldRestart(true);
 		Wizardry.proxy.setToNumberSliderEntry(property);
@@ -744,7 +744,7 @@ public final class Settings {
 		obeliskDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "obeliskRarity", 550, "Rarity of obelisks. 1 in this many chunks will contain an obelisk, meaning higher numbers are rarer.", 20, 5000);
+		property = config.get(WORLDGEN_CATEGORY, "obeliskRarity", 800, "Rarity of obelisks. 1 in this many chunks will contain an obelisk, meaning higher numbers are rarer.", 20, 5000);
 		property.setLanguageKey("config." + Wizardry.MODID + ".obelisk_rarity");
 		property.setRequiresWorldRestart(true);
 		Wizardry.proxy.setToNumberSliderEntry(property);
@@ -764,7 +764,7 @@ public final class Settings {
 		shrineDimensions = property.getIntList();
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "shrineRarity", 1000, "Rarity of shrines. 1 in this many chunks will contain a shrine, meaning higher numbers are rarer.", 20, 5000);
+		property = config.get(WORLDGEN_CATEGORY, "shrineRarity", 1500, "Rarity of shrines. 1 in this many chunks will contain a shrine, meaning higher numbers are rarer.", 20, 5000);
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_rarity");
 		property.setRequiresWorldRestart(true);
 		Wizardry.proxy.setToNumberSliderEntry(property);
