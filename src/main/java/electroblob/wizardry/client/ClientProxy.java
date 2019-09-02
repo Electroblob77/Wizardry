@@ -475,6 +475,9 @@ public class ClientProxy extends CommonProxy {
 
 		World world = Minecraft.getMinecraft().world;
 		Entity caster = world.getEntityByID(message.casterID);
+
+		if(caster == null) return; // Shouldn't happen
+
 		// Moved from when the packet is sent to when it is received; fixes the sound not playing in first person.
 		caster.playSound(WizardrySounds.SPELL_TRANSPORTATION_TRAVEL, 1, 1);
 
