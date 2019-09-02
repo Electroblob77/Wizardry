@@ -73,6 +73,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	private static final int CONTINUOUS_TRACKING_INTERVAL = 20;
 	/** The increase in progression for casting spells of the matching element. */
 	private static final float ELEMENTAL_PROGRESSION_MODIFIER = 1.2f;
+	/** The increase in progression for casting an undiscovered spell (can only happen once per spell for each player). */
+	private static final float DISCOVERY_PROGRESSION_MODIFIER = 5f;
 	/** The fraction of progression lost when all recently-cast spells are the same as the one being cast. */
 	private static final float MAX_PROGRESSION_REDUCTION = 0.75f;
 
@@ -571,6 +573,11 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		if(this.element == spell.getElement()){
 			modifiers.set(SpellModifiers.POTENCY, 1.0f + (this.tier.level + 1) * Constants.POTENCY_INCREASE_PER_TIER, true);
 			progressionModifier *= ELEMENTAL_PROGRESSION_MODIFIER;
+		}
+
+		if(WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+			// Casting an undiscovered spell now grants 5x progression
+			progressionModifier *= DISCOVERY_PROGRESSION_MODIFIER;
 		}
 
 		modifiers.set(SpellModifiers.PROGRESSION, progressionModifier, false);
