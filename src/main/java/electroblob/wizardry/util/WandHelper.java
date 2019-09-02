@@ -253,9 +253,11 @@ public final class WandHelper {
 
 		int[] cooldowns = getCooldowns(wand);
 
-		if(cooldowns.length == 0) return 0;
+		int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+
+		if(cooldowns.length <= selectedSpell) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
-		return cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)];
+		return cooldowns[selectedSpell];
 	}
 	
 	/** Returns the given wand's cooldown for the spell after the currently selected spell, or 0 if the wand has no
@@ -264,9 +266,11 @@ public final class WandHelper {
 
 		int[] cooldowns = getCooldowns(wand);
 
-		if(cooldowns.length == 0) return 0;
+		int nextSpell = getNextSpellIndex(wand);
+
+		if(cooldowns.length <= nextSpell) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
-		return cooldowns[getNextSpellIndex(wand)];
+		return cooldowns[nextSpell];
 	}
 	
 	/** Returns the given wand's cooldown for the spell before the currently selected spell, or 0 if the wand has no
@@ -275,9 +279,11 @@ public final class WandHelper {
 
 		int[] cooldowns = getCooldowns(wand);
 
-		if(cooldowns.length == 0) return 0;
+		int previousSpell = getPreviousSpellIndex(wand);
+
+		if(cooldowns.length <= previousSpell) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
-		return cooldowns[getPreviousSpellIndex(wand)];
+		return cooldowns[previousSpell];
 	}
 
 	/** Sets the given wand's cooldown for the currently selected spell. Will also set the maximum cooldown. */
@@ -287,19 +293,24 @@ public final class WandHelper {
 
 		int[] cooldowns = getCooldowns(wand);
 
+		int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
+		int spellCount = getSpells(wand).length;
+
+		if(spellCount <= selectedSpell) return; // Probably shouldn't happen
+
 		// The length of the spells array must be greater than 0 since this method can only be called if a spell is
 		// cast, which is impossible if there are no spells.
-		if(cooldowns.length == 0) cooldowns = new int[getSpells(wand).length];
+		if(cooldowns.length <= selectedSpell) cooldowns = new int[spellCount];
 
-		cooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)] = cooldown;
+		cooldowns[selectedSpell] = cooldown;
 
 		setCooldowns(wand, cooldowns);
 
 		int[] maxCooldowns = getMaxCooldowns(wand);
 
-		if(maxCooldowns.length == 0) maxCooldowns = new int[getSpells(wand).length];
+		if(maxCooldowns.length <= selectedSpell) maxCooldowns = new int[spellCount];
 
-		maxCooldowns[wand.getTagCompound().getInteger(SELECTED_SPELL_KEY)] = cooldown;
+		maxCooldowns[selectedSpell] = cooldown;
 
 		setMaxCooldowns(wand, maxCooldowns);
 	}
