@@ -20,6 +20,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class RenderArcaneLock {
 
@@ -54,9 +57,14 @@ public class RenderArcaneLock {
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		for(TileEntity tileentity : world.loadedTileEntityList){
+		// Someone managed to get a CME here so let's just copy the list to be safe
+		// It's only cosmetic so if a tileentity somehow gets removed while we're rendering them it's not a big deal
+		List<TileEntity> tileentities = new ArrayList<>(world.loadedTileEntityList);
 
-			if(tileentity.getDistanceSq(origin.x, origin.y, origin.z) <= 64*64 && tileentity.getTileData().hasUniqueId(ArcaneLock.NBT_KEY)){
+		for(TileEntity tileentity : tileentities){
+
+			if(tileentity.getDistanceSq(origin.x, origin.y, origin.z) <= tileentity.getMaxRenderDistanceSquared()
+					&& tileentity.getTileData().hasUniqueId(ArcaneLock.NBT_KEY)){
 
 				Vec3d[] vertices = WizardryUtilities.getVertices(world.getBlockState(tileentity.getPos()).getBoundingBox(world, tileentity.getPos()).grow(0.05).offset(tileentity.getPos()));
 
