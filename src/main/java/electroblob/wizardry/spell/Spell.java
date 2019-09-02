@@ -221,7 +221,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	// Conversely, general spell classes ONLY EVER define the properties they ACTUALLY USE.
 	public final Spell addProperties(String... keys){
 
-		if(properties != null) throw new IllegalStateException("Tried to add spell properties after they were initialised");
+		if(arePropertiesInitialised()) throw new IllegalStateException("Tried to add spell properties after they were initialised");
 
 		for(String key : keys) if(propertyKeys.contains(key)) Wizardry.logger.warn("Tried to add a duplicate property key '"
 		+ key + "' to spell " + this.getRegistryName());
@@ -236,11 +236,17 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return propertyKeys.toArray(new String[0]);
 	}
 
+	/** Returns true if this spell's properties have been initialised, false if not. Check this if you're attempting
+	 * to access them from code that could be called before wizardry's {@code init()} method (e.g. item attributes). */
+	public final boolean arePropertiesInitialised(){
+		return properties != null;
+	}
+
 	/** Sets this spell's properties to the given {@link SpellProperties} object, but only if it doesn't already
 	 * have one. This prevents spell properties from being changed after initialisation. */
 	public void setProperties(@Nonnull SpellProperties properties){
 
-		if(this.properties == null){
+		if(!arePropertiesInitialised()){
 			this.properties = properties;
 		}else{
 			Wizardry.logger.info("A mod attempted to set a spell's properties, but they were already initialised.");

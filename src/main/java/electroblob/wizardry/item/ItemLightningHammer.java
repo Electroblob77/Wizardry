@@ -81,7 +81,9 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 		Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(slot);
 
 		if(slot == EntityEquipmentSlot.MAINHAND){
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", Spells.lightning_hammer.getProperty(Spell.DIRECT_DAMAGE).floatValue(), WizardryUtilities.Operations.ADD));
+			float attackDamage = Spells.lightning_hammer.arePropertiesInitialised() ?
+					Spells.lightning_hammer.getProperty(Spell.DIRECT_DAMAGE).floatValue() : 10; // Fallback for search tree init, value doesn't really matter
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, WizardryUtilities.Operations.ADD));
 			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", ATTACK_SPEED, WizardryUtilities.Operations.ADD));
 			multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(MOVEMENT_SPEED_MODIFIER, "Weapon modifier", MOVEMENT_SPEED_REDUCTION, WizardryUtilities.Operations.MULTIPLY_FLAT));
 		}
