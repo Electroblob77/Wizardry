@@ -41,7 +41,10 @@ import org.apache.logging.log4j.Logger;
  * @author Electroblob
  * @since Wizardry 1.0
  */
-@Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, guiFactory = "electroblob.wizardry.WizardryGuiFactory")
+
+@Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, acceptedMinecraftVersions = "[1.12.2]",
+		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,)")
+
 public class Wizardry {
 
 	/** Wizardry's mod ID. */
