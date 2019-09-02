@@ -6,6 +6,7 @@ import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketCastContinuousSpell;
 import electroblob.wizardry.packet.PacketPlayerSync;
 import electroblob.wizardry.packet.WizardryPacketHandler;
@@ -71,7 +72,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	private static final Set<IStoredVariable> storedVariables = new HashSet<>();
 
 	/** The maximum number of recent spells to track. */
-	public static final int MAX_RECENT_SPELLS = 10;
+	public static final int MAX_RECENT_SPELLS = ItemWand.BASE_SPELL_SLOTS;
 
 	/** The player this WizardData instance belongs to. */
 	private final EntityPlayer player;
@@ -140,7 +141,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		// All players can recognise magic missile. This is not done using discoverSpell because that seems to cause
 		// a crash on load occasionally (probably something to do with achievements being initialised)
 		this.spellsDiscovered.add(Spells.magic_missile);
-		this.recentSpells = EvictingQueue.create(MAX_RECENT_SPELLS); // Only keeps a reference to the last 10 spells cast
+		this.recentSpells = EvictingQueue.create(MAX_RECENT_SPELLS); // Only keeps a reference to the last 5 spells cast
 		this.castCommandSpell = Spells.none;
 		this.castCommandModifiers = new SpellModifiers();
 		this.castCommandTick = 0;
@@ -272,7 +273,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * @param spell The spell to count casts for.
 	 */
 	public int countRecentCasts(Spell spell){
-		return (int)this.recentSpells.stream().filter(s -> s == spell).count(); // We know this can't be more than 10
+		return (int)this.recentSpells.stream().filter(s -> s == spell).count(); // We know this can't be more than 5
 	}
 
 	// Imbuements
