@@ -1003,6 +1003,16 @@ enchantment.ebwizardry\:magic_protection=Magic Protection
 enchantment.ebwizardry\:frost_protection=Frost Protection
 enchantment.ebwizardry\:shock_protection=Shock Protection
 
+enchantment.ebwizardry.magic_sword.desc=Part of the Imbue Weapon spell; unobtainable in survival mode (the book won't work).
+enchantment.ebwizardry.magic_bow.desc=Part of the Imbue Weapon spell; unobtainable in survival mode (the book won't work).
+enchantment.ebwizardry.flaming_weapon.desc=Part of the Flaming Weapon spell; unobtainable in survival mode (the book won't work).
+enchantment.ebwizardry.freezing_weapon.desc=Part of the Freezing Weapon spell; unobtainable in survival mode (the book won't work).
+enchantment.ebwizardry.shocking_weapon.desc=Part of the Shocking Weapon spell; unobtainable in survival mode (the book won't work).
+
+enchantment.ebwizardry.magic_protection.desc=Reduces damage from all magic.
+enchantment.ebwizardry.frost_protection.desc=Reduces the effects of frost damage.
+enchantment.ebwizardry.shock_protection.desc=Reduces the effects of shock damage.
+
 key.categories.ebwizardry=Wizardry
 
 key.ebwizardry.next_spell=Next Spell
