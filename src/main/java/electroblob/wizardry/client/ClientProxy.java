@@ -425,14 +425,15 @@ public class ClientProxy extends CommonProxy {
 				// Again, no need to check if the spell succeeded, because the packet is only ever sent when it
 				// succeeds.
 				MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.NPC, spell, (EntityLiving)caster, message.modifiers));
-			}
 
-			if(caster instanceof ISpellCaster){
-				if(spell.isContinuous || spell instanceof None){
-					((ISpellCaster)caster).setContinuousSpell(spell);
-					((EntityLiving)caster).setAttackTarget((EntityLivingBase)target);
+				if(caster instanceof ISpellCaster){
+					if(spell.isContinuous || spell instanceof None){
+						((ISpellCaster)caster).setContinuousSpell(spell);
+						((EntityLiving)caster).setAttackTarget((EntityLivingBase)target);
+					}
 				}
 			}
+
 		}else if(caster != null){
 			Wizardry.logger.warn("Recieved a PacketNPCCastSpell, but the caster ID was not the ID of an EntityLiving");
 		}
