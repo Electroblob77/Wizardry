@@ -64,10 +64,13 @@ public class ItemSpellBook extends Item {
 					: "#\u00A79" + SpellGlyphData.getGlyphName(spell, world));
 
 			tooltip.add(spell.getTier().getDisplayNameWithFormatting());
+
+			// Advanced tooltips display more information, mainly for searching purposes in creative
+			if(discovered && advanced.isAdvanced()){ // No cheating!
+				tooltip.add(spell.getElement().getDisplayName());
+				tooltip.add(spell.getType().getDisplayName());
+			}
 		}
-		/* Removed to streamline the tooltip a bit. Information is now within the book. if(spell.isContinuous){
-		 * tooltip.add("\u00A79Mana Cost: " + spell.cost + " per second"); }else{ tooltip.add("\u00A79Mana Cost: " +
-		 * spell.cost); } */
 	}
 
 	@Override

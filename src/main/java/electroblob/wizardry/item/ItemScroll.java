@@ -1,6 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
@@ -22,6 +23,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.List;
 
 public class ItemScroll extends Item implements ISpellCastingItem {
 	
@@ -79,6 +83,25 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 		 * that might compromise some perfectly reasonable use (think Bibliocraft's 'best guess' book detection). */
 		return Wizardry.proxy.getScrollDisplayName(stack);
 
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack itemstack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
+
+		if(world != null){
+
+			Spell spell = Spell.byMetadata(itemstack.getItemDamage());
+
+			boolean discovered = Wizardry.proxy.shouldDisplayDiscovered(spell, itemstack);
+
+			// Advanced tooltips display more information, mainly for searching purposes in creative
+			if(discovered && advanced.isAdvanced()){ // No cheating!
+				tooltip.add(spell.getTier().getDisplayName());
+				tooltip.add(spell.getElement().getDisplayName());
+				tooltip.add(spell.getType().getDisplayName());
+			}
+		}
 	}
 	
 	@Override
