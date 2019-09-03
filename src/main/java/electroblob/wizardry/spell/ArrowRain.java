@@ -18,11 +18,14 @@ public class ArrowRain extends SpellConstructRanged<EntityArrowRain> {
 		
 		// Moves the entity back towards the caster a bit, so the area of effect is better centred on the position.
 		// 3 is the distance to move the entity back towards the caster.
-		double dx = caster.posX - x;
-		double dz = caster.posZ - z;
-		double distRatio = 3 / Math.sqrt(dx * dx + dz * dz);
-		x += dx * distRatio;
-		z += dz * distRatio;
+		double dx = caster == null ? side.getDirectionVec().getX() : caster.posX - x;
+		double dz = caster == null ? side.getDirectionVec().getZ() : caster.posZ - z;
+		double dist = Math.sqrt(dx * dx + dz * dz);
+		if(dist != 0){
+			double distRatio = 3 / dist;
+			x += dx * distRatio;
+			z += dz * distRatio;
+		}
 		// Moves the entity up 5 blocks so that it is above mobs' heads.
 		y += 5;
 		
@@ -32,7 +35,11 @@ public class ArrowRain extends SpellConstructRanged<EntityArrowRain> {
 	@Override
 	protected void addConstructExtras(EntityArrowRain construct, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 		// Makes the arrows shoot in the direction the caster was looking when they cast the spell.
-		construct.rotationYaw = caster.rotationYawHead;
+		if(caster != null){
+			construct.rotationYaw = caster.rotationYawHead;
+		}else{
+			construct.rotationYaw = side.getHorizontalAngle();
+		}
 	}
 
 }

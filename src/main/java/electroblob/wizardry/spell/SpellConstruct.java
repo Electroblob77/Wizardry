@@ -149,7 +149,7 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	 * @param modifiers The modifiers with which the spell was cast.
 	 * @return false to cause the spell to fail, true to continue with casting.
 	 */
-	protected boolean spawnConstruct(World world, double x, double y, double z, @Nullable EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
+	protected boolean spawnConstruct(World world, double x, double y, double z, @Nullable EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 		
 		if(!world.isRemote){
 			// Creates a new construct using the supplied factory

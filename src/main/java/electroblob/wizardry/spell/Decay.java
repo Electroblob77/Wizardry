@@ -23,8 +23,10 @@ public class Decay extends SpellConstructRanged<EntityDecay> {
 
 	@Override
 	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
-		
-		if(world.getBlockState(new BlockPos(x, y, z)).isNormalCube()) return false;
+
+		BlockPos origin = new BlockPos(x, y, z);
+
+		if(world.getBlockState(origin).isNormalCube()) return false;
 		
 		super.spawnConstruct(world, x, y, z, side, caster, modifiers);
 
@@ -35,7 +37,7 @@ public class Decay extends SpellConstructRanged<EntityDecay> {
 		int verticalRange = (int)(6 * modifiers.get(WizardryItems.blast_upgrade));
 
 		for(int i=0; i<quantity; i++){
-			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, horizontalRange, verticalRange);
+			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(world, origin, horizontalRange, verticalRange);
 			if(pos == null) break;
 			super.spawnConstruct(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, side, caster, modifiers);
 		}

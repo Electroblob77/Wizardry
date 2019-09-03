@@ -5,6 +5,10 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class Tornado extends SpellConstruct<EntityTornado> {
 
@@ -19,7 +23,8 @@ public class Tornado extends SpellConstruct<EntityTornado> {
 	@Override
 	protected void addConstructExtras(EntityTornado construct, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 		float speed = getProperty(SPEED).floatValue();
-		construct.setHorizontalVelocity(caster.getLookVec().x * speed, caster.getLookVec().z * speed);
+		Vec3d direction = caster == null ? new Vec3d(side.getDirectionVec()) : caster.getLookVec();
+		construct.setHorizontalVelocity(direction.x * speed, direction.z * speed);
 	}
 
 }

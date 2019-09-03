@@ -6,6 +6,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 public class Hailstorm extends SpellConstructRanged<EntityHailstorm> {
 
 	public Hailstorm(){
@@ -14,15 +16,18 @@ public class Hailstorm extends SpellConstructRanged<EntityHailstorm> {
 	}
 
 	@Override
-	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
+	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 
 		// Moves the entity back towards the caster a bit, so the area of effect is better centred on the position.
 		// 3 is the distance to move the entity back towards the caster.
-		double dx = caster.posX - x;
-		double dz = caster.posZ - z;
-		double distRatio = 3 / Math.sqrt(dx * dx + dz * dz);
-		x += dx * distRatio;
-		z += dz * distRatio;
+		double dx = caster == null ? side.getDirectionVec().getX() : caster.posX - x;
+		double dz = caster == null ? side.getDirectionVec().getZ() : caster.posZ - z;
+		double dist = Math.sqrt(dx * dx + dz * dz);
+		if(dist != 0){
+			double distRatio = 3 / dist;
+			x += dx * distRatio;
+			z += dz * distRatio;
+		}
 		// Moves the entity up 5 blocks so that it is above mobs' heads.
 		y += 5;
 
@@ -32,7 +37,11 @@ public class Hailstorm extends SpellConstructRanged<EntityHailstorm> {
 	@Override
 	protected void addConstructExtras(EntityHailstorm construct, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 		// Makes the arrows shoot in the direction the caster was looking when they cast the spell.
-		if(caster != null) construct.rotationYaw = caster.rotationYawHead;
+		if(caster != null){
+			construct.rotationYaw = caster.rotationYawHead;
+		}else{
+			construct.rotationYaw = side.getHorizontalAngle();
+		}
 	}
 
 }

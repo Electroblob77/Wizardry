@@ -40,20 +40,18 @@
 		
 		if(world.isRemote){
 
-			world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, caster.posX,
-					caster.getEntityBoundingBox().minY + 0.1, caster.posZ, 0, 0, 0);
+			world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y + 0.1, z, 0, 0, 0);
 
 			double particleX, particleZ;
 
 			for(int i=0; i<40; i++){
 
-				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
-				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
+				particleX = x - 1.0d + 2 * world.rand.nextDouble();
+				particleZ = z - 1.0d + 2 * world.rand.nextDouble();
 
 				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
-				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY,
-						particleZ, particleX - caster.posX, 0, particleZ - caster.posZ,
-						Block.getStateId(block));
+				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, y,
+						particleZ, particleX - x, 0, particleZ - z, Block.getStateId(block));
 			}
 		}
 		
