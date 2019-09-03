@@ -59,8 +59,8 @@ public final class CustomSoundCategory {
 		constantName = name.toUpperCase().replace(" ", "");
 		referenceName = constantName.toLowerCase();
 		// >> Electroblob: Removed array surrounding varargs argument
-		soundCategory =  EnumHelper.addEnum(SoundCategory.class , constantName, new Class[]{String.class}, referenceName);
-		SOUND_CATEGORIES = ObfuscationReflectionHelper.getPrivateValue(SoundCategory.class, SoundCategory.VOICE ,"SOUND_CATEGORIES", SRG_SOUND_CATEGORIES);
+		soundCategory =  EnumHelper.addEnum(SoundCategory.class , constantName, new Class<?>[]{String.class}, referenceName);
+		SOUND_CATEGORIES = ObfuscationReflectionHelper.getPrivateValue(SoundCategory.class, SoundCategory.VOICE, SRG_SOUND_CATEGORIES);
 		if (SOUND_CATEGORIES.containsKey(referenceName))
 			// >> Electroblob: changed from Error to IllegalArgumentException
 			throw new IllegalArgumentException("Clash in Sound Category name pools! Cannot insert " + constantName);
@@ -79,8 +79,7 @@ public final class CustomSoundCategory {
 		// Replace the map in the GameSettings.class
 		// >> Electroblob: Fully qualified names, because this class gets loaded on both sides
 		ObfuscationReflectionHelper.setPrivateValue(net.minecraft.client.settings.GameSettings.class,
-				net.minecraft.client.Minecraft.getMinecraft().gameSettings, soundLevels,
-				"soundLevels", SRG_soundLevels);
+				net.minecraft.client.Minecraft.getMinecraft().gameSettings, soundLevels, SRG_soundLevels);
 	}
 
 }

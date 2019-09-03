@@ -113,6 +113,8 @@ public class Wizardry {
 		proxy.registerRenderers();
 		proxy.registerKeyBindings();
 
+		WizardrySounds.SPELLS = CustomSoundCategory.add(Wizardry.MODID + "_spells");
+
 		WizardryBaublesIntegration.init();
 		WizardryAntiqueAtlasIntegration.init();
 
@@ -151,8 +153,6 @@ public class Wizardry {
 		proxy.initGuiBits();
 		proxy.registerParticles();
 		proxy.registerSoundEventListener();
-
-		WizardrySounds.SPELLS = CustomSoundCategory.add(Wizardry.MODID + ":spells");
 	}
 
 	@EventHandler

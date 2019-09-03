@@ -1021,7 +1021,7 @@ key.ebwizardry.previous_spell=Previous Spell
 death.attack.wizardry_magic=%1$s was killed by %2$s using magic
 death.attack.indirect_wizardry_magic=%1$s was killed by %2$s using magic
 
-soundCategory.ebwizardry\:spells=Spells
+soundCategory.ebwizardry_spells=Spells
 
 commands.ebwizardry\:cast.usage=/%1$s <spell> [player | x y z direction] [duration] [modifiers]
 commands.ebwizardry\:cast.success=Successfully cast %s
