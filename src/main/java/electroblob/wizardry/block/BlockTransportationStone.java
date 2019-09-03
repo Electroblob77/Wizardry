@@ -62,12 +62,6 @@ public class BlockTransportationStone extends Block {
 		return false;
 	}
 
-	// Forge version of the above method. I still need to override both though because vanilla uses the other one.
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-		return false;
-	}
-
 	// ... and this one is for rendering.
 	@Override
 	public boolean isOpaqueCube(IBlockState state){

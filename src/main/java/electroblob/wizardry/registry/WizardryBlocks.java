@@ -86,7 +86,7 @@ public final class WizardryBlocks {
 		registerBlock(registry, "crystal_flower", 			new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "snare", 					new BlockSnare(Material.PLANTS).setHardness(0.0F));
 		registerBlock(registry, "transportation_stone", 	new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "spectral_block", 			new BlockSpectral(Material.GLASS).setLightLevel(0.7f).setLightOpacity(0).setBlockUnbreakable().setResistance(6000000.0F));
+		registerBlock(registry, "spectral_block", 			new BlockSpectral(Material.GLASS).setLightOpacity(1).setBlockUnbreakable().setResistance(6000000.0F));
 		registerBlock(registry, "crystal_block", 			new BlockCrystal(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "meteor", 					new Block(Material.ROCK).setLightLevel(1));
 		registerBlock(registry, "vanishing_cobweb", 		new BlockVanishingCobweb(Material.WEB).setLightOpacity(1).setHardness(4.0F));

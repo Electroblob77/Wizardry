@@ -11,7 +11,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -34,26 +33,16 @@ public class BlockSpectral extends Block implements ITileEntityProvider {
 
 	// Replaces getRenderBlockPass
 	@Override
+	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer(){
 		return BlockRenderLayer.TRANSLUCENT;
 	}
 
-	@Override
-	public EnumBlockRenderType getRenderType(IBlockState state){
-		return EnumBlockRenderType.MODEL;
-	}
-
-	// Apparently it's OK to override this, despite it being deprecated. More importantly, it being deprecated is not
-	// Forge's doing, rather it is Mojang themselves misusing the @Deprecated annotation to mean 'internal, don't call'.
-	@Override
-	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos){
-		return false;
-	}
+	// See BlockTransportationStone for what all these do
+	@Override public boolean isFullCube(IBlockState state){ return false; }
+	@Override public boolean isBlockNormalCube(IBlockState state){ return false; }
+	@Override public boolean isNormalCube(IBlockState state){ return false; }
+	@Override public boolean isOpaqueCube(IBlockState state){ return false; }
 
 	@Override
 	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random random){
@@ -67,12 +56,12 @@ public class BlockSpectral extends Block implements ITileEntityProvider {
 		}
 	}
 
-	// Overriden to make the block always look full brightness despite not emitting
-	// full light.
-	@Override
-	public int getPackedLightmapCoords(IBlockState state, IBlockAccess source, BlockPos pos){
-		return 15;
-	}
+//	// Overriden to make the block always look full brightness despite not emitting
+//	// full light.
+//	@Override
+//	public int getPackedLightmapCoords(IBlockState state, IBlockAccess source, BlockPos pos){
+//		return 15;
+//	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state){
