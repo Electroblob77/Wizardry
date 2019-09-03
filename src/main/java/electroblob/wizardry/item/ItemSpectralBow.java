@@ -71,9 +71,10 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 
 		if(!oldStack.isEmpty() || !newStack.isEmpty()){
 			// We only care about the situation where we specifically want the animation NOT to play.
-			if(oldStack.getItem() == newStack.getItem() && !slotChanged
+			if(oldStack.getItem() == newStack.getItem() && !slotChanged)
 			// This code should only run on the client side, so using Minecraft is ok.
-					&& !net.minecraft.client.Minecraft.getMinecraft().player.isHandActive())
+				// Why the heck was this here?
+					//&& !net.minecraft.client.Minecraft.getMinecraft().player.isHandActive())
 				return false;
 		}
 
