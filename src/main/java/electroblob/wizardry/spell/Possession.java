@@ -247,7 +247,7 @@ public class Possession extends SpellRay {
 				}
 			}
 
-			if(possessor.world.isRemote){
+			if(possessor.world.isRemote && possessor == net.minecraft.client.Minecraft.getMinecraft().player){
 				// Shaders and effects
 				if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
 				electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect(); // Looks quite nice...
@@ -342,7 +342,7 @@ public class Possession extends SpellRay {
 			player.capabilities.isFlying = false;
 		}
 
-		if(player.world.isRemote){
+		if(player.world.isRemote && player == net.minecraft.client.Minecraft.getMinecraft().player){
 			net.minecraft.client.Minecraft.getMinecraft().entityRenderer.stopUseShader();
 			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect(); // Looks quite nice...
 		}
