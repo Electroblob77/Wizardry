@@ -19,7 +19,7 @@ public class ParticleTornado extends ParticleDigging {
 	public ParticleTornado(World world, int maxAge, double originX, double originZ, double radius, double yPos,
 			double velX, double velZ, IBlockState block){
 		super(world, 0, 0, 0, 0, 0, 0, block);
-		float angle = this.rand.nextFloat() * (float)Math.PI * 2;
+		this.angle = this.rand.nextFloat() * (float)Math.PI * 2;
 		double x = originX - MathHelper.cos(angle) * radius;
 		double z = originZ + radius * MathHelper.sin(angle);
 		this.radius = radius;
