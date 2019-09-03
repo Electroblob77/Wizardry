@@ -9,6 +9,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 
 import javax.annotation.Nonnull;
 
@@ -18,6 +19,7 @@ import javax.annotation.Nonnull;
  * @author Electroblob
  * @since Wizardry 2.1
  */
+@ObjectHolder(Wizardry.MODID)
 @Mod.EventBusSubscriber
 public final class WizardryEnchantments {
 
