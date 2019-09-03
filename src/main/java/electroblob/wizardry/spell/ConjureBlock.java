@@ -33,7 +33,7 @@ public class ConjureBlock extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(world.getBlockState(pos).getBlock() == WizardryBlocks.spectral_block){
+		if(caster.isSneaking() && world.getBlockState(pos).getBlock() == WizardryBlocks.spectral_block){
 
 			if(!world.isRemote){
 				// Dispelling of blocks
