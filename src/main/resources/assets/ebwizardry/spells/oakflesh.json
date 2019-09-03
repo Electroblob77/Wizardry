@@ -18,6 +18,6 @@
   "cooldown": 50,
   "base_properties": {
     "resistance_duration": 600,
-    "resistance_strength": 1
+    "resistance_strength": 0
   }
 }
