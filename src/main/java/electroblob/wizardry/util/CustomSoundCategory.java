@@ -44,7 +44,7 @@ public final class CustomSoundCategory {
 	/**
 	 * Adds a new custom sound category, performing the necessary changes to GameSettings and
 	 *
-	 * @param name A unique name for the sound category
+	 * @param name A unique name for the sound category. <b>Must not contain any colons!</b>
 	 * @return The resulting SoundCategory object
 	 * @throws IllegalArgumentException if name is not unique
 	 */

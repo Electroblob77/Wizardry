@@ -54,9 +54,9 @@ public class Wizardry {
 	/**
 	 * The version number for this version of wizardry. The following system is used for version numbers:
 	 * <p></p>
-	 * <center><b>[major Minecraft version].[major mod version].[minor mod version/patch]
+	 * <center><b>[major Minecraft version].[major mod version].[minor mod version/patch]</b>
 	 * <p></p>
-	 * </center></b> The major mod version is consistent across Minecraft versions, i.e. Wizardry 1.1 has the same
+	 * </center> The major mod version is consistent across Minecraft versions, i.e. Wizardry 1.1 has the same
 	 * features as Wizardry 2.1, but they are for different versions of Minecraft and have separate minor versioning.
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
