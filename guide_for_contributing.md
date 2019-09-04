@@ -8,6 +8,8 @@ When submitting an issue, I would be grateful if you could follow these few guid
 
 - Please stick to the issue template, it's there to help you provide the right information so I can fix the problem more easily. If you're not sure what to put for anything, that's ok, just leave it as it is.
 
+- One issue per issue please! Make a separate issue for each bug/suggestion. If you think multiple different issues may be related, reference between them using # followed by the issue number.
+
 - Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem!
 
 - Make sure your wizardry and Forge versions are both up-to-date for the game version you are using.
