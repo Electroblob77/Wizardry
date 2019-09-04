@@ -642,6 +642,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 //					WandHelper.setProgression(centre.getStack(), WandHelper.getProgression(centre.getStack()) - tier.progression);
 //				}
 
+				WandHelper.setProgression(centre.getStack(), 0);
+
 				ItemStack newWand = new ItemStack(WizardryItems.getWand(tier, this.element));
 				newWand.setTagCompound(centre.getStack().getTagCompound());
 				// This needs to be done after copying the tag compound so the mana capacity for the new wand
