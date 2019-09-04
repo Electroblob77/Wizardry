@@ -111,11 +111,11 @@ public final class AllyDesignationSystem {
 	 */
 	public static boolean isValidTarget(Entity attacker, Entity target){
 
-		// Always return true if the attacker is null
-		if(attacker == null) return true;
-
 		// Always return false if the target is null
 		if(target == null) return false;
+
+		// Always return true if the attacker is null - this must be after the target null check!
+		if(attacker == null) return true;
 
 		// Tests whether the target is the attacker
 		if(target == attacker) return false;
