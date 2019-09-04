@@ -3,11 +3,13 @@ package electroblob.wizardry.client.gui;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.IWorkbenchItem;
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -29,6 +31,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -47,21 +51,25 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	private IInventory arcaneWorkbenchInventory;
 
 	private static final int TOOLTIP_WIDTH = 164;
+	private static final int TOOLTIP_TEXT_INSET = 6;
 
 	/** We report the actual size of the GUI to Minecraft when a wand is in so JEI doesn't overdraw it.
 	 * For calculations, we use the size without the tooltip, which is stored in this constant. */
 	private static final int MAIN_GUI_WIDTH = 176;
-	
+
 	private static final int RUNE_LEFT = 38;
 	private static final int RUNE_TOP = 22;
 	private static final int RUNE_WIDTH = 100;
 	private static final int RUNE_HEIGHT = 100;
-	
+
+	private static final int PROGRESSION_BAR_WIDTH = 152;
+	private static final int PROGRESSION_BAR_HEIGHT = 3;
+
 	private static final int HALO_DIAMETER = 156;
-	
+
 	private static final int TEXTURE_WIDTH = 512;
 	private static final int TEXTURE_HEIGHT = 256;
-	
+
 	private int animationTimer = 0;
 	private static final int ANIMATION_DURATION = 20;
 
@@ -113,28 +121,28 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		GlStateManager.color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		
+
 		// Animation
-		
+
 		// Grey background
 		DrawingUtils.drawTexturedRect(guiLeft + RUNE_LEFT, guiTop + RUNE_TOP, MAIN_GUI_WIDTH + TOOLTIP_WIDTH, 0,
 				RUNE_WIDTH, RUNE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-		
+
 		// Yellow 'halo'
 		if(animationTimer > 0){
-			
+
 			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-			
+
 			int x = guiLeft + RUNE_LEFT + RUNE_WIDTH/2;
 			int y = guiTop + RUNE_TOP + RUNE_HEIGHT/2;
-			
+
 			float scale = (animationTimer + partialTicks)/ANIMATION_DURATION;
 			scale = (float)(1 - Math.pow(1-scale, 1.4f)); // Makes it slower at the start and speed up
 			GlStateManager.scale(scale, scale, 1);
 			GlStateManager.translate(x/scale, y/scale, 0);
-			
+
 			DrawingUtils.drawTexturedRect(-HALO_DIAMETER /2, -HALO_DIAMETER /2, MAIN_GUI_WIDTH + TOOLTIP_WIDTH, RUNE_HEIGHT,
 					HALO_DIAMETER, HALO_DIAMETER, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
@@ -232,6 +240,26 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					y += 14;
 				}
 
+				// Progression bar
+				if(stack.getItem() instanceof ItemWand && !Wizardry.settings.legacyWandLevelling){
+
+					y += 10;
+
+					Tier tier = ((ItemWand)stack.getItem()).tier;
+
+					float progressFraction = 1;
+
+					if(tier != Tier.MASTER){
+						progressFraction = (float)WandHelper.getProgression(stack) / Tier.values()[tier.level + 1].progression;
+					}
+
+					DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize + PROGRESSION_BAR_HEIGHT, PROGRESSION_BAR_WIDTH, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+					int width = (int)(PROGRESSION_BAR_WIDTH * progressFraction);
+					DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize, width, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+					y += 8;
+				}
+
 				if(stack.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)stack.getItem()).showSpellsInWorkbench(this.mc.player, stack)){
 
 					Spell[] spells = ((ISpellCastingItem)stack.getItem()).getSpells(stack);
@@ -251,7 +279,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 								.bindTexture(discovered ? spell.getElement().getIcon() : Element.MAGIC.getIcon());
 
 						// Renders the little element icon
-						DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + 5, y, 8, 8);
+						DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET - 1, y, 8, 8);
 
 						y += 10;
 					}
@@ -270,8 +298,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					if(level > 0){
 						ItemStack stack1 = new ItemStack(item, level);
 						GlStateManager.enableDepth();
-						this.itemRender.renderItemAndEffectIntoGUI(stack1, guiLeft + MAIN_GUI_WIDTH + 6 + x, y);
-						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, guiLeft + MAIN_GUI_WIDTH + 6 + x, y,
+						this.itemRender.renderItemAndEffectIntoGUI(stack1, guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y);
+						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y,
 								null);
 						x += 18;
 						GlStateManager.disableDepth();
@@ -311,7 +339,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 				int y = 6;
 
-				this.fontRenderer.drawStringWithShadow("\u00A7f" + stack.getDisplayName(), MAIN_GUI_WIDTH + 6, y, 0);
+				this.fontRenderer.drawStringWithShadow("\u00A7f" + stack.getDisplayName(), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
 
 				if(stack.getItem() instanceof IManaStoringItem && ((IManaStoringItem)stack.getItem()).showManaInWorkbench(this.mc.player, stack)){
 					y += 14;
@@ -319,7 +347,27 @@ public class GuiArcaneWorkbench extends GuiContainer {
 							"\u00A77" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.mana")
 									+ " " + ((IManaStoringItem)stack.getItem()).getMana(stack) + "/"
 									+ ((IManaStoringItem)stack.getItem()).getManaCapacity(stack),
-							MAIN_GUI_WIDTH + 6, y, 0);
+							MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
+				}
+
+				// Progression tier text
+				if(stack.getItem() instanceof ItemWand && !Wizardry.settings.legacyWandLevelling){
+
+					y += 14;
+
+					Tier tier = ((ItemWand)stack.getItem()).tier;
+
+					this.fontRenderer.drawStringWithShadow(tier.getDisplayNameWithFormatting(), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
+
+					if(tier != Tier.MASTER){
+						Tier nextTier = Tier.values()[tier.level + 1];
+						String s = TextFormatting.DARK_GRAY.toString() + nextTier.getDisplayName();
+						if(WandHelper.getProgression(stack) >= nextTier.progression) s = nextTier.getDisplayNameWithFormatting();
+						this.fontRenderer.drawStringWithShadow(s, MAIN_GUI_WIDTH + TOOLTIP_WIDTH
+								- TOOLTIP_TEXT_INSET - fontRenderer.getStringWidth(s), y, 0);
+					}
+
+					y += 4;
 				}
 
 				y += 14;
@@ -337,10 +385,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						}
 
 						if(discovered){
-							this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), MAIN_GUI_WIDTH + 16, y, 0);
+							this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
 						}else{
 							this.mc.standardGalacticFontRenderer.drawStringWithShadow(
-									"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), MAIN_GUI_WIDTH + 16, y, 0);
+									"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
 						}
 						y += 10;
 					}
@@ -351,7 +399,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					y += 6;
 
 					this.fontRenderer.drawStringWithShadow("\u00A7f" + I18n.format("container."
-							+ Wizardry.MODID + ":arcane_workbench.upgrades"), MAIN_GUI_WIDTH + 6, y, 0);
+							+ Wizardry.MODID + ":arcane_workbench.upgrades"), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
 
 					int x = 0;
 					y += 10;
@@ -364,7 +412,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						if(level > 0){
 							// The javadoc for isPointInRegion is ambiguous; what it means is that the REGION is
 							// relative to the GUI but the POINT isn't.
-							if(isPointInRegion(MAIN_GUI_WIDTH + 6 + x, y, 16, 16, mouseX, mouseY)){
+							if(isPointInRegion(MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y, 16, 16, mouseX, mouseY)){
 								ItemStack stack1 = new ItemStack(item, level);
 								this.renderToolTip(stack1, mouseX - guiLeft, mouseY - guiTop);
 							}
