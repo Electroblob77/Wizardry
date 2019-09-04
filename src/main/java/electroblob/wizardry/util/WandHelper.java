@@ -50,7 +50,7 @@ public final class WandHelper {
 	public static final String UPGRADES_KEY = "upgrades";
 	public static final String PROGRESSION_KEY = "progression";
 
-	private static final HashMap<Item, String> upgradeMap = new HashMap<Item, String>();
+	private static final HashMap<Item, String> upgradeMap = new HashMap<>();
 
 	static {
 		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
@@ -250,6 +250,8 @@ public final class WandHelper {
 
 	/** Returns the given wand's cooldown for the currently selected spell, or 0 if the wand has no cooldown data. */
 	public static int getCurrentCooldown(ItemStack wand){
+
+		if(wand.getTagCompound() == null) wand.setTagCompound(new NBTTagCompound());
 
 		int[] cooldowns = getCooldowns(wand);
 
