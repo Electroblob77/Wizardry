@@ -23,8 +23,10 @@ public class IceSpikes extends SpellConstructRanged<EntityIceSpike> {
 	@Override
 	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 
+		if(side == null) return false;
+
 		BlockPos blockHit = new BlockPos(x, y, z);
-		if(side != null && side.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE) blockHit = blockHit.offset(side);
+		if(side.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE) blockHit = blockHit.offset(side);
 
 		if(world.getBlockState(blockHit).isNormalCube()) return false;
 
