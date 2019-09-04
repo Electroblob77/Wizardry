@@ -40,8 +40,6 @@ public class ParticlePath extends ParticleWizardry {
 
 	@Override
 	public void onUpdate(){
-		
-		super.onUpdate();
 
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
