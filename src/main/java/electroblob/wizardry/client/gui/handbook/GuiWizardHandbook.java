@@ -184,7 +184,7 @@ public class GuiWizardHandbook extends GuiScreen {
 		addFormatTag("advanced_max_charge", "" + Tier.ADVANCED.maxCharge);
 		addFormatTag("master_max_charge", "" + Tier.MASTER.maxCharge);
 		addFormatTag("version", Wizardry.VERSION);
-		addFormatTag("mcversion", Minecraft.getMinecraft().getVersion());
+		addFormatTag("mcversion", "1.12.2");
 
 		addFormatTag("colour_novice", "\u00A77");
 		addFormatTag("colour_apprentice", Tier.APPRENTICE.getFormattingCode());
