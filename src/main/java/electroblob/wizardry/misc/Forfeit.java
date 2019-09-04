@@ -375,7 +375,7 @@ public abstract class Forfeit {
 			if(!w.isRemote){
 				for(EnumFacing direction : EnumFacing.HORIZONTALS){
 					BlockPos pos = p.getPosition().offset(direction);
-					w.setBlockState(pos, WizardryBlocks.snare.getDefaultState());
+					if(WizardryUtilities.canBlockBeReplaced(w, pos)) w.setBlockState(pos, WizardryBlocks.snare.getDefaultState());
 				}
 			}
 		}));
@@ -410,6 +410,7 @@ public abstract class Forfeit {
 			if(!w.isRemote){
 				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(p.getPosition(), 4);
 				sphere.removeIf(pos -> !w.getBlockState(pos).isFullCube());
+				sphere.removeIf(pos -> WizardryUtilities.isBlockUnbreakable(w, pos));
 				sphere.forEach(pos -> {
 					EntityFallingBlock block = new EntityFallingBlock(w, pos.getX() + 0.5, pos.getY() + 0.5,
 							pos.getZ() + 0.5, w.getBlockState(pos));
