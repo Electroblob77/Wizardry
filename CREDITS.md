@@ -18,11 +18,18 @@ In addition, I'd like to thank the following individuals for their contributions
 - 12foo
 - Shadows-of-Fire
 - HellFirePvP
+- Tora-B
+- Avatair
+- Aeronica
 
 #### Translations
 
-- Russian: VilagVil
-- Spanish and Mexican Spanish: MadWrist
-- Chinese: ZHENGLOC and dragon-evol
+- Spanish and Mexican Spanish: MadWrist 
+- Russian: VilagVil, kellixon 
+- French: Hahdrim 
+- Brazilian Portuguese: lorrampi 
+- Chinese: ZHENGLOC, dragon-evol 
+- Korean: shejery, rewi_wire 
+- Polish: Trozuu
 
 Lightning ray sound effect from OhhWowProductions
