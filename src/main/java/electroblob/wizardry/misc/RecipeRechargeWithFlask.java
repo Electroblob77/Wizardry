@@ -50,7 +50,7 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv){
-		ItemStack result = super.getCraftingResult(inv);//lookupForIngredients(inv, true);
+		ItemStack result = super.getCraftingResult(inv);
 		rechargeItem(result, inv);
 		return result;
 	}
@@ -60,7 +60,6 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 		ItemStack stack = findItemToCharge(inv);
 		if(!stack.isEmpty() && chargeable.isManaFull(stack)) return false;
 		return super.matches(inv, world);
-		//return !lookupForIngredients(inv, false).isEmpty();
 	}
 
 	private void rechargeItem(ItemStack toCharge, InventoryCrafting inv){
@@ -80,25 +79,6 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 		}
 		return ItemStack.EMPTY;
 	}
-
-//	/** lookup for the needed ingredients && return the rechargeable itemstack */
-//	private ItemStack lookupForIngredients(InventoryCrafting inv, boolean copy){
-//		ItemStack flask = ItemStack.EMPTY;
-//		ItemStack rechargeable = ItemStack.EMPTY;
-//		for(int i = 0; (flask.isEmpty() || rechargeable.isEmpty()) && i < inv.getSizeInventory(); i++){
-//			ItemStack itemstack = inv.getStackInSlot(i);
-//			if(!itemstack.isEmpty()){
-//				if(flask.isEmpty() && itemstack.getItem() == WizardryItems.mana_flask){
-//					flask = itemstack;
-//				}else if(rechargeable.isEmpty() && (itemstack.getItem() instanceof ItemWand || itemstack.getItem() instanceof ItemWizardArmour) && itemstack.getItemDamage() > 0){
-//					rechargeable = copy ? itemstack.copy() : itemstack;
-//				}else{
-//					return ItemStack.EMPTY;
-//				}
-//			}
-//		}
-//		return flask.isEmpty() || rechargeable.isEmpty() ? ItemStack.EMPTY : rechargeable;
-//	}
 
 	@Override
 	public boolean isDynamic(){
