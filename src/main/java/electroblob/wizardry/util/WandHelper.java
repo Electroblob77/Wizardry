@@ -255,7 +255,7 @@ public final class WandHelper {
 
 		int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
 
-		if(cooldowns.length <= selectedSpell) return 0;
+		if(selectedSpell < 0 || cooldowns.length <= selectedSpell) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
 		return cooldowns[selectedSpell];
 	}
@@ -268,7 +268,7 @@ public final class WandHelper {
 
 		int nextSpell = getNextSpellIndex(wand);
 
-		if(cooldowns.length <= nextSpell) return 0;
+		if(nextSpell < 0 || cooldowns.length <= nextSpell) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
 		return cooldowns[nextSpell];
 	}
@@ -281,7 +281,7 @@ public final class WandHelper {
 
 		int previousSpell = getPreviousSpellIndex(wand);
 
-		if(cooldowns.length <= previousSpell) return 0;
+		if(previousSpell < 0 || cooldowns.length <= previousSpell) return 0;
 		// Don't need to check if the tag compound is null since the above check is equivalent.
 		return cooldowns[previousSpell];
 	}
