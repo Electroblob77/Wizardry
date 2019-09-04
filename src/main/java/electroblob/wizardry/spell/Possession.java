@@ -624,7 +624,7 @@ public class Possession extends SpellRay {
 			EntityLiving possessee = getPossessee((EntityPlayer)event.getTarget());
 			EntityLiving attacker = (EntityLiving)event.getEntityLiving();
 			if(possessee != null && !attacker.canAttackClass(possessee.getClass())){
-				event.setCanceled(true); // Mobs can't target a player possessing an entity they don't normally attack
+				((EntityLiving)event.getEntityLiving()).setAttackTarget(null); // Mobs can't target a player possessing an entity they don't normally attack
 			}
 		}
 	}
