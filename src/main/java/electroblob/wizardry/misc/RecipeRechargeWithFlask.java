@@ -15,8 +15,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-import javax.annotation.Nonnull;
-
 /**
  * Implements a dynamic crafting recipe for recharging items with mana flasks.
  *
@@ -42,11 +40,12 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 		this.flask = flask;
 	}
 
-	@Nonnull
-	@Override
-	public ItemStack getRecipeOutput(){
-		return ItemStack.EMPTY; // According to the javadoc, dynamic recipes are supposed to return an empty stack here
-	}
+	// Commented out for now because JEI spams the log with errors about the recipe having no output
+//	@Nonnull
+//	@Override
+//	public ItemStack getRecipeOutput(){
+//		return ItemStack.EMPTY; // According to the javadoc, dynamic recipes are supposed to return an empty stack here
+//	}
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv){
