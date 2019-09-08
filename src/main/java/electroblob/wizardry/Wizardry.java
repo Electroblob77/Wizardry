@@ -12,10 +12,10 @@ import electroblob.wizardry.misc.Forfeit;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.CustomSoundCategory;
 import electroblob.wizardry.util.SpellProperties;
 import electroblob.wizardry.worldgen.*;
 import net.minecraft.item.Item;
+import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -113,7 +113,8 @@ public class Wizardry {
 		proxy.registerRenderers();
 		proxy.registerKeyBindings();
 
-		WizardrySounds.SPELLS = CustomSoundCategory.add(Wizardry.MODID + "_spells");
+		// Commented out for 4.2.3 to get rid of the sound bug, reinstate once a fix is found.
+		WizardrySounds.SPELLS = SoundCategory.PLAYERS;//CustomSoundCategory.add(Wizardry.MODID + "_spells");
 
 		WizardryBaublesIntegration.init();
 		WizardryAntiqueAtlasIntegration.init();
