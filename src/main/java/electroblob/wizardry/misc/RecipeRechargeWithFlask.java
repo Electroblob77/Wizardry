@@ -50,7 +50,7 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv){
 		ItemStack result = super.getCraftingResult(inv);
-		rechargeItem(result, inv);
+		rechargeItemAndCopyNBT(result, inv);
 		return result;
 	}
 
@@ -61,11 +61,12 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 		return super.matches(inv, world);
 	}
 
-	private void rechargeItem(ItemStack toCharge, InventoryCrafting inv){
+	private void rechargeItemAndCopyNBT(ItemStack toCharge, InventoryCrafting inv){
 		if(toCharge.getItem() == chargeable){
 			ItemStack stack = findItemToCharge(inv);
 			if(!stack.isEmpty()) chargeable.setMana(toCharge, chargeable.getMana(stack));
 			chargeable.rechargeMana(toCharge, flask.size.capacity);
+			toCharge.setTagCompound(stack.getTagCompound()); // Copy NBT to new stack
 		}else{
 			Wizardry.logger.warn("Tried to recharge item {} with mana flask, but it did not match the recipe result {}!", toCharge.getItem(), chargeable);
 		}
@@ -94,7 +95,7 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 				if(recipe instanceof RecipeRechargeWithFlask
 						&& recipe.matches((InventoryCrafting)event.craftMatrix, event.player.world)){
 					// Have to modify the itemstack in the actual event, it cannot be replaced
-					((RecipeRechargeWithFlask)recipe).rechargeItem(event.crafting, (InventoryCrafting)event.craftMatrix);
+					((RecipeRechargeWithFlask)recipe).rechargeItemAndCopyNBT(event.crafting, (InventoryCrafting)event.craftMatrix);
 				}
 			}
 		}
