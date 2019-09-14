@@ -26,7 +26,12 @@ import java.util.Map;
  * <p>
  * Make sure that subclasses receive the instance of entity.
  *
+ * This class is generally used for creating multi-purpose entities,
+ * and reducing the amount of clutter and weird entity shenanigans you have going on.
+ * Spell specific behaviours should stay in their spell class, so as not to mess things up.
+ *
  * @param E Type of entity this behavior is for
+ * @author FavouriteDragon, CrowsofWar, Aang23
  */
 public abstract class Behaviour<E extends Entity> {
 
@@ -42,6 +47,7 @@ public abstract class Behaviour<E extends Entity> {
 
 	}
 
+	//Method used in abstract behaviour classes to register their own behaviours
 	protected static int registerBehaviour(Class<? extends Behaviour> behaviourClass) {
 		if (behaviourIdToClass == null) {
 			behaviourIdToClass = new HashMap<>();
