@@ -77,7 +77,7 @@ public class GuiSpellBook extends GuiScreen {
 		//this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 35, 0);
 
 		if(spell.getTier() == Tier.NOVICE){
-			// Basic is usually white but this doesn't show up.
+			// Novice is usually white but this doesn't show up.
 			this.fontRenderer.drawString("Tier: \u00A77" + Tier.NOVICE.getDisplayName(), xPos + 17, yPos + 45, 0);
 		}else{
 			this.fontRenderer.drawString("Tier: " + spell.getTier().getDisplayNameWithFormatting(), xPos + 17, yPos + 45, 0);
