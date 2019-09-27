@@ -1,11 +1,11 @@
 package electroblob.wizardry.client.gui;
 
-import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
@@ -14,27 +14,22 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
-
-import java.util.Map;
 
 public class GuiSpellBook extends GuiScreen {
 
 	private int xSize, ySize;
+	private ItemSpellBook book;
 	private Spell spell;
 
-	private static final Map<Tier, ResourceLocation> textures = ImmutableMap.of(
-			Tier.NOVICE, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_novice.png"),
-			Tier.APPRENTICE, 	new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_apprentice.png"),
-			Tier.ADVANCED, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_advanced.png"),
-			Tier.MASTER, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_master.png"));
-
-	public GuiSpellBook(Spell spell){
+	public GuiSpellBook(ItemStack stack){
 		super();
 		xSize = 288;
 		ySize = 180;
-		this.spell = spell;
+		if(!(stack.getItem() instanceof ItemSpellBook)) throw new ClassCastException("Cannot create spell book GUI for item that does not extend ItemSpellBook!");
+		this.book = (ItemSpellBook)stack.getItem();
+		this.spell = Spell.byMetadata(stack.getItemDamage());
 	}
 
 	/**
@@ -59,7 +54,7 @@ public class GuiSpellBook extends GuiScreen {
 		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
 		DrawingUtils.drawTexturedRect(xPos + 146, yPos + 20, 0, 0, 128, 128, 128, 128);
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures.get(spell.getTier()));
+		Minecraft.getMinecraft().renderEngine.bindTexture(book.getGuiTexture(spell));
 		DrawingUtils.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
 
 		super.drawScreen(par1, par2, par3);

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISpellCaster;
+import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
@@ -33,13 +34,18 @@ public class WizardSpell extends LootFunction {
 	@Override
 	public ItemStack apply(ItemStack stack, Random random, LootContext context){
 
-		if(!(stack.getItem() instanceof ItemSpellBook)) Wizardry.logger
+		if(!(stack.getItem() instanceof ItemSpellBook) && !(stack.getItem() instanceof ItemScroll)) Wizardry.logger
 				.warn("Applying the wizard_spell loot function to an item that isn't a spell book or scroll.");
 
 		if(context.getLootedEntity() instanceof ISpellCaster){
 			List<Spell> spells = ((ISpellCaster)context.getLootedEntity()).getSpells();
 			spells.remove(Spells.magic_missile); // Can't drop magic missile
-			stack.setItemDamage(spells.get(random.nextInt(spells.size())).metadata());
+			spells.removeIf(s -> !s.applicableForItem(stack.getItem()));
+			if(spells.isEmpty()){
+				Wizardry.logger.warn("Tried to apply the wizard_spell loot function to an item, but none of the looted entity's spells were applicable for that item. This is probably a bug!");
+			}else{
+				stack.setItemDamage(spells.get(random.nextInt(spells.size())).metadata());
+			}
 		}else{
 			Wizardry.logger.warn("Applying the wizard_spell loot function to an entity that isn't a spell caster.");
 		}

@@ -51,13 +51,14 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+
 		if(tab == WizardryTabs.SPELLS){
-			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
-			// is not required, only the metadata.
-			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
-				// i+1 is used so that the metadata ties up with the metadata() method. In other words, the none spell has metadata
-				// 0 and since this is not used as a spell book the metadata starts at 1.
-				list.add(new ItemStack(this, 1, i + 1));
+
+			List<Spell> spells = Spell.getSpells(Spell.allSpells);
+			spells.removeIf(s -> !s.applicableForItem(this));
+
+			for(Spell spell : spells){
+				list.add(new ItemStack(this, 1, spell.metadata()));
 			}
 		}
 	}

@@ -10,6 +10,7 @@ import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.packet.PacketSpellProperties;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.SpellProperties;
@@ -18,6 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -557,6 +559,13 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/** Sets whether the spell is enabled or not. */
 	public final void setEnabled(boolean isEnabled){
 		this.enabled = isEnabled;
+	}
+
+	/** Returns true if the given item has a variant for this spell. By default, returns true if the given item is
+	 * either {@link WizardryItems#spell_book} or {@link WizardryItems#scroll}. Override to give the spell a special
+	 * type of book or scroll. */
+	public boolean applicableForItem(Item item){
+		return item == WizardryItems.spell_book || item == WizardryItems.scroll;
 	}
 
 	/**

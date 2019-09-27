@@ -115,6 +115,7 @@ public class RandomSpell extends LootFunction {
 		// the spell randomiser use any element) change the overall outcome at all?
 		List<Spell> spellsList = Spell.getSpells(new Spell.TierElementFilter(tier, element, spellContext));
 
+		spellsList.removeIf(s -> !s.applicableForItem(stack.getItem()));
 		if(stack.getItem() instanceof ItemScroll) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.SCROLL));
 		if(stack.getItem() instanceof ItemSpellBook) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
 
