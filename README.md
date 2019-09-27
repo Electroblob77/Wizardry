@@ -4,7 +4,7 @@
 
 Source code for Electroblob's Wizardry, a Minecraft mod currently for versions 1.7.10, 1.10.2, 1.11.2, and 1.12.2. Wizardry adds an RPG-style system of magic spells to Minecraft with the aim of being as playable as possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master the arcane!
 
-Please read the [guide for contributing](guide_for_contributing.md) before submitting an issue or a PR.
+Please read the [guide for contributing](CONTRIBUTING.md) before submitting an issue or a PR.
 
 <b>Links</b>
 
