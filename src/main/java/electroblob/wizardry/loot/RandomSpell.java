@@ -108,9 +108,12 @@ public class RandomSpell extends LootFunction {
 			// element = null;
 		}
 
+		SpellProperties.Context spellContext = context.getLootedEntity() == null ? SpellProperties.Context.TREASURE
+				: SpellProperties.Context.LOOTING;
+
 		// Here's a thought: does randomly selecting the element beforehand (as opposed to leaving it null and letting
 		// the spell randomiser use any element) change the overall outcome at all?
-		List<Spell> spellsList = Spell.getSpells(new Spell.TierElementFilter(tier, element, SpellProperties.Context.TREASURE));
+		List<Spell> spellsList = Spell.getSpells(new Spell.TierElementFilter(tier, element, spellContext));
 
 		if(stack.getItem() instanceof ItemScroll) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.SCROLL));
 		if(stack.getItem() instanceof ItemSpellBook) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
