@@ -270,7 +270,7 @@ public final class WizardryUtilities {
 
 		/** Surface criterion which defines a surface as the boundary between a block that is solid on the required side and
 		 * a block that is replaceable. This means the surface can be built on. */
-		SurfaceCriteria BUILDABLE = (world, pos, side) -> world.isSideSolid(pos, side) && world.getBlockState(pos.offset(side)).getBlock().isReplaceable(world, pos);
+		SurfaceCriteria BUILDABLE = (world, pos, side) -> world.isSideSolid(pos, side) && world.getBlockState(pos.offset(side)).getBlock().isReplaceable(world, pos.offset(side));
 
 		/** Surface criterion which defines a surface as the boundary between a block that is solid on the required side
 		 * or a liquid, and an air block. Used for freezing water and placing snow. */
