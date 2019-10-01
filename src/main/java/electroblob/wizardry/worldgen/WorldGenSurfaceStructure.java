@@ -244,7 +244,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 
 			spawnStructure(random, world, origin, template, settings, structureFile);
 
-			if(!Wizardry.settings.fastWorldgen) removeFloatingTrees(world, box);
+			if(!Wizardry.settings.fastWorldgen) removeFloatingTrees(world, box, random);
 
 			structureMap.put(ChunkPos.asLong(origin.getX() >> 4, origin.getZ() >> 4), settings.getBoundingBox());
 
@@ -306,7 +306,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 	}
 
 	/** Finds and removes any floating bits of tree in and above the given structure bounding box. */
-	protected static void removeFloatingTrees(World world, StructureBoundingBox boundingBox){
+	protected static void removeFloatingTrees(World world, StructureBoundingBox boundingBox, Random random){
 
 		boolean changed = true;
 		int y = boundingBox.minY;
@@ -354,7 +354,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 		}
 
 		for(int i=0; i<16; i++){
-			leaves.forEach(p -> world.getBlockState(p).getBlock().updateTick(world, p, world.getBlockState(p), null));
+			leaves.forEach(p -> world.getBlockState(p).getBlock().updateTick(world, p, world.getBlockState(p), random));
 		}
 
 		// Finally, remove all the items that were dropped as a result of leaf decay
