@@ -23,6 +23,7 @@ run
 logs
 /misc
 /libs
+libs_src
 libsfordeobf
 generated
 Thumbs.db
