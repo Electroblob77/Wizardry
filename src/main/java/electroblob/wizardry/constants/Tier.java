@@ -13,8 +13,8 @@ public enum Tier {
 
 	NOVICE(700, 3, 12, 0, new Style().setColor(TextFormatting.WHITE), "novice"),
 	APPRENTICE(1000, 5, 5, 2000, new Style().setColor(TextFormatting.AQUA), "apprentice"),
-	ADVANCED(1500, 7, 2, 3000, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
-	MASTER(2500, 9, 1, 5000, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
+	ADVANCED(1500, 7, 2, 3500, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
+	MASTER(2500, 9, 1, 6000, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
 
 	/** Maximum mana a wand of this tier can store. */
 	public final int maxCharge;
