@@ -29,6 +29,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ForgeRegistry;
@@ -84,6 +88,7 @@ import java.util.stream.Collectors;
  * @see ItemScroll ItemScroll
  * @see Spells
  */
+@Mod.EventBusSubscriber
 public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements Comparable<Spell> {
 
 	// Spell checklist:
@@ -117,6 +122,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	private final String unlocalisedName;
 	/** This spell's associated SpellProperties object. */
 	private SpellProperties properties;
+	/** A reference to the global spell properties for this spell, so they are only loaded once. */
+	private SpellProperties globalProperties;
 	/** Used in initialisation. */
 	private Set<String> propertyKeys = new HashSet<>();
 
@@ -250,6 +257,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 		if(!arePropertiesInitialised()){
 			this.properties = properties;
+			if(this.globalProperties == null) this.globalProperties = properties;
 		}else{
 			Wizardry.logger.info("A mod attempted to set a spell's properties, but they were already initialised.");
 		}
@@ -266,9 +274,14 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 					.map(s -> s.properties).toArray(SpellProperties[]::new)));
 		}else{
 			// On the client side, wipe the spell properties so the new ones can be set
-			for(Spell spell : registry){
-				spell.properties = null; // TESTME: Can we guarantee this happens before the packet arrives?
-			}
+			// TESTME: Can we guarantee this happens before the packet arrives?
+			clearProperties();
+		}
+	}
+
+	private static void clearProperties(){
+		for(Spell spell : registry){
+			spell.properties = null;
 		}
 	}
 
@@ -871,4 +884,32 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 					&& (this.element == null || spell.getElement() == this.element);
 		}
 	}
+
+	// ============================================ Event handlers ==============================================
+
+	// Not ideal but it solves the reloading of spell properties without breaking encapsulation
+
+	@SubscribeEvent
+	public static void onWorldLoadEvent(WorldEvent.Load event){
+		if(!event.getWorld().isRemote){
+			if(event.getWorld().provider.getDimension() != 0) return; // Only do it once per save file
+			clearProperties();
+			SpellProperties.loadWorldSpecificSpellProperties(event.getWorld());
+			for(Spell spell : Spell.registry){
+				if(!spell.arePropertiesInitialised()) spell.setProperties(spell.globalProperties);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClientDisconnectEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event){
+		// Why does the world UNLOAD event happen during world LOADING? How does that even work?!
+		clearProperties();
+		for(Spell spell : Spell.registry){
+			// If someone wants to access them from the menu, they'll get the global ones (not sure why you'd want to)
+			// No need to sync here since the server is about to shut down anyway
+			spell.setProperties(spell.globalProperties);
+		}
+	}
+
 }

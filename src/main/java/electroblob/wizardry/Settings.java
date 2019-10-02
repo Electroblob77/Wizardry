@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -364,7 +365,7 @@ public final class Settings {
 	 */
 	void initConfig(FMLPreInitializationEvent event){
 
-		config = new Configuration(event.getSuggestedConfigurationFile());
+		config = new Configuration(new File(Wizardry.configDirectory, Wizardry.MODID + ".cfg"));
 		config.load();
 
 		Wizardry.logger.info("Setting up main config");

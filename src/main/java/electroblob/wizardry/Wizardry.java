@@ -31,6 +31,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+
 /**
  * <i>"Electroblob's Wizardry adds an RPG-like system of spells to Minecraft, with the aim of being as playable as
  * possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master
@@ -82,6 +84,10 @@ public class Wizardry {
 	 * - <b>INFO</b>: Anything that might happen during normal mod operation that the user needs to know about. */
 	public static Logger logger;
 
+	/** A {@link File} object representing wizardry's config folder, {@code config/ebwizardry}). As of wizardry 4.2.4,
+	 * this folder contains the main config file and the global spell properties folder, if used. */
+	public static File configDirectory;
+
 	// The instance of wizardry that Forge uses.
 	@Instance(Wizardry.MODID)
 	public static Wizardry instance;
@@ -97,6 +103,7 @@ public class Wizardry {
 		
 		proxy.registerResourceReloadListeners();
 
+		configDirectory = new File(event.getModConfigurationDirectory(), Wizardry.MODID);
 		settings.initConfig(event);
 
 		// Capabilities
