@@ -701,7 +701,7 @@ public final class Settings {
 		fastWorldgen = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "towerDimensions", new int[]{0}, "List of dimension ids in which wizard towers will generate.");
+		property = config.get(WORLDGEN_CATEGORY, "towerDimensions", new int[]{0}, "List of dimension ids in which wizard towers will generate. Remove all dimensions to disable wizard towers completely.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_dimensions");
 		property.setRequiresWorldRestart(true);
 		towerDimensions = property.getIntList();
@@ -726,20 +726,20 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "towerFiles", new String[]{Wizardry.MODID + ":wizard_tower_0", Wizardry.MODID + ":wizard_tower_1", Wizardry.MODID + ":wizard_tower_2", Wizardry.MODID + ":wizard_tower_3"},
-				"List of structure file locations for wizard towers without loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for wizard towers without loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable wizard towers, use the tower dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_files");
 		property.setRequiresWorldRestart(true);
 		towerFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "towerWithChestFiles", new String[]{Wizardry.MODID + ":wizard_tower_chest_0", Wizardry.MODID + ":wizard_tower_chest_1", Wizardry.MODID + ":wizard_tower_chest_2", Wizardry.MODID + ":wizard_tower_chest_3"},
-				"List of structure file locations for wizard towers with loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for wizard towers with loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable wizard towers, use the tower dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_with_chest_files");
 		property.setRequiresWorldRestart(true);
 		towerWithChestFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "obeliskDimensions", new int[]{0, -1}, "List of dimension ids in which obelisks will generate.");
+		property = config.get(WORLDGEN_CATEGORY, "obeliskDimensions", new int[]{0, -1}, "List of dimension ids in which obelisks will generate. Remove all dimensions to disable obelisks completely.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".obelisk_dimensions");
 		property.setRequiresWorldRestart(true);
 		obeliskDimensions = property.getIntList();
@@ -753,13 +753,13 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "obeliskFiles", new String[]{Wizardry.MODID + ":obelisk_0", Wizardry.MODID + ":obelisk_1", Wizardry.MODID + ":obelisk_2", Wizardry.MODID + ":obelisk_3", Wizardry.MODID + ":obelisk_4"},
-				"List of structure file locations for obelisks. One of these files will be randomly selected each time an obelisk is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for obelisks. One of these files will be randomly selected each time an obelisk is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable obelisks, use the obelisk dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".obelisk_files");
 		property.setRequiresWorldRestart(true);
 		obeliskFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "shrineDimensions", new int[]{0, -1}, "List of dimension ids in which shrines will generate.");
+		property = config.get(WORLDGEN_CATEGORY, "shrineDimensions", new int[]{0, -1}, "List of dimension ids in which shrines will generate. Remove all dimensions to disable shrines completely.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_dimensions");
 		property.setRequiresWorldRestart(true);
 		shrineDimensions = property.getIntList();
@@ -773,7 +773,7 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "shrineFiles", new String[]{Wizardry.MODID + ":shrine_0", Wizardry.MODID + ":shrine_1", Wizardry.MODID + ":shrine_2", Wizardry.MODID + ":shrine_3", Wizardry.MODID + ":shrine_4", Wizardry.MODID + ":shrine_5", Wizardry.MODID + ":shrine_6", Wizardry.MODID + ":shrine_7"},
-				"List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable shrines, use the shrine dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_files");
 		property.setRequiresWorldRestart(true);
 		shrineFiles = getResourceLocationList(property);
