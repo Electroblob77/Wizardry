@@ -265,7 +265,7 @@ public class ItemArtefact extends Item {
 
 				if(artefact == WizardryItems.ring_condensing){
 
-					if(world.isRemote && player.ticksExisted % 150 == 0){
+					if(player.ticksExisted % 150 == 0){
 						for(ItemStack stack : WizardryUtilities.getHotbar(player)){
 							// Needs to be both of these interfaces because this ring only recharges wands
 							// (or more accurately, chargeable spellcasting items)
@@ -276,7 +276,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_arcane_defence){
 
-					if(world.isRemote && player.ticksExisted % 300 == 0){
+					if(player.ticksExisted % 300 == 0){
 						for(ItemStack stack : player.getArmorInventoryList()){
 							// IManaStoringItem is sufficient, since anything in the armour slots is probably armour
 							if(stack.getItem() instanceof IManaStoringItem)
