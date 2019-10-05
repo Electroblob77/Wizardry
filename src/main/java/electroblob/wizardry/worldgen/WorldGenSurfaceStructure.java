@@ -145,8 +145,8 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 
 		if(Wizardry.settings.fastWorldgen){
 			BlockPos result = origin.up(startingHeight);
-			// Fast worldgen doesn't check for water, instead it checks the biome like vanilla, which is crude but fast
-			return BiomeDictionary.hasType(world.getBiome(result), BiomeDictionary.Type.WATER) ? null : result;
+			// Fast worldgen only checks the central position for water, which isn't perfect but it is faster
+			return world.getBlockState(new BlockPos(centre.getX(), startingHeight + 1, centre.getZ())).getMaterial().isLiquid() ? null : result;
 		}
 
 		int[] floorHeights = new int[size.getX() * size.getZ()];
