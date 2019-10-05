@@ -601,7 +601,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_transience){
 
-					if(player.getHealth() <= 2 && player.world.rand.nextFloat() < 0.25f){
+					if(player.getHealth() <= 6 && player.world.rand.nextFloat() < 0.25f){
 						player.addPotionEffect(new PotionEffect(WizardryPotions.transience, 300));
 						player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300, 0, false, false));
 					}
