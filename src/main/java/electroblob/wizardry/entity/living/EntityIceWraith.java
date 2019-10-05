@@ -197,7 +197,7 @@ public class EntityIceWraith extends EntityBlazeMinion {
 	@SubscribeEvent
 	public static void onCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event){
 		// We have no way of checking if it's a spawner in getCanSpawnHere() so this has to be done here instead
-		if(!event.isSpawner()){
+		if(event.getEntityLiving() instanceof EntityLightningWraith && !event.isSpawner()){
 			if(!ArrayUtils.contains(Wizardry.settings.mobSpawnDimensions, event.getWorld().provider.getDimension()))
 				event.setResult(Event.Result.DENY);
 		}
