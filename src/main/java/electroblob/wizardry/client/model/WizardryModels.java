@@ -295,10 +295,7 @@ public final class WizardryModels {
 
 	/**
 	 * Registers an item model, using the item's registry name as the model name (this convention makes it easier to
-	 * keep track of everything). Variant defaults to "normal". Registers the model for metadata 0 automatically, plus
-	 * all the other metadata values that the item can take, as defined in
-	 * {@link Item#getSubItems(CreativeTabs, NonNullList)}. The creative tab supplied
-	 * to the aforementioned method will be whichever one the item is in.
+	 * keep track of everything). Variant defaults to "normal". Registers the model for all metadata values.
 	 */
 	private static void registerItemModel(Item item){
 		// Changing the last parameter from null to "inventory" fixed the item/block model weirdness. No idea why!
