@@ -35,11 +35,17 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
+@Mod.EventBusSubscriber
 public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntityAdditionalSpawnData {
 
 	private EntityAIAttackSpell<EntityEvilWizard> spellCastingAI = new EntityAIAttackSpell<>(this, 0.5D, 14.0F, 30, 50);
@@ -283,16 +289,6 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	public int getMaxSpawnedInChunk(){
 		return 1;
 	}
-	
-	@Override
-	public boolean getCanSpawnHere(){
-		// Evil wizards can only spawn in the specified dimensions
-		for(int id : Wizardry.settings.mobSpawnDimensions){
-			if(this.dimension == id) return super.getCanSpawnHere();
-		}
-		
-		return false;
-	}
 
 	@Override
 	protected boolean canDespawn(){
@@ -391,6 +387,15 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public void readSpawnData(ByteBuf data){
 		textureIndex = data.readInt();
+	}
+
+	@SubscribeEvent
+	public static void onCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event){
+		// We have no way of checking if it's a spawner in getCanSpawnHere() so this has to be done here instead
+		if(!event.isSpawner()){
+			if(!ArrayUtils.contains(Wizardry.settings.mobSpawnDimensions, event.getWorld().provider.getDimension()))
+				event.setResult(Event.Result.DENY);
+		}
 	}
 
 }

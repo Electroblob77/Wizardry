@@ -13,7 +13,16 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.Arrays;
+import java.util.function.IntPredicate;
+
+@Mod.EventBusSubscriber
 public class EntityLightningWraith extends EntityBlazeMinion {
 
 	public EntityLightningWraith(World world){
@@ -74,14 +83,17 @@ public class EntityLightningWraith extends EntityBlazeMinion {
 
 	@Override
 	public boolean getCanSpawnHere(){
-		// Only spawns in the specified dimensions, during thunderstorms
-		if(!world.isThundering()) return false;
+		return super.getCanSpawnHere() && this.isValidLightLevel();
+	}
 
-		for(int id : Wizardry.settings.mobSpawnDimensions){
-			if(this.dimension == id) return super.getCanSpawnHere() && this.isValidLightLevel();
+	@SubscribeEvent
+	public static void onCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event){
+		// We have no way of checking if it's a spawner in getCanSpawnHere() so this has to be done here instead
+		if(!event.isSpawner()){
+			if(!event.getWorld().isThundering()) event.setResult(Event.Result.DENY);
+			if(!ArrayUtils.contains(Wizardry.settings.mobSpawnDimensions, event.getWorld().provider.getDimension()))
+				event.setResult(Event.Result.DENY);
 		}
-
-		return false;
 	}
 
 	/**
