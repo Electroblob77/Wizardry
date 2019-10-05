@@ -10,6 +10,7 @@ import electroblob.wizardry.item.ItemCrystal;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.creativetab.CreativeTabs;
@@ -300,18 +301,10 @@ public final class WizardryModels {
 	 * to the aforementioned method will be whichever one the item is in.
 	 */
 	private static void registerItemModel(Item item){
-
-		if(item.getHasSubtypes()){
-			NonNullList<ItemStack> items = NonNullList.create();
-			item.getSubItems(item.getCreativeTab(), items); // Client-only method, but we're client-side so this is OK.
-			for(ItemStack stack : items){
-				ModelLoader.setCustomModelResourceLocation(item, stack.getMetadata(),
-						new ModelResourceLocation(item.getRegistryName(), "inventory"));
-			}
-		}
 		// Changing the last parameter from null to "inventory" fixed the item/block model weirdness. No idea why!
-		ModelLoader.setCustomModelResourceLocation(item, 0,
-				new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		// Assigns the model for all metadata values
+		ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 	
 	/**
