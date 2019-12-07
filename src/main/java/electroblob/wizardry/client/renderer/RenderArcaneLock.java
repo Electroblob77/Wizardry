@@ -42,7 +42,7 @@ public class RenderArcaneLock {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
-		GL11.glPushAttrib(GL11.GL_LIGHTING);
+		boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
 		GlStateManager.disableLighting();
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -83,7 +83,9 @@ public class RenderArcaneLock {
 
 		GlStateManager.disableBlend();
 		GlStateManager.enableTexture2D();
-		GL11.glPopAttrib(); // GL11.GL_LIGHTING
+		if (lighting) {
+			GlStateManager.enableLighting();
+		}
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 	}
