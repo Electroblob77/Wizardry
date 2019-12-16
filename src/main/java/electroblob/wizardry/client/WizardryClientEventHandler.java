@@ -23,11 +23,8 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -35,18 +32,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
-
-import java.lang.reflect.Method;
 
 /**
  * Event handler responsible for client-side only events, mostly rendering.
@@ -71,12 +64,6 @@ public final class WizardryClientEventHandler {
 	private static int blinkEffectTimer;
 	/** The number of ticks the blink effect lasts for. */
 	private static final int BLINK_EFFECT_DURATION = 8;
-
-	private static final Method unpressKey;
-
-	static {
-		unpressKey = ObfuscationReflectionHelper.findMethod(KeyBinding.class, "func_74505_d", void.class);
-	}
 	
 	/** Starts the first person blink overlay effect. */
 	public static void playBlinkEffect(){
