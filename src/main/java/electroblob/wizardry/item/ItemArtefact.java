@@ -639,6 +639,7 @@ public class ItemArtefact extends Item {
 
 						WizardryUtilities.getEntitiesWithinRadius(3, player.posX, player.posY, player.posZ, world).stream()
 								.filter(WizardryUtilities::isLiving)
+								.filter(e -> e != player)
 								.min(Comparator.comparingDouble(player::getDistanceSq))
 								.ifPresent(target -> {
 
