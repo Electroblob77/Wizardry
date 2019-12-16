@@ -29,9 +29,9 @@ public class EntityIceSpike extends EntityMagicConstruct {
 		this.setRotation(-facing.getHorizontalAngle(), WizardryUtilities.getPitch(facing));
 		float yaw = (-facing.getHorizontalAngle()) * (float)Math.PI/180;
 		float pitch = (WizardryUtilities.getPitch(facing) - 90) * (float)Math.PI/180;
-		Vec3d min = new Vec3d(-width/2, 0, -width/2).rotatePitch(pitch).rotateYaw(yaw);
-		Vec3d max = new Vec3d(width/2, height, width/2).rotatePitch(pitch).rotateYaw(yaw);
-		this.setEntityBoundingBox(new AxisAlignedBB(this.getPositionVector().add(min), this.getPositionVector().add(max)));
+		Vec3d min = this.getPositionVector().add(new Vec3d(-width/2, 0, -width/2).rotatePitch(pitch).rotateYaw(yaw));
+		Vec3d max = this.getPositionVector().add(new Vec3d(width/2, height, width/2).rotatePitch(pitch).rotateYaw(yaw));
+		this.setEntityBoundingBox(min.x, min.y, min.z, max.x, max.y, max.z);
 	}
 
 	public EnumFacing getFacing(){
