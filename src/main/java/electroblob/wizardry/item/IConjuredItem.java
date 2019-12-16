@@ -58,6 +58,8 @@ public interface IConjuredItem {
 	 */
 	default int getMaxDamageFromNBT(ItemStack stack, Spell spell){
 
+		if(!spell.arePropertiesInitialised()) return 600; // Failsafe, some edge-cases call this during preInit
+
 		float baseDuration = spell.getProperty(SpellConjuration.ITEM_LIFETIME).floatValue();
 
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(DURATION_MULTIPLIER_KEY)){
