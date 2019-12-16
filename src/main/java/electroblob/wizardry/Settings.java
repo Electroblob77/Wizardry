@@ -169,6 +169,8 @@ public final class Settings {
 	/** <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
 	 * velocity-based one. */
 	public boolean replaceVanillaFallDamage = true;
+	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
+	public boolean bonemealGrowsCrystalFlowers = true;
 	/**
 	 * <b>[Server-only]</b> List of registry names of entities which summoned creatures are allowed to attack, in addition
 	 * to the defaults.
@@ -540,6 +542,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".slow_time_affects_players");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		slowTimeAffectsPlayers = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "bonemealGrowsCrystalFlowers", true,
+				"Whether using bonemeal on grass blocks has a chance to grow crystal flowers.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".bonemeal_grows_crystal_flowers");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		bonemealGrowsCrystalFlowers = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");

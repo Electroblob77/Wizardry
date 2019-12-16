@@ -1,5 +1,6 @@
 package electroblob.wizardry.block;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -56,7 +57,7 @@ public class BlockCrystalFlower extends BlockBush {
 	@SubscribeEvent
 	public static void onBonemealEvent(BonemealEvent event){
 		// Grows crystal flowers when bonemeal is used on grass
-		if(event.getBlock().getBlock() == Blocks.GRASS){
+		if(Wizardry.settings.bonemealGrowsCrystalFlowers && event.getBlock().getBlock() == Blocks.GRASS){
 
 			BlockPos pos = event.getPos().add(event.getWorld().rand.nextInt(8) - event.getWorld().rand.nextInt(8),
 					event.getWorld().rand.nextInt(4) - event.getWorld().rand.nextInt(4),
