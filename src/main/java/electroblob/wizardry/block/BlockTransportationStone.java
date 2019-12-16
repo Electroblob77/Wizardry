@@ -141,7 +141,8 @@ public class BlockTransportationStone extends Block {
 								if(locations.isEmpty()) locations.add(here);
 								else{
 									locations.remove(here); // Prevents duplicates
-									locations.set(Math.max(locations.size() - 1, 0), here);
+									if(locations.isEmpty()) locations.add(here);
+									else locations.set(Math.max(locations.size() - 1, 0), here);
 								}
 								if(!world.isRemote) player.sendStatusMessage(new TextComponentTranslation("tile." + Wizardry.MODID + ":transportation_stone.confirm", Spells.transportation.getNameForTranslationFormatted()), true);
 							}
