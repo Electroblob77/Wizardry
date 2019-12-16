@@ -7,6 +7,7 @@ import electroblob.wizardry.spell.Spell;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -238,6 +239,9 @@ public class CommonProxy {
 				+ "of sound events, but the given array contained less than 3 sound events!");
 		playSpellSoundLoop(world, x, y, z, spell, sounds[0], sounds[1], sounds[2], category, volume, pitch, duration);
 	}
+
+	/** Starts the first-person blink overlay effect for the specified player. */
+	public void playBlinkEffect(EntityPlayer player){}
 	
 	/**
 	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns

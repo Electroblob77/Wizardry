@@ -191,6 +191,11 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void playBlinkEffect(EntityPlayer player){
+		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.playBlinkEffect();
+	}
+
+	@Override
 	public Set<String> getSpellHUDSkins(){
 		return GuiSpellDisplay.getSkinKeys();
 	}
