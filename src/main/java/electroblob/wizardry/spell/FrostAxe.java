@@ -11,6 +11,7 @@ public class FrostAxe extends SpellConjuration {
 
 	public FrostAxe(){
 		super("frost_axe", WizardryItems.frost_axe);
+		addProperties(DAMAGE);
 	}
 
 	@Override
