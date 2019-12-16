@@ -112,7 +112,7 @@ public class LayerFrost implements LayerRenderer<EntityLivingBase> {
 		double scaleX = 1, scaleY = 1;
 		// It's more logical to use the model's texture size, but some classes don't bother setting it properly
 		// (e.g. ModelVillager), so to get the correct dimensions I'm getting them from the first box instead.
-		if(model.boxList != null && model.boxList.get(0) != null){
+		if(model.boxList != null && model.boxList.size() >= 1 && model.boxList.get(0) != null){
 			scaleX = (double)model.boxList.get(0).textureWidth / 16d;
 			scaleY = (double)model.boxList.get(0).textureHeight / 16d;
 		}else{ // Fallback to model fields; should never be needed
