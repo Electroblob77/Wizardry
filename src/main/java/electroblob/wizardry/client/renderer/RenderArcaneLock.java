@@ -62,6 +62,8 @@ public class RenderArcaneLock {
 		List<TileEntity> tileentities = new ArrayList<>(world.loadedTileEntityList);
 
 		for(TileEntity tileentity : tileentities){
+			
+			if(tileentity == null) continue; // What the heck VoxelMap
 
 			if(tileentity.getDistanceSq(origin.x, origin.y, origin.z) <= tileentity.getMaxRenderDistanceSquared()
 					&& tileentity.getTileData().hasUniqueId(ArcaneLock.NBT_KEY)){
