@@ -57,12 +57,12 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	}
 
 	/** Should only be used by vanilla's armour damage calculations; use {@link ItemWizardArmour#setMana(ItemStack, int)}
-	 * to modify wand mana from elsewhere. */
+	 * to modify armour mana from elsewhere. */
 	@Override
 	public void setDamage(ItemStack stack, int damage){
 		// Overridden to stop repair things from 'repairing' the mana in wizard armour
 		// This being armour, it's much easier to let its damage increase normally, but block it from being decreased
-		if(stack.getItemDamage() < damage) super.setDamage(stack, damage);
+		if(stack.getItemDamage() < damage) super.setDamage(stack, Math.min(damage, stack.getMaxDamage()));
 	}
 
 	@Override
