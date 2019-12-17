@@ -108,7 +108,7 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:astral_diamond",
-                    "weight": 1
+                    "weight": 2
                 },
                 {
                     "type": "item",
@@ -118,7 +118,7 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:grand_crystal",
-                    "weight": 1
+                    "weight": 2
                 }
             ]
         },
