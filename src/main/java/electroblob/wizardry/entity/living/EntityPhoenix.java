@@ -50,7 +50,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 		this.tasks.addTask(3, new EntityAILookIdle(this));
 		// this.targetTasks.addTask(0, new EntityAIMoveTowardsTarget(this, 1, 10));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class,
 				0, false, true, this.getTargetSelector()));
 
 		this.setAIMoveSpeed((float)AISpeed);

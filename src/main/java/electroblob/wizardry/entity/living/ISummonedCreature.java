@@ -221,7 +221,8 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 	 * possible for implementors to override this in order to do something special when selecting a target.
 	 */
 	default Predicate<Entity> getTargetSelector(){
-		return entity -> getCaster() == null ? entity instanceof EntityPlayer : !entity.isInvisible() && isValidTarget(entity);
+		return entity -> !entity.isInvisible() && (getCaster() == null ? entity instanceof EntityPlayer &&
+				!((EntityPlayer)entity).isCreative() : isValidTarget(entity));
 	}
 
 	/**
