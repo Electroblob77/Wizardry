@@ -416,7 +416,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		this.spells = (List<Spell>)NBTExtras.NBTToList(nbt.getTagList("spells", NBT.TAG_INT),
 				(NBTTagInt tag) -> Spell.byMetadata(tag.getInt()));
 
-		NBTTagList tagList = nbt.getTagList("towerBlocks", NBT.TAG_LONG);
+		NBTTagList tagList = nbt.getTagList("towerBlocks", NBT.TAG_COMPOUND);
 		if(!tagList.isEmpty()){
 			this.towerBlocks = new HashSet<>(NBTExtras.NBTToList(tagList, NBTUtil::getPosFromTag));
 		}else{
