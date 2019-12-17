@@ -121,11 +121,26 @@ public class LayerFrost implements LayerRenderer<EntityLivingBase> {
 		}
 		GlStateManager.scale(scaleX, scaleY, 1);
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW);
-		
+
+		boolean headWearHidden = false;
+		boolean bodyWearHidden = false;
+		boolean leftArmWearHidden = false;
+		boolean rightArmWearHidden = false;
+		boolean leftLegWearHidden = false;
+		boolean rightLegWearHidden = false;
+
 		// Hides the hat layer for bipeds
-		if(this.model instanceof ModelBiped) ((ModelBiped)this.model).bipedHeadwear.isHidden = true;
+		if(this.model instanceof ModelBiped){
+			headWearHidden = ((ModelBiped)this.model).bipedHeadwear.isHidden;
+			((ModelBiped)this.model).bipedHeadwear.isHidden = true;
+		}
 
 		if(this.model instanceof ModelPlayer){
+			bodyWearHidden = ((ModelPlayer)this.model).bipedBodyWear.isHidden;
+			leftArmWearHidden = ((ModelPlayer)this.model).bipedLeftArmwear.isHidden;
+			rightArmWearHidden = ((ModelPlayer)this.model).bipedRightArmwear.isHidden;
+			leftLegWearHidden = ((ModelPlayer)this.model).bipedLeftLegwear.isHidden;
+			rightLegWearHidden = ((ModelPlayer)this.model).bipedRightLegwear.isHidden;
 			((ModelPlayer)this.model).bipedBodyWear.isHidden = true;
 			((ModelPlayer)this.model).bipedLeftArmwear.isHidden = true;
 			((ModelPlayer)this.model).bipedRightArmwear.isHidden = true;
@@ -136,7 +151,15 @@ public class LayerFrost implements LayerRenderer<EntityLivingBase> {
 		this.model.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
 		this.model.render(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
 
-		if(this.model instanceof ModelBiped) ((ModelBiped)this.model).bipedHeadwear.isHidden = false;
+		if(this.model instanceof ModelBiped) ((ModelBiped)this.model).bipedHeadwear.isHidden = headWearHidden;
+
+		if(this.model instanceof ModelPlayer){
+			((ModelPlayer)this.model).bipedBodyWear.isHidden = bodyWearHidden;
+			((ModelPlayer)this.model).bipedLeftArmwear.isHidden = leftArmWearHidden;
+			((ModelPlayer)this.model).bipedRightArmwear.isHidden = rightArmWearHidden;
+			((ModelPlayer)this.model).bipedLeftLegwear.isHidden = leftLegWearHidden;
+			((ModelPlayer)this.model).bipedRightLegwear.isHidden = rightLegWearHidden;
+		}
 
 		// Undoes the texture scaling
 		GlStateManager.matrixMode(GL11.GL_TEXTURE);
