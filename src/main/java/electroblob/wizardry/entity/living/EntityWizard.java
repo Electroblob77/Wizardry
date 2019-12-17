@@ -218,7 +218,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Copied from EntityVillager
 		if(!this.world.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20){
             this.livingSoundTime = -this.getTalkInterval();
-            this.playSound(stack.isEmpty() ? WizardrySounds.ENTITY_WIZARD_NO : WizardrySounds.ENTITY_WIZARD_YES, this.getSoundVolume(), this.getSoundPitch());
+            SoundEvent yes = Wizardry.tisTheSeason ? WizardrySounds.ENTITY_WIZARD_HOHOHO : WizardrySounds.ENTITY_WIZARD_YES;
+            this.playSound(stack.isEmpty() ? WizardrySounds.ENTITY_WIZARD_NO : yes, this.getSoundVolume(), this.getSoundPitch());
         }
 	}
 
@@ -256,6 +257,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	
 	@Override
 	protected SoundEvent getAmbientSound(){
+		if(Wizardry.tisTheSeason) return WizardrySounds.ENTITY_WIZARD_HOHOHO;
 		return this.isTrading() ? WizardrySounds.ENTITY_WIZARD_TRADING : WizardrySounds.ENTITY_WIZARD_AMBIENT;
 	}
 

@@ -243,7 +243,12 @@ public final class Spells {
 		IForgeRegistry<Spell> registry = event.getRegistry();
 
 		registry.register(new None());
-		registry.register(new SpellArrow<>("magic_missile", EntityMagicMissile::new).addProperties(Spell.DAMAGE).soundValues(1, 1.4f, 0.4f));
+		registry.register(new SpellArrow<EntityMagicMissile>("magic_missile", EntityMagicMissile::new){
+			@Override
+			protected String getTranslationKey(){
+				return Wizardry.tisTheSeason ? super.getTranslationKey() + "_festive" : super.getTranslationKey();
+			}
+		}.addProperties(Spell.DAMAGE).soundValues(1, 1.4f, 0.4f));
 		registry.register(new Ignite());
 		registry.register(new Freeze());
 		registry.register(new Snowball());

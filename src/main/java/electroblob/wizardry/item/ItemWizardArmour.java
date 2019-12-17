@@ -178,9 +178,14 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 		String s = "wizard_armour";
 
-		if(this.element != null) s = s + "_" + this.element.getName();
+		if(Wizardry.tisTheSeason){
+			s = s + "_festive";
+		}else{
+			if(this.element != null) s = s + "_" + this.element.getName();
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) s = "legendary_" + s;
+		}
+
 		if(slot == EntityEquipmentSlot.LEGS) s = s + "_legs";
-		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) s = "legendary_" + s;
 
 		return "ebwizardry:textures/armour/" + s + ".png";
 	}

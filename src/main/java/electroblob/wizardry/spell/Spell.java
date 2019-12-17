@@ -597,13 +597,23 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * translating it. If, for whatever reason, you need to supply an ITextComponent but don't want it translated
 	 * (perhaps a name?), you can use TextComponentString, which will simply keep the raw string it is given. */
 
+	/** Returns the translation key for this spell. */
+	protected String getTranslationKey(){
+		return "spell." + unlocalisedName;
+	}
+
+	/** Returns the translation key for this spell's description. */
+	protected String getDescriptionTranslationKey(){
+		return "spell." + unlocalisedName + ".desc";
+	}
+
 	/**
 	 * Returns the translated display name of the spell, without formatting (i.e. not coloured). <b>Client-side
 	 * only!</b> On the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslation()}).
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
+		return net.minecraft.client.resources.I18n.format(getTranslationKey());
 	}
 
 	/**
@@ -611,7 +621,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * formatting (i.e. not coloured).
 	 */
 	public ITextComponent getNameForTranslation(){
-		return new TextComponentTranslation("spell." + unlocalisedName);
+		return new TextComponentTranslation(getTranslationKey());
 	}
 
 	/**
@@ -620,7 +630,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.getElement().getFormattingCode() + net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
+		return this.getElement().getFormattingCode() + net.minecraft.client.resources.I18n.format(getTranslationKey());
 	}
 
 	/**
@@ -628,7 +638,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * formatting (i.e. coloured).
 	 */
 	public ITextComponent getNameForTranslationFormatted(){
-		return new TextComponentTranslation("spell." + unlocalisedName).setStyle(this.getElement().getColour());
+		return new TextComponentTranslation(getTranslationKey()).setStyle(this.getElement().getColour());
 	}
 
 	/**
@@ -637,7 +647,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDescription(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName + ".desc");
+		return net.minecraft.client.resources.I18n.format(getDescriptionTranslationKey());
 	}
 
 	// ============================================ Sound methods ==============================================

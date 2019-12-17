@@ -62,7 +62,8 @@
 	"entity.wizard.no": 				{"category": "neutral", "sounds": ["mob/villager/no1", "mob/villager/no2", "mob/villager/no3"]},
 	"entity.wizard.hurt": 				{"category": "neutral", "sounds": ["mob/villager/hit1", "mob/villager/hit2", "mob/villager/hit3", "mob/villager/hit4"]},
 	"entity.wizard.death": 				{"category": "neutral", "sounds": ["mob/villager/death"]},
-	
+	"entity.wizard.hohoho": 			{"category": "neutral", "sounds": ["ebwizardry:hohoho"]},
+
 	"entity.darkness_orb.hit": 			{"category": "spells", "sounds": ["mob/wither/hurt1", "mob/wither/hurt2", "mob/wither/hurt3", "mob/wither/hurt4"]},
 	"entity.dart.hit": 					{"category": "spells", "sounds": ["damage/hit1", "damage/hit2", "damage/hit3"]},
 	"entity.dart.hit_block": 			{"category": "spells", "sounds": ["random/bowhit1", "random/bowhit2", "random/bowhit3"]},

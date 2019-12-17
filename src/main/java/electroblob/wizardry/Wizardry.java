@@ -32,6 +32,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.util.Calendar;
 
 /**
  * <i>"Electroblob's Wizardry adds an RPG-like system of spells to Minecraft, with the aim of being as playable as
@@ -88,6 +89,8 @@ public class Wizardry {
 	 * this folder contains the main config file and the global spell properties folder, if used. */
 	public static File configDirectory;
 
+	public static boolean tisTheSeason;
+
 	// The instance of wizardry that Forge uses.
 	@Instance(Wizardry.MODID)
 	public static Wizardry instance;
@@ -105,6 +108,10 @@ public class Wizardry {
 
 		configDirectory = new File(event.getModConfigurationDirectory(), Wizardry.MODID);
 		settings.initConfig(event);
+
+		Calendar calendar = Calendar.getInstance();
+		tisTheSeason = calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DAY_OF_MONTH) >= 24
+				&& calendar.get(Calendar.DAY_OF_MONTH) <= 26;
 
 		// Capabilities
 		WizardData.register();

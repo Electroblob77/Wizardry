@@ -88,6 +88,7 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_WIZARD_TRADING = 			createSound("entity.wizard.trading");
 	public static final SoundEvent ENTITY_WIZARD_HURT = 			createSound("entity.wizard.hurt");
 	public static final SoundEvent ENTITY_WIZARD_DEATH = 			createSound("entity.wizard.death");
+	public static final SoundEvent ENTITY_WIZARD_HOHOHO = 			createSound("entity.wizard.hohoho");
 
 	public static final SoundEvent ENTITY_DARKNESS_ORB_HIT = 		createSound("entity.darkness_orb.hit");
 	public static final SoundEvent ENTITY_DART_HIT = 				createSound("entity.dart.hit");

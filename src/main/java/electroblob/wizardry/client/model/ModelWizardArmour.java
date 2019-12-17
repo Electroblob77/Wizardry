@@ -1,5 +1,6 @@
 package electroblob.wizardry.client.model;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockStatue;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -13,6 +14,7 @@ public class ModelWizardArmour extends ModelArmourFixer {
 	ModelRenderer hatSegment4;
 	ModelRenderer hatSegment5;
 	ModelRenderer hatSegment6;
+	ModelRenderer hatBobble;
 	ModelRenderer robe;
 
 	public ModelWizardArmour(float delta){
@@ -75,6 +77,13 @@ public class ModelWizardArmour extends ModelArmourFixer {
 		hatSegment6.mirror = true;
 		setRotation(hatSegment6, -0.5585054F, 0F, 0F);
 
+		hatBobble = new ModelRenderer(this, 52, 47);
+		hatBobble.addBox(0F, 0F, 0F, 3, 3, 3);
+		hatBobble.setRotationPoint(-1.5F, -15.1F, 4F);
+		hatBobble.setTextureSize(64, 64);
+		hatBobble.mirror = true;
+		setRotation(hatBobble, -0.65F, 0F, 0F);
+
 		bipedBody = new ModelRenderer(this, 16, 16);
 		bipedBody.addBox(-4F, 0F, -2F, 8, 11, 4, delta);
 		bipedBody.setRotationPoint(0F, 0F, 0F);
@@ -97,6 +106,7 @@ public class ModelWizardArmour extends ModelArmourFixer {
 		bipedHead.addChild(hatSegment4);
 		bipedHead.addChild(hatSegment5);
 		bipedHead.addChild(hatSegment6);
+		bipedHead.addChild(hatBobble);
 	}
 
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5){
@@ -129,6 +139,8 @@ public class ModelWizardArmour extends ModelArmourFixer {
 		this.robe.rotateAngleX = (this.bipedLeftLeg.rotateAngleX + this.bipedRightLeg.rotateAngleX) / 2f;
 		this.robe.rotateAngleY = this.bipedBody.rotateAngleY;
 		this.robe.rotateAngleZ = (this.bipedLeftLeg.rotateAngleZ + this.bipedRightLeg.rotateAngleZ) / 2f;
+
+		this.hatBobble.showModel = Wizardry.tisTheSeason;
 	}
 
 }

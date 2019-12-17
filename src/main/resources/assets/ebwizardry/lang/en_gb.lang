@@ -1289,4 +1289,9 @@ integration.antiqueatlas.marker.ebwizardry\:wizard_tower=Wizard Tower
 integration.antiqueatlas.marker.ebwizardry\:obelisk=Obelisk
 integration.antiqueatlas.marker.ebwizardry\:shrine=Shrine
 
+spell.ebwizardry\:magic_missile_festive=Magic Mistletoe
+spell.ebwizardry\:summon_snow_golem_festive=Summon Frosty The Snowman
+spell.ebwizardry\:invigorating_presence_festive=Invigorating Presents
+spell.ebwizardry\:empowering_presence_festive=Empowering Presents
+
 wizard.debug=%1$s, %2$s, %3$s

@@ -33,6 +33,7 @@ public class ItemSpellBook extends Item {
 		setHasSubtypes(true);
 		setMaxStackSize(16);
 		setCreativeTab(WizardryTabs.SPELLS);
+		this.addPropertyOverride(new ResourceLocation("festive"), (s, w, e) -> Wizardry.tisTheSeason ? 1 : 0);
 	}
 
 	@Override

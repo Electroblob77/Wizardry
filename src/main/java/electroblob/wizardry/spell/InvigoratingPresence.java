@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -60,6 +61,11 @@ public class InvigoratingPresence extends Spell {
 
 		playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
+	}
+
+	@Override
+	protected String getTranslationKey(){
+		return Wizardry.tisTheSeason ? super.getTranslationKey() + "_festive" : super.getTranslationKey();
 	}
 
 }

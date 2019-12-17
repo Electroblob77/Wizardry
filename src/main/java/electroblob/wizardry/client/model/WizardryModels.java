@@ -67,10 +67,10 @@ public final class WizardryModels {
 
 		registerMultiTexturedModel((ItemCrystal)WizardryItems.magic_crystal);
 
-		registerItemModel(WizardryItems.magic_wand);
-		registerItemModel(WizardryItems.apprentice_wand);
-		registerItemModel(WizardryItems.advanced_wand);
-		registerItemModel(WizardryItems.master_wand);
+		registerWandModel(WizardryItems.magic_wand);
+		registerWandModel(WizardryItems.apprentice_wand);
+		registerWandModel(WizardryItems.advanced_wand);
+		registerWandModel(WizardryItems.master_wand);
 
 		registerItemModel(WizardryItems.spell_book);
 		// Wildcard registered for wizard trades.
@@ -78,37 +78,37 @@ public final class WizardryModels {
 		registerItemModel(WizardryItems.arcane_tome);
 		registerItemModel(WizardryItems.wizard_handbook);
 
-		registerItemModel(WizardryItems.novice_fire_wand);
-		registerItemModel(WizardryItems.novice_ice_wand);
-		registerItemModel(WizardryItems.novice_lightning_wand);
-		registerItemModel(WizardryItems.novice_necromancy_wand);
-		registerItemModel(WizardryItems.novice_earth_wand);
-		registerItemModel(WizardryItems.novice_sorcery_wand);
-		registerItemModel(WizardryItems.novice_healing_wand);
+		registerWandModel(WizardryItems.novice_fire_wand);
+		registerWandModel(WizardryItems.novice_ice_wand);
+		registerWandModel(WizardryItems.novice_lightning_wand);
+		registerWandModel(WizardryItems.novice_necromancy_wand);
+		registerWandModel(WizardryItems.novice_earth_wand);
+		registerWandModel(WizardryItems.novice_sorcery_wand);
+		registerWandModel(WizardryItems.novice_healing_wand);
 
-		registerItemModel(WizardryItems.apprentice_fire_wand);
-		registerItemModel(WizardryItems.apprentice_ice_wand);
-		registerItemModel(WizardryItems.apprentice_lightning_wand);
-		registerItemModel(WizardryItems.apprentice_necromancy_wand);
-		registerItemModel(WizardryItems.apprentice_earth_wand);
-		registerItemModel(WizardryItems.apprentice_sorcery_wand);
-		registerItemModel(WizardryItems.apprentice_healing_wand);
+		registerWandModel(WizardryItems.apprentice_fire_wand);
+		registerWandModel(WizardryItems.apprentice_ice_wand);
+		registerWandModel(WizardryItems.apprentice_lightning_wand);
+		registerWandModel(WizardryItems.apprentice_necromancy_wand);
+		registerWandModel(WizardryItems.apprentice_earth_wand);
+		registerWandModel(WizardryItems.apprentice_sorcery_wand);
+		registerWandModel(WizardryItems.apprentice_healing_wand);
 
-		registerItemModel(WizardryItems.advanced_fire_wand);
-		registerItemModel(WizardryItems.advanced_ice_wand);
-		registerItemModel(WizardryItems.advanced_lightning_wand);
-		registerItemModel(WizardryItems.advanced_necromancy_wand);
-		registerItemModel(WizardryItems.advanced_earth_wand);
-		registerItemModel(WizardryItems.advanced_sorcery_wand);
-		registerItemModel(WizardryItems.advanced_healing_wand);
+		registerWandModel(WizardryItems.advanced_fire_wand);
+		registerWandModel(WizardryItems.advanced_ice_wand);
+		registerWandModel(WizardryItems.advanced_lightning_wand);
+		registerWandModel(WizardryItems.advanced_necromancy_wand);
+		registerWandModel(WizardryItems.advanced_earth_wand);
+		registerWandModel(WizardryItems.advanced_sorcery_wand);
+		registerWandModel(WizardryItems.advanced_healing_wand);
 
-		registerItemModel(WizardryItems.master_fire_wand);
-		registerItemModel(WizardryItems.master_ice_wand);
-		registerItemModel(WizardryItems.master_lightning_wand);
-		registerItemModel(WizardryItems.master_necromancy_wand);
-		registerItemModel(WizardryItems.master_earth_wand);
-		registerItemModel(WizardryItems.master_sorcery_wand);
-		registerItemModel(WizardryItems.master_healing_wand);
+		registerWandModel(WizardryItems.master_fire_wand);
+		registerWandModel(WizardryItems.master_ice_wand);
+		registerWandModel(WizardryItems.master_lightning_wand);
+		registerWandModel(WizardryItems.master_necromancy_wand);
+		registerWandModel(WizardryItems.master_earth_wand);
+		registerWandModel(WizardryItems.master_sorcery_wand);
+		registerWandModel(WizardryItems.master_healing_wand);
 
 		registerItemModel(WizardryItems.spectral_sword);
 		registerItemModel(WizardryItems.spectral_pickaxe);
@@ -302,6 +302,23 @@ public final class WizardryModels {
 		ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 		// Assigns the model for all metadata values
 		ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
+	}
+
+	/**
+	 * Registers a wand model, using the item's registry name as the model name (this convention makes it easier to
+	 * keep track of everything).
+	 */
+	private static void registerWandModel(Item item){
+
+		if(Wizardry.tisTheSeason){
+			// Changing the last parameter from null to "inventory" fixed the item/block model weirdness. No idea why!
+			ModelBakery.registerItemVariants(item, new ModelResourceLocation("ebwizardry:festive_wand", "inventory"));
+			// Assigns the model for all metadata values
+			ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation("ebwizardry:festive_wand", "inventory"));
+		}else{
+			registerItemModel(item);
+		}
+
 	}
 	
 	/**
