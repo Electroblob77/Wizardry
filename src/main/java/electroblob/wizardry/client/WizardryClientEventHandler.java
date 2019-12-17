@@ -41,6 +41,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Event handler responsible for client-side only events, mostly rendering.
  * 
@@ -138,7 +141,10 @@ public final class WizardryClientEventHandler {
 
 			if(world == null) return;
 
-			for(TileEntity tileentity : world.loadedTileEntityList){
+			// Somehow this was throwing a CME, I have no idea why so I'm just going to cheat and copy the list
+			List<TileEntity> tileEntities = new ArrayList<>(world.loadedTileEntityList);
+
+			for(TileEntity tileentity : tileEntities){
 				if(tileentity instanceof TileEntityDispenser){
 					if(DispenserCastingData.get((TileEntityDispenser)tileentity) != null){
 						DispenserCastingData.get((TileEntityDispenser)tileentity).update();

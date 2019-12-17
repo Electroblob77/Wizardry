@@ -166,7 +166,10 @@ public class DispenserCastingData extends BlockCastingData<TileEntityDispenser> 
 			// This will fire once for each dimension, but since we want dispenser-casting to work in all dimensions,
 			// this is correct (the loaded tile entity list will of course be different in each case.
 
-			for(TileEntity tileentity : event.world.loadedTileEntityList){
+			// Somehow this was throwing a CME, I have no idea why so I'm just going to cheat and copy the list
+			List<TileEntity> tileEntities = new ArrayList<>(event.world.loadedTileEntityList);
+
+			for(TileEntity tileentity : tileEntities){
 				if(tileentity instanceof TileEntityDispenser){
 					if(DispenserCastingData.get((TileEntityDispenser)tileentity) != null){
 						DispenserCastingData.get((TileEntityDispenser)tileentity).update();
