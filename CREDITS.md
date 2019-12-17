@@ -1,7 +1,7 @@
 # Credits
 
 Electroblob's Wizardry  
-Version 4.2.3  
+Version 4.2.6
 For Minecraft 1.12.2
 
 Designed, coded and textured by Electroblob
@@ -21,6 +21,8 @@ In addition, I'd like to thank the following individuals for their contributions
 - Tora-B
 - Avatair
 - Aeronica
+- UltraHex
+- Azim-Palmer
 
 #### Translations
 
