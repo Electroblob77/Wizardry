@@ -66,12 +66,11 @@ public class EntitySmokeBomb extends EntityBomb {
 
 			for(EntityLivingBase target : targets){
 				if(target != this.getThrower()){
-					// Gives the target blindness if it is a player, mind trick otherwise (since this has the desired
+					// Gives the target blindness, and mind trick if it's not a player (since this has the desired
 					// effect of preventing targeting)
-					if(target instanceof EntityPlayer){
-						target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
-					}else if(target instanceof EntityLiving){
-						// New AI
+					target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
+
+					if(target instanceof EntityLiving){
 						((EntityLiving)target).setAttackTarget(null);
 						target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick, duration, 0));
 					}
