@@ -33,6 +33,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
@@ -46,6 +49,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * General-purpose event handler for things that don't fit anywhere else or groups of related behaviours that are better
@@ -365,6 +369,22 @@ public final class WizardryEventHandler {
 		if(event.getSource().getTrueSource() instanceof EntityPlayer){
 
 			EntityPlayer player = (EntityPlayer)event.getSource().getTrueSource();
+
+			// Compatibility with "Lycanites Mobs" -it uses custom loot drop logic which can't be hooked, given the
+			// number of mobs that spawn as Lycanites when this mod is active it would massively nerf the wizard drops
+			//  if we didn't handle this
+			if(event.getEntity().getClass().getCanonicalName().contains("lycanitesmobs"))
+			{
+				WorldServer world = (WorldServer)event.getEntity().getEntityWorld();
+				LootTable table =  world.getLootTableManager().getLootTableFromLocation(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
+
+				LootContext ctx = new LootContext.Builder(world).withPlayer(player).build();
+				List<ItemStack> stacks = table.generateLootForPools(world.rand, ctx);
+
+				for(ItemStack stack : stacks) {
+					event.getEntity().entityDropItem(stack, 0f);
+				}
+			}
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
 
