@@ -397,7 +397,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			if(MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(Source.WAND, spell, caster, modifiers, castingTick))) return false;
 		}
 
-		int cost = (int)(spell.getCost() * modifiers.get(SpellModifiers.COST));
+		int cost = (int)(spell.getCost() * modifiers.get(SpellModifiers.COST) + 0.1f); // Weird floaty rounding
 
 		// As of wizardry 4.2 mana cost is only divided over two intervals each second
 		if(spell.isContinuous) cost = getDistributedCost(cost, castingTick);
@@ -433,7 +433,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				caster.setActiveHand(hand);
 
 				// Mana cost
-				int cost = (int)(spell.getCost() * modifiers.get(SpellModifiers.COST));
+				int cost = (int)(spell.getCost() * modifiers.get(SpellModifiers.COST) + 0.1f); // Weird floaty rounding
 				// As of wizardry 4.2 mana cost is only divided over two intervals each second
 				if(spell.isContinuous) cost = getDistributedCost(cost, castingTick);
 
@@ -494,7 +494,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 			int castingTick = stack.getMaxItemUseDuration() - timeLeft; // Might as well include this
 
-			int cost = getDistributedCost((int)(spell.getCost() * modifiers.get(SpellModifiers.COST)), castingTick);
+			int cost = getDistributedCost((int)(spell.getCost() * modifiers.get(SpellModifiers.COST) + 0.1f), castingTick);
 
 			// Still need to check there's enough mana or the spell will finish twice, since running out of mana is
 			// handled separately.
