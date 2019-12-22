@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-Please read the [guide for contributing](https://github.com/Electroblob77/Wizardry/blob/1.12.2/guide_for_contributing.md) before posting.
+Please read the [guide for contributing](https://github.com/Electroblob77/Wizardry/blob/1.12.2/CONTRIBUTING.md) before posting.
 
 Minecraft versions: [if this suggestion only applies to some versions, list them here]
 
