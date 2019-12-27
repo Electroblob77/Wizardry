@@ -159,6 +159,12 @@ item.ebwizardry:wizard_leggings_healing.name=Поножи Целителя
 item.ebwizardry:wizard_boots_healing.name=Ботинки Целителя
 
 item.ebwizardry:spawn_wizard.name=Спаун Волшебника
+item.ebwizardry:spawn_evil_wizard.name=Спаун Злого Волшебника
+
+item.ebwizardry:spectral_helmet.name=Призрачный шлем
+item.ebwizardry:spectral_chestplate.name=Призрачный нагрудник
+item.ebwizardry:spectral_leggings.name=Призрачные поножи
+item.ebwizardry:spectral_boots.name=Призрачные ботинки
 
 entity.ebwizardry:zombie_minion.name=Зомби
 entity.ebwizardry:skeleton_minion.name=Скелет
