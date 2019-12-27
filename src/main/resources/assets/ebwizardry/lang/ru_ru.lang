@@ -84,7 +84,21 @@ item.ebwizardry:spectral_sword.name=Спектральный Меч
 item.ebwizardry:spectral_pickaxe.name=Спектральная Кирка
 item.ebwizardry:spectral_bow.name=Спектральный Лук
 
-item.ebwizardry:mana_flask.name=Бутылка Маны
+item.ebwizardry:spectral_sword_upgraded.name=Спектральный Меч
+item.ebwizardry:spectral_pickaxe_upgraded.name=Спектральная Кирка
+
+item.ebwizardry:small_mana_flask.name=Маленькая Бутылка Маны
+item.ebwizardry:medium_mana_flask.name=Средняя Бутылка Маны
+item.ebwizardry:large_mana_flask.name=Большая Бутылка Маны
+
+item.ebwizardry:grand_crystal.name=Большой Магический Кристалл
+item.ebwizardry:crystal_shard.name=Осколок Магического Кристалла
+
+item.ebwizardry:astral_diamond.name=Звёздный Алмаз
+
+item.ebwizardry:purifying_elixir.name=Очищающий Эликсир
+item.ebwizardry:purifying_elixir.desc=Снимает проклятия при употреблении
+
 item.ebwizardry:storage_upgrade.name=Улучшение Хранилища Маны Жезла
 item.ebwizardry:siphon_upgrade.name=Улучшение Сифона Жезла
 item.ebwizardry:condenser_upgrade.name=Улучшение Конденсатора Жезла
@@ -97,9 +111,13 @@ item.ebwizardry:attunement_upgrade.name=Улучшение Хранилища З
 item.ebwizardry:flaming_axe.name=Огненный Топор
 item.ebwizardry:frost_axe.name=Ледяной Топор
 
+item.ebwizardry:flaming_axe_upgraded.name=Огненный Топор
+item.ebwizardry:frost_axe_upgraded.name=Ледяной Топор
+
 item.ebwizardry:firebomb.name=Огненная Бомба
 item.ebwizardry:poison_bomb.name=Ядовитая Бомба
 item.ebwizardry:smoke_bomb.name=Дымовая Бомба
+item.ebwizardry:spark_bomb.name=Бомба Искр
 
 item.ebwizardry:blank_scroll.name=Пустой Свиток
 item.ebwizardry:scroll.name=Свиток %1$s
