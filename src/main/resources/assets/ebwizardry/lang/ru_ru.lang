@@ -7,8 +7,30 @@ tile.ebwizardry:snare.name=Ловушка
 tile.ebwizardry:transportation_stone.name=Камень Транспортировки
 tile.ebwizardry:spectral_block.name=Спектральный Блок
 tile.ebwizardry:crystal_block.name=Кристальный Блок
+tile.ebwizardry:runestone.name=Рунический камень
+tile.ebwizardry:runestone_pedestal.name=Пьедестал рунического камня
+tile.ebwizardry:thorns.name=Колючки
+tile.ebwizardry:obsidian_crust.name=Обсидиановая кора
+tile.ebwizardry:dry_frosted_ice.name=Сухой матовый лед
 
-item.ebwizardry:magic_crystal.name=Магический Кристалл
+tile.ebwizardry:magic_crystal_block.name=Блок кристалла
+tile.ebwizardry:fire_crystal_block.name=Блок огненного кристалла
+tile.ebwizardry:ice_crystal_block.name=Блок ледяного кристалла
+tile.ebwizardry:lightning_crystal_block.name=Блок грозового кристалла
+tile.ebwizardry:necromancy_crystal_block.name=Блок темного кристалла
+tile.ebwizardry:earth_crystal_block.name=Блок зеленого кристалла
+tile.ebwizardry:sorcery_crystal_block.name=Блок мистического кристалла
+tile.ebwizardry:healing_crystal_block.name=Блок сияющего кристалла
+
+item.ebwizardry:crystal_magic.name=Магический Кристалл
+item.ebwizardry:crystal_fire.name=Огненный кристалл
+item.ebwizardry:crystal_ice.name=Ледяной кристалл
+item.ebwizardry:crystal_lightning.name=Грозовой кристалл
+item.ebwizardry:crystal_necromancy.name=Темный кристалл
+item.ebwizardry:crystal_earth.name=Зелёный кристалл
+item.ebwizardry:crystal_sorcery.name=Мистический кристалл
+item.ebwizardry:crystal_healing.name=Сияющий кристалл
+
 item.ebwizardry:magic_wand.name=Волшебный Жезл
 item.ebwizardry:apprentice_wand.name=Жезл Ученика
 item.ebwizardry:advanced_wand.name=Продвинутый Жезл
@@ -62,7 +84,21 @@ item.ebwizardry:spectral_sword.name=Спектральный Меч
 item.ebwizardry:spectral_pickaxe.name=Спектральная Кирка
 item.ebwizardry:spectral_bow.name=Спектральный Лук
 
-item.ebwizardry:mana_flask.name=Бутылка Маны
+item.ebwizardry:spectral_sword_upgraded.name=Спектральный Меч
+item.ebwizardry:spectral_pickaxe_upgraded.name=Спектральная Кирка
+
+item.ebwizardry:small_mana_flask.name=Маленькая Бутылка Маны
+item.ebwizardry:medium_mana_flask.name=Средняя Бутылка Маны
+item.ebwizardry:large_mana_flask.name=Большая Бутылка Маны
+
+item.ebwizardry:grand_crystal.name=Большой Магический Кристалл
+item.ebwizardry:crystal_shard.name=Осколок Магического Кристалла
+
+item.ebwizardry:astral_diamond.name=Звёздный Алмаз
+
+item.ebwizardry:purifying_elixir.name=Очищающий Эликсир
+item.ebwizardry:purifying_elixir.desc=Снимает проклятия при употреблении
+
 item.ebwizardry:storage_upgrade.name=Улучшение Хранилища Маны Жезла
 item.ebwizardry:siphon_upgrade.name=Улучшение Сифона Жезла
 item.ebwizardry:condenser_upgrade.name=Улучшение Конденсатора Жезла
@@ -75,9 +111,13 @@ item.ebwizardry:attunement_upgrade.name=Улучшение Хранилища З
 item.ebwizardry:flaming_axe.name=Огненный Топор
 item.ebwizardry:frost_axe.name=Ледяной Топор
 
+item.ebwizardry:flaming_axe_upgraded.name=Огненный Топор
+item.ebwizardry:frost_axe_upgraded.name=Ледяной Топор
+
 item.ebwizardry:firebomb.name=Огненная Бомба
 item.ebwizardry:poison_bomb.name=Ядовитая Бомба
 item.ebwizardry:smoke_bomb.name=Дымовая Бомба
+item.ebwizardry:spark_bomb.name=Бомба Искр
 
 item.ebwizardry:blank_scroll.name=Пустой Свиток
 item.ebwizardry:scroll.name=Свиток %1$s
@@ -137,6 +177,75 @@ item.ebwizardry:wizard_leggings_healing.name=Поножи Целителя
 item.ebwizardry:wizard_boots_healing.name=Ботинки Целителя
 
 item.ebwizardry:spawn_wizard.name=Спаун Волшебника
+item.ebwizardry:spawn_evil_wizard.name=Спаун Злого Волшебника
+
+item.ebwizardry:spectral_helmet.name=Призрачный шлем
+item.ebwizardry:spectral_chestplate.name=Призрачный нагрудник
+item.ebwizardry:spectral_leggings.name=Призрачные поножи
+item.ebwizardry:spectral_boots.name=Призрачные ботинки
+
+item.ebwizardry:lightning_hammer.name=Молот Шторма
+
+item.ebwizardry:ring_condensing.name=Кольцо Конденсации
+item.ebwizardry:ring_condensing.desc=Медленно восстанавливает ману для всех жезлов на вашем хотбаре
+item.ebwizardry:ring_siphoning.name=Кольцо Сифонинга
+item.ebwizardry:ring_siphoning.desc=Увеличивает сифоновую ману на 30 %%
+item.ebwizardry:ring_battlemage.name=Кольцо Боевого Мага
+item.ebwizardry:ring_battlemage.desc=Держа палочку в руке и меч в основной руке, вы получаете 10 %% дополнительного магического урона
+item.ebwizardry:ring_combustion.name=Кольцо Горения
+item.ebwizardry:ring_combustion.desc=Существа, убитые огненными заклинаниями, взрываются
+item.ebwizardry:ring_fire_melee.name=Кольцо Огненного Прикосновения
+item.ebwizardry:ring_fire_melee.desc=Удар по существу огненной палочкой поджигает его
+item.ebwizardry:ring_fire_biome.name=Кольцо Пустынного Солнца
+item.ebwizardry:ring_fire_biome.desc=Огненные заклинания на 30% более сильны в горячих биомах
+item.ebwizardry:ring_disintegration.name=Кольцо Раскаленных Углей
+item.ebwizardry:ring_disintegration.desc=Все заклинания огненной атаки разрушают их жертв
+item.ebwizardry:ring_ice_melee.name=Кольцо Ледяного Прикосновения
+item.ebwizardry:ring_ice_melee.desc=Удар по существу ледяной палочкой дает эффект обморожения
+item.ebwizardry:ring_ice_biome.name=Кольцо Оледенения
+item.ebwizardry:ring_ice_biome.desc=Заклинания льда в снежных биомах на 30% более мощные
+item.ebwizardry:ring_arcane_frost.name=Кольцо Чародейского Мороза
+item.ebwizardry:ring_arcane_frost.desc=Существа, убитые ледяными заклинаниями, выпускают осколки льда во всех направлениях
+item.ebwizardry:ring_shattering.name=Кольцо Разрушителя
+item.ebwizardry:ring_shattering.desc=Атаки ближнего боя на мобов с эффектом обморожения могут разбить их на ледяные осколки
+item.ebwizardry:ring_lightning_melee.name=Кольцо Цепи
+item.ebwizardry:ring_lightning_melee.desc=Удар молнии о существо выстреливает молнией в другого находящегося поблизости существа
+item.ebwizardry:ring_storm.name=Кольцо Собирающейся Бури
+item.ebwizardry:ring_storm.desc=Во время грозы заклинания молнии резко сокращают время восстановления
+item.ebwizardry:ring_seeking.name=Кольцо Притяжения
+item.ebwizardry:ring_seeking.desc=Все снарядовые заклинания ищут свои цели
+item.ebwizardry:ring_hammer.name=Кольцо Талека Всемогущего
+item.ebwizardry:ring_hammer.desc=Молнии могут быть подняты и брошены
+item.ebwizardry:ring_soulbinding.name=Кольцо Странника Душ
+item.ebwizardry:ring_soulbinding.desc=Существа, поврежденные заклинаниями некромантии, становятся привязанными к вам
+item.ebwizardry:ring_leeching.name=Кольцо Пиявки
+item.ebwizardry:ring_leeching.desc=Все атаки некромантии с вероятностью 30% могут вызвать эффект истощения жизни
+item.ebwizardry:ring_necromancy_melee.name=Кольцо Некротического Прикосновения
+item.ebwizardry:ring_necromancy_melee.desc=Удар по существу с помощью палочки некромантии дает ему эффект увядания
+item.ebwizardry:ring_mind_control.name=Кольцо Экстрасенса
+item.ebwizardry:ring_mind_control.desc=Контролируемые разумом существа могут контролировать свои близлежащие существа
+item.ebwizardry:ring_poison.name=Кольцо Змеи
+item.ebwizardry:ring_poison.desc=Все заклинания земли отравляют свою цель
+item.ebwizardry:ring_earth_melee.name=Кольцо ядовитого прикосновения
+item.ebwizardry:ring_earth_melee.desc=Удар по существу земной палочкой отравляет его
+item.ebwizardry:ring_earth_biome.name=Кольцо Дриады
+item.ebwizardry:ring_earth_biome.desc=Заклинания земли сильнее на 30% в лесах и крытых лесах
+item.ebwizardry:ring_full_moon.name=Кольцо Воющего Волка
+item.ebwizardry:ring_full_moon.desc=Земные заклинания резко сократили время восстановления при полной луне
+item.ebwizardry:ring_extraction.name=Кольцо Извлечения
+item.ebwizardry:ring_extraction.desc=Убийства заклинаниями магии дают бонус маны
+item.ebwizardry:ring_mana_return.name=Кольцо Перфекциониста
+item.ebwizardry:ring_mana_return.desc=Силовые стрелы, которые не попадают в цель, возвращают ману, которую они использовали к вашей палочке
+item.ebwizardry:ring_blockwrangler.name=Кольцо Странника
+item.ebwizardry:ring_blockwrangler.desc=Брошенные блоки наносят в два раза больше обычного урона
+item.ebwizardry:ring_conjurer.name=Кольцо фокусника
+item.ebwizardry:ring_conjurer.desc=Колдовские вещи длятся в два раза дольше
+item.ebwizardry:ring_defender.name=Кольцо Защитника
+item.ebwizardry:ring_defender.desc=Ваши снаряды проходят через силовые поля, принадлежащие вам или союзнику
+item.ebwizardry:ring_paladin.name=Кольцо Паладина
+item.ebwizardry:ring_paladin.desc=Когда вы исцеляете себя или союзника, близлежащие союзники также получают немного здоровья
+item.ebwizardry:ring_interdiction.name=Кольцо Запрета
+item.ebwizardry:ring_interdiction.desc=Ваше силовое поле наносит урон существам, которые его касаются
 
 entity.ebwizardry:zombie_minion.name=Зомби
 entity.ebwizardry:skeleton_minion.name=Скелет
