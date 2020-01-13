@@ -464,7 +464,8 @@ public final class WizardryEventHandler {
 //					Wizardry.logger.info("Replaced fall distance {} with effective distance {} based on entity velocity", event.getDistance(), y);
 //				}
 
-				event.setDistance((float)y);
+				// Don't let it increase fall damage beyond vanilla values
+				if(y < event.getDistance()) event.setDistance((float)y);
 			}
 		}
 	}
