@@ -294,7 +294,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @see Spell#createSoundsWithSuffixes(String[])
 	 */
 	public final SoundEvent createSoundWithSuffix(String suffix){
-		return WizardrySounds.createSound("spell." + this.getRegistryName().getPath() + "." + suffix);
+		return WizardrySounds.createSound(this.getRegistryName().getNamespace(), "spell." + this.getRegistryName().getPath() + "." + suffix);
 	}
 
 	/**
