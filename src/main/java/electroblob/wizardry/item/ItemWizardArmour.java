@@ -330,7 +330,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 			IAttributeInstance attribute = event.getEntityLiving().getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
 			double followRange = attribute == null ? 16 : attribute.getAttributeValue();
 			if(event.getTarget().isSneaking()) followRange *= 0.8;
-			float f = armourPieces / ((EntityPlayer)event.getTarget()).inventory.armorInventory.size();
+			float f = (float)armourPieces / ((EntityPlayer)event.getTarget()).inventory.armorInventory.size();
 			if(f < 0.1F) f = 0.1F;
 			followRange *= (double)(0.7F * f);
 			// Don't need to worry about the isSuitableTarget check since it must already have been checked to get this far
