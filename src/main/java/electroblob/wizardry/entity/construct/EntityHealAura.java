@@ -62,7 +62,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 						target.motionZ = velZ;
 					}
 
-				}else if(target.getHealth() < target.getMaxHealth() && this.ticksExisted % 5 == 0){
+				}else if(target.getHealth() < target.getMaxHealth() && target.ticksExisted % 5 == 0){
 					target.heal(Spells.healing_aura.getProperty(Spell.HEALTH).floatValue() * damageMultiplier);
 				}
 			}
