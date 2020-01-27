@@ -26,12 +26,12 @@ In addition, I'd like to thank the following individuals for their contributions
 
 #### Translations
 
-- Spanish and Mexican Spanish: MadWrist 
-- Russian: VilagVil, kellixon 
-- French: Hahdrim 
-- Brazilian Portuguese: lorrampi 
-- Chinese: ZHENGLOC, dragon-evol 
-- Korean: shejery, rewi_wire 
+- Spanish and Mexican Spanish: MadWrist
+- Russian: VilagVil, kellixon, bigenergy
+- French: Hahdrim
+- Brazilian Portuguese: lorrampi
+- Chinese: ZHENGLOC, dragon-evol
+- Korean: shejery, rewi_wire
 - Polish: Trozuu
 
 Lightning ray sound effect from OhhWowProductions
