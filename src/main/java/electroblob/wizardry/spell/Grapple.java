@@ -59,7 +59,7 @@ public class Grapple extends Spell {
 
 	@Override
 	public boolean canBeCastByNPCs(){
-		return super.canBeCastByNPCs();
+		return true;
 	}
 
 	@Override
