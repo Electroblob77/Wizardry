@@ -5,7 +5,6 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import electroblob.wizardry.spell.Spell;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;

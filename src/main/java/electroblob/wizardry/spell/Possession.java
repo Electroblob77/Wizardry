@@ -16,6 +16,7 @@ import electroblob.wizardry.packet.PacketPossession;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
@@ -267,7 +268,7 @@ public class Possession extends SpellRay {
 				// Inventory and items
 
 				if(possessor.getEntityData() != null){
-					possessor.getEntityData().setTag(INVENTORY_NBT_KEY, possessor.inventory.writeToNBT(new NBTTagList()));
+					NBTExtras.storeTagSafely(possessor.getEntityData(), INVENTORY_NBT_KEY, possessor.inventory.writeToNBT(new NBTTagList()));
 				}
 
 				possessor.inventory.clear();

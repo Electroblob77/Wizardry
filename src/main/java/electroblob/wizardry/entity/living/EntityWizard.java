@@ -389,15 +389,15 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		super.writeEntityToNBT(nbt);
 
 		if(this.trades != null){
-			nbt.setTag("trades", this.trades.getRecipiesAsTags());
+			NBTExtras.storeTagSafely(nbt, "trades", this.trades.getRecipiesAsTags());
 		}
 
 		nbt.setInteger("element", this.getElement().ordinal());
 		nbt.setInteger("skin", this.textureIndex);
-		nbt.setTag("spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
+		NBTExtras.storeTagSafely(nbt, "spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
 
 		if(this.towerBlocks != null && this.towerBlocks.size() > 0){
-			nbt.setTag("towerBlocks", NBTExtras.listToNBT(this.towerBlocks, NBTUtil::createPosTag));
+			NBTExtras.storeTagSafely(nbt, "towerBlocks", NBTExtras.listToNBT(this.towerBlocks, NBTUtil::createPosTag));
 		}
 	}
 

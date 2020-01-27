@@ -1,5 +1,6 @@
 package electroblob.wizardry.data;
 
+import electroblob.wizardry.util.NBTExtras;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -89,7 +90,7 @@ public interface IStoredVariable<T> extends IVariable<T> {
 
 		@Override
 		public void write(NBTTagCompound nbt, T value){
-			if(value != null) nbt.setTag(key, serialiser.apply(value));
+			if(value != null) NBTExtras.storeTagSafely(nbt, key, serialiser.apply(value));
 		}
 
 		@Override

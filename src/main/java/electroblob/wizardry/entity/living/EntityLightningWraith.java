@@ -19,9 +19,6 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.Arrays;
-import java.util.function.IntPredicate;
-
 @Mod.EventBusSubscriber
 public class EntityLightningWraith extends EntityBlazeMinion {
 

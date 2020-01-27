@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
@@ -89,7 +90,7 @@ public class ShulkerBullet extends Spell {
 				targetTag.setInteger("X", pos.getX());
 				targetTag.setInteger("Y", pos.getY());
 				targetTag.setInteger("Z", pos.getZ());
-				nbt.setTag("Target", targetTag);
+				NBTExtras.storeTagSafely(nbt, "Target", targetTag);
 				bullet.readFromNBT(nbt); // LOL I just modified private fields without reflection
 
 				world.spawnEntity(bullet);

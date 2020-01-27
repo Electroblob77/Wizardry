@@ -515,12 +515,12 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		NBTTagCompound properties = new NBTTagCompound();
 
-		properties.setTag("imbuements", NBTExtras.mapToNBT(this.imbuementDurations,
+		NBTExtras.storeTagSafely(properties, "imbuements", NBTExtras.mapToNBT(this.imbuementDurations,
 				imbuement -> new NBTTagInt(Enchantment.getEnchantmentID((Enchantment)imbuement)), NBTTagInt::new));
 
 		// Mmmmmm Java 8....
-		properties.setTag("allies", NBTExtras.listToNBT(this.allies, NBTUtil::createUUIDTag));
-		properties.setTag("allyNames", NBTExtras.listToNBT(this.allyNames, NBTTagString::new));
+		NBTExtras.storeTagSafely(properties, "allies", NBTExtras.listToNBT(this.allies, NBTUtil::createUUIDTag));
+		NBTExtras.storeTagSafely(properties, "allyNames", NBTExtras.listToNBT(this.allyNames, NBTTagString::new));
 
 		// Might be worth converting this over to WizardryUtilities.listToNBT.
 		int[] spells = new int[this.spellsDiscovered.size()];
@@ -531,7 +531,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 		properties.setIntArray("discoveredSpells", spells);
 
-		properties.setTag("recentSpells", NBTExtras.listToNBT(recentSpells, s -> new NBTTagInt(s.metadata())));
+		NBTExtras.storeTagSafely(properties, "recentSpells", NBTExtras.listToNBT(recentSpells, s -> new NBTTagInt(s.metadata())));
 
 		storedVariables.forEach(k -> k.write(properties, this.spellData.get(k)));
 

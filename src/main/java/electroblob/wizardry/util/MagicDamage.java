@@ -8,7 +8,10 @@ import net.minecraft.entity.monster.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 // A note on the use of the vanilla damagesources:
 // When using indirect damage sources, the SECOND argument is the original entity (i.e. the caster), and the

@@ -3,6 +3,7 @@ package electroblob.wizardry.worldgen;
 import com.google.common.math.Quantiles;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.WizardryUtilities;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -256,7 +257,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("ChunkX", chunkX);
 			tag.setInteger("ChunkZ", chunkZ);
-			tag.setTag("BB", settings.getBoundingBox().toNBTTagIntArray());
+			NBTExtras.storeTagSafely(tag, "BB", settings.getBoundingBox().toNBTTagIntArray());
 			structureData.writeInstance(tag, chunkX, chunkZ);
 			structureData.markDirty();
 		}

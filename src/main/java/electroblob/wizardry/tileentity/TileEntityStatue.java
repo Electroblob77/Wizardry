@@ -1,5 +1,6 @@
 package electroblob.wizardry.tileentity;
 
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
@@ -152,7 +153,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 			tagCompound.setFloat("entityYawHead", creature.rotationYawHead);
 			tagCompound.setFloat("entityYawOffset", creature.renderYawOffset);
 		}
-		tagCompound.setTag("entity", entityCompound);
+		NBTExtras.storeTagSafely(tagCompound, "entity", entityCompound);
 		tagCompound.setInteger("timer", timer);
 		tagCompound.setInteger("lifetime", lifetime);
 		tagCompound.setBoolean("isIce", isIce);

@@ -4,6 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketGlyphData;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.NBTExtras;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -171,7 +172,7 @@ public class SpellGlyphData extends WorldSavedData {
 			tagList.appendTag(tag);
 		}
 
-		nbt.setTag("spellGlyphData", tagList);
+		NBTExtras.storeTagSafely(nbt, "spellGlyphData", tagList);
 
 		return nbt;
 	}

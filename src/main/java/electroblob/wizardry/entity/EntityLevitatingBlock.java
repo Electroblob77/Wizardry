@@ -5,6 +5,7 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
@@ -183,7 +184,7 @@ public class EntityLevitatingBlock extends EntityFallingBlock implements IEntity
 												NBTBase nbtbase = this.tileEntityData.getTag(s);
 
 												if(!"x".equals(s) && !"y".equals(s) && !"z".equals(s)){
-													nbttagcompound.setTag(s, nbtbase.copy());
+													NBTExtras.storeTagSafely(nbttagcompound, s, nbtbase.copy());
 												}
 											}
 
