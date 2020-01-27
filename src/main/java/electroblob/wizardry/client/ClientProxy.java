@@ -434,6 +434,7 @@ public class ClientProxy extends CommonProxy {
 				if(caster instanceof ISpellCaster){
 					if(spell.isContinuous || spell instanceof None){
 						((ISpellCaster)caster).setContinuousSpell(spell);
+						((ISpellCaster)caster).setSpellCounter(spell instanceof None ? 0 : 1);
 						((EntityLiving)caster).setAttackTarget((EntityLivingBase)target);
 					}
 				}

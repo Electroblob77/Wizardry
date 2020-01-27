@@ -74,6 +74,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
 	private Spell continuousSpell;
+	private int spellCounter;
 
 	public EntityEvilWizard(World world){
 
@@ -174,6 +175,16 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
+	}
+
+	@Override
+	public void setSpellCounter(int count){
+		spellCounter = count;
+	}
+
+	@Override
+	public int getSpellCounter(){
+		return spellCounter;
 	}
 	
 	@Override

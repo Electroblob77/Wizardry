@@ -213,6 +213,7 @@ public class EntityAIAttackSpell<T extends EntityLiving & ISpellCaster> extends 
 			return false;
 		}
 
+		// This is only called when spell casting starts so ticksInUse is always zero
 		if(spell.cast(attacker.world, attacker, EnumHand.MAIN_HAND, 0, target, modifiers)){
 
 			if(spell.isContinuous){

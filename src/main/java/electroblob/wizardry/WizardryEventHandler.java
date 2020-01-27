@@ -347,18 +347,21 @@ public final class WizardryEventHandler {
 
 				Spell spell = ((ISpellCaster)event.getEntity()).getContinuousSpell();
 				SpellModifiers modifiers = ((ISpellCaster)event.getEntity()).getModifiers();
+				int count = ((ISpellCaster)event.getEntity()).getSpellCounter();
 
 				if(spell != null && spell != Spells.none){ // IntelliJ is wrong, do NOT remove the null check!
 
 					if(!MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(SpellCastEvent.Source.NPC, spell, event.getEntityLiving(),
-							modifiers, 0))){
+							modifiers, count))){
 
-						spell.cast(event.getEntity().world, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, 0,
+						spell.cast(event.getEntity().world, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, count,
 								// TODO: This implementation of modifiers relies on them being accessible client-side.
 								// 		 Right now that doesn't matter because NPCs don't use modifiers, but they might in future
 								((EntityLiving)event.getEntity()).getAttackTarget(), modifiers);
 					}
 				}
+
+				((ISpellCaster)event.getEntity()).setSpellCounter(count + 1);
 			}
 		}
 	}

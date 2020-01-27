@@ -83,6 +83,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
 	private Spell continuousSpell;
+	private int spellCounter;
 
 	/** A set of the positions of the blocks that are part of this wizard's tower. */
 	private Set<BlockPos> towerBlocks;
@@ -187,7 +188,17 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
 	}
-	
+
+	@Override
+	public void setSpellCounter(int count){
+		spellCounter = count;
+	}
+
+	@Override
+	public int getSpellCounter(){
+		return spellCounter;
+	}
+
 	@Override
 	public int getAimingError(EnumDifficulty difficulty){
 		// Being more intelligent than skeletons, wizards are a little more accurate.

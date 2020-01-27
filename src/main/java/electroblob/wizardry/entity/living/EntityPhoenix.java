@@ -30,6 +30,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	private EntityAIAttackSpell<EntityPhoenix> spellAttackAI = new EntityAIAttackSpell<>(this, AISpeed, 15f, 60, 140);
 
 	private Spell continuousSpell;
+	private int spellCounter;
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.flame_ray);
 
@@ -74,6 +75,16 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	@Override
 	public void setContinuousSpell(Spell spell){
 		continuousSpell = spell;
+	}
+
+	@Override
+	public void setSpellCounter(int count){
+		spellCounter = count;
+	}
+
+	@Override
+	public int getSpellCounter(){
+		return spellCounter;
 	}
 
 	@Override

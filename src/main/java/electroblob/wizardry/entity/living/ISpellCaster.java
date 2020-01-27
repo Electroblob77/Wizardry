@@ -19,7 +19,9 @@ import java.util.List;
  * packets) is handled by that class, and all the implementor needs to do is decide which spell(s) to select.
  * <p></p>
  * This class also allows Wizardry to do all the syncing necessary for continuous spell casting. All the implementor
- * needs to do is store the actual fields involved.
+ * needs to do is store the actual fields involved, by implementing {@link ISpellCaster#setContinuousSpell(Spell)},
+ * {@link ISpellCaster#getContinuousSpell()}, {@link ISpellCaster#setSpellCounter(int)}, {@link ISpellCaster#getSpellCounter()}
+ * and {@link ISpellCaster#getModifiers()}.
  */
 /* Perhaps this should be a capability? Though I can't help thinking they're mainly for attaching data to vanilla
  * classes, rather than custom ones. For now, the main purpose of this is to centralise code within wizardry itself, and
@@ -39,7 +41,7 @@ public interface ISpellCaster {
 	 *         list <b>must</b> be castable by NPCs (i.e. {@link Spell#canBeCastBy(net.minecraft.entity.EntityLiving, boolean)} returns true).
 	 */
 	@Nonnull
-	public List<Spell> getSpells();
+	List<Spell> getSpells();
 
 	/**
 	 * Called each time the entity attacks to get the modifiers to apply to the spell.
@@ -48,31 +50,47 @@ public interface ISpellCaster {
 	 *         required, pass in an empty {@code SpellModifiers} object.
 	 */
 	@Nonnull
-	public SpellModifiers getModifiers();
+	default SpellModifiers getModifiers(){
+		return new SpellModifiers(); // May seem wasteful but this should never be called so it doesn't matter
+	}
 
 	/**
 	 * Returns the continuous spell that is currently being cast, or the None spell if there is none. Implementors
 	 * should simply store this as a private field and return it here. Will be synced by the AI class, but whether it is
-	 * saved to NBT is up to you. If the implementing class does not deal with continuous spells, just return
-	 * {@link Spells#none}. If the implementing class only ever uses one continuous spell, do <b>not</b> just return
-	 * that spell; the field must still be stored.
+	 * saved to NBT is up to you. If the implementing class only ever uses one continuous spell, do <b>not</b> just
+	 * return that spell; the field must still be stored.
 	 */
 	@Nonnull
-	public Spell getContinuousSpell();
+	default Spell getContinuousSpell(){
+		return Spells.none;
+	}
 
 	/**
 	 * Sets the continuous spell that is currently being cast, or the None spell if there is none. Implementors should
 	 * simply store this as a private field and assign it here. Will be synced by the AI class, but whether it is saved
 	 * to NBT is up to you. If the implementing class does not deal with continuous spells, leave this method blank.
 	 */
-	public void setContinuousSpell(Spell spell);
+	default void setContinuousSpell(Spell spell){
+		// Do nothing
+	}
+
+	/** Returns the number of ticks the current spell has been cast for. Implementors should simply store this as a
+	 * private field and return it here. This is only used client-side. */
+	default int getSpellCounter(){
+		return 0;
+	}
+
+	/** Sets the number of ticks the current spell has been cast for. Implementors should simply store this as a
+	 * private field and assign it here. This is only used client-side. */
+	default void setSpellCounter(int count){
+		// Do nothing
+	}
 	
 	/**
 	 * Returns the aiming error for the given difficulty, used in projectile spells. Defaults to the values used by
 	 * skeletons, which are: Easy - 10, Normal - 6, Hard - 2, Peaceful - 10 (rarely used).
 	 */
-	// This is what default methods are actually intended for!
-	public default int getAimingError(EnumDifficulty difficulty) {
+	default int getAimingError(EnumDifficulty difficulty) {
 		return WizardryUtilities.getDefaultAimingError(difficulty);
 	}
 }

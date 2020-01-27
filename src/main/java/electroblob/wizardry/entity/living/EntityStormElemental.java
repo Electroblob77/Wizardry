@@ -60,21 +60,6 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 	}
 
 	@Override
-	public SpellModifiers getModifiers(){
-		return new SpellModifiers();
-	}
-
-	@Override
-	public Spell getContinuousSpell(){
-		return Spells.none;
-	}
-
-	@Override
-	public void setContinuousSpell(Spell spell){
-		// Doesn't use continuous spells.
-	}
-
-	@Override
 	protected void applyEntityAttributes(){
 		super.applyEntityAttributes();
 		this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(6.0D);
