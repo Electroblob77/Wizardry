@@ -204,7 +204,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @see Spell#playSound(World, double, double, double, int, int, SpellModifiers, String...)
 	 */
 	protected SoundEvent[] createSounds(){
-		return new SoundEvent[]{WizardrySounds.createSound("spell." + this.getRegistryName().getPath())};
+		return new SoundEvent[]{WizardrySounds.createSound(this.getRegistryName().getNamespace(), "spell." + this.getRegistryName().getPath())};
 	}
 
 	// Note 1: The aim here is conciseness. Keeping the identifiers in the spell classes means we don't usually have to
