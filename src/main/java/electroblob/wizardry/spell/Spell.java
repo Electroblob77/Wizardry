@@ -150,6 +150,9 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/** The pitch variation of the sound played when this spell is cast. Defaults to 0. */
 	protected float pitchVariation = 0;
 
+	/** List of items for which this spell is applicable (used by default behaviour of {@link Spell#applicableForItem(Item)}). */
+	protected Item[] applicableItems;
+
 	private static int nextSpellId = 0;
 	/** The spell's integer ID, mainly used for networking. */
 	// This was added after I learnt the hard way why you can't assume Forge's registry IDs are sequential...
@@ -187,6 +190,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		this.icon = new ResourceLocation(modID, "textures/spells/" + name + ".png");
 		this.sounds = createSounds();
 		this.id = nextSpellId++;
+		this.items(WizardryItems.spell_book, WizardryItems.scroll);
 	}
 
 	// ========================================= Initialisation methods ===========================================
@@ -602,10 +606,21 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/** Returns true if the given item has a variant for this spell. By default, returns true if the given item is
-	 * either {@link WizardryItems#spell_book} or {@link WizardryItems#scroll}. Override to give the spell a special
-	 * type of book or scroll. */
+	 * in this spell's {@link Spell#applicableItems} list (set using {@link Spell#items(Item...)}). Override to do
+	 * something more complex. */
 	public boolean applicableForItem(Item item){
-		return item == WizardryItems.spell_book || item == WizardryItems.scroll;
+		return Arrays.asList(applicableItems).contains(item);
+	}
+
+	/**
+	 * Sets which items this spell can appear on (these default to the regular spell book and scroll).
+	 * @param applicableItems The items this spell should naturally appear on (or no items at all).
+	 * @return The spell instance, allowing this method to be chained onto the constructor. Note that since this method
+	 * only returns a {@code Spell}, if you are chaining multiple methods onto the constructor this should be called last.
+	 */
+	public Spell items(Item... applicableItems){
+		this.applicableItems = applicableItems;
+		return this;
 	}
 
 	/**
