@@ -36,7 +36,7 @@ public interface ISpellCaster {
 	 * 
 	 * @return A list of {@link Spell} instances. A random spell from this list will be cast when the entity attacks.
 	 *         The list will not be modified by the AI class and can therefore be an immutable list. The spells in the
-	 *         list <b>must</b> be castable by NPCs (i.e. {@link Spell#canBeCastByNPCs()} returns true).
+	 *         list <b>must</b> be castable by NPCs (i.e. {@link Spell#canBeCastBy(net.minecraft.entity.EntityLiving, boolean)} returns true).
 	 */
 	@Nonnull
 	public List<Spell> getSpells();
@@ -68,7 +68,7 @@ public interface ISpellCaster {
 	public void setContinuousSpell(Spell spell);
 	
 	/**
-	 * Returns the aiming arror for the given difficulty, used in projectile spells. Defaults to the values used by
+	 * Returns the aiming error for the given difficulty, used in projectile spells. Defaults to the values used by
 	 * skeletons, which are: Easy - 10, Normal - 6, Hard - 2, Peaceful - 10 (rarely used).
 	 */
 	// This is what default methods are actually intended for!

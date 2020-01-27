@@ -136,7 +136,7 @@ public class Blink extends Spell {
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
+	public boolean canBeCastBy(EntityLiving npc, boolean override){
 		return true;
 	}
 

@@ -24,9 +24,9 @@ import net.minecraft.world.World;
  * <p></p>
  * Properties added by this type of spell: {@link SpellConjuration#ITEM_LIFETIME}
  * <p></p>
- * By default, this type of spell cannot be cast by NPCs. {@link Spell#canBeCastByNPCs()}
+ * By default, this type of spell cannot be cast by NPCs. {@link Spell#canBeCastBy(net.minecraft.entity.EntityLiving, boolean)}
  * <p></p>
- * By default, this type of spell cannot be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * By default, this type of spell cannot be cast by dispensers. {@link Spell#canBeCastBy(net.minecraft.tileentity.TileEntityDispenser)}
  * <p></p>
  * By default, this type of spell requires a packet to be sent. {@link Spell#requiresPacket()}
  * 

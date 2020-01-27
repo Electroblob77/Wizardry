@@ -44,6 +44,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -124,8 +125,8 @@ public class Possession extends SpellRay {
 		addProperties(EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 
-	@Override public boolean canBeCastByNPCs() { return false; }
-	@Override public boolean canBeCastByDispensers() { return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override) { return false; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return false; }
 
 	@Override
 	public boolean requiresPacket(){

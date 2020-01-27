@@ -359,7 +359,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
 		if(player.isCreative() && stack.getItem() instanceof ItemSpellBook){
 			Spell spell = Spell.byMetadata(stack.getItemDamage());
-			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
+			if(this.spells.size() >= 4 && spell.canBeCastBy(this, true)){
 				// The set(...) method returns the element that was replaced - neat!
 				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
 						this.getDisplayName(), this.spells.set(rand.nextInt(3) + 1, spell).getNameForTranslationFormatted(),
@@ -752,7 +752,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// All wizards know magic missile, even if it is disabled.
 		spells.add(Spells.magic_missile);
 
-		Tier maxTier = populateSpells(spells, element, false, 3, rand);
+		Tier maxTier = populateSpells(this, spells, element, false, 3, rand);
 
 		// Now done after the spells so it can take the tier into account.
 		ItemStack wand = new ItemStack(WizardryItems.getWand(maxTier, element));
@@ -769,19 +769,21 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	/**
 	 * Adds n random spells to the given list. The spells will be of the given element if possible. Extracted as a
 	 * separate function since it was the same in both EntityWizard and EntityEvilWizard.
-	 * 
+	 *
+	 * @param wizard The wizard whose spells are to be populated.
 	 * @param spells The spell list to be populated.
 	 * @param e The element that the spells should belong to, or {@link Element#MAGIC} for a random element each time.
+	 * @param master Whether to include master spells.
 	 * @param n The number of spells to add.
 	 * @param random A random number generator to use.
 	 * @return The tier of the highest-tier spell that was added to the list.
 	 */
-	static Tier populateSpells(List<Spell> spells, Element e, boolean master, int n, Random random){
+	static Tier populateSpells(final EntityLiving wizard, List<Spell> spells, Element e, boolean master, int n, Random random){
 
 		// This is the tier of the highest tier spell added.
 		Tier maxTier = Tier.NOVICE;
 
-		List<Spell> npcSpells = Spell.getSpells(Spell.npcSpells);
+		List<Spell> npcSpells = Spell.getSpells(s -> s.canBeCastBy(wizard, false));
 		npcSpells.removeIf(s -> !s.applicableForItem(WizardryItems.spell_book));
 
 		for(int i = 0; i < n; i++){

@@ -433,7 +433,7 @@ public final class Settings {
 
 		Property property;
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			property = config.get(SPELLS_CATEGORY, spell.getRegistryName().toString(), true,
 					I18n.translateToLocal("spell." + spell.getUnlocalisedName() + ".desc"));
 			// Uses the same config key as the spell name, because - well, that's what it's called!

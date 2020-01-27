@@ -8,6 +8,7 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -28,7 +29,7 @@ public class Poison extends SpellRay {
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
+	public boolean canBeCastBy(EntityLiving npc, boolean override){
 		return true;
 	}
 

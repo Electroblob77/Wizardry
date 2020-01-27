@@ -41,7 +41,7 @@ public class ItemSpellBook extends Item {
 
 		if(tab == WizardryTabs.SPELLS){
 
-			List<Spell> spells = Spell.getSpells(Spell.allSpells);
+			List<Spell> spells = Spell.getAllSpells();
 			spells.removeIf(s -> !s.applicableForItem(this));
 
 			for(Spell spell : spells){

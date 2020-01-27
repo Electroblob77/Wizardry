@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
@@ -58,12 +59,12 @@ public class Grapple extends Spell {
 	}
 
 	@Override
-	public boolean canBeCastByNPCs(){
+	public boolean canBeCastBy(EntityLiving npc, boolean override){
 		return true;
 	}
 
 	@Override
-	public boolean canBeCastByDispensers(){
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
 		return true;
 	}
 

@@ -20,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -354,7 +355,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * work if the caster is on full health).
 	 * <p></p>
 	 * This method is intended for use by NPCs (see {@link EntityWizard}) so that they can cast spells. Override it if
-	 * you want a spell to be cast by wizards. Note that you must also override {@link Spell#canBeCastByNPCs()} to
+	 * you want a spell to be cast by wizards. Note that you must also override {@link Spell#canBeCastBy(EntityLiving, boolean)} to
 	 * return true to allow wizards to select the spell. For some spells, this method may well be exactly the same as
 	 * the regular cast method; for others it won't be - for example, projectile-based spells are normally done using
 	 * the player's look vector, but NPCs need to use a target-based method instead.
@@ -390,7 +391,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * won't work if the caster is on full health).
 	 * <p></p>
 	 * This method is intended for use by dispensers and command blocks so that they can cast spells. Override it if
-	 * you want a spell to be cast by dispensers. Note that you must also override {@link Spell#canBeCastByDispensers()} to
+	 * you want a spell to be cast by dispensers. Note that you must also override {@link Spell#canBeCastBy(TileEntityDispenser)} to
 	 * return true to allow dispensers to select the spell. For some spells, this method may well be exactly the same as
 	 * the regular cast method; for others it won't be - for example, projectile-based spells are normally done using
 	 * the player's look vector, but dispensers need to use a facing-based method instead.
@@ -447,19 +448,45 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 							  @Nullable EnumFacing direction, int duration, SpellModifiers modifiers){}
 
 	/**
+	 * Whether the given entity can cast this spell. If you have overridden
+	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
+	 * this to return true (either always or under certain circumstances).
+	 * @param npc The entity to query.
+	 * @param override True if a player in creative mode is assigning this spell the given entity, false otherwise.
+	 *                 Usually this means situational conditions should be ignored.
+	 */
+	public boolean canBeCastBy(EntityLiving npc, boolean override){
+		return canBeCastByNPCs();
+	}
+
+	/**
 	 * Whether NPCs such as wizards can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
 	 * this to return true.
+	 * @deprecated Use the entity-sensitive version {@link Spell#canBeCastBy(EntityLiving, boolean)}.
 	 */
+	@Deprecated
 	public boolean canBeCastByNPCs(){
 		return false;
+	}
+
+	/**
+	 * Whether the given dispenser can cast this spell. If you have overridden
+	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
+	 * to return true (either always or under certain circumstances).
+	 * @param dispenser The dispenser to query.
+	 */
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
+		return canBeCastByDispensers();
 	}
 
 	/**
 	 * Whether dispensers can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
 	 * to return true.
+	 * @deprecated Use the tileentity-sensitive version {@link Spell#canBeCastBy(TileEntityDispenser)}.
 	 */
+	@Deprecated
 	public boolean canBeCastByDispensers(){
 		return false;
 	}
@@ -785,7 +812,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/**
 	 * Returns the total number of registered spells, excluding the 'None' spell. Returns the same number that would be
-	 * returned by {@code Spell.getSpells(Spell.allSpells).size()}, but this method is more efficient.
+	 * returned by {@code Spell.getAllSpells().size()}, but this method is more efficient.
 	 */
 	public static int getTotalSpellCount(){
 		return registry.getValuesCollection().size() - 1;
@@ -833,31 +860,37 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/**
 	 * Returns a list containing all spells matching the given {@link Predicate}. The returned list is separate from the
 	 * internal spells list; any changes you make to the returned list will have no effect on wizardry since the
-	 * returned list is local to this method. Never includes the {@link None} spell. For convenience, there are some
-	 * predefined predicates in the Spell class (some of these really aren't shortcuts any more):
-	 * <p></p>
-	 * {@link Spell#allSpells} will allow all spells to be returned<br>
-	 * {@link Spell#npcSpells} will only allow enabled spells that can be cast by NPCs (see
-	 * {@link Spell#canBeCastByNPCs()})<br>
-	 * {@link Spell#nonContinuousSpells} will filter out continuous spells but not disabled spells<br>
-	 * {@link TierElementFilter} will only allow enabled spells of the specified tier and element
+	 * returned list is local to this method. Never includes the {@link None} spell.
 	 *
 	 * @param filter A <code>Predicate&ltSpell&gt</code> that the returned spells must satisfy.
 	 *
 	 * @return A <b>local, modifiable</b> list of spells matching the given predicate. <i>Note that this list may be
 	 *         empty.</i>
+	 *
+	 * @see TierElementFilter
 	 */
 	public static List<Spell> getSpells(Predicate<Spell> filter){
 		return registry.getValuesCollection().stream().filter(filter.and(s -> s != Spells.none)).collect(Collectors.toList());
 	}
 
-	/** Predicate which allows all spells. */
+	/** Returns all registered spells, except the {@link None} spell. */
+	public static List<Spell> getAllSpells(){
+		return getSpells(s -> true);
+	}
+
+	/** Predicate which allows all spells.
+	 * @deprecated Use {@link Spell#getAllSpells()}. */
+	@Deprecated
 	public static Predicate<Spell> allSpells = s -> true;
 
-	/** Predicate which allows all non-continuous spells, even those that have been disabled. */
+	/** Predicate which allows all non-continuous spells, even those that have been disabled.
+	 * @deprecated Nobody ever uses this now we have continuous scrolls, if you really need it just use a lambda.  */
+	@Deprecated
 	public static Predicate<Spell> nonContinuousSpells = s -> !s.isContinuous;
 
-	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastByNPCs()} returns true. */
+	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastBy(EntityLiving, boolean)} returns true.
+	 * @deprecated in favour of entity-sensitive version, use a lambda expression directly. */
+	@Deprecated
 	public static Predicate<Spell> npcSpells = s -> s.isEnabled(SpellProperties.Context.NPCS) && s.canBeCastByNPCs();
 
 	/**

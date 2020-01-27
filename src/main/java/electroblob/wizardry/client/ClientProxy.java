@@ -547,7 +547,7 @@ public class ClientProxy extends CommonProxy {
 		data.randomNames = new HashMap<>();
 		data.randomDescriptions = new HashMap<>();
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			// -1 because the none spell isn't included
 			// This is a case where we must use the network ID, not the metadata
 			data.randomNames.put(spell, message.names.get(spell.networkID() - 1));

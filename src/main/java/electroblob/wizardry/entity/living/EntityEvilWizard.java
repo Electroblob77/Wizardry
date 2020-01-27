@@ -252,7 +252,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
 		if(player.isCreative() && stack.getItem() instanceof ItemSpellBook){
 			Spell spell = Spell.byMetadata(stack.getItemDamage());
-			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
+			if(this.spells.size() >= 4 && spell.canBeCastBy(this, true)){
 				// The set(...) method returns the element that was replaced - neat!
 				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
 						this.getDisplayName(), this.spells.set(rand.nextInt(3) + 1, spell).getNameForTranslationFormatted(),
@@ -369,7 +369,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// All wizards know magic missile, even if it is disabled.
 		spells.add(Spells.magic_missile);
 
-		Tier maxTier = EntityWizard.populateSpells(spells, element, hasStructure, 3, rand);
+		Tier maxTier = EntityWizard.populateSpells(this, spells, element, hasStructure, 3, rand);
 
 		// Now done after the spells so it can take the tier into account. For evil wizards this is slightly different;
 		// it picks a random wand which is at least a high enough tier for the spells the wizard has.

@@ -258,7 +258,7 @@ public final class WizardrySounds {
 		event.getRegistry().register(MISC_PAGE_TURN);
 		event.getRegistry().register(MISC_FREEZE);
 		
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			event.getRegistry().registerAll(spell.getSounds());
 		}
 

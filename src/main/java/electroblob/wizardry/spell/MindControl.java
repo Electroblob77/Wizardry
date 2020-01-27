@@ -19,6 +19,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -43,8 +44,8 @@ public class MindControl extends SpellRay {
 		addProperties(EFFECT_DURATION);
 	}
 	
-	@Override public boolean canBeCastByNPCs() { return false; }
-	@Override public boolean canBeCastByDispensers() { return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override) { return false; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return false; }
 	
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){

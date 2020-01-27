@@ -190,7 +190,8 @@ public class CommandCastSpell extends CommandBase {
 				}
 
 				if(spell.isContinuous){
-
+					// We need not query Spell#canBeCastByDispensers since with commands there's no difference between
+					// a spell that can't be cast positionally and one that can be cast positionally but fails
 					if(spell.cast(world, origin.x, origin.y, origin.z, direction, 0, duration, modifiers)){
 
 						MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.COMMAND, spell, world, origin.x, origin.y, origin.z, direction, modifiers));

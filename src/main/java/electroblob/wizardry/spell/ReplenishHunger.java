@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
@@ -17,7 +18,7 @@ public class ReplenishHunger extends SpellBuff {
 		addProperties(HUNGER_POINTS, SATURATION_MODIFIER);
 	}
 	
-	@Override public boolean canBeCastByNPCs(){ return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return false; }
 	
 	@Override
 	protected boolean applyEffects(EntityLivingBase caster, SpellModifiers modifiers){

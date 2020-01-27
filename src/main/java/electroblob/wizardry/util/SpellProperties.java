@@ -247,7 +247,7 @@ public final class SpellProperties {
 	public static void init(){
 
 		// Collecting to a set should give us one of each mod ID
-		Set<String> modIDs = Spell.getSpells(Spell.allSpells).stream().map(s -> s.getRegistryName().getNamespace()).collect(Collectors.toSet());
+		Set<String> modIDs = Spell.getAllSpells().stream().map(s -> s.getRegistryName().getNamespace()).collect(Collectors.toSet());
 
 		boolean flag = loadConfigSpellProperties();
 

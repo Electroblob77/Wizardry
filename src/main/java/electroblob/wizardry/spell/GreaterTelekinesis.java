@@ -9,12 +9,14 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -41,8 +43,8 @@ public class GreaterTelekinesis extends SpellRay {
 		this.soundValues(0.8f, 1, 0.2f);
 	}
 
-	@Override public boolean canBeCastByNPCs() { return false; }
-	@Override public boolean canBeCastByDispensers() { return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override) { return false; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return false; }
 
 	@Override
 	protected SoundEvent[] createSounds(){

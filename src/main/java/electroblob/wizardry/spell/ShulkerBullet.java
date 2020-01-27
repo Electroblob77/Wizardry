@@ -13,6 +13,7 @@ import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -30,9 +31,9 @@ public class ShulkerBullet extends Spell {
 		addProperties(RANGE);
 	}
 
-	@Override public boolean canBeCastByNPCs(){ return true; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 
-	@Override public boolean canBeCastByDispensers(){ return true; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser){ return true; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){

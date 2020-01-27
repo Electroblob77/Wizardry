@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -29,8 +30,8 @@ public class ForestOfThorns extends Spell {
 	}
 
 	@Override public boolean requiresPacket(){ return false; }
-	@Override public boolean canBeCastByNPCs(){ return true; }
-	@Override public boolean canBeCastByDispensers(){ return true; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser){ return true; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){

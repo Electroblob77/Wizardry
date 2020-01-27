@@ -62,7 +62,7 @@ public class BehaviourSpellDispense extends BehaviorDispenseOptional {
 		if(world.isSideSolid(source.getBlockPos().offset(direction), direction.getOpposite())) return stack;
 		
 		// If the scroll can never be cast by a dispenser, it should be dispensed as an item.
-		if(!spell.canBeCastByDispensers()) return super.dispenseStack(source, stack);
+		if(!spell.canBeCastBy(source.getBlockTileEntity())) return super.dispenseStack(source, stack);
 		
 		SpellModifiers modifiers = new SpellModifiers();
 		

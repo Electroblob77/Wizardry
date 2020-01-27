@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -34,9 +35,9 @@ import javax.annotation.Nullable;
  * <p></p>
  * Properties added by this type of spell: {@link Spell#RANGE}
  * <p></p>
- * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastByNPCs()}
+ * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastBy(EntityLiving, boolean)}
  * <p></p>
- * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastBy(TileEntityDispenser)}
  * <p></p>
  * By default, this type of spell requires a packet to be sent. {@link Spell#requiresPacket()}
  * 
@@ -151,9 +152,9 @@ public abstract class SpellRay extends Spell {
 		return this;
 	}
 	
-	@Override public boolean canBeCastByNPCs(){ return true; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
-	@Override public boolean canBeCastByDispensers() { return true; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 
 	// Finally everything in here is standardised and written in a form that's actually readable - it was long overdue!
 	@Override

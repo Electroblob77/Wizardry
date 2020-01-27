@@ -9,12 +9,14 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -45,9 +47,9 @@ public class CurseOfSoulbinding extends SpellRay {
 		WizardData.registerStoredVariables(TARGETS_KEY);
 	}
 
-	@Override public boolean canBeCastByNPCs() { return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override) { return false; }
 	// You can't damage a dispenser so this would be nonsense!
-	@Override public boolean canBeCastByDispensers() { return false; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return false; }
 
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){

@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -29,9 +30,9 @@ import java.util.function.Function;
  * <p></p>
  * Properties added by this type of spell: {@link Spell#DURATION} (if the construct is not permanent)
  * <p></p>
- * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastByNPCs()}
+ * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastBy(EntityLiving, boolean)}
  * <p></p>
- * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastBy(TileEntityDispenser)}
  * <p></p>
  * By default, this type of spell does not require a packet to be sent. {@link Spell#requiresPacket()}
  * 
@@ -63,9 +64,9 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 	
 	@Override public boolean requiresPacket(){ return false; }
 
-	@Override public boolean canBeCastByNPCs(){ return true; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
-	@Override public boolean canBeCastByDispensers() { return true; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 	
 	/**
 	 * Sets whether the construct must be spawned on the ground.
