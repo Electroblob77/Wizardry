@@ -218,7 +218,7 @@ public final class NBTExtras {
 	public static void storeTagSafely(NBTTagCompound compound, String key, NBTBase tag){
 
 		if(compound == tag || deepContains(tag, compound)){
-			Wizardry.logger.error("Cannot store tag of type {} under key '{}' as it would result in a circular reference!",
+			Wizardry.logger.error("Cannot store tag of type {} under key '{}' as it would result in a circular reference! Please report this (including your full log) to wizardry's issue tracker.",
 					NBTBase.getTypeName(tag.getId()), key);
 		}else{
 			compound.setTag(key, tag);
