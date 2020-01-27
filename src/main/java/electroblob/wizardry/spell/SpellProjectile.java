@@ -59,11 +59,10 @@ public class SpellProjectile<T extends EntityMagicProjectile> extends Spell {
 		super(modID, name, EnumAction.NONE, false);
 		this.projectileFactory = projectileFactory;
 		addProperties(RANGE);
+		this.npcSelector((e, o) -> true);
 	}
 	
 	@Override public boolean requiresPacket(){ return false; }
-	
-	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
 	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 

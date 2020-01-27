@@ -67,6 +67,7 @@ public class SpellMinion<T extends EntityLiving & ISummonedCreature> extends Spe
 		super(modID, name, EnumAction.BOW, false);
 		this.minionFactory = minionFactory;
 		addProperties(MINION_LIFETIME, MINION_COUNT, SUMMON_RADIUS);
+		this.npcSelector((e, o) -> true);
 	}
 
 	/**
@@ -80,8 +81,6 @@ public class SpellMinion<T extends EntityLiving & ISummonedCreature> extends Spe
 	}
 	
 	@Override public boolean requiresPacket(){ return false; }
-	
-	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
 	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 

@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 
 /**
  * Generic superclass for all spells which use a raytrace to do something and (optionally) spawn particles along that
- * trajectory. This is for both continuous ('stream') spells and non-continuous ('bolt') spells This allows all the
+ * trajectory. This is for both continuous ('stream') spells and non-continuous ('bolt') spells. This allows all the
  * relevant code to be centralised. This class differs from most other spell superclasses in that it is abstract and as
  * such must be subclassed to define what the spell actually does. This is because ray-like spells do a wider variety of
  * different things, so it does not make sense to define more specific functions in this class since they would be
@@ -73,6 +73,7 @@ public abstract class SpellRay extends Spell {
 	public SpellRay(String modID, String name, boolean isContinuous, EnumAction action){
 		super(modID, name, action, isContinuous);
 		this.addProperties(RANGE);
+		this.npcSelector((e, o) -> true);
 	}
 	
 	// Although this class is abstract, someone might instantiate one of its subclasses more than once to make two
@@ -151,9 +152,7 @@ public abstract class SpellRay extends Spell {
 		this.aimAssist = aimAssist;
 		return this;
 	}
-	
-	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
-	
+
 	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 
 	// Finally everything in here is standardised and written in a form that's actually readable - it was long overdue!

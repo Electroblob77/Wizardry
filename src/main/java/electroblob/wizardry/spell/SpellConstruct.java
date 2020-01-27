@@ -59,12 +59,11 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 		super(modID, name, action, false);
 		this.constructFactory = constructFactory;
 		this.permanent = permanent;
+		this.npcSelector((e, o) -> true);
 		if(!permanent) this.addProperties(DURATION);
 	}
 	
 	@Override public boolean requiresPacket(){ return false; }
-
-	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
 	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 	

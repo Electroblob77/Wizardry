@@ -68,6 +68,7 @@ public class SpellBuff extends Spell {
 		this.r = r;
 		this.g = g;
 		this.b = b;
+		this.npcSelector((e, o) -> true);
 	}
 
 	@Override
@@ -103,8 +104,6 @@ public class SpellBuff extends Spell {
 		this.particleCount = particleCount;
 		return this;
 	}
-	
-	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
 	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 

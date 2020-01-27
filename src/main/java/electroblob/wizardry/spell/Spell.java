@@ -43,6 +43,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -150,8 +151,16 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/** The pitch variation of the sound played when this spell is cast. Defaults to 0. */
 	protected float pitchVariation = 0;
 
+	// The following two fields are supposed to eliminate the need for boilerplate classes in spell packs.
+	// As an example, spells in the twilight forest spell pack only appear on custom spell book and scroll items and
+	// NPCs can only cast them if they spawned in the twilight forest. Without these convenience fields, spells that
+	// would not otherwise require their own classes have to have one just so they can override those two behaviours.
+
 	/** List of items for which this spell is applicable (used by default behaviour of {@link Spell#applicableForItem(Item)}). */
 	protected Item[] applicableItems;
+	/** Predicate that specifies a condition that NPCs must satisfy in order to spawn with this spell equipped (used by
+	 * default behaviour of {@link Spell#canBeCastBy(EntityLiving, boolean)}). */
+	protected BiPredicate<EntityLiving, Boolean> npcSelector; // Kinda ugly but it's better than boilerplate classes
 
 	private static int nextSpellId = 0;
 	/** The spell's integer ID, mainly used for networking. */
@@ -191,6 +200,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		this.sounds = createSounds();
 		this.id = nextSpellId++;
 		this.items(WizardryItems.spell_book, WizardryItems.scroll);
+		this.npcSelector((e, o) -> canBeCastByNPCs()); // Fallback to old behaviour until we remove it entirely
 	}
 
 	// ========================================= Initialisation methods ===========================================
@@ -454,13 +464,17 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/**
 	 * Whether the given entity can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
-	 * this to return true (either always or under certain circumstances).
+	 * this to return true (either always or under certain circumstances), or alternatively assign an NPC selector via
+	 * {@link Spell#npcSelector(BiPredicate)} (recommended for general spell classes).
 	 * @param npc The entity to query.
-	 * @param override True if a player in creative mode is assigning this spell the given entity, false otherwise.
+	 * @param override True if a player in creative mode is assigning this spell to the given entity, false otherwise.
 	 *                 Usually this means situational conditions should be ignored.
 	 */
+	// We could make this final and force everyone to move over to the predicate system, but for particularly complex
+	// behaviour (i.e. several lines of code) it gets too ugly, and then you end up moving the contents of the predicate
+	// to a static method anyway and referring to it via method reference... so we may as well leave people the option.
 	public boolean canBeCastBy(EntityLiving npc, boolean override){
-		return canBeCastByNPCs();
+		return npcSelector.test(npc, override);
 	}
 
 	/**
@@ -590,37 +604,6 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @throws IllegalArgumentException if no property was defined with the given identifier. */
 	public final Number getProperty(String identifier){
 		return properties.getBaseValue(identifier);
-	}
-
-	/** Returns whether the spell is enabled in any of the given {@link electroblob.wizardry.util.SpellProperties.Context Context}s.
-	 * A spell may be disabled globally in the config, or it may be disabled for one or more specific contexts in
-	 * its JSON file using a resource pack. If called with no arguments, defaults to any context, i.e. only returns
-	 * false if the spell is completely disabled in all contexts. */
-	public final boolean isEnabled(SpellProperties.Context... contexts){
-		return enabled && (contexts.length == 0 || properties.isEnabled(contexts));
-	}
-
-	/** Sets whether the spell is enabled or not. */
-	public final void setEnabled(boolean isEnabled){
-		this.enabled = isEnabled;
-	}
-
-	/** Returns true if the given item has a variant for this spell. By default, returns true if the given item is
-	 * in this spell's {@link Spell#applicableItems} list (set using {@link Spell#items(Item...)}). Override to do
-	 * something more complex. */
-	public boolean applicableForItem(Item item){
-		return Arrays.asList(applicableItems).contains(item);
-	}
-
-	/**
-	 * Sets which items this spell can appear on (these default to the regular spell book and scroll).
-	 * @param applicableItems The items this spell should naturally appear on (or no items at all).
-	 * @return The spell instance, allowing this method to be chained onto the constructor. Note that since this method
-	 * only returns a {@code Spell}, if you are chaining multiple methods onto the constructor this should be called last.
-	 */
-	public Spell items(Item... applicableItems){
-		this.applicableItems = applicableItems;
-		return this;
 	}
 
 	/**
@@ -807,6 +790,51 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 			Wizardry.proxy.playSpellSoundLoop(world, x, y, z, this, this.sounds,
 					WizardrySounds.SPELLS, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f), duration);
 		}
+	}
+
+	// ============================================= Misc methods ===============================================
+
+	/** Returns whether the spell is enabled in any of the given {@link electroblob.wizardry.util.SpellProperties.Context Context}s.
+	 * A spell may be disabled globally in the config, or it may be disabled for one or more specific contexts in
+	 * its JSON file using a resource pack. If called with no arguments, defaults to any context, i.e. only returns
+	 * false if the spell is completely disabled in all contexts. */
+	public final boolean isEnabled(SpellProperties.Context... contexts){
+		return enabled && (contexts.length == 0 || properties.isEnabled(contexts));
+	}
+
+	/** Sets whether the spell is enabled or not. */
+	public final void setEnabled(boolean isEnabled){
+		this.enabled = isEnabled;
+	}
+
+	/** Returns true if the given item has a variant for this spell. By default, returns true if the given item is
+	 * in this spell's {@link Spell#applicableItems} list (set using {@link Spell#items(Item...)}). Override to do
+	 * something more complex. */
+	public boolean applicableForItem(Item item){
+		return Arrays.asList(applicableItems).contains(item);
+	}
+
+	/**
+	 * Sets which items this spell can appear on (these default to the regular spell book and scroll).
+	 * @param applicableItems The items this spell should naturally appear on (or no items at all).
+	 * @return The spell instance, allowing this method to be chained onto the constructor. Note that since this method
+	 * only returns a {@code Spell}, if you are chaining multiple methods onto the constructor this should be called last.
+	 */
+	public Spell items(Item... applicableItems){
+		this.applicableItems = applicableItems;
+		return this;
+	}
+
+	/**
+	 * Specifies a condition that NPCs must satisfy in order to spawn with this spell equipped (this defaults to always
+	 * true).
+	 * @param selector A condition that NPCs must satisfy in order to spawn with this spell equipped.
+	 * @return The spell instance, allowing this method to be chained onto the constructor. Note that since this method
+	 * only returns a {@code Spell}, if you are chaining multiple methods onto the constructor this should be called last.
+	 */
+	public Spell npcSelector(BiPredicate<EntityLiving, Boolean> selector){
+		this.npcSelector = selector;
+		return this;
 	}
 
 	// Spells are sorted according to tier and element. Where several spells have the same tier and element,

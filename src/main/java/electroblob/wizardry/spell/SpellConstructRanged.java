@@ -55,6 +55,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 	public SpellConstructRanged(String modID, String name, Function<World, T> constructFactory, boolean permanent){
 		super(modID, name, EnumAction.NONE, constructFactory, permanent);
 		this.addProperties(RANGE);
+		this.npcSelector((e, o) -> true);
 	}
 
 	/**
@@ -80,8 +81,6 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 	}
 
 	@Override public boolean requiresPacket(){ return false; }
-
-	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 	
 	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 	
