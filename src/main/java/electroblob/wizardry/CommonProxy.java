@@ -140,8 +140,6 @@ public class CommonProxy {
 
 	public void handleAdvancementSyncPacket(PacketSyncAdvancements.Message message){}
 
-	public void handleEndSlowTimePacket(PacketEndSlowTime.Message message){}
-
 	public void handleResurrectionPacket(PacketResurrection.Message message){}
 
 	public void handlePossessionPacket(PacketPossession.Message message){}

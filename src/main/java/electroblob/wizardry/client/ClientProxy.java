@@ -576,13 +576,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void handleEndSlowTimePacket(PacketEndSlowTime.Message message){
-		Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.hostID);
-		if(entity instanceof EntityLivingBase) PotionSlowTime.unblockNearbyEntities((EntityLivingBase)entity);
-		else Wizardry.logger.warn("Received a PacketEndSlowTime, but the entity ID did not match any living entity");
-	}
-
-	@Override
 	public void handleResurrectionPacket(PacketResurrection.Message message){
 		Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.playerID);
 		if(entity instanceof EntityPlayer){

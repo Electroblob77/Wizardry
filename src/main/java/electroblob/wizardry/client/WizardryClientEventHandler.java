@@ -9,6 +9,7 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.ItemSpectralBow;
+import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -153,6 +154,7 @@ public final class WizardryClientEventHandler {
 			}
 
 			SpellEmitterData.update(world);
+			PotionSlowTime.cleanUpEntities(world);
 		}
 	}
 	
