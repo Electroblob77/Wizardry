@@ -23,6 +23,7 @@ In addition, I'd like to thank the following individuals for their contributions
 - Aeronica
 - UltraHex
 - Azim-Palmer
+- raoulvdberge
 
 #### Translations
 
