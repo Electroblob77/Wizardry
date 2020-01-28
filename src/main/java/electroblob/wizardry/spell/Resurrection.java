@@ -25,6 +25,8 @@ public class Resurrection extends Spell {
 
 	public static final String WAIT_TIME = "wait_time";
 
+	private static final String POTION_CORE_FIX_NBT_KEY = "Potion Core - Health Fix";
+
 	public Resurrection(){
 		super("resurrection", EnumAction.NONE, false);
 		addProperties(EFFECT_RADIUS, WAIT_TIME);
@@ -90,6 +92,8 @@ public class Resurrection extends Spell {
 		player.experience = 0;
 		player.experienceLevel = 0;
 		player.experienceTotal = 0;
+		// Not sure what potion core is 'fixing' but it breaks my resurrection, so let's unfix it!
+		player.getEntityData().removeTag(POTION_CORE_FIX_NBT_KEY);
 
 		if(player.world.isRemote){
 			ParticleBuilder.spawnHealParticles(player.world, player);
