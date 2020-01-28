@@ -44,8 +44,7 @@ item.ebwizardry\:spell_book.name=Spell Book
 item.ebwizardry\:spell_book.apply_to_wizard=Replaced %1$s's spell %2$s with %3$s
 
 item.ebwizardry\:arcane_tome.name=Tome of Arcana
-item.ebwizardry\:arcane_tome.desc1=Upgrades any %1$s
-item.ebwizardry\:arcane_tome.desc2=wand to %1$s tier
+item.ebwizardry\:arcane_tome.desc=Upgrades any %1$s wand with sufficient progression to %2$s tier
 
 item.ebwizardry\:wizard_handbook.name=The Wizard's Handbook
 item.ebwizardry\:wizard_handbook.desc=by %1$s

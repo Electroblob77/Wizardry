@@ -100,9 +100,9 @@ public class CommonProxy {
 		return ((ItemSpectralBow)WizardryItems.spectral_bow).getDefaultDurabilityForDisplay(stack);
 	}
 
-	/** Like {@link CommonProxy#addMultiLineDescription(List, String, Style)}, but style defaults to light grey. */
-	public void addMultiLineDescription(List<String> tooltip, String key){
-		this.addMultiLineDescription(tooltip, key, new Style().setColor(TextFormatting.GRAY));
+	/** Like {@link CommonProxy#addMultiLineDescription(List, String, Style, Object...)}, but style defaults to light grey. */
+	public void addMultiLineDescription(List<String> tooltip, String key, Object... args){
+		this.addMultiLineDescription(tooltip, key, new Style().setColor(TextFormatting.GRAY), args);
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class CommonProxy {
 	 * @param key The translation key for the description
 	 * @param style A style to apply
 	 */
-	public void addMultiLineDescription(List<String> tooltip, String key, Style style){}
+	public void addMultiLineDescription(List<String> tooltip, String key, Style style, Object... args){}
 
 	// SECTION Packet Handlers
 	// ===============================================================================================================

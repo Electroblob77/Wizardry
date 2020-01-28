@@ -61,11 +61,10 @@ public class ItemArcaneTome extends Item {
 
 		Tier tier = Tier.values()[stack.getItemDamage()];
 		Tier tier2 = Tier.values()[stack.getItemDamage() - 1];
+
 		tooltip.add(tier.getDisplayNameWithFormatting());
-		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":arcane_tome.desc1",
-				tier2.getDisplayNameWithFormatting()));
-		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":arcane_tome.desc2",
-				tier.getDisplayNameWithFormatting() + "\u00A77"));
+		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + this.getRegistryName() + ".desc",
+				tier2.getDisplayNameWithFormatting() + "\u00A77", tier.getDisplayNameWithFormatting() + "\u00A77");
 	}
 
 }

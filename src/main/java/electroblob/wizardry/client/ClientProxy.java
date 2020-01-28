@@ -107,7 +107,7 @@ public class ClientProxy extends CommonProxy {
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
 
-	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style)}). */
+	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style, Object...)}). */
 	private static final int TOOLTIP_WRAP_WIDTH = 140;
 
 	// SECTION Registry
@@ -287,8 +287,8 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void addMultiLineDescription(List<String> tooltip, String key, Style style){
-		String description = style.getFormattingCode() + I18n.format(key);
+	public void addMultiLineDescription(List<String> tooltip, String key, Style style, Object... args){
+		String description = style.getFormattingCode() + I18n.format(key, args);
 		tooltip.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(description, TOOLTIP_WRAP_WIDTH));
 	}
 
