@@ -1269,12 +1269,12 @@ enchantment.ebwizardry\:frost_protection=冰霜保护
 enchantment.ebwizardry\:shock_protection=雷电保护
 
 
-enchantment.ebwizardry.magic_sword.desc=魔力灌注法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
-enchantment.ebwizardry.magic_bow.desc=魔力灌注法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
-enchantment.ebwizardry.flaming_weapon.desc=赤炎武器法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
-enchantment.ebwizardry.freezing_weapon.desc=冰霜武器法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
-enchantment.ebwizardry.shocking_weapon.desc=雷电武器法术的一部分;无法在生存模式下获得(法术书也不会起作用).
+enchantment.ebwizardry\.magic_sword.desc=魔力灌注法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
+enchantment.ebwizardry\.magic_bow.desc=魔力灌注法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
+enchantment.ebwizardry\.flaming_weapon.desc=赤炎武器法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
+enchantment.ebwizardry\.freezing_weapon.desc=冰霜武器法术的一部分; 无法在生存模式下获得(法术书也不会起作用).
+enchantment.ebwizardry\.shocking_weapon.desc=雷电武器法术的一部分;无法在生存模式下获得(法术书也不会起作用).
 
-enchantment.ebwizardry.magic_protection.desc=减少任意来源的魔法伤害
-enchantment.ebwizardry.frost_protection.desc=减少任意来源的寒冷伤害
-enchantment.ebwizardry.shock_protection.desc=减少任意来源的雷电伤害
+enchantment.ebwizardry\.magic_protection.desc=减少任意来源的魔法伤害
+enchantment.ebwizardry\.frost_protection.desc=减少任意来源的寒冷伤害
+enchantment.ebwizardry\.shock_protection.desc=减少任意来源的雷电伤害
