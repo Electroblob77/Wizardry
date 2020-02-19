@@ -1284,9 +1284,9 @@ config.ebwizardry.auto_place_shrine_markers.tooltip=Controls whether wizardry au
 
 integration.jei.category.ebwizardry\:arcane_workbench=Arcane Workbench
 
-integration.antiqueatlas.marker.ebwizardry\:wizard_tower=Wizard Tower
-integration.antiqueatlas.marker.ebwizardry\:obelisk=Obelisk
-integration.antiqueatlas.marker.ebwizardry\:shrine=Shrine
+integration.antiqueatlas.marker.ebwizardry.wizard_tower=Wizard Tower
+integration.antiqueatlas.marker.ebwizardry.obelisk=Obelisk
+integration.antiqueatlas.marker.ebwizardry.shrine=Shrine
 
 spell.ebwizardry\:magic_missile_festive=Magic Mistletoe
 spell.ebwizardry\:summon_snow_golem_festive=Summon Frosty The Snowman

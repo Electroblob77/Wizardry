@@ -1272,8 +1272,8 @@ config.ebwizardry.auto_place_shrine_markers.tooltip=Kontroluje, czy Wizardry aut
 
 integration.jei.category.ebwizardry\:arcane_workbench=Tajmniczny Stół
 
-integration.antiqueatlas.marker.ebwizardry\:wizard_tower=Wieża Czarodzieja
-integration.antiqueatlas.marker.ebwizardry\:obelisk=Obelisk
-integration.antiqueatlas.marker.ebwizardry\:shrine=Świątynia
+integration.antiqueatlas.marker.ebwizardry.wizard_tower=Wieża Czarodzieja
+integration.antiqueatlas.marker.ebwizardry.obelisk=Obelisk
+integration.antiqueatlas.marker.ebwizardry.shrine=Świątynia
 
 wizard.debug=%1$s, %2$s, %3$s
