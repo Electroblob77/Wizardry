@@ -54,7 +54,8 @@ public class BlockSnare extends Block implements ITileEntityProvider {
 	@Override
 	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity){
 
-		if(!world.isRemote && entity instanceof EntityLivingBase){
+		if(entity instanceof EntityLivingBase){
+
 			if(world.getTileEntity(pos) instanceof TileEntityPlayerSave){
 
 				TileEntityPlayerSave tileentity = (TileEntityPlayerSave)world.getTileEntity(pos);
@@ -68,7 +69,7 @@ public class BlockSnare extends Block implements ITileEntityProvider {
 							Spells.snare.getProperty(Spell.EFFECT_DURATION).intValue(),
 							Spells.snare.getProperty(Spell.EFFECT_STRENGTH).intValue()));
 
-					world.destroyBlock(pos, false);
+					if(!world.isRemote) world.destroyBlock(pos, false);
 				}
 			}
 		}
