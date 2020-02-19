@@ -87,7 +87,7 @@ public final class WizardryClientEventHandler {
 	@SubscribeEvent
 	public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event){
 
-		if(event.player == Minecraft.getMinecraft().player){
+		if(event.player == Minecraft.getMinecraft().player && event.phase == TickEvent.Phase.END){
 
 			if(blinkEffectTimer > 0) blinkEffectTimer--;
 
