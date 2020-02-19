@@ -7,6 +7,7 @@ import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellProperties;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,9 +17,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunction;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -76,89 +77,90 @@ public class RandomSpell extends LootFunction {
 		if(!(stack.getItem() instanceof ItemSpellBook) && !(stack.getItem() instanceof ItemScroll)) Wizardry.logger
 				.warn("Applying the random_spell loot function to an item that isn't a spell book or scroll.");
 
-		Tier tier;
-		Element element;
-
-		if(ignoreWeighting){
-			if(tiers == null || tiers.isEmpty()){
-				tier = Tier.values()[random.nextInt(Tier.values().length)];
-			}else{
-				tier = tiers.get(random.nextInt(tiers.size()));
-			}
-		}else{
-			if(tiers == null || tiers.isEmpty()){
-				tier = Tier.getWeightedRandomTier(random);
-			}else{
-				tier = Tier.getWeightedRandomTier(random, tiers.toArray(new Tier[0]));
-			}
-		}
-
-		// Elements aren't weighted
-		if(elements == null || elements.isEmpty()){
-			// Element can only be MAGIC if tier is NOVICE
-			if(tier == Tier.NOVICE){
-				element = Element.values()[random.nextInt(Element.values().length)];
-			}else{
-				Element[] elements = ArrayUtils.removeElement(Element.values(), Element.MAGIC);
-				element = elements[random.nextInt(elements.length)];
-			}
-		}else{
-			// In theory, swapping this line to the commented one should make absolutely no difference.
-			element = elements.get(random.nextInt(elements.size()));
-			// element = null;
-		}
-
 		SpellProperties.Context spellContext = context.getLootedEntity() == null ? SpellProperties.Context.TREASURE
 				: SpellProperties.Context.LOOTING;
-
-		// Here's a thought: does randomly selecting the element beforehand (as opposed to leaving it null and letting
-		// the spell randomiser use any element) change the overall outcome at all?
-		List<Spell> spellsList = Spell.getSpells(new Spell.TierElementFilter(tier, element, spellContext));
-
-		spellsList.removeIf(s -> !s.applicableForItem(stack.getItem()));
-		if(stack.getItem() instanceof ItemScroll) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.SCROLL));
-		if(stack.getItem() instanceof ItemSpellBook) spellsList.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
-
-		// Ensures the tier chosen actually has spells in it, and if not uses NOVICE instead. NOVICE always has at least
-		// the NONE spell since this spell cannot be disabled.
-		// Commented out for now because it will interfere with the ability to specify tiers and elements.
-		// To be honest, I may as well just say that if you disable enough spells to make this important, you deserve
-		// less loot!
-		/* if(spells.isEmpty()){ spellsList = Spell.getSpells(new Spell.TierElementFilter(EnumTier.NOVICE, null));
-		 * if(stack.getItem() instanceof ItemScroll) spellsList.retainAll(Spell.getSpells(Spell.nonContinuousSpells));
-		 * } */
-
-		if(spells != null && !spells.isEmpty()){
-			spellsList.retainAll(spells);
-		}
 
 		// This method is badly-named, loot chests pass a player through too, not just mobs
 		// (And WHY does it only return an entity?! The underlying field is always a player so I'm casting it anyway)
 		EntityPlayer player = (EntityPlayer)context.getKillerPlayer();
+
+		Spell spell = pickRandomSpell(stack, random, spellContext, player);
+
+		if(spell == Spells.none) Wizardry.logger.warn("Tried to apply the random_spell loot function to an item, but no"
+					+ " enabled spells matched the criteria specified. Substituting placeholder (metadata 0) item.");
+
+		stack.setItemDamage(spell.metadata());
+
+		return stack;
+	}
+
+	private Spell pickRandomSpell(ItemStack stack, Random random, SpellProperties.Context spellContext, EntityPlayer player){
+
+		// We're now doing this first because we need to know which spells we have to play with before selecting a tier and element
+		List<Spell> possibleSpells = Spell.getSpells(s -> s.isEnabled(spellContext) && s.applicableForItem(stack.getItem())
+				// Remove excluded tiers/elements immediately (mainly because empty tier checks should account for excluded elements)
+				&& tiers.contains(s.getTier()) && elements.contains(s.getElement()));
+
+		if(spells != null && !spells.isEmpty()){
+			possibleSpells.retainAll(spells); // Normally you wouldn't specify a spells list AND tiers/elements... but you could!
+		}
+
+		if(stack.getItem() instanceof ItemScroll) possibleSpells.removeIf(s -> !s.isEnabled(SpellProperties.Context.SCROLL));
+		if(stack.getItem() instanceof ItemSpellBook) possibleSpells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
+
+		// Select a tier...
+
+		List<Tier> possibleTiers = tiers;
+
+		if(tiers == null || tiers.isEmpty()){
+			possibleTiers = Arrays.asList(Tier.values());
+		}
+		// Remove all empty tiers
+		possibleTiers.removeIf(t -> possibleSpells.stream().noneMatch(s -> s.getTier() == t)); // Lambdaception!
+
+		if(possibleTiers.isEmpty()) return Spells.none; // Gotta disable a lot of spells for this to happen
+
+		Tier tier = ignoreWeighting ? possibleTiers.get(random.nextInt(possibleTiers.size()))
+				: Tier.getWeightedRandomTier(random, possibleTiers.toArray(new Tier[0]));
+
+		// Remove all spells that aren't of the selected tier
+		possibleSpells.removeIf(s -> s.getTier() != tier);
+		if(possibleSpells.isEmpty()) return Spells.none; // Should be caught by the no-elements check but we might as well
+
+		// Select an element...
+
+		List<Element> possibleElements = elements;
+
+		// Elements aren't weighted
+		if(elements == null || elements.isEmpty()){
+			possibleElements = Arrays.asList(Element.values());
+		}
+		// Remove all empty elements
+		possibleElements.removeIf(e -> possibleSpells.stream().noneMatch(s -> s.getElement() == e));
+
+		if(possibleElements.isEmpty()) return Spells.none; // A bit more likely I guess, but still pretty unlikely
+
+		Element element = possibleElements.get(random.nextInt(possibleElements.size()));
+
+		// Remove all spells that aren't of the selected tier
+		possibleSpells.removeIf(s -> s.getElement() != element);
+		if(possibleSpells.isEmpty()) return Spells.none; // If it fails anywhere, it'll most likely be here
 
 		// Remove either the undiscovered spells or the discovered ones, depending on the bias
 		if(undiscoveredBias > 0 && player != null){
 
 			WizardData data = WizardData.get(player);
 
-			int discoveredCount = (int)spellsList.stream().filter(data::hasSpellBeenDiscovered).count();
+			int discoveredCount = (int)possibleSpells.stream().filter(data::hasSpellBeenDiscovered).count();
 			// If none have been discovered or they've all been discovered, don't bother!
-			if(discoveredCount > 0 && discoveredCount < spellsList.size()){
+			if(discoveredCount > 0 && discoveredCount < possibleSpells.size()){
 				// Kinda unintuitive but it's very neat!
 				boolean keepDiscovered = random.nextFloat() < 0.5f + 0.5f * undiscoveredBias;
-				spellsList.removeIf(s -> keepDiscovered != data.hasSpellBeenDiscovered(s));
+				possibleSpells.removeIf(s -> keepDiscovered != data.hasSpellBeenDiscovered(s));
 			}
 		}
 
-		if(spellsList.isEmpty()){
-			Wizardry.logger.warn("Tried to apply the random_spell loot function to an item, but no enabled spells"
-					+ "matched the criteria specified. Substituting placeholder (metadata 0) item.");
-			stack.setItemDamage(0);
-		}else{
-			stack.setItemDamage(spellsList.get(random.nextInt(spellsList.size())).metadata());
-		}
-
-		return stack;
+		return possibleSpells.get(random.nextInt(possibleSpells.size())); // Finally pick a spell
 	}
 
 	public static class Serializer extends LootFunction.Serializer<RandomSpell> {
