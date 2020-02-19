@@ -99,7 +99,7 @@ public class RandomSpell extends LootFunction {
 		// We're now doing this first because we need to know which spells we have to play with before selecting a tier and element
 		List<Spell> possibleSpells = Spell.getSpells(s -> s.isEnabled(spellContext) && s.applicableForItem(stack.getItem())
 				// Remove excluded tiers/elements immediately (mainly because empty tier checks should account for excluded elements)
-				&& tiers.contains(s.getTier()) && elements.contains(s.getElement()));
+				&& (tiers == null || tiers.contains(s.getTier())) && (elements == null || elements.contains(s.getElement())));
 
 		if(spells != null && !spells.isEmpty()){
 			possibleSpells.retainAll(spells); // Normally you wouldn't specify a spells list AND tiers/elements... but you could!
@@ -110,10 +110,12 @@ public class RandomSpell extends LootFunction {
 
 		// Select a tier...
 
-		List<Tier> possibleTiers = tiers;
+		List<Tier> possibleTiers = new ArrayList<>();
 
 		if(tiers == null || tiers.isEmpty()){
-			possibleTiers = Arrays.asList(Tier.values());
+			possibleTiers.addAll(Arrays.asList(Tier.values()));
+		}else{
+			possibleTiers.addAll(tiers);
 		}
 		// Remove all empty tiers
 		possibleTiers.removeIf(t -> possibleSpells.stream().noneMatch(s -> s.getTier() == t)); // Lambdaception!
@@ -129,11 +131,13 @@ public class RandomSpell extends LootFunction {
 
 		// Select an element...
 
-		List<Element> possibleElements = elements;
+		List<Element> possibleElements = new ArrayList<>();
 
 		// Elements aren't weighted
 		if(elements == null || elements.isEmpty()){
-			possibleElements = Arrays.asList(Element.values());
+			possibleElements.addAll(Arrays.asList(Element.values()));
+		}else{
+			possibleElements.addAll(elements);
 		}
 		// Remove all empty elements
 		possibleElements.removeIf(e -> possibleSpells.stream().noneMatch(s -> s.getElement() == e));
