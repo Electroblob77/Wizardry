@@ -1,5 +1,6 @@
  package electroblob.wizardry.spell;
 
+ import electroblob.wizardry.Wizardry;
  import electroblob.wizardry.entity.construct.EntityEarthquake;
  import electroblob.wizardry.registry.WizardryItems;
  import electroblob.wizardry.util.SpellModifiers;
@@ -7,6 +8,7 @@
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.EntityLivingBase;
+ import net.minecraft.entity.player.EntityPlayer;
  import net.minecraft.item.EnumAction;
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.EnumParticleTypes;
@@ -53,6 +55,10 @@
 				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, y,
 						particleZ, particleX - x, 0, particleZ - z, Block.getStateId(block));
 			}
+
+			WizardryUtilities.getEntitiesWithinRadius(15, x, y, z, world, EntityPlayer.class)
+					.forEach(p -> Wizardry.proxy.shakeScreen(p, 12));
+
 		}
 		
 		return super.spawnConstruct(world, x, y, z, side, caster, modifiers);

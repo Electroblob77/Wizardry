@@ -7,7 +7,6 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -95,18 +94,6 @@ public class EntityEarthquake extends EntityMagicConstruct {
 				if(target instanceof EntityPlayerMP){
 					((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
 				}
-			}
-		}
-
-		if(!world.isRemote){
-			// Constant 15 blocks for now
-			List<EntityPlayer> targets2 = WizardryUtilities.getEntitiesWithinRadius(15, posX, posY, posZ, world, EntityPlayer.class);
-
-			float magnitude = 10f * ((float)(this.lifetime - this.ticksExisted))/(float)this.lifetime;
-
-			// Makes the screen shake
-			for(EntityPlayer target : targets2){
-				target.rotationPitch += this.ticksExisted % 2 == 0 ? magnitude : -magnitude;
 			}
 		}
 	}

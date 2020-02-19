@@ -240,6 +240,13 @@ public class CommonProxy {
 
 	/** Starts the first-person blink overlay effect for the specified player. */
 	public void playBlinkEffect(EntityPlayer player){}
+
+	/**
+	 * Starts the client-side screen shake effect for the specified player.
+	 * @param player The player whose screen is to be shaken
+	 * @param intensity The amplitude of the shaking (around 10 looks about right)
+	 */
+	public void shakeScreen(EntityPlayer player, float intensity){}
 	
 	/**
 	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns

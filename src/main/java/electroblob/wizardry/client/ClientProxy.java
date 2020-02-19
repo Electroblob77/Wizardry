@@ -29,7 +29,6 @@ import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.*;
-import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.*;
@@ -193,6 +192,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void playBlinkEffect(EntityPlayer player){
 		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.playBlinkEffect();
+	}
+
+	@Override
+	public void shakeScreen(EntityPlayer player, float intensity){
+		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.shakeScreen(intensity);
 	}
 
 	@Override

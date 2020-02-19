@@ -68,10 +68,20 @@ public final class WizardryClientEventHandler {
 	private static int blinkEffectTimer;
 	/** The number of ticks the blink effect lasts for. */
 	private static final int BLINK_EFFECT_DURATION = 8;
+
+	/** The remaining time for which the screen shake effect will be active. */
+	private static int screenShakeCounter = 0;
+	private static final float SHAKINESS = 0.5f;
 	
-	/** Starts the first person blink overlay effect. */
+	/** Starts the first-person blink overlay effect. */
 	public static void playBlinkEffect(){
 		blinkEffectTimer = BLINK_EFFECT_DURATION;
+	}
+
+	/** Starts the client-side screen shake effect. */
+	public static void shakeScreen(float intensity){
+		screenShakeCounter = (int)(intensity / SHAKINESS);
+		Minecraft.getMinecraft().player.rotationPitch -= intensity * 0.5f; // Start halfway down
 	}
 	
 	@SubscribeEvent
@@ -80,6 +90,12 @@ public final class WizardryClientEventHandler {
 		if(event.player == Minecraft.getMinecraft().player){
 
 			if(blinkEffectTimer > 0) blinkEffectTimer--;
+
+			if(screenShakeCounter > 0){
+				float magnitude = screenShakeCounter * SHAKINESS;
+				Minecraft.getMinecraft().player.rotationPitch += screenShakeCounter % 2 == 0 ? magnitude : -magnitude;
+				screenShakeCounter--;
+			}
 
 			// Only seems to work here...
 //			EntityLiving victim = Possession.getPossessee(Minecraft.getMinecraft().player);

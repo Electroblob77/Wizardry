@@ -169,6 +169,7 @@ public class EntityHammer extends EntityMagicConstruct {
 	public void fall(float distance, float damageMultiplier){
 
 		if(world.isRemote){
+
 			for(int i = 0; i < 40; i++){
 				double particleX = this.posX - 1.0d + 2 * rand.nextDouble();
 				double particleZ = this.posZ - 1.0d + 2 * rand.nextDouble();
@@ -180,6 +181,12 @@ public class EntityHammer extends EntityMagicConstruct {
 							particleX - this.posX, 0, particleZ - this.posZ, Block.getStateId(block));
 				}
 			}
+
+			if(this.fallDistance > 10){
+				WizardryUtilities.getEntitiesWithinRadius(10, posX, posY, posZ, world, EntityPlayer.class)
+						.forEach(p -> Wizardry.proxy.shakeScreen(p, 6));
+			}
+
 		}else{
 			// Just to check the hammer has actually fallen from the sky, rather than the block under it being broken.
 			if(this.fallDistance > 10){
