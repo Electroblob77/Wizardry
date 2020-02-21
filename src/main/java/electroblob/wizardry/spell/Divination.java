@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -65,11 +66,14 @@ public class Divination extends Spell {
 
 		List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(), range);
 
-		sphere.removeIf(b -> !(world.getBlockState(b).getBlock() instanceof BlockOre
-							|| world.getBlockState(b).getBlock() instanceof BlockRedstoneOre
-							|| world.getBlockState(b).getBlock() instanceof BlockCrystalOre
-							|| Arrays.asList(Wizardry.settings.divinationOreWhitelist)
-				.contains(world.getBlockState(b).getBlock().getRegistryName())));
+		sphere.removeIf(b -> {
+			Block block = world.getBlockState(b).getBlock();
+			return !(block instanceof BlockOre
+								|| block instanceof BlockRedstoneOre
+								|| block instanceof BlockCrystalOre
+								|| Arrays.asList(Wizardry.settings.divinationOreWhitelist)
+					.contains(Pair.of(block.getRegistryName(), block.getMetaFromState(world.getBlockState(b)))));
+		});
 
 		Strength strength = Strength.NOTHING;
 

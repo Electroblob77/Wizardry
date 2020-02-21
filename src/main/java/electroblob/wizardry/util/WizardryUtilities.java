@@ -32,6 +32,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -298,11 +299,10 @@ public final class WizardryUtilities {
 	 * @return True if the given block is a tree block, false if not.
 	 */
 	public static boolean isTreeBlock(World world, BlockPos pos){
-		return world.getBlockState(pos).getBlock() instanceof BlockLog
-				|| world.getBlockState(pos).getBlock() instanceof BlockCactus
-				|| world.getBlockState(pos).getBlock().isLeaves(world.getBlockState(pos), world, pos)
-				|| world.getBlockState(pos).getBlock().isFoliage(world, pos)
-				|| Arrays.asList(Wizardry.settings.treeBlocks).contains(world.getBlockState(pos).getBlock().getRegistryName());
+		Block block = world.getBlockState(pos).getBlock();
+		return block instanceof BlockLog || block instanceof BlockCactus
+				|| block.isLeaves(world.getBlockState(pos), world, pos) || block.isFoliage(world, pos)
+				|| Arrays.asList(Wizardry.settings.treeBlocks).contains(Pair.of(block.getRegistryName(), block.getMetaFromState(world.getBlockState(pos))));
 	}
 
 	/**

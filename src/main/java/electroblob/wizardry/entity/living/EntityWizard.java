@@ -50,6 +50,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -587,12 +588,14 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 	// TODO: Switch all of this over to some kind of loot pool system?
 
+	@SuppressWarnings("unchecked")
 	private ItemStack getRandomPrice(Tier tier){
 
-		Map<ResourceLocation, Integer> map = Wizardry.settings.currencyItems;
+		Map<Pair<ResourceLocation, Short>, Integer> map = Wizardry.settings.currencyItems;
 		// This isn't that efficient but it's not called very often really so it doesn't matter
-		ResourceLocation itemName = map.keySet().toArray(new ResourceLocation[0])[rand.nextInt(map.size())];
-		Item item = Item.REGISTRY.getObject(itemName);
+		Pair<ResourceLocation, Short> itemName = map.keySet().toArray(new Pair[0])[rand.nextInt(map.size())];
+		Item item = Item.REGISTRY.getObject(itemName.getLeft());
+		short meta = itemName.getRight();
 		int value;
 
 		if(item == null){
@@ -606,7 +609,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// ((tier.ordinal() + 1) * 16 + rand.nextInt(6)) gives a 'value' for the item being bought
 		// This is then divided by the value of the currency item to give a price
 		// The absolute maximum stack size that can result from this calculation (with value = 1) is 64.
-		return new ItemStack(item, (8 + tier.ordinal() * 16 + rand.nextInt(9)) / value);
+		return new ItemStack(item, (8 + tier.ordinal() * 16 + rand.nextInt(9)) / value, meta);
 	}
 
 	private ItemStack getRandomItemOfTier(Tier tier){

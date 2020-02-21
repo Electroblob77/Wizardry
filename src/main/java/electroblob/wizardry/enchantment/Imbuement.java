@@ -120,9 +120,9 @@ public interface Imbuement {
 
 				ItemStack bow = archer.getHeldItemMainhand();
 
-				if(!ImbueWeapon.isBow(bow.getItem())){
+				if(!ImbueWeapon.isBow(bow)){
 					bow = archer.getHeldItemOffhand();
-					if(!ImbueWeapon.isBow(bow.getItem())) return;
+					if(!ImbueWeapon.isBow(bow)) return;
 				}
 
 				// Taken directly from ItemBow, so it works exactly the same as the power enchantment.

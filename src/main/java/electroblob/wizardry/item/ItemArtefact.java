@@ -375,7 +375,7 @@ public class ItemArtefact extends Item {
 				if(artefact == WizardryItems.ring_battlemage){
 
 					if(player.getHeldItemOffhand().getItem() instanceof ISpellCastingItem
-						&& ImbueWeapon.isSword(player.getHeldItemMainhand().getItem())){
+						&& ImbueWeapon.isSword(player.getHeldItemMainhand())){
 						modifiers.set(SpellModifiers.POTENCY, 1.1f * potency, false);
 					}
 

@@ -290,7 +290,7 @@ public final class WizardryEventHandler {
 			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getTrueSource();
 
 			// Players can only ever attack with their main hand, so this is the right method to use here.
-			if(!attacker.getHeldItemMainhand().isEmpty() && ImbueWeapon.isSword(attacker.getHeldItemMainhand().getItem())){
+			if(!attacker.getHeldItemMainhand().isEmpty() && ImbueWeapon.isSword(attacker.getHeldItemMainhand())){
 
 				int level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.flaming_weapon,
 						attacker.getHeldItemMainhand());

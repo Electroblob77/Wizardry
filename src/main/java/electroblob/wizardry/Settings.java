@@ -16,6 +16,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.util.*;
@@ -125,7 +126,7 @@ public final class Settings {
 											new ResourceLocation(Wizardry.MODID, "shrine_6"),
 											new ResourceLocation(Wizardry.MODID, "shrine_7")};
 	/** <b>[Server-only]</b> List of solid blocks (usually trees) which are ignored by the structure generators. */
-	public ResourceLocation[] treeBlocks = toResourceLocations(DEFAULT_TREE_BLOCKS);
+	public Pair<ResourceLocation, Short>[] treeBlocks = parseItemMetaStrings(DEFAULT_TREE_BLOCKS);
 	/** <b>[Server-only]</b> The chance for wizard towers to generate with an evil wizard and chest inside. */
 	public double evilWizardChance = 0.2;
 	/** <b>[Server-only]</b> List of dimension ids in which to generate crystal ore. */
@@ -190,15 +191,15 @@ public final class Settings {
 	 * <b>[Server-only]</b> List of registry names of items which cannot be smelted by the pocket furnace spell, in
 	 * addition to armour, tools and weapons.
 	 */
-	public ResourceLocation[] pocketFurnaceItemBlacklist = toResourceLocations("cobblestone", "netherrack");
+	public Pair<ResourceLocation, Short>[] pocketFurnaceItemBlacklist = parseItemMetaStrings("cobblestone", "netherrack");
 	/** <b>[Server-only]</b> List of registry names of blocks which can be detected by the divination spell. */
-	public ResourceLocation[] divinationOreWhitelist = {};
+	public Pair<ResourceLocation, Short>[] divinationOreWhitelist = parseItemMetaStrings(); // That works I guess
 	/** <b>[Server-only]</b> List of registry names of items which count as swords for imbuement spells. */
-	public ResourceLocation[] swordItemWhitelist = {};
+	public Pair<ResourceLocation, Short>[] swordItemWhitelist = parseItemMetaStrings();
 	/** <b>[Server-only]</b> List of registry names of items which count as bows for imbuement spells. */
-	public ResourceLocation[] bowItemWhitelist = {};
+	public Pair<ResourceLocation, Short>[] bowItemWhitelist = parseItemMetaStrings();
 	/** <b>[Server-only]</b> Map of items to values which wizard trades may use as currency. */
-	public Map<ResourceLocation, Integer> currencyItems = new HashMap<>();
+	public Map<Pair<ResourceLocation, Short>, Integer> currencyItems = new HashMap<>();
 	/** <b>[Server-only]</b> Global damage scaling factor for all player magic damage. */
 	public double playerDamageScale = 1.0;
 	/** <b>[Server-only]</b> Global damage scaling factor for all npc magic damage. */
@@ -652,41 +653,42 @@ public final class Settings {
 				"List of registry names of blocks or items which cannot be smelted by the pocket furnace spell, in addition to armour, tools and weapons. Block/item names are not case sensitive. For mod items, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".pocket_furnace_item_blacklist");
 		property.setRequiresWorldRestart(true);
-		pocketFurnaceItemBlacklist = getResourceLocationList(property);
+		pocketFurnaceItemBlacklist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "divinationOreWhitelist", new String[0], "List of registry names of ore blocks which can be detected by the divination spell. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".divination_ore_whitelist");
 		property.setRequiresWorldRestart(true);
-		divinationOreWhitelist = getResourceLocationList(property);
+		divinationOreWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "swordItemWhitelist", new String[0], "List of registry names of items which should count as swords for imbuement spells. Most swords should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:broadsword).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".sword_item_whitelist");
 		property.setRequiresWorldRestart(true);
-		swordItemWhitelist = getResourceLocationList(property);
+		swordItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "bowItemWhitelist", new String[0], "List of registry names of items which should count as bows for imbuement spells. Most bows should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:shortbow).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".bow_item_whitelist");
 		property.setRequiresWorldRestart(true);
-		bowItemWhitelist = getResourceLocationList(property);
+		bowItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
-				Pattern.compile("[A-Za-z:_]+ [0-9]+"));
+				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
 		property.setRequiresWorldRestart(true);
 		propOrder.add(property.getName());
 		currencyItems = new HashMap<>();
 		for(String string : property.getStringList()){
+			string = string.toLowerCase(Locale.ROOT).trim();
 			String[] args = string.split(" ");
 			if(args.length != 2){
 				Wizardry.logger.warn("Invalid entry in currency items: {}", string);
 				continue; // Ignore invalid entries, the pattern above should ensure this never happens
 			}
 			try {
-				currencyItems.put(new ResourceLocation(args[0]), Integer.parseInt(args[1]));
+				currencyItems.put(parseItemMetaString(args[0]), Integer.parseInt(args[1]));
 			}catch(NumberFormatException e){
 				Wizardry.logger.warn("Invalid integer in currency items: {}", args[1]);
 			}
@@ -791,7 +793,7 @@ public final class Settings {
 		property = config.get(GAMEPLAY_CATEGORY, "treeBlocks", DEFAULT_TREE_BLOCKS, "List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tree_blocks");
 		property.setRequiresWorldRestart(true);
-		treeBlocks = getResourceLocationList(property);
+		treeBlocks = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "oreDimensions", new int[]{0}, "List of dimension ids in which crystal ore will generate. Note that removing the overworld (id 0) from this list will make the mod VERY difficult to play!");
@@ -1081,5 +1083,33 @@ public final class Settings {
 	/** Converts the given strings to an array of {@link ResourceLocation}s */
 	public static ResourceLocation[] toResourceLocations(String... strings){
 		return Arrays.stream(strings).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
+	}
+
+	/** Applies {@link Settings#parseItemMetaString(String)} to each input string and returns and array of the resulting
+	 * {@link Pair}s. */
+	@SuppressWarnings("unchecked") // Shut up java
+	public static Pair<ResourceLocation, Short>[] parseItemMetaStrings(String... strings){
+		return Arrays.stream(strings).map(Settings::parseItemMetaString).toArray(Pair[]::new);
+	}
+
+	/** Parses the given input string as an item of the form {@code id:metadata} and returns the resulting
+	 * {@link ResourceLocation} ID and metadata value as a {@link Pair} object. */
+	public static Pair<ResourceLocation, Short> parseItemMetaString(String string){
+
+		string = string.toLowerCase(Locale.ROOT).trim();
+
+		String[] itemArgs = string.split(":");
+		String item;
+		short meta;
+
+		try {
+			meta = Short.parseShort(itemArgs[itemArgs.length-1]);
+			item = String.join("", Arrays.copyOfRange(itemArgs, 0, itemArgs.length-2));
+		}catch(NumberFormatException e){ // If no metadata is specified
+			meta = 0;
+			item = string;
+		}
+
+		return Pair.of(new ResourceLocation(item), meta);
 	}
 }
