@@ -82,12 +82,12 @@ public class ImbueWeapon extends Spell {
 
 	/** Returns true if the given item counts as a sword, i.e. it extends {@link ItemSword} or is in the whitelist. */
 	public static boolean isSword(ItemStack stack){
-		return stack.getItem() instanceof ItemSword || Arrays.asList(Wizardry.settings.swordItemWhitelist).contains(Pair.of(stack.getItem().getRegistryName(), stack.getMetadata()));
+		return stack.getItem() instanceof ItemSword || Arrays.asList(Wizardry.settings.swordItemWhitelist).contains(Pair.of(stack.getItem().getRegistryName(), (short)stack.getMetadata()));
 	}
 
 	/** Returns true if the given item counts as a bow, i.e. it extends {@link ItemBow} or is in the whitelist. */
 	public static boolean isBow(ItemStack stack){
-		return stack.getItem() instanceof ItemBow || Arrays.asList(Wizardry.settings.bowItemWhitelist).contains(Pair.of(stack.getItem().getRegistryName(), stack.getMetadata()));
+		return stack.getItem() instanceof ItemBow || Arrays.asList(Wizardry.settings.bowItemWhitelist).contains(Pair.of(stack.getItem().getRegistryName(), (short)stack.getMetadata()));
 	}
 
 }

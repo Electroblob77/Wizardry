@@ -1104,7 +1104,7 @@ public final class Settings {
 
 		try {
 			meta = Short.parseShort(itemArgs[itemArgs.length-1]);
-			item = String.join("", Arrays.copyOfRange(itemArgs, 0, itemArgs.length-2));
+			item = String.join(":", Arrays.copyOfRange(itemArgs, 0, itemArgs.length-1));
 		}catch(NumberFormatException e){ // If no metadata is specified
 			meta = 0;
 			item = string;

@@ -72,7 +72,7 @@ public class Divination extends Spell {
 								|| block instanceof BlockRedstoneOre
 								|| block instanceof BlockCrystalOre
 								|| Arrays.asList(Wizardry.settings.divinationOreWhitelist)
-					.contains(Pair.of(block.getRegistryName(), block.getMetaFromState(world.getBlockState(b)))));
+					.contains(Pair.of(block.getRegistryName(), (short)block.getMetaFromState(world.getBlockState(b)))));
 		});
 
 		Strength strength = Strength.NOTHING;

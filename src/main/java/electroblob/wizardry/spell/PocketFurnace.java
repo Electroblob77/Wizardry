@@ -40,7 +40,7 @@ public class PocketFurnace extends Spell {
 
 				if(!result.isEmpty() && !(stack.getItem() instanceof ItemTool) && !(stack.getItem() instanceof ItemSword)
 						&& !(stack.getItem() instanceof ItemArmor)
-						&& !Arrays.asList(Wizardry.settings.pocketFurnaceItemBlacklist).contains(Pair.of(stack.getItem().getRegistryName(), stack.getMetadata()))){
+						&& !Arrays.asList(Wizardry.settings.pocketFurnaceItemBlacklist).contains(Pair.of(stack.getItem().getRegistryName(), (short)stack.getMetadata()))){
 
 					if(stack.getCount() <= usesLeft){
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.getCount(), result.getItemDamage());
