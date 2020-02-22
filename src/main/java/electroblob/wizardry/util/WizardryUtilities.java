@@ -1,6 +1,7 @@
 package electroblob.wizardry.util;
 
 import electroblob.wizardry.CommonProxy;
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.ISpellCaster;
@@ -32,7 +33,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -302,7 +302,7 @@ public final class WizardryUtilities {
 		Block block = world.getBlockState(pos).getBlock();
 		return block instanceof BlockLog || block instanceof BlockCactus
 				|| block.isLeaves(world.getBlockState(pos), world, pos) || block.isFoliage(world, pos)
-				|| Arrays.asList(Wizardry.settings.treeBlocks).contains(Pair.of(block.getRegistryName(), block.getMetaFromState(world.getBlockState(pos))));
+				|| Settings.containsMetaBlock(Wizardry.settings.treeBlocks, world.getBlockState(pos));
 	}
 
 	/**

@@ -6,8 +6,10 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.AllyDesignationSystem.FriendlyFire;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -16,6 +18,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
@@ -1106,10 +1109,23 @@ public final class Settings {
 			meta = Short.parseShort(itemArgs[itemArgs.length-1]);
 			item = String.join(":", Arrays.copyOfRange(itemArgs, 0, itemArgs.length-1));
 		}catch(NumberFormatException e){ // If no metadata is specified
-			meta = 0;
+			meta = OreDictionary.WILDCARD_VALUE;
 			item = string;
 		}
 
 		return Pair.of(new ResourceLocation(item), meta);
 	}
+
+	public static boolean containsMetaBlock(Pair<ResourceLocation, Short>[] array, IBlockState block){
+		return containsMetaThing(array, block.getBlock().getRegistryName(), (short)block.getBlock().getMetaFromState(block));
+	}
+
+	public static boolean containsMetaItem(Pair<ResourceLocation, Short>[] array, ItemStack stack){
+		return containsMetaThing(array, stack.getItem().getRegistryName(), (short)stack.getMetadata());
+	}
+
+	public static boolean containsMetaThing(Pair<ResourceLocation, Short>[] array, ResourceLocation id, short metadata){
+		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, OreDictionary.WILDCARD_VALUE));
+	}
+
 }

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockCrystalOre;
 import electroblob.wizardry.registry.WizardryItems;
@@ -71,8 +72,7 @@ public class Divination extends Spell {
 			return !(block instanceof BlockOre
 								|| block instanceof BlockRedstoneOre
 								|| block instanceof BlockCrystalOre
-								|| Arrays.asList(Wizardry.settings.divinationOreWhitelist)
-					.contains(Pair.of(block.getRegistryName(), (short)block.getMetaFromState(world.getBlockState(b)))));
+								|| Settings.containsMetaBlock(Wizardry.settings.divinationOreWhitelist, world.getBlockState(b)));
 		});
 
 		Strength strength = Strength.NOTHING;
