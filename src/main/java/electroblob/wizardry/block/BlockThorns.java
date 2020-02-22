@@ -137,9 +137,11 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 		TileEntity tileentity = world.getTileEntity(pos);
 
 		if(tileentity instanceof TileEntityPlayerSaveTimed){
-			if(AllyDesignationSystem.isValidTarget(((TileEntityPlayerSaveTimed)tileentity).getCaster(), target)){
-				source = MagicDamage.causeDirectMagicDamage(((TileEntityPlayerSaveTimed)tileentity).getCaster(),
-						MagicDamage.DamageType.MAGIC);
+
+			EntityLivingBase caster = ((TileEntityPlayerSaveTimed)tileentity).getCaster();
+
+			if(caster != null && AllyDesignationSystem.isValidTarget(caster, target)){
+				source = MagicDamage.causeDirectMagicDamage(caster, MagicDamage.DamageType.MAGIC);
 			}else{
 				return false; // Don't attack or slow allies of the caster
 			}
