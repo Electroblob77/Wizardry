@@ -36,5 +36,6 @@ In addition, I'd like to thank the following individuals for their contributions
 - Korean: shejery, rewi_wire
 - Polish: Trozuu
 - German: BirdyDragon
+- Taiwanese: chesterccj305
 
 Lightning ray sound effect from OhhWowProductions
