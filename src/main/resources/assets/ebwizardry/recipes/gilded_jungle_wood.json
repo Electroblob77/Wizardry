@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "www",
+        "wgw",
+        "www"
+    ],
+    "key": {
+        "g": {
+            "type": "forge:ore_dict",
+            "ore": "nuggetGold"
+        },
+        "w": {
+            "item": "minecraft:planks",
+            "data": 3
+        }
+    },
+    "result": {
+        "item": "ebwizardry:gilded_wood",
+		"data": 3,
+        "count": 8
+    }
+}

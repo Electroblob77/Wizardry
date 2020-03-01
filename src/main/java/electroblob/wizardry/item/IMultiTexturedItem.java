@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
  * convenience method {@link electroblob.wizardry.client.model.WizardryModels#registerMultiTexturedModel(Item) WizardryModels.registerMultiTexturedModel(T)}. Also works well for {@code ItemBlock}s!
  * @author Electroblob
  * @since Wizardry 4.2
- * @see ItemBlockMultiTexturedElemental
+ * @see ItemBlockMultiTextured
  */
 public interface IMultiTexturedItem {
 	

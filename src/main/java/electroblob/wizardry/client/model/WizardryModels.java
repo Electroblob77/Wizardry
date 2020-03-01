@@ -5,10 +5,11 @@ import electroblob.wizardry.block.BlockCrystal;
 import electroblob.wizardry.block.BlockPedestal;
 import electroblob.wizardry.block.BlockRunestone;
 import electroblob.wizardry.item.IMultiTexturedItem;
-import electroblob.wizardry.item.ItemBlockMultiTexturedElemental;
+import electroblob.wizardry.item.ItemBlockMultiTextured;
 import electroblob.wizardry.item.ItemCrystal;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -50,18 +51,23 @@ public final class WizardryModels {
 		ModelLoader.setCustomStateMapper(WizardryBlocks.crystal_block, new StateMap.Builder()
 				.withName(BlockCrystal.ELEMENT).withSuffix("_crystal_block").build());
 		// Yay unchecked casting! But we know it's always ok here, and it makes everything much neater.
-		ItemBlockMultiTexturedElemental crystalBlockItem = (ItemBlockMultiTexturedElemental)Item.getItemFromBlock(WizardryBlocks.crystal_block);
+		ItemBlockMultiTextured crystalBlockItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.crystal_block);
 		registerMultiTexturedModel(crystalBlockItem);
 
 		ModelLoader.setCustomStateMapper(WizardryBlocks.runestone, new StateMap.Builder()
 				.withName(BlockRunestone.ELEMENT).withSuffix("_runestone").build());
-		ItemBlockMultiTexturedElemental runestoneItem = (ItemBlockMultiTexturedElemental)Item.getItemFromBlock(WizardryBlocks.runestone);
+		ItemBlockMultiTextured runestoneItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.runestone);
 		registerMultiTexturedModel(runestoneItem);
 
 		ModelLoader.setCustomStateMapper(WizardryBlocks.runestone_pedestal, new StateMap.Builder()
 				.withName(BlockPedestal.ELEMENT).ignore(BlockPedestal.NATURAL).withSuffix("_runestone_pedestal").build()); // Don't care about NATURAL property
-		ItemBlockMultiTexturedElemental pedestalItem = (ItemBlockMultiTexturedElemental)Item.getItemFromBlock(WizardryBlocks.runestone_pedestal);
+		ItemBlockMultiTextured pedestalItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.runestone_pedestal);
 		registerMultiTexturedModel(pedestalItem);
+
+		ModelLoader.setCustomStateMapper(WizardryBlocks.gilded_wood, new StateMap.Builder()
+				.withName(BlockPlanks.VARIANT).withSuffix("_gilded_wood").build());
+		ItemBlockMultiTextured gildedWoodItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.gilded_wood);
+		registerMultiTexturedModel(gildedWoodItem);
 
 		// Items
 

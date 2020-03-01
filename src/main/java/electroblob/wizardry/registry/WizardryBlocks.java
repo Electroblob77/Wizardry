@@ -4,6 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.*;
 import electroblob.wizardry.tileentity.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -56,6 +57,7 @@ public final class WizardryBlocks {
 	public static final Block thorns = placeholder();
 	public static final Block obsidian_crust = placeholder();
 	public static final Block dry_frosted_ice = placeholder();
+	public static final Block gilded_wood = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given block, then registers it with the given registry. Use
@@ -95,6 +97,7 @@ public final class WizardryBlocks {
 		registerBlock(registry, "thorns", 					new BlockThorns());
 		registerBlock(registry, "obsidian_crust", 			new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
+		registerBlock(registry, "gilded_wood", 			new BlockPlanks());
 
 	}
 

@@ -13,6 +13,7 @@ import electroblob.wizardry.registry.WizardryTabs.CreativeTabListed;
 import electroblob.wizardry.registry.WizardryTabs.CreativeTabSorted;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.IProjectile;
@@ -35,6 +36,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -366,9 +368,9 @@ public final class WizardryItems {
 		}
 	}
 
-	private static void registerMultiTexturedItemBlock(IForgeRegistry<Item> registry, Block block, boolean separateNames){
+	private static void registerMultiTexturedItemBlock(IForgeRegistry<Item> registry, Block block, boolean separateNames, String... prefixes){
 		// We don't need to keep a reference to the ItemBlock
-		Item itemblock = new ItemBlockMultiTexturedElemental(block, separateNames).setRegistryName(block.getRegistryName());
+		Item itemblock = new ItemBlockMultiTextured(block, separateNames, prefixes).setRegistryName(block.getRegistryName());
 		registry.register(itemblock);
 
 		if(block.getCreativeTab() instanceof CreativeTabListed){
@@ -389,9 +391,14 @@ public final class WizardryItems {
 		registerItemBlock(registry, WizardryBlocks.crystal_ore);
 		registerItemBlock(registry, WizardryBlocks.crystal_flower);
 		registerItemBlock(registry, WizardryBlocks.transportation_stone);
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.crystal_block, true);
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone, false);
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone_pedestal, false);
+
+		String[] elements = Arrays.stream(Element.values()).map(Element::getName).toArray(String[]::new);
+		String[] woodTypes = Arrays.stream(BlockPlanks.EnumType.values()).map(BlockPlanks.EnumType::getName).toArray(String[]::new);
+
+		registerMultiTexturedItemBlock(registry, WizardryBlocks.crystal_block, true, elements);
+		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone, false, elements);
+		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone_pedestal, false, elements);
+		registerMultiTexturedItemBlock(registry, WizardryBlocks.gilded_wood, true, woodTypes);
 
 		// Items
 

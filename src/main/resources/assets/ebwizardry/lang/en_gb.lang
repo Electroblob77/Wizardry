@@ -26,6 +26,13 @@ tile.ebwizardry\:earth_crystal_block.name=Block of Verdant Crystal
 tile.ebwizardry\:sorcery_crystal_block.name=Block of Mystical Crystal
 tile.ebwizardry\:healing_crystal_block.name=Block of Radiant Crystal
 
+tile.ebwizardry\:oak_gilded_wood.name=Gilded Oak Wood
+tile.ebwizardry\:spruce_gilded_wood.name=Gilded Spruce Wood
+tile.ebwizardry\:birch_gilded_wood.name=Gilded Birch Wood
+tile.ebwizardry\:jungle_gilded_wood.name=Gilded Jungle Wood
+tile.ebwizardry\:dark_oak_gilded_wood.name=Gilded Dark Oak Wood
+tile.ebwizardry\:acacia_gilded_wood.name=Gilded Acacia Wood
+
 item.ebwizardry\:crystal_magic.name=Magic Crystal
 item.ebwizardry\:crystal_fire.name=Fiery Crystal
 item.ebwizardry\:crystal_ice.name=Icy Crystal
