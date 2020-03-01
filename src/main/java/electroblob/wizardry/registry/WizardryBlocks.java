@@ -83,19 +83,19 @@ public final class WizardryBlocks {
 		registerBlock(registry, "arcane_workbench", 		new BlockArcaneWorkbench().setHardness(1.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "crystal_ore", 			new BlockCrystalOre(Material.ROCK).setHardness(3.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "petrified_stone", 		new BlockStatue(Material.ROCK).setHardness(1.5F).setResistance(10.0F));
-		registerBlock(registry, "ice_statue", 				new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3));
+		registerBlock(registry, "ice_statue", 			new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3));
 		registerBlock(registry, "magic_light", 			new BlockMagicLight(Material.CIRCUITS));
-		registerBlock(registry, "crystal_flower", 			new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "crystal_flower", 		new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "snare", 					new BlockSnare(Material.PLANTS).setHardness(0.0F));
 		registerBlock(registry, "transportation_stone", 	new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "spectral_block", 			new BlockSpectral(Material.GLASS).setLightOpacity(1).setBlockUnbreakable().setResistance(6000000.0F));
+		registerBlock(registry, "spectral_block", 		new BlockSpectral(Material.GLASS).setLightOpacity(1).setBlockUnbreakable().setResistance(6000000.0F));
 		registerBlock(registry, "crystal_block", 			new BlockCrystal(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "meteor", 					new Block(Material.ROCK).setLightLevel(1));
+		registerBlock(registry, "meteor", 				new Block(Material.ROCK).setLightLevel(1));
 		registerBlock(registry, "vanishing_cobweb", 		new BlockVanishingCobweb(Material.WEB).setLightOpacity(1).setHardness(4.0F));
 		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
-		registerBlock(registry, "runestone_pedestal", 		new BlockPedestal(Material.ROCK));
-		registerBlock(registry, "thorns", 					new BlockThorns());
-		registerBlock(registry, "obsidian_crust", 			new BlockObsidianCrust());
+		registerBlock(registry, "runestone_pedestal", 	new BlockPedestal(Material.ROCK));
+		registerBlock(registry, "thorns", 				new BlockThorns());
+		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
 		registerBlock(registry, "gilded_wood", 			new BlockPlanks());
 

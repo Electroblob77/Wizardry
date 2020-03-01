@@ -407,29 +407,29 @@ public final class WizardryItems {
 		registerItem(registry, "crystal_shard", 				new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 		registerItem(registry, "grand_crystal", 				new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 
-		registerItem(registry, "wizard_handbook", 				new ItemWizardHandbook(), true);
-		registerItem(registry, "arcane_tome", 					new ItemArcaneTome());
+		registerItem(registry, "wizard_handbook", 			new ItemWizardHandbook(), true);
+		registerItem(registry, "arcane_tome", 				new ItemArcaneTome());
 		registerItem(registry, "spell_book", 					new ItemSpellBook(), true);
 		registerItem(registry, "scroll", 						new ItemScroll());
 
 		registerItem(registry, "magic_wand", 					new ItemWand(Tier.NOVICE, null));
-		registerItem(registry, "apprentice_wand", 				new ItemWand(Tier.APPRENTICE, null));
+		registerItem(registry, "apprentice_wand", 			new ItemWand(Tier.APPRENTICE, null));
 		registerItem(registry, "advanced_wand", 				new ItemWand(Tier.ADVANCED, null));
-		registerItem(registry, "master_wand", 					new ItemWand(Tier.MASTER, null));
+		registerItem(registry, "master_wand", 				new ItemWand(Tier.MASTER, null));
 
 		registerItem(registry, "novice_fire_wand", 			new ItemWand(Tier.NOVICE, Element.FIRE));
 		registerItem(registry, "apprentice_fire_wand", 		new ItemWand(Tier.APPRENTICE, Element.FIRE));
 		registerItem(registry, "advanced_fire_wand", 			new ItemWand(Tier.ADVANCED, Element.FIRE));
 		registerItem(registry, "master_fire_wand", 			new ItemWand(Tier.MASTER, Element.FIRE));
 
-		registerItem(registry, "novice_ice_wand", 				new ItemWand(Tier.NOVICE, Element.ICE));
-		registerItem(registry, "apprentice_ice_wand", 			new ItemWand(Tier.APPRENTICE, Element.ICE));
+		registerItem(registry, "novice_ice_wand", 			new ItemWand(Tier.NOVICE, Element.ICE));
+		registerItem(registry, "apprentice_ice_wand", 		new ItemWand(Tier.APPRENTICE, Element.ICE));
 		registerItem(registry, "advanced_ice_wand", 			new ItemWand(Tier.ADVANCED, Element.ICE));
-		registerItem(registry, "master_ice_wand", 				new ItemWand(Tier.MASTER, Element.ICE));
+		registerItem(registry, "master_ice_wand", 			new ItemWand(Tier.MASTER, Element.ICE));
 
 		registerItem(registry, "novice_lightning_wand", 		new ItemWand(Tier.NOVICE, Element.LIGHTNING));
 		registerItem(registry, "apprentice_lightning_wand", 	new ItemWand(Tier.APPRENTICE, Element.LIGHTNING));
-		registerItem(registry, "advanced_lightning_wand", 		new ItemWand(Tier.ADVANCED, Element.LIGHTNING));
+		registerItem(registry, "advanced_lightning_wand", 	new ItemWand(Tier.ADVANCED, Element.LIGHTNING));
 		registerItem(registry, "master_lightning_wand", 		new ItemWand(Tier.MASTER, Element.LIGHTNING));
 
 		registerItem(registry, "novice_necromancy_wand", 		new ItemWand(Tier.NOVICE, Element.NECROMANCY));
@@ -439,31 +439,31 @@ public final class WizardryItems {
 
 		registerItem(registry, "novice_earth_wand", 			new ItemWand(Tier.NOVICE, Element.EARTH));
 		registerItem(registry, "apprentice_earth_wand", 		new ItemWand(Tier.APPRENTICE, Element.EARTH));
-		registerItem(registry, "advanced_earth_wand", 			new ItemWand(Tier.ADVANCED, Element.EARTH));
+		registerItem(registry, "advanced_earth_wand", 		new ItemWand(Tier.ADVANCED, Element.EARTH));
 		registerItem(registry, "master_earth_wand", 			new ItemWand(Tier.MASTER, Element.EARTH));
 
-		registerItem(registry, "novice_sorcery_wand", 			new ItemWand(Tier.NOVICE, Element.SORCERY));
-		registerItem(registry, "apprentice_sorcery_wand", 		new ItemWand(Tier.APPRENTICE, Element.SORCERY));
+		registerItem(registry, "novice_sorcery_wand", 		new ItemWand(Tier.NOVICE, Element.SORCERY));
+		registerItem(registry, "apprentice_sorcery_wand", 	new ItemWand(Tier.APPRENTICE, Element.SORCERY));
 		registerItem(registry, "advanced_sorcery_wand", 		new ItemWand(Tier.ADVANCED, Element.SORCERY));
-		registerItem(registry, "master_sorcery_wand", 			new ItemWand(Tier.MASTER, Element.SORCERY));
+		registerItem(registry, "master_sorcery_wand", 		new ItemWand(Tier.MASTER, Element.SORCERY));
 
-		registerItem(registry, "novice_healing_wand", 			new ItemWand(Tier.NOVICE, Element.HEALING));
-		registerItem(registry, "apprentice_healing_wand", 		new ItemWand(Tier.APPRENTICE, Element.HEALING));
+		registerItem(registry, "novice_healing_wand", 		new ItemWand(Tier.NOVICE, Element.HEALING));
+		registerItem(registry, "apprentice_healing_wand", 	new ItemWand(Tier.APPRENTICE, Element.HEALING));
 		registerItem(registry, "advanced_healing_wand", 		new ItemWand(Tier.ADVANCED, Element.HEALING));
-		registerItem(registry, "master_healing_wand", 			new ItemWand(Tier.MASTER, Element.HEALING));
+		registerItem(registry, "master_healing_wand", 		new ItemWand(Tier.MASTER, Element.HEALING));
 
 		registerItem(registry, "spectral_sword", 				new ItemSpectralSword(ToolMaterial.IRON));
 		registerItem(registry, "spectral_pickaxe", 			new ItemSpectralPickaxe(ToolMaterial.IRON));
 		registerItem(registry, "spectral_bow", 				new ItemSpectralBow());
 
-		registerItem(registry, "blank_scroll",					new ItemBlankScroll());
+		registerItem(registry, "blank_scroll",				new ItemBlankScroll());
 		registerItem(registry, "magic_silk", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 
 		registerItem(registry, "small_mana_flask", 			new ItemManaFlask(ItemManaFlask.Size.SMALL));
 		registerItem(registry, "medium_mana_flask", 			new ItemManaFlask(ItemManaFlask.Size.MEDIUM));
 		registerItem(registry, "large_mana_flask", 			new ItemManaFlask(ItemManaFlask.Size.LARGE));
 
-		registerItem(registry, "storage_upgrade", 				new ItemWandUpgrade());
+		registerItem(registry, "storage_upgrade", 			new ItemWandUpgrade());
 		registerItem(registry, "siphon_upgrade", 				new ItemWandUpgrade());
 		registerItem(registry, "condenser_upgrade", 			new ItemWandUpgrade());
 		registerItem(registry, "range_upgrade", 				new ItemWandUpgrade());
@@ -473,32 +473,32 @@ public final class WizardryItems {
 		registerItem(registry, "attunement_upgrade", 			new ItemWandUpgrade());
 		registerItem(registry, "melee_upgrade", 				new ItemWandUpgrade());
 
-		registerItem(registry, "flaming_axe", 					new ItemFlamingAxe(Materials.MAGICAL));
+		registerItem(registry, "flaming_axe", 				new ItemFlamingAxe(Materials.MAGICAL));
 		registerItem(registry, "frost_axe",					new ItemFrostAxe(Materials.MAGICAL));
 
 		registerItem(registry, "identification_scroll", 		new ItemIdentificationScroll());
 		registerItem(registry, "armour_upgrade", 				new ItemArmourUpgrade());
 		registerItem(registry, "astral_diamond", 				new Item(){ @Override public EnumRarity getRarity(ItemStack stack){ return EnumRarity.RARE; }}.setCreativeTab(WizardryTabs.WIZARDRY));
-		registerItem(registry, "purifying_elixir",				new ItemPurifyingElixir());
+		registerItem(registry, "purifying_elixir",			new ItemPurifyingElixir());
 
 		registerItem(registry, "firebomb", 					new ItemFirebomb());
-		registerItem(registry, "poison_bomb", 					new ItemPoisonBomb());
+		registerItem(registry, "poison_bomb", 				new ItemPoisonBomb());
 		registerItem(registry, "smoke_bomb", 					new ItemSmokeBomb());
 		registerItem(registry, "spark_bomb", 					new ItemSparkBomb());
 
 		registerItem(registry, "wizard_hat", 					new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, null), true);
-		registerItem(registry, "wizard_robe", 					new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, null));
-		registerItem(registry, "wizard_leggings", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, null));
+		registerItem(registry, "wizard_robe", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, null));
+		registerItem(registry, "wizard_leggings", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, null));
 		registerItem(registry, "wizard_boots", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, null));
 
-		registerItem(registry, "wizard_hat_fire", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.FIRE));
+		registerItem(registry, "wizard_hat_fire", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.FIRE));
 		registerItem(registry, "wizard_robe_fire", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.FIRE));
 		registerItem(registry, "wizard_leggings_fire", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.FIRE));
 		registerItem(registry, "wizard_boots_fire", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.FIRE));
 
 		registerItem(registry, "wizard_hat_ice", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.ICE));
-		registerItem(registry, "wizard_robe_ice", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.ICE));
-		registerItem(registry, "wizard_leggings_ice", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.ICE));
+		registerItem(registry, "wizard_robe_ice", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.ICE));
+		registerItem(registry, "wizard_leggings_ice", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.ICE));
 		registerItem(registry, "wizard_boots_ice", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.ICE));
 
 		registerItem(registry, "wizard_hat_lightning", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.LIGHTNING));
@@ -509,7 +509,7 @@ public final class WizardryItems {
 		registerItem(registry, "wizard_hat_necromancy", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.NECROMANCY));
 		registerItem(registry, "wizard_robe_necromancy", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.NECROMANCY));
 		registerItem(registry, "wizard_leggings_necromancy", 	new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.NECROMANCY));
-		registerItem(registry, "wizard_boots_necromancy", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.NECROMANCY));
+		registerItem(registry, "wizard_boots_necromancy", 	new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.NECROMANCY));
 
 		registerItem(registry, "wizard_hat_earth", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.EARTH));
 		registerItem(registry, "wizard_robe_earth", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.EARTH));
@@ -517,13 +517,13 @@ public final class WizardryItems {
 		registerItem(registry, "wizard_boots_earth", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.EARTH));
 
 		registerItem(registry, "wizard_hat_sorcery", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.SORCERY));
-		registerItem(registry, "wizard_robe_sorcery", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.SORCERY));
-		registerItem(registry, "wizard_leggings_sorcery", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.SORCERY));
+		registerItem(registry, "wizard_robe_sorcery", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.SORCERY));
+		registerItem(registry, "wizard_leggings_sorcery", 	new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.SORCERY));
 		registerItem(registry, "wizard_boots_sorcery", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.SORCERY));
 
 		registerItem(registry, "wizard_hat_healing", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, Element.HEALING));
-		registerItem(registry, "wizard_robe_healing", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.HEALING));
-		registerItem(registry, "wizard_leggings_healing", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.HEALING));
+		registerItem(registry, "wizard_robe_healing", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, Element.HEALING));
+		registerItem(registry, "wizard_leggings_healing", 	new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.HEALING));
 		registerItem(registry, "wizard_boots_healing", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.HEALING));
 
 		registerItem(registry, "spectral_helmet", 				new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.HEAD));
@@ -533,30 +533,30 @@ public final class WizardryItems {
 
 		registerItem(registry, "lightning_hammer", 			new ItemLightningHammer());
 
-		registerItem(registry, "ring_condensing", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_condensing", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_siphoning", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_battlemage", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_combustion", 				new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_fire_melee", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_fire_biome", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_disintegration", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_battlemage", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_combustion", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_fire_melee", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_fire_biome", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_disintegration", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_ice_melee", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_ice_biome", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_arcane_frost", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_shattering", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_shattering", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_lightning_melee", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_storm", 					new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_seeking", 				new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_hammer", 					new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_hammer", 				new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_soulbinding", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_leeching", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_necromancy_melee", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_mind_control", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_poison", 					new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_poison", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_earth_melee", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_earth_biome", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_full_moon", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
-		registerItem(registry, "ring_extraction", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_extraction", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_mana_return", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_blockwrangler", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_conjurer", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
@@ -569,33 +569,33 @@ public final class WizardryItems {
 		registerItem(registry, "amulet_wisdom", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_fire_protection", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_fire_cloaking", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
-		registerItem(registry, "amulet_ice_immunity", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
+		registerItem(registry, "amulet_ice_immunity", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_ice_protection", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_potential", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_channeling", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
-		registerItem(registry, "amulet_lich", 					new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
+		registerItem(registry, "amulet_lich", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_wither_immunity", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_glide", 				new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_banishing", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_anchoring", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
-		registerItem(registry, "amulet_recovery", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
+		registerItem(registry, "amulet_recovery", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_transience", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
-		registerItem(registry, "amulet_resurrection", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
+		registerItem(registry, "amulet_resurrection", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_auto_shield", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
 
 		registerItem(registry, "charm_haggler", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_experience_tome", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_auto_smelt", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_lava_walking", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
-		registerItem(registry, "charm_storm", 					new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
-		registerItem(registry, "charm_minion_health", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_storm", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_minion_health", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_minion_variants", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_flight", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_growth", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
-		registerItem(registry, "charm_abseiling", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_abseiling", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_silk_touch", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
-		registerItem(registry, "charm_stop_time", 				new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
-		registerItem(registry, "charm_light", 					new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_stop_time", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_light", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_transportation", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_feeding", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
 

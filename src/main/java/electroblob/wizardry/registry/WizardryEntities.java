@@ -61,18 +61,18 @@ public class WizardryEntities {
 		IForgeRegistry<EntityEntry> registry = event.getRegistry();
 
 		// Vanilla summoned creatures
-		registry.register(createEntry(EntityZombieMinion.class, 	"zombie_minion", 		TrackingType.LIVING).build());
-		registry.register(createEntry(EntityHuskMinion.class, 		"husk_minion", 		TrackingType.LIVING).build());
-		registry.register(createEntry(EntitySkeletonMinion.class, 	"skeleton_minion", 	TrackingType.LIVING).build());
-		registry.register(createEntry(EntityStrayMinion.class, 		"stray_minion", 		TrackingType.LIVING).build());
-		registry.register(createEntry(EntitySpiderMinion.class, 	"spider_minion", 		TrackingType.LIVING).build());
-		registry.register(createEntry(EntityBlazeMinion.class, 		"blaze_minion", 		TrackingType.LIVING).build());
+		registry.register(createEntry(EntityZombieMinion.class, 		"zombie_minion", 			TrackingType.LIVING).build());
+		registry.register(createEntry(EntityHuskMinion.class, 			"husk_minion", 			TrackingType.LIVING).build());
+		registry.register(createEntry(EntitySkeletonMinion.class, 		"skeleton_minion", 		TrackingType.LIVING).build());
+		registry.register(createEntry(EntityStrayMinion.class, 			"stray_minion", 			TrackingType.LIVING).build());
+		registry.register(createEntry(EntitySpiderMinion.class, 		"spider_minion", 			TrackingType.LIVING).build());
+		registry.register(createEntry(EntityBlazeMinion.class, 			"blaze_minion", 			TrackingType.LIVING).build());
 		registry.register(createEntry(EntityWitherSkeletonMinion.class, "wither_skeleton_minion", TrackingType.LIVING).build());
-		registry.register(createEntry(EntitySilverfishMinion.class, "silverfish_minion", 	TrackingType.LIVING).build());
-		registry.register(createEntry(EntityVexMinion.class, 		"vex_minion", 			TrackingType.LIVING).build());
+		registry.register(createEntry(EntitySilverfishMinion.class, 	"silverfish_minion", 		TrackingType.LIVING).build());
+		registry.register(createEntry(EntityVexMinion.class, 			"vex_minion", 			TrackingType.LIVING).build());
 
 		// Custom summoned creatures
-		registry.register(createEntry(EntityIceWraith.class, 		"ice_wraith", 			TrackingType.LIVING).egg(0xaafaff, 0x001ce1)
+		registry.register(createEntry(EntityIceWraith.class, 		"ice_wraith", 		TrackingType.LIVING).egg(0xaafaff, 0x001ce1)
 				.spawn(EnumCreatureType.MONSTER, Wizardry.settings.iceWraithSpawnRate, 1, 1, ForgeRegistries.BIOMES.getValuesCollection().stream()
 						.filter(b -> !Arrays.asList(Wizardry.settings.mobSpawnBiomeBlacklist).contains(b.getRegistryName())
 								&& BiomeDictionary.hasType(b, BiomeDictionary.Type.SNOWY)
@@ -94,10 +94,10 @@ public class WizardryEntities {
 
 		// These two are only made of particles, so we can afford a lower update frequency
 		registry.register(createEntry(EntityShadowWraith.class, 	"shadow_wraith")		.tracker(80, 10, true).egg(0x11071c, 0x421384).build());
-		registry.register(createEntry(EntityStormElemental.class, 	"storm_elemental")		.tracker(80, 10, true).egg(0x162128, 0x135279).build());
+		registry.register(createEntry(EntityStormElemental.class, 	"storm_elemental")	.tracker(80, 10, true).egg(0x162128, 0x135279).build());
 
 		// Other living entities
-		registry.register(createEntry(EntityWizard.class, 			"wizard", 				TrackingType.LIVING).egg(0x19295e, 0xee9312).build());
+		registry.register(createEntry(EntityWizard.class, 			"wizard", 			TrackingType.LIVING).egg(0x19295e, 0xee9312).build());
 		registry.register(createEntry(EntityEvilWizard.class, 		"evil_wizard", 		TrackingType.LIVING).egg(0x290404, 0xee9312)
 				// For reference: 5, 1, 1 are the parameters for the witch in vanilla
 				.spawn(EnumCreatureType.MONSTER, Wizardry.settings.evilWizardSpawnRate, 1, 1, ForgeRegistries.BIOMES.getValuesCollection().stream()
@@ -115,17 +115,17 @@ public class WizardryEntities {
 		// Directionless projectiles
 		registry.register(createEntry(EntityFirebomb.class, 		"firebomb", 			TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityPoisonBomb.class, 		"poison_bomb", 		TrackingType.PROJECTILE).build());
-		registry.register(createEntry(EntitySparkBomb.class, 		"spark_bomb", 			TrackingType.PROJECTILE).build());
-		registry.register(createEntry(EntitySmokeBomb.class, 		"smoke_bomb", 			TrackingType.PROJECTILE).build());
-		registry.register(createEntry(EntityIceCharge.class, 		"ice_charge", 			TrackingType.PROJECTILE).build());
+		registry.register(createEntry(EntitySparkBomb.class, 		"spark_bomb", 		TrackingType.PROJECTILE).build());
+		registry.register(createEntry(EntitySmokeBomb.class, 		"smoke_bomb", 		TrackingType.PROJECTILE).build());
+		registry.register(createEntry(EntityIceCharge.class, 		"ice_charge", 		TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityForceOrb.class, 		"force_orb", 			TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntitySpark.class, 			"spark", 				TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityDarknessOrb.class, 		"darkness_orb", 		TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityFirebolt.class, 		"firebolt", 			TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityThunderbolt.class, 		"thunderbolt", 		TrackingType.PROJECTILE).build());
-		registry.register(createEntry(EntityLightningDisc.class, 	"lightning_disc", 		TrackingType.PROJECTILE).build());
+		registry.register(createEntry(EntityLightningDisc.class, 	"lightning_disc", 	TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityEmber.class, 			"ember", 				TrackingType.PROJECTILE).build());
-		registry.register(createEntry(EntityMagicFireball.class, 	"magic_fireball", 		TrackingType.PROJECTILE).build());
+		registry.register(createEntry(EntityMagicFireball.class, 	"magic_fireball", 	TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityLargeMagicFireball.class, "large_magic_fireball", TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityIceball.class, 			"iceball", 			TrackingType.PROJECTILE).build());
 
@@ -135,10 +135,10 @@ public class WizardryEntities {
 		registry.register(createEntry(EntityLevitatingBlock.class, 	"levitating_block")	.tracker(160, 3, true).build());
 
 		// Constructs
-		registry.register(createEntry(EntityBlackHole.class, 		"black_hole", 			TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityBlackHole.class, 		"black_hole", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityBlizzard.class, 		"blizzard", 			TrackingType.CONSTRUCT).build());
-		registry.register(createEntry(EntityForcefield.class, 		"forcefield", 			TrackingType.CONSTRUCT).build());
-		registry.register(createEntry(EntityFireSigil.class, 		"fire_sigil", 			TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityForcefield.class, 		"forcefield", 		TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityFireSigil.class, 		"fire_sigil", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityFrostSigil.class, 		"frost_sigil", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityLightningSigil.class, 	"lightning_sigil", 	TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityCombustionRune.class, 	"combustion_rune", 	TrackingType.CONSTRUCT).build());
@@ -147,14 +147,14 @@ public class WizardryEntities {
 		registry.register(createEntry(EntityDecay.class, 			"decay", 				TrackingType.CONSTRUCT).build());
 
 		// These ones don't render, currently that makes no difference here but we might as well separate them
-		registry.register(createEntry(EntityArrowRain.class, 		"arrow_rain", 			TrackingType.CONSTRUCT).build());
-		registry.register(createEntry(EntityEarthquake.class, 		"earthquake", 			TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityArrowRain.class, 		"arrow_rain", 		TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityEarthquake.class, 		"earthquake", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityHailstorm.class, 		"hailstorm", 			TrackingType.CONSTRUCT).build());
 
 		// These ones move, velocity updates are sent if that's not at constant velocity
 		registry.register(createEntry(EntityShield.class, 			"shield")				.tracker(160, 10, true).build());
 		registry.register(createEntry(EntityBubble.class, 			"bubble")				.tracker(160, 3, false).build());
-		registry.register(createEntry(EntityTornado.class, 			"tornado")				.tracker(160, 3, false).build());
+		registry.register(createEntry(EntityTornado.class, 			"tornado")			.tracker(160, 3, false).build());
 		registry.register(createEntry(EntityIceSpike.class, 		"ice_spike")			.tracker(160, 1, true).build());
 
 	}
