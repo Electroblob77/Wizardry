@@ -97,7 +97,7 @@ public final class WizardryBlocks {
 		registerBlock(registry, "thorns", 				new BlockThorns());
 		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
-		registerBlock(registry, "gilded_wood", 			new BlockPlanks());
+		registerBlock(registry, "gilded_wood", 			new BlockPlanks().setCreativeTab(WizardryTabs.WIZARDRY));
 
 	}
 
