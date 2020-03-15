@@ -1,6 +1,6 @@
 {
-	"bookmark_start_section": "introduccion",
-	
+	"bookmark_start_section": "introduction",
+
 	"colours": {
 		"text": "#000000",
 		"caption": "#666666",
@@ -8,7 +8,7 @@
 		"highlight": "#dd4c1d",
 		"new_section": "#ee88f7"
 	},
-	
+
 	"images": {
 		"workbench": {
 			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
@@ -226,26 +226,26 @@
 			"locations": [ "ebwizardry:spark_bomb" ]
 		}
 	},
-	
+
 	"sections": {
-		
+
 		"inside_cover": {
 			"centre": {
 				"x": true,
 				"y": true
 			},
 			"text": [
-			
+
 				"El Manual del Mago",
-				
+
 				"Por Electroblob"
 			]
 		},
-		
+
 		"introduction": {
 			"title": "Introduccion",
 			"text": [
-			
+
 				"¡Saludos Mago! Este libro te mostrara los secretos de las artes arcanas, y de cómo usarlas. Este no es un libro común y corriente, ya que su conocimiento y sus páginas aumentarán a medida que descubres más y más sobre mundo mágico.",
 
 				"Utiliza los botones en forma de flecha para pasar la página, y los botones de doble flecha para pasar de una sección a otra. Usa el botón de menú central para regresar al índice.",
@@ -676,13 +676,13 @@
 						"ebwizardry:enchant_scroll"
 					],
 					"text": [
-					
+
 						"Experimentación reciente ha revelado que es posible automatizar la conjuración de @spells hechizos@, hasta cierto punto, usando nada mas que un dispensador simple. Nadie sabe porque, pero parece que las extrañas propiedades de la piedra roja se extienden hasta la conjuración de un pergamino de hechizo. Poniendo un par de estos en un dispensador y dándole poder serviría como una buena trampa…."
 					]
 				}
 			}
 		},
-		
+
 		"crafting_recipes": {
 			"title": "Recetas para crafteos",
 			"include_in_contents": "main_contents",
@@ -714,12 +714,12 @@
 				"#recipe spark_bomb"
 			]
 		},
-		
+
 		"credits": {
 			"title": "Creditos",
 			"include_in_contents": "main_contents",
 			"text": [
-				
+
 				"Electroblob's Wizardry \nVersion #version \nPara Minecraft #mcversion",
 
 				"Diseñado, programado y texturizado por Electroblob",
@@ -745,6 +745,6 @@
 				"¿Te encanta este mod? ¡unete al @https://discord.gg/MTmMzMv servidor de Discord@ para las ultimas noticias,discusiones y extras!"
 			]
 		}
-		
+
 	}
 }
