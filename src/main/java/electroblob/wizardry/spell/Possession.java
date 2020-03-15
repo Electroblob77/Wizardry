@@ -201,6 +201,8 @@ public class Possession extends SpellRay {
 	 */
 	public boolean possess(EntityPlayer possessor, EntityLiving target, int duration){
 
+		if(possessor.isSneaking()) return false;
+
 		if(WizardData.get(possessor) != null){
 
 			WizardData.get(possessor).setVariable(POSSESSEE_KEY, target);
@@ -683,11 +685,13 @@ public class Possession extends SpellRay {
 
 		if(possessee != null){
 
-			if(possessee.canPickUpLoot() && possessee.getHeldItemMainhand().isEmpty()){
-				possessee.setHeldItem(EnumHand.MAIN_HAND, event.getItem().getItem());
-			}else{
-				event.setCanceled(true);
-			}
+			event.setCanceled(true);
+
+//			if(possessee.canPickUpLoot() && possessee.getHeldItemMainhand().isEmpty()){
+//				possessee.setHeldItem(EnumHand.MAIN_HAND, event.getItem().getItem());
+//			}else{
+//				event.setCanceled(true);
+//			}
 		}
 	}
 
