@@ -9,7 +9,6 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.PotionEffect;
@@ -48,13 +47,7 @@ public class EntityIceball extends EntityMagicProjectile {
 
 			}else{
 
-				boolean flag = true;
-
-				if(this.getThrower() != null && this.getThrower() instanceof EntityLiving){
-					flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getThrower());
-				}
-
-				if(flag){
+				if(this.getThrower() == null || WizardryUtilities.canDamageBlocks(this.getThrower(), world)){
 
 					BlockPos pos = rayTrace.getBlockPos();
 

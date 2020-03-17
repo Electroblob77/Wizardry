@@ -3,6 +3,7 @@ package electroblob.wizardry.entity.projectile;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,7 +51,7 @@ public class EntityLargeMagicFireball extends EntityMagicFireball {
 	protected void onImpact(RayTraceResult rayTrace){
 
 		if(!world.isRemote){
-			boolean flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.thrower);
+			boolean flag = this.getThrower() == null || WizardryUtilities.canDamageBlocks(this.getThrower(), world);
 			this.world.newExplosion(null, this.posX, this.posY, this.posZ, getExplosionPower() * blastMultiplier, flag, flag);
 		}
 

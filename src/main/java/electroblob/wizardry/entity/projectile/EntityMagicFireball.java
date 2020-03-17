@@ -6,9 +6,9 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.init.Blocks;
@@ -84,13 +84,7 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 
 			}else{
 
-				boolean flag = true;
-
-				if(this.getThrower() != null && this.getThrower() instanceof EntityLiving){
-					flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getThrower());
-				}
-
-				if(flag){
+				if(this.getThrower() == null || WizardryUtilities.canDamageBlocks(this.getThrower(), world)){
 
 					BlockPos blockpos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
 
