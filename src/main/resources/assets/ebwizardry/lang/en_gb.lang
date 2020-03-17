@@ -1,4 +1,4 @@
-#PARSE_ESCAPES
+# PARSE_ESCAPES
 tile.ebwizardry\:arcane_workbench.name=Arcane Workbench
 tile.ebwizardry\:crystal_ore.name=Crystal Ore
 tile.ebwizardry\:petrified_stone.name=Petrified Stone
@@ -497,6 +497,13 @@ advancement.ebwizardry\:enchant_scroll=Scroll Up!
 advancement.ebwizardry\:enchant_scroll.desc=Craft a blank scroll and enchant it with a spell at an arcane workbench
 
 handbook.toast.title=New Handbook Section Unlocked!
+
+gui.ebwizardry\:spell_book.tier=Tier: %s
+gui.ebwizardry\:spell_book.element=Element: %s
+gui.ebwizardry\:spell_book.element_undiscovered=Element: ?
+gui.ebwizardry\:spell_book.mana_cost=Mana Cost: %s
+gui.ebwizardry\:spell_book.mana_cost_continuous=Mana Cost: %s/second
+gui.ebwizardry\:spell_book.mana_cost_undiscovered=Mana Cost: ?
 
 container.ebwizardry\:arcane_workbench=Arcane Workbench
 container.ebwizardry\:arcane_workbench.apply=Apply
