@@ -10,7 +10,7 @@
 				{
                     "type": "loot_table",
                     "name": "ebwizardry:subsets/arcane_tomes",
-                    "weight": 3
+                    "weight": 4
                 },
 				{
                     "type": "loot_table",
