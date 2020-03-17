@@ -73,8 +73,8 @@ public class GuiSpellBook extends GuiScreen {
 				"\u00A77" + spell.getTier().getDisplayName() : spell.getTier().getDisplayNameWithFormatting());
 		this.fontRenderer.drawString(tier, xPos + 17, yPos + 45, 0);
 
-		String element = I18n.format("gui.ebwizardry:spell_book.tier", spell.getElement().getFormattingCode() + spell.getElement().getDisplayName());
-		if(!discovered) element = I18n.format("gui.ebwizardry:spell_book.tier_undiscovered");
+		String element = I18n.format("gui.ebwizardry:spell_book.element", spell.getElement().getFormattingCode() + spell.getElement().getDisplayName());
+		if(!discovered) element = I18n.format("gui.ebwizardry:spell_book.element_undiscovered");
 		this.fontRenderer.drawString(element, xPos + 17, yPos + 57, 0);
 
 		String manaCost = I18n.format("gui.ebwizardry:spell_book.mana_cost", spell.getCost());
