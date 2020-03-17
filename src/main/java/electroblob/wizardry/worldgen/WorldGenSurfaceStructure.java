@@ -144,6 +144,9 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 
 		// Estimate a starting height for searching for the floor
 		BlockPos centre = world.getTopSolidOrLiquidBlock(new BlockPos(origin.add(size.getX()/2, 0, size.getZ()/2)));
+		// Check if we're at the top of the world, and if so just randomise the y pos (accounts for 'cavern' dimensions)
+		if(centre.getY() >= world.getActualHeight()) centre = new BlockPos(centre.getX(), random.nextInt(world.getActualHeight()), centre.getZ());
+
 		Integer startingHeight = WizardryUtilities.getNearestSurface(world, centre, EnumFacing.UP, 32, true,
 				WizardryUtilities.SurfaceCriteria.COLLIDABLE_IGNORING_TREES);
 
