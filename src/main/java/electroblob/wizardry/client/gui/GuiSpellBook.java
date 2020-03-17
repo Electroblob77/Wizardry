@@ -32,9 +32,7 @@ public class GuiSpellBook extends GuiScreen {
 		this.spell = Spell.byMetadata(stack.getItemDamage());
 	}
 
-	/**
-	 * Draws the screen and all the components in it.
-	 */
+	@Override
 	public void drawScreen(int par1, int par2, float par3){
 
 		int xPos = this.width / 2 - xSize / 2;
@@ -95,6 +93,7 @@ public class GuiSpellBook extends GuiScreen {
 		}
 	}
 
+	@Override
 	public void initGui(){
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
@@ -103,6 +102,7 @@ public class GuiSpellBook extends GuiScreen {
 		this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(WizardrySounds.MISC_BOOK_OPEN, 1));
 	}
 
+	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
