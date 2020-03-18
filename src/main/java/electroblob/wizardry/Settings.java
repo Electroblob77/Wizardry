@@ -168,8 +168,6 @@ public final class Settings {
 	public boolean playerBlockDamage = true;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
-	/** <b>[Server-only]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
-	public boolean replaceVanillaFireballs = true;
 	/** <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
 	 * velocity-based one. */
 	public boolean replaceVanillaFallDamage = false;
@@ -272,7 +270,9 @@ public final class Settings {
 	 * effect.
 	 */
 	public boolean slowTimeAffectsPlayers = true;
-	/**  <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
+	/** <b>[Synchronised]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
+	public boolean replaceVanillaFireballs = true;
+	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys
