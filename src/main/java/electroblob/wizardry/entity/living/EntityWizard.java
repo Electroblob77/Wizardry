@@ -503,7 +503,6 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			ItemStack anySpellBook = new ItemStack(WizardryItems.spell_book, 1, OreDictionary.WILDCARD_VALUE);
 			ItemStack crystalStack = new ItemStack(WizardryItems.magic_crystal, 5);
 
-			// NOTE: For wizardry 1.2, increase the number of uses of this trade. The default is 7, for reference.
 			this.trades.add(new MerchantRecipe(anySpellBook, crystalStack));
 
 			this.addRandomRecipes(3);
