@@ -420,7 +420,7 @@ public final class WizardryEventHandler {
 	@SubscribeEvent // Priority doesn't matter here, we're only setting event fields so if it's cancelled it won't matter
 	public static void onLivingFallEvent(LivingFallEvent event){
 		// Why is fall damage based on distance fallen? Why? Who on earth came up with that? It makes no sense whatsoever!
-		if(Wizardry.settings.replaceVanillaFallDamage && !Loader.isModLoaded("speedbasedfalldamage")){
+		if(!event.getEntity().world.isRemote && Wizardry.settings.replaceVanillaFallDamage && !Loader.isModLoaded("speedbasedfalldamage")){
 			// We want to keep the fall damage EXACTLY THE SAME for free, uninterrupted falls, but fix the weirdness
 			// caused when something else changes the entity's velocity
 			// All living entities have a gravity of 0.08b/t^2
