@@ -1278,3 +1278,10 @@ enchantment.ebwizardry\.shocking_weapon.desc=雷电武器法术的一部分;无�
 enchantment.ebwizardry\.magic_protection.desc=减少任意来源的魔法伤害
 enchantment.ebwizardry\.frost_protection.desc=减少任意来源的寒冷伤害
 enchantment.ebwizardry\.shock_protection.desc=减少任意来源的雷电伤害
+
+spell.ebwizardry\:magic_missile_festive=魔法飞弹
+spell.ebwizardry\:summon_snow_golem_festive=生成雪傀儡
+spell.ebwizardry\:invigorating_presence_festive=鼓舞之心
+spell.ebwizardry\:empowering_presence_festive=魔力增强
+
+
