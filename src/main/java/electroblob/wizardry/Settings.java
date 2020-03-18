@@ -172,7 +172,7 @@ public final class Settings {
 	public boolean replaceVanillaFireballs = true;
 	/** <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
 	 * velocity-based one. */
-	public boolean replaceVanillaFallDamage = true;
+	public boolean replaceVanillaFallDamage = false;
 	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
 	public boolean bonemealGrowsCrystalFlowers = true;
 	/**
