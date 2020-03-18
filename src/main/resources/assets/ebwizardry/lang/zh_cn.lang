@@ -1279,6 +1279,10 @@ enchantment.ebwizardry\.magic_protection.desc=减少任意来源的魔法伤害
 enchantment.ebwizardry\.frost_protection.desc=减少任意来源的寒冷伤害
 enchantment.ebwizardry\.shock_protection.desc=减少任意来源的雷电伤害
 
+integration.antiqueatlas.marker.ebwizardry.wizard_tower=巫师塔
+integration.antiqueatlas.marker.ebwizardry.obelisk=方尖碑
+integration.antiqueatlas.marker.ebwizardry.shrine=祭坛
+
 spell.ebwizardry\:magic_missile_festive=魔法飞弹
 spell.ebwizardry\:summon_snow_golem_festive=生成雪傀儡
 spell.ebwizardry\:invigorating_presence_festive=鼓舞之心
