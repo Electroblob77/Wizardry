@@ -64,7 +64,7 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "4.2.9";
+	public static final String VERSION = "4.2.10";
 
 	// IDEA: Triggering of inbuilt Forge events in relevant places?
 	// IDEA: Abstract the vanilla particles behind the particle builder
