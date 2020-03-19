@@ -10,6 +10,7 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
@@ -61,10 +62,9 @@ public class EntityIceSpike extends EntityMagicConstruct {
 		if(!this.world.isRemote){
 			for(Object entity : this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox())){
 				if(entity instanceof EntityLivingBase && this.isValidTarget((EntityLivingBase)entity)){
+					DamageSource source = this.getCaster() == null ? DamageSource.MAGIC : MagicDamage.causeDirectMagicDamage(this.getCaster(), DamageType.FROST);
 					// Potion effect only gets added if the damage succeeded.
-					if(((EntityLivingBase)entity).attackEntityFrom(
-							MagicDamage.causeDirectMagicDamage(this.getCaster(), DamageType.FROST),
-							Spells.ice_spikes.getProperty(Spell.DAMAGE).floatValue() * this.damageMultiplier))
+					if(((EntityLivingBase)entity).attackEntityFrom(source, Spells.ice_spikes.getProperty(Spell.DAMAGE).floatValue() * this.damageMultiplier))
 						((EntityLivingBase)entity).addPotionEffect(new PotionEffect(WizardryPotions.frost,
 								Spells.ice_spikes.getProperty(Spell.EFFECT_DURATION).intValue(),
 								Spells.ice_spikes.getProperty(Spell.EFFECT_STRENGTH).intValue()));
