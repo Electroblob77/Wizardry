@@ -1,11 +1,17 @@
 package electroblob.wizardry.integration.antiqueatlas;
 
 import electroblob.wizardry.Wizardry;
+import hunternif.mc.atlas.AntiqueAtlasMod;
 import hunternif.mc.atlas.api.AtlasAPI;
+import hunternif.mc.atlas.marker.GlobalMarkersData;
+import hunternif.mc.atlas.marker.Marker;
 import hunternif.mc.atlas.registry.MarkerType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * This class handles all of wizardry's integration with the <i>Antique Atlas</i> mod. This class contains only the code
@@ -15,6 +21,7 @@ import net.minecraftforge.fml.common.Loader;
  * @since Wizardry 4.2
  * @author Electroblob
  */
+@Mod.EventBusSubscriber
 public class WizardryAntiqueAtlasIntegration {
 
 	public static final String ANTIQUE_ATLAS_MOD_ID = "antiqueatlas";
@@ -66,6 +73,20 @@ public class WizardryAntiqueAtlasIntegration {
 		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(TOWER_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/wizard_tower.png")));
 		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(SHRINE_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/shrine.png")));
 		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(OBELISK_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/obelisk.png")));
+	}
+
+	@SubscribeEvent
+	public static void onWorldLoadEvent(WorldEvent.Load event){
+		// Backwards compatibility for existing markers using the old translation key format (with colons)
+		GlobalMarkersData data = AntiqueAtlasMod.globalMarkersData.getData();
+		for(Marker marker : data.getMarkersInDimension(event.getWorld().provider.getDimension())){
+			if(marker.getLabel().contains(":")){
+				// Remove old-format markers and replace them with new ones
+				data.removeMarker(marker.getId());
+				AtlasAPI.getMarkerAPI().putGlobalMarker(event.getWorld(), marker.isVisibleAhead(), marker.getType(),
+						marker.getLabel().replace(':', '.'), marker.getX(), marker.getZ());
+			}
+		}
 	}
 
 }
