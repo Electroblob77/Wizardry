@@ -77,6 +77,9 @@ public class WizardryAntiqueAtlasIntegration {
 
 	@SubscribeEvent
 	public static void onWorldLoadEvent(WorldEvent.Load event){
+
+		if(!enabled()) return;
+
 		// Backwards compatibility for existing markers using the old translation key format (with colons)
 		GlobalMarkersData data = AntiqueAtlasMod.globalMarkersData.getData();
 		for(Marker marker : data.getMarkersInDimension(event.getWorld().provider.getDimension())){
