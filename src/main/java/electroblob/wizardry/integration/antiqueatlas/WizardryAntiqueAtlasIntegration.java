@@ -38,7 +38,7 @@ public class WizardryAntiqueAtlasIntegration {
 	 * {@link electroblob.wizardry.Settings#autoTowerMarkers} is enabled. Server side only! */
 	public static void markTower(World world, int x, int z){
 		if(enabled() && Wizardry.settings.autoTowerMarkers){
-			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, TOWER_MARKER.toString().replace(':', '.'), "integration.antiqueatlas.marker." + TOWER_MARKER.toString(), x, z);
+			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, TOWER_MARKER.toString(), "integration.antiqueatlas.marker." + TOWER_MARKER.toString().replace(':', '.'), x, z);
 		}
 	}
 
@@ -46,7 +46,7 @@ public class WizardryAntiqueAtlasIntegration {
 	 * {@link electroblob.wizardry.Settings#autoObeliskMarkers} is enabled. Server side only! */
 	public static void markObelisk(World world, int x, int z){
 		if(enabled() && Wizardry.settings.autoObeliskMarkers){
-			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, OBELISK_MARKER.toString().replace(':', '.'), "integration.antiqueatlas.marker." + OBELISK_MARKER.toString(), x, z);
+			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, OBELISK_MARKER.toString(), "integration.antiqueatlas.marker." + OBELISK_MARKER.toString().replace(':', '.'), x, z);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class WizardryAntiqueAtlasIntegration {
 	 * {@link electroblob.wizardry.Settings#autoShrineMarkers} is enabled. Server side only! */
 	public static void markShrine(World world, int x, int z){
 		if(enabled() && Wizardry.settings.autoShrineMarkers){
-			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, SHRINE_MARKER.toString().replace(':', '.'), "integration.antiqueatlas.marker." + SHRINE_MARKER.toString(), x, z);
+			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, SHRINE_MARKER.toString(), "integration.antiqueatlas.marker." + SHRINE_MARKER.toString().replace(':', '.'), x, z);
 		}
 	}
 
