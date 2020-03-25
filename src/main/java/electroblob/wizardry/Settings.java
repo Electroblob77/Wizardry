@@ -472,13 +472,6 @@ public final class Settings {
 		playerBlockDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "bonemealGrowsCrystalFlowers", true,
-				"Whether using bonemeal on grass blocks has a chance to grow crystal flowers.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".bonemeal_grows_crystal_flowers");
-		Wizardry.proxy.setToNamedBooleanEntry(property);
-		bonemealGrowsCrystalFlowers = property.getBoolean();
-		propOrder.add(property.getName());
-
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,
 				"Whether to allow players to move other players around using magic.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".players_move_each_other");
@@ -521,57 +514,11 @@ public final class Settings {
 		creativeBypassesArcaneLock = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_whitelist");
-		property.setRequiresMcRestart(true);
-		mobLootTableWhitelist = getResourceLocationList(property);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "mobLootTableBlacklist", new String[]{"entities/vex", "entities/ender_dragon", "entities/wither", Wizardry.MODID + ":entities/evil_wizard"}, "Blacklist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually exclude them.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_blacklist");
-		property.setRequiresMcRestart(true);
-		mobLootTableBlacklist = getResourceLocationList(property);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "mobSpawnDimensions", new int[]{0},
-				"List of dimension ids in which wizardry's hostile mobs can spawn.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_dimensions");
-		property.setRequiresMcRestart(true);
-		mobSpawnDimensions = property.getIntList();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "mobSpawnBiomeBlacklist", new String[]{"mushroom_island", "mushroom_island_shore"},
-				"List of names of biomes in which wizardry's hostile mobs cannot spawn. Biome names are not case-sensitive. For mod biomes, prefix with the mod ID (e.g. biomesoplenty:mystic_grove).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_biome_blacklist");
-		property.setRequiresMcRestart(true);
-		mobSpawnBiomeBlacklist = getResourceLocationList(property);
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "evilWizardSpawnRate", 3,
-				"Spawn rate for naturally-spawned evil wizards; higher numbers mean more evil wizards will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable evil wizard spawning entirely.",
-				0, 100);
-		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_spawn_rate");
-		Wizardry.proxy.setToNumberSliderEntry(property);
-		property.setRequiresMcRestart(true);
-		evilWizardSpawnRate = property.getInt();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "iceWraithSpawnRate", 3,
-				"Spawn rate for naturally-spawned ice wraiths; higher numbers mean more ice wraiths will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable ice wraith spawning entirely.",
-				0, 100);
-		property.setLanguageKey("config." + Wizardry.MODID + ".ice_wraith_spawn_rate");
-		Wizardry.proxy.setToNumberSliderEntry(property);
-		property.setRequiresMcRestart(true);
-		iceWraithSpawnRate = property.getInt();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "lightningWraithSpawnRate", 1,
-				"Spawn rate for naturally-spawned lightning wraiths; higher numbers mean more lightning wraiths will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable lightning wraith spawning entirely.",
-				0, 100);
-		property.setLanguageKey("config." + Wizardry.MODID + ".lightning_wraith_spawn_rate");
-		Wizardry.proxy.setToNumberSliderEntry(property);
-		property.setRequiresMcRestart(true);
-		lightningWraithSpawnRate = property.getInt();
+		property = config.get(GAMEPLAY_CATEGORY, "bonemealGrowsCrystalFlowers", true,
+				"Whether using bonemeal on grass blocks has a chance to grow crystal flowers.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".bonemeal_grows_crystal_flowers");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		bonemealGrowsCrystalFlowers = property.getBoolean();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(GAMEPLAY_CATEGORY, propOrder);
@@ -638,6 +585,33 @@ public final class Settings {
 		npcDamageScale = property.getDouble();
 		propOrder.add(property.getName());
 
+		property = config.get(DIFFICULTY_CATEGORY, "evilWizardSpawnRate", 3,
+				"Spawn rate for naturally-spawned evil wizards; higher numbers mean more evil wizards will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable evil wizard spawning entirely.",
+				0, 100);
+		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_spawn_rate");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresMcRestart(true);
+		evilWizardSpawnRate = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "iceWraithSpawnRate", 3,
+				"Spawn rate for naturally-spawned ice wraiths; higher numbers mean more ice wraiths will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable ice wraith spawning entirely.",
+				0, 100);
+		property.setLanguageKey("config." + Wizardry.MODID + ".ice_wraith_spawn_rate");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresMcRestart(true);
+		iceWraithSpawnRate = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "lightningWraithSpawnRate", 1,
+				"Spawn rate for naturally-spawned lightning wraiths; higher numbers mean more lightning wraiths will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable lightning wraith spawning entirely.",
+				0, 100);
+		property.setLanguageKey("config." + Wizardry.MODID + ".lightning_wraith_spawn_rate");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresMcRestart(true);
+		lightningWraithSpawnRate = property.getInt();
+		propOrder.add(property.getName());
+
 		config.setCategoryPropertyOrder(DIFFICULTY_CATEGORY, propOrder);
 
 	}
@@ -662,6 +636,32 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fall_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		replaceVanillaFallDamage = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_whitelist");
+		property.setRequiresMcRestart(true);
+		mobLootTableWhitelist = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobLootTableBlacklist", new String[]{"entities/vex", "entities/ender_dragon", "entities/wither", Wizardry.MODID + ":entities/evil_wizard"}, "Blacklist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually exclude them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_blacklist");
+		property.setRequiresMcRestart(true);
+		mobLootTableBlacklist = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobSpawnDimensions", new int[]{0},
+				"List of dimension ids in which wizardry's hostile mobs can spawn.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_dimensions");
+		property.setRequiresMcRestart(true);
+		mobSpawnDimensions = property.getIntList();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobSpawnBiomeBlacklist", new String[]{"mushroom_island", "mushroom_island_shore"},
+				"List of names of biomes in which wizardry's hostile mobs cannot spawn. Biome names are not case-sensitive. For mod biomes, prefix with the mod ID (e.g. biomesoplenty:mystic_grove).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_biome_blacklist");
+		property.setRequiresMcRestart(true);
+		mobSpawnBiomeBlacklist = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "summonedCreatureTargetsWhitelist", new String[0],
