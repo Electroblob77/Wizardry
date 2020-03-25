@@ -25,10 +25,12 @@ public class GuiConfigWizardry extends GuiConfig {
 
 	private static List<IConfigElement> getConfigEntries(){
 		
-		List<IConfigElement> configList = new ArrayList<IConfigElement>(1);
+		List<IConfigElement> configList = new ArrayList<>(1);
 
 		configList.add(new DummyCategoryElement("gameplayConfig", "config." + Wizardry.MODID + ".category." + Settings.GAMEPLAY_CATEGORY, GameplayCategory.class));
+		configList.add(new DummyCategoryElement("difficultyConfig", "config." + Wizardry.MODID + ".category." + Settings.DIFFICULTY_CATEGORY, DifficultyCategory.class));
 		configList.add(new DummyCategoryElement("worldgenConfig", "config." + Wizardry.MODID + ".category." + Settings.WORLDGEN_CATEGORY, WorldgenCategory.class));
+		configList.add(new DummyCategoryElement("tweaksConfig", "config." + Wizardry.MODID + ".category." + Settings.TWEAKS_CATEGORY, TweaksCategory.class));
 		configList.add(new DummyCategoryElement("commandsConfig", "config." + Wizardry.MODID + ".category." + Settings.COMMANDS_CATEGORY, CommandsCategory.class));
 		configList.add(new DummyCategoryElement("clientConfig", "config." + Wizardry.MODID + ".category." + Settings.CLIENT_CATEGORY, ClientCategory.class));
 		configList.add(new DummyCategoryElement("spellsConfig", "config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY, SpellsCategory.class));
@@ -79,6 +81,16 @@ public class GuiConfigWizardry extends GuiConfig {
 		@Override protected String getCategory() { return Settings.GAMEPLAY_CATEGORY; }
 	}
 
+	/** Difficulty category of the config gui. */
+	public static class DifficultyCategory extends CategoryBase {
+
+		public DifficultyCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
+
+		@Override protected String getCategory() { return Settings.DIFFICULTY_CATEGORY; }
+	}
+
 	/** Worldgen category of the config gui. */
 	public static class WorldgenCategory extends CategoryBase {
 
@@ -87,6 +99,16 @@ public class GuiConfigWizardry extends GuiConfig {
 		}
 
 		@Override protected String getCategory() { return Settings.WORLDGEN_CATEGORY; }
+	}
+
+	/** Tweaks category of the config gui. */
+	public static class TweaksCategory extends CategoryBase {
+
+		public TweaksCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
+
+		@Override protected String getCategory() { return Settings.TWEAKS_CATEGORY; }
 	}
 
 	/** Commands category of the config gui. */
