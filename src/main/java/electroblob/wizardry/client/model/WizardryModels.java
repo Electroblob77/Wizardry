@@ -10,16 +10,20 @@ import electroblob.wizardry.item.ItemCrystal;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -365,6 +369,11 @@ public final class WizardryModels {
 	private static void registerItemModel(Item item, int metadata, String variant){
 		ModelLoader.setCustomModelResourceLocation(item, metadata,
 				new ModelResourceLocation(item.getRegistryName(), variant));
+	}
+
+	@SubscribeEvent
+	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
+		event.getMap().registerSprite(new ResourceLocation(Wizardry.MODID, "blocks/books"));
 	}
 
 }
