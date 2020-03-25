@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "ebwizardry:smart_model/birch_bookshelf#facing=north" },
+		"facing=east":  { "model": "ebwizardry:smart_model/birch_bookshelf#facing=east" },
+		"facing=south": { "model": "ebwizardry:smart_model/birch_bookshelf#facing=south" },
+		"facing=west":  { "model": "ebwizardry:smart_model/birch_bookshelf#facing=west" }
+	}
+}

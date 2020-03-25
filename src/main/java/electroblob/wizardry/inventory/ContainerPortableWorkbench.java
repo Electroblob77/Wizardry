@@ -1,4 +1,4 @@
-package electroblob.wizardry.tileentity;
+package electroblob.wizardry.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

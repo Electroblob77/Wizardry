@@ -21,6 +21,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -68,6 +69,16 @@ public final class WizardryModels {
 				.withName(BlockPlanks.VARIANT).withSuffix("_gilded_wood").build());
 		ItemBlockMultiTextured gildedWoodItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.gilded_wood);
 		registerMultiTexturedModel(gildedWoodItem);
+
+		// Explanation for all this here -> https://github.com/TheGreyGhost/MinecraftByExample/tree/master/src/main/java/minecraftbyexample/mbe05_block_dynamic_block_model2
+		ModelLoaderRegistry.registerLoader(new ModelLoaderBookshelf());
+
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.oak_bookshelf));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.spruce_bookshelf));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.birch_bookshelf));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.jungle_bookshelf));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.acacia_bookshelf));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_bookshelf));
 
 		// Items
 

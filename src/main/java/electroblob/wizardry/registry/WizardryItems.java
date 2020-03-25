@@ -400,6 +400,13 @@ public final class WizardryItems {
 		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone_pedestal, false, elements);
 		registerMultiTexturedItemBlock(registry, WizardryBlocks.gilded_wood, true, woodTypes);
 
+		registerItemBlock(registry, WizardryBlocks.oak_bookshelf);
+		registerItemBlock(registry, WizardryBlocks.spruce_bookshelf);
+		registerItemBlock(registry, WizardryBlocks.birch_bookshelf);
+		registerItemBlock(registry, WizardryBlocks.jungle_bookshelf);
+		registerItemBlock(registry, WizardryBlocks.acacia_bookshelf);
+		registerItemBlock(registry, WizardryBlocks.dark_oak_bookshelf);
+
 		// Items
 
 		registerItem(registry, "magic_crystal", 				new ItemCrystal());

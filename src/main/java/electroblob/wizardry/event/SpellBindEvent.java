@@ -1,6 +1,6 @@
 package electroblob.wizardry.event;
 
-import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;

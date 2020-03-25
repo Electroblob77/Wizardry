@@ -14,7 +14,7 @@ import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.client.Minecraft;

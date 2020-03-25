@@ -1,19 +1,11 @@
 package electroblob.wizardry.tileentity;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
-import electroblob.wizardry.item.IManaStoringItem;
-import electroblob.wizardry.item.IWorkbenchItem;
-import electroblob.wizardry.item.ItemCrystal;
+import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.item.ItemSpellBook;
-import electroblob.wizardry.registry.WizardryBlocks;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.WandHelper;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -22,28 +14,18 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.HashSet;
-import java.util.Set;
+public class TileEntityBookshelf extends TileEntity implements IInventory, ITickable {
 
-public class TileEntityArcaneWorkbench extends TileEntity implements IInventory, ITickable {
-
-	/** The inventory of the arcane workbench. */
+	/** The inventory of the bookshelf. */
 	private NonNullList<ItemStack> inventory;
-	/** Controls the rotating rune and floating wand animations. */
-	public float timer = 0;
 
-	public TileEntityArcaneWorkbench(){
-		inventory = NonNullList.withSize(ContainerArcaneWorkbench.UPGRADE_SLOT + 1, ItemStack.EMPTY);
-	}
-
-	@Override
-	public void onLoad(){
-		timer = 0;
+	public TileEntityBookshelf(){
+		inventory = NonNullList.withSize(BlockBookshelf.SLOT_COUNT, ItemStack.EMPTY);
 	}
 
 	/** Called to manually sync the tile entity with clients. */
@@ -53,20 +35,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public void update(){
-
-		ItemStack stack = this.getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
-
-		// Decrements wand damage (increases mana) every 1.5 seconds if it has a condenser upgrade
-		if(stack.getItem() instanceof IManaStoringItem && !this.world.isRemote && !((IManaStoringItem)stack.getItem()).isManaFull(stack)
-				&& this.world.getTotalWorldTime() % electroblob.wizardry.constants.Constants.CONDENSER_TICK_INTERVAL == 0){
-			// If the upgrade level is 0, this does nothing anyway.
-			((IManaStoringItem)stack.getItem()).rechargeMana(stack, WandHelper.getUpgradeLevel(stack, WizardryItems.condenser_upgrade));
-		}
-
-		// The server doesn't care what these are, and there's no need for them to be synced or saved.
-		if(this.world.isRemote){
-			timer++;
-		}
+		// Nothing here for now
 	}
 
 	@Override
@@ -113,8 +82,12 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack){
-		
+
 		inventory.set(slot, stack);
+		
+		//ItemStack previous = inventory.set(slot, stack);
+
+		//if(previous.isEmpty() != stack.isEmpty()) this.sync();
 		
 		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
 			stack.setCount(getInventoryStackLimit());
@@ -123,12 +96,17 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public String getName(){
-		return "container." + Wizardry.MODID + ":arcane_workbench";
+		return "container." + Wizardry.MODID + ":bookshelf";
 	}
 
 	@Override
 	public boolean hasCustomName(){
 		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName(){
+		return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
 	}
 
 	@Override
@@ -153,27 +131,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public boolean isItemValidForSlot(int slotNumber, ItemStack itemstack){
-
-		if(itemstack == ItemStack.EMPTY) return true;
-
-		if(slotNumber >= 0 && slotNumber < ContainerArcaneWorkbench.CRYSTAL_SLOT){
-			return itemstack.getItem() instanceof ItemSpellBook;
-
-		}else if(slotNumber == ContainerArcaneWorkbench.CRYSTAL_SLOT){
-			return itemstack.getItem() instanceof ItemCrystal;
-
-		}else if(slotNumber == ContainerArcaneWorkbench.CENTRE_SLOT){
-			return itemstack.getItem() instanceof IWorkbenchItem;
-
-		}else if(slotNumber == ContainerArcaneWorkbench.UPGRADE_SLOT){
-			Set<Item> upgrades = new HashSet<>(WandHelper.getSpecialUpgrades());
-			upgrades.add(WizardryItems.arcane_tome);
-			upgrades.add(WizardryItems.armour_upgrade);
-			return upgrades.contains(itemstack.getItem());
-		}
-
-		return true;
-
+		return itemstack.isEmpty() || itemstack.getItem() instanceof ItemSpellBook; // TODO: Add a whitelist
 	}
 
 	@Override
@@ -224,22 +182,6 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
 		readFromNBT(pkt.getNbtCompound());
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public AxisAlignedBB getRenderBoundingBox(){
-		AxisAlignedBB bb = INFINITE_EXTENT_AABB;
-		Block type = getBlockType();
-		if(type == WizardryBlocks.arcane_workbench){
-			bb = new AxisAlignedBB(pos, pos.add(1, 1, 1));
-		}else if(type != null){
-			AxisAlignedBB cbb = this.getWorld().getBlockState(pos).getBoundingBox(world, pos);
-			if(cbb != null){
-				bb = cbb;
-			}
-		}
-		return bb;
 	}
 
 	// What are all these for?

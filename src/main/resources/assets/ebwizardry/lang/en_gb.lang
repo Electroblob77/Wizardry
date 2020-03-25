@@ -1,4 +1,4 @@
-#PARSE_ESCAPES
+# PARSE_ESCAPES
 tile.ebwizardry\:arcane_workbench.name=Arcane Workbench
 tile.ebwizardry\:crystal_ore.name=Crystal Ore
 tile.ebwizardry\:petrified_stone.name=Petrified Stone
@@ -30,8 +30,15 @@ tile.ebwizardry\:oak_gilded_wood.name=Gilded Oak Wood
 tile.ebwizardry\:spruce_gilded_wood.name=Gilded Spruce Wood
 tile.ebwizardry\:birch_gilded_wood.name=Gilded Birch Wood
 tile.ebwizardry\:jungle_gilded_wood.name=Gilded Jungle Wood
-tile.ebwizardry\:dark_oak_gilded_wood.name=Gilded Dark Oak Wood
 tile.ebwizardry\:acacia_gilded_wood.name=Gilded Acacia Wood
+tile.ebwizardry\:dark_oak_gilded_wood.name=Gilded Dark Oak Wood
+
+tile.ebwizardry\:oak_bookshelf.name=Oak Bookshelf
+tile.ebwizardry\:spruce_bookshelf.name=Spruce Bookshelf
+tile.ebwizardry\:birch_bookshelf.name=Birch Bookshelf
+tile.ebwizardry\:jungle_bookshelf.name=Jungle Bookshelf
+tile.ebwizardry\:acacia_bookshelf.name=Acacia Bookshelf
+tile.ebwizardry\:dark_oak_bookshelf.name=Dark Oak Bookshelf
 
 item.ebwizardry\:crystal_magic.name=Magic Crystal
 item.ebwizardry\:crystal_fire.name=Fiery Crystal
@@ -509,6 +516,8 @@ container.ebwizardry\:arcane_workbench=Arcane Workbench
 container.ebwizardry\:arcane_workbench.apply=Apply
 container.ebwizardry\:arcane_workbench.mana=Mana\:
 container.ebwizardry\:arcane_workbench.upgrades=Applied Upgrades\:
+
+container.ebwizardry\:bookshelf=Bookshelf
 
 tier.novice=Novice
 tier.apprentice=Apprentice

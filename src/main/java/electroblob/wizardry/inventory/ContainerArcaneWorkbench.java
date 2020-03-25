@@ -1,4 +1,4 @@
-package electroblob.wizardry.tileentity;
+package electroblob.wizardry.inventory;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.SpellBindEvent;
@@ -6,6 +6,7 @@ import electroblob.wizardry.item.IWorkbenchItem;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -161,6 +162,7 @@ public class ContainerArcaneWorkbench extends Container {
 
 		// FIXME: It only seems to be syncing correctly when a stack is put into the slot, not taken out.
 		// 		  This is because markDirty isn't called in the tileentity, I think.
+		//		  You can simulate this using hoppers!
 		this.tileentity.sync();
 	}
 

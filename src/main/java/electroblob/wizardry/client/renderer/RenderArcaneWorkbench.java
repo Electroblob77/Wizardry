@@ -1,7 +1,7 @@
 package electroblob.wizardry.client.renderer;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;

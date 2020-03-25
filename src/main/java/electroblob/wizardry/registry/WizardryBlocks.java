@@ -58,6 +58,12 @@ public final class WizardryBlocks {
 	public static final Block obsidian_crust = placeholder();
 	public static final Block dry_frosted_ice = placeholder();
 	public static final Block gilded_wood = placeholder();
+	public static final Block oak_bookshelf = placeholder();
+	public static final Block spruce_bookshelf = placeholder();
+	public static final Block birch_bookshelf = placeholder();
+	public static final Block jungle_bookshelf = placeholder();
+	public static final Block acacia_bookshelf = placeholder();
+	public static final Block dark_oak_bookshelf = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given block, then registers it with the given registry. Use
@@ -98,6 +104,12 @@ public final class WizardryBlocks {
 		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
 		registerBlock(registry, "gilded_wood", 			new BlockPlanks().setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "oak_bookshelf", 			new BlockBookshelf());
+		registerBlock(registry, "spruce_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "birch_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "jungle_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "acacia_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "dark_oak_bookshelf", 	new BlockBookshelf());
 
 	}
 
@@ -111,5 +123,6 @@ public final class WizardryBlocks {
 		GameRegistry.registerTileEntity(TileEntityPlayerSave.class, 		new ResourceLocation(Wizardry.MODID, "player_save"));
 		GameRegistry.registerTileEntity(TileEntityPlayerSaveTimed.class, 	new ResourceLocation(Wizardry.MODID, "player_save_timed"));
 		GameRegistry.registerTileEntity(TileEntityShrineCore.class, 		new ResourceLocation(Wizardry.MODID, "shrine_core"));
+		GameRegistry.registerTileEntity(TileEntityBookshelf.class, 			new ResourceLocation(Wizardry.MODID, "bookshelf"));
 	}
 }
