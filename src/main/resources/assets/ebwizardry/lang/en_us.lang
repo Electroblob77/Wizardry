@@ -512,6 +512,13 @@ advancement.ebwizardry\:enchant_scroll.desc=Craft a blank scroll and enchant it 
 
 handbook.toast.title=New Handbook Section Unlocked!
 
+gui.ebwizardry\:spell_book.tier=Tier: %s
+gui.ebwizardry\:spell_book.element=Element: %s
+gui.ebwizardry\:spell_book.element_undiscovered=Element: ?
+gui.ebwizardry\:spell_book.mana_cost=Mana Cost: %s
+gui.ebwizardry\:spell_book.mana_cost_continuous=Mana Cost: %s/second
+gui.ebwizardry\:spell_book.mana_cost_undiscovered=Mana Cost: ?
+
 container.ebwizardry\:arcane_workbench=Arcane Workbench
 container.ebwizardry\:arcane_workbench.apply=Apply
 container.ebwizardry\:arcane_workbench.mana=Mana\:

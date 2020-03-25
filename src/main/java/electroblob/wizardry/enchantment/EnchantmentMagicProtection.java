@@ -68,7 +68,7 @@ public class EnchantmentMagicProtection extends Enchantment {
 
 	public enum Type {
 
-		MAGIC("magic", 1, 5, 8, s -> s instanceof IElementalDamage),
+		MAGIC("magic", 1, 5, 8, s -> s instanceof IElementalDamage || s.isMagicDamage()),
 		FROST("frost", 2, 10, 8, s -> s instanceof IElementalDamage && ((IElementalDamage)s).getType() == MagicDamage.DamageType.FROST),
 		SHOCK("shock", 2, 10, 8, s -> s instanceof IElementalDamage && ((IElementalDamage)s).getType() == MagicDamage.DamageType.SHOCK);
 		// Fire already exists, and the other types aren't used enough to be worth having

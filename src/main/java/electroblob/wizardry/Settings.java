@@ -94,7 +94,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate wizard towers. */
 	public int[] towerDimensions = {0};
 	/** <b>[Server-only]</b> The rarity of wizard towers, used by the world generator. Larger numbers are rarer. */
-	public int towerRarity = 900;
+	public int towerRarity = 700;
 	/** <b>[Server-only]</b> List of structure file locations for wizard towers without loot chests. */
 	public ResourceLocation[] towerFiles = {new ResourceLocation(Wizardry.MODID, "wizard_tower_0"),
 											new ResourceLocation(Wizardry.MODID, "wizard_tower_1"),
@@ -108,7 +108,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate obelisks. */
 	public int[] obeliskDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of obelisks, used by the world generator. Larger numbers are rarer. */
-	public int obeliskRarity = 800;
+	public int obeliskRarity = 600;
 	/** <b>[Server-only]</b> List of structure file locations for obelisks. */
 	public ResourceLocation[] obeliskFiles = {new ResourceLocation(Wizardry.MODID, "obelisk_0"),
 												new ResourceLocation(Wizardry.MODID, "obelisk_1"),
@@ -118,7 +118,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate shrines. */
 	public int[] shrineDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of shrines, used by the world generator. Larger numbers are rarer. */
-	public int shrineRarity = 1500;
+	public int shrineRarity = 1100;
 	/** <b>[Server-only]</b> List of structure file locations for shrines. */
 	public ResourceLocation[] shrineFiles = {new ResourceLocation(Wizardry.MODID, "shrine_0"),
 											new ResourceLocation(Wizardry.MODID, "shrine_1"),
@@ -168,8 +168,6 @@ public final class Settings {
 	public boolean playerBlockDamage = true;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
-	/** <b>[Server-only]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
-	public boolean replaceVanillaFireballs = true;
 	/** <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
 	 * velocity-based one. */
 	public boolean replaceVanillaFallDamage = true;
@@ -272,7 +270,9 @@ public final class Settings {
 	 * effect.
 	 */
 	public boolean slowTimeAffectsPlayers = true;
-	/**  <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
+	/** <b>[Synchronised]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
+	public boolean replaceVanillaFireballs = true;
+	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys

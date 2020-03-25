@@ -1,8 +1,10 @@
 package electroblob.wizardry.misc;
 
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraftforge.oredict.OreDictionary;
@@ -46,12 +48,42 @@ public class WildcardTradeList extends MerchantRecipeList {
     }
 
     private boolean areItemStacksExactlyEqual(ItemStack stack1, ItemStack stack2){
-    	// Added to allow wildcards; this line is the only actual change.
+    	// Added to allow wildcards
     	if((stack1.getItemDamage() == OreDictionary.WILDCARD_VALUE || stack2.getItemDamage() == OreDictionary.WILDCARD_VALUE)
     			// Can't use ItemStack.areItemsEqualIgnoreDurability because that only works for items with durability, not subtypes.
     			&& stack1.getItem() == stack2.getItem()) return true;
     	
         return ItemStack.areItemsEqual(stack1, stack2) && (!stack2.hasTagCompound() || stack1.hasTagCompound() && NBTUtil.areNBTEquals(stack2.getTagCompound(), stack1.getTagCompound(), false));
     }
+
+	@Override
+	public void writeToBuf(PacketBuffer buffer){
+
+		buffer.writeByte((byte)(this.size() & 255));
+
+		// Trick the client into thinking this is a normal item
+		for(MerchantRecipe merchantrecipe : this){
+
+			ItemStack itemToBuy = merchantrecipe.getItemToBuy();
+			if(itemToBuy.getMetadata() == OreDictionary.WILDCARD_VALUE) itemToBuy = WizardryUtilities.copyWithMeta(itemToBuy, 0);
+			buffer.writeItemStack(itemToBuy);
+
+			ItemStack itemToSell = merchantrecipe.getItemToSell();
+			if(itemToSell.getMetadata() == OreDictionary.WILDCARD_VALUE) itemToSell = WizardryUtilities.copyWithMeta(itemToSell, 0);
+			buffer.writeItemStack(itemToSell);
+
+			ItemStack secondItemToBuy = merchantrecipe.getSecondItemToBuy();
+			buffer.writeBoolean(!secondItemToBuy.isEmpty());
+
+			if(!secondItemToBuy.isEmpty()){
+				if(secondItemToBuy.getMetadata() == OreDictionary.WILDCARD_VALUE) secondItemToBuy = WizardryUtilities.copyWithMeta(secondItemToBuy, 0);
+				buffer.writeItemStack(secondItemToBuy);
+			}
+
+			buffer.writeBoolean(merchantrecipe.isRecipeDisabled());
+			buffer.writeInt(merchantrecipe.getToolUses());
+			buffer.writeInt(merchantrecipe.getMaxTradeUses());
+		}
+	}
 	
 }

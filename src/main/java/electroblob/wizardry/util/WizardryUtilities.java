@@ -24,6 +24,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
@@ -793,6 +794,20 @@ public final class WizardryUtilities {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns a new {@link ItemStack} that is identical to the supplied one, except with the metadata changed to the
+	 * new value given.
+	 * @param toCopy The stack to copy
+	 * @param newMetadata The new metadata value
+	 * @return The resulting {@link ItemStack}
+	 */
+	public static ItemStack copyWithMeta(ItemStack toCopy, int newMetadata){
+		ItemStack copy = new ItemStack(toCopy.getItem(), toCopy.getCount(), newMetadata);
+		NBTTagCompound compound = toCopy.getTagCompound();
+		if(compound != null) copy.setTagCompound(compound.copy());
+		return copy;
 	}
 
 	/**

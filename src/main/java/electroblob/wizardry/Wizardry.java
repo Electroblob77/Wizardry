@@ -46,7 +46,7 @@ import java.util.Calendar;
  */
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, acceptedMinecraftVersions = "[1.12.2]",
-		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,)")
+		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,);after:antiqueatlas@[4.6,)")
 
 public class Wizardry {
 
@@ -64,7 +64,7 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "4.2.9";
+	public static final String VERSION = "4.2.10";
 
 	// IDEA: Triggering of inbuilt Forge events in relevant places?
 	// IDEA: Abstract the vanilla particles behind the particle builder
