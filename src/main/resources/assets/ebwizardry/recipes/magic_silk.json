@@ -7,41 +7,42 @@
     ],
     "key": {
         "x": {
-            "item": "minecraft:string"
+            "type": "forge:ore_dict",
+            "ore": "string"
         },
         "y": [
             {
-				"item": "ebwizardry:magic_crystal",
-				"data": 0
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 1
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 2
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 3
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 4
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 5
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 6
-			},
-			{
-				"item": "ebwizardry:magic_crystal",
-				"data": 7
-			}
+                "item": "ebwizardry:magic_crystal",
+                "data": 0
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 1
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 2
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 3
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 4
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 5
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 6
+            },
+            {
+                "item": "ebwizardry:magic_crystal",
+                "data": 7
+            }
         ]
     },
     "result": {
