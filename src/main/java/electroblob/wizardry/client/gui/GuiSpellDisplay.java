@@ -97,6 +97,9 @@ public class GuiSpellDisplay {
 	// using any of them, so this class may as well not bother and just be a static event handler. Neat!
 	@SubscribeEvent
 	public static void draw(RenderGameOverlayEvent.Post event){
+
+		if(event.getType() != RenderGameOverlayEvent.ElementType.TEXT
+				&& event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
 		
 		Minecraft mc = Minecraft.getMinecraft();
 
