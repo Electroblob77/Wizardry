@@ -17,7 +17,7 @@
   "chargeup": 0,
   "cooldown": 30,
   "base_properties": {
-    "hunger_points": 3,
+    "hunger_points": 6,
     "saturation_modifier": 0.1
   }
 }
