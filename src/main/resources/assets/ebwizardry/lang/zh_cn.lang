@@ -348,8 +348,8 @@ item.charge_status.mostly_empty=大部分亏空
 item.charge_status.almost_empty=几乎全空
 item.charge_status.empty=全空
 
-entity.ebwizardry\:summonedcreature.nameplate=%1$s's %2$s
-entity.ebwizardry\:summonedcreature.nameplate_fallback=Someone's %1$s
+entity.ebwizardry\:summonedcreature.nameplate=%1$s 的 %2$s
+entity.ebwizardry\:summonedcreature.nameplate_fallback=某人的 %1$s
 
 entity.ebwizardry\:wizard.greeting_0=早上好，流浪者。
 entity.ebwizardry\:wizard.greeting_1=你好，旅行者。什么风把你吹来的？
