@@ -31,6 +31,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		Wizardry.settings.discoveryMode = message.settings.discoveryMode;
 		Wizardry.settings.creativeBypassesArcaneLock = message.settings.creativeBypassesArcaneLock;
 		Wizardry.settings.slowTimeAffectsPlayers = message.settings.slowTimeAffectsPlayers;
+		Wizardry.settings.replaceVanillaFireballs = message.settings.replaceVanillaFireballs;
 		Wizardry.settings.forfeitChance = message.settings.forfeitChance;
 	}
 
