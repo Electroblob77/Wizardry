@@ -553,6 +553,12 @@ public class ClientProxy extends CommonProxy {
 		data.randomDescriptions = new HashMap<>();
 
 		for(Spell spell : Spell.getAllSpells()){
+
+			if(spell.networkID() > message.names.size()){
+				Wizardry.logger.warn("Received no glyph data for spell {}, skipping", spell.getRegistryName());
+				continue;
+			}
+
 			// -1 because the none spell isn't included
 			// This is a case where we must use the network ID, not the metadata
 			data.randomNames.put(spell, message.names.get(spell.networkID() - 1));
