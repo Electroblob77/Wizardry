@@ -13,6 +13,8 @@ import electroblob.wizardry.registry.WizardryRecipes;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentMending;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -194,7 +196,13 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	public boolean getIsRepairable(ItemStack stack, ItemStack material){
 		return false;
 	}
-	
+
+	// This is misleadingly-named, it also applies to enchanting with books at an anvil
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment){
+		return !(enchantment instanceof EnchantmentMending) && super.canApplyAtEnchantingTable(stack, enchantment);
+	}
+
 	/**
 	 * Properly handles the defence value of the armour. This method is responsible for the tooltip on top of
 	 * the armour value. It is also what handles armour toughness.
