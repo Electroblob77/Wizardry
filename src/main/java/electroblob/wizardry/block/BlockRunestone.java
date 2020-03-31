@@ -69,7 +69,9 @@ public class BlockRunestone extends Block {
 
 	@Override
     public IBlockState getStateFromMeta(int metadata){
-        return this.getDefaultState().withProperty(ELEMENT, Element.values()[metadata]);
+		Element element = Element.values()[metadata];
+		if(!ELEMENT.getAllowedValues().contains(element)) return this.getDefaultState();
+        return this.getDefaultState().withProperty(ELEMENT, element);
     }
 
     @Override
