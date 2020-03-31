@@ -117,6 +117,11 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public static final String SPLASH_EFFECT_DURATION = "splash_effect_duration";
 	public static final String SPLASH_EFFECT_STRENGTH = "splash_effect_strength";
 
+	// TODO: Translations for these?
+	public static final String TIER_MATCH_PREFIX = "tier=";
+	public static final String ELEMENT_MATCH_PREFIX = "element=";
+	public static final String TYPE_MATCH_PREFIX = "type=";
+
 	/** Forge registry-based replacement for the internal spells list. */
 	public static IForgeRegistry<Spell> registry;
 
@@ -673,6 +678,30 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	@SideOnly(Side.CLIENT)
 	public String getDescription(){
 		return net.minecraft.client.resources.I18n.format(getDescriptionTranslationKey());
+	}
+
+	/**
+	 * Returns whether this spell matches the given string. <b>Client-side only!</b> A spell matches a particular string
+	 * if any of the following conditions are true:<p></p>
+	 * - The spell's localised name contains the given string<br>
+	 * - The string starts with "tier:", and the localised name of the spell's tier contains the given string<br>
+	 * - The string starts with "element:", and the localised name of the spell's element contains the given string<br>
+	 * - The string starts with "type:", and the localised name of the spell's type contains the given string<p></p>
+	 * <i>Matches are not case-sensitive.</i>
+	 * @param text The string to tested
+	 * @return True if this spell matches the given string, false otherwise.
+	 */
+	public boolean matches(@Nonnull String text){
+
+		if(text.startsWith(TIER_MATCH_PREFIX)){
+			return getTier().getDisplayName().toLowerCase(Locale.ROOT).contains(text.substring(TIER_MATCH_PREFIX.length()));
+		}else if(text.startsWith(ELEMENT_MATCH_PREFIX)){
+			return getElement().getDisplayName().toLowerCase(Locale.ROOT).contains(text.substring(ELEMENT_MATCH_PREFIX.length()));
+		}else if(text.startsWith(TYPE_MATCH_PREFIX)){
+			return getType().getDisplayName().toLowerCase(Locale.ROOT).contains(text.substring(TYPE_MATCH_PREFIX.length()));
+		}else{
+			return getDisplayName().toLowerCase(Locale.ROOT).contains(text);
+		}
 	}
 
 	// ============================================ Sound methods ==============================================

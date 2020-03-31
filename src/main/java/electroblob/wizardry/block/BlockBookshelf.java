@@ -51,16 +51,6 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 	}
 
 	@Override
-	public boolean isOpaqueCube(IBlockState state){
-		return false;
-	}
-
-	@Override
-	public boolean isFullCube(IBlockState state){
-		return false;
-	}
-
-	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face){
 		return state.getValue(FACING).getAxis() == face.getAxis() ? BlockFaceShape.UNDEFINED : BlockFaceShape.SOLID;
 	}

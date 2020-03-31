@@ -6,6 +6,8 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
+import electroblob.wizardry.inventory.SlotBookList;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.IWorkbenchItem;
@@ -14,23 +16,25 @@ import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -38,6 +42,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import java.io.IOException;
+import java.util.Locale;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class GuiArcaneWorkbench extends GuiContainer {
@@ -46,11 +54,14 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	public static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID,
 			"textures/gui/arcane_workbench.png");
 
-	private IInventory playerInventory;
+	private InventoryPlayer playerInventory;
 	private IInventory arcaneWorkbenchInventory;
+	private ContainerArcaneWorkbench arcaneWorkbenchContainer;
 
-	private static final int TOOLTIP_WIDTH = 164;
+	private static final int TOOLTIP_WIDTH = 144;
 	private static final int TOOLTIP_TEXT_INSET = 6;
+
+	private static final int BOOKSHELF_UI_WIDTH = 122;
 
 	/** We report the actual size of the GUI to Minecraft when a wand is in so JEI doesn't overdraw it.
 	 * For calculations, we use the size without the tooltip, which is stored in this constant. */
@@ -61,23 +72,67 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	private static final int RUNE_WIDTH = 100;
 	private static final int RUNE_HEIGHT = 100;
 
+	private static final int SCROLL_BAR_LEFT = 102;
+	private static final int SCROLL_BAR_TOP = 34;
+	private static final int SCROLL_BAR_WIDTH = 12;
+	private static final int SCROLL_BAR_HEIGHT = 178;
+	private static final int SCROLL_HANDLE_HEIGHT = 15;
+
 	private static final int PROGRESSION_BAR_WIDTH = 152;
 	private static final int PROGRESSION_BAR_HEIGHT = 3;
 
 	private static final int HALO_DIAMETER = 156;
 
 	private static final int TEXTURE_WIDTH = 512;
-	private static final int TEXTURE_HEIGHT = 256;
+	private static final int TEXTURE_HEIGHT = 512;
 
 	private int animationTimer = 0;
 	private static final int ANIMATION_DURATION = 20;
 
+	private GuiTextField searchField;
+	private boolean searchNeedsClearing;
+
+	private float scroll = 0;
+	private boolean scrolling = false;
+
 	public GuiArcaneWorkbench(InventoryPlayer invPlayer, TileEntityArcaneWorkbench entity){
 		super(new ContainerArcaneWorkbench(invPlayer, entity));
+		this.arcaneWorkbenchContainer = (ContainerArcaneWorkbench)inventorySlots;
 		this.playerInventory = invPlayer;
 		this.arcaneWorkbenchInventory = entity;
 		xSize = MAIN_GUI_WIDTH;
 		ySize = 220;
+	}
+
+	@Override
+	public void initGui(){
+
+		this.mc.player.openContainer = this.inventorySlots;
+		this.guiLeft = (this.width - this.xSize) / 2;
+		this.guiTop = (this.height - this.ySize) / 2;
+
+		Keyboard.enableRepeatEvents(true);
+
+		this.buttonList.clear();
+		this.buttonList.add(this.applyBtn = new GuiButtonApply(0, this.width / 2 + 64, this.height / 2 + 3));
+		this.buttonList.add(new GuiButtonSort(1, this.guiLeft - 44, this.guiTop + 8, ContainerArcaneWorkbench.SortType.TIER));
+		this.buttonList.add(new GuiButtonSort(2, this.guiLeft - 31, this.guiTop + 8, ContainerArcaneWorkbench.SortType.ELEMENT));
+		this.buttonList.add(new GuiButtonSort(3, this.guiLeft - 18, this.guiTop + 8, ContainerArcaneWorkbench.SortType.ALPHABETICAL));
+
+		this.searchField = new GuiTextField(0, this.fontRenderer, this.guiLeft - 113, this.guiTop + 22, 104, this.fontRenderer.FONT_HEIGHT);
+		this.searchField.setMaxStringLength(50);
+		this.searchField.setEnableBackgroundDrawing(false);
+		this.searchField.setVisible(true);
+		this.searchField.setTextColor(16777215);
+		this.searchField.setCanLoseFocus(false);
+		this.searchField.setFocused(true);
+
+	}
+
+	@Override
+	public void onGuiClosed(){
+		super.onGuiClosed();
+		Keyboard.enableRepeatEvents(false);
 	}
 
 	// Huh, didn't realise this method existed. Pretty neat.
@@ -93,18 +148,33 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		GlStateManager.color(1, 1, 1, 1); // Just in case
 
+		boolean mouseHeld = Mouse.isButtonDown(0);
+
+		if(!scrolling && mouseHeld && getMaxScrollRows() > 0 && isPointInRegion(SCROLL_BAR_LEFT - BOOKSHELF_UI_WIDTH,
+				SCROLL_BAR_TOP, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT, mouseX, mouseY)){
+			scrolling = true;
+		}
+
+		if(!mouseHeld || getMaxScrollRows() == 0) scrolling = false;
+
+		if(scrolling){
+			scroll = MathHelper.clamp((float)(mouseY - SCROLL_BAR_TOP - SCROLL_HANDLE_HEIGHT/2 - guiTop)
+					/(SCROLL_BAR_HEIGHT - SCROLL_HANDLE_HEIGHT), 0, 1);
+			arcaneWorkbenchContainer.scrollTo((int)(getMaxScrollRows() * scroll + 0.5f));
+		}
+
 		Slot slot = this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
 		// Tests if there is a wand in the workbench and edits the positioning accordingly
 		if(slot.getHasStack() && slot.getStack().getItem() instanceof IWorkbenchItem
 				&& ((IWorkbenchItem)slot.getStack().getItem()).showTooltip(slot.getStack())){
 			xSize = MAIN_GUI_WIDTH + TOOLTIP_WIDTH;
-			guiLeft = (this.width - this.xSize) / 2;
-			this.applyBtn.x = (this.width - TOOLTIP_WIDTH) / 2 + 64;
+//			guiLeft = (this.width - this.xSize) / 2;
+//			this.applyBtn.x = (this.width - TOOLTIP_WIDTH) / 2 + 64;
 		}else{
 			xSize = MAIN_GUI_WIDTH;
-			guiLeft = (this.width - this.xSize) / 2;
-			this.applyBtn.x = this.width / 2 + 64;
+//			guiLeft = (this.width - this.xSize) / 2;
+//			this.applyBtn.x = this.width / 2 + 64;
 		}
 
 		this.applyBtn.enabled = slot.getHasStack();
@@ -218,6 +288,15 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			}
 		}
 
+		// Bookshelf interface
+		DrawingUtils.drawTexturedRect(guiLeft - BOOKSHELF_UI_WIDTH, guiTop, 0, 256, BOOKSHELF_UI_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+		// Scroll bar
+		DrawingUtils.drawTexturedRect(guiLeft - BOOKSHELF_UI_WIDTH + SCROLL_BAR_LEFT,
+				guiTop + SCROLL_BAR_TOP + (int)(scroll * (SCROLL_BAR_HEIGHT - SCROLL_HANDLE_HEIGHT) + 0.5f),
+				getMaxScrollRows() > 0 ? 30 : 30 + SCROLL_BAR_WIDTH, 476,
+				SCROLL_BAR_WIDTH, SCROLL_HANDLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
 		// Tooltip only drawn if there is a wand
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack()){
 
@@ -302,10 +381,15 @@ public class GuiArcaneWorkbench extends GuiContainer {
 								null);
 						x += 18;
 						GlStateManager.disableDepth();
+						GlStateManager.disableLighting(); // Whyyyyyy?
 					}
 				}
 			}
 		}
+
+		this.searchField.drawTextBox(); // Easier to do this last, then we don't need to re-bind the GUI texture twice
+
+		GlStateManager.color(1, 1, 1, 1);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
@@ -324,6 +408,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						: I18n.format(this.arcaneWorkbenchInventory.getName()), 8, 6, 4210752);
 		this.fontRenderer.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName()
 				: I18n.format(this.playerInventory.getName()), 8, this.ySize - 96 + 2, 4210752);
+		this.fontRenderer.drawString(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.bookshelves"), 8 - BOOKSHELF_UI_WIDTH, 6, 4210752);
 
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack()){
 
@@ -421,28 +506,18 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				}
 			}
 		}
+
+		this.buttonList.forEach(b -> b.drawButtonForegroundLayer(mouseX, mouseY));
 	}
 
-	@Override
-	public void initGui(){
-		this.mc.player.openContainer = this.inventorySlots;
-		this.guiLeft = (this.width - this.xSize) / 2;
-		this.guiTop = (this.height - this.ySize) / 2;
-		Keyboard.enableRepeatEvents(true);
-		this.buttonList.clear();
-		this.buttonList.add(this.applyBtn = new GuiButtonApply(0, this.width / 2 + 64, this.height / 2 + 3));
-	}
-
-	@Override
-	public void onGuiClosed(){
-		super.onGuiClosed();
-		Keyboard.enableRepeatEvents(false);
-	}
+	// Controls
 
 	@Override
 	protected void actionPerformed(GuiButton button){
+
 		if(button.enabled){
-			if(button.id == 0){
+
+			if(button == applyBtn){
 				// Packet building
 				IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.APPLY_BUTTON);
 				WizardryPacketHandler.net.sendToServer(msg);
@@ -452,10 +527,106 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				// Animation
 				animationTimer = 20;
 			}
+
+			if(button instanceof GuiButtonSort) this.arcaneWorkbenchContainer.setSortType(((GuiButtonSort)button).sortType);
 		}
 	}
 
-	private class GuiButtonApply extends GuiButton {
+	private int getMaxScrollRows(){
+		return Math.max(0, MathHelper.ceil((float)arcaneWorkbenchContainer.getActiveBookshelfSlots().size()
+				/ ContainerArcaneWorkbench.BOOKSHELF_SLOTS_X) - ContainerArcaneWorkbench.BOOKSHELF_SLOTS_Y);
+	}
+
+	@Override
+	public void handleMouseInput() throws IOException{
+
+		super.handleMouseInput();
+		int scrollDist = -Mouse.getEventDWheel();
+
+		if(scrollDist != 0 && getMaxScrollRows() > 0){
+
+			if(scrollDist > 0) this.scroll += 1f / getMaxScrollRows();
+			if(scrollDist < 0) this.scroll -= 1f / getMaxScrollRows();
+
+			scroll = MathHelper.clamp(scroll, 0, 1);
+
+			arcaneWorkbenchContainer.scrollTo((int)(scroll * getMaxScrollRows() + 0.5f));
+		}
+	}
+
+	@Override
+	protected void handleMouseClick(Slot slot, int slotId, int mouseButton, ClickType type){
+
+		searchNeedsClearing = true;
+
+		// Click type behaves weirdly, don't use it! Query the item stack held by the cursor instead
+		if(slot instanceof SlotBookList && ((SlotBookList)slot).hasDelegate() && playerInventory.getItemStack().isEmpty()){
+			// If no item is currently being moved, divert book list slots to send the virtual slot through instead
+			// See explanation in ContainerArcaneWorkbench
+			Slot virtualSlot = ((SlotBookList)slot).getDelegate();
+			super.handleMouseClick(virtualSlot, virtualSlot.slotNumber, mouseButton, type);
+		}else{
+			super.handleMouseClick(slot, slotId, mouseButton, type);
+		}
+		
+		arcaneWorkbenchContainer.updateActiveBookshelfSlots();
+	}
+
+	@Override
+	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+
+		if(this.searchNeedsClearing){
+			this.searchNeedsClearing = false;
+			this.searchField.setText("");
+		}
+
+		if(this.searchField.textboxKeyTyped(typedChar, keyCode)){
+			arcaneWorkbenchContainer.setSearchText(searchField.getText().toLowerCase(Locale.ROOT));
+		}else{
+			super.keyTyped(typedChar, keyCode);
+		}
+	}
+
+	// Nested classes
+
+	private class GuiButtonSort extends GuiButton {
+
+		private final ContainerArcaneWorkbench.SortType sortType;
+
+		public GuiButtonSort(int id, int x, int y, ContainerArcaneWorkbench.SortType sortType){
+			super(id, x, y, 10, 10, I18n.format("container." + Wizardry.MODID + ":arcane_workbench.sort_" + sortType.name));
+			this.sortType = sortType;
+		}
+
+		@Override
+		public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
+
+			if(this.visible){
+
+				// Whether the button is highlighted
+				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+
+				int k = 0;
+				int l = 476 + this.sortType.ordinal() * this.height;
+
+				if(sortType == GuiArcaneWorkbench.this.arcaneWorkbenchContainer.getSortType()){
+					k += this.width;
+					if(GuiArcaneWorkbench.this.arcaneWorkbenchContainer.isSortDescending()) k += this.width;
+				}
+
+				DrawingUtils.drawTexturedRect(this.x, this.y, k, l, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+			}
+		}
+
+		@Override
+		public void drawButtonForegroundLayer(int mouseX, int mouseY){
+			if(hovered) drawHoveringText(this.displayString, mouseX - guiLeft, mouseY - guiTop);
+		}
+
+	}
+
+	private static class GuiButtonApply extends GuiButton {
 
 		public GuiButtonApply(int id, int x, int y){
 			super(id, x, y, 16, 16, I18n.format("container." + Wizardry.MODID + ":arcane_workbench.apply"));
@@ -481,7 +652,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				//colour = 10526880;
 			}
 
-			DrawingUtils.drawTexturedRect(this.x, this.y, k, l, this.width, this.height, 512, 256);
+			DrawingUtils.drawTexturedRect(this.x, this.y, k, l, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 			//this.drawCenteredString(minecraft.fontRenderer, this.displayString, this.x + this.width / 2,
 			//		this.y + (this.height - 8) / 2, colour);
 		}

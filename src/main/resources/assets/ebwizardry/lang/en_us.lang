@@ -524,6 +524,11 @@ container.ebwizardry\:arcane_workbench.apply=Apply
 container.ebwizardry\:arcane_workbench.mana=Mana\:
 container.ebwizardry\:arcane_workbench.upgrades=Applied Upgrades\:
 
+container.ebwizardry\:arcane_workbench.bookshelves=Bookshelves
+container.ebwizardry\:arcane_workbench.sort_tier=Sort by Tier
+container.ebwizardry\:arcane_workbench.sort_element=Sort by Element
+container.ebwizardry\:arcane_workbench.sort_alphabetical=Sort Alphabetically
+
 container.ebwizardry\:bookshelf=Bookshelf
 
 tier.novice=Novice
