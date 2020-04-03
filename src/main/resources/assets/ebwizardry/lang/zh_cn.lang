@@ -91,7 +91,7 @@ item.ebwizardry\:master_lightning_wand.name=『宗师』雷霆万钧之杖
 item.ebwizardry\:master_necromancy_wand.name=『宗师』冥境唤灵之杖
 item.ebwizardry\:master_earth_wand.name=『宗师』万物吹息之杖
 item.ebwizardry\:master_sorcery_wand.name=『宗师』扭曲现实之杖
-item.ebwizardry\:master_healing_wand.name=『宗师』救世重生之杖
+item.ebwizardry\:master_healing_wand.name=『宗师』圣境守护之杖
 
 item.ebwizardry\:spectral_sword.name=幽冥剑
 item.ebwizardry\:spectral_pickaxe.name=幽冥镐
@@ -888,7 +888,7 @@ spell.ebwizardry\:wither.desc=发射一股暗黑射线，任何与其接触的�
 spell.ebwizardry\:wither_skull.desc=在你指向的方向发射一个凋灵头颅。
 
 spell.ebwizardry\:invoke_weather.sun=雨停了......
-spell.ebwizardry\:invoke_weather.rain=天上的窗户敞开了......
+spell.ebwizardry\:invoke_weather.rain=倾盆大雨......
 spell.ebwizardry\:transportation.missing=你记录的传送石圈已遗失或是被阻挡......
 spell.ebwizardry\:transportation.undefined=你必须先记录一个传送石圈的位置！
 spell.ebwizardry\:transportation.wrongdimension=这个维度没有被记录的传送点......
