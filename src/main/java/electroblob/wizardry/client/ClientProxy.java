@@ -79,6 +79,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import org.lwjgl.input.Keyboard;
 
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.List;
@@ -208,7 +209,7 @@ public class ClientProxy extends CommonProxy {
 	// ===============================================================================================================
 
 	@Override
-	public boolean shouldDisplayDiscovered(Spell spell, ItemStack stack){
+	public boolean shouldDisplayDiscovered(Spell spell, @Nullable ItemStack stack){
 
 		EntityPlayerSP player = Minecraft.getMinecraft().player;
 

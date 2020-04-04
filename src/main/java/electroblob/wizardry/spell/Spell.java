@@ -118,9 +118,15 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public static final String SPLASH_EFFECT_STRENGTH = "splash_effect_strength";
 
 	// TODO: Translations for these?
-	public static final String TIER_MATCH_PREFIX = "tier=";
-	public static final String ELEMENT_MATCH_PREFIX = "element=";
-	public static final String TYPE_MATCH_PREFIX = "type=";
+	public static final String TIER_MATCH_PREFIX = "tier";
+	public static final String ELEMENT_MATCH_PREFIX = "element";
+	public static final String TYPE_MATCH_PREFIX = "type";
+	public static final String DISCOVERED_MATCH_PREFIX = "discovered";
+	public static final String MODID_MATCH_PREFIX = "modid";
+
+	public static final String MATCH_CONDITION_SEPARATOR = ";";
+	public static final String MATCH_KEY_VALUE_SEPARATOR = "=";
+	public static final String MATCH_VALUE_SEPARATOR = ",";
 
 	/** Forge registry-based replacement for the internal spells list. */
 	public static IForgeRegistry<Spell> registry;
@@ -682,26 +688,68 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/**
 	 * Returns whether this spell matches the given string. <b>Client-side only!</b> A spell matches a particular string
-	 * if any of the following conditions are true:<p></p>
+	 * if any of the following conditions are true:
+	 * <p></p>
 	 * - The spell's localised name contains the given string<br>
 	 * - The string starts with "tier:", and the localised name of the spell's tier contains the given string<br>
 	 * - The string starts with "element:", and the localised name of the spell's element contains the given string<br>
-	 * - The string starts with "type:", and the localised name of the spell's type contains the given string<p></p>
+	 * - The string starts with "type:", and the localised name of the spell's type contains the given string
+	 * <p></p>
 	 * <i>Matches are not case-sensitive.</i>
 	 * @param text The string to tested
 	 * @return True if this spell matches the given string, false otherwise.
 	 */
 	public boolean matches(@Nonnull String text){
 
-		if(text.startsWith(TIER_MATCH_PREFIX)){
-			return getTier().getDisplayName().toLowerCase(Locale.ROOT).contains(text.substring(TIER_MATCH_PREFIX.length()));
-		}else if(text.startsWith(ELEMENT_MATCH_PREFIX)){
-			return getElement().getDisplayName().toLowerCase(Locale.ROOT).contains(text.substring(ELEMENT_MATCH_PREFIX.length()));
-		}else if(text.startsWith(TYPE_MATCH_PREFIX)){
-			return getType().getDisplayName().toLowerCase(Locale.ROOT).contains(text.substring(TYPE_MATCH_PREFIX.length()));
-		}else{
-			return getDisplayName().toLowerCase(Locale.ROOT).contains(text);
+		if(text.isEmpty()) return true;
+
+		boolean discovered = Wizardry.proxy.shouldDisplayDiscovered(this, null);
+
+		String[] conditions = text.split(MATCH_CONDITION_SEPARATOR);
+
+		for(String condition : conditions){
+
+			String[] args = condition.split(MATCH_KEY_VALUE_SEPARATOR, 2);
+
+			// Invalid condition, treat the whole lot as a spell name instead
+			if(args.length < 2) return discovered && getDisplayName().toLowerCase(Locale.ROOT).contains(text);
+
+			String key = args[0];
+			String[] values = args[1].split(MATCH_VALUE_SEPARATOR);
+
+			String target;
+
+			switch(key){
+				case TIER_MATCH_PREFIX:
+					// Tier IS known for undiscovered spells so we can match it
+					target = getTier().getDisplayName().toLowerCase(Locale.ROOT);
+					break;
+				case ELEMENT_MATCH_PREFIX:
+					if(!discovered) return false; // Element is unknown so doesn't match
+					target = getElement().getDisplayName().toLowerCase(Locale.ROOT);
+					break;
+				case TYPE_MATCH_PREFIX:
+					if(!discovered) return false; // Type is unknown so doesn't match
+					target = getType().getDisplayName().toLowerCase(Locale.ROOT);
+					break;
+				case MODID_MATCH_PREFIX:
+					if(!discovered) return false; // Mod ID is unknown so doesn't match
+					target = getRegistryName().getNamespace().toLowerCase(Locale.ROOT);
+					break;
+				case DISCOVERED_MATCH_PREFIX:
+					target = Boolean.toString(discovered);
+					break;
+				default:
+					// Invalid condition, treat the whole lot as a spell name instead
+					return discovered && getDisplayName().toLowerCase(Locale.ROOT).contains(text);
+			}
+
+			if(Arrays.stream(values).noneMatch(target::contains)) return false; // Didn't match
+
 		}
+
+		return true; // Matched all the conditions, yay!
+
 	}
 
 	// ============================================ Sound methods ==============================================

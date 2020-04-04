@@ -19,6 +19,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Property;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public class CommonProxy {
 	// SECTION Items
 	// ===============================================================================================================
 
-	public boolean shouldDisplayDiscovered(Spell spell, ItemStack stack){
+	public boolean shouldDisplayDiscovered(Spell spell, @Nullable ItemStack stack){
 		return false;
 	}
 

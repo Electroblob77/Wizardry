@@ -288,7 +288,6 @@ public class ContainerArcaneWorkbench extends Container {
 	 * or null if no slots are appropriate. Note that this does mean the stack <i>will</i> fit, only that it is valid
 	 * for all of the slots in the given range, and will fit if there is space for it.
 	 * @param stack The stack to find a slot for
-	 * @param excludeBookshelves Whether to exclude the bookshelf slots (useful when transferring from them)
 	 * @return A 2-element int array of the minimum and maximum slot IDs respectively
 	 */
 	@Nullable
