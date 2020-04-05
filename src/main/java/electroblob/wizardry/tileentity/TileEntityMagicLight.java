@@ -2,6 +2,8 @@ package electroblob.wizardry.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+// TODO: Remove this class entirely, it really doesn't need to be a tile entity
+@Deprecated
 public class TileEntityMagicLight extends TileEntityTimer {
 
 	public int[] randomiser;
