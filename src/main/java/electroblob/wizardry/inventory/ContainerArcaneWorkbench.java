@@ -9,6 +9,7 @@ import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
+import electroblob.wizardry.util.ISpellSortable;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,9 +19,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
  * for consistency, just in case). The bookshelf slot delegates to a virtual slot on the client side (which is where
  * the search and sorting is done), and <i>then</i> the click is sent to the server.
  */
-public class ContainerArcaneWorkbench extends Container {
+public class ContainerArcaneWorkbench extends Container implements ISpellSortable {
 
 	/** The arcane workbench tile entity associated with this container. */
 	public TileEntityArcaneWorkbench tileentity;
@@ -70,7 +69,7 @@ public class ContainerArcaneWorkbench extends Container {
 	private List<VirtualSlot> activeBookshelfSlots = new ArrayList<>();
 
 	private int scroll = 0;
-	private SortType sortType = SortType.TIER;
+	private ISpellSortable.SortType sortType = ISpellSortable.SortType.TIER;
 	private boolean sortDescending = false;
 	private String searchText = "";
 
@@ -369,7 +368,7 @@ public class ContainerArcaneWorkbench extends Container {
 	}
 
 	/** Sets the sorting type to the given type, or toggles the sort direction if it is already that type. */
-	public void setSortType(SortType sortType){
+	public void setSortType(ISpellSortable.SortType sortType){
 
 		if(this.sortType == sortType){
 			this.sortDescending = !this.sortDescending;
@@ -381,12 +380,12 @@ public class ContainerArcaneWorkbench extends Container {
 		updateActiveBookshelfSlots();
 	}
 
-	/** Returns the current sorting type. */
-	public SortType getSortType(){
+	@Override
+	public ISpellSortable.SortType getSortType(){
 		return sortType;
 	}
 
-	/** Returns true if the current sorting is in descending order, false otherwise. */
+	@Override
 	public boolean isSortDescending(){
 		return sortDescending;
 	}
@@ -435,6 +434,7 @@ public class ContainerArcaneWorkbench extends Container {
 	// N.B. If we drop the requirement of it working with any container it could potentially be a lot easier since
 	// we then always have control over the bookshelf classes
 
+	// TODO: Call this when a bookshelf is added or removed
 	/** Called on initialisation, and whenever a bookshelf is added or removed. */
 	private void refreshBookshelfSlots(){
 
@@ -442,7 +442,7 @@ public class ContainerArcaneWorkbench extends Container {
 		// TESTME: May need to do this for inventoryItemStacks (probably not though, seems like MC handles it)
 		bookshelfSlots.clear();
 
-		for(IInventory bookshelf : findNearbyBookshelves()){
+		for(IInventory bookshelf : BlockBookshelf.findNearbyBookshelves(tileentity.getWorld(), tileentity.getPos(), tileentity)){
 			for(int i=0; i<bookshelf.getSizeInventory(); i++){
 				VirtualSlot slot = new VirtualSlot(bookshelf, i); // This sets the slot INDEX (for the INVENTORY)
 				bookshelfSlots.add(slot);
@@ -454,45 +454,4 @@ public class ContainerArcaneWorkbench extends Container {
 
 	}
 
-	/** Returns a list of nearby tile entities that have inventories. */
-	public List<IInventory> findNearbyBookshelves(){
-
-		List<IInventory> bookshelves = new ArrayList<>();
-
-		int searchRadius = 4; // TODO: Config option for this
-
-		for(int x = -searchRadius; x <= searchRadius; x++){
-			for(int y = -searchRadius; y <= searchRadius; y++){
-				for(int z = -searchRadius; z <= searchRadius; z++){
-
-					BlockPos pos = this.tileentity.getPos().add(x, y, z);
-					// TODO: Config option for allowed containers
-					if(this.tileentity.getWorld().getBlockState(pos).getBlock() instanceof BlockBookshelf){
-						TileEntity te = this.tileentity.getWorld().getTileEntity(pos);
-						if(te instanceof IInventory && te != this.tileentity) bookshelves.add((IInventory)te);
-					}
-
-				}
-			}
-		}
-
-		return bookshelves;
-
-	}
-
-	public enum SortType {
-
-		TIER("tier", Comparator.naturalOrder()),
-		ELEMENT("element", Comparator.comparing(Spell::getElement).thenComparing(Spell::getTier)),
-		ALPHABETICAL("alphabetical", Comparator.comparing(Spell::getUnlocalisedName));
-
-		public String name;
-		public Comparator<? super Spell> comparator;
-
-		SortType(String name, Comparator<? super Spell> comparator){
-			this.name = name;
-			this.comparator = comparator;
-		}
-
-	}
 }

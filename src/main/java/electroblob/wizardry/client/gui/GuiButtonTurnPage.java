@@ -1,6 +1,5 @@
-package electroblob.wizardry.client.gui.handbook;
+package electroblob.wizardry.client.gui;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.registry.WizardrySounds;
 import net.minecraft.client.Minecraft;
@@ -11,12 +10,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 //@SideOnly(Side.CLIENT)
-class GuiButtonTurnPage extends GuiButton {
+public class GuiButtonTurnPage extends GuiButton {
 
-	static final int WIDTH = 20;
-	static final int HEIGHT = 12;
+	public static final int WIDTH = 20;
+	public static final int HEIGHT = 12;
 
-	enum Type {
+	public enum Type {
 		
 		NEXT_PAGE(0, 196),
 		PREVIOUS_PAGE(0, 208),
@@ -34,11 +33,15 @@ class GuiButtonTurnPage extends GuiButton {
 	
 	public final Type type;
 
-	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/handbook.png");
+	private final ResourceLocation texture;
+	private final int textureWidth, textureHeight;
 
-	public GuiButtonTurnPage(int id, int x, int y, Type type){
+	public GuiButtonTurnPage(int id, int x, int y, Type type, ResourceLocation texture, int textureWidth, int textureHeight){
 		super(id, x, y, WIDTH, HEIGHT, "");
 		this.type = type;
+		this.texture = texture;
+		this.textureWidth = textureWidth;
+		this.textureHeight = textureHeight;
 	}
 	
 	@Override
@@ -50,12 +53,13 @@ class GuiButtonTurnPage extends GuiButton {
 	public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
 		
 		if(this.visible){
-			
+
 			boolean flag = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			minecraft.getTextureManager().bindTexture(texture);
 
-			DrawingUtils.drawTexturedRect(this.x, this.y, flag ? type.u + width : type.u, type.v, width, height, 512, 256);
+			DrawingUtils.drawTexturedRect(this.x, this.y, flag ? type.u + width : type.u, type.v, width, height, textureWidth, textureHeight);
 		}
 	}
+
 }

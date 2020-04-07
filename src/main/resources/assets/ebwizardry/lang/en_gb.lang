@@ -40,6 +40,13 @@ tile.ebwizardry\:jungle_bookshelf.name=Jungle Bookshelf
 tile.ebwizardry\:acacia_bookshelf.name=Acacia Bookshelf
 tile.ebwizardry\:dark_oak_bookshelf.name=Dark Oak Bookshelf
 
+tile.ebwizardry\:oak_lectern.name=Oak Lectern
+tile.ebwizardry\:spruce_lectern.name=Spruce Lectern
+tile.ebwizardry\:birch_lectern.name=Birch Lectern
+tile.ebwizardry\:jungle_lectern.name=Jungle Lectern
+tile.ebwizardry\:acacia_lectern.name=Acacia Lectern
+tile.ebwizardry\:dark_oak_lectern.name=Dark Oak Lectern
+
 item.ebwizardry\:crystal_magic.name=Magic Crystal
 item.ebwizardry\:crystal_fire.name=Fiery Crystal
 item.ebwizardry\:crystal_ice.name=Icy Crystal
@@ -518,6 +525,8 @@ gui.ebwizardry\:spell_book.element_undiscovered=Element: ?
 gui.ebwizardry\:spell_book.mana_cost=Mana Cost: %s
 gui.ebwizardry\:spell_book.mana_cost_continuous=Mana Cost: %s/second
 gui.ebwizardry\:spell_book.mana_cost_undiscovered=Mana Cost: ?
+
+gui.ebwizardry\:lectern.title=Spell Lookup
 
 container.ebwizardry\:arcane_workbench=Arcane Workbench
 container.ebwizardry\:arcane_workbench.apply=Apply

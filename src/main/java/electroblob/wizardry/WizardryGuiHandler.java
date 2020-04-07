@@ -7,6 +7,7 @@ import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWizardHandbook;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityBookshelf;
+import electroblob.wizardry.tileentity.TileEntityLectern;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +24,7 @@ public class WizardryGuiHandler implements IGuiHandler {
 	public static final int WIZARD_HANDBOOK = nextGuiId++;
 	public static final int PORTABLE_CRAFTING = nextGuiId++;
 	public static final int BOOKSHELF = nextGuiId++;
+	public static final int LECTERN = nextGuiId++;
 
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z){
@@ -85,6 +87,14 @@ public class WizardryGuiHandler implements IGuiHandler {
 			if(tileEntity instanceof TileEntityBookshelf){
 				return new electroblob.wizardry.client.gui.GuiBookshelf(player.inventory,
 						(TileEntityBookshelf)tileEntity);
+			}
+
+		}else if(id == LECTERN){
+
+			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+
+			if(tileEntity instanceof TileEntityLectern){
+				return new electroblob.wizardry.client.gui.GuiLectern((TileEntityLectern)tileEntity);
 			}
 
 		}

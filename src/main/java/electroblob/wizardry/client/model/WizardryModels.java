@@ -84,6 +84,13 @@ public final class WizardryModels {
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.acacia_bookshelf));
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_bookshelf));
 
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.oak_lectern));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.spruce_lectern));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.birch_lectern));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.jungle_lectern));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.acacia_lectern));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_lectern));
+
 		// Items
 
 		registerMultiTexturedModel((ItemCrystal)WizardryItems.magic_crystal);

@@ -32,10 +32,7 @@ import electroblob.wizardry.packet.*;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.*;
-import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
-import electroblob.wizardry.tileentity.TileEntityMagicLight;
-import electroblob.wizardry.tileentity.TileEntityShrineCore;
-import electroblob.wizardry.tileentity.TileEntityStatue;
+import electroblob.wizardry.tileentity.*;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.WandHelper;
@@ -310,6 +307,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerParticles(){
 		// I'll be a good programmer and use the API method rather than the one above. Lead by example, as they say...
 		ParticleWizardry.registerParticle(Type.BEAM, ParticleBeam::new);
+		ParticleWizardry.registerParticle(Type.BLOCK_HIGHLIGHT, ParticleBlockHighlight::new);
 		ParticleWizardry.registerParticle(Type.BUFF, ParticleBuff::new);
 		ParticleWizardry.registerParticle(Type.DARK_MAGIC, ParticleDarkMagic::new);
 		ParticleWizardry.registerParticle(Type.DUST, ParticleDust::new);
@@ -762,6 +760,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArcaneWorkbench.class, new RenderArcaneWorkbench());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStatue.class, renderStatue = new RenderStatue());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMagicLight.class, new RenderMagicLight());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLectern.class, new RenderLectern());
 
 	}
 }

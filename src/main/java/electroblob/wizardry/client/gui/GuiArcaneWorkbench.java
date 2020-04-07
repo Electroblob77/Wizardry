@@ -17,6 +17,7 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
+import electroblob.wizardry.util.ISpellSortable;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -115,9 +116,9 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		this.buttonList.clear();
 		this.buttonList.add(this.applyBtn = new GuiButtonApply(0, this.width / 2 + 64, this.height / 2 + 3));
-		this.buttonList.add(new GuiButtonSort(1, this.guiLeft - 44, this.guiTop + 8, ContainerArcaneWorkbench.SortType.TIER));
-		this.buttonList.add(new GuiButtonSort(2, this.guiLeft - 31, this.guiTop + 8, ContainerArcaneWorkbench.SortType.ELEMENT));
-		this.buttonList.add(new GuiButtonSort(3, this.guiLeft - 18, this.guiTop + 8, ContainerArcaneWorkbench.SortType.ALPHABETICAL));
+		this.buttonList.add(new GuiButtonSpellSort(1, this.guiLeft - 44, this.guiTop + 8, ISpellSortable.SortType.TIER, arcaneWorkbenchContainer, this));
+		this.buttonList.add(new GuiButtonSpellSort(2, this.guiLeft - 31, this.guiTop + 8, ISpellSortable.SortType.ELEMENT, arcaneWorkbenchContainer, this));
+		this.buttonList.add(new GuiButtonSpellSort(3, this.guiLeft - 18, this.guiTop + 8, ISpellSortable.SortType.ALPHABETICAL, arcaneWorkbenchContainer, this));
 
 		this.searchField = new GuiTextField(0, this.fontRenderer, this.guiLeft - 113, this.guiTop + 22, 104, this.fontRenderer.FONT_HEIGHT);
 		this.searchField.setMaxStringLength(50);
@@ -294,7 +295,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		// Scroll bar
 		DrawingUtils.drawTexturedRect(guiLeft - BOOKSHELF_UI_WIDTH + SCROLL_BAR_LEFT,
 				guiTop + SCROLL_BAR_TOP + (int)(scroll * (SCROLL_BAR_HEIGHT - SCROLL_HANDLE_HEIGHT) + 0.5f),
-				getMaxScrollRows() > 0 ? 30 : 30 + SCROLL_BAR_WIDTH, 476,
+				getMaxScrollRows() > 0 ? 0 : SCROLL_BAR_WIDTH, 476,
 				SCROLL_BAR_WIDTH, SCROLL_HANDLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 		// Tooltip only drawn if there is a wand
@@ -507,7 +508,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			}
 		}
 
-		this.buttonList.forEach(b -> b.drawButtonForegroundLayer(mouseX, mouseY));
+		this.buttonList.forEach(b -> b.drawButtonForegroundLayer(mouseX - guiLeft, mouseY - guiTop));
 	}
 
 	// Controls
@@ -528,7 +529,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				animationTimer = 20;
 			}
 
-			if(button instanceof GuiButtonSort) this.arcaneWorkbenchContainer.setSortType(((GuiButtonSort)button).sortType);
+			if(button instanceof GuiButtonSpellSort) this.arcaneWorkbenchContainer.setSortType(((GuiButtonSpellSort)button).sortType);
 		}
 	}
 
@@ -585,45 +586,6 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}else{
 			super.keyTyped(typedChar, keyCode);
 		}
-	}
-
-	// Nested classes
-
-	private class GuiButtonSort extends GuiButton {
-
-		private final ContainerArcaneWorkbench.SortType sortType;
-
-		public GuiButtonSort(int id, int x, int y, ContainerArcaneWorkbench.SortType sortType){
-			super(id, x, y, 10, 10, I18n.format("container." + Wizardry.MODID + ":arcane_workbench.sort_" + sortType.name));
-			this.sortType = sortType;
-		}
-
-		@Override
-		public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
-
-			if(this.visible){
-
-				// Whether the button is highlighted
-				this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-
-				int k = 0;
-				int l = 476 + this.sortType.ordinal() * this.height;
-
-				if(sortType == GuiArcaneWorkbench.this.arcaneWorkbenchContainer.getSortType()){
-					k += this.width;
-					if(GuiArcaneWorkbench.this.arcaneWorkbenchContainer.isSortDescending()) k += this.width;
-				}
-
-				DrawingUtils.drawTexturedRect(this.x, this.y, k, l, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-
-			}
-		}
-
-		@Override
-		public void drawButtonForegroundLayer(int mouseX, int mouseY){
-			if(hovered) drawHoveringText(this.displayString, mouseX - guiLeft, mouseY - guiTop);
-		}
-
 	}
 
 	private static class GuiButtonApply extends GuiButton {

@@ -13,6 +13,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -22,8 +23,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvider {
 
@@ -132,6 +136,39 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		public UnlistedPropertyBool(String name){
 			super(PropertyBool.create(name));
 		}
+	}
+
+	/**
+	 * Returns a list of nearby bookshelves' inventories, where 'bookshelves' are any tile entities with inventories
+	 * whose blocks are specified in the config file under the {@code bookshelfBlocks} option.
+	 * @param world The world to search in
+	 * @param centre The position to search around
+	 * @param exclude Any tile entities that should be excluded from the returned list
+	 * @return A list of nearby {@link IInventory} objects that count as valid bookshelves
+	 */
+	public static List<IInventory> findNearbyBookshelves(World world, BlockPos centre, TileEntity... exclude){
+
+		List<IInventory> bookshelves = new ArrayList<>();
+
+		int searchRadius = 4; // TODO: Config option for this
+
+		for(int x = -searchRadius; x <= searchRadius; x++){
+			for(int y = -searchRadius; y <= searchRadius; y++){
+				for(int z = -searchRadius; z <= searchRadius; z++){
+
+					BlockPos pos = centre.add(x, y, z);
+					// TODO: Config option for allowed containers
+					if(world.getBlockState(pos).getBlock() instanceof BlockBookshelf){
+						TileEntity te = world.getTileEntity(pos);
+						if(te instanceof IInventory && !ArrayUtils.contains(exclude, te)) bookshelves.add((IInventory)te);
+					}
+
+				}
+			}
+		}
+
+		return bookshelves;
+
 	}
 
 }

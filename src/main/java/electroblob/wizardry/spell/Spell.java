@@ -552,6 +552,9 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return ((ForgeRegistry<Spell>)registry).getID(this);
 	}
 
+	// N.B. You don't *have* to use the network ID for networking, metadata is consistent within a world and will work
+	// fine, *however* when syncing a list/array of spells it is much more convenient to use network IDs.
+
 	/** Returns this spell's network ID number, similar to mod-specific entity IDs.<br>
 	 * <br>
 	 * Unlike {@link Spell#metadata()}, this is guaranteed to be sequential so is suitable for indexed lookup.
@@ -947,7 +950,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return spell == null ? Spells.none : spell;
 	}
 
-	/** Gets a spell instance from its network ID. Or the {@link None} spell if no such spell exists. */
+	/** Gets a spell instance from its network ID, or the {@link None} spell if no such spell exists. */
 	public static Spell byNetworkID(int id){
 		if(id < 0 || id >= registry.getValuesCollection().size()){
 			return Spells.none;

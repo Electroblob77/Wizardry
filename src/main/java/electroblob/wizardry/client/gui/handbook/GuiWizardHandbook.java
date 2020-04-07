@@ -8,7 +8,8 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.client.gui.GuiButtonInvisible;
-import electroblob.wizardry.client.gui.handbook.GuiButtonTurnPage.Type;
+import electroblob.wizardry.client.gui.GuiButtonTurnPage;
+import electroblob.wizardry.client.gui.GuiButtonTurnPage.Type;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -348,19 +349,19 @@ public class GuiWizardHandbook extends GuiScreen {
 		this.buttonList.clear();
 
 		this.buttonList.add(next = new GuiButtonTurnPage(nextButtonId++, left + GUI_WIDTH - BUTTON_INSET_X - GuiButtonTurnPage.WIDTH,
-				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.NEXT_PAGE));
+				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.NEXT_PAGE, texture, TEXTURE_WIDTH, TEXTURE_HEIGHT));
 
 		this.buttonList.add(previous = new GuiButtonTurnPage(nextButtonId++, left + BUTTON_INSET_X,
-				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.PREVIOUS_PAGE));
+				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.PREVIOUS_PAGE, texture, TEXTURE_WIDTH, TEXTURE_HEIGHT));
 
 		this.buttonList.add(nextSection = new GuiButtonTurnPage(nextButtonId++, left + GUI_WIDTH - BUTTON_INSET_X - GuiButtonTurnPage.WIDTH - BUTTON_SPACING,
-				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.NEXT_SECTION));
+				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.NEXT_SECTION, texture, TEXTURE_WIDTH, TEXTURE_HEIGHT));
 
 		this.buttonList.add(previousSection = new GuiButtonTurnPage(nextButtonId++, left + BUTTON_INSET_X + BUTTON_SPACING,
-				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.PREVIOUS_SECTION));
+				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.PREVIOUS_SECTION, texture, TEXTURE_WIDTH, TEXTURE_HEIGHT));
 
 		this.buttonList.add(menu = new GuiButtonTurnPage(nextButtonId++, left + GUI_WIDTH/2 - 28,
-				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.CONTENTS));
+				top + GUI_HEIGHT - BUTTON_INSET_Y - GuiButtonTurnPage.HEIGHT, Type.CONTENTS, texture, TEXTURE_WIDTH, TEXTURE_HEIGHT));
 
 		this.buttonList.add(bookmark = new GuiButtonInvisible(nextButtonId++, left + 130, top + 172, 11, 19) {
 			@Override

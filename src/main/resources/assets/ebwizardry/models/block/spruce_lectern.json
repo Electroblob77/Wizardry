@@ -1,0 +1,10 @@
+{
+    "parent": "ebwizardry:block/lectern",
+	"textures": {
+		"particle": "ebwizardry:blocks/spruce_lectern_top",
+		"base": "ebwizardry:blocks/spruce_lectern_base",
+		"side": "ebwizardry:blocks/spruce_lectern_side",
+		"top": "ebwizardry:blocks/spruce_lectern_top",
+		"underside": "ebwizardry:blocks/spruce_lectern_underside"
+	}
+}
