@@ -154,7 +154,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		boolean mouseHeld = Mouse.isButtonDown(0);
 
-		if(!scrolling && mouseHeld && getMaxScrollRows() > 0 && isPointInRegion(SCROLL_BAR_LEFT - BOOKSHELF_UI_WIDTH,
+		if(!scrolling && mouseHeld && getMaxScrollRows() > 0 && isPointInRegion(SCROLL_BAR_LEFT,
 				SCROLL_BAR_TOP, SCROLL_BAR_WIDTH, SCROLL_BAR_HEIGHT, mouseX, mouseY)){
 			scrolling = true;
 		}
