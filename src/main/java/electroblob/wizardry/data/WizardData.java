@@ -285,14 +285,13 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * @throws IllegalArgumentException if the given {@link Enchantment} is not an {@link Imbuement}.
 	 */
 	public void setImbuementDuration(Enchantment enchantment, int duration){
-		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if
-		// non-imbuements
-		// were ignored) or cause a ClassCastException later (if non-imbuements were allowed to be added).
+		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if non-
+		// -imbuements were ignored) or cause a ClassCastException later (if non-imbuements were allowed to be added)
 		if(enchantment instanceof Imbuement){
 			this.imbuementDurations.put((Imbuement)enchantment, duration);
 		}else{
 			throw new IllegalArgumentException(
-					"Attempted to set an imbuement duration for something that isn't an Imbuement! (This exception has been thrown now to prevent a ClassCastException from occurring later.)");
+					"Attempted to set an imbuement duration for something that isn't an Imbuement!");
 		}
 	}
 
