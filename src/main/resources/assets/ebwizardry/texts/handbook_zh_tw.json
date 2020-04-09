@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/handbook/picturesarcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench_picture.png",
 			"caption": "法術工作台",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/handbook/picturesore_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/ore_picture.png",
 			"caption": "水晶礦",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/handbook/picturesflower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/flower_picture.png",
 			"caption": "水晶花",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/handbook/picturestower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tower_picture.png",
 			"caption": "法師塔",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/handbook/picturesarmour_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/armour_picture.png",
 			"caption": "法師服",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/handbook/picturesobelisk_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk_picture.png",
 			"caption": "方尖碑",
 			"u": 0,
 			"v": 0,
@@ -79,7 +79,7 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/handbook/picturesshrine_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine_picture.png",
 			"caption": "神殿",
 			"u": 0,
 			"v": 0,
@@ -87,7 +87,7 @@
 			"height": 67
 		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/handbook/picturestiers_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers_picture.png",
 			"caption": "四種等級的法杖",
 			"u": 0,
 			"v": 0,
@@ -96,7 +96,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/handbook/pictureselements_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements_picture.png",
 			"caption": "七種法術元素",
 			"u": 0,
 			"v": 0,
