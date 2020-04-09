@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "wbw",
+        "cwc",
+        "www"
+    ],
+    "key": {
+        "b": {
+            "item": "minecraft:book"
+        },
+        "c": {
+            "item": "ebwizardry:grand_crystal"
+        },
+        "w": {
+            "item": "ebwizardry:gilded_wood",
+            "data": 1
+        }
+    },
+    "result": {
+        "item": "ebwizardry:spruce_lectern"
+    }
+}
