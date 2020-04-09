@@ -398,7 +398,7 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
 				if(stack.getItem() instanceof ItemSpellBook){
 					Spell spell = Spell.byMetadata(stack.getMetadata());
-					if(!availableSpells.contains(spell)) availableSpells.add(spell);
+					if(spell != Spells.none && !availableSpells.contains(spell)) availableSpells.add(spell);
 				}
 			}
 		}
