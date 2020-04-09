@@ -11,6 +11,7 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.util.ISpellSortable;
 import electroblob.wizardry.util.WandHelper;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
@@ -230,8 +231,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 			// Workbench -> inventory/bookshelves
 			if(clickedSlotId <= UPGRADE_SLOT){
 				// Try to move the stack into the bookshelves. If this fails...
-				if(getBookshelfSlots().isEmpty() || !this.mergeItemStack(stack, getBookshelfSlots().get(0).slotNumber,
-						getBookshelfSlots().get(getBookshelfSlots().size()-1).slotNumber + 1, false)){
+				if(!mergeStackIntoBookshelves(stack)){
 					// ...try to move the stack into the player's inventory. If this fails...
 					if(!this.mergeItemStack(stack, UPGRADE_SLOT + 1, UPGRADE_SLOT + 1 + PLAYER_INVENTORY_SIZE, true)){
 						return ItemStack.EMPTY; // ...nothing else happens.
@@ -259,8 +259,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 				// Try to move the stack into the workbench. If this fails...
 				if(slotRange == null || !this.mergeItemStack(stack, slotRange[0], slotRange[1] + 1, false)){
 					// ...try to move the stack into the bookshelves. If this fails...
-					if(getBookshelfSlots().isEmpty() || !this.mergeItemStack(stack, getBookshelfSlots().get(0).slotNumber,
-							getBookshelfSlots().get(getBookshelfSlots().size()-1).slotNumber + 1, false)){
+					if(!mergeStackIntoBookshelves(stack)){
 						return ItemStack.EMPTY; // ...nothing else happens.
 					}
 				}
@@ -328,12 +327,84 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 			ItemStack stack = player.inventory.getItemStack();
 
 			if(!stack.isEmpty() && !getBookshelfSlots().isEmpty()){
-				mergeItemStack(stack, getBookshelfSlots().get(0).slotNumber, getBookshelfSlots().get(getBookshelfSlots().size() - 1).slotNumber + 1, false);
+				mergeStackIntoBookshelves(stack);
 				return stack;
 			}
 		}
 
 		return super.slotClick(slotId, dragType, clickTypeIn, player);
+	}
+
+	/**
+	 * Tries to merge the given stack into the bookshelf slots, accounting for their previous contents. The stack will
+	 * be merged into slots in the following order of priority:
+	 * <p></p>
+	 * 1. Slots that currently contain a matching item<br>
+	 * 2. Empty slots that previously contained a matching item<br>
+	 * 3. Empty slots that did not previously contain any items<br>
+	 * 4. Empty slots that previously contained a non-matching item
+	 * @param stack The {@link ItemStack} to be merged; will be reduced by the number of items that fitted into the
+	 *              bookshelf slots
+	 * @return True if the entire stack was merged into the bookshelf slots, false if not (equivalent to calling
+	 * 		   {@link ItemStack#isEmpty()} on the input stack after this method returns)
+	 */
+	private boolean mergeStackIntoBookshelves(ItemStack stack){
+
+		// LinkedHashSet preserves iteration order whilst ignoring duplicates - neat!
+		Set<VirtualSlot> slots = new LinkedHashSet<>(bookshelfSlots.size());
+
+		// Add all slots that currently contain a matching stack
+		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getStack())).collect(Collectors.toSet()));
+		// Then add all empty slots that previously contained a matching stack, if they weren't already added
+		// No need to actually check if they're empty since inserting a new stack overwrites prevStack anyway
+		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getPrevStack())).collect(Collectors.toSet()));
+		// Then add all slots that did not previously contain anything
+		slots.addAll(bookshelfSlots.stream().filter(s -> s.getPrevStack().isEmpty()).collect(Collectors.toSet()));
+		// Finally add all other empty slots (these will be the ones that used to contain something else)
+		slots.addAll(bookshelfSlots.stream().filter(s -> !s.getHasStack()).collect(Collectors.toSet()));
+
+		slots.removeIf(s -> !s.isItemValid(stack)); // Should never be true, but just in case...
+
+		// Now we have a set of slots in order of priority to try merging into
+		// We already know the stack will fit, so it's simply a question of distributing it
+		// This is waaay neater and more flexible than vanilla's (disgusting) mergeItemStack implementation - and that
+		// only has two priorities of slot to deal with!
+
+		for(Slot slot : slots){
+
+			ItemStack contents = slot.getStack();
+
+			if(contents.isEmpty()){
+
+				// Not sure why mergeItemStack differentiates between full/partial merging, as far as I can tell the
+				// following line will work for both cases
+				slot.putStack(stack.splitStack(contents.getMaxStackSize()));
+				slot.onSlotChanged();
+
+				if(stack.isEmpty()) return true; // The whole stack has been merged, so we're done!
+
+			}else{
+
+				int totalItemCount = contents.getCount() + stack.getCount();
+				int maxSize = Math.min(slot.getSlotStackLimit(), stack.getMaxStackSize());
+
+				if(totalItemCount <= maxSize){
+
+					stack.setCount(0);
+					contents.setCount(totalItemCount);
+					slot.onSlotChanged();
+					return true; // The whole stack has been merged, so we're done!
+
+				}else if(contents.getCount() < maxSize){
+
+					stack.shrink(maxSize - contents.getCount());
+					contents.setCount(maxSize);
+					slot.onSlotChanged();
+				}
+			}
+		}
+
+		return false; // If we get this far, it didn't all fit so return false
 	}
 
 	/**

@@ -20,11 +20,14 @@ import net.minecraft.tileentity.TileEntity;
 public class VirtualSlot extends Slot {
 
 	private final TileEntity tileEntity;
+	/** Allows the virtual slot to remember what was last stored in it, so items can be put back in the same place. */
+	private ItemStack prevStack; // For now this doesn't persist over GUI close
 
 	public VirtualSlot(IInventory inventory, int index){
 		super(inventory, index, -999, -999);
 		if(!(inventory instanceof TileEntity)) throw new IllegalArgumentException("Inventory must be a tile entity!");
 		this.tileEntity = (TileEntity)inventory;
+		this.prevStack = getStack().copy(); // We MUST copy the stack or it will get changed from elsewhere later!
 	}
 
 	@Override
@@ -60,14 +63,27 @@ public class VirtualSlot extends Slot {
 	}
 
 	@Override
+	public void onSlotChanged(){
+		super.onSlotChanged();
+		if(this.getHasStack()) this.prevStack = this.getStack().copy(); // Ignore stack removal (insertion of empty stacks)
+	}
+
+	@Override
 	public ItemStack getStack(){
 		return isValid() ? super.getStack() : ItemStack.EMPTY;
 	}
 
+	/** Returns the stack that was last in this slot. */
+	public ItemStack getPrevStack(){
+		return prevStack;
+	}
+
 	@Override
 	public void putStack(ItemStack stack){
-		if(isValid() && inventory instanceof TileEntityBookshelf) ((TileEntityBookshelf)inventory).sync();
-		if(isValid()) super.putStack(stack);
+		if(isValid()){
+			if(inventory instanceof TileEntityBookshelf) ((TileEntityBookshelf)inventory).sync();
+			super.putStack(stack);
+		}
 	}
 
 	@Override

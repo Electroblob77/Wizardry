@@ -39,6 +39,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * <i>"Where do you put random but useful bits and pieces? {@code WizardryUtilities} of course - the 'stuff that doesn't
@@ -808,6 +809,22 @@ public final class WizardryUtilities {
 		NBTTagCompound compound = toCopy.getTagCompound();
 		if(compound != null) copy.setTagCompound(compound.copy());
 		return copy;
+	}
+
+	/**
+	 * Returns whether the two given item stacks can be merged, i.e. if they both contain the same (stackable) item,
+	 * metadata and NBT. Importantly, the number of items in each stack need not be the same. No actual merging is
+	 * performed by this method; the input stacks will not be modified.
+	 * @param stack1 The first stack to be tested for mergeability
+	 * @param stack2 The second stack to be tested for mergeability (order does not matter)
+	 * @return True if the two stacks can be merged, false if not
+	 */
+	public static boolean canMerge(ItemStack stack1, ItemStack stack2){
+		return !stack1.isEmpty() && !stack2.isEmpty()
+				&& stack1.isStackable() && stack2.isStackable()
+				&& stack1.getItem() == stack2.getItem()
+				&& (!stack1.getHasSubtypes() || stack1.getMetadata() == stack2.getMetadata())
+				&& ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
 
 	/**
