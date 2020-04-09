@@ -34,7 +34,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 	public static final String NBT_KEY = "time_slowed";
 
 	public PotionSlowTime(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_slow_time.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/slow_time.png"));
 		this.setPotionName("potion." + Wizardry.MODID + ":slow_time");
 	}
 

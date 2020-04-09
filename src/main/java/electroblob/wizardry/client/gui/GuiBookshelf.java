@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiBookshelf extends GuiContainer {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/bookshelf.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/container/bookshelf.png");
 	/** The player inventory bound to this GUI. */
 	private final InventoryPlayer playerInventory;
 	/** The inventory contained within the corresponding bookshelf. */

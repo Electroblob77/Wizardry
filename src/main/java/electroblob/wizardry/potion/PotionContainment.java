@@ -21,7 +21,7 @@ public class PotionContainment extends PotionMagicEffect {
 	public static final String ENTITY_TAG = "containmentPos";
 
 	public PotionContainment(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_containment.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/containment.png"));
 		this.setPotionName("potion." + Wizardry.MODID + ":containment");
 	}
 

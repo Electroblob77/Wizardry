@@ -37,7 +37,7 @@ public enum Element implements IStringSerializable {
 	Element(Style colour, String name, String modid){
 		this.colour = colour;
 		this.unlocalisedName = name;
-		this.icon = new ResourceLocation(modid, "textures/gui/element_icon_" + unlocalisedName + ".png");
+		this.icon = new ResourceLocation(modid, "textures/gui/container/element_icon_" + unlocalisedName + ".png");
 	}
 
 	/** Returns the element with the given name, or throws an {@link java.lang.IllegalArgumentException} if no such

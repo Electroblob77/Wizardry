@@ -11,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiButtonSpellSort extends GuiButton {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_sort_buttons.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/container/spell_sort_buttons.png");
 	private static final int TEXTURE_WIDTH = 32;
 	private static final int TEXTURE_HEIGHT = 32;
 

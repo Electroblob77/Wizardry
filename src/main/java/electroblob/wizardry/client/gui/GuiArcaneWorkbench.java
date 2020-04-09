@@ -52,7 +52,7 @@ import java.util.Locale;
 public class GuiArcaneWorkbench extends GuiContainer {
 
 	public static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID,
-			"textures/gui/arcane_workbench.png");
+			"textures/gui/container/arcane_workbench.png");
 
 	private static final int TOOLTIP_WIDTH = 144;
 	private static final int TOOLTIP_TEXT_INSET = 6;

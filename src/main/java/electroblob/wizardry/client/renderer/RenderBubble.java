@@ -11,14 +11,14 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class RenderBubble extends Render<EntityBubble> {
 
-	private static final ResourceLocation particleTextures = new ResourceLocation("textures/particle/particles.png");
-	private static final ResourceLocation darkOrbTexture = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/dark_orb.png");
+	private static final ResourceLocation PARTICLE_TEXTURES = new ResourceLocation("textures/particle/particles.png");
+	private static final ResourceLocation ENTRAPMENT_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/entrapment.png");
 
 	public RenderBubble(RenderManager renderManager){
 		super(renderManager);
@@ -33,18 +33,20 @@ public class RenderBubble extends Render<EntityBubble> {
 
 		float yOffset = 0;
 
-		if(WizardryUtilities.getRider(entity) != null){
-			yOffset = WizardryUtilities.getRider(entity).height / 2;
+		Entity rider = WizardryUtilities.getRider(entity);
+
+		if(rider != null){
+			yOffset = rider.height / 2;
 		}
 
 		GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
 
-		this.bindTexture(((EntityBubble)entity).isDarkOrb ? darkOrbTexture : particleTextures);
+		this.bindTexture(entity.isDarkOrb ? ENTRAPMENT_TEXTURE : PARTICLE_TEXTURES);
 		float f6 = 1.0F;
 		float f7 = 0.5F;
 		float f8 = 0.5F;
 
-		if(((EntityBubble)entity).isDarkOrb){
+		if(entity.isDarkOrb){
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 		}else{
@@ -74,24 +76,22 @@ public class RenderBubble extends Render<EntityBubble> {
 		// tessellator.setColorRGBA_I(k1, 128);
 		// buffer.normal(0.0F, 1.0F, 0.0F);
 
-		if(((EntityBubble)entity).isDarkOrb){
-			buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.0D).tex(0, 1).endVertex();
-			buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.0D).tex(1, 1).endVertex();
-			buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.0D).tex(1, 0).endVertex();
-			buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.0D).tex(0, 0).endVertex();
+		if(entity.isDarkOrb){
+			buffer.pos(0.0F - f7, 0.0F - f8, 0.0D).tex(0, 1).endVertex();
+			buffer.pos(f6 - f7, 0.0F - f8, 0.0D).tex(1, 1).endVertex();
+			buffer.pos(f6 - f7, 1.0F - f8, 0.0D).tex(1, 0).endVertex();
+			buffer.pos(0.0F - f7, 1.0F - f8, 0.0D).tex(0, 0).endVertex();
 		}else{
-			buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.0D).tex(pixelwidth, pixelwidth * 24).endVertex();
-			buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.0D).tex(pixelwidth * 8, pixelwidth * 24).endVertex();
-			buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.0D).tex(pixelwidth * 8, pixelwidth * 17).endVertex();
-			buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.0D).tex(pixelwidth, pixelwidth * 17).endVertex();
+			buffer.pos(0.0F - f7, 0.0F - f8, 0.0D).tex(pixelwidth, pixelwidth * 24).endVertex();
+			buffer.pos(f6 - f7, 0.0F - f8, 0.0D).tex(pixelwidth * 8, pixelwidth * 24).endVertex();
+			buffer.pos(f6 - f7, 1.0F - f8, 0.0D).tex(pixelwidth * 8, pixelwidth * 17).endVertex();
+			buffer.pos(0.0F - f7, 1.0F - f8, 0.0D).tex(pixelwidth, pixelwidth * 17).endVertex();
 		}
 
 		tessellator.draw();
 
 		GlStateManager.disableBlend();
-		if(((EntityBubble)entity).isDarkOrb){
-			GlStateManager.enableLighting();
-		}
+		if(entity.isDarkOrb) GlStateManager.enableLighting();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.popMatrix();
 

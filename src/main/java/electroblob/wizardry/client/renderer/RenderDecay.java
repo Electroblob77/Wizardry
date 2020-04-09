@@ -14,12 +14,12 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDecay extends Render<EntityDecay> {
 
-	private static final ResourceLocation[] textures = new ResourceLocation[10];
+	private static final ResourceLocation[] TEXTURES = new ResourceLocation[10];
 
 	public RenderDecay(RenderManager renderManager){
 		super(renderManager);
 		for(int i = 0; i < 10; i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/decay_" + i + ".png");
+			TEXTURES[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/decay/decay_" + i + ".png");
 		}
 	}
 
@@ -36,7 +36,7 @@ public class RenderDecay extends Render<EntityDecay> {
 
 		GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
 
-		this.bindTexture(textures[((EntityDecay)entity).textureIndex]);
+		this.bindTexture(TEXTURES[((EntityDecay)entity).textureIndex]);
 		float f6 = 1.0F;
 		float f7 = 0.5F;
 		float f8 = 0.5F;

@@ -52,8 +52,8 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	/** The arcane workbench tile entity associated with this container. */
 	public TileEntityArcaneWorkbench tileentity;
 
-	public static final ResourceLocation EMPTY_SLOT_CRYSTAL = new ResourceLocation(Wizardry.MODID, "gui/empty_slot_crystal");
-	public static final ResourceLocation EMPTY_SLOT_UPGRADE = new ResourceLocation(Wizardry.MODID, "gui/empty_slot_upgrade");
+	public static final ResourceLocation EMPTY_SLOT_CRYSTAL = new ResourceLocation(Wizardry.MODID, "gui/container/empty_slot_crystal");
+	public static final ResourceLocation EMPTY_SLOT_UPGRADE = new ResourceLocation(Wizardry.MODID, "gui/container/empty_slot_upgrade");
 
 	public static final int CRYSTAL_SLOT = 8;
 	public static final int CENTRE_SLOT = 9;
@@ -192,7 +192,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 					
 					int centreX = this.getSlot(CENTRE_SLOT).xPos;
 					int centreY = this.getSlot(CENTRE_SLOT).yPos;
-					
+
 					// Show however many spell book slots are necessary
 					for(int i = 0; i < spellSlots; i++){
 						

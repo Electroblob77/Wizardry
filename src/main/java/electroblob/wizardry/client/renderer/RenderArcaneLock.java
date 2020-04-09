@@ -26,11 +26,11 @@ import java.util.List;
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class RenderArcaneLock {
 
-	private static final ResourceLocation[] textures = new ResourceLocation[8];
+	private static final ResourceLocation[] TEXTURES = new ResourceLocation[8];
 
 	static {
-		for(int i=0; i<textures.length; i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/arcane_lock_" + i + ".png");
+		for(int i = 0; i< TEXTURES.length; i++){
+			TEXTURES[i] = new ResourceLocation(Wizardry.MODID, "textures/blocks/arcane_lock_" + i + ".png");
 		}
 	}
 
@@ -52,7 +52,7 @@ public class RenderArcaneLock {
 
 		GlStateManager.color(1, 1, 1, 1);
 
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures[(player.ticksExisted % (textures.length * 2))/2]);
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURES[(player.ticksExisted % (TEXTURES.length * 2))/2]);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();

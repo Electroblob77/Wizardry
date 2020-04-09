@@ -54,7 +54,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 	private static final ResourceLocation DEFAULT = new ResourceLocation(Wizardry.MODID, "texts/handbook_en_us.json");
 
-	static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/handbook.png");
+	static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/handbook/handbook.png");
 
 	/** Global Gson instance for the handbook. */
 	private static final Gson gson = new Gson();

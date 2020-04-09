@@ -55,12 +55,12 @@ import java.util.List;
 @Mod.EventBusSubscriber(Side.CLIENT)
 public final class WizardryClientEventHandler {
 
-	private static final ResourceLocation sixthSenseTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/sixth_sense.png");
-	private static final ResourceLocation sixthSenseOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_overlay.png");
-	private static final ResourceLocation frostOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/frost_overlay.png");
-	private static final ResourceLocation blinkOverlayTexture = new ResourceLocation(Wizardry.MODID, "textures/gui/blink_overlay.png");
-	private static final ResourceLocation pointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/pointer.png");
-	private static final ResourceLocation targetPointerTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/target_pointer.png");
+	private static final ResourceLocation SIXTH_SENSE_MARKER_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_marker.png");
+	private static final ResourceLocation SIXTH_SENSE_OVERLAY_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_overlay.png");
+	private static final ResourceLocation FROST_OVERLAY_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/frost_overlay.png");
+	private static final ResourceLocation BLINK_OVERLAY_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/blink_overlay.png");
+	private static final ResourceLocation POINTER_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/pointer.png");
+	private static final ResourceLocation TARGET_POINTER_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/target_pointer.png");
 
 	/** The remaining time for which the blink screen overlay effect will be displayed in first-person. Since this is
 	 * only for the first-person player (the instance of which is itself stored in a static variable), this can simply
@@ -298,7 +298,7 @@ public final class WizardryClientEventHandler {
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-				mc.renderEngine.bindTexture(targetPointerTexture);
+				mc.renderEngine.bindTexture(TARGET_POINTER_TEXTURE);
 
 				buffer.pos(-0.2, 0.24, 0).tex(0, 0).endVertex();
 				buffer.pos(0.2, 0.24, 0).tex(9f / 16f, 0).endVertex();
@@ -340,7 +340,7 @@ public final class WizardryClientEventHandler {
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-			mc.renderEngine.bindTexture(pointerTexture);
+			mc.renderEngine.bindTexture(POINTER_TEXTURE);
 
 			buffer.pos(-0.2, 0.24, 0).tex(0, 0).endVertex();
 			buffer.pos(0.2, 0.24, 0).tex(9f / 16f, 0).endVertex();
@@ -385,7 +385,7 @@ public final class WizardryClientEventHandler {
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-			mc.renderEngine.bindTexture(sixthSenseTexture);
+			mc.renderEngine.bindTexture(SIXTH_SENSE_MARKER_TEXTURE);
 
 			buffer.pos(-0.6, 0.6, 0).tex(0, 0).endVertex();
 			buffer.pos(0.6, 0.6, 0).tex(1, 0).endVertex();
@@ -414,7 +414,7 @@ public final class WizardryClientEventHandler {
 				GlStateManager.color(1, 1, 1, 1);
 				GlStateManager.disableAlpha();
 				
-				renderScreenOverlay(event, sixthSenseOverlayTexture);
+				renderScreenOverlay(event, SIXTH_SENSE_OVERLAY_TEXTURE);
 				
 				GlStateManager.enableAlpha();
 				GlStateManager.color(1, 1, 1, 1);
@@ -426,7 +426,7 @@ public final class WizardryClientEventHandler {
 				GlStateManager.color(1, 1, 1, 1);
 				GlStateManager.disableAlpha();
 				
-				renderScreenOverlay(event, frostOverlayTexture);
+				renderScreenOverlay(event, FROST_OVERLAY_TEXTURE);
 				
 				GlStateManager.enableAlpha();
 				GlStateManager.color(1, 1, 1, 1);
@@ -440,7 +440,7 @@ public final class WizardryClientEventHandler {
 				GlStateManager.color(1, 1, 1, alpha);
 				GlStateManager.disableAlpha();
 				
-				renderScreenOverlay(event, blinkOverlayTexture);
+				renderScreenOverlay(event, BLINK_OVERLAY_TEXTURE);
 				
 				GlStateManager.enableAlpha();
 				GlStateManager.color(1, 1, 1, 1);

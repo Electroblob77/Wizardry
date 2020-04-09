@@ -24,7 +24,7 @@ public class CurseEnfeeblement extends Curse {
 	}
 
 	public CurseEnfeeblement(boolean isBadEffect, int liquiidColour){
-		super(isBadEffect, liquiidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_curse_of_enfeeblement.png"));
+		super(isBadEffect, liquiidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/curse_of_enfeeblement.png"));
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
 		this.setPotionName("potion." + Wizardry.MODID + ":curse_of_enfeeblement");
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MAX_HEALTH,

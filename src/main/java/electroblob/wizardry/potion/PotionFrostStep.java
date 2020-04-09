@@ -32,7 +32,7 @@ public class PotionFrostStep extends PotionMagicEffect implements ICustomPotionP
 	private static final Field prevBlockPos = ObfuscationReflectionHelper.findField(EntityLivingBase.class, "field_184620_bC");
 
 	public PotionFrostStep(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_frost_step.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/frost_step.png"));
 		this.setPotionName("potion." + Wizardry.MODID + ":frost_step");
 	}
 

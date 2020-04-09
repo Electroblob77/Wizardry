@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/lectern.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/container/lectern.png");
 	/** The distance of the page buttons from the bottom outside corners of the GUI. */
 	private static final int PAGE_BUTTON_INSET_X = 22, PAGE_BUTTON_INSET_Y = 13;
 	/** The distance between adjacent page turn buttons. */

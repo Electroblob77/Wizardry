@@ -24,14 +24,14 @@ import org.lwjgl.opengl.GL11;
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class RenderContainmentField {
 
-	private static final ResourceLocation[] textures = new ResourceLocation[8];
+	private static final ResourceLocation[] TEXTURES = new ResourceLocation[8];
 
 	private static final float ANIMATION_SPEED = 0.004f;
 	private static final float FADE_DISTANCE_SQUARED = 15;
 
 	static {
-		for(int i=0; i<textures.length; i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/containment_field_" + i + ".png");
+		for(int i = 0; i< TEXTURES.length; i++){
+			TEXTURES[i] = new ResourceLocation(Wizardry.MODID, "textures/environment/containment_field_" + i + ".png");
 		}
 	}
 
@@ -65,7 +65,7 @@ public class RenderContainmentField {
 
 			GlStateManager.color(1, 1, 1, 1);
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(textures[(player.ticksExisted % (textures.length * 2))/2]);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURES[(player.ticksExisted % (TEXTURES.length * 2))/2]);
 
 			Tessellator tessellator = Tessellator.getInstance();
 

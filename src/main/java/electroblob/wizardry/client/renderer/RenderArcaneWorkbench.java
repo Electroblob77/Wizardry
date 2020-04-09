@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityArcaneWorkbench> {
 
-	private static final ResourceLocation runeTexture = new ResourceLocation(Wizardry.MODID, "textures/entity/rune.png");
+	private static final ResourceLocation RUNE_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/arcane_workbench_rune.png");
 
 	public RenderArcaneWorkbench(){}
 
@@ -56,7 +56,7 @@ public class RenderArcaneWorkbench extends TileEntitySpecialRenderer<TileEntityA
 			GlStateManager.translate(0.0f, 0.65f, 0.0f);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
-			bindTexture(runeTexture);
+			bindTexture(RUNE_TEXTURE);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 			buffer.pos(-0.5f, 0, -0.5f).tex(0, 0).endVertex();

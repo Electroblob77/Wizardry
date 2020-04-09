@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class PotionFrost extends PotionMagicEffect implements ICustomPotionParticles {
 
 	public PotionFrost(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_frost.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/frost.png"));
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
 		this.setPotionName("potion." + Wizardry.MODID + ":frost");
 		// With -0.5 as the 'amount', frost 1 slows the entity down by a half and frost 2 roots it to the spot

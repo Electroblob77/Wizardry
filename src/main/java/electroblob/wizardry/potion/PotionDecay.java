@@ -19,7 +19,7 @@ import java.util.List;
 public class PotionDecay extends PotionMagicEffect {
 
 	public PotionDecay(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_decay.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/decay.png"));
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
 		this.setPotionName("potion." + Wizardry.MODID + ":decay");
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED,

@@ -12,10 +12,10 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicLight> {
 
-	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/light_ray.png");
-	private static final ResourceLocation texture2 = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/light_aura.png");
+	private static final ResourceLocation RAY_TEXTURE = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/light/ray.png");
+	private static final ResourceLocation FLARE_TEXTURE = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/light/flare.png");
 
 	@Override
 	public void render(TileEntityMagicLight tileentity, double x, double y, double z, float f,
@@ -60,7 +60,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		this.bindTexture(texture2);
+		this.bindTexture(FLARE_TEXTURE);
 
 		buffer.pos(-0.6, 0.6, 0).tex(0, 0).endVertex();
 		buffer.pos(0.6, 0.6, 0).tex(1, 0).endVertex();
@@ -77,7 +77,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 		// ends of the rays to appear black, so I have changed it to this, which looks very slightly different.
 		GlStateManager.blendFunc(GL11.GL_ONE, GL11.GL_SRC_ALPHA);
 
-		this.bindTexture(texture);
+		this.bindTexture(RAY_TEXTURE);
 
 		if(tileentity.randomiser.length >= 30){
 			for(int j = 0; j < 30; j++){

@@ -16,10 +16,10 @@ import java.util.Collections;
 
 public class RenderBlackHole extends Render<EntityBlackHole> {
 
-	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/dark_ray.png");
-	private static final ResourceLocation texture2 = new ResourceLocation(Wizardry.MODID,
-			"textures/entity/black_hole.png");
+	private static final ResourceLocation RAY_TEXTURE = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/black_hole/ray.png");
+	private static final ResourceLocation CENTRE_TEXTURE = new ResourceLocation(Wizardry.MODID,
+			"textures/entity/black_hole/centre.png");
 
 	public RenderBlackHole(RenderManager renderManager){
 		super(renderManager);
@@ -57,7 +57,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 			GlStateManager.scale(scale, scale, scale);
 		}
 
-		this.bindTexture(texture);
+		this.bindTexture(RAY_TEXTURE);
 
 		// In theory this stuff should sort the rays into the correct render order based on the distance from
 		// the 'camera' (i.e. the player's viewpoint)
@@ -142,7 +142,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		this.bindTexture(texture2);
+		this.bindTexture(CENTRE_TEXTURE);
 
 		buffer.pos(-0.4, 0.4, 0).tex(0, 0).endVertex();
 		buffer.pos(0.4, 0.4, 0).tex(1, 0).endVertex();
@@ -164,7 +164,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityBlackHole entity){
-		return texture;
+		return RAY_TEXTURE;
 	}
 
 }
