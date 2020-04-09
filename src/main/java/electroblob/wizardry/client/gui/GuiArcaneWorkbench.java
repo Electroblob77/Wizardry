@@ -74,7 +74,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	private static final int SCROLL_BAR_HEIGHT = 178;
 	private static final int SCROLL_HANDLE_HEIGHT = 15;
 
-	private static final int PROGRESSION_BAR_WIDTH = 152;
+	private static final int PROGRESSION_BAR_WIDTH = 131;
 	private static final int PROGRESSION_BAR_HEIGHT = 3;
 
 	private static final int HALO_DIAMETER = 156;
