@@ -621,8 +621,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/**
-	 * Returns the unlocalised name of the spell, without any prefixes or suffixes, e.g. "flame_ray". <b>This should
-	 * only be used for translation purposes.</b>
+	 * Returns the unlocalised name of the spell, which is now its registry name as a string, e.g. "ebwizardry:flame_ray".
+	 * <b>This should only be used for translation purposes.</b>
 	 */
 	public final String getUnlocalisedName(){
 		return unlocalisedName;

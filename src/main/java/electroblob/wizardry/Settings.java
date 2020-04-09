@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -53,7 +52,6 @@ import java.util.regex.Pattern;
  */
 // For the time being, I'm sticking with the old config system because @Config doesn't support custom config entry classes
 // @Config(modid = Wizardry.MODID)
-@SuppressWarnings("deprecation") // Used server I18n deliberately; we want to write the comments in the actual config file in english.
 public final class Settings {
 
 	// Category names
@@ -447,7 +445,7 @@ public final class Settings {
 
 		for(Spell spell : Spell.getAllSpells()){
 			property = config.get(SPELLS_CATEGORY, spell.getRegistryName().toString(), true,
-					I18n.translateToLocal("spell." + spell.getUnlocalisedName() + ".desc"));
+					"Set to false to disable this spell");
 			// Uses the same config key as the spell name, because - well, that's what it's called!
 			property.setLanguageKey("spell." + spell.getUnlocalisedName());
 			Wizardry.proxy.setToNamedBooleanEntry(property);
