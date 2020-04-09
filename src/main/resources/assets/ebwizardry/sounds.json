@@ -2,6 +2,7 @@
 	"block.arcane_workbench.bind_spell": {"category": "blocks", "sounds": ["ebwizardry:spellbind"]},
 	"block.pedestal.activate": 			{"category": "blocks", "sounds": ["mob/evocation_illager/prepare_summon"]},
 	"block.pedestal.conquer": 			{"category": "blocks", "sounds": ["ui/toast/challenge_complete"]},
+	"block.lectern.locate_spell": 		{"category": "blocks", "sounds": ["ebwizardry:conjure"]},
 
 	"item.wand.switch_spell": 			{"category": "player", "sounds": ["ebwizardry:select"]},
 	"item.wand.levelup": 				{"category": "player", "sounds": ["random/levelup"]},

@@ -28,6 +28,7 @@ import net.minecraft.network.play.client.CPacketCloseWindow;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -275,7 +276,9 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 						Spell spell = Spell.byMetadata(stack.getMetadata());
 
 						if(spell == this.currentSpell){
+
 							BlockPos pos = (((TileEntity)bookshelf).getPos());
+
 							for(EnumFacing side : EnumFacing.VALUES){
 								ParticleBuilder.create(ParticleBuilder.Type.BLOCK_HIGHLIGHT).pos(
 												WizardryUtilities.getFaceCentre(pos, side)
@@ -283,6 +286,9 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 												.scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET)))
 										.face(side).clr(0.9f, 0.5f, 0.8f).fade(0.7f, 0, 1).spawn(mc.world);
 							}
+
+							mc.world.playSound(pos, WizardrySounds.BLOCK_LECTERN_LOCATE_SPELL, SoundCategory.BLOCKS, 1, 0.7f, false);
+
 							break; // This bookshelf has the spell, skip to the next bookshelf
 						}
 					}
