@@ -353,15 +353,15 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		// LinkedHashSet preserves iteration order whilst ignoring duplicates - neat!
 		Set<VirtualSlot> slots = new LinkedHashSet<>(bookshelfSlots.size());
 
-		// Add all slots that currently contain a matching stack
-		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getStack())).collect(Collectors.toSet()));
+		// Add all slots that currently contain a matching stack - collect to list to retain order
+		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getStack())).collect(Collectors.toList()));
 		// Then add all empty slots that previously contained a matching stack, if they weren't already added
 		// No need to actually check if they're empty since inserting a new stack overwrites prevStack anyway
-		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getPrevStack())).collect(Collectors.toSet()));
+		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getPrevStack())).collect(Collectors.toList()));
 		// Then add all slots that did not previously contain anything
-		slots.addAll(bookshelfSlots.stream().filter(s -> s.getPrevStack().isEmpty()).collect(Collectors.toSet()));
+		slots.addAll(bookshelfSlots.stream().filter(s -> s.getPrevStack().isEmpty()).collect(Collectors.toList()));
 		// Finally add all other empty slots (these will be the ones that used to contain something else)
-		slots.addAll(bookshelfSlots.stream().filter(s -> !s.getHasStack()).collect(Collectors.toSet()));
+		slots.addAll(bookshelfSlots.stream().filter(s -> !s.getHasStack()).collect(Collectors.toList()));
 
 		slots.removeIf(s -> !s.isItemValid(stack)); // Should never be true, but just in case...
 
