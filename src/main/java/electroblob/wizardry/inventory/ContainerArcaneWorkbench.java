@@ -66,8 +66,12 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 
 	public static final int PLAYER_INVENTORY_SIZE = 36;
 
+	public static final int BOOKSHELF_UI_WIDTH = 122;
+
 	private List<VirtualSlot> bookshelfSlots = new ArrayList<>();
 	private List<VirtualSlot> activeBookshelfSlots = new ArrayList<>();
+
+	private boolean hasBookshelves;
 
 	private int scroll = 0;
 	private ISpellSortable.SortType sortType = ISpellSortable.SortType.TIER;
@@ -111,7 +115,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		for(int y = 0; y < BOOKSHELF_SLOTS_Y; y++){
 			for(int x = 0; x < BOOKSHELF_SLOTS_X; x++){
 				int index = x + y * BOOKSHELF_SLOTS_X;
-				this.addSlotToContainer(new SlotBookList(tileentity, UPGRADE_SLOT + 1 + index, -114 + x * 18, 34 + y * 18, this, index));
+				this.addSlotToContainer(new SlotBookList(tileentity, UPGRADE_SLOT + 1 + index, 8 + x * 18, 34 + y * 18, this, index));
 			}
 		}
 
@@ -146,6 +150,8 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	 * @param index The index of the slot to hide.
 	 * @param player The player that is using this container.
 	 */
+	// We're not using slot.isEnabled() because it would mean making another slot class, and we'd still need to handle
+	// what happens to the contents when the slot is hidden
 	private void hideSlot(int index, EntityPlayer player){
 		
 		Slot slot = this.getSlot(index);
@@ -476,7 +482,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		return validSlots;
 	}
 
-	/** Updates the active bookshelf slots with the current search term and sorting. Client-side only! */
+	/** Updates the active bookshelf slots with the current search term and sorting. <b>Client-side only!</b> */
 	public void updateActiveBookshelfSlots(){
 		activeBookshelfSlots = bookshelfSlots.stream().filter(s -> s.isValid() && !s.getStack().isEmpty()
 				// Slot 0 is a convenient way of testing if the item is a valid spell book
@@ -501,7 +507,12 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		return activeSlots.subList(BOOKSHELF_SLOTS_X * scroll, activeSlots.size());
 	}
 
-	// The following operations are expensive so should not be done every tick!
+	/** Returns true if there are any nearby bookshelves that are accessible from this workbench, false if not. */
+	public boolean hasBookshelves(){
+		return hasBookshelves;
+	}
+
+	// This is relatively expensive so should not be done every tick!
 	// N.B. If we drop the requirement of it working with any container it could potentially be a lot easier since
 	// we then always have control over the bookshelf classes
 
@@ -510,18 +521,34 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	private void refreshBookshelfSlots(){
 
 		this.inventorySlots.removeAll(bookshelfSlots);
-		// TESTME: May need to do this for inventoryItemStacks (probably not though, seems like MC handles it)
 		bookshelfSlots.clear();
 
-		for(IInventory bookshelf : BlockBookshelf.findNearbyBookshelves(tileentity.getWorld(), tileentity.getPos(), tileentity)){
-			for(int i=0; i<bookshelf.getSizeInventory(); i++){
-				VirtualSlot slot = new VirtualSlot(bookshelf, i); // This sets the slot INDEX (for the INVENTORY)
-				bookshelfSlots.add(slot);
-				this.addSlotToContainer(slot); // This sets the slot NUMBER (for the CONTAINER)
+		List<IInventory> bookshelves = BlockBookshelf.findNearbyBookshelves(tileentity.getWorld(), tileentity.getPos(), tileentity);
+
+		if(!bookshelves.isEmpty()){
+
+			for(IInventory bookshelf : bookshelves){
+				for(int i = 0; i < bookshelf.getSizeInventory(); i++){
+					VirtualSlot slot = new VirtualSlot(bookshelf, i); // This sets the slot INDEX (for the INVENTORY)
+					bookshelfSlots.add(slot);
+					this.addSlotToContainer(slot); // This sets the slot NUMBER (for the CONTAINER)
+				}
 			}
+
+			if(tileentity.getWorld().isRemote) updateActiveBookshelfSlots();
 		}
 
-		if(tileentity.getWorld().isRemote) updateActiveBookshelfSlots();
+		if(bookshelves.isEmpty() == hasBookshelves){ // If the bookshelf status changed
+
+			// Move all the slots appropriately
+			for(Slot slot : this.inventorySlots){
+				if(!(slot instanceof SlotBookList || slot instanceof VirtualSlot)){
+					slot.xPos += bookshelves.isEmpty() ? -BOOKSHELF_UI_WIDTH : BOOKSHELF_UI_WIDTH;
+				}
+			}
+
+			hasBookshelves = !bookshelves.isEmpty();
+		}
 
 	}
 

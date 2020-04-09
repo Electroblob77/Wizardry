@@ -5,8 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
-import java.util.List;
-
 public class SlotBookList extends SlotItemClassList {
 
 	private final ContainerArcaneWorkbench container;
@@ -40,6 +38,11 @@ public class SlotBookList extends SlotItemClassList {
 	public boolean isItemValid(ItemStack stack){
 		// It's valid if there is a virtual slot that will accept it
 		return container.getBookshelfSlots().stream().anyMatch(s -> s.isItemValid(stack));
+	}
+
+	@Override
+	public boolean isEnabled(){
+		return container.hasBookshelves();
 	}
 
 	// Actual item interaction is delegated client-side before it ever gets here (in the GUI class)

@@ -51,18 +51,13 @@ import java.util.Locale;
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class GuiArcaneWorkbench extends GuiContainer {
 
-	private GuiButton applyBtn;
 	public static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID,
 			"textures/gui/arcane_workbench.png");
-
-	private InventoryPlayer playerInventory;
-	private IInventory arcaneWorkbenchInventory;
-	private ContainerArcaneWorkbench arcaneWorkbenchContainer;
 
 	private static final int TOOLTIP_WIDTH = 144;
 	private static final int TOOLTIP_TEXT_INSET = 6;
 
-	private static final int BOOKSHELF_UI_WIDTH = 122;
+	private static final int BOOKSHELF_UI_WIDTH = ContainerArcaneWorkbench.BOOKSHELF_UI_WIDTH; // For conciseness
 
 	/** We report the actual size of the GUI to Minecraft when a wand is in so JEI doesn't overdraw it.
 	 * For calculations, we use the size without the tooltip, which is stored in this constant. */
@@ -87,11 +82,19 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	private static final int TEXTURE_WIDTH = 512;
 	private static final int TEXTURE_HEIGHT = 512;
 
-	private int animationTimer = 0;
 	private static final int ANIMATION_DURATION = 20;
+
+	private InventoryPlayer playerInventory;
+	private IInventory arcaneWorkbenchInventory;
+	private ContainerArcaneWorkbench arcaneWorkbenchContainer;
+
+	private GuiButton applyBtn;
+	private GuiButton[] sortButtons = new GuiButton[3];
 
 	private GuiTextField searchField;
 	private boolean searchNeedsClearing;
+
+	private int animationTimer = 0;
 
 	private float scroll = 0;
 	private boolean scrolling = false;
@@ -116,9 +119,9 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		this.buttonList.clear();
 		this.buttonList.add(this.applyBtn = new GuiButtonApply(0, this.width / 2 + 64, this.height / 2 + 3));
-		this.buttonList.add(new GuiButtonSpellSort(1, this.guiLeft - 44, this.guiTop + 8, ISpellSortable.SortType.TIER, arcaneWorkbenchContainer, this));
-		this.buttonList.add(new GuiButtonSpellSort(2, this.guiLeft - 31, this.guiTop + 8, ISpellSortable.SortType.ELEMENT, arcaneWorkbenchContainer, this));
-		this.buttonList.add(new GuiButtonSpellSort(3, this.guiLeft - 18, this.guiTop + 8, ISpellSortable.SortType.ALPHABETICAL, arcaneWorkbenchContainer, this));
+		this.buttonList.add(sortButtons[0] = new GuiButtonSpellSort(1, this.guiLeft - 44, this.guiTop + 8, ISpellSortable.SortType.TIER, arcaneWorkbenchContainer, this));
+		this.buttonList.add(sortButtons[1] = new GuiButtonSpellSort(2, this.guiLeft - 31, this.guiTop + 8, ISpellSortable.SortType.ELEMENT, arcaneWorkbenchContainer, this));
+		this.buttonList.add(sortButtons[2] = new GuiButtonSpellSort(3, this.guiLeft - 18, this.guiTop + 8, ISpellSortable.SortType.ALPHABETICAL, arcaneWorkbenchContainer, this));
 
 		this.searchField = new GuiTextField(0, this.fontRenderer, this.guiLeft - 113, this.guiTop + 22, 104, this.fontRenderer.FONT_HEIGHT);
 		this.searchField.setMaxStringLength(50);
@@ -164,21 +167,27 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			arcaneWorkbenchContainer.scrollTo((int)(getMaxScrollRows() * scroll + 0.5f));
 		}
 
-		Slot slot = this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
+		Slot centreSlot = this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
-		// Tests if there is a wand in the workbench and edits the positioning accordingly
-		if(slot.getHasStack() && slot.getStack().getItem() instanceof IWorkbenchItem
-				&& ((IWorkbenchItem)slot.getStack().getItem()).showTooltip(slot.getStack())){
-			xSize = MAIN_GUI_WIDTH + TOOLTIP_WIDTH;
-//			guiLeft = (this.width - this.xSize) / 2;
-//			this.applyBtn.x = (this.width - TOOLTIP_WIDTH) / 2 + 64;
-		}else{
-			xSize = MAIN_GUI_WIDTH;
-//			guiLeft = (this.width - this.xSize) / 2;
-//			this.applyBtn.x = this.width / 2 + 64;
+		// Update the GUI dimensions based on whether there is a wand present and whether there are bookshelves
+
+		xSize = MAIN_GUI_WIDTH;
+		guiLeft = (this.width - MAIN_GUI_WIDTH) / 2;
+
+		if(centreSlot.getHasStack() && centreSlot.getStack().getItem() instanceof IWorkbenchItem
+				&& ((IWorkbenchItem)centreSlot.getStack().getItem()).showTooltip(centreSlot.getStack())){
+			xSize += TOOLTIP_WIDTH;
 		}
 
-		this.applyBtn.enabled = slot.getHasStack();
+		if(arcaneWorkbenchContainer.hasBookshelves()){
+			xSize += BOOKSHELF_UI_WIDTH;
+			guiLeft -= BOOKSHELF_UI_WIDTH;
+		}
+
+		// Show/hide the relevant gui elements
+		this.applyBtn.enabled = centreSlot.getHasStack();
+		for(GuiButton button : this.sortButtons) button.visible = arcaneWorkbenchContainer.hasBookshelves();
+		this.searchField.setVisible(arcaneWorkbenchContainer.hasBookshelves());
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
@@ -192,10 +201,14 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		GlStateManager.color(1, 1, 1, 1);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
+		// Coordinates of the top left corner of the main GUI
+		int left = arcaneWorkbenchContainer.hasBookshelves() ? guiLeft + BOOKSHELF_UI_WIDTH : guiLeft;
+		int top = guiTop;
+
 		// Animation
 
 		// Grey background
-		DrawingUtils.drawTexturedRect(guiLeft + RUNE_LEFT, guiTop + RUNE_TOP, MAIN_GUI_WIDTH + TOOLTIP_WIDTH, 0,
+		DrawingUtils.drawTexturedRect(left + RUNE_LEFT, top + RUNE_TOP, MAIN_GUI_WIDTH + TOOLTIP_WIDTH, 0,
 				RUNE_WIDTH, RUNE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 		// Yellow 'halo'
@@ -205,8 +218,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
-			int x = guiLeft + RUNE_LEFT + RUNE_WIDTH/2;
-			int y = guiTop + RUNE_TOP + RUNE_HEIGHT/2;
+			int x = left + RUNE_LEFT + RUNE_WIDTH/2;
+			int y = top + RUNE_TOP + RUNE_HEIGHT/2;
 
 			float scale = (animationTimer + partialTicks)/ANIMATION_DURATION;
 			scale = (float)(1 - Math.pow(1-scale, 1.4f)); // Makes it slower at the start and speed up
@@ -221,11 +234,11 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 
 		// Main inventory
-		DrawingUtils.drawTexturedRect(guiLeft, guiTop, 0, 0, MAIN_GUI_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+		DrawingUtils.drawTexturedRect(left, top, 0, 0, MAIN_GUI_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 		float opacity = (animationTimer + partialTicks)/ANIMATION_DURATION;
 
-		// Changing slots
+		// Spell book slots (always use guiLeft and guiTop here regardless of bookshelf UI visibility
 		for(int i = 0; i < ContainerArcaneWorkbench.CRYSTAL_SLOT; i++){
 
 			Slot slot = this.inventorySlots.getSlot(i);
@@ -265,7 +278,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(1, 1, 1, opacity);
 
-				DrawingUtils.drawTexturedRect(guiLeft + crystals.xPos - 8, guiTop + crystals.yPos - 8,
+				DrawingUtils.drawTexturedRect(left + crystals.xPos - 8, top + crystals.yPos - 8,
 						MAIN_GUI_WIDTH + TOOLTIP_WIDTH + RUNE_WIDTH, 0, 32, 32, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 				GlStateManager.color(1, 1, 1, 1);
@@ -280,7 +293,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(1, 1, 1, opacity);
 
-				DrawingUtils.drawTexturedRect(guiLeft + upgrades.xPos - 8, guiTop + upgrades.yPos - 8,
+				DrawingUtils.drawTexturedRect(left + upgrades.xPos - 8, top + upgrades.yPos - 8,
 						MAIN_GUI_WIDTH + TOOLTIP_WIDTH + RUNE_WIDTH, 0, 32, 32, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 				GlStateManager.color(1, 1, 1, 1);
@@ -290,13 +303,16 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 
 		// Bookshelf interface
-		DrawingUtils.drawTexturedRect(guiLeft - BOOKSHELF_UI_WIDTH, guiTop, 0, 256, BOOKSHELF_UI_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+		if(arcaneWorkbenchContainer.hasBookshelves()){
 
-		// Scroll bar
-		DrawingUtils.drawTexturedRect(guiLeft - BOOKSHELF_UI_WIDTH + SCROLL_BAR_LEFT,
-				guiTop + SCROLL_BAR_TOP + (int)(scroll * (SCROLL_BAR_HEIGHT - SCROLL_HANDLE_HEIGHT) + 0.5f),
-				getMaxScrollRows() > 0 ? 0 : SCROLL_BAR_WIDTH, 476,
-				SCROLL_BAR_WIDTH, SCROLL_HANDLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+			DrawingUtils.drawTexturedRect(left - BOOKSHELF_UI_WIDTH, top, 0, 256, BOOKSHELF_UI_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
+			// Scroll bar
+			DrawingUtils.drawTexturedRect(left - BOOKSHELF_UI_WIDTH + SCROLL_BAR_LEFT,
+					top + SCROLL_BAR_TOP + (int)(scroll * (SCROLL_BAR_HEIGHT - SCROLL_HANDLE_HEIGHT) + 0.5f),
+					getMaxScrollRows() > 0 ? 0 : SCROLL_BAR_WIDTH, 476,
+					SCROLL_BAR_WIDTH, SCROLL_HANDLE_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+		}
 
 		// Tooltip only drawn if there is a wand
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack()){
@@ -311,9 +327,9 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			if(((IWorkbenchItem)stack.getItem()).showTooltip(stack)){
 
 				// Tooltip box
-				DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH, guiTop, MAIN_GUI_WIDTH, 0, TOOLTIP_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+				DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH, top, MAIN_GUI_WIDTH, 0, TOOLTIP_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
-				int y = guiTop + 20;
+				int y = top + 20;
 
 				if(stack.getItem() instanceof IManaStoringItem && ((IManaStoringItem)stack.getItem()).showManaInWorkbench(this.mc.player, stack)){
 					y += 14;
@@ -332,9 +348,9 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						progressFraction = (float)WandHelper.getProgression(stack) / Tier.values()[tier.level + 1].progression;
 					}
 
-					DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize + PROGRESSION_BAR_HEIGHT, PROGRESSION_BAR_WIDTH, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+					DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize + PROGRESSION_BAR_HEIGHT, PROGRESSION_BAR_WIDTH, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 					int width = (int)(PROGRESSION_BAR_WIDTH * progressFraction);
-					DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize, width, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+					DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize, width, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 					y += 8;
 				}
@@ -358,7 +374,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 								.bindTexture(discovered ? spell.getElement().getIcon() : Element.MAGIC.getIcon());
 
 						// Renders the little element icon
-						DrawingUtils.drawTexturedRect(guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET - 1, y, 8, 8);
+						DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET - 1, y, 8, 8);
 
 						y += 10;
 					}
@@ -377,8 +393,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					if(level > 0){
 						ItemStack stack1 = new ItemStack(item, level);
 						GlStateManager.enableDepth();
-						this.itemRender.renderItemAndEffectIntoGUI(stack1, guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y);
-						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, guiLeft + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y,
+						this.itemRender.renderItemAndEffectIntoGUI(stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y);
+						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y,
 								null);
 						x += 18;
 						GlStateManager.disableDepth();
@@ -404,12 +420,17 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		GlStateManager.color(1, 1, 1, 1); // Just in case
 
+		int left = arcaneWorkbenchContainer.hasBookshelves() ? BOOKSHELF_UI_WIDTH : 0;
+
 		this.fontRenderer
 				.drawString(this.arcaneWorkbenchInventory.hasCustomName() ? this.arcaneWorkbenchInventory.getName()
-						: I18n.format(this.arcaneWorkbenchInventory.getName()), 8, 6, 4210752);
+						: I18n.format(this.arcaneWorkbenchInventory.getName()), left + 8, 6, 4210752);
 		this.fontRenderer.drawString(this.playerInventory.hasCustomName() ? this.playerInventory.getName()
-				: I18n.format(this.playerInventory.getName()), 8, this.ySize - 96 + 2, 4210752);
-		this.fontRenderer.drawString(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.bookshelves"), 8 - BOOKSHELF_UI_WIDTH, 6, 4210752);
+				: I18n.format(this.playerInventory.getName()), left + 8, this.ySize - 96 + 2, 4210752);
+
+		if(arcaneWorkbenchContainer.hasBookshelves()){
+			this.fontRenderer.drawString(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.bookshelves"), 8, 6, 4210752);
+		}
 
 		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.CENTRE_SLOT).getHasStack()){
 
@@ -424,7 +445,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 				int y = 6;
 
-				this.fontRenderer.drawStringWithShadow("\u00A7f" + stack.getDisplayName(), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
+				this.fontRenderer.drawStringWithShadow("\u00A7f" + stack.getDisplayName(), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
 
 				if(stack.getItem() instanceof IManaStoringItem && ((IManaStoringItem)stack.getItem()).showManaInWorkbench(this.mc.player, stack)){
 					y += 14;
@@ -432,7 +453,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 							"\u00A77" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.mana")
 									+ " " + ((IManaStoringItem)stack.getItem()).getMana(stack) + "/"
 									+ ((IManaStoringItem)stack.getItem()).getManaCapacity(stack),
-							MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
+							left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
 				}
 
 				// Progression tier text
@@ -442,13 +463,13 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 					Tier tier = ((ItemWand)stack.getItem()).tier;
 
-					this.fontRenderer.drawStringWithShadow(tier.getDisplayNameWithFormatting(), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
+					this.fontRenderer.drawStringWithShadow(tier.getDisplayNameWithFormatting(), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
 
 					if(tier != Tier.MASTER){
 						Tier nextTier = Tier.values()[tier.level + 1];
 						String s = TextFormatting.DARK_GRAY.toString() + nextTier.getDisplayName();
 						if(WandHelper.getProgression(stack) >= nextTier.progression) s = nextTier.getDisplayNameWithFormatting();
-						this.fontRenderer.drawStringWithShadow(s, MAIN_GUI_WIDTH + TOOLTIP_WIDTH
+						this.fontRenderer.drawStringWithShadow(s, left + MAIN_GUI_WIDTH + TOOLTIP_WIDTH
 								- TOOLTIP_TEXT_INSET - fontRenderer.getStringWidth(s), y, 0);
 					}
 
@@ -470,10 +491,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						}
 
 						if(discovered){
-							this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
+							this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
 						}else{
 							this.mc.standardGalacticFontRenderer.drawStringWithShadow(
-									"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
+									"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
 						}
 						y += 10;
 					}
@@ -484,7 +505,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					y += 6;
 
 					this.fontRenderer.drawStringWithShadow("\u00A7f" + I18n.format("container."
-							+ Wizardry.MODID + ":arcane_workbench.upgrades"), MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
+							+ Wizardry.MODID + ":arcane_workbench.upgrades"), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
 
 					int x = 0;
 					y += 10;
@@ -497,7 +518,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 						if(level > 0){
 							// The javadoc for isPointInRegion is ambiguous; what it means is that the REGION is
 							// relative to the GUI but the POINT isn't.
-							if(isPointInRegion(MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y, 16, 16, mouseX, mouseY)){
+							if(isPointInRegion(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y, 16, 16, mouseX, mouseY)){
 								ItemStack stack1 = new ItemStack(item, level);
 								this.renderToolTip(stack1, mouseX - guiLeft, mouseY - guiTop);
 							}
