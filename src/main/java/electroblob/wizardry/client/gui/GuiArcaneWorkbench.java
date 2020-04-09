@@ -391,12 +391,20 @@ public class GuiArcaneWorkbench extends GuiContainer {
 					int level = WandHelper.getUpgradeLevel(stack, item);
 
 					if(level > 0){
+
 						ItemStack stack1 = new ItemStack(item, level);
 						GlStateManager.enableDepth();
+
 						this.itemRender.renderItemAndEffectIntoGUI(stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y);
-						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y,
-								null);
+						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y, null);
+
 						x += 18;
+
+						if(TOOLTIP_TEXT_INSET * 2 + x + 16 > TOOLTIP_WIDTH){
+							x = 0;
+							y += 18;
+						}
+
 						GlStateManager.disableDepth();
 						GlStateManager.disableLighting(); // Whyyyyyy?
 					}
@@ -522,7 +530,14 @@ public class GuiArcaneWorkbench extends GuiContainer {
 								ItemStack stack1 = new ItemStack(item, level);
 								this.renderToolTip(stack1, mouseX - guiLeft, mouseY - guiTop);
 							}
+
 							x += 18;
+
+							if(TOOLTIP_TEXT_INSET * 2 + x + 16 > TOOLTIP_WIDTH){
+								x = 0;
+								y += 18;
+							}
+
 						}
 					}
 				}
