@@ -294,13 +294,13 @@ public final class WizardryClientEventHandler {
 			if(tab == WizardryTabs.SPELLS){
 
 				GuiContainerCreative.ContainerCreative container = (GuiContainerCreative.ContainerCreative)gui.inventorySlots;
-				container.itemList.clear();
+				container.itemList.clear(); // Required or duplicates will appear!
 				String searchText = currentSearchField.getText().toLowerCase(Locale.ROOT);
 				tab.displayAllRelevantItems(container.itemList);
 
 				if(!searchText.isEmpty()){
 					container.itemList.removeIf(s -> !Spell.byMetadata(s.getMetadata()).matches(searchText));
-					container.scrollTo(0);
+					container.scrollTo(0); // Seems to refresh the GUI somehow so it displays correctly
 				}
 			}
 		}
