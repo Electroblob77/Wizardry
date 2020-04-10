@@ -519,6 +519,7 @@ public final class Settings {
 				"Whether players are slowed when another nearby player uses the slow time spell. If this is false, mobs and projectiles will still be affected but players will move at normal speed.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".slow_time_affects_players");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
 		slowTimeAffectsPlayers = property.getBoolean();
 		propOrder.add(property.getName());
 
@@ -526,6 +527,7 @@ public final class Settings {
 				"Whether any player in creative mode can bypass arcane-locked blocks. If this is false, players must also be op in order to do so.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".creative_bypasses_arcane_lock");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
 		creativeBypassesArcaneLock = property.getBoolean();
 		propOrder.add(property.getName());
 
@@ -582,6 +584,7 @@ public final class Settings {
 				0, 1);
 		property.setLanguageKey("config." + Wizardry.MODID + ".forfeit_chance");
 		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresWorldRestart(true);
 		forfeitChance = property.getDouble();
 		propOrder.add(property.getName());
 
@@ -643,6 +646,7 @@ public final class Settings {
 				"Whether to replace Minecraft's own fireballs with wizardry fireballs. If this is disabled, only wizardry spells will use the custom fireballs.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fireballs");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
 		replaceVanillaFireballs = property.getBoolean();
 		propOrder.add(property.getName());
 
@@ -722,6 +726,7 @@ public final class Settings {
 
 		property = config.get(TWEAKS_CATEGORY, "bookshelfBlocks", new String[]{Wizardry.MODID + ":oak_bookshelf", Wizardry.MODID + ":spruce_bookshelf", Wizardry.MODID + ":birch_bookshelf", Wizardry.MODID + ":jungle_bookshelf",  Wizardry.MODID + ":acacia_bookshelf",  Wizardry.MODID + ":dark_oak_bookshelf"}, "List of registry names of blocks that count as bookshelves for the arcane workbench and lectern. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":oak_bookshelf).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_blocks");
+		property.setRequiresWorldRestart(true);
 		bookshelfBlocks = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
@@ -730,6 +735,7 @@ public final class Settings {
 				1, 10);
 		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_search_radius");
 		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresWorldRestart(true);
 		bookshelfSearchRadius = property.getInt();
 		propOrder.add(property.getName());
 
