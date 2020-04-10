@@ -13,17 +13,21 @@ import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.*;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMerchant;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
@@ -37,13 +41,16 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Event handler responsible for client-side only events, mostly rendering.
@@ -72,6 +79,15 @@ public final class WizardryClientEventHandler {
 	/** The remaining time for which the screen shake effect will be active. */
 	private static int screenShakeCounter = 0;
 	private static final float SHAKINESS = 0.5f;
+
+	/** Reflected into {@code GuiContainerCreative#searchField} */
+	private static final Field searchField;
+
+	private static GuiTextField currentSearchField = null;
+
+	static {
+		searchField = ObfuscationReflectionHelper.findField(GuiContainerCreative.class, "field_147062_A");
+	}
 	
 	/** Starts the first-person blink overlay effect. */
 	public static void playBlinkEffect(){
@@ -249,6 +265,42 @@ public final class WizardryClientEventHandler {
 						DrawingUtils.drawItemAndTooltip(gui, trade.getItemToSell(), slot.xPos, slot.yPos, event.getMouseX(), event.getMouseY(),
 								gui.getSlotUnderMouse() == slot);
 					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onInitGuiEvent(GuiScreenEvent.InitGuiEvent.Post event){
+		// Reduces reflection as much as possible - searchField is created on GUI init and never reassigned so we need
+		// not (and should not!) use reflection to retrieve it every time a key is typed
+		if(event.getGui() instanceof GuiContainerCreative){
+			try{
+				currentSearchField = (GuiTextField)searchField.get(event.getGui());
+			}catch(IllegalAccessException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onKeyboardInputEvent(GuiScreenEvent.KeyboardInputEvent.Post event){
+		// Custom creative tab search behaviour
+		if(event.getGui() instanceof GuiContainerCreative){
+
+			GuiContainerCreative gui = (GuiContainerCreative)event.getGui();
+			CreativeTabs tab = CreativeTabs.CREATIVE_TAB_ARRAY[gui.getSelectedTabIndex()];
+
+			if(tab == WizardryTabs.SPELLS){
+
+				GuiContainerCreative.ContainerCreative container = (GuiContainerCreative.ContainerCreative)gui.inventorySlots;
+				container.itemList.clear();
+				String searchText = currentSearchField.getText().toLowerCase(Locale.ROOT);
+				tab.displayAllRelevantItems(container.itemList);
+
+				if(!searchText.isEmpty()){
+					container.itemList.removeIf(s -> !Spell.byMetadata(s.getMetadata()).matches(searchText));
+					container.scrollTo(0);
 				}
 			}
 		}
