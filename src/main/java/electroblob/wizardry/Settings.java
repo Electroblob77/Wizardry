@@ -278,6 +278,23 @@ public final class Settings {
 	public boolean replaceVanillaFireballs = true;
 	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
+	/**
+	 * <b>[Synchronised]</b> The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be
+	 * able to link to it.
+	 */
+	public int bookshelfSearchRadius = 4;
+	/**
+	 * <b>[Synchronised]</b> List of registry names of blocks that count as bookshelves for the arcane workbench and
+	 * lectern.
+	 */
+	public Pair<ResourceLocation, Short>[] bookshelfBlocks = parseItemMetaStrings(
+			Wizardry.MODID + ":oak_bookshelf",
+			Wizardry.MODID + ":spruce_bookshelf",
+			Wizardry.MODID + ":birch_bookshelf",
+			Wizardry.MODID + ":jungle_bookshelf",
+			Wizardry.MODID + ":acacia_bookshelf",
+			Wizardry.MODID + ":dark_oak_bookshelf"
+	);
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys
 	// its own values for these, and changing them on a dedicated server will have no effect.
@@ -708,6 +725,21 @@ public final class Settings {
 		bowItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
+		property = config.get(TWEAKS_CATEGORY, "bookshelfBlocks", new String[0], "List of registry names of blocks that count as bookshelves for the arcane workbench and lectern. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":oak_bookshelf).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_blocks");
+		property.setRequiresWorldRestart(true);
+		bookshelfBlocks = parseItemMetaStrings(property.getStringList());
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "bookshelfSearchRadius", 4,
+				"The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be able to link to it.",
+				1, 10);
+		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_search_radius");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresMcRestart(true);
+		bookshelfSearchRadius = property.getInt();
+		propOrder.add(property.getName());
+
 		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
 				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
@@ -1119,7 +1151,7 @@ public final class Settings {
 		return Arrays.stream(strings).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 	}
 
-	/** Applies {@link Settings#parseItemMetaString(String)} to each input string and returns and array of the resulting
+	/** Applies {@link Settings#parseItemMetaString(String)} to each input string and returns an array of the resulting
 	 * {@link Pair}s. */
 	@SuppressWarnings("unchecked") // Shut up java
 	public static Pair<ResourceLocation, Short>[] parseItemMetaStrings(String... strings){
@@ -1147,14 +1179,34 @@ public final class Settings {
 		return Pair.of(new ResourceLocation(item), meta);
 	}
 
+	/**
+	 * Checks a metadata-sensitive list option (see {@link Settings#parseItemMetaStrings(String...)} for the given block.
+	 * @param array The config option to check
+	 * @param block The block state to search for
+	 * @return True if the given array contains an entry that matches the given block, false if not.
+	 */
 	public static boolean containsMetaBlock(Pair<ResourceLocation, Short>[] array, IBlockState block){
 		return containsMetaThing(array, block.getBlock().getRegistryName(), (short)block.getBlock().getMetaFromState(block));
 	}
 
+	/**
+	 * Checks a metadata-sensitive list option (see {@link Settings#parseItemMetaStrings(String...)} for the given item.
+	 * @param array The config option to check
+	 * @param stack An item stack with the item and metadata to search for
+	 * @return True if the given array contains an entry that matches the given stack, false if not.
+	 */
 	public static boolean containsMetaItem(Pair<ResourceLocation, Short>[] array, ItemStack stack){
 		return containsMetaThing(array, stack.getItem().getRegistryName(), (short)stack.getMetadata());
 	}
 
+	/**
+	 * Checks a metadata-sensitive list option (see {@link Settings#parseItemMetaStrings(String...)} for the given
+	 * id/metadata pair.
+	 * @param array The config option to check
+	 * @param id The id to search for
+	 * @param metadata The metadata value to search for
+	 * @return True if the given array contains the given id/metadata pair, or the given id paired with the wildcard value.
+	 */
 	public static boolean containsMetaThing(Pair<ResourceLocation, Short>[] array, ResourceLocation id, short metadata){
 		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, OreDictionary.WILDCARD_VALUE));
 	}

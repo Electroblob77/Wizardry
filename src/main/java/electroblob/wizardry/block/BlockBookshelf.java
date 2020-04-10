@@ -1,5 +1,6 @@
 package electroblob.wizardry.block;
 
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.registry.WizardryTabs;
@@ -150,15 +151,15 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 
 		List<IInventory> bookshelves = new ArrayList<>();
 
-		int searchRadius = 4; // TODO: Config option for this
+		int searchRadius = Wizardry.settings.bookshelfSearchRadius;
 
 		for(int x = -searchRadius; x <= searchRadius; x++){
 			for(int y = -searchRadius; y <= searchRadius; y++){
 				for(int z = -searchRadius; z <= searchRadius; z++){
 
 					BlockPos pos = centre.add(x, y, z);
-					// TODO: Config option for allowed containers
-					if(world.getBlockState(pos).getBlock() instanceof BlockBookshelf){
+
+					if(Settings.containsMetaBlock(Wizardry.settings.bookshelfBlocks, world.getBlockState(pos))){
 						TileEntity te = world.getTileEntity(pos);
 						if(te instanceof IInventory && !ArrayUtils.contains(exclude, te)) bookshelves.add((IInventory)te);
 					}

@@ -4,9 +4,15 @@ import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketSyncSettings.Message;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <b>[Server -> Client]</b> This packet is sent to synchronise the config settings with clients on player login.
@@ -31,7 +37,10 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		Wizardry.settings.discoveryMode = message.settings.discoveryMode;
 		Wizardry.settings.creativeBypassesArcaneLock = message.settings.creativeBypassesArcaneLock;
 		Wizardry.settings.slowTimeAffectsPlayers = message.settings.slowTimeAffectsPlayers;
+		Wizardry.settings.replaceVanillaFireballs = message.settings.replaceVanillaFireballs;
 		Wizardry.settings.forfeitChance = message.settings.forfeitChance;
+		Wizardry.settings.bookshelfSearchRadius = message.settings.bookshelfSearchRadius;
+		Wizardry.settings.bookshelfBlocks = message.settings.bookshelfBlocks;
 	}
 
 	public static class Message implements IMessage {
@@ -48,6 +57,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public void fromBytes(ByteBuf buf){
 			// I'm guessing the settings field will be null here, so it needs initialising.
 			// This is also a great reason to have the settings as an actual object.
@@ -58,6 +68,13 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.slowTimeAffectsPlayers = buf.readBoolean();
 			settings.replaceVanillaFireballs = buf.readBoolean();
 			settings.forfeitChance = buf.readFloat();
+			settings.bookshelfSearchRadius = buf.readInt();
+			int length = buf.readInt();
+			List<Pair<ResourceLocation, Short>> entries = new ArrayList<>();
+			for(int i=0; i<length; i++){
+				entries.add(Pair.of(new ResourceLocation(ByteBufUtils.readUTF8String(buf)), buf.readShort()));
+			}
+			settings.bookshelfBlocks = entries.toArray(new Pair[0]);
 		}
 
 		@Override
@@ -67,6 +84,12 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeBoolean(settings.slowTimeAffectsPlayers);
 			buf.writeBoolean(settings.replaceVanillaFireballs);
 			buf.writeFloat((float)settings.forfeitChance); // Configs don't have floats but this can only be 0-1 anyway
+			buf.writeInt(settings.bookshelfSearchRadius);
+			buf.writeInt(settings.bookshelfBlocks.length);
+			for(Pair<ResourceLocation, Short> entry : settings.bookshelfBlocks){
+				ByteBufUtils.writeUTF8String(buf, entry.getLeft().toString());
+				buf.writeShort(entry.getRight());
+			}
 		}
 	}
 }
