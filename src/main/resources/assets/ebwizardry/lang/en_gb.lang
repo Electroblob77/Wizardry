@@ -529,9 +529,8 @@ gui.ebwizardry\:spell_book.mana_cost_undiscovered=Mana Cost: ?
 gui.ebwizardry\:lectern.title=Spell Lookup
 
 container.ebwizardry\:arcane_workbench=Arcane Workbench
-container.ebwizardry\:arcane_workbench.apply=Apply
-container.ebwizardry\:arcane_workbench.mana=Mana\:
-container.ebwizardry\:arcane_workbench.upgrades=Applied Upgrades\:
+container.ebwizardry\:arcane_workbench.mana=Mana\: %s/%s
+container.ebwizardry\:arcane_workbench.upgrades=Applied Upgrades
 
 container.ebwizardry\:arcane_workbench.bookshelves=Bookshelves
 container.ebwizardry\:arcane_workbench.sort_tier=Sort by Tier

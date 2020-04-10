@@ -5,13 +5,9 @@ import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
-import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.inventory.SlotBookList;
-import electroblob.wizardry.item.IManaStoringItem;
-import electroblob.wizardry.item.ISpellCastingItem;
-import electroblob.wizardry.item.IWorkbenchItem;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.item.*;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -21,6 +17,7 @@ import electroblob.wizardry.util.ISpellSortable;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -36,6 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -46,6 +44,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
@@ -55,7 +55,9 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			"textures/gui/container/arcane_workbench.png");
 
 	private static final int TOOLTIP_WIDTH = 144;
-	private static final int TOOLTIP_TEXT_INSET = 6;
+	private static final int TOOLTIP_BORDER = 6;
+	private static final int LINE_SPACING_WIDE = 5;
+	private static final int LINE_SPACING_NARROW = 1;
 
 	private static final int BOOKSHELF_UI_WIDTH = ContainerArcaneWorkbench.BOOKSHELF_UI_WIDTH; // For conciseness
 
@@ -74,9 +76,6 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	private static final int SCROLL_BAR_HEIGHT = 178;
 	private static final int SCROLL_HANDLE_HEIGHT = 15;
 
-	private static final int PROGRESSION_BAR_WIDTH = 131;
-	private static final int PROGRESSION_BAR_HEIGHT = 3;
-
 	private static final int HALO_DIAMETER = 156;
 
 	private static final int TEXTURE_WIDTH = 512;
@@ -93,6 +92,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 	private GuiTextField searchField;
 	private boolean searchNeedsClearing;
+
+	private final List<TooltipElement> tooltipElements = new ArrayList<>();
 
 	private int animationTimer = 0;
 
@@ -130,6 +131,12 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		this.searchField.setTextColor(16777215);
 		this.searchField.setCanLoseFocus(false);
 		this.searchField.setFocused(true);
+
+		this.tooltipElements.add(new TooltipElementItemName(new Style().setColor(TextFormatting.WHITE), LINE_SPACING_WIDE));
+		this.tooltipElements.add(new TooltipElementManaReadout(LINE_SPACING_WIDE));
+		this.tooltipElements.add(new TooltipElementProgressionBar(LINE_SPACING_WIDE));
+		this.tooltipElements.add(new TooltipElementSpellList(LINE_SPACING_WIDE));
+		this.tooltipElements.add(new TooltipElementUpgradeList(LINE_SPACING_WIDE));
 
 	}
 
@@ -326,88 +333,20 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			if(((IWorkbenchItem)stack.getItem()).showTooltip(stack)){
 
+				int tooltipHeight = tooltipElements.stream().mapToInt(e -> e.getTotalHeight(stack)).sum()
+						- tooltipElements.get(tooltipElements.size() - 1).spaceAfter; // Remove space after last element
+
 				// Tooltip box
-				DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH, top, MAIN_GUI_WIDTH, 0, TOOLTIP_WIDTH, ySize, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+				DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH, top, MAIN_GUI_WIDTH, 0, TOOLTIP_WIDTH,
+						TOOLTIP_BORDER + tooltipHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+				DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH, top + TOOLTIP_BORDER + tooltipHeight,
+						MAIN_GUI_WIDTH, ySize - TOOLTIP_BORDER, TOOLTIP_WIDTH, TOOLTIP_BORDER, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
-				int y = top + 20;
+				int x = left + MAIN_GUI_WIDTH + TOOLTIP_BORDER;
+				int y = top + TOOLTIP_BORDER;
 
-				if(stack.getItem() instanceof IManaStoringItem && ((IManaStoringItem)stack.getItem()).showManaInWorkbench(this.mc.player, stack)){
-					y += 14;
-				}
-
-				// Progression bar
-				if(stack.getItem() instanceof ItemWand && !Wizardry.settings.legacyWandLevelling){
-
-					y += 10;
-
-					Tier tier = ((ItemWand)stack.getItem()).tier;
-
-					float progressFraction = 1;
-
-					if(tier != Tier.MASTER){
-						progressFraction = (float)WandHelper.getProgression(stack) / Tier.values()[tier.level + 1].progression;
-					}
-
-					DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize + PROGRESSION_BAR_HEIGHT, PROGRESSION_BAR_WIDTH, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-					int width = (int)(PROGRESSION_BAR_WIDTH * progressFraction);
-					DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, MAIN_GUI_WIDTH, ySize, width, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-
-					y += 8;
-				}
-
-				if(stack.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)stack.getItem()).showSpellsInWorkbench(this.mc.player, stack)){
-
-					Spell[] spells = ((ISpellCastingItem)stack.getItem()).getSpells(stack);
-
-					GlStateManager.enableBlend();
-
-					for(Spell spell : spells){
-
-						boolean discovered = true;
-
-						if(!this.mc.player.isCreative() && WizardData.get(this.mc.player) != null){
-							discovered = WizardData.get(this.mc.player).hasSpellBeenDiscovered(spell);
-						}
-						// As of Wizardry 1.2, the icons have been split off into their own texture files to allow for add-on
-						// mods to add their own.
-						Minecraft.getMinecraft().renderEngine
-								.bindTexture(discovered ? spell.getElement().getIcon() : Element.MAGIC.getIcon());
-
-						// Renders the little element icon
-						DrawingUtils.drawTexturedRect(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET - 1, y, 8, 8);
-
-						y += 10;
-					}
-				}
-
-				GlStateManager.disableBlend();
-
-				int x = 0;
-				y += 16;
-
-				// Look how much shorter this is with the WandHelper class!
-				for(Item item : WandHelper.getSpecialUpgrades()){
-
-					int level = WandHelper.getUpgradeLevel(stack, item);
-
-					if(level > 0){
-
-						ItemStack stack1 = new ItemStack(item, level);
-						GlStateManager.enableDepth();
-
-						this.itemRender.renderItemAndEffectIntoGUI(stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y);
-						this.itemRender.renderItemOverlayIntoGUI(this.fontRenderer, stack1, left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y, null);
-
-						x += 18;
-
-						if(TOOLTIP_TEXT_INSET * 2 + x + 16 > TOOLTIP_WIDTH){
-							x = 0;
-							y += 18;
-						}
-
-						GlStateManager.disableDepth();
-						GlStateManager.disableLighting(); // Whyyyyyy?
-					}
+				for(TooltipElement element : this.tooltipElements){
+					y = element.drawBackgroundLayer(x, y, stack, partialTicks, mouseX, mouseY);
 				}
 			}
 		}
@@ -451,95 +390,11 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			if(((IWorkbenchItem)stack.getItem()).showTooltip(stack)){
 
-				int y = 6;
+				int x = left + MAIN_GUI_WIDTH + TOOLTIP_BORDER;
+				int y = TOOLTIP_BORDER;
 
-				this.fontRenderer.drawStringWithShadow("\u00A7f" + stack.getDisplayName(), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
-
-				if(stack.getItem() instanceof IManaStoringItem && ((IManaStoringItem)stack.getItem()).showManaInWorkbench(this.mc.player, stack)){
-					y += 14;
-					this.fontRenderer.drawStringWithShadow(
-							"\u00A77" + I18n.format("container." + Wizardry.MODID + ":arcane_workbench.mana")
-									+ " " + ((IManaStoringItem)stack.getItem()).getMana(stack) + "/"
-									+ ((IManaStoringItem)stack.getItem()).getManaCapacity(stack),
-							left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
-				}
-
-				// Progression tier text
-				if(stack.getItem() instanceof ItemWand && !Wizardry.settings.legacyWandLevelling){
-
-					y += 14;
-
-					Tier tier = ((ItemWand)stack.getItem()).tier;
-
-					this.fontRenderer.drawStringWithShadow(tier.getDisplayNameWithFormatting(), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
-
-					if(tier != Tier.MASTER){
-						Tier nextTier = Tier.values()[tier.level + 1];
-						String s = TextFormatting.DARK_GRAY.toString() + nextTier.getDisplayName();
-						if(WandHelper.getProgression(stack) >= nextTier.progression) s = nextTier.getDisplayNameWithFormatting();
-						this.fontRenderer.drawStringWithShadow(s, left + MAIN_GUI_WIDTH + TOOLTIP_WIDTH
-								- TOOLTIP_TEXT_INSET - fontRenderer.getStringWidth(s), y, 0);
-					}
-
-					y += 4;
-				}
-
-				y += 14;
-
-				if(stack.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)stack.getItem()).showSpellsInWorkbench(this.mc.player, stack)){
-
-					Spell[] spells = ((ISpellCastingItem)stack.getItem()).getSpells(stack);
-
-					for(Spell spell : spells){
-
-						boolean discovered = true;
-
-						if(!this.mc.player.isCreative() && WizardData.get(this.mc.player) != null){
-							discovered = WizardData.get(this.mc.player).hasSpellBeenDiscovered(spell);
-						}
-
-						if(discovered){
-							this.fontRenderer.drawStringWithShadow(spell.getDisplayNameWithFormatting(), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
-						}else{
-							this.mc.standardGalacticFontRenderer.drawStringWithShadow(
-									"\u00A79" + SpellGlyphData.getGlyphName(spell, this.mc.world), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + 10, y, 0);
-						}
-						y += 10;
-					}
-				}
-
-				if(WandHelper.getTotalUpgrades(stack) > 0){
-
-					y += 6;
-
-					this.fontRenderer.drawStringWithShadow("\u00A7f" + I18n.format("container."
-							+ Wizardry.MODID + ":arcane_workbench.upgrades"), left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET, y, 0);
-
-					int x = 0;
-					y += 10;
-
-					// Wand upgrade tooltips
-					for(Item item : WandHelper.getSpecialUpgrades()){
-
-						int level = WandHelper.getUpgradeLevel(stack, item);
-
-						if(level > 0){
-							// The javadoc for isPointInRegion is ambiguous; what it means is that the REGION is
-							// relative to the GUI but the POINT isn't.
-							if(isPointInRegion(left + MAIN_GUI_WIDTH + TOOLTIP_TEXT_INSET + x, y, 16, 16, mouseX, mouseY)){
-								ItemStack stack1 = new ItemStack(item, level);
-								this.renderToolTip(stack1, mouseX - guiLeft, mouseY - guiTop);
-							}
-
-							x += 18;
-
-							if(TOOLTIP_TEXT_INSET * 2 + x + 16 > TOOLTIP_WIDTH){
-								x = 0;
-								y += 18;
-							}
-
-						}
-					}
+				for(TooltipElement element : this.tooltipElements){
+					y = element.drawForegroundLayer(x, y, stack, mouseX, mouseY);
 				}
 			}
 		}
@@ -575,7 +430,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	}
 
 	@Override
-	public void handleMouseInput() throws IOException{
+	public void handleMouseInput() throws IOException {
 
 		super.handleMouseInput();
 		int scrollDist = -Mouse.getEventDWheel();
@@ -624,6 +479,477 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 	}
 
+	@SubscribeEvent
+	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
+		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_CRYSTAL);
+		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_UPGRADE);
+	}
+
+	private abstract static class TooltipElement {
+
+		private final TooltipElement[] children;
+		private final int spaceAfter;
+
+		public TooltipElement(int spaceAfter, TooltipElement... children){
+			this.children = children;
+			this.spaceAfter = spaceAfter;
+		}
+
+		// Externally-called methods
+
+		/**
+		 * Returns the height of this tooltip element and its children, with spacing, or 0 if it is not visible.
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @return The total height of this tooltip element and its children, including spacing
+		 */
+		public int getTotalHeight(ItemStack stack){
+			if(!this.isVisible(stack)) return 0;
+			int height = this.getHeight(stack);
+			for(TooltipElement child : children) height += child.getTotalHeight(stack);
+			return height + spaceAfter;
+		}
+
+		/**
+		 * Draws the background layer of this tooltip element and all of its children.
+		 * @param x The x-coordinate of the top left corner of this element
+		 * @param y The y-coordinate of the top left corner of this element
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @param partialTicks The current partial tick time
+		 * @param mouseX The current x-coordinate of the cursor
+		 * @param mouseY The current y-coordinate of the cursor
+		 * @return The y-coordinate at which the next tooltip element should start
+		 */
+		public int drawBackgroundLayer(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+			if(!this.isVisible(stack)) return y;
+			this.drawBackground(x, y, stack, partialTicks, mouseX, mouseY);
+			y += this.getHeight(stack);
+			for(TooltipElement child : children) y = child.drawBackgroundLayer(x, y, stack, partialTicks, mouseX, mouseY);
+			return y + spaceAfter;
+		}
+
+		/**
+		 * Draws the foreground layer of this tooltip element and all of its children.
+		 * @param x The x-coordinate of the top left corner of this element
+		 * @param y The y-coordinate of the top left corner of this element
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @param mouseX The current x-coordinate of the cursor
+		 * @param mouseY The current y-coordinate of the cursor
+		 * @return The y-coordinate at which the next tooltip element should start
+		 */
+		public int drawForegroundLayer(int x, int y, ItemStack stack, int mouseX, int mouseY){
+			if(!this.isVisible(stack)) return y;
+			this.drawForeground(x, y, stack, mouseX, mouseY);
+			y += this.getHeight(stack);
+			for(TooltipElement child : children) y = child.drawForegroundLayer(x, y, stack, mouseX, mouseY);
+			return y + spaceAfter;
+		}
+
+		// Abstract internal methods
+
+		/**
+		 * Returns whether this tooltip element should be shown.
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @return True if this element should be shown, false if not.
+		 */
+		protected abstract boolean isVisible(ItemStack stack);
+
+		/**
+		 * Returns the height of this tooltip element. This is for internal implementation.
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @return The height of this tooltip element, excluding children and spacing.
+		 */
+		protected abstract int getHeight(ItemStack stack);
+
+		/**
+		 * Draws the background layer of this tooltip element (excluding children). This is for internal implementation.
+		 * @param x The x-coordinate of the top left corner of this element
+		 * @param y The y-coordinate of the top left corner of this element
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @param partialTicks The current partial tick time
+		 * @param mouseX The current x-coordinate of the cursor
+		 * @param mouseY The current y-coordinate of the cursor
+		 */
+		protected abstract void drawBackground(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY);
+
+		/**
+		 * Draws the foreground layer of this tooltip element (excluding children). This is for internal implementation.
+		 * @param x The x-coordinate of the top left corner of this element
+		 * @param y The y-coordinate of the top left corner of this element
+		 * @param stack The item stack currently in the central slot of the workbench
+		 * @param mouseX The current x-coordinate of the cursor
+		 * @param mouseY The current y-coordinate of the cursor
+		 */
+		protected abstract void drawForeground(int x, int y, ItemStack stack, int mouseX, int mouseY);
+
+	}
+
+	private class TooltipElementText extends TooltipElement {
+
+		private final String text; // Can't change the language whilst in a GUI so we can just store the translated text
+		private final Style style;
+
+		public TooltipElementText(String text, Style style, int spaceAfter, TooltipElement... children){
+			super(spaceAfter, children);
+			this.text = text;
+			this.style = style;
+		}
+
+		/** Returns the text for this element. */
+		protected String getText(ItemStack stack){
+			return text;
+		}
+
+		protected FontRenderer getFontRenderer(ItemStack stack){
+			return fontRenderer;
+		}
+
+		protected int getColour(ItemStack stack){
+			return 0;
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return true; // Always visible by default
+		}
+
+		@Override
+		protected int getHeight(ItemStack stack){
+			return getFontRenderer(stack).listFormattedStringToWidth(getText(stack), TOOLTIP_WIDTH - 2 * TOOLTIP_BORDER)
+					.size() * getFontRenderer(stack).FONT_HEIGHT;
+		}
+
+		@Override
+		protected void drawBackground(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+			// Nothing here because this element is only text!
+		}
+
+		@Override
+		protected void drawForeground(int x, int y, ItemStack stack, int mouseX, int mouseY){
+			for(String line : getFontRenderer(stack).listFormattedStringToWidth(getText(stack), TOOLTIP_WIDTH - 2 * TOOLTIP_BORDER)){
+				getFontRenderer(stack).drawStringWithShadow(style.getFormattingCode() + line, x, y, getColour(stack));
+				y += getFontRenderer(stack).FONT_HEIGHT;
+			}
+		}
+	}
+
+	private class TooltipElementItemName extends TooltipElementText {
+
+		public TooltipElementItemName(Style style, int spaceAfter){
+			super(null, style, spaceAfter);
+		}
+
+		@Override
+		protected String getText(ItemStack stack){
+			return stack.getDisplayName();
+		}
+
+	}
+
+	private class TooltipElementManaReadout extends TooltipElementText {
+
+		public TooltipElementManaReadout(int spaceAfter){
+			super(null, new Style().setColor(TextFormatting.BLUE), spaceAfter);
+		}
+
+		@Override
+		protected String getText(ItemStack stack){
+			return I18n.format("container." + Wizardry.MODID + ":arcane_workbench.mana",
+					((IManaStoringItem)stack.getItem()).getMana(stack),
+					((IManaStoringItem)stack.getItem()).getManaCapacity(stack));
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return stack.getItem() instanceof IManaStoringItem && ((IManaStoringItem)stack.getItem()).showManaInWorkbench(mc.player, stack);
+		}
+
+	}
+
+	private class TooltipElementProgressionBar extends TooltipElement {
+
+		private static final int PROGRESSION_BAR_WIDTH = 131;
+		private static final int PROGRESSION_BAR_HEIGHT = 3;
+
+		public TooltipElementProgressionBar(int spaceAfter){
+			super(spaceAfter);
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return stack.getItem() instanceof ItemWand && !Wizardry.settings.legacyWandLevelling;
+		}
+
+		@Override
+		protected int getHeight(ItemStack stack){
+			return fontRenderer.FONT_HEIGHT + LINE_SPACING_NARROW + PROGRESSION_BAR_HEIGHT;
+		}
+
+		@Override
+		protected void drawBackground(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+
+			y += fontRenderer.FONT_HEIGHT + LINE_SPACING_NARROW;
+
+			Tier tier = ((ItemWand)stack.getItem()).tier; // Only called if isVisible() returns true so this is ok
+
+			float progressFraction = 1;
+
+			if(tier != Tier.MASTER){
+				progressFraction = (float)WandHelper.getProgression(stack) / Tier.values()[tier.level + 1].progression;
+			}
+
+			DrawingUtils.drawTexturedRect(x, y, MAIN_GUI_WIDTH, ySize + PROGRESSION_BAR_HEIGHT, PROGRESSION_BAR_WIDTH, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+			int width = (int)(PROGRESSION_BAR_WIDTH * progressFraction);
+			DrawingUtils.drawTexturedRect(x, y, MAIN_GUI_WIDTH, ySize, width, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+		}
+
+		@Override
+		protected void drawForeground(int x, int y, ItemStack stack, int mouseX, int mouseY){
+
+			Tier tier = ((ItemWand)stack.getItem()).tier;
+
+			fontRenderer.drawStringWithShadow(tier.getDisplayNameWithFormatting(), x, y, 0);
+
+			if(tier != Tier.MASTER){
+				Tier nextTier = Tier.values()[tier.level + 1];
+				String s = TextFormatting.DARK_GRAY.toString() + nextTier.getDisplayName();
+				if(WandHelper.getProgression(stack) >= nextTier.progression) s = nextTier.getDisplayNameWithFormatting();
+				fontRenderer.drawStringWithShadow(s, x + TOOLTIP_WIDTH - TOOLTIP_BORDER * 2 - fontRenderer.getStringWidth(s), y, 0);
+			}
+		}
+
+	}
+
+	private class TooltipElementSpellList extends TooltipElement {
+
+		public TooltipElementSpellList(int spaceAfter){
+			super(spaceAfter, generateSpellEntries(8));
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return stack.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)stack.getItem()).showSpellsInWorkbench(mc.player, stack);
+		}
+
+		@Override
+		protected int getHeight(ItemStack stack){
+			return 0; // Doesn't have any height of its own
+		}
+
+		@Override
+		public int drawBackgroundLayer(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+			// It's more efficient to do GL state changes once in here
+			GlStateManager.enableBlend();
+			y = super.drawBackgroundLayer(x, y, stack, partialTicks, mouseX, mouseY);
+			GlStateManager.disableBlend();
+			return y;
+		}
+
+		@Override
+		protected void drawBackground(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+			// Has no background of its own
+		}
+
+		@Override
+		protected void drawForeground(int x, int y, ItemStack stack, int mouseX, int mouseY){
+			//Has no text of its own
+		}
+	}
+
+	private TooltipElement[] generateSpellEntries(int count){
+		TooltipElement[] entries = new TooltipElement[count];
+		for(int i=0; i<count; i++) entries[i] = new TooltipElementSpellEntry(i);
+		return entries;
+	}
+
+	private class TooltipElementSpellEntry extends TooltipElementText {
+
+		private final int index;
+
+		public TooltipElementSpellEntry(int index){
+			super(null, new Style().setColor(TextFormatting.BLUE), LINE_SPACING_NARROW);
+			this.index = index;
+		}
+
+		private Spell getSpell(ItemStack stack){
+
+			ItemStack spellBook = inventorySlots.getSlot(index).getStack();
+
+			if(!spellBook.isEmpty() && spellBook.getItem() instanceof ItemSpellBook){
+				return Spell.byMetadata(spellBook.getMetadata());
+			}else{
+				return ((ISpellCastingItem)stack.getItem()).getSpells(stack)[index];
+			}
+		}
+
+		private boolean shouldFlash(ItemStack stack){
+			ItemStack spellBook = inventorySlots.getSlot(index).getStack();
+			return !spellBook.isEmpty() && spellBook.getItem() instanceof ItemSpellBook
+					&& Spell.byMetadata(spellBook.getMetadata()) != ((ISpellCastingItem)stack.getItem()).getSpells(stack)[index];
+		}
+
+		private float getAlpha(float partialTicks){
+			return (MathHelper.sin(0.2f * (mc.player.ticksExisted + partialTicks)) + 1) / 4 + 0.5f;
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return stack.getItem() instanceof ISpellCastingItem
+					&& index < ((ISpellCastingItem)stack.getItem()).getSpells(stack).length;
+		}
+
+		@Override
+		protected FontRenderer getFontRenderer(ItemStack stack){
+			return Wizardry.proxy.shouldDisplayDiscovered(getSpell(stack), null) ? super.getFontRenderer(stack)
+					: mc.standardGalacticFontRenderer;
+		}
+
+		@Override
+		protected int getColour(ItemStack stack){
+			return shouldFlash(stack) ? DrawingUtils.makeTranslucent(0x000000, getAlpha(mc.getRenderPartialTicks()))
+					: super.getColour(stack);
+		}
+
+		@Override
+		protected String getText(ItemStack stack){
+
+			Spell spell = getSpell(stack);
+
+			if(Wizardry.proxy.shouldDisplayDiscovered(spell, null)){
+				return spell.getDisplayNameWithFormatting();
+			}else{
+				return SpellGlyphData.getGlyphName(spell, mc.world);
+			}
+		}
+
+		@Override
+		protected void drawBackground(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+
+			Spell spell = getSpell(stack);
+
+			Minecraft.getMinecraft().renderEngine.bindTexture(Wizardry.proxy.shouldDisplayDiscovered(spell, null)
+					? spell.getElement().getIcon() : Element.MAGIC.getIcon());
+
+			if(shouldFlash(stack)){
+				GlStateManager.color(1, 1, 1, getAlpha(partialTicks));
+			}
+
+			// Renders the little element icon
+			DrawingUtils.drawTexturedRect(x, y, 8, 8);
+
+			GlStateManager.color(1, 1, 1, 1);
+
+		}
+
+		@Override
+		protected void drawForeground(int x, int y, ItemStack stack, int mouseX, int mouseY){
+			super.drawForeground(x + 11, y, stack, mouseX, mouseY);
+		}
+	}
+
+	private class TooltipElementUpgradeList extends TooltipElementText {
+
+		public TooltipElementUpgradeList(int spaceAfter){
+			super(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.upgrades"),
+					new Style().setColor(TextFormatting.WHITE), spaceAfter, new TooltipElementUpgrades(0));
+		}
+
+		@Override
+		protected int getHeight(ItemStack stack){
+			return super.getHeight(stack) + LINE_SPACING_NARROW; // Gap between heading and upgrade icons
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return WandHelper.getTotalUpgrades(stack) > 0;
+		}
+
+	}
+
+	private class TooltipElementUpgrades extends TooltipElement {
+
+		private static final int ITEM_SIZE = 16;
+		private static final int ITEM_SPACING = 2;
+
+		public TooltipElementUpgrades(int spaceAfter){
+			super(spaceAfter);
+		}
+
+		@Override
+		protected boolean isVisible(ItemStack stack){
+			return true; // Handled by parent
+		}
+
+		@Override
+		protected int getHeight(ItemStack stack){
+			int rows = 1 + (WandHelper.getTotalUpgrades(stack) * (ITEM_SIZE + ITEM_SPACING) - ITEM_SPACING)
+					/ (TOOLTIP_WIDTH - TOOLTIP_BORDER * 2);
+			return rows * (ITEM_SIZE + ITEM_SPACING) - ITEM_SPACING;
+		}
+
+		@Override
+		protected void drawBackground(int x, int y, ItemStack stack, float partialTicks, int mouseX, int mouseY){
+
+			GlStateManager.enableDepth();
+
+			int x1 = 0;
+
+			// Upgrades
+			for(Item item : WandHelper.getSpecialUpgrades()){
+
+				int level = WandHelper.getUpgradeLevel(stack, item);
+
+				if(level > 0){
+
+					ItemStack upgrade = new ItemStack(item, level);
+
+					itemRender.renderItemAndEffectIntoGUI(upgrade, x + x1, y);
+					itemRender.renderItemOverlayIntoGUI(fontRenderer, upgrade, x + x1, y, null);
+
+					x1 += ITEM_SIZE + ITEM_SPACING;
+
+					if(x1 + ITEM_SIZE > TOOLTIP_WIDTH - TOOLTIP_BORDER * 2){
+						x1 = 0;
+						y += ITEM_SIZE + ITEM_SPACING;
+					}
+				}
+			}
+
+			GlStateManager.disableDepth();
+			GlStateManager.disableLighting(); // Whyyyyyy?
+		}
+
+		@Override
+		protected void drawForeground(int x, int y, ItemStack stack, int mouseX, int mouseY){
+
+			int x1 = 0;
+
+			// Wand upgrade tooltips
+			for(Item item : WandHelper.getSpecialUpgrades()){
+
+				int level = WandHelper.getUpgradeLevel(stack, item);
+
+				if(level > 0){
+					// The javadoc for isPointInRegion is ambiguous; what it means is that the REGION is
+					// relative to the GUI but the POINT isn't.
+					if(isPointInRegion(x + x1, y, ITEM_SIZE, ITEM_SIZE, mouseX, mouseY)){
+						ItemStack upgrade = new ItemStack(item, level);
+						renderToolTip(upgrade, mouseX - guiLeft, mouseY - guiTop);
+					}
+
+					x1 += ITEM_SIZE + ITEM_SPACING;
+
+					if(TOOLTIP_BORDER * 2 + x1 + ITEM_SIZE > TOOLTIP_WIDTH){
+						x1 = 0;
+						y += ITEM_SIZE + ITEM_SPACING;
+					}
+
+				}
+			}
+
+		}
+
+	}
+
 	private static class GuiButtonApply extends GuiButton {
 
 		public GuiButtonApply(int id, int x, int y){
@@ -654,12 +980,6 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			//this.drawCenteredString(minecraft.fontRenderer, this.displayString, this.x + this.width / 2,
 			//		this.y + (this.height - 8) / 2, colour);
 		}
-	}
-
-	@SubscribeEvent
-	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
-		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_CRYSTAL);
-		event.getMap().registerSprite(ContainerArcaneWorkbench.EMPTY_SLOT_UPGRADE);
 	}
 
 }

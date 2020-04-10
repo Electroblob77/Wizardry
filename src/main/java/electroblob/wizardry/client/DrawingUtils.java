@@ -156,7 +156,7 @@ public final class DrawingUtils {
 	 * @return The resulting integer colour code, which will be an 8-digit hexadecimal.
 	 */
 	public static int makeTranslucent(int colour, float opacity){
-		return colour + ((int)(0xff * opacity * 0x01000000));
+		return colour + ((int)(opacity * 0xff) << 24);
 	}
 
 	/**
