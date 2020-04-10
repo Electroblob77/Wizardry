@@ -16,6 +16,7 @@ import electroblob.wizardry.packet.PacketPossession;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
@@ -43,6 +44,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -123,8 +125,8 @@ public class Possession extends SpellRay {
 		addProperties(EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 
-	@Override public boolean canBeCastByNPCs() { return false; }
-	@Override public boolean canBeCastByDispensers() { return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override) { return false; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return false; }
 
 	@Override
 	public boolean requiresPacket(){
@@ -199,6 +201,8 @@ public class Possession extends SpellRay {
 	 */
 	public boolean possess(EntityPlayer possessor, EntityLiving target, int duration){
 
+		if(possessor.isSneaking()) return false;
+
 		if(WizardData.get(possessor) != null){
 
 			WizardData.get(possessor).setVariable(POSSESSEE_KEY, target);
@@ -267,7 +271,7 @@ public class Possession extends SpellRay {
 				// Inventory and items
 
 				if(possessor.getEntityData() != null){
-					possessor.getEntityData().setTag(INVENTORY_NBT_KEY, possessor.inventory.writeToNBT(new NBTTagList()));
+					NBTExtras.storeTagSafely(possessor.getEntityData(), INVENTORY_NBT_KEY, possessor.inventory.writeToNBT(new NBTTagList()));
 				}
 
 				possessor.inventory.clear();
@@ -681,11 +685,13 @@ public class Possession extends SpellRay {
 
 		if(possessee != null){
 
-			if(possessee.canPickUpLoot() && possessee.getHeldItemMainhand().isEmpty()){
-				possessee.setHeldItem(EnumHand.MAIN_HAND, event.getItem().getItem());
-			}else{
-				event.setCanceled(true);
-			}
+			event.setCanceled(true);
+
+//			if(possessee.canPickUpLoot() && possessee.getHeldItemMainhand().isEmpty()){
+//				possessee.setHeldItem(EnumHand.MAIN_HAND, event.getItem().getItem());
+//			}else{
+//				event.setCanceled(true);
+//			}
 		}
 	}
 

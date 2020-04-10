@@ -4,6 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.SpellEmitterData;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -129,7 +130,7 @@ public class SpellEmitter implements ITickable {
 		nbt.setDouble("z", z);
 		nbt.setInteger("direction", direction.getIndex());
 		nbt.setInteger("duration", duration);
-		nbt.setTag("modifiers", modifiers.toNBT());
+		NBTExtras.storeTagSafely(nbt, "modifiers", modifiers.toNBT());
 		nbt.setInteger("castingTick", castingTick);
 
 		return nbt;

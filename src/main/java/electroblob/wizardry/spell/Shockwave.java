@@ -41,12 +41,17 @@ public class Shockwave extends Spell {
 
 		for(EntityLivingBase target : targets){
 
-			if(target instanceof EntityPlayer && (!Wizardry.settings.playersMoveEachOther
-					|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
+			if(target instanceof EntityPlayer){
 
-				if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell.resist",
-						target.getName(), this.getNameForTranslationFormatted()), true);
-				return false;
+				Wizardry.proxy.shakeScreen((EntityPlayer)target, 10);
+
+				if(!Wizardry.settings.playersMoveEachOther) continue;
+
+				if(ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)){
+					if(!world.isRemote) caster.sendStatusMessage(new TextComponentTranslation("spell.resist",
+							target.getName(), this.getNameForTranslationFormatted()), true);
+					continue;
+				}
 			}
 
 			if(AllyDesignationSystem.isValidTarget(caster, target)){

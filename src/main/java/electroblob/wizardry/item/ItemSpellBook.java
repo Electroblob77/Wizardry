@@ -1,7 +1,9 @@
 package electroblob.wizardry.item;
 
+import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
+import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
@@ -9,35 +11,41 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
+import java.util.Map;
 
 public class ItemSpellBook extends Item {
+
+	private static final Map<Tier, ResourceLocation> guiTextures = ImmutableMap.of(
+			Tier.NOVICE, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_novice.png"),
+			Tier.APPRENTICE, 	new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_apprentice.png"),
+			Tier.ADVANCED, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_advanced.png"),
+			Tier.MASTER, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_master.png"));
 
 	public ItemSpellBook(){
 		super();
 		setHasSubtypes(true);
 		setMaxStackSize(16);
 		setCreativeTab(WizardryTabs.SPELLS);
+		this.addPropertyOverride(new ResourceLocation("festive"), (s, w, e) -> Wizardry.tisTheSeason ? 1 : 0);
 	}
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+
 		if(tab == WizardryTabs.SPELLS){
-			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
-			// is not required, only the metadata.
-			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
-				// i+1 is used so that the metadata ties up with the metadata() method. In other words, the none spell has metadata
-				// 0 and since this is not used as a spell book the metadata starts at 1.
-				list.add(new ItemStack(this, 1, i + 1));
+
+			List<Spell> spells = Spell.getAllSpells();
+			spells.removeIf(s -> !s.applicableForItem(this));
+
+			for(Spell spell : spells){
+				list.add(new ItemStack(this, 1, spell.metadata()));
 			}
 		}
 	}
@@ -77,6 +85,14 @@ public class ItemSpellBook extends Item {
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
+	}
+
+	/**
+	 * Returns the GUI texture to be used when this spell book is opened.
+	 * @param spell The spell for the book being opened.
+	 */
+	public ResourceLocation getGuiTexture(Spell spell){
+		return guiTextures.get(spell.getTier());
 	}
 
 }

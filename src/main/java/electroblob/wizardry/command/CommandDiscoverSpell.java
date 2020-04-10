@@ -113,7 +113,7 @@ public class CommandDiscoverSpell extends CommandBase {
 					if(server.sendCommandFeedback()) sender.sendMessage(
 							new TextComponentTranslation("commands." + Wizardry.MODID + ":discoverspell.clear", player.getName()));
 				}else if(all){
-					data.spellsDiscovered.addAll(Spell.getSpells(Spell.allSpells));
+					data.spellsDiscovered.addAll(Spell.getAllSpells());
 					if(server.sendCommandFeedback()) sender.sendMessage(
 							new TextComponentTranslation("commands." + Wizardry.MODID + ":discoverspell.all", player.getName()));
 				}else{

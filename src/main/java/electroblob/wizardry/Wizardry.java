@@ -31,6 +31,9 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
+import java.util.Calendar;
+
 /**
  * <i>"Electroblob's Wizardry adds an RPG-like system of spells to Minecraft, with the aim of being as playable as
  * possible. No crazy constructs, no perk trees, no complex recipes - simply find spell books, cast spells, and master
@@ -43,7 +46,7 @@ import org.apache.logging.log4j.Logger;
  */
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, acceptedMinecraftVersions = "[1.12.2]",
-		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,)")
+		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,);after:antiqueatlas@[4.6,)")
 
 public class Wizardry {
 
@@ -61,7 +64,7 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "4.2.3";
+	public static final String VERSION = "4.2.10";
 
 	// IDEA: Triggering of inbuilt Forge events in relevant places?
 	// IDEA: Abstract the vanilla particles behind the particle builder
@@ -82,6 +85,12 @@ public class Wizardry {
 	 * - <b>INFO</b>: Anything that might happen during normal mod operation that the user needs to know about. */
 	public static Logger logger;
 
+	/** A {@link File} object representing wizardry's config folder, {@code config/ebwizardry}). As of wizardry 4.2.4,
+	 * this folder contains the main config file and the global spell properties folder, if used. */
+	public static File configDirectory;
+
+	public static boolean tisTheSeason;
+
 	// The instance of wizardry that Forge uses.
 	@Instance(Wizardry.MODID)
 	public static Wizardry instance;
@@ -97,7 +106,12 @@ public class Wizardry {
 		
 		proxy.registerResourceReloadListeners();
 
+		configDirectory = new File(event.getModConfigurationDirectory(), Wizardry.MODID);
 		settings.initConfig(event);
+
+		Calendar calendar = Calendar.getInstance();
+		tisTheSeason = calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DAY_OF_MONTH) >= 24
+				&& calendar.get(Calendar.DAY_OF_MONTH) <= 26;
 
 		// Capabilities
 		WizardData.register();

@@ -6,8 +6,10 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.AllyDesignationSystem.FriendlyFire;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -16,7 +18,10 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -89,7 +94,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate wizard towers. */
 	public int[] towerDimensions = {0};
 	/** <b>[Server-only]</b> The rarity of wizard towers, used by the world generator. Larger numbers are rarer. */
-	public int towerRarity = 900;
+	public int towerRarity = 700;
 	/** <b>[Server-only]</b> List of structure file locations for wizard towers without loot chests. */
 	public ResourceLocation[] towerFiles = {new ResourceLocation(Wizardry.MODID, "wizard_tower_0"),
 											new ResourceLocation(Wizardry.MODID, "wizard_tower_1"),
@@ -103,7 +108,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate obelisks. */
 	public int[] obeliskDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of obelisks, used by the world generator. Larger numbers are rarer. */
-	public int obeliskRarity = 800;
+	public int obeliskRarity = 600;
 	/** <b>[Server-only]</b> List of structure file locations for obelisks. */
 	public ResourceLocation[] obeliskFiles = {new ResourceLocation(Wizardry.MODID, "obelisk_0"),
 												new ResourceLocation(Wizardry.MODID, "obelisk_1"),
@@ -113,7 +118,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of dimension ids in which to generate shrines. */
 	public int[] shrineDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of shrines, used by the world generator. Larger numbers are rarer. */
-	public int shrineRarity = 1500;
+	public int shrineRarity = 1100;
 	/** <b>[Server-only]</b> List of structure file locations for shrines. */
 	public ResourceLocation[] shrineFiles = {new ResourceLocation(Wizardry.MODID, "shrine_0"),
 											new ResourceLocation(Wizardry.MODID, "shrine_1"),
@@ -124,7 +129,7 @@ public final class Settings {
 											new ResourceLocation(Wizardry.MODID, "shrine_6"),
 											new ResourceLocation(Wizardry.MODID, "shrine_7")};
 	/** <b>[Server-only]</b> List of solid blocks (usually trees) which are ignored by the structure generators. */
-	public ResourceLocation[] treeBlocks = toResourceLocations(DEFAULT_TREE_BLOCKS);
+	public Pair<ResourceLocation, Short>[] treeBlocks = parseItemMetaStrings(DEFAULT_TREE_BLOCKS);
 	/** <b>[Server-only]</b> The chance for wizard towers to generate with an evil wizard and chest inside. */
 	public double evilWizardChance = 0.2;
 	/** <b>[Server-only]</b> List of dimension ids in which to generate crystal ore. */
@@ -163,11 +168,11 @@ public final class Settings {
 	public boolean playerBlockDamage = true;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
-	/** <b>[Server-only]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
-	public boolean replaceVanillaFireballs = true;
 	/** <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
 	 * velocity-based one. */
 	public boolean replaceVanillaFallDamage = true;
+	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
+	public boolean bonemealGrowsCrystalFlowers = true;
 	/**
 	 * <b>[Server-only]</b> List of registry names of entities which summoned creatures are allowed to attack, in addition
 	 * to the defaults.
@@ -187,15 +192,15 @@ public final class Settings {
 	 * <b>[Server-only]</b> List of registry names of items which cannot be smelted by the pocket furnace spell, in
 	 * addition to armour, tools and weapons.
 	 */
-	public ResourceLocation[] pocketFurnaceItemBlacklist = toResourceLocations("cobblestone", "netherrack");
+	public Pair<ResourceLocation, Short>[] pocketFurnaceItemBlacklist = parseItemMetaStrings("cobblestone", "netherrack");
 	/** <b>[Server-only]</b> List of registry names of blocks which can be detected by the divination spell. */
-	public ResourceLocation[] divinationOreWhitelist = {};
+	public Pair<ResourceLocation, Short>[] divinationOreWhitelist = parseItemMetaStrings(); // That works I guess
 	/** <b>[Server-only]</b> List of registry names of items which count as swords for imbuement spells. */
-	public ResourceLocation[] swordItemWhitelist = {};
+	public Pair<ResourceLocation, Short>[] swordItemWhitelist = parseItemMetaStrings();
 	/** <b>[Server-only]</b> List of registry names of items which count as bows for imbuement spells. */
-	public ResourceLocation[] bowItemWhitelist = {};
+	public Pair<ResourceLocation, Short>[] bowItemWhitelist = parseItemMetaStrings();
 	/** <b>[Server-only]</b> Map of items to values which wizard trades may use as currency. */
-	public Map<ResourceLocation, Integer> currencyItems = new HashMap<>();
+	public Map<Pair<ResourceLocation, Short>, Integer> currencyItems = new HashMap<>();
 	/** <b>[Server-only]</b> Global damage scaling factor for all player magic damage. */
 	public double playerDamageScale = 1.0;
 	/** <b>[Server-only]</b> Global damage scaling factor for all npc magic damage. */
@@ -265,7 +270,9 @@ public final class Settings {
 	 * effect.
 	 */
 	public boolean slowTimeAffectsPlayers = true;
-	/**  <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
+	/** <b>[Synchronised]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
+	public boolean replaceVanillaFireballs = true;
+	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys
@@ -364,7 +371,7 @@ public final class Settings {
 	 */
 	void initConfig(FMLPreInitializationEvent event){
 
-		config = new Configuration(event.getSuggestedConfigurationFile());
+		config = new Configuration(new File(Wizardry.configDirectory, Wizardry.MODID + ".cfg"));
 		config.load();
 
 		Wizardry.logger.info("Setting up main config");
@@ -430,7 +437,7 @@ public final class Settings {
 
 		Property property;
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			property = config.get(SPELLS_CATEGORY, spell.getRegistryName().toString(), true,
 					I18n.translateToLocal("spell." + spell.getUnlocalisedName() + ".desc"));
 			// Uses the same config key as the spell name, because - well, that's what it's called!
@@ -541,6 +548,13 @@ public final class Settings {
 		slowTimeAffectsPlayers = property.getBoolean();
 		propOrder.add(property.getName());
 
+		property = config.get(GAMEPLAY_CATEGORY, "bonemealGrowsCrystalFlowers", true,
+				"Whether using bonemeal on grass blocks has a chance to grow crystal flowers.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".bonemeal_grows_crystal_flowers");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		bonemealGrowsCrystalFlowers = property.getBoolean();
+		propOrder.add(property.getName());
+
 		property = config.get(GAMEPLAY_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_whitelist");
 		property.setRequiresMcRestart(true);
@@ -642,41 +656,42 @@ public final class Settings {
 				"List of registry names of blocks or items which cannot be smelted by the pocket furnace spell, in addition to armour, tools and weapons. Block/item names are not case sensitive. For mod items, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".pocket_furnace_item_blacklist");
 		property.setRequiresWorldRestart(true);
-		pocketFurnaceItemBlacklist = getResourceLocationList(property);
+		pocketFurnaceItemBlacklist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "divinationOreWhitelist", new String[0], "List of registry names of ore blocks which can be detected by the divination spell. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".divination_ore_whitelist");
 		property.setRequiresWorldRestart(true);
-		divinationOreWhitelist = getResourceLocationList(property);
+		divinationOreWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "swordItemWhitelist", new String[0], "List of registry names of items which should count as swords for imbuement spells. Most swords should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:broadsword).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".sword_item_whitelist");
 		property.setRequiresWorldRestart(true);
-		swordItemWhitelist = getResourceLocationList(property);
+		swordItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "bowItemWhitelist", new String[0], "List of registry names of items which should count as bows for imbuement spells. Most bows should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:shortbow).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".bow_item_whitelist");
 		property.setRequiresWorldRestart(true);
-		bowItemWhitelist = getResourceLocationList(property);
+		bowItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
-				Pattern.compile("[A-Za-z:_]+ [0-9]+"));
+				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
 		property.setRequiresWorldRestart(true);
 		propOrder.add(property.getName());
 		currencyItems = new HashMap<>();
 		for(String string : property.getStringList()){
+			string = string.toLowerCase(Locale.ROOT).trim();
 			String[] args = string.split(" ");
 			if(args.length != 2){
 				Wizardry.logger.warn("Invalid entry in currency items: {}", string);
 				continue; // Ignore invalid entries, the pattern above should ensure this never happens
 			}
 			try {
-				currencyItems.put(new ResourceLocation(args[0]), Integer.parseInt(args[1]));
+				currencyItems.put(parseItemMetaString(args[0]), Integer.parseInt(args[1]));
 			}catch(NumberFormatException e){
 				Wizardry.logger.warn("Invalid integer in currency items: {}", args[1]);
 			}
@@ -700,7 +715,7 @@ public final class Settings {
 		fastWorldgen = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "towerDimensions", new int[]{0}, "List of dimension ids in which wizard towers will generate.");
+		property = config.get(WORLDGEN_CATEGORY, "towerDimensions", new int[]{0}, "List of dimension ids in which wizard towers will generate. Remove all dimensions to disable wizard towers completely.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_dimensions");
 		property.setRequiresWorldRestart(true);
 		towerDimensions = property.getIntList();
@@ -725,20 +740,20 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "towerFiles", new String[]{Wizardry.MODID + ":wizard_tower_0", Wizardry.MODID + ":wizard_tower_1", Wizardry.MODID + ":wizard_tower_2", Wizardry.MODID + ":wizard_tower_3"},
-				"List of structure file locations for wizard towers without loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for wizard towers without loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable wizard towers, use the tower dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_files");
 		property.setRequiresWorldRestart(true);
 		towerFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "towerWithChestFiles", new String[]{Wizardry.MODID + ":wizard_tower_chest_0", Wizardry.MODID + ":wizard_tower_chest_1", Wizardry.MODID + ":wizard_tower_chest_2", Wizardry.MODID + ":wizard_tower_chest_3"},
-				"List of structure file locations for wizard towers with loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for wizard towers with loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable wizard towers, use the tower dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tower_with_chest_files");
 		property.setRequiresWorldRestart(true);
 		towerWithChestFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "obeliskDimensions", new int[]{0, -1}, "List of dimension ids in which obelisks will generate.");
+		property = config.get(WORLDGEN_CATEGORY, "obeliskDimensions", new int[]{0, -1}, "List of dimension ids in which obelisks will generate. Remove all dimensions to disable obelisks completely.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".obelisk_dimensions");
 		property.setRequiresWorldRestart(true);
 		obeliskDimensions = property.getIntList();
@@ -752,13 +767,13 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "obeliskFiles", new String[]{Wizardry.MODID + ":obelisk_0", Wizardry.MODID + ":obelisk_1", Wizardry.MODID + ":obelisk_2", Wizardry.MODID + ":obelisk_3", Wizardry.MODID + ":obelisk_4"},
-				"List of structure file locations for obelisks. One of these files will be randomly selected each time an obelisk is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for obelisks. One of these files will be randomly selected each time an obelisk is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable obelisks, use the obelisk dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".obelisk_files");
 		property.setRequiresWorldRestart(true);
 		obeliskFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "shrineDimensions", new int[]{0, -1}, "List of dimension ids in which shrines will generate.");
+		property = config.get(WORLDGEN_CATEGORY, "shrineDimensions", new int[]{0, -1}, "List of dimension ids in which shrines will generate. Remove all dimensions to disable shrines completely.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_dimensions");
 		property.setRequiresWorldRestart(true);
 		shrineDimensions = property.getIntList();
@@ -772,7 +787,7 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "shrineFiles", new String[]{Wizardry.MODID + ":shrine_0", Wizardry.MODID + ":shrine_1", Wizardry.MODID + ":shrine_2", Wizardry.MODID + ":shrine_3", Wizardry.MODID + ":shrine_4", Wizardry.MODID + ":shrine_5", Wizardry.MODID + ":shrine_6", Wizardry.MODID + ":shrine_7"},
-				"List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.");
+				"List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable shrines, use the shrine dimensions setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_files");
 		property.setRequiresWorldRestart(true);
 		shrineFiles = getResourceLocationList(property);
@@ -781,7 +796,7 @@ public final class Settings {
 		property = config.get(GAMEPLAY_CATEGORY, "treeBlocks", DEFAULT_TREE_BLOCKS, "List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tree_blocks");
 		property.setRequiresWorldRestart(true);
-		treeBlocks = getResourceLocationList(property);
+		treeBlocks = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "oreDimensions", new int[]{0}, "List of dimension ids in which crystal ore will generate. Note that removing the overworld (id 0) from this list will make the mod VERY difficult to play!");
@@ -1072,4 +1087,45 @@ public final class Settings {
 	public static ResourceLocation[] toResourceLocations(String... strings){
 		return Arrays.stream(strings).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 	}
+
+	/** Applies {@link Settings#parseItemMetaString(String)} to each input string and returns and array of the resulting
+	 * {@link Pair}s. */
+	@SuppressWarnings("unchecked") // Shut up java
+	public static Pair<ResourceLocation, Short>[] parseItemMetaStrings(String... strings){
+		return Arrays.stream(strings).map(Settings::parseItemMetaString).toArray(Pair[]::new);
+	}
+
+	/** Parses the given input string as an item of the form {@code id:metadata} and returns the resulting
+	 * {@link ResourceLocation} ID and metadata value as a {@link Pair} object. */
+	public static Pair<ResourceLocation, Short> parseItemMetaString(String string){
+
+		string = string.toLowerCase(Locale.ROOT).trim();
+
+		String[] itemArgs = string.split(":");
+		String item;
+		short meta;
+
+		try {
+			meta = Short.parseShort(itemArgs[itemArgs.length-1]);
+			item = String.join(":", Arrays.copyOfRange(itemArgs, 0, itemArgs.length-1));
+		}catch(NumberFormatException e){ // If no metadata is specified
+			meta = OreDictionary.WILDCARD_VALUE;
+			item = string;
+		}
+
+		return Pair.of(new ResourceLocation(item), meta);
+	}
+
+	public static boolean containsMetaBlock(Pair<ResourceLocation, Short>[] array, IBlockState block){
+		return containsMetaThing(array, block.getBlock().getRegistryName(), (short)block.getBlock().getMetaFromState(block));
+	}
+
+	public static boolean containsMetaItem(Pair<ResourceLocation, Short>[] array, ItemStack stack){
+		return containsMetaThing(array, stack.getItem().getRegistryName(), (short)stack.getMetadata());
+	}
+
+	public static boolean containsMetaThing(Pair<ResourceLocation, Short>[] array, ResourceLocation id, short metadata){
+		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, OreDictionary.WILDCARD_VALUE));
+	}
+
 }

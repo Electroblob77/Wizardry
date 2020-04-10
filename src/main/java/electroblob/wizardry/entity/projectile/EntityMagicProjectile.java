@@ -71,7 +71,7 @@ public abstract class EntityMagicProjectile extends EntityThrowable implements I
 		double dy = !this.hasNoGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - this.posY
 				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - this.posY;
 		double dz = target.posZ - caster.posZ;
-		double horizontalDistance = (double)MathHelper.sqrt(dx * dx + dz * dz);
+		double horizontalDistance = MathHelper.sqrt(dx * dx + dz * dz);
 
 		if(horizontalDistance >= 1.0E-7D){
 			

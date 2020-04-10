@@ -1,6 +1,5 @@
 package electroblob.wizardry.entity.construct;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.WizardryUtilities;

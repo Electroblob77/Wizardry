@@ -1,6 +1,7 @@
 package electroblob.wizardry.util;
 
 import electroblob.wizardry.CommonProxy;
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.ISpellCaster;
@@ -23,6 +24,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
@@ -270,7 +272,7 @@ public final class WizardryUtilities {
 
 		/** Surface criterion which defines a surface as the boundary between a block that is solid on the required side and
 		 * a block that is replaceable. This means the surface can be built on. */
-		SurfaceCriteria BUILDABLE = (world, pos, side) -> world.isSideSolid(pos, side) && world.getBlockState(pos.offset(side)).getBlock().isReplaceable(world, pos);
+		SurfaceCriteria BUILDABLE = (world, pos, side) -> world.isSideSolid(pos, side) && world.getBlockState(pos.offset(side)).getBlock().isReplaceable(world, pos.offset(side));
 
 		/** Surface criterion which defines a surface as the boundary between a block that is solid on the required side
 		 * or a liquid, and an air block. Used for freezing water and placing snow. */
@@ -298,11 +300,10 @@ public final class WizardryUtilities {
 	 * @return True if the given block is a tree block, false if not.
 	 */
 	public static boolean isTreeBlock(World world, BlockPos pos){
-		return world.getBlockState(pos).getBlock() instanceof BlockLog
-				|| world.getBlockState(pos).getBlock() instanceof BlockCactus
-				|| world.getBlockState(pos).getBlock().isLeaves(world.getBlockState(pos), world, pos)
-				|| world.getBlockState(pos).getBlock().isFoliage(world, pos)
-				|| Arrays.asList(Wizardry.settings.treeBlocks).contains(world.getBlockState(pos).getBlock().getRegistryName());
+		Block block = world.getBlockState(pos).getBlock();
+		return block instanceof BlockLog || block instanceof BlockCactus
+				|| block.isLeaves(world.getBlockState(pos), world, pos) || block.isFoliage(world, pos)
+				|| Settings.containsMetaBlock(Wizardry.settings.treeBlocks, world.getBlockState(pos));
 	}
 
 	/**
@@ -793,6 +794,20 @@ public final class WizardryUtilities {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Returns a new {@link ItemStack} that is identical to the supplied one, except with the metadata changed to the
+	 * new value given.
+	 * @param toCopy The stack to copy
+	 * @param newMetadata The new metadata value
+	 * @return The resulting {@link ItemStack}
+	 */
+	public static ItemStack copyWithMeta(ItemStack toCopy, int newMetadata){
+		ItemStack copy = new ItemStack(toCopy.getItem(), toCopy.getCount(), newMetadata);
+		NBTTagCompound compound = toCopy.getTagCompound();
+		if(compound != null) copy.setTagCompound(compound.copy());
+		return copy;
 	}
 
 	/**

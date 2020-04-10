@@ -16,7 +16,13 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.apache.commons.lang3.ArrayUtils;
 
+@Mod.EventBusSubscriber
 public class EntityIceWraith extends EntityBlazeMinion {
 
 	/** The version from EntityLivingBase is only used in onLivingUpdate, so it can safely be copied. */
@@ -185,12 +191,16 @@ public class EntityIceWraith extends EntityBlazeMinion {
 
 	@Override
 	public boolean getCanSpawnHere(){
-		// Only spawns in the specified dimensions
-		for(int id : Wizardry.settings.mobSpawnDimensions){
-			if(this.dimension == id) return super.getCanSpawnHere() && this.isValidLightLevel();
-		}
+		return super.getCanSpawnHere() && this.isValidLightLevel();
+	}
 
-		return false;
+	@SubscribeEvent
+	public static void onCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event){
+		// We have no way of checking if it's a spawner in getCanSpawnHere() so this has to be done here instead
+		if(event.getEntityLiving() instanceof EntityLightningWraith && !event.isSpawner()){
+			if(!ArrayUtils.contains(Wizardry.settings.mobSpawnDimensions, event.getWorld().provider.getDimension()))
+				event.setResult(Event.Result.DENY);
+		}
 	}
 
 	/**

@@ -184,7 +184,7 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 
 		for(EntityLivingBase entity : entities){
 			entity.addPotionEffect(new PotionEffect(WizardryPotions.containment, 219));
-			entity.getEntityData().setTag(PotionContainment.ENTITY_TAG, NBTUtil.createPosTag(this.pos));
+			NBTExtras.storeTagSafely(entity.getEntityData(), PotionContainment.ENTITY_TAG, NBTUtil.createPosTag(this.pos));
 		}
 	}
 
@@ -192,13 +192,13 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
 
 		compound.setBoolean("activated", this.activated);
-		if(linkedContainer != null) compound.setTag("linkedContainerPos", NBTUtil.createPosTag(linkedContainer.getPos()));
+		if(linkedContainer != null) NBTExtras.storeTagSafely(compound, "linkedContainerPos", NBTUtil.createPosTag(linkedContainer.getPos()));
 
 		NBTTagList tagList = new NBTTagList();
 		for(UUID uuid : linkedWizards){
 			if(uuid != null) tagList.appendTag(NBTUtil.createUUIDTag(uuid));
 		}
-		compound.setTag("wizards", tagList);
+		NBTExtras.storeTagSafely(compound, "wizards", tagList);
 
 		return super.writeToNBT(compound);
 	}

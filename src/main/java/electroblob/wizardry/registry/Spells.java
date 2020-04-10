@@ -5,6 +5,7 @@ import electroblob.wizardry.entity.construct.*;
 import electroblob.wizardry.entity.living.*;
 import electroblob.wizardry.entity.projectile.*;
 import electroblob.wizardry.spell.*;
+import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.ResourceLocation;
@@ -243,10 +244,15 @@ public final class Spells {
 		IForgeRegistry<Spell> registry = event.getRegistry();
 
 		registry.register(new None());
-		registry.register(new SpellArrow<>("magic_missile", EntityMagicMissile::new).addProperties(Spell.DAMAGE).soundValues(1, 1.4f, 0.4f));
+		registry.register(new SpellArrow<EntityMagicMissile>("magic_missile", EntityMagicMissile::new){
+			@Override
+			protected String getTranslationKey(){
+				return Wizardry.tisTheSeason ? super.getTranslationKey() + "_festive" : super.getTranslationKey();
+			}
+		}.addProperties(Spell.DAMAGE).soundValues(1, 1.4f, 0.4f));
 		registry.register(new Ignite());
 		registry.register(new Freeze());
-		registry.register(new Snowball());
+		registry.register(new SpellThrowable<>("snowball", EntitySnowball::new).npcSelector((e, o) -> o).soundValues(0.5f, 0.4f, 0.2f)); // Let's spare wizards the pain of the snowball spell
 		registry.register(new Arc());
 		registry.register(new SpellProjectile<>("thunderbolt", EntityThunderbolt::new).addProperties(Spell.DAMAGE, EntityThunderbolt.KNOCKBACK_STRENGTH).soundValues(0.8f, 0.9f, 0.2f));
 		registry.register(new SummonZombie());
@@ -316,7 +322,7 @@ public final class Spells {
 		registry.register(new SpellProjectile<>("darkness_orb", EntityDarknessOrb::new).addProperties(Spell.DAMAGE, Spell.EFFECT_DURATION, Spell.EFFECT_STRENGTH).soundValues(0.5f, 0.4f, 0.2f));
 		registry.register(new ShadowWard());
 		registry.register(new Decay());
-		registry.register(new SpellBuff("water_breathing", 0.3f, 0.3f, 1, () -> MobEffects.WATER_BREATHING){ @Override public boolean canBeCastByNPCs(){ return false; } }.soundValues(0.7f, 1.2f, 0.4f));
+		registry.register(new SpellBuff("water_breathing", 0.3f, 0.3f, 1, () -> MobEffects.WATER_BREATHING).npcSelector((e, o) -> false).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new Tornado());
 		registry.register(new Glide());
 		registry.register(new SummonSpiritHorse());
@@ -367,7 +373,7 @@ public final class Spells {
 		registry.register(new Intimidate());
 		registry.register(new Banish());
 		registry.register(new SixthSense());
-		registry.register(new SpellBuff("darkvision", 0, 0.4f, 0.7f, () -> MobEffects.NIGHT_VISION){ @Override public boolean canBeCastByNPCs(){ return false; } }.soundValues(0.7f, 1.2f, 0.4f));
+		registry.register(new SpellBuff("darkvision", 0, 0.4f, 0.7f, () -> MobEffects.NIGHT_VISION).npcSelector((e, o) -> false).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new Clairvoyance());
 		registry.register(new PocketWorkbench());
 		registry.register(new ImbueWeapon());

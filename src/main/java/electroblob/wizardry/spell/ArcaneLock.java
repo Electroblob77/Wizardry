@@ -6,11 +6,13 @@ import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -32,9 +34,9 @@ public class ArcaneLock extends SpellRay {
 
 	@Override public boolean requiresPacket(){ return true; }
 
-	@Override public boolean canBeCastByDispensers(){ return false; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser){ return false; }
 
-	@Override public boolean canBeCastByNPCs(){ return false; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return false; }
 
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){

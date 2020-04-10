@@ -13,13 +13,16 @@ import electroblob.wizardry.spell.Spell;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -40,9 +43,6 @@ import java.util.stream.Collectors;
  * @author Electroblob
  * @since Wizardry 4.2
  */
-// There is not a particular semantic reason to separate this from the Spell class itself. However, doing so means that
-// everything related to the JSON spell system is kept in one place and doesn't clutter the (already long) Spell class.
-// Additionally, it allows SpellProperties objects to be passed around during loading and syncing.
 public final class SpellProperties {
 
 	private static final Gson gson = new Gson();
@@ -245,32 +245,57 @@ public final class SpellProperties {
 	// things don't work as expected then that may be why - pretty sure it's fine though since the properties get
 	// wiped client-side on each login anyway.
 	public static void init(){
-		// Collecting to a set should give us one of each mod ID
-		Set<String> modIDs = Spell.getSpells(Spell.allSpells).stream().map(s -> s.getRegistryName().getNamespace()).collect(Collectors.toSet());
 
-		boolean flag = true;
+		// Collecting to a set should give us one of each mod ID
+		Set<String> modIDs = Spell.getAllSpells().stream().map(s -> s.getRegistryName().getNamespace()).collect(Collectors.toSet());
+
+		boolean flag = loadConfigSpellProperties();
 
 		for(String modID : modIDs){
-			flag &= loadSpellProperties(modID); // Don't short-circuit, or mods later on won't get loaded!
+			flag &= loadBuiltInSpellProperties(modID); // Don't short-circuit, or mods later on won't get loaded!
 		}
 
 		if(!flag) Wizardry.logger.warn("Some spell property files did not load correctly; this will likely cause problems later!");
 	}
 
-	// Sooooooo I just realised that resource packs - you know, that famously client-side thing - can now define
-	// stuff that should be specified by the server. No wonder it all got moved to data packs in 1.13...
-	// Anyway, for the time being we're in 1.12 so we're gonna have to do this instead.
+	// There are now three 'layers' of spell properties - in order of priority, these are:
+	// 1. World-specific properties, stored in saves/[world]/data/spells
+	// 2. Global overrides, stored in config/ebwizardry/spells
+	// 3. Built-in properties, stored in mods/[mod jar]/assets/spells
+	// There's a method for loading each of these below, because that makes sense to me!
+
+	public static void loadWorldSpecificSpellProperties(World world){
+
+		Wizardry.logger.info("Loading custom spell properties for world {}", world.getWorldInfo().getWorldName());
+
+		File spellJSONDir = new File(new File(world.getSaveHandler().getWorldDirectory(), "data"), "spells");
+
+		if(spellJSONDir.mkdirs()) return; // If it just got created it can't possibly have anything inside
+
+		if(!loadSpellPropertiesFromDir(spellJSONDir)) Wizardry.logger.warn("Some spell property files did not load correctly; this will likely cause problems later!");
+	}
+
+	private static boolean loadConfigSpellProperties(){
+
+		Wizardry.logger.info("Loading spell properties from config folder");
+
+		File spellJSONDir = new File(Wizardry.configDirectory, "spells");
+
+		if(!spellJSONDir.exists()) return true; // If there's no global spell properties folder, do nothing
+
+		return loadSpellPropertiesFromDir(spellJSONDir);
+	}
 
 	// For crafting recipes, Forge does some stuff behind the scenes to load recipe JSON files from mods' namespaces.
 	// This leverages the same methods.
 
-	private static boolean loadSpellProperties(String modID){
+	private static boolean loadBuiltInSpellProperties(String modID){
 
 		// Yes, I know you're not supposed to do orElse(null). But... meh.
 		ModContainer mod = Loader.instance().getModList().stream().filter(m -> m.getModId().equals(modID)).findFirst().orElse(null);
 
 		if(mod == null){
-			Wizardry.logger.warn("Tried to load spell properties for mod with ID '" + modID + "', but no such mod was loaded");
+			Wizardry.logger.warn("Tried to load built-in spell properties for mod with ID '" + modID + "', but no such mod was loaded");
 			return false; // Failed!
 		}
 
@@ -279,7 +304,7 @@ public final class SpellProperties {
 		List<Spell> spells = Spell.getSpells(s -> s.getRegistryName().getNamespace().equals(modID));
 		if(modID.equals(Wizardry.MODID)) spells.add(Spells.none); // In this particular case we do need the none spell
 
-		Wizardry.logger.info("Loading spell properties for " + spells.size() + " spells in mod " + modID);
+		Wizardry.logger.info("Loading built-in spell properties for " + spells.size() + " spells in mod " + modID);
 
 		// This method is used by Forge to load mod recipes and advancements, so it's a fair bet it's the right one
 		// In the absence of Javadoc, here's what the non-obvious parameters do:
@@ -307,11 +332,15 @@ public final class SpellProperties {
 						return true;
 					}
 
-					BufferedReader reader = null;
-
 					// We want to do this regardless of whether the JSON file got read properly, because that prints its
 					// own separate warning
 					if(!spells.remove(spell)) Wizardry.logger.warn("What's going on?!");
+
+					// Ignore spells overridden in the config folder
+					// This needs to be done AFTER the above line or it'll think there are missing spell properties files
+					if(spell.arePropertiesInitialised()) return true;
+
+					BufferedReader reader = null;
 
 					try{
 
@@ -348,6 +377,54 @@ public final class SpellProperties {
 
 		return success;
 	}
+
+	private static boolean loadSpellPropertiesFromDir(File dir){
+
+		boolean success = true;
+
+		for(File file : FileUtils.listFiles(dir, new String[]{"json"}, true)){
+
+			// The structure in world and config folders is subtly different in that the "spells" and mod id directories
+			// are in the opposite order, i.e. it's spells/modid/whatever.json instead of modid/spells/whatever.json
+			String relative = dir.toPath().relativize(file.toPath()).toString(); // modid\whatever.json
+			String nameAndModID = FilenameUtils.removeExtension(relative).replaceAll("\\\\", "/"); // modid/whatever
+			String modID = nameAndModID.split("/")[0]; // modid
+			String name = nameAndModID.substring(nameAndModID.indexOf('/') + 1); // whatever
+
+			ResourceLocation key = new ResourceLocation(modID, name);
+
+			Spell spell = Spell.registry.getValue(key);
+
+			// If no spell matches a particular file, log it and just ignore the file
+			if(spell == null){
+				Wizardry.logger.info("Spell properties file " + nameAndModID + ".json does not match any registered spells; ensure the filename is spelled correctly.");
+				continue;
+			}
+
+			BufferedReader reader = null;
+
+			try{
+
+				reader = Files.newBufferedReader(file.toPath());
+
+				JsonObject json = JsonUtils.fromJson(gson, reader, JsonObject.class);
+				SpellProperties properties = new SpellProperties(json, spell);
+				spell.setProperties(properties);
+
+			}catch(JsonParseException jsonparseexception){
+				Wizardry.logger.error("Parsing error loading spell property file for " + key, jsonparseexception);
+				success = false;
+			}catch(IOException ioexception){
+				Wizardry.logger.error("Couldn't read spell property file for " + key, ioexception);
+				success = false;
+			}finally{
+				IOUtils.closeQuietly(reader);
+			}
+		}
+
+		return success;
+	}
+
 }
 
 // We probably could have used the attribute system for all of this, but I am reluctant to do so for a number of

@@ -10,6 +10,7 @@ import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.packet.PacketSpellProperties;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.SpellProperties;
@@ -18,6 +19,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +30,10 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ForgeRegistry;
@@ -36,6 +43,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -82,6 +90,7 @@ import java.util.stream.Collectors;
  * @see ItemScroll ItemScroll
  * @see Spells
  */
+@Mod.EventBusSubscriber
 public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements Comparable<Spell> {
 
 	// Spell checklist:
@@ -115,6 +124,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	private final String unlocalisedName;
 	/** This spell's associated SpellProperties object. */
 	private SpellProperties properties;
+	/** A reference to the global spell properties for this spell, so they are only loaded once. */
+	private SpellProperties globalProperties;
 	/** Used in initialisation. */
 	private Set<String> propertyKeys = new HashSet<>();
 
@@ -139,6 +150,17 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	protected float pitch = 1;
 	/** The pitch variation of the sound played when this spell is cast. Defaults to 0. */
 	protected float pitchVariation = 0;
+
+	// The following two fields are supposed to eliminate the need for boilerplate classes in spell packs.
+	// As an example, spells in the twilight forest spell pack only appear on custom spell book and scroll items and
+	// NPCs can only cast them if they spawned in the twilight forest. Without these convenience fields, spells that
+	// would not otherwise require their own classes have to have one just so they can override those two behaviours.
+
+	/** List of items for which this spell is applicable (used by default behaviour of {@link Spell#applicableForItem(Item)}). */
+	protected Item[] applicableItems;
+	/** Predicate that specifies a condition that NPCs must satisfy in order to spawn with this spell equipped (used by
+	 * default behaviour of {@link Spell#canBeCastBy(EntityLiving, boolean)}). */
+	protected BiPredicate<EntityLiving, Boolean> npcSelector; // Kinda ugly but it's better than boilerplate classes
 
 	private static int nextSpellId = 0;
 	/** The spell's integer ID, mainly used for networking. */
@@ -177,6 +199,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		this.icon = new ResourceLocation(modID, "textures/spells/" + name + ".png");
 		this.sounds = createSounds();
 		this.id = nextSpellId++;
+		this.items(WizardryItems.spell_book, WizardryItems.scroll);
+		this.npcSelector((e, o) -> canBeCastByNPCs()); // Fallback to old behaviour until we remove it entirely
 	}
 
 	// ========================================= Initialisation methods ===========================================
@@ -195,7 +219,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @see Spell#playSound(World, double, double, double, int, int, SpellModifiers, String...)
 	 */
 	protected SoundEvent[] createSounds(){
-		return new SoundEvent[]{WizardrySounds.createSound("spell." + this.getRegistryName().getPath())};
+		return new SoundEvent[]{WizardrySounds.createSound(this.getRegistryName().getNamespace(), "spell." + this.getRegistryName().getPath())};
 	}
 
 	// Note 1: The aim here is conciseness. Keeping the identifiers in the spell classes means we don't usually have to
@@ -248,6 +272,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 		if(!arePropertiesInitialised()){
 			this.properties = properties;
+			if(this.globalProperties == null) this.globalProperties = properties;
 		}else{
 			Wizardry.logger.info("A mod attempted to set a spell's properties, but they were already initialised.");
 		}
@@ -264,9 +289,14 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 					.map(s -> s.properties).toArray(SpellProperties[]::new)));
 		}else{
 			// On the client side, wipe the spell properties so the new ones can be set
-			for(Spell spell : registry){
-				spell.properties = null; // TESTME: Can we guarantee this happens before the packet arrives?
-			}
+			// TESTME: Can we guarantee this happens before the packet arrives?
+			clearProperties();
+		}
+	}
+
+	private static void clearProperties(){
+		for(Spell spell : registry){
+			spell.properties = null;
 		}
 	}
 
@@ -279,7 +309,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @see Spell#createSoundsWithSuffixes(String[])
 	 */
 	public final SoundEvent createSoundWithSuffix(String suffix){
-		return WizardrySounds.createSound("spell." + this.getRegistryName().getPath() + "." + suffix);
+		return WizardrySounds.createSound(this.getRegistryName().getNamespace(), "spell." + this.getRegistryName().getPath() + "." + suffix);
 	}
 
 	/**
@@ -339,7 +369,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * work if the caster is on full health).
 	 * <p></p>
 	 * This method is intended for use by NPCs (see {@link EntityWizard}) so that they can cast spells. Override it if
-	 * you want a spell to be cast by wizards. Note that you must also override {@link Spell#canBeCastByNPCs()} to
+	 * you want a spell to be cast by wizards. Note that you must also override {@link Spell#canBeCastBy(EntityLiving, boolean)} to
 	 * return true to allow wizards to select the spell. For some spells, this method may well be exactly the same as
 	 * the regular cast method; for others it won't be - for example, projectile-based spells are normally done using
 	 * the player's look vector, but NPCs need to use a target-based method instead.
@@ -375,7 +405,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * won't work if the caster is on full health).
 	 * <p></p>
 	 * This method is intended for use by dispensers and command blocks so that they can cast spells. Override it if
-	 * you want a spell to be cast by dispensers. Note that you must also override {@link Spell#canBeCastByDispensers()} to
+	 * you want a spell to be cast by dispensers. Note that you must also override {@link Spell#canBeCastBy(TileEntityDispenser)} to
 	 * return true to allow dispensers to select the spell. For some spells, this method may well be exactly the same as
 	 * the regular cast method; for others it won't be - for example, projectile-based spells are normally done using
 	 * the player's look vector, but dispensers need to use a facing-based method instead.
@@ -432,19 +462,49 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 							  @Nullable EnumFacing direction, int duration, SpellModifiers modifiers){}
 
 	/**
+	 * Whether the given entity can cast this spell. If you have overridden
+	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
+	 * this to return true (either always or under certain circumstances), or alternatively assign an NPC selector via
+	 * {@link Spell#npcSelector(BiPredicate)} (recommended for general spell classes).
+	 * @param npc The entity to query.
+	 * @param override True if a player in creative mode is assigning this spell to the given entity, false otherwise.
+	 *                 Usually this means situational conditions should be ignored.
+	 */
+	// We could make this final and force everyone to move over to the predicate system, but for particularly complex
+	// behaviour (i.e. several lines of code) it gets too ugly, and then you end up moving the contents of the predicate
+	// to a static method anyway and referring to it via method reference... so we may as well leave people the option.
+	public boolean canBeCastBy(EntityLiving npc, boolean override){
+		return npcSelector.test(npc, override);
+	}
+
+	/**
 	 * Whether NPCs such as wizards can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
 	 * this to return true.
+	 * @deprecated Use the entity-sensitive version {@link Spell#canBeCastBy(EntityLiving, boolean)}.
 	 */
+	@Deprecated
 	public boolean canBeCastByNPCs(){
 		return false;
+	}
+
+	/**
+	 * Whether the given dispenser can cast this spell. If you have overridden
+	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
+	 * to return true (either always or under certain circumstances).
+	 * @param dispenser The dispenser to query.
+	 */
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
+		return canBeCastByDispensers();
 	}
 
 	/**
 	 * Whether dispensers can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
 	 * to return true.
+	 * @deprecated Use the tileentity-sensitive version {@link Spell#canBeCastBy(TileEntityDispenser)}.
 	 */
+	@Deprecated
 	public boolean canBeCastByDispensers(){
 		return false;
 	}
@@ -546,19 +606,6 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return properties.getBaseValue(identifier);
 	}
 
-	/** Returns whether the spell is enabled in any of the given {@link electroblob.wizardry.util.SpellProperties.Context Context}s.
-	 * A spell may be disabled globally in the config, or it may be disabled for one or more specific contexts in
-	 * its JSON file using a resource pack. If called with no arguments, defaults to any context, i.e. only returns
-	 * false if the spell is completely disabled in all contexts. */
-	public final boolean isEnabled(SpellProperties.Context... contexts){
-		return enabled && (contexts.length == 0 || properties.isEnabled(contexts));
-	}
-
-	/** Sets whether the spell is enabled or not. */
-	public final void setEnabled(boolean isEnabled){
-		this.enabled = isEnabled;
-	}
-
 	/**
 	 * Returns the unlocalised name of the spell, without any prefixes or suffixes, e.g. "flame_ray". <b>This should
 	 * only be used for translation purposes.</b>
@@ -575,13 +622,23 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * translating it. If, for whatever reason, you need to supply an ITextComponent but don't want it translated
 	 * (perhaps a name?), you can use TextComponentString, which will simply keep the raw string it is given. */
 
+	/** Returns the translation key for this spell. */
+	protected String getTranslationKey(){
+		return "spell." + unlocalisedName;
+	}
+
+	/** Returns the translation key for this spell's description. */
+	protected String getDescriptionTranslationKey(){
+		return "spell." + unlocalisedName + ".desc";
+	}
+
 	/**
 	 * Returns the translated display name of the spell, without formatting (i.e. not coloured). <b>Client-side
 	 * only!</b> On the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslation()}).
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
+		return net.minecraft.client.resources.I18n.format(getTranslationKey());
 	}
 
 	/**
@@ -589,7 +646,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * formatting (i.e. not coloured).
 	 */
 	public ITextComponent getNameForTranslation(){
-		return new TextComponentTranslation("spell." + unlocalisedName);
+		return new TextComponentTranslation(getTranslationKey());
 	}
 
 	/**
@@ -598,7 +655,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.getElement().getFormattingCode() + net.minecraft.client.resources.I18n.format("spell." + unlocalisedName);
+		return this.getElement().getFormattingCode() + net.minecraft.client.resources.I18n.format(getTranslationKey());
 	}
 
 	/**
@@ -606,7 +663,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * formatting (i.e. coloured).
 	 */
 	public ITextComponent getNameForTranslationFormatted(){
-		return new TextComponentTranslation("spell." + unlocalisedName).setStyle(this.getElement().getColour());
+		return new TextComponentTranslation(getTranslationKey()).setStyle(this.getElement().getColour());
 	}
 
 	/**
@@ -615,7 +672,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 */
 	@SideOnly(Side.CLIENT)
 	public String getDescription(){
-		return net.minecraft.client.resources.I18n.format("spell." + unlocalisedName + ".desc");
+		return net.minecraft.client.resources.I18n.format(getDescriptionTranslationKey());
 	}
 
 	// ============================================ Sound methods ==============================================
@@ -735,6 +792,51 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		}
 	}
 
+	// ============================================= Misc methods ===============================================
+
+	/** Returns whether the spell is enabled in any of the given {@link electroblob.wizardry.util.SpellProperties.Context Context}s.
+	 * A spell may be disabled globally in the config, or it may be disabled for one or more specific contexts in
+	 * its JSON file using a resource pack. If called with no arguments, defaults to any context, i.e. only returns
+	 * false if the spell is completely disabled in all contexts. */
+	public final boolean isEnabled(SpellProperties.Context... contexts){
+		return enabled && (contexts.length == 0 || properties.isEnabled(contexts));
+	}
+
+	/** Sets whether the spell is enabled or not. */
+	public final void setEnabled(boolean isEnabled){
+		this.enabled = isEnabled;
+	}
+
+	/** Returns true if the given item has a variant for this spell. By default, returns true if the given item is
+	 * in this spell's {@link Spell#applicableItems} list (set using {@link Spell#items(Item...)}). Override to do
+	 * something more complex. */
+	public boolean applicableForItem(Item item){
+		return Arrays.asList(applicableItems).contains(item);
+	}
+
+	/**
+	 * Sets which items this spell can appear on (these default to the regular spell book and scroll).
+	 * @param applicableItems The items this spell should naturally appear on (or no items at all).
+	 * @return The spell instance, allowing this method to be chained onto the constructor. Note that since this method
+	 * only returns a {@code Spell}, if you are chaining multiple methods onto the constructor this should be called last.
+	 */
+	public Spell items(Item... applicableItems){
+		this.applicableItems = applicableItems;
+		return this;
+	}
+
+	/**
+	 * Specifies a condition that NPCs must satisfy in order to spawn with this spell equipped (this defaults to always
+	 * true).
+	 * @param selector A condition that NPCs must satisfy in order to spawn with this spell equipped.
+	 * @return The spell instance, allowing this method to be chained onto the constructor. Note that since this method
+	 * only returns a {@code Spell}, if you are chaining multiple methods onto the constructor this should be called last.
+	 */
+	public Spell npcSelector(BiPredicate<EntityLiving, Boolean> selector){
+		this.npcSelector = selector;
+		return this;
+	}
+
 	// Spells are sorted according to tier and element. Where several spells have the same tier and element,
 	// they will remain in the order they were registered.
 	@Override
@@ -753,7 +855,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/**
 	 * Returns the total number of registered spells, excluding the 'None' spell. Returns the same number that would be
-	 * returned by {@code Spell.getSpells(Spell.allSpells).size()}, but this method is more efficient.
+	 * returned by {@code Spell.getAllSpells().size()}, but this method is more efficient.
 	 */
 	public static int getTotalSpellCount(){
 		return registry.getValuesCollection().size() - 1;
@@ -801,31 +903,37 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/**
 	 * Returns a list containing all spells matching the given {@link Predicate}. The returned list is separate from the
 	 * internal spells list; any changes you make to the returned list will have no effect on wizardry since the
-	 * returned list is local to this method. Never includes the {@link None} spell. For convenience, there are some
-	 * predefined predicates in the Spell class (some of these really aren't shortcuts any more):
-	 * <p></p>
-	 * {@link Spell#allSpells} will allow all spells to be returned<br>
-	 * {@link Spell#npcSpells} will only allow enabled spells that can be cast by NPCs (see
-	 * {@link Spell#canBeCastByNPCs()})<br>
-	 * {@link Spell#nonContinuousSpells} will filter out continuous spells but not disabled spells<br>
-	 * {@link TierElementFilter} will only allow enabled spells of the specified tier and element
+	 * returned list is local to this method. Never includes the {@link None} spell.
 	 *
 	 * @param filter A <code>Predicate&ltSpell&gt</code> that the returned spells must satisfy.
 	 *
 	 * @return A <b>local, modifiable</b> list of spells matching the given predicate. <i>Note that this list may be
 	 *         empty.</i>
+	 *
+	 * @see TierElementFilter
 	 */
 	public static List<Spell> getSpells(Predicate<Spell> filter){
 		return registry.getValuesCollection().stream().filter(filter.and(s -> s != Spells.none)).collect(Collectors.toList());
 	}
 
-	/** Predicate which allows all spells. */
+	/** Returns all registered spells, except the {@link None} spell. */
+	public static List<Spell> getAllSpells(){
+		return getSpells(s -> true);
+	}
+
+	/** Predicate which allows all spells.
+	 * @deprecated Use {@link Spell#getAllSpells()}. */
+	@Deprecated
 	public static Predicate<Spell> allSpells = s -> true;
 
-	/** Predicate which allows all non-continuous spells, even those that have been disabled. */
+	/** Predicate which allows all non-continuous spells, even those that have been disabled.
+	 * @deprecated Nobody ever uses this now we have continuous scrolls, if you really need it just use a lambda.  */
+	@Deprecated
 	public static Predicate<Spell> nonContinuousSpells = s -> !s.isContinuous;
 
-	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastByNPCs()} returns true. */
+	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastBy(EntityLiving, boolean)} returns true.
+	 * @deprecated in favour of entity-sensitive version, use a lambda expression directly. */
+	@Deprecated
 	public static Predicate<Spell> npcSpells = s -> s.isEnabled(SpellProperties.Context.NPCS) && s.canBeCastByNPCs();
 
 	/**
@@ -862,4 +970,32 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 					&& (this.element == null || spell.getElement() == this.element);
 		}
 	}
+
+	// ============================================ Event handlers ==============================================
+
+	// Not ideal but it solves the reloading of spell properties without breaking encapsulation
+
+	@SubscribeEvent
+	public static void onWorldLoadEvent(WorldEvent.Load event){
+		if(!event.getWorld().isRemote){
+			if(event.getWorld().provider.getDimension() != 0) return; // Only do it once per save file
+			clearProperties();
+			SpellProperties.loadWorldSpecificSpellProperties(event.getWorld());
+			for(Spell spell : Spell.registry){
+				if(!spell.arePropertiesInitialised()) spell.setProperties(spell.globalProperties);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onClientDisconnectEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event){
+		// Why does the world UNLOAD event happen during world LOADING? How does that even work?!
+		clearProperties();
+		for(Spell spell : Spell.registry){
+			// If someone wants to access them from the menu, they'll get the global ones (not sure why you'd want to)
+			// No need to sync here since the server is about to shut down anyway
+			spell.setProperties(spell.globalProperties);
+		}
+	}
+
 }

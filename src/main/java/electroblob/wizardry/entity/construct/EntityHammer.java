@@ -80,8 +80,8 @@ public class EntityHammer extends EntityMagicConstruct {
 
 		if(this.world.isRemote && this.ticksExisted % 3 == 0){
 			ParticleBuilder.create(Type.SPARK)
-			.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + 2 * rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble())
-			.spawn(world);
+					.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + 2 * rand.nextDouble(), this.posZ - 0.5d + rand.nextDouble())
+					.spawn(world);
 		}
 
 		this.prevPosX = this.posX;
@@ -103,39 +103,37 @@ public class EntityHammer extends EntityMagicConstruct {
 			this.rotationPitch = 0;
 			this.spin = false;
 
-			if(this.ticksExisted % Spells.lightning_hammer.getProperty(LightningHammer.ATTACK_INTERVAL).floatValue() == 0){
+			double seekerRange = Spells.lightning_hammer.getProperty(Spell.EFFECT_RADIUS).doubleValue();
 
-				double seekerRange = Spells.lightning_hammer.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(seekerRange, this.posX,
+					this.posY + 1, this.posZ, world);
 
-				List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(seekerRange, this.posX,
-						this.posY + 1, this.posZ, world);
+			int maxTargets = Spells.lightning_hammer.getProperty(LightningHammer.SECONDARY_MAX_TARGETS).intValue();
+			while(targets.size() > maxTargets) targets.remove(targets.size() - 1);
 
-				int maxTargets = Spells.lightning_hammer.getProperty(LightningHammer.SECONDARY_MAX_TARGETS).intValue();
-				while(targets.size() > maxTargets) targets.remove(targets.size() - 1);
+			for(EntityLivingBase target : targets){
 
-				for(EntityLivingBase target : targets){
+				if(WizardryUtilities.isLiving(target) && this.isValidTarget(target)
+						&& target.ticksExisted % Spells.lightning_hammer.getProperty(LightningHammer.ATTACK_INTERVAL).floatValue() == 0){
 
-					if(WizardryUtilities.isLiving(target) && this.isValidTarget(target)){
+					if(world.isRemote){
 
-						if(world.isRemote){
+						ParticleBuilder.create(Type.LIGHTNING).pos(posX, posY + height - 0.1, posZ) .target(target).spawn(world);
 
-							ParticleBuilder.create(Type.LIGHTNING).pos(posX, posY + height - 0.1, posZ) .target(target).spawn(world);
+						ParticleBuilder.spawnShockParticles(world, target.posX,
+								target.getEntityBoundingBox().minY + target.height, target.posZ);
+					}
 
-							ParticleBuilder.spawnShockParticles(world, target.posX,
-									target.getEntityBoundingBox().minY + target.height, target.posZ);
-						}
+					target.playSound(WizardrySounds.ENTITY_HAMMER_ATTACK, 1.0F, rand.nextFloat() * 0.4F + 1.5F);
 
-						target.playSound(WizardrySounds.ENTITY_HAMMER_ATTACK, 1.0F, rand.nextFloat() * 0.4F + 1.5F);
+					float damage = Spells.lightning_hammer.getProperty(Spell.SPLASH_DAMAGE).floatValue() * damageMultiplier;
 
-						float damage = Spells.lightning_hammer.getProperty(Spell.SPLASH_DAMAGE).floatValue() * damageMultiplier;
-
-						if(this.getCaster() != null){
-							WizardryUtilities.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(
-									this, getCaster(), DamageType.SHOCK), damage);
-							WizardryUtilities.applyStandardKnockback(this, target);
-						}else{
-							target.attackEntityFrom(DamageSource.MAGIC, damage);
-						}
+					if(this.getCaster() != null){
+						WizardryUtilities.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(
+								this, getCaster(), DamageType.SHOCK), damage);
+						WizardryUtilities.applyStandardKnockback(this, target);
+					}else{
+						target.attackEntityFrom(DamageSource.MAGIC, damage);
 					}
 				}
 			}
@@ -171,6 +169,7 @@ public class EntityHammer extends EntityMagicConstruct {
 	public void fall(float distance, float damageMultiplier){
 
 		if(world.isRemote){
+
 			for(int i = 0; i < 40; i++){
 				double particleX = this.posX - 1.0d + 2 * rand.nextDouble();
 				double particleZ = this.posZ - 1.0d + 2 * rand.nextDouble();
@@ -182,6 +181,12 @@ public class EntityHammer extends EntityMagicConstruct {
 							particleX - this.posX, 0, particleZ - this.posZ, Block.getStateId(block));
 				}
 			}
+
+			if(this.fallDistance > 10){
+				WizardryUtilities.getEntitiesWithinRadius(10, posX, posY, posZ, world, EntityPlayer.class)
+						.forEach(p -> Wizardry.proxy.shakeScreen(p, 6));
+			}
+
 		}else{
 			// Just to check the hammer has actually fallen from the sky, rather than the block under it being broken.
 			if(this.fallDistance > 10){

@@ -3,6 +3,7 @@ package electroblob.wizardry.spell;
 import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.item.IConjuredItem;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
@@ -40,7 +41,7 @@ public class ConjureArmour extends SpellConjuration {
 				armour = new ItemStack(SPECTRAL_ARMOUR_MAP.get(slot));
 				IConjuredItem.setDurationMultiplier(armour, modifiers.get(WizardryItems.duration_upgrade));
 				// Sets a blank "ench" tag to trick the renderer into showing the enchantment effect on the armour model
-				armour.getTagCompound().setTag("ench", new NBTTagList());
+				NBTExtras.storeTagSafely(armour.getTagCompound(), "ench", new NBTTagList());
 				caster.setItemStackToSlot(slot, armour);
 				flag = true;
 			}

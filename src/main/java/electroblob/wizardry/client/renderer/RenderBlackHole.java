@@ -53,9 +53,8 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 					(float)blackhole.ticksExisted / 10);
 		}
 		if(blackhole.ticksExisted > blackhole.lifetime - 10){
-			GlStateManager.scale((float)(blackhole.lifetime - blackhole.ticksExisted) / 10,
-					(float)(blackhole.lifetime - blackhole.ticksExisted) / 10,
-					(float)(blackhole.lifetime - blackhole.ticksExisted) / 10);
+			float scale = Math.max(0, (float)(blackhole.lifetime - blackhole.ticksExisted) / 10);
+			GlStateManager.scale(scale, scale, scale);
 		}
 
 		this.bindTexture(texture);

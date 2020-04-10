@@ -9,6 +9,7 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.ItemSpectralBow;
+import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -23,11 +24,8 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -35,18 +33,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.MerchantRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Event handler responsible for client-side only events, mostly rendering.
@@ -72,23 +69,33 @@ public final class WizardryClientEventHandler {
 	/** The number of ticks the blink effect lasts for. */
 	private static final int BLINK_EFFECT_DURATION = 8;
 
-	private static final Method unpressKey;
-
-	static {
-		unpressKey = ObfuscationReflectionHelper.findMethod(KeyBinding.class, "func_74505_d", void.class);
-	}
+	/** The remaining time for which the screen shake effect will be active. */
+	private static int screenShakeCounter = 0;
+	private static final float SHAKINESS = 0.5f;
 	
-	/** Starts the first person blink overlay effect. */
+	/** Starts the first-person blink overlay effect. */
 	public static void playBlinkEffect(){
 		blinkEffectTimer = BLINK_EFFECT_DURATION;
+	}
+
+	/** Starts the client-side screen shake effect. */
+	public static void shakeScreen(float intensity){
+		screenShakeCounter = (int)(intensity / SHAKINESS);
+		Minecraft.getMinecraft().player.rotationPitch -= intensity * 0.5f; // Start halfway down
 	}
 	
 	@SubscribeEvent
 	public static void onPlayerTickEvent(TickEvent.PlayerTickEvent event){
 
-		if(event.player == Minecraft.getMinecraft().player){
+		if(event.player == Minecraft.getMinecraft().player && event.phase == TickEvent.Phase.END){
 
 			if(blinkEffectTimer > 0) blinkEffectTimer--;
+
+			if(screenShakeCounter > 0){
+				float magnitude = screenShakeCounter * SHAKINESS;
+				Minecraft.getMinecraft().player.rotationPitch += screenShakeCounter % 2 == 0 ? magnitude : -magnitude;
+				screenShakeCounter--;
+			}
 
 			// Only seems to work here...
 //			EntityLiving victim = Possession.getPossessee(Minecraft.getMinecraft().player);
@@ -151,7 +158,10 @@ public final class WizardryClientEventHandler {
 
 			if(world == null) return;
 
-			for(TileEntity tileentity : world.loadedTileEntityList){
+			// Somehow this was throwing a CME, I have no idea why so I'm just going to cheat and copy the list
+			List<TileEntity> tileEntities = new ArrayList<>(world.loadedTileEntityList);
+
+			for(TileEntity tileentity : tileEntities){
 				if(tileentity instanceof TileEntityDispenser){
 					if(DispenserCastingData.get((TileEntityDispenser)tileentity) != null){
 						DispenserCastingData.get((TileEntityDispenser)tileentity).update();
@@ -160,6 +170,7 @@ public final class WizardryClientEventHandler {
 			}
 
 			SpellEmitterData.update(world);
+			PotionSlowTime.cleanUpEntities(world);
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.WizardData;
@@ -11,9 +12,13 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.*;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 
@@ -32,7 +37,7 @@ public class ImbueWeapon extends Spell {
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
 
-				if(isSword(stack.getItem())
+				if(isSword(stack)
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.magic_sword)
 						&& WizardData.get(caster).getImbuementDuration(WizardryEnchantments.magic_sword) <= 0){
 					// The enchantment level as determined by the damage multiplier. The + 0.5f is so that
@@ -44,7 +49,7 @@ public class ImbueWeapon extends Spell {
 					WizardData.get(caster).setImbuementDuration(WizardryEnchantments.magic_sword,
 							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 
-				}else if(isBow(stack.getItem())
+				}else if(isBow(stack)
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.magic_bow)
 						&& WizardData.get(caster).getImbuementDuration(WizardryEnchantments.magic_bow) <= 0){
 					// The enchantment level as determined by the damage multiplier. The + 0.5f is so that
@@ -77,13 +82,13 @@ public class ImbueWeapon extends Spell {
 	}
 
 	/** Returns true if the given item counts as a sword, i.e. it extends {@link ItemSword} or is in the whitelist. */
-	public static boolean isSword(Item item){
-		return item instanceof ItemSword || Arrays.asList(Wizardry.settings.swordItemWhitelist).contains(item.getRegistryName());
+	public static boolean isSword(ItemStack stack){
+		return stack.getItem() instanceof ItemSword || Settings.containsMetaItem(Wizardry.settings.swordItemWhitelist, stack);
 	}
 
 	/** Returns true if the given item counts as a bow, i.e. it extends {@link ItemBow} or is in the whitelist. */
-	public static boolean isBow(Item item){
-		return item instanceof ItemBow || Arrays.asList(Wizardry.settings.bowItemWhitelist).contains(item.getRegistryName());
+	public static boolean isBow(ItemStack stack){
+		return stack.getItem() instanceof ItemBow || Settings.containsMetaItem(Wizardry.settings.bowItemWhitelist, stack);
 	}
 
 }

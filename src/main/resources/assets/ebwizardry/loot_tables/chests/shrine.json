@@ -31,7 +31,7 @@
                 {
                     "type": "loot_table",
                     "name": "ebwizardry:subsets/arcane_tomes",
-                    "weight": 6
+                    "weight": 8
                 },
                 {
                     "type": "loot_table",
@@ -108,7 +108,7 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:astral_diamond",
-                    "weight": 1
+                    "weight": 2
                 },
                 {
                     "type": "item",
@@ -118,7 +118,7 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:grand_crystal",
-                    "weight": 1
+                    "weight": 2
                 }
             ]
         },

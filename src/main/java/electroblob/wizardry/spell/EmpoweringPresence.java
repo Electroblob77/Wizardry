@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.registry.WizardryItems;
@@ -66,10 +67,16 @@ public class EmpoweringPresence extends Spell {
 		return true;
 	}
 
+	@Override
+	protected String getTranslationKey(){
+		return Wizardry.tisTheSeason ? super.getTranslationKey() + "_festive" : super.getTranslationKey();
+	}
+
 	@SubscribeEvent(priority = EventPriority.LOW) // Doesn't really matter but there's no point processing it if casting is blocked
 	public static void onSpellCastPreEvent(SpellCastEvent.Pre event){
 		// Empowerment stacks extra potency on top of the existing potency.
-		if(event.getCaster() != null && event.getCaster().isPotionActive(WizardryPotions.empowerment)){
+		if(event.getCaster() != null && event.getCaster().isPotionActive(WizardryPotions.empowerment)
+				&& !(event.getSpell() instanceof EmpoweringPresence)){ // Prevent exponential empowerment stacking!
 
 			float potency = 1 + Constants.EMPOWERMENT_POTENCY_PER_LEVEL
 					* (event.getCaster().getActivePotionEffect(WizardryPotions.empowerment).getAmplifier() + 1);
@@ -78,4 +85,5 @@ public class EmpoweringPresence extends Spell {
 					event.getModifiers().get(SpellModifiers.POTENCY) * potency, true);
 		}
 	}
+
 }

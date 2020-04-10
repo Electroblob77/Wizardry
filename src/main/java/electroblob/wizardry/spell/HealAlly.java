@@ -4,6 +4,7 @@ import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
@@ -17,6 +18,11 @@ public class HealAlly extends SpellRay {
 		super("heal_ally", false, EnumAction.NONE);
 		this.soundValues(0.7f, 1.2f, 0.4f);
 		addProperties(HEALTH);
+	}
+
+	@Override
+	public boolean canBeCastBy(EntityLiving npc, boolean override){
+		return false;
 	}
 
 	@Override

@@ -74,5 +74,9 @@
 	"planks": {
 		"texture": "ebwizardry:gui/spell_hud/planks",
 		"metadata": "ebwizardry:gui/spell_hud/planks"
+	},
+	"festive": {
+		"texture": "ebwizardry:gui/spell_hud/festive",
+		"metadata": "ebwizardry:gui/spell_hud/festive"
 	}
 }

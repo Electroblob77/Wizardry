@@ -6,14 +6,18 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -80,13 +84,7 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 
 			}else{
 
-				boolean flag = true;
-
-				if(this.getThrower() != null && this.getThrower() instanceof EntityLiving){
-					flag = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.world, this.getThrower());
-				}
-
-				if(flag){
+				if(this.getThrower() == null || WizardryUtilities.canDamageBlocks(this.getThrower(), world)){
 
 					BlockPos blockpos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
 
@@ -127,6 +125,54 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 							.pos(this.getPositionVector().add(dx - this.motionX, dy, dz - this.motionZ))
 							.vel(-v * dx, -v * dy, -v * dz).scale(width*2).time(10).spawn(world);
 				}
+			}
+		}
+	}
+
+	@Override
+	public boolean canBeCollidedWith(){
+		return true;
+	}
+
+	@Override
+	public float getCollisionBorderSize(){
+		return 1.0F;
+	}
+
+	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount){
+
+		if(this.isEntityInvulnerable(source)){
+			return false;
+
+		}else{
+
+			this.markVelocityChanged();
+
+			if(source.getTrueSource() != null){
+
+				Vec3d vec3d = source.getTrueSource().getLookVec();
+
+				if(vec3d != null){
+
+					double speed = MathHelper.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+
+					this.motionX = vec3d.x * speed;
+					this.motionY = vec3d.y * speed;
+					this.motionZ = vec3d.z * speed;
+
+					this.lifetime = 160;
+
+				}
+
+				if(source.getTrueSource() instanceof EntityLivingBase){
+					this.setCaster((EntityLivingBase)source.getTrueSource());
+				}
+
+				return true;
+
+			}else{
+				return false;
 			}
 		}
 	}

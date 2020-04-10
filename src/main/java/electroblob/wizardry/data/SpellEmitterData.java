@@ -91,7 +91,7 @@ public class SpellEmitterData extends WorldSavedData {
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound){
-		compound.setTag("emitters", NBTExtras.listToNBT(emitters, SpellEmitter::toNBT));
+		NBTExtras.storeTagSafely(compound, "emitters", NBTExtras.listToNBT(emitters, SpellEmitter::toNBT));
 		return compound;
 	}
 

@@ -3,6 +3,7 @@ package electroblob.wizardry.item;
 import com.google.common.collect.Multimap;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -79,6 +80,12 @@ public class ItemFrostAxe extends ItemAxe implements IConjuredItem {
 		int damage = stack.getItemDamage();
 		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
 		stack.setItemDamage(damage + 1);
+	}
+
+	@Override
+	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot){
+		attackDamage = Spells.frost_axe.getProperty(Spell.DAMAGE).floatValue();
+		return super.getItemAttributeModifiers(equipmentSlot);
 	}
 
 	@Override

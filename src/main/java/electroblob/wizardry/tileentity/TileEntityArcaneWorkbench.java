@@ -7,6 +7,7 @@ import electroblob.wizardry.item.ItemCrystal;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -205,7 +206,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 			}
 		}
 
-		tagCompound.setTag("Inventory", itemList);
+		NBTExtras.storeTagSafely(tagCompound, "Inventory", itemList);
 		return tagCompound;
 	}
 

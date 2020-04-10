@@ -31,7 +31,7 @@ public class FlamingWeapon extends Spell {
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
 
-				if((ImbueWeapon.isSword(stack.getItem()) || ImbueWeapon.isBow(stack.getItem()))
+				if((ImbueWeapon.isSword(stack) || ImbueWeapon.isBow(stack))
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.flaming_weapon)){
 					// The enchantment level as determined by the damage multiplier. The + 0.5f is so that
 					// weird float processing doesn't incorrectly round it down.

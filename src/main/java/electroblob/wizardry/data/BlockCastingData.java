@@ -7,6 +7,7 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.None;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -141,7 +142,7 @@ public abstract class BlockCastingData<T extends TileEntity> implements INBTSeri
 
 		nbt.setInteger("spell", spell.metadata());
 		nbt.setInteger("castingTick", castingTick);
-		nbt.setTag("modifiers", modifiers.toNBT());
+		NBTExtras.storeTagSafely(nbt, "modifiers", modifiers.toNBT());
 
 		return nbt;
 	}

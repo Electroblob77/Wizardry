@@ -1,11 +1,11 @@
 package electroblob.wizardry.client.gui;
 
-import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
@@ -13,33 +13,27 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
-
-import java.util.Map;
 
 public class GuiSpellBook extends GuiScreen {
 
 	private int xSize, ySize;
+	private ItemSpellBook book;
 	private Spell spell;
 
-	private static final Map<Tier, ResourceLocation> textures = ImmutableMap.of(
-			Tier.NOVICE, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_novice.png"),
-			Tier.APPRENTICE, 	new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_apprentice.png"),
-			Tier.ADVANCED, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_advanced.png"),
-			Tier.MASTER, 		new ResourceLocation(Wizardry.MODID, "textures/gui/spell_book_master.png"));
-
-	public GuiSpellBook(Spell spell){
+	public GuiSpellBook(ItemStack stack){
 		super();
 		xSize = 288;
 		ySize = 180;
-		this.spell = spell;
+		if(!(stack.getItem() instanceof ItemSpellBook)) throw new ClassCastException("Cannot create spell book GUI for item that does not extend ItemSpellBook!");
+		this.book = (ItemSpellBook)stack.getItem();
+		this.spell = Spell.byMetadata(stack.getItemDamage());
 	}
 
-	/**
-	 * Draws the screen and all the components in it.
-	 */
+	@Override
 	public void drawScreen(int par1, int par2, float par3){
 
 		int xPos = this.width / 2 - xSize / 2;
@@ -59,7 +53,7 @@ public class GuiSpellBook extends GuiScreen {
 		Minecraft.getMinecraft().renderEngine.bindTexture(discovered ? spell.getIcon() : Spells.none.getIcon());
 		DrawingUtils.drawTexturedRect(xPos + 146, yPos + 20, 0, 0, 128, 128, 128, 128);
 		
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures.get(spell.getTier()));
+		Minecraft.getMinecraft().renderEngine.bindTexture(book.getGuiTexture(spell));
 		DrawingUtils.drawTexturedRect(xPos, yPos, 0, 0, xSize, ySize, xSize, 256);
 
 		super.drawScreen(par1, par2, par3);
@@ -74,22 +68,18 @@ public class GuiSpellBook extends GuiScreen {
 					0x777777);
 		}
 
-		//this.fontRenderer.drawString("-------------------", xPos + 17, yPos + 35, 0);
+		// Novice is usually white but this doesn't show up
+		String tier = I18n.format("gui.ebwizardry:spell_book.tier", spell.getTier() == Tier.NOVICE ?
+				"\u00A77" + spell.getTier().getDisplayName() : spell.getTier().getDisplayNameWithFormatting());
+		this.fontRenderer.drawString(tier, xPos + 17, yPos + 45, 0);
 
-		if(spell.getTier() == Tier.NOVICE){
-			// Basic is usually white but this doesn't show up.
-			this.fontRenderer.drawString("Tier: \u00A77" + Tier.NOVICE.getDisplayName(), xPos + 17, yPos + 45, 0);
-		}else{
-			this.fontRenderer.drawString("Tier: " + spell.getTier().getDisplayNameWithFormatting(), xPos + 17, yPos + 45, 0);
-		}
-
-		String element = "Element: " + spell.getElement().getFormattingCode() + spell.getElement().getDisplayName();
-		if(!discovered) element = "Element: ?";
+		String element = I18n.format("gui.ebwizardry:spell_book.element", spell.getElement().getFormattingCode() + spell.getElement().getDisplayName());
+		if(!discovered) element = I18n.format("gui.ebwizardry:spell_book.element_undiscovered");
 		this.fontRenderer.drawString(element, xPos + 17, yPos + 57, 0);
 
-		String manaCost = "Mana Cost: " + spell.getCost();
-		if(spell.isContinuous) manaCost = "Mana Cost: " + spell.getCost() + "/second";
-		if(!discovered) manaCost = "Mana Cost: ?";
+		String manaCost = I18n.format("gui.ebwizardry:spell_book.mana_cost", spell.getCost());
+		if(spell.isContinuous) manaCost = I18n.format("gui.ebwizardry:spell_book.mana_cost_continuous", spell.getCost());
+		if(!discovered) manaCost = I18n.format("gui.ebwizardry:spell_book.mana_cost_undiscovered");
 		this.fontRenderer.drawString(manaCost, xPos + 17, yPos + 69, 0);
 
 		if(discovered){
@@ -100,6 +90,7 @@ public class GuiSpellBook extends GuiScreen {
 		}
 	}
 
+	@Override
 	public void initGui(){
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
@@ -108,6 +99,7 @@ public class GuiSpellBook extends GuiScreen {
 		this.mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(WizardrySounds.MISC_BOOK_OPEN, 1));
 	}
 
+	@Override
 	public void onGuiClosed(){
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);

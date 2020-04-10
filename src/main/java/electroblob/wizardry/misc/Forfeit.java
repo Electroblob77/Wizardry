@@ -162,7 +162,7 @@ public abstract class Forfeit {
 
 				event.setCanceled(true);
 
-				Forfeit forfeit = getRandomForfeit(event.getWorld().rand, event.getSpell().getTier(), event.getSpell().getElement());
+				Forfeit forfeit = getRandomForfeit(data.synchronisedRandom, event.getSpell().getTier(), event.getSpell().getElement());
 
 				if(forfeit == null){ // Should never happen, but just in case...
 					if(!event.getWorld().isRemote) player.sendMessage(new TextComponentTranslation("forfeit.ebwizardry:do_nothing"));

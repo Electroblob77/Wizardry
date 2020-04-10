@@ -1,7 +1,6 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.data.SpellGlyphData;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
@@ -14,16 +13,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.NonNullList;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -37,6 +32,7 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 		setHasSubtypes(true);
 		setMaxStackSize(16);
 		setCreativeTab(WizardryTabs.SPELLS);
+		this.addPropertyOverride(new ResourceLocation("festive"), (s, w, e) -> Wizardry.tisTheSeason ? 1 : 0);
 	}
 	
 	@Override
@@ -51,13 +47,14 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 
 	@Override
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
+
 		if(tab == WizardryTabs.SPELLS){
-			// In this particular case, getTotalSpellCount() is a more efficient way of doing this since the spell instance
-			// is not required, only the metadata.
-			for(int i = 0; i < Spell.getTotalSpellCount(); i++){
-				// i+1 is used so that the metadata ties up with the metadata() method. In other words, the none spell has metadata
-				// 0 and since this is not used as a spell book the metadata starts at 1.
-				list.add(new ItemStack(this, 1, i + 1));
+
+			List<Spell> spells = Spell.getAllSpells();
+			spells.removeIf(s -> !s.applicableForItem(this));
+
+			for(Spell spell : spells){
+				list.add(new ItemStack(this, 1, spell.metadata()));
 			}
 		}
 	}

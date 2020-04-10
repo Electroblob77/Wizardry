@@ -26,7 +26,6 @@ public class WizardryPacketHandler {
 		registerMessage(PacketSpellProperties.class, PacketSpellProperties.Message.class);
 		registerMessage(PacketSyncAdvancements.class, PacketSyncAdvancements.Message.class);
 		registerMessage(PacketRequestAdvancementSync.class, PacketRequestAdvancementSync.Message.class);
-		registerMessage(PacketEndSlowTime.class, PacketEndSlowTime.Message.class);
 		registerMessage(PacketResurrection.class, PacketResurrection.Message.class);
 		registerMessage(PacketCastSpellAtPos.class, PacketCastSpellAtPos.Message.class);
 		registerMessage(PacketEmitterData.class, PacketEmitterData.Message.class);

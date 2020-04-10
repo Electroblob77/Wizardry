@@ -2,6 +2,7 @@ package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -40,7 +41,7 @@ public class PotionContainment extends PotionMagicEffect {
 
 		// Initialise the containment position to the entity's position if it wasn't set already
 		if(!target.getEntityData().hasKey(ENTITY_TAG)){
-			target.getEntityData().setTag(ENTITY_TAG, NBTUtil.createPosTag(new BlockPos(target.getPositionVector().subtract(0.5, 0.5, 0.5))));
+			NBTExtras.storeTagSafely(target.getEntityData(), ENTITY_TAG, NBTUtil.createPosTag(new BlockPos(target.getPositionVector().subtract(0.5, 0.5, 0.5))));
 		}
 
 		Vec3d origin = WizardryUtilities.getCentre(NBTUtil.getPosFromTag(target.getEntityData().getCompoundTag(ENTITY_TAG)));

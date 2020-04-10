@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -32,9 +33,9 @@ import java.util.stream.Collectors;
  * <p></p>
  * Properties added by this type of spell: {@link SpellBuff#getDurationKey(Potion)}, {@link SpellBuff#getStrengthKey(Potion)}
  * <p></p>
- * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastByNPCs()}
+ * By default, this type of spell can be cast by NPCs. {@link Spell#canBeCastBy(EntityLiving, boolean)}
  * <p></p>
- * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastByDispensers()}
+ * By default, this type of spell can be cast by dispensers. {@link Spell#canBeCastBy(TileEntityDispenser)}
  * <p></p>
  * By default, this type of spell requires a packet to be sent. {@link Spell#requiresPacket()}
  * 
@@ -67,6 +68,7 @@ public class SpellBuff extends Spell {
 		this.r = r;
 		this.g = g;
 		this.b = b;
+		this.npcSelector((e, o) -> true);
 	}
 
 	@Override
@@ -103,9 +105,7 @@ public class SpellBuff extends Spell {
 		return this;
 	}
 	
-	@Override public boolean canBeCastByNPCs(){ return true; }
-	
-	@Override public boolean canBeCastByDispensers() { return true; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser) { return true; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){

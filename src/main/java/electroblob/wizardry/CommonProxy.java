@@ -7,6 +7,7 @@ import electroblob.wizardry.spell.Spell;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -99,9 +100,9 @@ public class CommonProxy {
 		return ((ItemSpectralBow)WizardryItems.spectral_bow).getDefaultDurabilityForDisplay(stack);
 	}
 
-	/** Like {@link CommonProxy#addMultiLineDescription(List, String, Style)}, but style defaults to light grey. */
-	public void addMultiLineDescription(List<String> tooltip, String key){
-		this.addMultiLineDescription(tooltip, key, new Style().setColor(TextFormatting.GRAY));
+	/** Like {@link CommonProxy#addMultiLineDescription(List, String, Style, Object...)}, but style defaults to light grey. */
+	public void addMultiLineDescription(List<String> tooltip, String key, Object... args){
+		this.addMultiLineDescription(tooltip, key, new Style().setColor(TextFormatting.GRAY), args);
 	}
 
 	/**
@@ -112,7 +113,7 @@ public class CommonProxy {
 	 * @param key The translation key for the description
 	 * @param style A style to apply
 	 */
-	public void addMultiLineDescription(List<String> tooltip, String key, Style style){}
+	public void addMultiLineDescription(List<String> tooltip, String key, Style style, Object... args){}
 
 	// SECTION Packet Handlers
 	// ===============================================================================================================
@@ -138,8 +139,6 @@ public class CommonProxy {
 	public void handleClairvoyancePacket(PacketClairvoyance.Message message){}
 
 	public void handleAdvancementSyncPacket(PacketSyncAdvancements.Message message){}
-
-	public void handleEndSlowTimePacket(PacketEndSlowTime.Message message){}
 
 	public void handleResurrectionPacket(PacketResurrection.Message message){}
 
@@ -238,6 +237,16 @@ public class CommonProxy {
 				+ "of sound events, but the given array contained less than 3 sound events!");
 		playSpellSoundLoop(world, x, y, z, spell, sounds[0], sounds[1], sounds[2], category, volume, pitch, duration);
 	}
+
+	/** Starts the first-person blink overlay effect for the specified player. */
+	public void playBlinkEffect(EntityPlayer player){}
+
+	/**
+	 * Starts the client-side screen shake effect for the specified player.
+	 * @param player The player whose screen is to be shaken
+	 * @param intensity The amplitude of the shaking (around 10 looks about right)
+	 */
+	public void shakeScreen(EntityPlayer player, float intensity){}
 	
 	/**
 	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns

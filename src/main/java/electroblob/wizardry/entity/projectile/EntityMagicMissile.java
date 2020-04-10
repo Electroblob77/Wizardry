@@ -1,5 +1,6 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
@@ -44,15 +45,34 @@ public class EntityMagicMissile extends EntityMagicArrow {
 	public void tickInAir(){
 
 		if(this.world.isRemote){
-			ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)
-			.time(20 + rand.nextInt(10)).spawn(world);
-			
-			if(this.ticksExisted > 1){ // Don't spawn particles behind where it started!
-				double x = posX - motionX/2;
-				double y = posY - motionY/2;
-				double z = posZ - motionZ/2;
-				ParticleBuilder.create(Type.SPARKLE, rand, x, y, z, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)
-				.time(20 + rand.nextInt(10)).spawn(world);
+
+			if(Wizardry.tisTheSeason){
+
+				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.03, true).clr(0.8f, 0.15f, 0.15f)
+						.time(20 + rand.nextInt(10)).spawn(world);
+
+				ParticleBuilder.create(Type.SNOW).pos(posX, posY, posZ).spawn(world);
+
+				if(this.ticksExisted > 1){ // Don't spawn particles behind where it started!
+					double x = posX - motionX / 2;
+					double y = posY - motionY / 2;
+					double z = posZ - motionZ / 2;
+					ParticleBuilder.create(Type.SPARKLE, rand, x, y, z, 0.03, true).clr(0.15f, 0.7f, 0.15f)
+							.time(20 + rand.nextInt(10)).spawn(world);
+				}
+
+			}else{
+
+				ParticleBuilder.create(Type.SPARKLE, rand, posX, posY, posZ, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)
+						.time(20 + rand.nextInt(10)).spawn(world);
+
+				if(this.ticksExisted > 1){ // Don't spawn particles behind where it started!
+					double x = posX - motionX / 2;
+					double y = posY - motionY / 2;
+					double z = posZ - motionZ / 2;
+					ParticleBuilder.create(Type.SPARKLE, rand, x, y, z, 0.03, true).clr(1, 1, 0.65f).fade(0.7f, 0, 1)
+							.time(20 + rand.nextInt(10)).spawn(world);
+				}
 			}
 		}
 	}

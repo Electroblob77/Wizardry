@@ -57,12 +57,12 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	}
 
 	/** Should only be used by vanilla's armour damage calculations; use {@link ItemWizardArmour#setMana(ItemStack, int)}
-	 * to modify wand mana from elsewhere. */
+	 * to modify armour mana from elsewhere. */
 	@Override
 	public void setDamage(ItemStack stack, int damage){
 		// Overridden to stop repair things from 'repairing' the mana in wizard armour
 		// This being armour, it's much easier to let its damage increase normally, but block it from being decreased
-		if(stack.getItemDamage() < damage) super.setDamage(stack, damage);
+		if(stack.getItemDamage() < damage) super.setDamage(stack, Math.min(damage, stack.getMaxDamage()));
 	}
 
 	@Override
@@ -178,9 +178,14 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 		String s = "wizard_armour";
 
-		if(this.element != null) s = s + "_" + this.element.getName();
+		if(Wizardry.tisTheSeason){
+			s = s + "_festive";
+		}else{
+			if(this.element != null) s = s + "_" + this.element.getName();
+			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) s = "legendary_" + s;
+		}
+
 		if(slot == EntityEquipmentSlot.LEGS) s = s + "_legs";
-		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) s = "legendary_" + s;
 
 		return "ebwizardry:textures/armour/" + s + ".png";
 	}
@@ -325,7 +330,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 			IAttributeInstance attribute = event.getEntityLiving().getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
 			double followRange = attribute == null ? 16 : attribute.getAttributeValue();
 			if(event.getTarget().isSneaking()) followRange *= 0.8;
-			float f = armourPieces / ((EntityPlayer)event.getTarget()).inventory.armorInventory.size();
+			float f = (float)armourPieces / ((EntityPlayer)event.getTarget()).inventory.armorInventory.size();
 			if(f < 0.1F) f = 0.1F;
 			followRange *= (double)(0.7F * f);
 			// Don't need to worry about the isSuitableTarget check since it must already have been checked to get this far

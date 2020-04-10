@@ -2,8 +2,6 @@ package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemArtefact;
-import electroblob.wizardry.packet.PacketEndSlowTime;
-import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -17,17 +15,23 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
 public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 
 	// FIXME: Minecarts with entities in them (and, I suspect, any other ridden entities) go crazy when time-slowed
+
+	public static final String NBT_KEY = "time_slowed";
 
 	public PotionSlowTime(boolean isBadEffect, int liquidColour){
 		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_slow_time.png"));
@@ -60,6 +64,8 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 		targetsInRange.removeIf(t -> t instanceof EntityArrow && t.isEntityInsideOpaqueBlock());
 
 		for(Entity entity : targetsInRange){
+
+			entity.getEntityData().setBoolean(NBT_KEY, true);
 
 			// If time is stopped, block all updates; otherwise block all updates except every [interval] ticks
 			entity.updateBlocked = stopTime || host.ticksExisted % interval != 0;
@@ -130,6 +136,29 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 
 	}
 
+	/**
+	 * Goes through every entity in the given world and does the following:<br>
+	 * 1. Checks if they have the slow time NBT tag<br>
+	 * 2. If so, scans the area nearby for players or NPCs with the slow time effect<br>
+	 * 3. If none are found, removes the slow time NBT tag and unblocks the entity's updates
+	 */
+	public static void cleanUpEntities(World world){
+		// Had trouble with accessing loadedTileEntityList from tick events causing random CMEs so I'm making a
+		// copy of this too just in case
+		List<Entity> loadedEntityList = new ArrayList<>(world.loadedEntityList);
+
+		for(Entity entity : loadedEntityList){
+			if(entity.getEntityData().getBoolean(NBT_KEY)){
+				// Currently only players can cast slow time, but you could apply the effect to NPCs with commands
+				List<EntityLivingBase> nearby = WizardryUtilities.getEntitiesWithinRadius(getEffectRadius(), entity.posX, entity.posY, entity.posZ, entity.world, EntityLivingBase.class);
+				if(nearby.stream().noneMatch(e -> e.isPotionActive(WizardryPotions.slow_time))){
+					entity.getEntityData().removeTag(NBT_KEY);
+					entity.updateBlocked = false;
+				}
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 
@@ -150,23 +179,16 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 	}
 
 	@SubscribeEvent
-	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
-		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == WizardryPotions.slow_time){
-			unblockNearbyEntities(event.getEntityLiving());
-			if(!event.getEntity().world.isRemote){
-				WizardryPacketHandler.net.sendToDimension(new PacketEndSlowTime.Message(event.getEntityLiving()), event.getEntity().dimension);
-			}
-		}
+	public static void tick(TickEvent.WorldTickEvent event){
+		if(!event.world.isRemote && event.phase == TickEvent.Phase.END) cleanUpEntities(event.world);
 	}
 
+	// We still need this as well as tick events because the player hasn't moved anywhere, they just logged out
+	// In fact, it won't really matter since the tick event fixes it on login anyway, but if the mod is uninstalled or
+	// something else weird happens...
 	@SubscribeEvent
-	public static void onPotionRemoveEvent(PotionEvent.PotionRemoveEvent event){
-		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == WizardryPotions.slow_time){
-			unblockNearbyEntities(event.getEntityLiving());
-			if(!event.getEntity().world.isRemote){
-				WizardryPacketHandler.net.sendToDimension(new PacketEndSlowTime.Message(event.getEntityLiving()), event.getEntity().dimension);
-			}
-		}
+	public static void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event){
+		if(event.player.updateBlocked) event.player.updateBlocked = false;
 	}
 
 }

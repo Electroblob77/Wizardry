@@ -43,8 +43,7 @@ public class PhaseStep extends Spell {
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 			}
 
-			// Can't be bothered to route this through the proxies!
-			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
+			Wizardry.proxy.playBlinkEffect(caster);
 		}
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){

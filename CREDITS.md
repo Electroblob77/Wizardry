@@ -1,7 +1,7 @@
 # Credits
 
 Electroblob's Wizardry  
-Version 4.2.3  
+Version 4.2.10  
 For Minecraft 1.12.2
 
 Designed, coded and textured by Electroblob
@@ -21,15 +21,21 @@ In addition, I'd like to thank the following individuals for their contributions
 - Tora-B
 - Avatair
 - Aeronica
+- UltraHex
+- Azim-Palmer
+- raoulvdberge
 
 #### Translations
 
-- Spanish and Mexican Spanish: MadWrist 
-- Russian: VilagVil, kellixon 
-- French: Hahdrim 
-- Brazilian Portuguese: lorrampi 
-- Chinese: ZHENGLOC, dragon-evol 
-- Korean: shejery, rewi_wire 
+- Spanish: MadWrist, Alsentar
+- Mexican Spanish: MadWrist
+- Russian: VilagVil, kellixon, bigenergy
+- French: Hahdrim
+- Brazilian Portuguese: lorrampi
+- Chinese: ZHENGLOC, dragon-evol, Hokorizero, TUsama
+- Korean: shejery, rewi_wire
 - Polish: Trozuu
+- German: BirdyDragon
+- Taiwanese: chesterccj305
 
 Lightning ray sound effect from OhhWowProductions

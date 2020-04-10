@@ -3,6 +3,7 @@ package electroblob.wizardry.worldgen;
 import com.google.common.math.Quantiles;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.WizardryUtilities;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
@@ -27,7 +28,6 @@ import net.minecraft.world.gen.structure.MapGenStructureData;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
-import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.Mod;
@@ -120,6 +120,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 	 * @param world The world in which to spawn the structure
 	 * @param chunkX The x-coordinate of the chunk being populated
 	 * @param chunkZ The z-coordinate of the chunk being populated
+	 * @param structureFile The name of the structure file, used for error messages.
 	 * @return The coordinates of the position found, or null if no suitable position was found. The returned
 	 * {@code BlockPos} is <b>always</b> the northwest corner of the structure, and the y-coordinate is that of the
 	 * uppermost block at those (x, z) coordinates. If the structure is being rotated this needs to be altered using
@@ -128,7 +129,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 	 */
 	@Nullable
 	protected BlockPos findValidPosition(Template template, PlacementSettings settings, Random random, World world,
-										 int chunkX, int chunkZ){
+										 int chunkX, int chunkZ, String structureFile){
 
 		// Offset by (8, 8) to minimise cascading worldgen lag
 		// See https://www.reddit.com/r/feedthebeast/cowmments/5x0twz/investigating_extreme_worldgen_lag/?ref=share&ref_source=embed&utm_content=title&utm_medium=post_embed&utm_name=c07cbb545f74487793783012794733d8&utm_source=embedly&utm_term=5x0twz
@@ -136,8 +137,16 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 		BlockPos origin = new BlockPos(8 + (chunkX << 4) + random.nextInt(16), 0, 8 + (chunkZ << 4) + random.nextInt(16));
 
 		BlockPos size = template.transformedSize(settings.getRotation());
+
+		if(size.getX() == 0 || size.getY() == 0 || size.getZ() == 0){
+			Wizardry.logger.warn("Structure template file {} is missing or empty! If you're trying to disable structure spawning, pointing to a non-existent location is NOT the correct way to do so; use the structure dimension lists instead.", structureFile);
+		}
+
 		// Estimate a starting height for searching for the floor
 		BlockPos centre = world.getTopSolidOrLiquidBlock(new BlockPos(origin.add(size.getX()/2, 0, size.getZ()/2)));
+		// Check if we're at the top of the world, and if so just randomise the y pos (accounts for 'cavern' dimensions)
+		if(centre.getY() >= world.getActualHeight()) centre = new BlockPos(centre.getX(), random.nextInt(world.getActualHeight()), centre.getZ());
+
 		Integer startingHeight = WizardryUtilities.getNearestSurface(world, centre, EnumFacing.UP, 32, true,
 				WizardryUtilities.SurfaceCriteria.COLLIDABLE_IGNORING_TREES);
 
@@ -145,8 +154,8 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 
 		if(Wizardry.settings.fastWorldgen){
 			BlockPos result = origin.up(startingHeight);
-			// Fast worldgen doesn't check for water, instead it checks the biome like vanilla, which is crude but fast
-			return BiomeDictionary.hasType(world.getBiome(result), BiomeDictionary.Type.WATER) ? null : result;
+			// Fast worldgen only checks the central position for water, which isn't perfect but it is faster
+			return world.getBlockState(new BlockPos(centre.getX(), startingHeight + 1, centre.getZ())).getMaterial().isLiquid() ? null : result;
 		}
 
 		int[] floorHeights = new int[size.getX() * size.getZ()];
@@ -212,7 +221,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 			BlockPos origin;
 
 			do {
-				origin = findValidPosition(template, settings, random, world, chunkX, chunkZ);
+				origin = findValidPosition(template, settings, random, world, chunkX, chunkZ, structureFile.toString());
 				triesLeft--;
 			}while(triesLeft > 0 && origin != null);
 
@@ -244,14 +253,14 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 
 			spawnStructure(random, world, origin, template, settings, structureFile);
 
-			if(!Wizardry.settings.fastWorldgen) removeFloatingTrees(world, box);
+			if(!Wizardry.settings.fastWorldgen) removeFloatingTrees(world, box, random);
 
 			structureMap.put(ChunkPos.asLong(origin.getX() >> 4, origin.getZ() >> 4), settings.getBoundingBox());
 
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setInteger("ChunkX", chunkX);
 			tag.setInteger("ChunkZ", chunkZ);
-			tag.setTag("BB", settings.getBoundingBox().toNBTTagIntArray());
+			NBTExtras.storeTagSafely(tag, "BB", settings.getBoundingBox().toNBTTagIntArray());
 			structureData.writeInstance(tag, chunkX, chunkZ);
 			structureData.markDirty();
 		}
@@ -306,7 +315,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 	}
 
 	/** Finds and removes any floating bits of tree in and above the given structure bounding box. */
-	protected static void removeFloatingTrees(World world, StructureBoundingBox boundingBox){
+	protected static void removeFloatingTrees(World world, StructureBoundingBox boundingBox, Random random){
 
 		boolean changed = true;
 		int y = boundingBox.minY;
@@ -354,7 +363,7 @@ public abstract class WorldGenSurfaceStructure implements IWorldGenerator {
 		}
 
 		for(int i=0; i<16; i++){
-			leaves.forEach(p -> world.getBlockState(p).getBlock().updateTick(world, p, world.getBlockState(p), null));
+			leaves.forEach(p -> world.getBlockState(p).getBlock().updateTick(world, p, world.getBlockState(p), random));
 		}
 
 		// Finally, remove all the items that were dropped as a result of leaf decay

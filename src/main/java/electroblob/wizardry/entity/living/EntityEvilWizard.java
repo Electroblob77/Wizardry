@@ -35,11 +35,17 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
+@Mod.EventBusSubscriber
 public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntityAdditionalSpawnData {
 
 	private EntityAIAttackSpell<EntityEvilWizard> spellCastingAI = new EntityAIAttackSpell<>(this, 0.5D, 14.0F, 30, 50);
@@ -68,6 +74,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
 	private Spell continuousSpell;
+	private int spellCounter;
 
 	public EntityEvilWizard(World world){
 
@@ -169,6 +176,16 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	public Spell getContinuousSpell(){
 		return this.continuousSpell;
 	}
+
+	@Override
+	public void setSpellCounter(int count){
+		spellCounter = count;
+	}
+
+	@Override
+	public int getSpellCounter(){
+		return spellCounter;
+	}
 	
 	@Override
 	public int getAimingError(EnumDifficulty difficulty){
@@ -246,7 +263,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// When right-clicked with a spell book in creative, sets one of the spells to that spell
 		if(player.isCreative() && stack.getItem() instanceof ItemSpellBook){
 			Spell spell = Spell.byMetadata(stack.getItemDamage());
-			if(this.spells.size() >= 4 && spell.canBeCastByNPCs()){
+			if(this.spells.size() >= 4 && spell.canBeCastBy(this, true)){
 				// The set(...) method returns the element that was replaced - neat!
 				player.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":spell_book.apply_to_wizard",
 						this.getDisplayName(), this.spells.set(rand.nextInt(3) + 1, spell).getNameForTranslationFormatted(),
@@ -263,9 +280,9 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("element", this.getElement().ordinal());
 		nbt.setInteger("skin", this.textureIndex);
-		nbt.setTag("spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
+		NBTExtras.storeTagSafely(nbt, "spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
 		nbt.setBoolean("hasStructure", this.hasStructure);
-		nbt.setTag("groupUUIDs", NBTExtras.listToNBT(groupUUIDs, NBTUtil::createUUIDTag));
+		NBTExtras.storeTagSafely(nbt, "groupUUIDs", NBTExtras.listToNBT(groupUUIDs, NBTUtil::createUUIDTag));
 	}
 
 	@Override
@@ -282,16 +299,6 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public int getMaxSpawnedInChunk(){
 		return 1;
-	}
-	
-	@Override
-	public boolean getCanSpawnHere(){
-		// Evil wizards can only spawn in the specified dimensions
-		for(int id : Wizardry.settings.mobSpawnDimensions){
-			if(this.dimension == id) return super.getCanSpawnHere();
-		}
-		
-		return false;
 	}
 
 	@Override
@@ -373,7 +380,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		// All wizards know magic missile, even if it is disabled.
 		spells.add(Spells.magic_missile);
 
-		Tier maxTier = EntityWizard.populateSpells(spells, element, hasStructure, 3, rand);
+		Tier maxTier = EntityWizard.populateSpells(this, spells, element, hasStructure, 3, rand);
 
 		// Now done after the spells so it can take the tier into account. For evil wizards this is slightly different;
 		// it picks a random wand which is at least a high enough tier for the spells the wizard has.
@@ -391,6 +398,15 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public void readSpawnData(ByteBuf data){
 		textureIndex = data.readInt();
+	}
+
+	@SubscribeEvent
+	public static void onCheckSpawnEvent(LivingSpawnEvent.CheckSpawn event){
+		// We have no way of checking if it's a spawner in getCanSpawnHere() so this has to be done here instead
+		if(event.getEntityLiving() instanceof EntityEvilWizard && !event.isSpawner()){
+			if(!ArrayUtils.contains(Wizardry.settings.mobSpawnDimensions, event.getWorld().provider.getDimension()))
+				event.setResult(Event.Result.DENY);
+		}
 	}
 
 }

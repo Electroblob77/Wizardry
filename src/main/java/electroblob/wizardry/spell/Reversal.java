@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -28,7 +29,7 @@ public class Reversal extends SpellRay {
 	}
 
 	@Override
-	public boolean canBeCastByDispensers(){
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
 		return false;
 	}
 

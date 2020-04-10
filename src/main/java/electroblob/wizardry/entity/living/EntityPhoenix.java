@@ -30,6 +30,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	private EntityAIAttackSpell<EntityPhoenix> spellAttackAI = new EntityAIAttackSpell<>(this, AISpeed, 15f, 60, 140);
 
 	private Spell continuousSpell;
+	private int spellCounter;
 
 	private static final List<Spell> attack = Collections.singletonList(Spells.flame_ray);
 
@@ -50,7 +51,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 		this.tasks.addTask(3, new EntityAILookIdle(this));
 		// this.targetTasks.addTask(0, new EntityAIMoveTowardsTarget(this, 1, 10));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityLivingBase>(this, EntityLivingBase.class,
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityLivingBase.class,
 				0, false, true, this.getTargetSelector()));
 
 		this.setAIMoveSpeed((float)AISpeed);
@@ -74,6 +75,16 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	@Override
 	public void setContinuousSpell(Spell spell){
 		continuousSpell = spell;
+	}
+
+	@Override
+	public void setSpellCounter(int count){
+		spellCounter = count;
+	}
+
+	@Override
+	public int getSpellCounter(){
+		return spellCounter;
 	}
 
 	@Override

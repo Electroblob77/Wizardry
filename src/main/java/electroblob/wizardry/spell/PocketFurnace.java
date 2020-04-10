@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -9,8 +10,6 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-
-import java.util.Arrays;
 
 public class PocketFurnace extends Spell {
 
@@ -37,9 +36,9 @@ public class PocketFurnace extends Spell {
 
 				result = FurnaceRecipes.instance().getSmeltingResult(stack);
 
-				if(!result.isEmpty() && !(result.getItem() instanceof ItemTool) && !(result.getItem() instanceof ItemSword)
-						&& !(result.getItem() instanceof ItemArmor)
-						&& !Arrays.asList(Wizardry.settings.pocketFurnaceItemBlacklist).contains(result.getItem().getRegistryName())){
+				if(!result.isEmpty() && !(stack.getItem() instanceof ItemTool) && !(stack.getItem() instanceof ItemSword)
+						&& !(stack.getItem() instanceof ItemArmor)
+						&& !Settings.containsMetaItem(Wizardry.settings.pocketFurnaceItemBlacklist, stack)){
 
 					if(stack.getCount() <= usesLeft){
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.getCount(), result.getItemDamage());

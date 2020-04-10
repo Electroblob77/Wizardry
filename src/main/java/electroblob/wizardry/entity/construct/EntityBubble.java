@@ -65,7 +65,7 @@ public class EntityBubble extends EntityMagicConstruct {
 		if(isDarkOrb){
 
 			if(WizardryUtilities.getRider(this) != null
-					&& this.ticksExisted % Spells.entrapment.getProperty(Entrapment.DAMAGE_INTERVAL).intValue() == 0){
+					&& WizardryUtilities.getRider(this).ticksExisted % Spells.entrapment.getProperty(Entrapment.DAMAGE_INTERVAL).intValue() == 0){
 				if(this.getCaster() != null){
 					WizardryUtilities.getRider(this).attackEntityFrom(
 							MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC),

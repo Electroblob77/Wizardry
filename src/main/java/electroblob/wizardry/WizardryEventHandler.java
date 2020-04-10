@@ -33,6 +33,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
@@ -46,6 +49,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * General-purpose event handler for things that don't fit anywhere else or groups of related behaviours that are better
@@ -286,7 +290,7 @@ public final class WizardryEventHandler {
 			EntityLivingBase attacker = (EntityLivingBase)event.getSource().getTrueSource();
 
 			// Players can only ever attack with their main hand, so this is the right method to use here.
-			if(!attacker.getHeldItemMainhand().isEmpty() && ImbueWeapon.isSword(attacker.getHeldItemMainhand().getItem())){
+			if(!attacker.getHeldItemMainhand().isEmpty() && ImbueWeapon.isSword(attacker.getHeldItemMainhand())){
 
 				int level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.flaming_weapon,
 						attacker.getHeldItemMainhand());
@@ -343,18 +347,21 @@ public final class WizardryEventHandler {
 
 				Spell spell = ((ISpellCaster)event.getEntity()).getContinuousSpell();
 				SpellModifiers modifiers = ((ISpellCaster)event.getEntity()).getModifiers();
+				int count = ((ISpellCaster)event.getEntity()).getSpellCounter();
 
 				if(spell != null && spell != Spells.none){ // IntelliJ is wrong, do NOT remove the null check!
 
 					if(!MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Tick(SpellCastEvent.Source.NPC, spell, event.getEntityLiving(),
-							modifiers, 0))){
+							modifiers, count))){
 
-						spell.cast(event.getEntity().world, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, 0,
+						spell.cast(event.getEntity().world, (EntityLiving)event.getEntity(), EnumHand.MAIN_HAND, count,
 								// TODO: This implementation of modifiers relies on them being accessible client-side.
 								// 		 Right now that doesn't matter because NPCs don't use modifiers, but they might in future
 								((EntityLiving)event.getEntity()).getAttackTarget(), modifiers);
 					}
 				}
+
+				((ISpellCaster)event.getEntity()).setSpellCounter(count + 1);
 			}
 		}
 	}
@@ -365,6 +372,22 @@ public final class WizardryEventHandler {
 		if(event.getSource().getTrueSource() instanceof EntityPlayer){
 
 			EntityPlayer player = (EntityPlayer)event.getSource().getTrueSource();
+
+			// Compatibility with "Lycanites Mobs" -it uses custom loot drop logic which can't be hooked, given the
+			// number of mobs that spawn as Lycanites when this mod is active it would massively nerf the wizard drops
+			//  if we didn't handle this
+			if(event.getEntity().getClass().getCanonicalName().contains("lycanitesmobs"))
+			{
+				WorldServer world = (WorldServer)event.getEntity().getEntityWorld();
+				LootTable table =  world.getLootTableManager().getLootTableFromLocation(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
+
+				LootContext ctx = new LootContext.Builder(world).withPlayer(player).build();
+				List<ItemStack> stacks = table.generateLootForPools(world.rand, ctx);
+
+				for(ItemStack stack : stacks) {
+					event.getEntity().entityDropItem(stack, 0f);
+				}
+			}
 
 			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
 
@@ -397,7 +420,7 @@ public final class WizardryEventHandler {
 	@SubscribeEvent // Priority doesn't matter here, we're only setting event fields so if it's cancelled it won't matter
 	public static void onLivingFallEvent(LivingFallEvent event){
 		// Why is fall damage based on distance fallen? Why? Who on earth came up with that? It makes no sense whatsoever!
-		if(Wizardry.settings.replaceVanillaFallDamage && !Loader.isModLoaded("speedbasedfalldamage")){
+		if(!event.getEntity().world.isRemote && Wizardry.settings.replaceVanillaFallDamage && !Loader.isModLoaded("speedbasedfalldamage")){
 			// We want to keep the fall damage EXACTLY THE SAME for free, uninterrupted falls, but fix the weirdness
 			// caused when something else changes the entity's velocity
 			// All living entities have a gravity of 0.08b/t^2
@@ -444,7 +467,8 @@ public final class WizardryEventHandler {
 //					Wizardry.logger.info("Replaced fall distance {} with effective distance {} based on entity velocity", event.getDistance(), y);
 //				}
 
-				event.setDistance((float)y);
+				// Don't let it increase fall damage beyond vanilla values
+				if(y < event.getDistance()) event.setDistance((float)y);
 			}
 		}
 	}

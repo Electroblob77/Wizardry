@@ -398,7 +398,7 @@ public final class WandHelper {
 		if(wand.getTagCompound() == null) wand.setTagCompound((new NBTTagCompound()));
 
 		if(!wand.getTagCompound().hasKey(UPGRADES_KEY))
-			wand.getTagCompound().setTag(UPGRADES_KEY, new NBTTagCompound());
+			NBTExtras.storeTagSafely(wand.getTagCompound(), UPGRADES_KEY, new NBTTagCompound());
 
 		NBTTagCompound upgrades = wand.getTagCompound().getCompoundTag(UPGRADES_KEY);
 
@@ -406,7 +406,7 @@ public final class WandHelper {
 
 		if(key != null) upgrades.setInteger(key, upgrades.getInteger(key) + 1);
 
-		wand.getTagCompound().setTag(UPGRADES_KEY, upgrades);
+		NBTExtras.storeTagSafely(wand.getTagCompound(), UPGRADES_KEY, upgrades);
 	}
 
 	/** Returns true if the given item is a valid special wand upgrade. */

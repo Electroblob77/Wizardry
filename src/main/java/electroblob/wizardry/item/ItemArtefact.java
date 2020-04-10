@@ -265,7 +265,7 @@ public class ItemArtefact extends Item {
 
 				if(artefact == WizardryItems.ring_condensing){
 
-					if(world.isRemote && player.ticksExisted % 150 == 0){
+					if(player.ticksExisted % 150 == 0){
 						for(ItemStack stack : WizardryUtilities.getHotbar(player)){
 							// Needs to be both of these interfaces because this ring only recharges wands
 							// (or more accurately, chargeable spellcasting items)
@@ -276,7 +276,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_arcane_defence){
 
-					if(world.isRemote && player.ticksExisted % 300 == 0){
+					if(player.ticksExisted % 300 == 0){
 						for(ItemStack stack : player.getArmorInventoryList()){
 							// IManaStoringItem is sufficient, since anything in the armour slots is probably armour
 							if(stack.getItem() instanceof IManaStoringItem)
@@ -375,7 +375,7 @@ public class ItemArtefact extends Item {
 				if(artefact == WizardryItems.ring_battlemage){
 
 					if(player.getHeldItemOffhand().getItem() instanceof ISpellCastingItem
-						&& ImbueWeapon.isSword(player.getHeldItemMainhand().getItem())){
+						&& ImbueWeapon.isSword(player.getHeldItemMainhand())){
 						modifiers.set(SpellModifiers.POTENCY, 1.1f * potency, false);
 					}
 
@@ -601,7 +601,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_transience){
 
-					if(player.getHealth() <= 2 && player.world.rand.nextFloat() < 0.25f){
+					if(player.getHealth() <= 6 && player.world.rand.nextFloat() < 0.25f){
 						player.addPotionEffect(new PotionEffect(WizardryPotions.transience, 300));
 						player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300, 0, false, false));
 					}
@@ -639,6 +639,7 @@ public class ItemArtefact extends Item {
 
 						WizardryUtilities.getEntitiesWithinRadius(3, player.posX, player.posY, player.posZ, world).stream()
 								.filter(WizardryUtilities::isLiving)
+								.filter(e -> e != player)
 								.min(Comparator.comparingDouble(player::getDistanceSq))
 								.ifPresent(target -> {
 

@@ -29,7 +29,6 @@ import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.*;
-import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.*;
@@ -107,7 +106,7 @@ public class ClientProxy extends CommonProxy {
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
 
-	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style)}). */
+	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style, Object...)}). */
 	private static final int TOOLTIP_WRAP_WIDTH = 140;
 
 	// SECTION Registry
@@ -188,6 +187,16 @@ public class ClientProxy extends CommonProxy {
 		}else{
 			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellPosTimed(start, loop, end, spell, duration, x, y, z, volume, pitch));
 		}
+	}
+
+	@Override
+	public void playBlinkEffect(EntityPlayer player){
+		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.playBlinkEffect();
+	}
+
+	@Override
+	public void shakeScreen(EntityPlayer player, float intensity){
+		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.shakeScreen(intensity);
 	}
 
 	@Override
@@ -282,8 +291,8 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void addMultiLineDescription(List<String> tooltip, String key, Style style){
-		String description = style.getFormattingCode() + I18n.format(key);
+	public void addMultiLineDescription(List<String> tooltip, String key, Style style, Object... args){
+		String description = style.getFormattingCode() + I18n.format(key, args);
 		tooltip.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(description, TOOLTIP_WRAP_WIDTH));
 	}
 
@@ -429,6 +438,7 @@ public class ClientProxy extends CommonProxy {
 				if(caster instanceof ISpellCaster){
 					if(spell.isContinuous || spell instanceof None){
 						((ISpellCaster)caster).setContinuousSpell(spell);
+						((ISpellCaster)caster).setSpellCounter(spell instanceof None ? 0 : 1);
 						((EntityLiving)caster).setAttackTarget((EntityLivingBase)target);
 					}
 				}
@@ -542,7 +552,7 @@ public class ClientProxy extends CommonProxy {
 		data.randomNames = new HashMap<>();
 		data.randomDescriptions = new HashMap<>();
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			// -1 because the none spell isn't included
 			// This is a case where we must use the network ID, not the metadata
 			data.randomNames.put(spell, message.names.get(spell.networkID() - 1));
@@ -567,13 +577,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void handleAdvancementSyncPacket(PacketSyncAdvancements.Message message){
 		GuiWizardHandbook.updateUnlockStatus(message.showToasts, message.completedAdvancements);
-	}
-
-	@Override
-	public void handleEndSlowTimePacket(PacketEndSlowTime.Message message){
-		Entity entity = Minecraft.getMinecraft().world.getEntityByID(message.hostID);
-		if(entity instanceof EntityLivingBase) PotionSlowTime.unblockNearbyEntities((EntityLivingBase)entity);
-		else Wizardry.logger.warn("Received a PacketEndSlowTime, but the entity ID did not match any living entity");
 	}
 
 	@Override

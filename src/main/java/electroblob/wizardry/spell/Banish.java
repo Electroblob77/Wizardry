@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -7,6 +8,7 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -78,9 +80,7 @@ public class Banish extends SpellRay {
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);
 			}
 
-			// Can't be bothered to route this through the proxies!
-			if(entity == net.minecraft.client.Minecraft.getMinecraft().player)
-				electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
+			if(entity instanceof EntityPlayer) Wizardry.proxy.playBlinkEffect((EntityPlayer)entity);
 		}
 
 		if(y != null){

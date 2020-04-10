@@ -1,5 +1,6 @@
 package electroblob.wizardry.item;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.Spells;
@@ -11,11 +12,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class ItemBlankScroll extends Item implements IWorkbenchItem {
 
 	public ItemBlankScroll(){
 		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		this.addPropertyOverride(new ResourceLocation("festive"), (s, w, e) -> Wizardry.tisTheSeason ? 1 : 0);
 	}
 
 	@Override
@@ -45,10 +48,14 @@ public class ItemBlankScroll extends Item implements IWorkbenchItem {
 				int cost = spell.getCost() * centre.getStack().getCount();
 				// Continuous spell scrolls require enough mana to cast them for the duration defined in ItemScroll.
 				if(spell.isContinuous) cost *= ItemScroll.CASTING_TIME / 20;
+
+				int manaPerItem = Constants.MANA_PER_CRYSTAL;
+				if(crystals.getStack().getItem() == WizardryItems.crystal_shard) manaPerItem = Constants.MANA_PER_SHARD;
+				if(crystals.getStack().getItem() == WizardryItems.grand_crystal) manaPerItem = Constants.GRAND_CRYSTAL_MANA;
 				
-				if(crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL > cost){
+				if(crystals.getStack().getCount() * manaPerItem > cost){
 					// Rounds up to the nearest whole crystal
-					crystals.decrStackSize(cost / Constants.MANA_PER_CRYSTAL + 1);
+					crystals.decrStackSize(cost / manaPerItem + 1);
 					centre.putStack(new ItemStack(WizardryItems.scroll, centre.getStack().getCount(), spell.metadata()));
 					return true;
 				}

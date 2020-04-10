@@ -4,6 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketGlyphData;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.NBTExtras;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -43,11 +44,11 @@ public class SpellGlyphData extends WorldSavedData {
 	/** Generates random names and descriptions for any spells which don't already have them. */
 	public void generateGlyphNames(World world){
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			if(!randomNames.containsKey(spell)) randomNames.put(spell, generateRandomName(world.rand));
 		}
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			if(!randomDescriptions.containsKey(spell))
 				randomDescriptions.put(spell, generateRandomDescription(world.rand));
 		}
@@ -161,7 +162,7 @@ public class SpellGlyphData extends WorldSavedData {
 
 		NBTTagList tagList = new NBTTagList();
 
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			// Much like the enchantments tag for items, this stores a list of spell-id-to-name tag pairs
 			// The description is now also included; there's no point in making a second compound tag!
 			NBTTagCompound tag = new NBTTagCompound();
@@ -171,7 +172,7 @@ public class SpellGlyphData extends WorldSavedData {
 			tagList.appendTag(tag);
 		}
 
-		nbt.setTag("spellGlyphData", tagList);
+		NBTExtras.storeTagSafely(nbt, "spellGlyphData", tagList);
 
 		return nbt;
 	}

@@ -1277,11 +1277,13 @@ config.ebwizardry.jei_integration.tooltip=若已下载 JEI，控制是否接受 
 config.ebwizardry.antique_atlas_integration=古式地图 联动
 config.ebwizardry.antique_atlas_integration.tooltip=若已下载 古式地图，控制是否接受 古式地图 的特性。若关闭，则本模组视 古式地图 为不存在。
 config.ebwizardry.auto_place_tower_markers=自动标记巫师塔
+
 config.ebwizardry.auto_place_tower_markers.tooltip=控制古式地图是否自动标记巫师塔。
 config.ebwizardry.auto_place_obelisk_markers=自动标记方尖碑
 config.ebwizardry.auto_place_obelisk_markers.tooltip=控制古式地图是否自动标记方尖碑。
 config.ebwizardry.auto_place_shrine_markers=自动标记圣祠
 config.ebwizardry.auto_place_shrine_markers.tooltip=控制古式地图是否自动标记圣祠。
+
 
 integration.jei.category.ebwizardry\:arcane_workbench=奥术工作台
 

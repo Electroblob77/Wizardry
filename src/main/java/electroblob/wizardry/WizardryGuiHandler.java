@@ -2,7 +2,6 @@ package electroblob.wizardry;
 
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWizardHandbook;
-import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
 import electroblob.wizardry.tileentity.ContainerPortableWorkbench;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
@@ -48,9 +47,9 @@ public class WizardryGuiHandler implements IGuiHandler {
 			return new electroblob.wizardry.client.gui.handbook.GuiWizardHandbook();
 		}else if(id == SPELL_BOOK){
 			if(player.getHeldItemMainhand().getItem() instanceof ItemSpellBook){
-				return new electroblob.wizardry.client.gui.GuiSpellBook(Spell.byMetadata(player.getHeldItemMainhand().getItemDamage()));
+				return new electroblob.wizardry.client.gui.GuiSpellBook(player.getHeldItemMainhand());
 			}else if(player.getHeldItemOffhand().getItem() instanceof ItemSpellBook){
-				return new electroblob.wizardry.client.gui.GuiSpellBook(Spell.byMetadata(player.getHeldItemOffhand().getItemDamage()));
+				return new electroblob.wizardry.client.gui.GuiSpellBook(player.getHeldItemOffhand());
 			}
 		}else if(id == PORTABLE_CRAFTING){
 			return new electroblob.wizardry.client.gui.GuiPortableCrafting(player.inventory, world, new BlockPos(x, y, z));

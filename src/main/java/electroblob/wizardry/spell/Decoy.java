@@ -21,7 +21,7 @@ public class Decoy extends Spell {
 		addProperties(DECOY_LIFETIME, MOB_TRICK_CHANCE);
 	}
 
-	@Override public boolean canBeCastByNPCs(){ return true; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){

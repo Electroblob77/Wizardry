@@ -88,6 +88,7 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_WIZARD_TRADING = 			createSound("entity.wizard.trading");
 	public static final SoundEvent ENTITY_WIZARD_HURT = 			createSound("entity.wizard.hurt");
 	public static final SoundEvent ENTITY_WIZARD_DEATH = 			createSound("entity.wizard.death");
+	public static final SoundEvent ENTITY_WIZARD_HOHOHO = 			createSound("entity.wizard.hohoho");
 
 	public static final SoundEvent ENTITY_DARKNESS_ORB_HIT = 		createSound("entity.darkness_orb.hit");
 	public static final SoundEvent ENTITY_DART_HIT = 				createSound("entity.dart.hit");
@@ -132,10 +133,17 @@ public final class WizardrySounds {
 	public static final SoundEvent MISC_PAGE_TURN = 				createSound("misc.page_turn");
 	public static final SoundEvent MISC_FREEZE = 					createSound("misc.freeze");
 
-	/** Trick borrowed from the Twilight Forest, makes things neater. */
+	// Trick borrowed from the Twilight Forest, makes things neater.
+
+	/** Overload for {@link WizardrySounds#createSound(String, String)} which assigns wizardry's mod ID automatically. */
 	public static SoundEvent createSound(String name){
+		return createSound(Wizardry.MODID, name);
+	}
+
+	/** Creates a sound with the given name, to be read from {@code assets/[modID]/sounds.json}. */
+	public static SoundEvent createSound(String modID, String name){
 		// All the setRegistryName methods delegate to this one, it doesn't matter which you use.
-		return new SoundEvent(new ResourceLocation(Wizardry.MODID, name)).setRegistryName(name);
+		return new SoundEvent(new ResourceLocation(modID, name)).setRegistryName(name);
 	}
 
 	// For some reason, sound events seem to work even when they aren't registered, without even so much as a warning.
@@ -250,7 +258,7 @@ public final class WizardrySounds {
 		event.getRegistry().register(MISC_PAGE_TURN);
 		event.getRegistry().register(MISC_FREEZE);
 		
-		for(Spell spell : Spell.getSpells(Spell.allSpells)){
+		for(Spell spell : Spell.getAllSpells()){
 			event.getRegistry().registerAll(spell.getSounds());
 		}
 

@@ -6,9 +6,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class Tornado extends SpellConstruct<EntityTornado> {
 

@@ -2,5 +2,13 @@
     "parent": "item/generated",
     "textures": {
         "layer0": "ebwizardry:items/spell_book"
-    }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "festive": 1
+            },
+            "model": "ebwizardry:item/festive_spell_book"
+        }
+    ]
 }

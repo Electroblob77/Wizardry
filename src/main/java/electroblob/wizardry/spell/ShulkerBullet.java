@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,7 @@ import net.minecraft.entity.projectile.EntityShulkerBullet;
 import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -29,9 +31,9 @@ public class ShulkerBullet extends Spell {
 		addProperties(RANGE);
 	}
 
-	@Override public boolean canBeCastByNPCs(){ return true; }
+	@Override public boolean canBeCastBy(EntityLiving npc, boolean override){ return true; }
 
-	@Override public boolean canBeCastByDispensers(){ return true; }
+	@Override public boolean canBeCastBy(TileEntityDispenser dispenser){ return true; }
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
@@ -89,7 +91,7 @@ public class ShulkerBullet extends Spell {
 				targetTag.setInteger("X", pos.getX());
 				targetTag.setInteger("Y", pos.getY());
 				targetTag.setInteger("Z", pos.getZ());
-				nbt.setTag("Target", targetTag);
+				NBTExtras.storeTagSafely(nbt, "Target", targetTag);
 				bullet.readFromNBT(nbt); // LOL I just modified private fields without reflection
 
 				world.spawnEntity(bullet);

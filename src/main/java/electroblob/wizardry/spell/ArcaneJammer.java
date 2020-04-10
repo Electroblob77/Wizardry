@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -18,11 +19,20 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.lang.reflect.Field;
+
 @Mod.EventBusSubscriber
 public class ArcaneJammer extends SpellRay {
+
+	private static final Field spellTicks;
+
+	static { // Yay more reflection
+		spellTicks = ObfuscationReflectionHelper.findField(EntitySpellcasterIllager.class, "field_193087_b");
+	}
 
 	public ArcaneJammer(){
 		super("arcane_jammer", false, EnumAction.NONE);
@@ -68,9 +78,17 @@ public class ArcaneJammer extends SpellRay {
 
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event){
+
 		if(event.getEntity() instanceof EntitySpellcasterIllager
 				&& event.getEntityLiving().isPotionActive(WizardryPotions.arcane_jammer)){
+
 			((EntitySpellcasterIllager)event.getEntity()).setSpellType(EntitySpellcasterIllager.SpellType.NONE);
+
+			try{
+				spellTicks.set(event.getEntity(), 10);
+			}catch(IllegalAccessException e){
+				Wizardry.logger.error("Error setting evoker spell timer:", e);
+			}
 		}
 	}
 

@@ -2,5 +2,13 @@
     "parent": "item/generated",
     "textures": {
         "layer0": "ebwizardry:items/scroll"
-    }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "festive": 1
+            },
+            "model": "ebwizardry:item/festive_scroll"
+        }
+    ]
 }

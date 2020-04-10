@@ -44,8 +44,7 @@ item.ebwizardry\:spell_book.name=Spell Book
 item.ebwizardry\:spell_book.apply_to_wizard=Replaced %1$s's spell %2$s with %3$s
 
 item.ebwizardry\:arcane_tome.name=Tome of Arcana
-item.ebwizardry\:arcane_tome.desc1=Upgrades any %1$s
-item.ebwizardry\:arcane_tome.desc2=wand to %1$s tier
+item.ebwizardry\:arcane_tome.desc=Upgrades any %1$s wand with sufficient progression to %2$s tier
 
 item.ebwizardry\:wizard_handbook.name=The Wizard's Handbook
 item.ebwizardry\:wizard_handbook.desc=by %1$s
@@ -498,6 +497,13 @@ advancement.ebwizardry\:enchant_scroll=Scroll Up!
 advancement.ebwizardry\:enchant_scroll.desc=Craft a blank scroll and enchant it with a spell at an arcane workbench
 
 handbook.toast.title=New Handbook Section Unlocked!
+
+gui.ebwizardry\:spell_book.tier=Tier: %s
+gui.ebwizardry\:spell_book.element=Element: %s
+gui.ebwizardry\:spell_book.element_undiscovered=Element: ?
+gui.ebwizardry\:spell_book.mana_cost=Mana Cost: %s
+gui.ebwizardry\:spell_book.mana_cost_continuous=Mana Cost: %s/second
+gui.ebwizardry\:spell_book.mana_cost_undiscovered=Mana Cost: ?
 
 container.ebwizardry\:arcane_workbench=Arcane Workbench
 container.ebwizardry\:arcane_workbench.apply=Apply
@@ -1117,6 +1123,8 @@ config.ebwizardry.creative_bypasses_arcane_lock.true=Anyone in creative mode
 config.ebwizardry.creative_bypasses_arcane_lock.false=Only ops in creative mode
 config.ebwizardry.slow_time_affects_players=Slow Time Affects Players
 config.ebwizardry.slow_time_affects_players.tooltip=Whether players are slowed when another nearby player uses the slow time spell. If this is disabled, mobs and projectiles will still be affected but players will move at normal speed.
+config.ebwizardry.bonemeal_grows_crystal_flowers=Bonemeal Grows Crystal Flowers
+config.ebwizardry.bonemeal_grows_crystal_flowers.tooltip=Whether using bonemeal on grass blocks has a chance to grow crystal flowers.
 config.ebwizardry.mob_loot_table_whitelist=Mob Loot Table Whitelist
 config.ebwizardry.mob_loot_table_whitelist.tooltip=Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.
 config.ebwizardry.mob_loot_table_blacklist=Mob Loot Table Blacklist
@@ -1164,27 +1172,27 @@ config.ebwizardry.fast_worldgen.tooltip=Controls which algorithm wizardry uses f
 config.ebwizardry.fast_worldgen.true=Fast
 config.ebwizardry.fast_worldgen.false=Fancy
 config.ebwizardry.tower_dimensions=Tower Dimensions
-config.ebwizardry.tower_dimensions.tooltip=List of ids of dimensions in which wizard towers will generate.
+config.ebwizardry.tower_dimensions.tooltip=List of ids of dimensions in which wizard towers will generate. Remove all dimensions to disable wizard towers completely.
 config.ebwizardry.tower_rarity=Tower Rarity
 config.ebwizardry.tower_rarity.tooltip=Rarity of wizard towers. 1 in this many chunks will contain a wizard tower, meaning higher numbers are rarer.
 config.ebwizardry.evil_wizard_chance=Evil Wizard Chance
 config.ebwizardry.evil_wizard_chance.tooltip=The chance for wizard towers to generate with an evil wizard and chest inside, instead of a friendly wizard.
 config.ebwizardry.tower_files=Tower Structure Files
-config.ebwizardry.tower_files.tooltip=List of structure file locations for wizard towers without loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.
+config.ebwizardry.tower_files.tooltip=List of structure file locations for wizard towers without loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable wizard towers, use the tower dimensions setting.
 config.ebwizardry.tower_with_chest_files=Tower With Chest Structure Files
-config.ebwizardry.tower_with_chest_files.tooltip=List of structure file locations for wizard towers with loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.
+config.ebwizardry.tower_with_chest_files.tooltip=List of structure file locations for wizard towers with loot chests. One of these files will be randomly selected each time a wizard tower is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable wizard towers, use the tower dimensions setting.
 config.ebwizardry.obelisk_dimensions=Obelisk Dimensions
-config.ebwizardry.obelisk_dimensions.tooltip=List of ids of dimensions in which obelisks will generate.
+config.ebwizardry.obelisk_dimensions.tooltip=List of ids of dimensions in which obelisks will generate. Remove all dimensions to disable obelisks completely.
 config.ebwizardry.obelisk_rarity=Obelisk Rarity
 config.ebwizardry.obelisk_rarity.tooltip=Rarity of obelisks. 1 in this many chunks will contain an obelisk, meaning higher numbers are rarer.
 config.ebwizardry.obelisk_files=Obelisk Structure Files
-config.ebwizardry.obelisk_files.tooltip=List of structure file locations for obelisks. One of these files will be randomly selected each time an obelisk is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.
+config.ebwizardry.obelisk_files.tooltip=List of structure file locations for obelisks. One of these files will be randomly selected each time an obelisk is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable obelisks, use the obelisk dimensions setting.
 config.ebwizardry.shrine_dimensions=Shrine Dimensions
-config.ebwizardry.shrine_dimensions.tooltip=List of ids of dimensions in which shrines will generate.
+config.ebwizardry.shrine_dimensions.tooltip=List of ids of dimensions in which shrines will generate. Remove all dimensions to disable shrines completely.
 config.ebwizardry.shrine_rarity=Shrine Rarity
 config.ebwizardry.shrine_rarity.tooltip=Rarity of shrines. 1 in this many chunks will contain a shrine, meaning higher numbers are rarer.
 config.ebwizardry.shrine_files=Shrine Structure Files
-config.ebwizardry.shrine_files.tooltip=List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves.
+config.ebwizardry.shrine_files.tooltip=List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable shrines, use the shrine dimensions setting.
 config.ebwizardry.tree_blocks=Tree Blocks
 config.ebwizardry.tree_blocks.tooltip=List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).
 config.ebwizardry.ore_dimensions=Ore Dimensions
@@ -1283,8 +1291,13 @@ config.ebwizardry.auto_place_shrine_markers.tooltip=Controls whether wizardry au
 
 integration.jei.category.ebwizardry\:arcane_workbench=Arcane Workbench
 
-integration.antiqueatlas.marker.ebwizardry\:wizard_tower=Wizard Tower
-integration.antiqueatlas.marker.ebwizardry\:obelisk=Obelisk
-integration.antiqueatlas.marker.ebwizardry\:shrine=Shrine
+integration.antiqueatlas.marker.ebwizardry.wizard_tower=Wizard Tower
+integration.antiqueatlas.marker.ebwizardry.obelisk=Obelisk
+integration.antiqueatlas.marker.ebwizardry.shrine=Shrine
+
+spell.ebwizardry\:magic_missile_festive=Magic Mistletoe
+spell.ebwizardry\:summon_snow_golem_festive=Summon Frosty The Snowman
+spell.ebwizardry\:invigorating_presence_festive=Invigorating Presents
+spell.ebwizardry\:empowering_presence_festive=Empowering Presents
 
 wizard.debug=%1$s, %2$s, %3$s

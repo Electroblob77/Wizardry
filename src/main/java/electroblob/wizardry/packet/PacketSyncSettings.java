@@ -56,6 +56,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.discoveryMode = buf.readBoolean();
 			settings.creativeBypassesArcaneLock = buf.readBoolean();
 			settings.slowTimeAffectsPlayers = buf.readBoolean();
+			settings.replaceVanillaFireballs = buf.readBoolean();
 			settings.forfeitChance = buf.readFloat();
 		}
 
@@ -64,6 +65,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeBoolean(settings.discoveryMode);
 			buf.writeBoolean(settings.creativeBypassesArcaneLock);
 			buf.writeBoolean(settings.slowTimeAffectsPlayers);
+			buf.writeBoolean(settings.replaceVanillaFireballs);
 			buf.writeFloat((float)settings.forfeitChance); // Configs don't have floats but this can only be 0-1 anyway
 		}
 	}

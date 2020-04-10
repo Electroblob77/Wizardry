@@ -525,30 +525,42 @@ public abstract class ParticleWizardry extends Particle {
 
 
 	// =============================================== Helper Methods ===============================================
-	
+
+	/** Internal overload for {@link ParticleWizardry#generateTextures(String, String, int)} which uses wizardry's mod
+	 * ID automatically. */
+	public static ResourceLocation[] generateTextures(String stem, int n){
+		return generateTextures(Wizardry.MODID, stem, n);
+	}
+
 	/** Static helper method that generates an array of n ResourceLocations using the particle file naming convention,
 	 * which is the given stem plus an underscore plus the integer index. */
-	public static ResourceLocation[] generateTextures(String stem, int n){
+	public static ResourceLocation[] generateTextures(String modID, String stem, int n){
 
 		ResourceLocation[] textures = new ResourceLocation[n];
 		
 		for(int i=0; i<n; i++){
-			textures[i] = new ResourceLocation(Wizardry.MODID, "particle/" + stem + "_" + i);
+			textures[i] = new ResourceLocation(modID, "particle/" + stem + "_" + i);
 		}
 		
 		return textures;
+	}
+
+	/** Internal overload for {@link ParticleWizardry#generateTextures(String, String, int, int)} which uses wizardry's
+	 * mod ID automatically. */
+	public static ResourceLocation[][] generateTextures(String stem, int m, int n){
+		return generateTextures(Wizardry.MODID, stem, m, n);
 	}
 	
 	/** Static helper method that generates a 2D m x n array of ResourceLocations using the particle file naming
 	 * convention, which is the given stem plus an underscore plus the first index, plus an underscore plus the second
 	 * index. Useful for animated particles that also pick a random animation strip. */
-	public static ResourceLocation[][] generateTextures(String stem, int m, int n){
+	public static ResourceLocation[][] generateTextures(String modID, String stem, int m, int n){
 
 		ResourceLocation[][] textures = new ResourceLocation[m][n];
 		
 		for(int i=0; i<m; i++){
 			for(int j=0; j<n; j++){
-				textures[i][j] = new ResourceLocation(Wizardry.MODID, "particle/" + stem + "_" + i + "_" + j);
+				textures[i][j] = new ResourceLocation(modID, "particle/" + stem + "_" + i + "_" + j);
 			}
 		}
 		
