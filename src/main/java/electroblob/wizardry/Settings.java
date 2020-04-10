@@ -696,38 +696,32 @@ public final class Settings {
 		property = config.get(TWEAKS_CATEGORY, "mindControlTargetsBlacklist", new String[]{},
 				"List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. SoundLoopSpellEntity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".mind_control_targets_blacklist");
-		property.setRequiresWorldRestart(true);
 		mindControlTargetsBlacklist = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "pocketFurnaceItemBlacklist", new String[]{"cobblestone", "netherrack"},
 				"List of registry names of blocks or items which cannot be smelted by the pocket furnace spell, in addition to armour, tools and weapons. Block/item names are not case sensitive. For mod items, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".pocket_furnace_item_blacklist");
-		property.setRequiresWorldRestart(true);
 		pocketFurnaceItemBlacklist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "divinationOreWhitelist", new String[0], "List of registry names of ore blocks which can be detected by the divination spell. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".divination_ore_whitelist");
-		property.setRequiresWorldRestart(true);
 		divinationOreWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "swordItemWhitelist", new String[0], "List of registry names of items which should count as swords for imbuement spells. Most swords should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:broadsword).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".sword_item_whitelist");
-		property.setRequiresWorldRestart(true);
 		swordItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "bowItemWhitelist", new String[0], "List of registry names of items which should count as bows for imbuement spells. Most bows should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:shortbow).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".bow_item_whitelist");
-		property.setRequiresWorldRestart(true);
 		bowItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
-		property = config.get(TWEAKS_CATEGORY, "bookshelfBlocks", new String[0], "List of registry names of blocks that count as bookshelves for the arcane workbench and lectern. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":oak_bookshelf).");
+		property = config.get(TWEAKS_CATEGORY, "bookshelfBlocks", new String[]{Wizardry.MODID + ":oak_bookshelf", Wizardry.MODID + ":spruce_bookshelf", Wizardry.MODID + ":birch_bookshelf", Wizardry.MODID + ":jungle_bookshelf",  Wizardry.MODID + ":acacia_bookshelf",  Wizardry.MODID + ":dark_oak_bookshelf"}, "List of registry names of blocks that count as bookshelves for the arcane workbench and lectern. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":oak_bookshelf).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_blocks");
-		property.setRequiresWorldRestart(true);
 		bookshelfBlocks = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
@@ -736,14 +730,12 @@ public final class Settings {
 				1, 10);
 		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_search_radius");
 		Wizardry.proxy.setToNumberSliderEntry(property);
-		property.setRequiresMcRestart(true);
 		bookshelfSearchRadius = property.getInt();
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
 				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
-		property.setRequiresWorldRestart(true);
 		propOrder.add(property.getName());
 		currencyItems = new HashMap<>();
 		for(String string : property.getStringList()){
