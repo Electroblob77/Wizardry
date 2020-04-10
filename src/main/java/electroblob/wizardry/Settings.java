@@ -1206,7 +1206,7 @@ public final class Settings {
 	 * @return True if the given array contains the given id/metadata pair, or the given id paired with the wildcard value.
 	 */
 	public static boolean containsMetaThing(Pair<ResourceLocation, Short>[] array, ResourceLocation id, short metadata){
-		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, OreDictionary.WILDCARD_VALUE));
+		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, (short)OreDictionary.WILDCARD_VALUE));
 	}
 
 }
