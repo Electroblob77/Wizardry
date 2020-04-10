@@ -1,3 +1,4 @@
+
 #PARSE_ESCAPES
 tile.ebwizardry\:arcane_workbench.name=奥术工作台
 tile.ebwizardry\:crystal_ore.name=水晶矿石
@@ -9,7 +10,7 @@ tile.ebwizardry\:transportation_stone.name=传送石
 tile.ebwizardry\:transportation_stone.confirm=你将会在%1$s释放成功后返回此处
 tile.ebwizardry\:transportation_stone.remember=你记住了位于 %4$s 维度 %1$s，%2$s，%3$s的传送坐标
 tile.ebwizardry\:transportation_stone.forget=你遗忘了位于 %4$s 维度 %1$s，%2$s，%3$s的传送坐标
-tile.ebwizardry\:transportation_stone.invalid=你必须先用8个传送石围成一个圈！
+tile.ebwizardry\:transportation_stone.invalid=你必须用8个传送石围成一个圈！
 tile.ebwizardry\:spectral_block.name=幽冥方块
 tile.ebwizardry\:runestone.name=符石
 tile.ebwizardry\:runestone_pedestal.name=符石基座
@@ -23,7 +24,7 @@ tile.ebwizardry\:ice_crystal_block.name=寒霜晶块
 tile.ebwizardry\:lightning_crystal_block.name=风暴晶块
 tile.ebwizardry\:necromancy_crystal_block.name=邃暗晶块
 tile.ebwizardry\:earth_crystal_block.name=苍翠晶块
-tile.ebwizardry\:sorcery_crystal_block.name=秘术晶块
+tile.ebwizardry\:sorcery_crystal_block.name=秘源晶块
 tile.ebwizardry\:healing_crystal_block.name=光辉晶块
 
 item.ebwizardry\:crystal_magic.name=魔法水晶
@@ -32,7 +33,7 @@ item.ebwizardry\:crystal_ice.name=寒霜水晶
 item.ebwizardry\:crystal_lightning.name=风暴水晶
 item.ebwizardry\:crystal_necromancy.name=邃暗水晶
 item.ebwizardry\:crystal_earth.name=苍翠水晶
-item.ebwizardry\:crystal_sorcery.name=秘术水晶
+item.ebwizardry\:crystal_sorcery.name=秘源水晶
 item.ebwizardry\:crystal_healing.name=光辉水晶
 
 item.ebwizardry\:magic_wand.name=魔杖
@@ -66,7 +67,7 @@ item.ebwizardry\:novice_ice_wand.name=冰霜魔杖
 item.ebwizardry\:novice_lightning_wand.name=雷电魔杖
 item.ebwizardry\:novice_necromancy_wand.name=死灵魔杖
 item.ebwizardry\:novice_earth_wand.name=大地魔杖
-item.ebwizardry\:novice_sorcery_wand.name=秘术魔杖
+item.ebwizardry\:novice_sorcery_wand.name=秘法魔杖
 item.ebwizardry\:novice_healing_wand.name=治愈魔杖
 
 item.ebwizardry\:apprentice_fire_wand.name=学徒烈焰魔杖
@@ -74,7 +75,7 @@ item.ebwizardry\:apprentice_ice_wand.name=学徒冰霜魔杖
 item.ebwizardry\:apprentice_lightning_wand.name=学徒雷电魔杖
 item.ebwizardry\:apprentice_necromancy_wand.name=学徒死灵魔杖
 item.ebwizardry\:apprentice_earth_wand.name=学徒大地魔杖
-item.ebwizardry\:apprentice_sorcery_wand.name=学徒秘术魔杖
+item.ebwizardry\:apprentice_sorcery_wand.name=学徒秘法魔杖
 item.ebwizardry\:apprentice_healing_wand.name=学徒治愈魔杖
 
 item.ebwizardry\:advanced_fire_wand.name=『进阶』舞焰者魔杖
@@ -114,7 +115,7 @@ item.ebwizardry\:purifying_elixir.desc=使用后消除诅咒
 
 item.ebwizardry\:storage_upgrade.name=魔力储能升级
 item.ebwizardry\:siphon_upgrade.name=魔力吸取升级
-item.ebwizardry\:condenser_upgrade.name=魔力聚光升级
+item.ebwizardry\:condenser_upgrade.name=魔力凝结升级
 item.ebwizardry\:range_upgrade.name=法术距离升级
 item.ebwizardry\:duration_upgrade.name=法术持续升级
 item.ebwizardry\:cooldown_upgrade.name=法术冷却升级
@@ -152,8 +153,8 @@ item.ebwizardry\:identification_scroll.desc=识别的未知法术书或卷轴
 item.ebwizardry\:identification_scroll.nothing_to_identify=没有可识别物品！
 
 item.ebwizardry\:armour_upgrade.name=奥术护具升级圣印
-item.ebwizardry\:armour_upgrade.desc1=%1$s升级任意的巫术护具
-item.ebwizardry\:armour_upgrade.desc2=%1$s使它到达%2$s传奇 级别
+item.ebwizardry\:armour_upgrade.desc1=%1$s升级任意的巫师护具
+item.ebwizardry\:armour_upgrade.desc2=%1$s使它到达%2$s传奇级别
 
 item.ebwizardry\:magic_silk.name=魔法绸缎
 
@@ -186,10 +187,10 @@ item.ebwizardry\:wizard_robe_necromancy.name=死灵巫师长袍
 item.ebwizardry\:wizard_leggings_necromancy.name=死灵巫师护腿
 item.ebwizardry\:wizard_boots_necromancy.name=死灵巫师靴子
 
-item.ebwizardry\:wizard_hat_earth.name=自然巫师帽
-item.ebwizardry\:wizard_robe_earth.name=自然巫师长袍
-item.ebwizardry\:wizard_leggings_earth.name=自然巫师护腿
-item.ebwizardry\:wizard_boots_earth.name=自然巫师靴子
+item.ebwizardry\:wizard_hat_earth.name=大地巫师帽
+item.ebwizardry\:wizard_robe_earth.name=大地巫师长袍
+item.ebwizardry\:wizard_leggings_earth.name=大地巫师护腿
+item.ebwizardry\:wizard_boots_earth.name=大地巫师靴子
 
 item.ebwizardry\:wizard_hat_sorcery.name=秘术巫师帽
 item.ebwizardry\:wizard_robe_sorcery.name=秘术巫师长袍
@@ -212,7 +213,7 @@ item.ebwizardry\:spectral_boots.name=幽冥靴子
 item.ebwizardry\:lightning_hammer.name=雷霆圣锤
 
 item.ebwizardry\:ring_condensing.name=聚能戒指
-item.ebwizardry\:ring_condensing.desc=缓慢为你的快捷栏的所有魔杖恢复魔力值
+item.ebwizardry\:ring_condensing.desc=缓慢为你的物品栏中的所有魔杖恢复魔力值
 item.ebwizardry\:ring_siphoning.name=虹吸戒指
 item.ebwizardry\:ring_siphoning.desc=魔力吸取升级所获得的魔力值提高30%%
 item.ebwizardry\:ring_battlemage.name=近战法师之戒
@@ -250,15 +251,15 @@ item.ebwizardry\:ring_necromancy_melee.desc=被死灵魔杖近战攻击的生物
 item.ebwizardry\:ring_mind_control.name=精神之戒
 item.ebwizardry\:ring_mind_control.desc=被精神控制的实体在攻击其他实体时，将有概率使被攻击实体同样遭到精神控制
 item.ebwizardry\:ring_poison.name=蛇纹戒指
-item.ebwizardry\:ring_poison.desc=所有自然系法术会使目标中毒
+item.ebwizardry\:ring_poison.desc=所有大地系法术会使目标中毒
 item.ebwizardry\:ring_earth_melee.name=毒触戒指
-item.ebwizardry\:ring_earth_melee.desc=被自然魔杖近战击中的生物会获得中毒效果
+item.ebwizardry\:ring_earth_melee.desc=被大地魔杖近战击中的生物会获得中毒效果
 item.ebwizardry\:ring_earth_biome.name=树妖戒指
-item.ebwizardry\:ring_earth_biome.desc=当你身处森林生物群系时，自然系法术伤害提升30%%
+item.ebwizardry\:ring_earth_biome.desc=当你身处森林生物群系时，大地系法术伤害提升30%%
 item.ebwizardry\:ring_full_moon.name=啸狼戒指
-item.ebwizardry\:ring_full_moon.desc=在满月时自然系法术的冷却时间会大大缩短
+item.ebwizardry\:ring_full_moon.desc=在满月时大地系法术的冷却时间会大大缩短
 item.ebwizardry\:ring_extraction.name=萃取戒指
-item.ebwizardry\:ring_extraction.desc=使用秘术系法术击杀目标会获得额外法力恢复
+item.ebwizardry\:ring_extraction.desc=使用秘法系法术击杀目标会获得额外魔力恢复
 item.ebwizardry\:ring_mana_return.name=完美主义者之戒
 item.ebwizardry\:ring_mana_return.desc=未击中目标的原力箭矢会返还魔力
 item.ebwizardry\:ring_blockwrangler.name=方块牧者之戒
@@ -314,7 +315,7 @@ item.ebwizardry\:charm_haggler.desc=每次与巫师交易后必定会刷新交�
 item.ebwizardry\:charm_experience_tome.name=勤勉者之书
 item.ebwizardry\:charm_experience_tome.desc=魔杖升级速度提升50%%
 item.ebwizardry\:charm_auto_smelt.name=冶金学家徽标
-item.ebwizardry\:charm_auto_smelt.desc=当快捷栏的法杖拥有口袋熔炉魔法时会自动触发
+item.ebwizardry\:charm_auto_smelt.desc=快捷栏中含有带有口袋熔炉法术的魔杖时,口袋熔炉法术将会自动被触发
 item.ebwizardry\:charm_lava_walking.name=下界冰核
 item.ebwizardry\:charm_lava_walking.desc=霜步法术可以将岩浆变为黑曜石
 item.ebwizardry\:charm_storm.name=瓶装雷云
@@ -338,7 +339,7 @@ item.ebwizardry\:charm_light.desc=你使用荧光闪烁所释放的魔法光斑�
 item.ebwizardry\:charm_transportation.name=古老罗盘
 item.ebwizardry\:charm_transportation.desc=在使用传送魔法时，最多能记住四个传送石圈，并可以选择前往其中任意一个
 item.ebwizardry\:charm_feeding.name=无底食粮
-item.ebwizardry\:charm_feeding.desc=当你物品栏中的法杖绑定有饱食恢复法术时，饱食恢复将会被自动触发
+item.ebwizardry\:charm_feeding.desc=当你物品栏中的法杖绑定有饱食恢复法术时，饱食恢复法术将会被自动触发
 
 item.charge_status.full=全满
 item.charge_status.almost_full=近满
@@ -437,7 +438,7 @@ entity.ebwizardry\:earthquake.name=地震
 entity.ebwizardry\:hailstorm.name=冰雹风暴
 entity.ebwizardry\:lightning_pulse.name=闪电脉冲
 
-itemGroup.ebwizardry=魔法秘术
+itemGroup.ebwizardry=巫术学
 itemGroup.ebwizardryspells=法术
 itemGroup.ebwizardrygear=巫师装备
 
@@ -462,13 +463,13 @@ advancement.ebwizardry\:all_spells=样样精通
 advancement.ebwizardry\:all_spells.desc=在游戏中施放所有法术
 
 advancement.ebwizardry\:wizard_tower=谁住在这？
-advancement.ebwizardry\:wizard_tower.desc=拜访一个巫师塔
+advancement.ebwizardry\:wizard_tower.desc=拜访一座巫师塔
 advancement.ebwizardry\:wizard_trade=魔法交易
 advancement.ebwizardry\:wizard_trade.desc=向巫师购买物品
 advancement.ebwizardry\:anger_wizard=你会后悔的
-advancement.ebwizardry\:anger_wizard.desc=惹怒一个巫师
+advancement.ebwizardry\:anger_wizard.desc=惹怒一名巫师
 advancement.ebwizardry\:defeat_evil_wizard=正义之举
-advancement.ebwizardry\:defeat_evil_wizard.desc=击败一个邪恶的巫师
+advancement.ebwizardry\:defeat_evil_wizard.desc=击败一名邪恶的巫师
 advancement.ebwizardry\:buy_master_spell=知识就是力量
 advancement.ebwizardry\:buy_master_spell.desc=向巫师购买一个宗师级卷轴
 
@@ -488,7 +489,7 @@ advancement.ebwizardry\:artefact.desc=消除圣祠的保护魔法，并获取其
 advancement.ebwizardry\:all_artefacts=认证博物馆
 advancement.ebwizardry\:all_artefacts.desc=集齐所有的戒指，护符和圣物
 
-advancement.ebwizardry\:armour_set=现在你是一个真正的巫师了
+advancement.ebwizardry\:armour_set=现在你是一名真正的巫师了
 advancement.ebwizardry\:armour_set.desc=制作并装备全套巫师护甲
 advancement.ebwizardry\:legendary=『传奇』
 advancement.ebwizardry\:legendary.desc=获得一件传奇巫师护甲
@@ -503,7 +504,7 @@ container.ebwizardry\:arcane_workbench.apply=应用
 container.ebwizardry\:arcane_workbench.mana=魔力\：
 container.ebwizardry\:arcane_workbench.upgrades=已有升级\：
 
-tier.novice=基础
+tier.novice=新手
 tier.apprentice=学徒
 tier.advanced=进阶
 tier.master=宗师
@@ -514,7 +515,7 @@ element.ice=冰霜
 element.lightning=雷电
 element.necromancy=死灵
 element.earth=大地
-element.sorcery=秘术
+element.sorcery=秘法
 element.healing=治疗
 
 element.magic.wizard=巫师
@@ -522,7 +523,7 @@ element.fire.wizard=舞焰师
 element.ice.wizard=纵霜师
 element.lightning.wizard=驯雷师
 element.necromancy.wizard=御冥师
-element.earth.wizard=师
+element.earth.wizard=滋生师
 element.sorcery.wizard=秘术师
 element.healing.wizard=治疗师
 
@@ -587,7 +588,7 @@ spell.ebwizardry\:fireskin=狱炎肌肤
 spell.ebwizardry\:fire_breath=炎龙之息
 spell.ebwizardry\:flame_ray=火焰射线
 spell.ebwizardry\:flaming_axe=炽烈之斧
-spell.ebwizardry\:flaming_weapon=赤炎武器
+spell.ebwizardry\:flaming_weapon=火焰灌注
 spell.ebwizardry\:flight=自然之翼
 spell.ebwizardry\:font_of_mana=魔法圣泉
 spell.ebwizardry\:font_of_vitality=生命圣泉
@@ -597,7 +598,7 @@ spell.ebwizardry\:force_orb=原力球体
 spell.ebwizardry\:forests_curse=森林诅咒
 spell.ebwizardry\:forest_of_thorns=荆棘森林
 spell.ebwizardry\:freeze=冻结
-spell.ebwizardry\:freezing_weapon=冰霜武器
+spell.ebwizardry\:freezing_weapon=冰霜灌注
 spell.ebwizardry\:frost_axe=冰霜之斧
 spell.ebwizardry\:frost_ray=冰霜射线
 spell.ebwizardry\:frost_sigil=冰霜陷阱
@@ -761,7 +762,7 @@ spell.ebwizardry\:fireskin.desc=将施法者笼罩在火焰中30秒，并点燃�
 spell.ebwizardry\:fire_breath.desc=“我即是龙。”
 spell.ebwizardry\:flame_ray.desc=在你指的方向产生一股火焰，它会持续点燃并伤害目标。
 spell.ebwizardry\:flaming_axe.desc=创造一把燃烧的斧头，会点燃击中的敌人，斧头存在时间30秒。
-spell.ebwizardry\:flaming_weapon.desc=暂时性的将火焰的力量附加在快捷栏的第一件武器上，使其点燃击中的敌人，法术在45秒后失效。
+spell.ebwizardry\:flaming_weapon.desc=暂时性的将火焰的力量附加在物品栏的第一件武器上，使其能够点燃被其攻击的敌人，法术在45秒后失效。
 spell.ebwizardry\:flight.desc=像鹰一样翱翔。
 spell.ebwizardry\:font_of_mana.desc=“我们体内仿佛有巨量的魔能喷涌而出……” 摘自一位被遗忘的法师的日志中，该页面的其余部分已经被烧毁。
 spell.ebwizardry\:font_of_vitality.desc=仿若新生
@@ -771,7 +772,7 @@ spell.ebwizardry\:force_orb.desc=发射一团能量，击中目标后击退附�
 spell.ebwizardry\:forests_curse.desc=“你竟敢闯入我的森林！”
 spell.ebwizardry\:forest_of_thorns.desc=密林幽隐地，\n法师咒初成。\n秘术藏遗道，\n深伴荆棘生。
 spell.ebwizardry\:freeze.desc=冰冻目标10秒，也能把水冻结或在地表造雪。
-spell.ebwizardry\:freezing_weapon.desc=暂时性的将冰霜的力量附加在快捷栏的第一件武器上，武器能使受害者冰冻。法术在45秒后失效。
+spell.ebwizardry\:freezing_weapon.desc=暂时性的将冰霜的力量附加在物品栏的第一件武器上，使其能够冰冻被其攻击的敌人。法术在45秒后失效。
 spell.ebwizardry\:frost_axe.desc=制造一把冰霜之斧，击中敌人时将其冻伤，冰霜之斧存在时间30秒。
 spell.ebwizardry\:frost_ray.desc=在你所指向的方向射出一道冰霜射线，冰霜射线可将目标减速并造成伤害。
 spell.ebwizardry\:frost_sigil.desc=在地表放置一个魔法冰封陷阱，触发陷阱的生物会被冻结并受到伤害。
@@ -829,7 +830,7 @@ spell.ebwizardry\:paralysis.desc=释放一道强力的电击使目标麻痹5秒�
 spell.ebwizardry\:petrify.desc=将目标石化，直到石化效果被打破，在黑暗中有几率提前解除石化效果。石化时不能移动或者做其他事情，但也不会受到伤害.
 spell.ebwizardry\:phase_step.desc=将施法者向前传送一小段距离，可以穿过墙壁。 范围升级可以让您传送的更远。
 spell.ebwizardry\:plague_of_darkness.desc=黑暗将吞噬一切……
-spell.ebwizardry\:pocket_furnace.desc=每次施法可以熔炼5个可熔炼的物品（可以是不同的物品），快捷栏的物品会被优先熔炼。
+spell.ebwizardry\:pocket_furnace.desc=每次施法可以熔炼5个可被熔炼的物品（可以是不同的物品），物品栏中的物品会被优先熔炼。
 spell.ebwizardry\:pocket_workbench.desc=为施法者打开工作台界面以便合成物品。
 spell.ebwizardry\:poison.desc=向你指向的方向发射毒液。
 spell.ebwizardry\:poison_bomb.desc=向你指向的方向发射一枚毒液弹，击中后破裂并使附近的生物中毒。
@@ -1002,15 +1003,15 @@ enchantment.ebwizardry\:magic_protection=魔法保护
 enchantment.ebwizardry\:frost_protection=冰霜保护
 enchantment.ebwizardry\:shock_protection=雷电保护
 
-enchantment.ebwizardry.magic_sword.desc=武器灌注魔法的一部分；在生存模式下无法获取（该类型附魔书无法正常发挥作用）。
-enchantment.ebwizardry.magic_bow.desc=武器灌注魔法的一部分；在生存模式下无法获取（该类型附魔书无法正常发挥作用）。
-enchantment.ebwizardry.flaming_weapon.desc=武器火焰灌注魔法的一部分；在生存模式下无法获取（该类型附魔书无法正常发挥作用）。
-enchantment.ebwizardry.freezing_weapon.desc=武器冰霜灌注魔法的一部分；在生存模式下无法获取（该类型附魔书无法正常发挥作用）。
-enchantment.ebwizardry.shocking_weapon.desc=武器雷电灌注魔法的一部分；在生存模式下无法获取（该类型附魔书无法正常发挥作用）。
+enchantment.ebwizardry.magic_sword.desc=由武器注魔法术生成的附魔书,在生存模式下无法获取（该种附魔书无法正常发挥作用）。
+enchantment.ebwizardry.magic_bow.desc=由武器注魔法术生成的附魔书,在生存模式下无法获取（该种附魔书无法正常发挥作用）。
+enchantment.ebwizardry.flaming_weapon.desc=由火焰灌注法术生成的附魔书,在生存模式下无法获取（该种附魔书无法正常发挥作用）。
+enchantment.ebwizardry.freezing_weapon.desc=由冰霜灌注法术生成的附魔书,在生存模式下无法获取（该种附魔书无法正常发挥作用）。
+enchantment.ebwizardry.shocking_weapon.desc=由雷电灌注法术生成的附魔书,在生存模式下无法获取（该种附魔书无法正常发挥作用）。
 
 enchantment.ebwizardry.magic_protection.desc=减少所有魔法伤害。
 enchantment.ebwizardry.frost_protection.desc=减少冻伤伤害的效果。
-enchantment.ebwizardry.shock_protection.desc=减弱雷电伤害的效果。
+enchantment.ebwizardry.shock_protection.desc=减少雷电伤害的效果。
 
 key.categories.ebwizardry=巫术学
 
@@ -1244,21 +1245,21 @@ config.ebwizardry.ally_command_name.tooltip=/ally设置盟友命令的使用名�
 config.ebwizardry.allies_command_name=Allies查看盟友指令的使用名称
 config.ebwizardry.allies_command_name.tooltip=/allies查看盟友指令的使用名称。这是你直接输入/后应该输入的内容。如果这个设置中填入的为“magic”，那么不需要输入/allies，而是输入/magic。
 
-config.ebwizardry.category.resistances=实体魔法元素抗性设置
+config.ebwizardry.category.resistances=魔法元素抗性设置
 config.ebwizardry.category.resistances.tooltip=设定实体可以对哪种元素的魔法产生抗性
-config.ebwizardry.title.resistances=实体魔法元素抗性设置
+config.ebwizardry.title.resistances=魔法元素抗性设置
 config.ebwizardry.subtitle.resistances=允许更改实体对某种元素的魔法产生抗性
 
 config.ebwizardry.mobs_immune_to_fire=免疫火焰元素伤害的实体
-config.ebwizardry.mobs_immune_to_fire.tooltip=除了原版不受火焰元素伤害的实体以外,不受火焰元素的实体名单。如果你想让某个实体不受火焰元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
+config.ebwizardry.mobs_immune_to_fire.tooltip=除了默认不受火焰元素伤害的实体以外,不受火焰元素伤害的实体名单。如果你想让某个实体不受火焰元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
 config.ebwizardry.mobs_immune_to_ice=免疫冰霜元素伤害的实体
-config.ebwizardry.mobs_immune_to_ice.tooltip=除了原版不受冰霜元素伤害的实体以外,不受冰霜元素的实体名单。如果你想让某个实体不受冰霜元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
+config.ebwizardry.mobs_immune_to_ice.tooltip=除了默认不受冰霜元素伤害的实体以外,不受冰霜元素伤害的实体名单。如果你想让某个实体不受冰霜元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
 config.ebwizardry.mobs_immune_to_lightning=免疫雷电元素伤害的实体
-config.ebwizardry.mobs_immune_to_lightning.tooltip=除了默认外，不受闪电伤害的实体名称列表。如果你想让他们不受闪电魔法影响，请把这个mod的生物添加到这个列表中。实体名称不区分大小写。对于mod实体，以mod ID作为前缀（例如ebwizardry.wizard）。
+config.ebwizardry.mobs_immune_to_lightning.tooltip=除了默认不受闪电元素伤害的实体以外,不受雷电元素伤害的实体名单。如果你想让某个实体不受雷电元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
 config.ebwizardry.mobs_immune_to_wither=免疫死灵元素伤害的实体
-config.ebwizardry.mobs_immune_to_wither.tooltip=除了默认外，不受凋灵伤害的实体名称列表。如果你想让他们不受凋灵魔法影响，请把这个mod的生物添加到这个列表中。实体名称不区分大小写。对于mod实体，以mod ID作为前缀（例如ebwizardry.wizard）。
+config.ebwizardry.mobs_immune_to_wither.tooltip=除了默认不受死灵元素伤害的实体以外,不受死灵元素伤害的实体名单。如果你想让某个实体不受死灵元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
 config.ebwizardry.mobs_immune_to_poison=免疫大地元素伤害的实体
-config.ebwizardry.mobs_immune_to_poison.tooltip=除了默认外，不受中毒伤害的实体名称列表。如果你想让他们不受中毒魔法影响，请把这个mod的生物添加到这个列表中。实体名称不区分大小写。对于mod实体，以mod ID作为前缀（例如ebwizardry.wizard）。
+config.ebwizardry.mobs_immune_to_poison.tooltip=除了默认不受大地元素伤害的实体以外,不受大地元素伤害的实体名单。如果你想让某个实体不受大地元素法术的伤害，请把这个实体的名称添加到这个列表中。实体名称不区分大小写。对于其他mod实体，你需要填入它的模组id(例如 ebwizardry\:wizard)。
 
 config.ebwizardry.category.compatibility=模组兼容性设置
 config.ebwizardry.category.compatibility.tooltip=设置本模组与其他模组的兼容性
