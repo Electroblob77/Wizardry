@@ -78,6 +78,8 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	private boolean sortDescending = false;
 	private String searchText = "";
 
+	public boolean needsRefresh;
+
 	public ContainerArcaneWorkbench(IInventory inventory, TileEntityArcaneWorkbench tileentity){
 
 		this.tileentity = tileentity;
@@ -350,6 +352,10 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	 * 		   {@link ItemStack#isEmpty()} on the input stack after this method returns)
 	 */
 	private boolean mergeStackIntoBookshelves(ItemStack stack){
+
+		// As far as the client is concerned, which stacks were *previously* in which slots never affects whether a
+		// given book can fit or not, so as long as it refreshes it doesn't matter where the book actually gets put
+		if(tileentity.getWorld().isRemote) this.needsRefresh = true; // It's a bit clunky but it works!
 
 		// LinkedHashSet preserves iteration order whilst ignoring duplicates - neat!
 		Set<VirtualSlot> slots = new LinkedHashSet<>(bookshelfSlots.size());

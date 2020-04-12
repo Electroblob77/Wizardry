@@ -150,6 +150,10 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	@Override
 	public void updateScreen(){
 		if(animationTimer > 0) animationTimer--;
+		if(arcaneWorkbenchContainer.needsRefresh){
+			arcaneWorkbenchContainer.refreshBookshelfSlots();
+			arcaneWorkbenchContainer.needsRefresh = false;
+		}
 	}
 
 	@Override
