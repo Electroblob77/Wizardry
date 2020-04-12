@@ -41,6 +41,9 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	public TileEntityArcaneWorkbench(){
 		inventory = NonNullList.withSize(ContainerArcaneWorkbench.UPGRADE_SLOT + 1, ItemStack.EMPTY);
+		// Prevent sync() happening when loading from NBT the first time or weirdness ensues when loading a world
+		// Normally I'd pass this as a flag to setInventorySlotContents but we can't change the method signature
+		this.doNotSync = true;
 	}
 
 	@Override
@@ -55,6 +58,8 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public void update(){
+
+		this.doNotSync = false;
 
 		ItemStack stack = this.getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
@@ -185,10 +190,6 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 
-		// Prevent sync() happening when loading from NBT or weirdness ensues when loading a world
-		// Normally I'd pass this as a flag to setInventorySlotContents but we can't change the method signature
-		this.doNotSync = true;
-
 		super.readFromNBT(tagCompound);
 
 		NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
@@ -199,8 +200,6 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 				setInventorySlotContents(slot, new ItemStack(tag));
 			}
 		}
-
-		this.doNotSync = false;
 	}
 
 	@Override

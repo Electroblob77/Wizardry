@@ -28,15 +28,19 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 
 	public TileEntityBookshelf(){
 		inventory = NonNullList.withSize(BlockBookshelf.SLOT_COUNT, ItemStack.EMPTY);
+		// Prevent sync() happening when loading from NBT or weirdness ensues when loading a world
+		// Normally I'd pass this as a flag to setInventorySlotContents but we can't change the method signature
+		this.doNotSync = true;
 	}
 
 	/** Called to manually sync the tile entity with clients. */
 	public void sync(){
-		if(!doNotSync) this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
+		if(!this.doNotSync) this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 
 	@Override
 	public void update(){
+		this.doNotSync = false;
 		// Nothing here for now
 	}
 
@@ -139,10 +143,6 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 
-		// Prevent sync() happening when loading from NBT or weirdness ensues when loading a world
-		// Normally I'd pass this as a flag to setInventorySlotContents but we can't change the method signature
-		this.doNotSync = true;
-
 		super.readFromNBT(tagCompound);
 
 		NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
@@ -153,8 +153,6 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 				setInventorySlotContents(slot, new ItemStack(tag));
 			}
 		}
-
-		this.doNotSync = false;
 	}
 
 	@Override
