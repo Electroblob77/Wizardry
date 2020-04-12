@@ -1,5 +1,7 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.block.BlockBookshelf;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.ItemSpectralBow;
 import electroblob.wizardry.packet.*;
 import electroblob.wizardry.registry.WizardryItems;
@@ -261,4 +263,17 @@ public class CommonProxy {
 	public Set<String> getSpellHUDSkins(){
 		return null;
 	}
+
+	/** Notifies nearby players of a bookshelf change, causing any lectern or arcane workbench GUI (client-side) or
+	 * container (both sides) to refresh its linked bookshelves (does not send packets). */
+	public void notifyBookshelfChange(World world, BlockPos pos){
+		for(EntityPlayer player : world.playerEntities){
+			if(player.getDistanceSq(pos) < BlockBookshelf.PLAYER_NOTIFY_RANGE * BlockBookshelf.PLAYER_NOTIFY_RANGE){
+				if(player.openContainer instanceof ContainerArcaneWorkbench){
+					((ContainerArcaneWorkbench)player.openContainer).refreshBookshelfSlots();
+				}
+			}
+		}
+	}
+
 }

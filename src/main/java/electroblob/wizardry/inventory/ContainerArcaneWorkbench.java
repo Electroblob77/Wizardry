@@ -212,11 +212,6 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 				}
 			}
 		}
-
-		// FIXME: It only seems to be syncing correctly when a stack is put into the slot, not taken out.
-		// 		  This is because markDirty isn't called in the tileentity, I think.
-		//		  You can simulate this using hoppers!
-		this.tileentity.sync();
 	}
 
 	// FIXME: Shift-clicking a stack of special upgrades when in the arcane workbench causes the whole stack to be
@@ -516,9 +511,8 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	// N.B. If we drop the requirement of it working with any container it could potentially be a lot easier since
 	// we then always have control over the bookshelf classes
 
-	// TODO: Call this when a bookshelf is added or removed
-	/** Called on initialisation, and whenever a bookshelf is added or removed. */
-	private void refreshBookshelfSlots(){
+	/** Called on initialisation and whenever a bookshelf is added or removed, to update the virtual slot list. */
+	public void refreshBookshelfSlots(){
 
 		this.inventorySlots.removeAll(bookshelfSlots);
 		bookshelfSlots.clear();

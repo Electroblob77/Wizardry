@@ -48,7 +48,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	/** Called to manually sync the tile entity with clients. */
 	public void sync(){
-		this.world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 
 	@Override
@@ -113,8 +113,11 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack){
-		
-		inventory.set(slot, stack);
+
+		ItemStack previous = inventory.set(slot, stack);
+
+		// Only the central slot affects the in-world rendering, so only sync if that changes
+		if(slot == ContainerArcaneWorkbench.CENTRE_SLOT && previous.isEmpty() != stack.isEmpty()) this.sync();
 		
 		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
 			stack.setCount(getInventoryStackLimit());
@@ -199,12 +202,10 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		NBTTagList itemList = new NBTTagList();
 		for(int i = 0; i < getSizeInventory(); i++){
 			ItemStack stack = getStackInSlot(i);
-			if(!stack.isEmpty()){
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)i);
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
-			}
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setByte("Slot", (byte)i);
+			stack.writeToNBT(tag);
+			itemList.appendTag(tag);
 		}
 
 		NBTExtras.storeTagSafely(tagCompound, "Inventory", itemList);

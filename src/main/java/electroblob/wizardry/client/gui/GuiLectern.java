@@ -127,8 +127,6 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
 		super.initGui();
 
-		updateAvailableSpells();
-
 		final int left = this.width / 2 - this.xSize / 2;
 		final int top = this.height / 2 - this.ySize / 2;
 
@@ -181,8 +179,7 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 		this.searchField.setCanLoseFocus(false);
 		this.searchField.setFocused(true);
 
-		updateMatchingSpells();
-		updateButtonVisiblity();
+		refreshAvailableSpells(); // Must be done last
 
 	}
 
@@ -383,9 +380,9 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 				.collect(Collectors.toList());
 	}
 
-	// TODO: Call this when a bookshelf is added or removed
 	// TODO: Config option to always display all spells when in creative
-	private void updateAvailableSpells(){
+	/** Called on initialisation and whenever a bookshelf is added or removed, to update the list of spells. */
+	public void refreshAvailableSpells(){
 
 		availableSpells.clear();
 
@@ -404,6 +401,9 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 		}
 
 		if(!availableSpells.contains(currentSpell)) currentSpell = Spells.none; // TODO: Do we want this?
+
+		updateMatchingSpells();
+		updateButtonVisiblity();
 
 	}
 

@@ -12,6 +12,7 @@ import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -19,19 +20,30 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IWorldEventListener;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Mod.EventBusSubscriber
 public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvider {
 
+	/** When a bookshelf block (of any kind specified in the config) is added or removed, players within this range will
+	 * be notified of the change. */
+	public static final double PLAYER_NOTIFY_RANGE = 32;
 	public static final int SLOT_COUNT = 12;
 
 	public static final UnlistedPropertyBool[] BOOKS = new UnlistedPropertyBool[SLOT_COUNT];
@@ -63,6 +75,11 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
+	}
+
+	@Override
+	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state){
+		super.onBlockAdded(worldIn, pos, state);
 	}
 
 	@Override
@@ -169,6 +186,51 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		}
 
 		return bookshelves;
+
+	}
+
+	@SubscribeEvent
+	public static void onWorldLoadEvent(WorldEvent.Load event){
+		event.getWorld().addEventListener(Listener.instance);
+	}
+
+	@SubscribeEvent
+	public static void onWorldUnloadEvent(WorldEvent.Unload event){
+		event.getWorld().removeEventListener(Listener.instance);
+	}
+
+	public static class Listener implements IWorldEventListener {
+
+		public static final Listener instance = new Listener();
+
+		private Listener(){}
+
+		@Override
+		public void notifyBlockUpdate(World world, BlockPos pos, IBlockState oldState, IBlockState newState, int flags){
+
+			if(oldState == newState) return; // Probably won't happen but just in case
+
+			if(Settings.containsMetaBlock(Wizardry.settings.bookshelfBlocks, oldState) // Bookshelf removed
+					|| Settings.containsMetaBlock(Wizardry.settings.bookshelfBlocks, newState)){ // Bookshelf placed
+				// It is also possible (with commands) for a bookshelf to be replaced with another bookshelf, in which
+				// case this should still just be called once
+				Wizardry.proxy.notifyBookshelfChange(world, pos);
+			}
+
+		}
+
+		// Dummy implementations
+		@Override public void notifyLightSet(BlockPos pos){}
+		@Override public void markBlockRangeForRenderUpdate(int x1, int y1, int z1, int x2, int y2, int z2){}
+		@Override public void playSoundToAllNearExcept(@Nullable EntityPlayer player, SoundEvent soundIn, SoundCategory category, double x, double y, double z, float volume, float pitch){}
+		@Override public void playRecord(SoundEvent soundIn, BlockPos pos){}
+		@Override public void spawnParticle(int particleID, boolean ignoreRange, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int... parameters){}
+		@Override public void spawnParticle(int id, boolean ignoreRange, boolean minimiseParticleLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, int... parameters){}
+		@Override public void onEntityAdded(Entity entityIn){}
+		@Override public void onEntityRemoved(Entity entityIn){}
+		@Override public void broadcastSound(int soundID, BlockPos pos, int data){}
+		@Override public void playEvent(EntityPlayer player, int type, BlockPos blockPosIn, int data){}
+		@Override public void sendBlockBreakProgress(int breakerId, BlockPos pos, int progress){}
 
 	}
 

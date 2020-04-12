@@ -36,7 +36,9 @@ public class BakedModelBookshelf implements IBakedModel {
 		IExtendedBlockState extendedState = (IExtendedBlockState)state;
 
 		for(int i = 0; i<BlockBookshelf.SLOT_COUNT; i++){
-			if(extendedState.getValue(BlockBookshelf.BOOKS[i])) quads.addAll(books[i].getQuads(state, side, rand));
+			Boolean value = extendedState.getValue(BlockBookshelf.BOOKS[i]);
+			if(value == null) return fallback.getQuads(null, side, rand);
+			if(value) quads.addAll(books[i].getQuads(state, side, rand));
 		}
 
 		return quads;

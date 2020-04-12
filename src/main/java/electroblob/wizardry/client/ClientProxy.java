@@ -2,9 +2,11 @@ package electroblob.wizardry.client;
 
 import electroblob.wizardry.CommonProxy;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.client.audio.MovingSoundEntity;
 import electroblob.wizardry.client.audio.SoundLoop;
 import electroblob.wizardry.client.audio.SoundLoopSpell;
+import electroblob.wizardry.client.gui.GuiLectern;
 import electroblob.wizardry.client.gui.GuiSpellDisplay;
 import electroblob.wizardry.client.gui.config.NamedBooleanEntry;
 import electroblob.wizardry.client.gui.config.SpellHUDSkinChooserEntry;
@@ -200,6 +202,20 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public Set<String> getSpellHUDSkins(){
 		return GuiSpellDisplay.getSkinKeys();
+	}
+
+	@Override
+	public void notifyBookshelfChange(World world, BlockPos pos){
+
+		super.notifyBookshelfChange(world, pos);
+
+		EntityPlayer player = Minecraft.getMinecraft().player;
+
+		if(player.getDistanceSq(pos) < BlockBookshelf.PLAYER_NOTIFY_RANGE * BlockBookshelf.PLAYER_NOTIFY_RANGE){
+			if(Minecraft.getMinecraft().currentScreen instanceof GuiLectern){
+				((GuiLectern)Minecraft.getMinecraft().currentScreen).refreshAvailableSpells();
+			}
+		}
 	}
 
 	// SECTION Items
