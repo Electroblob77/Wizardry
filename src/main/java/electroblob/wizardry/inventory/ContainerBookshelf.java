@@ -35,13 +35,11 @@ public class ContainerBookshelf extends Container {
 			}
 		}
 
-		this.onSlotChanged();
-
 	}
 
 	/** Called from individual slots when their item is changed or removed. */
 	public void onSlotChanged(){
-		this.tileentity.sync();
+		//this.tileentity.sync();
 	}
 
 	@Override

@@ -37,6 +37,8 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	/** Controls the rotating rune and floating wand animations. */
 	public float timer = 0;
 
+	private boolean doNotSync;
+
 	public TileEntityArcaneWorkbench(){
 		inventory = NonNullList.withSize(ContainerArcaneWorkbench.UPGRADE_SLOT + 1, ItemStack.EMPTY);
 	}
@@ -48,7 +50,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	/** Called to manually sync the tile entity with clients. */
 	public void sync(){
-		this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
+		if(!doNotSync) this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 
 	@Override
@@ -117,6 +119,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		ItemStack previous = inventory.set(slot, stack);
 
 		// Only the central slot affects the in-world rendering, so only sync if that changes
+		// This must be done in the tile entity because containers only exist for player interaction, not hoppers etc.
 		if(slot == ContainerArcaneWorkbench.CENTRE_SLOT && previous.isEmpty() != stack.isEmpty()) this.sync();
 		
 		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
@@ -182,6 +185,10 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 
+		// Prevent sync() happening when loading from NBT or weirdness ensues when loading a world
+		// Normally I'd pass this as a flag to setInventorySlotContents but we can't change the method signature
+		this.doNotSync = true;
+
 		super.readFromNBT(tagCompound);
 
 		NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
@@ -192,6 +199,8 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 				setInventorySlotContents(slot, new ItemStack(tag));
 			}
 		}
+
+		this.doNotSync = false;
 	}
 
 	@Override
