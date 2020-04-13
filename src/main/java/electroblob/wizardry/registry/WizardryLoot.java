@@ -67,6 +67,9 @@ public final class WizardryLoot {
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/wizard_armour"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/arcane_tomes"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/wand_upgrades"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/uncommon_artefacts"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/rare_artefacts"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/epic_artefacts"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/evil_wizard"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
 
