@@ -18,6 +18,7 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -86,7 +87,8 @@ public class GreaterTelekinesis extends SpellRay {
 				
 				Vec3d look = caster.getLookVec().scale(getProperty(THROW_VELOCITY).floatValue() * modifiers.get(WizardryItems.range_upgrade));
 				target.addVelocity(look.x, look.y, look.z);
-				if(caster instanceof EntityPlayer) caster.swingArm(caster.getActiveHand());
+				// No IntelliJ, it's not always false, that's not how polymorphism works
+				if(caster instanceof EntityPlayer) caster.swingArm(caster.getActiveHand() == null ? EnumHand.MAIN_HAND : caster.getActiveHand());
 				
 			}else{
 			
