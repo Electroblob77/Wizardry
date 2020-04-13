@@ -20,9 +20,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class RenderArcaneLock {
 
@@ -39,35 +36,43 @@ public class RenderArcaneLock {
 
 		EntityPlayer player = Minecraft.getMinecraft().player;
 		World world = Minecraft.getMinecraft().world;
-
-		GlStateManager.pushMatrix();
-		GlStateManager.enableBlend();
-		boolean lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
-		GlStateManager.disableLighting();
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
 		Vec3d origin = player.getPositionEyes(event.getPartialTicks());
-		GlStateManager.translate(-origin.x, -origin.y + player.getEyeHeight(), -origin.z);
-
-		GlStateManager.color(1, 1, 1, 1);
-
-		Minecraft.getMinecraft().renderEngine.bindTexture(textures[(player.ticksExisted % (textures.length * 2))/2]);
-
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
-		// Someone managed to get a CME here so let's just copy the list to be safe
+		boolean flag = false;
+		boolean lighting = false;
+
+		// Someone managed to get a CME here so let's iterate manually to be safe (don't copy the list, it's expensive!)
 		// It's only cosmetic so if a tileentity somehow gets removed while we're rendering them it's not a big deal
-		List<TileEntity> tileentities = new ArrayList<>(world.loadedTileEntityList);
+		for(int i=0; i<world.loadedTileEntityList.size(); i++){
 
-		for(TileEntity tileentity : tileentities){
+			TileEntity tileentity = world.loadedTileEntityList.get(i);
 			
 			if(tileentity == null) continue; // What the heck VoxelMap
 
 			if(tileentity.getDistanceSq(origin.x, origin.y, origin.z) <= tileentity.getMaxRenderDistanceSquared()
 					&& tileentity.getTileData().hasUniqueId(ArcaneLock.NBT_KEY)){
+
+				if(!flag){
+
+					flag = true;
+
+					GlStateManager.pushMatrix();
+					GlStateManager.enableBlend();
+					lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
+					GlStateManager.disableLighting();
+					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
+					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+					GlStateManager.translate(-origin.x, -origin.y + player.getEyeHeight(), -origin.z);
+
+					GlStateManager.color(1, 1, 1, 1);
+
+					Minecraft.getMinecraft().renderEngine.bindTexture(textures[(player.ticksExisted % (textures.length * 2))/2]);
+
+					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+				}
 
 				Vec3d[] vertices = WizardryUtilities.getVertices(world.getBlockState(tileentity.getPos()).getBoundingBox(world, tileentity.getPos()).grow(0.05).offset(tileentity.getPos()));
 
@@ -81,15 +86,19 @@ public class RenderArcaneLock {
 			}
 		}
 
-		tessellator.draw();
+		if(flag){
 
-		GlStateManager.disableBlend();
-		GlStateManager.enableTexture2D();
-		if (lighting) {
-			GlStateManager.enableLighting();
+			tessellator.draw();
+
+			GlStateManager.disableBlend();
+			GlStateManager.enableTexture2D();
+			if(lighting){
+				GlStateManager.enableLighting();
+			}
+			GlStateManager.disableRescaleNormal();
+			GlStateManager.popMatrix();
 		}
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.popMatrix();
+
 	}
 
 	private static void drawFace(BufferBuilder buffer, Vec3d topLeft, Vec3d topRight, Vec3d bottomLeft, Vec3d bottomRight, float u1, float v1, float u2, float v2){
