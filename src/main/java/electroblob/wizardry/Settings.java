@@ -1125,7 +1125,7 @@ public final class Settings {
 	}
 
 	public static boolean containsMetaThing(Pair<ResourceLocation, Short>[] array, ResourceLocation id, short metadata){
-		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, OreDictionary.WILDCARD_VALUE));
+		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, (short)OreDictionary.WILDCARD_VALUE));
 	}
 
 }
