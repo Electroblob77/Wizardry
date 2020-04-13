@@ -251,10 +251,10 @@ public class Possession extends SpellRay {
 				}
 			}
 
-			if(possessor.world.isRemote && possessor == net.minecraft.client.Minecraft.getMinecraft().player){
+			if(possessor.world.isRemote){
 				// Shaders and effects
-				if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
-				electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect(); // Looks quite nice...
+				Wizardry.proxy.loadShader(possessor, SHADER);
+				Wizardry.proxy.playBlinkEffect(possessor);
 
 			}else{
 
@@ -348,7 +348,7 @@ public class Possession extends SpellRay {
 
 		if(player.world.isRemote && player == net.minecraft.client.Minecraft.getMinecraft().player){
 			net.minecraft.client.Minecraft.getMinecraft().entityRenderer.stopUseShader();
-			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect(); // Looks quite nice...
+			Wizardry.proxy.playBlinkEffect(player);
 		}
 
 		for(IAttribute attribute : INHERITED_ATTRIBUTES.keySet()){
@@ -399,9 +399,7 @@ public class Possession extends SpellRay {
 
 				if(player.world.isRemote){
 					ParticleBuilder.create(Type.DARK_MAGIC, player).clr(0.1f, 0, 0.3f).spawn(player.world);
-					// TODO: This (and a few other similar uses) needs ClientProxy-ing.
-					if(!net.minecraft.client.Minecraft.getMinecraft().entityRenderer.isShaderActive())
-						if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
+					Wizardry.proxy.loadShader(player, SHADER);
 				}
 
 			}else{

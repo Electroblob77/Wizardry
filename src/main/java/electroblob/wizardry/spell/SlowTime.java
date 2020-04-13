@@ -24,8 +24,8 @@ public class SlowTime extends SpellBuff {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		if(caster.world.isRemote && caster == net.minecraft.client.Minecraft.getMinecraft().player){
-			if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
+		if(caster.world.isRemote){
+			Wizardry.proxy.loadShader(caster, SHADER);
 		}
 
 		return super.cast(world, caster, hand, ticksInUse, modifiers);

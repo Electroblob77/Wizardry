@@ -200,6 +200,13 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void loadShader(EntityPlayer player, ResourceLocation shader){
+		if(Minecraft.getMinecraft().player == player && Wizardry.settings.useShaders
+				&& !Minecraft.getMinecraft().entityRenderer.isShaderActive())
+			Minecraft.getMinecraft().entityRenderer.loadShader(shader);
+	}
+
+	@Override
 	public Set<String> getSpellHUDSkins(){
 		return GuiSpellDisplay.getSkinKeys();
 	}
