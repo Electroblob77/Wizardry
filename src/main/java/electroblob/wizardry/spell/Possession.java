@@ -212,6 +212,7 @@ public class Possession extends SpellRay {
 			possessor.eyeHeight = target.getEyeHeight();
 			setSize(possessor, target.width, target.height);
 
+			target.dismountRidingEntity();
 			target.setDead();
 			target.setNoAI(true);
 			target.setAttackTarget(null);
