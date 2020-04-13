@@ -33,7 +33,7 @@ In addition, I'd like to thank the following individuals for their contributions
 - Russian: VilagVil, kellixon, bigenergy
 - French: Hahdrim
 - Brazilian Portuguese: lorrampi
-- Chinese: ZHENGLOC, dragon-evol, Hokorizero, TUsama
+- Chinese: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
 - Korean: shejery, rewi_wire
 - Polish: Trozuu
 - German: BirdyDragon
