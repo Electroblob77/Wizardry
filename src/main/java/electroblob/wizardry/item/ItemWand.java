@@ -2,6 +2,7 @@ package electroblob.wizardry.item;
 
 import com.google.common.collect.Multimap;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -169,6 +170,11 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	public boolean hasEffect(ItemStack stack){
 		return !Wizardry.settings.legacyWandLevelling && this.tier.level < Tier.MASTER.level
 				&& WandHelper.getProgression(stack) >= Tier.values()[tier.ordinal() + 1].progression;
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return DrawingUtils.mix(0xff8bfe, 0x8e2ee4, (float)getDurabilityForDisplay(stack));
 	}
 
 	// Max damage is modifiable with upgrades.
