@@ -386,7 +386,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 				// Not sure why mergeItemStack differentiates between full/partial merging, as far as I can tell the
 				// following line will work for both cases
 				slot.putStack(stack.splitStack(contents.getMaxStackSize()));
-				slot.onSlotChanged();
+				//slot.onSlotChanged();
 
 				if(stack.isEmpty()) return true; // The whole stack has been merged, so we're done!
 
@@ -520,23 +520,15 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 	/** Called on initialisation and whenever a bookshelf is added or removed, to update the virtual slot list. */
 	public void refreshBookshelfSlots(){
 
-		this.inventorySlots.removeAll(bookshelfSlots);
-		bookshelfSlots.clear();
+		// We can't simply re-initialise everything because this method gets called whenever a bookshelf is updated,
+		// and that also happens whenever a stack is added or removed to update the book state on the client - and
+		// unfortunately there is no way for a world event listener to detect whether the tile entity changed or not
+
+		// Remove slots that are no longer valid
+		this.inventorySlots.removeIf(s -> s instanceof VirtualSlot && !((VirtualSlot)s).isValid());
+		bookshelfSlots.removeIf(s -> !s.isValid());
 
 		List<IInventory> bookshelves = BlockBookshelf.findNearbyBookshelves(tileentity.getWorld(), tileentity.getPos(), tileentity);
-
-		if(!bookshelves.isEmpty()){
-
-			for(IInventory bookshelf : bookshelves){
-				for(int i = 0; i < bookshelf.getSizeInventory(); i++){
-					VirtualSlot slot = new VirtualSlot(bookshelf, i); // This sets the slot INDEX (for the INVENTORY)
-					bookshelfSlots.add(slot);
-					this.addSlotToContainer(slot); // This sets the slot NUMBER (for the CONTAINER)
-				}
-			}
-
-			if(tileentity.getWorld().isRemote) updateActiveBookshelfSlots();
-		}
 
 		if(bookshelves.isEmpty() == hasBookshelves){ // If the bookshelf status changed
 
@@ -549,6 +541,22 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 
 			hasBookshelves = !bookshelves.isEmpty();
 		}
+
+		// Ignore bookshelves we already have slots for
+		bookshelves.removeIf(b -> bookshelfSlots.stream().anyMatch(s -> s.inventory == b));
+
+		if(!bookshelves.isEmpty()){
+
+			for(IInventory bookshelf : bookshelves){
+				for(int i = 0; i < bookshelf.getSizeInventory(); i++){
+					VirtualSlot slot = new VirtualSlot(bookshelf, i); // This sets the slot INDEX (for the INVENTORY)
+					bookshelfSlots.add(slot);
+					this.addSlotToContainer(slot); // This sets the slot NUMBER (for the CONTAINER)
+				}
+			}
+		}
+
+		if(tileentity.getWorld().isRemote) updateActiveBookshelfSlots();
 
 	}
 
