@@ -46,6 +46,7 @@ public abstract class GuiSpellInfo extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks){
 		int left = this.width/2 - xSize/2;
 		int top = this.height/2 - this.ySize/2;
+		this.drawDefaultBackground();
 		this.drawBackgroundLayer(left, top, mouseX, mouseY);
 		super.drawScreen(mouseX, mouseY, partialTicks); // Just draws the buttons
 		this.drawForegroundLayer(left, top, mouseX, mouseY);

@@ -244,6 +244,8 @@ public class GuiWizardHandbook extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks){
 
+		this.drawDefaultBackground();
+
 		int left = this.width / 2 - GUI_WIDTH / 2;
 		int top = this.height / 2 - GUI_HEIGHT / 2;
 
