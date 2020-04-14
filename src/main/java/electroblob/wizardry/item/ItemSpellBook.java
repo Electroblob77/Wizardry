@@ -60,8 +60,11 @@ public class ItemSpellBook extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemstack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
+
+		if(world == null) world = Wizardry.proxy.getTheWorld(); // But... I need the world!
+
 		// Tooltip is left blank for wizards buying generic spell books.
-		if(world != null && itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
+		if(itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
 
 			Spell spell = Spell.byMetadata(itemstack.getItemDamage());
 
