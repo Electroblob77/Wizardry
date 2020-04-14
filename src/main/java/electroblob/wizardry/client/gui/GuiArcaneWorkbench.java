@@ -289,7 +289,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(1, 1, 1, opacity);
 
-				DrawingUtils.drawTexturedRect(left + crystals.xPos - 8, top + crystals.yPos - 8,
+				DrawingUtils.drawTexturedRect(guiLeft + crystals.xPos - 8, guiTop + crystals.yPos - 8,
 						MAIN_GUI_WIDTH + TOOLTIP_WIDTH + RUNE_WIDTH, 0, 32, 32, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 				GlStateManager.color(1, 1, 1, 1);
@@ -304,7 +304,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(1, 1, 1, opacity);
 
-				DrawingUtils.drawTexturedRect(left + upgrades.xPos - 8, top + upgrades.yPos - 8,
+				DrawingUtils.drawTexturedRect(guiLeft + upgrades.xPos - 8, guiTop + upgrades.yPos - 8,
 						MAIN_GUI_WIDTH + TOOLTIP_WIDTH + RUNE_WIDTH, 0, 32, 32, TEXTURE_WIDTH, TEXTURE_HEIGHT);
 
 				GlStateManager.color(1, 1, 1, 1);
