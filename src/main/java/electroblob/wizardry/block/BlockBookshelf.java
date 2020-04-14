@@ -7,6 +7,7 @@ import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.tileentity.TileEntityBookshelf;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
@@ -58,6 +59,9 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		super(Material.WOOD);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		this.setHardness(2.0F);
+		this.setResistance(5.0F);
+		this.setSoundType(SoundType.WOOD);
 	}
 
 	@Override

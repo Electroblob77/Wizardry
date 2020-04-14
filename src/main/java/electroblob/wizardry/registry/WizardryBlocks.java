@@ -5,6 +5,7 @@ import electroblob.wizardry.block.*;
 import electroblob.wizardry.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -109,7 +110,7 @@ public final class WizardryBlocks {
 		registerBlock(registry, "thorns", 				new BlockThorns());
 		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
-		registerBlock(registry, "gilded_wood", 			new BlockPlanks().setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "gilded_wood", 			new BlockGildedWood());
 		registerBlock(registry, "oak_bookshelf", 			new BlockBookshelf());
 		registerBlock(registry, "spruce_bookshelf", 		new BlockBookshelf());
 		registerBlock(registry, "birch_bookshelf", 		new BlockBookshelf());

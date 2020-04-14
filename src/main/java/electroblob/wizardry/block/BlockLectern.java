@@ -8,6 +8,7 @@ import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
@@ -32,6 +33,9 @@ public class BlockLectern extends BlockHorizontal implements ITileEntityProvider
 		super(Material.WOOD);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		this.setHardness(2.0F);
+		this.setResistance(5.0F);
+		this.setSoundType(SoundType.WOOD);
 	}
 
 	@Override
