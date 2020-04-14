@@ -13,6 +13,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 public class ItemBlankScroll extends Item implements IWorkbenchItem {
 
@@ -55,7 +56,7 @@ public class ItemBlankScroll extends Item implements IWorkbenchItem {
 				
 				if(crystals.getStack().getCount() * manaPerItem > cost){
 					// Rounds up to the nearest whole crystal
-					crystals.decrStackSize(cost / manaPerItem + 1);
+					crystals.decrStackSize(MathHelper.ceil((float)cost / manaPerItem));
 					centre.putStack(new ItemStack(WizardryItems.scroll, centre.getStack().getCount(), spell.metadata()));
 					return true;
 				}
