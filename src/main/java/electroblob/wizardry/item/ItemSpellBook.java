@@ -57,6 +57,10 @@ public class ItemSpellBook extends Item {
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
 
+	// This is accessed during loading (before we even get to the main menu) for search tree population
+	// Obviously the world is always null at that point, because no world objects exist! However, outside of a world
+	// there are no guarantees as to spell metadata order so we just have to give up (and we can't account for discovery)
+	// TODO: Search trees seem to get reloaded when the mappings change so in theory this should work ok, why doesn't it?
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemstack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
@@ -64,7 +68,7 @@ public class ItemSpellBook extends Item {
 		if(world == null) world = Wizardry.proxy.getTheWorld(); // But... I need the world!
 
 		// Tooltip is left blank for wizards buying generic spell books.
-		if(itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
+		if(world != null && itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
 
 			Spell spell = Spell.byMetadata(itemstack.getItemDamage());
 
