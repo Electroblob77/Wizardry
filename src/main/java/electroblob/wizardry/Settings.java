@@ -321,6 +321,10 @@ public final class Settings {
 	public boolean booksPauseGame = true;
 	/** <b>[Client-only]</b> Whether to use custom shaders for certain spells. */
 	public boolean useShaders = true;
+	/** <b>[Client-only]</b> Whether to use the screen shake effect for certain spells. */
+	public boolean screenShake = true;
+	/** <b>[Client-only]</b> Whether to use the screen blink effect for teleportation spells. */
+	public boolean blinkEffect = true;
 	/** <b>[Client-only]</b> The position of the spell HUD. */
 	public GuiPosition spellHUDPosition = GuiPosition.BOTTOM_LEFT;
 
@@ -937,6 +941,18 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".use_shaders");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		useShaders = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "screenShake", true, "Whether to use the screen shake effect for certain spells.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".screen_shake");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		screenShake = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "blinkEffect", true, "Whether to use the screen blink effect for teleportation spells.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".blink_effect");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		blinkEffect = property.getBoolean();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(CLIENT_CATEGORY, propOrder);

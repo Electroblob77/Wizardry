@@ -210,6 +210,8 @@ public class Grapple extends Spell {
 	@Override
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
 
+		if(target == null) return false;
+
 		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ);
 
 		// If the target is an entity, we need to use the entity's centre rather than the original hit position

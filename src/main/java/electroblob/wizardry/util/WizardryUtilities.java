@@ -636,7 +636,7 @@ public final class WizardryUtilities {
 			// This is a perfect example of where you need to use .equals() and not ==. For most applications,
 			// this was unnoticeable until world reload because the UUID instance or entity instance is stored.
 			// Fixed now though.
-			if(entity.getUniqueID().equals(id)){
+			if(entity != null && entity.getUniqueID() != null && entity.getUniqueID().equals(id)){
 				return entity;
 			}
 		}

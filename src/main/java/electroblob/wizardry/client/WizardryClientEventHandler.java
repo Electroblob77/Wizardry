@@ -91,13 +91,15 @@ public final class WizardryClientEventHandler {
 	
 	/** Starts the first-person blink overlay effect. */
 	public static void playBlinkEffect(){
-		blinkEffectTimer = BLINK_EFFECT_DURATION;
+		if(Wizardry.settings.blinkEffect) blinkEffectTimer = BLINK_EFFECT_DURATION;
 	}
 
 	/** Starts the client-side screen shake effect. */
 	public static void shakeScreen(float intensity){
-		screenShakeCounter = (int)(intensity / SHAKINESS);
-		Minecraft.getMinecraft().player.rotationPitch -= intensity * 0.5f; // Start halfway down
+		if(Wizardry.settings.screenShake){
+			screenShakeCounter = (int)(intensity / SHAKINESS);
+			Minecraft.getMinecraft().player.rotationPitch -= intensity * 0.5f; // Start halfway down
+		}
 	}
 	
 	@SubscribeEvent
@@ -105,12 +107,20 @@ public final class WizardryClientEventHandler {
 
 		if(event.player == Minecraft.getMinecraft().player && event.phase == TickEvent.Phase.END){
 
-			if(blinkEffectTimer > 0) blinkEffectTimer--;
+			if(Wizardry.settings.blinkEffect){
+				if(blinkEffectTimer > 0) blinkEffectTimer--;
+			}else{
+				blinkEffectTimer = 0;
+			}
 
-			if(screenShakeCounter > 0){
-				float magnitude = screenShakeCounter * SHAKINESS;
-				Minecraft.getMinecraft().player.rotationPitch += screenShakeCounter % 2 == 0 ? magnitude : -magnitude;
-				screenShakeCounter--;
+			if(Wizardry.settings.screenShake){
+				if(screenShakeCounter > 0){
+					float magnitude = screenShakeCounter * SHAKINESS;
+					Minecraft.getMinecraft().player.rotationPitch += screenShakeCounter % 2 == 0 ? magnitude : -magnitude;
+					screenShakeCounter--;
+				}
+			}else{
+				screenShakeCounter = 0;
 			}
 
 			// Only seems to work here...

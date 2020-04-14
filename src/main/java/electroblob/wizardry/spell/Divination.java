@@ -91,9 +91,6 @@ public class Divination extends Spell {
 					(float)(target.getY() + 0.5 - (caster.getEntityBoundingBox().minY + caster.getEyeHeight())),
 					(float)(target.getZ() + 0.5 - caster.posZ));
 
-			if(world.isRemote) ParticleBuilder.create(ParticleBuilder.Type.SPARKLE).pos(target.getX() + 0.5,
-					target.getY() + 1.5, target.getZ() + 0.5).spawn(world);
-
 			strength = Strength.forWeight(calculateWeight(world, caster, target, range, modifiers));
 		}
 

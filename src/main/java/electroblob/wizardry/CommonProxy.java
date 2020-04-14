@@ -250,6 +250,13 @@ public class CommonProxy {
 	 * @param intensity The amplitude of the shaking (around 10 looks about right)
 	 */
 	public void shakeScreen(EntityPlayer player, float intensity){}
+
+	/**
+	 * Loads the given shader for the given player, if they have shaders enabled.
+	 * @param player The player to load the shader for
+	 * @param shader The location of the shader to load
+	 */
+	public void loadShader(EntityPlayer player, ResourceLocation shader){}
 	
 	/**
 	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns

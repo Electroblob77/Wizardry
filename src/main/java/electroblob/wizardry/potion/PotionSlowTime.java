@@ -172,9 +172,9 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 	@SubscribeEvent
 	public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event){
 		if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == WizardryPotions.slow_time
-				&& event.getEntity() == net.minecraft.client.Minecraft.getMinecraft().player){
-			if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SlowTime.SHADER);
-			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
+				&& event.getEntity() instanceof EntityPlayer){
+			Wizardry.proxy.loadShader((EntityPlayer)event.getEntity(), SlowTime.SHADER);
+			Wizardry.proxy.playBlinkEffect((EntityPlayer)event.getEntity());
 		}
 	}
 

@@ -38,9 +38,9 @@ public class Transience extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		if(world.isRemote && caster == net.minecraft.client.Minecraft.getMinecraft().player){
-			if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
-			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
+		if(world.isRemote){
+			Wizardry.proxy.loadShader(caster, SHADER);
+			Wizardry.proxy.playBlinkEffect(caster);
 		}
 
 		if(!caster.isPotionActive(WizardryPotions.transience)){
@@ -87,9 +87,9 @@ public class Transience extends Spell {
 	@SubscribeEvent
 	public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event){
 		if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == WizardryPotions.transience
-				&& event.getEntity() == net.minecraft.client.Minecraft.getMinecraft().player){
-			if(Wizardry.settings.useShaders) net.minecraft.client.Minecraft.getMinecraft().entityRenderer.loadShader(SHADER);
-			electroblob.wizardry.client.WizardryClientEventHandler.playBlinkEffect();
+				&& event.getEntity() instanceof EntityPlayer){
+			Wizardry.proxy.loadShader((EntityPlayer)event.getEntity(), SHADER);
+			Wizardry.proxy.playBlinkEffect((EntityPlayer)event.getEntity());
 		}
 	}
 
