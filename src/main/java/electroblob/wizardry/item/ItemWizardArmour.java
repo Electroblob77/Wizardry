@@ -38,6 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -248,24 +249,34 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	}
 
 	@Override
+	public ItemStack applyUpgrade(@Nullable EntityPlayer player, ItemStack stack, ItemStack upgrade){
+
+		// Applies legendary upgrade
+		if(upgrade.getItem() == WizardryItems.armour_upgrade){
+
+			if(!stack.hasTagCompound()){
+				stack.setTagCompound(new NBTTagCompound());
+			}
+
+			if(!stack.getTagCompound().hasKey("legendary")){
+				stack.getTagCompound().setBoolean("legendary", true);
+				upgrade.shrink(1);
+				if(player != null) WizardryAdvancementTriggers.legendary.triggerFor(player);
+			}
+		}
+
+		return stack;
+	}
+
+	@Override
 	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
 		
 		boolean changed = false;
-		
-		// Applies legendary upgrade
-		if(upgrade.getStack().getItem() == WizardryItems.armour_upgrade){
-			
-			if(!centre.getStack().hasTagCompound()){
-				centre.getStack().setTagCompound(new NBTTagCompound());
-			}
-			
-			if(!centre.getStack().getTagCompound().hasKey("legendary")){
-				
-				centre.getStack().getTagCompound().setBoolean("legendary", true);
-				upgrade.decrStackSize(1);
-				WizardryAdvancementTriggers.legendary.triggerFor(player);
-				changed = true;
-			}
+
+		if(upgrade.getHasStack()){
+			ItemStack original = centre.getStack().copy();
+			centre.putStack(this.applyUpgrade(player, centre.getStack(), upgrade.getStack()));
+			changed = ItemStack.areItemStacksEqual(centre.getStack(), original);
 		}
 		
 		// Charges armour by appropriate amount

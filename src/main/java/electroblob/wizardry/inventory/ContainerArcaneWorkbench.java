@@ -197,12 +197,8 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 
 					// Show however many spell book slots are necessary
 					for(int i = 0; i < spellSlots; i++){
-						
-						float angle = i * (2 * (float)Math.PI)/spellSlots;
-						int x = centreX + Math.round(SLOT_RADIUS * MathHelper.sin(angle));
-						// -cos because +y is downwards
-						int y = centreY + Math.round(SLOT_RADIUS * -MathHelper.cos(angle));
-						
+						int x = centreX + getBookSlotXOffset(i, spellSlots);
+						int y = centreY + getBookSlotYOffset(i, spellSlots);
 						showSlot(i, x, y);
 					}
 					
@@ -214,6 +210,20 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 				}
 			}
 		}
+	}
+
+	/** Returns the x offset (relative to the central slot) of the ith book slot when the total number of book slots is
+	 * equal to {@code bookSlotCount}. */
+	public static int getBookSlotXOffset(int i, int bookSlotCount){
+		float angle = i * (2 * (float)Math.PI) / bookSlotCount;
+		return Math.round(SLOT_RADIUS * MathHelper.sin(angle));
+	}
+
+	/** Returns the y offset (relative to the central slot) of the ith book slot when the total number of book slots is
+	 * equal to {@code bookSlotCount}. */
+	public static int getBookSlotYOffset(int i, int bookSlotCount){
+		float angle = i * (2 * (float)Math.PI) / bookSlotCount;
+		return Math.round(SLOT_RADIUS * -MathHelper.cos(angle)); // -cos because +y is downwards
 	}
 
 	// FIXME: Shift-clicking a stack of special upgrades when in the arcane workbench causes the whole stack to be

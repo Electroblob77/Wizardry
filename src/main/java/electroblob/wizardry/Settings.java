@@ -241,10 +241,11 @@ public final class Settings {
 	public String[] damageSourceBlacklist = {};
 	/** <b>[Server-only]</b> Whether to print compatibility warnings to the console. */
 	public boolean compatibilityWarnings = true;
+	// TODO: Should these really be server-only?
 	/** <b>[Server-only]</b> Whether Baubles integration features are enabled. */
 	public boolean baublesIntegration = true;
-//	/** <b>[Server-only]</b> Whether JEI integration features are enabled. */
-//	public boolean jeiIntegration = true;
+	/** <b>[Server-only]</b> Whether JEI integration features are enabled. */
+	public boolean jeiIntegration = true;
 	/** <b>[Server-only]</b> Whether Antique Atlas integration features are enabled. */
 	public boolean antiqueAtlasIntegration = true;
 	/** <b>[Server-only]</b> Whether global markers for wizard towers are added to antique atlases. */
@@ -1111,13 +1112,13 @@ public final class Settings {
 		baublesIntegration = property.getBoolean();
 		propOrder.add(property.getName());
 
-//		property = config.get(COMPATIBILITY_CATEGORY, "jeiIntegration", true,
-//				"If JEI (Just Enough Items) is installed, controls whether JEI integration features are enabled. If this is disabled, wizardry will always behave as if JEI is not installed.");
-//		property.setLanguageKey("config." + Wizardry.MODID + ".jei_integration");
-//		property.setRequiresMcRestart(true);
-//		Wizardry.proxy.setToNamedBooleanEntry(property);
-//		jeiIntegration = property.getBoolean();
-//		propOrder.add(property.getName());
+		property = config.get(COMPATIBILITY_CATEGORY, "jeiIntegration", true,
+				"If JEI (Just Enough Items) is installed, controls whether JEI integration features are enabled. If this is disabled, wizardry will always behave as if JEI is not installed.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".jei_integration");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		jeiIntegration = property.getBoolean();
+		propOrder.add(property.getName());
 
 		property = config.get(COMPATIBILITY_CATEGORY, "antiqueAtlasIntegration", true,
 				"If Antique Atlas is installed, controls whether Antique Atlas integration features are enabled. If this is disabled, wizardry will always behave as if Antique Atlas is not installed.");

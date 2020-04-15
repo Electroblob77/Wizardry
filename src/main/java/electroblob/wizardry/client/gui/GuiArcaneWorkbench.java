@@ -113,7 +113,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	public void initGui(){
 
 		this.mc.player.openContainer = this.inventorySlots;
-		this.guiLeft = (this.width - this.xSize) / 2;
+		this.guiLeft = (this.width - MAIN_GUI_WIDTH) / 2; // Use MAIN_GUI_WIDTH, not xSize, otherwise JEI messes with it
 		this.guiTop = (this.height - this.ySize) / 2;
 
 		Keyboard.enableRepeatEvents(true);
@@ -132,6 +132,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		this.searchField.setCanLoseFocus(false);
 		this.searchField.setFocused(true);
 
+		this.tooltipElements.clear();
 		this.tooltipElements.add(new TooltipElementItemName(new Style().setColor(TextFormatting.WHITE), LINE_SPACING_WIDE));
 		this.tooltipElements.add(new TooltipElementManaReadout(LINE_SPACING_WIDE));
 		this.tooltipElements.add(new TooltipElementProgressionBar(LINE_SPACING_WIDE));

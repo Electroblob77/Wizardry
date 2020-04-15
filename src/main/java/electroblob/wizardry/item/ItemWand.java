@@ -45,6 +45,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -625,95 +626,108 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	}
 
 	@Override
-	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
-		
-		boolean changed = false;
-		
+	public ItemStack applyUpgrade(@Nullable EntityPlayer player, ItemStack wand, ItemStack upgrade){
+
 		// Upgrades wand if necessary. Damage is copied, preserving remaining durability,
 		// and also the entire NBT tag compound.
-		if(upgrade.getStack().getItem() == WizardryItems.arcane_tome){
+		if(upgrade.getItem() == WizardryItems.arcane_tome){
 
-			Tier tier = Tier.values()[upgrade.getStack().getItemDamage()];
+			Tier tier = Tier.values()[upgrade.getItemDamage()];
 
 			// Checks the wand upgrade is for the tier above the wand's tier, and that either the wand has enough
 			// progression or the player is in creative mode.
-			// It is guaranteed that: this == centre.getStack().getItem()
-			if((player.isCreative() || Wizardry.settings.legacyWandLevelling
-					|| WandHelper.getProgression(centre.getStack()) >= tier.progression)
+			if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
+					|| WandHelper.getProgression(wand) >= tier.progression)
 					&& tier.ordinal() - 1 == this.tier.ordinal()){
 
 				// We're not carrying over excess progression for now, but if we do want to, this is how
 //				if(!Wizardry.settings.legacyWandLevelling){
 //					// Easy way to carry excess progression over to the new stack
-//					WandHelper.setProgression(centre.getStack(), WandHelper.getProgression(centre.getStack()) - tier.progression);
+//					WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.progression);
 //				}
 
-				WandHelper.setProgression(centre.getStack(), 0);
+				WandHelper.setProgression(wand, 0);
 
 				ItemStack newWand = new ItemStack(WizardryItems.getWand(tier, this.element));
-				newWand.setTagCompound(centre.getStack().getTagCompound());
+				newWand.setTagCompound(wand.getTagCompound());
 				// This needs to be done after copying the tag compound so the mana capacity for the new wand
 				// takes storage upgrades into account
 				// Note the usage of the new wand item and not 'this' to ensure the correct capacity is used
-				((IManaStoringItem)newWand.getItem()).setMana(newWand, this.getMana(centre.getStack()));
+				((IManaStoringItem)newWand.getItem()).setMana(newWand, this.getMana(wand));
 
-				centre.putStack(newWand);
-				upgrade.decrStackSize(1);
-				
-				changed = true;
+				upgrade.shrink(1);
+
+				return newWand;
 			}
 
-		}else if(WandHelper.isWandUpgrade(upgrade.getStack().getItem())){
+		}else if(WandHelper.isWandUpgrade(upgrade.getItem())){
 
 			// Special upgrades
-			Item specialUpgrade = upgrade.getStack().getItem();
+			Item specialUpgrade = upgrade.getItem();
 
-			if(WandHelper.getTotalUpgrades(centre.getStack()) < this.tier.upgradeLimit
-					&& WandHelper.getUpgradeLevel(centre.getStack(), specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
+			if(WandHelper.getTotalUpgrades(wand) < this.tier.upgradeLimit
+					&& WandHelper.getUpgradeLevel(wand, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
 
 				// Used to preserve existing mana when upgrading storage rather than creating free mana.
-				int prevMana = this.getMana(centre.getStack());
+				int prevMana = this.getMana(wand);
 
-				WandHelper.applyUpgrade(centre.getStack(), specialUpgrade);
+				WandHelper.applyUpgrade(wand, specialUpgrade);
 
 				// Special behaviours for specific upgrades
 				if(specialUpgrade == WizardryItems.storage_upgrade){
 
-					this.setMana(centre.getStack(), prevMana);
-					
+					this.setMana(wand, prevMana);
+
 				}else if(specialUpgrade == WizardryItems.attunement_upgrade){
 
-					int newSlotCount = BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(centre.getStack(),
+					int newSlotCount = BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(wand,
 							WizardryItems.attunement_upgrade);
-					
-					Spell[] spells = WandHelper.getSpells(centre.getStack());
+
+					Spell[] spells = WandHelper.getSpells(wand);
 					Spell[] newSpells = new Spell[newSlotCount];
 
 					for(int i = 0; i < newSpells.length; i++){
 						newSpells[i] = i < spells.length && spells[i] != null ? spells[i] : Spells.none;
 					}
 
-					WandHelper.setSpells(centre.getStack(), newSpells);
+					WandHelper.setSpells(wand, newSpells);
 
-					int[] cooldowns = WandHelper.getCooldowns(centre.getStack());
+					int[] cooldowns = WandHelper.getCooldowns(wand);
 					int[] newCooldowns = new int[newSlotCount];
 
 					if(cooldowns.length > 0){
 						System.arraycopy(cooldowns, 0, newCooldowns, 0, cooldowns.length);
 					}
 
-					WandHelper.setCooldowns(centre.getStack(), newCooldowns);
+					WandHelper.setCooldowns(wand, newCooldowns);
 				}
 
-				upgrade.decrStackSize(1);
-				WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
+				upgrade.shrink(1);
 
-				if(WandHelper.getTotalUpgrades(centre.getStack()) == Tier.MASTER.upgradeLimit){
-					WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
+				if(player != null){
+
+					WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
+
+					if(WandHelper.getTotalUpgrades(wand) == Tier.MASTER.upgradeLimit){
+						WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
+					}
 				}
-				
-				changed = true;
+
 			}
+		}
+
+		return wand;
+	}
+
+	@Override
+	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		
+		boolean changed = false; // Used for advancements
+
+		if(upgrade.getHasStack()){
+			ItemStack original = centre.getStack().copy();
+			centre.putStack(this.applyUpgrade(player, centre.getStack(), upgrade.getStack()));
+			changed = ItemStack.areItemStacksEqual(centre.getStack(), original);
 		}
 
 		// Reads NBT spell metadata array to variable, edits this, then writes it back to NBT.
