@@ -46,7 +46,8 @@ import java.util.Calendar;
  */
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, acceptedMinecraftVersions = "[1.12.2]",
-		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,);after:antiqueatlas@[4.6,)")
+		guiFactory = "electroblob.wizardry.WizardryGuiFactory",
+		dependencies = "required-after:forge@[14.23.5.2814,);after:jei@[4.15.0,);after:baubles@[1.5.2,);after:antiqueatlas@[4.6,)")
 
 public class Wizardry {
 
