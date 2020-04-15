@@ -1,6 +1,6 @@
 {
 	"bookmark_start_section": "introduction",
-
+	
 	"colours": {
 		"text": "#000000",
 		"caption": "#666666",
@@ -8,10 +8,10 @@
 		"highlight": "#dd4c1d",
 		"new_section": "#ee88f7"
 	},
-
+	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
 			"caption": "Mesa Arcana",
 			"u": 0,
 			"v": 0,
@@ -19,8 +19,8 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/ore_picture.png",
-			"caption": "Mena de Cristal Mágico",
+			"location": "ebwizardry:textures/gui/ore_picture.png",
+			"caption": "Mena de Cristal Magico",
 			"u": 0,
 			"v": 0,
 			"width": 64,
@@ -28,7 +28,7 @@
 		},
 		"magic_crystal": {
 			"location": "ebwizardry:textures/items/crystal_magic.png",
-			"caption": "Cristal Mágico",
+			"caption": "Cristal Magico",
 			"u": 6,
 			"v": 6,
 			"width": 36,
@@ -39,7 +39,7 @@
 		},
 		"magic_wand": {
 			"location": "ebwizardry:textures/items/wand_novice.png",
-			"caption": "Varita Mágica",
+			"caption": "Varita Magica",
 			"u": 0,
 			"v": 0,
 			"width": 64,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/flower_picture.png",
+			"location": "ebwizardry:textures/gui/flower_picture.png",
 			"caption": "Flor de Cristal",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tower_picture.png",
+			"location": "ebwizardry:textures/gui/tower_picture.png",
 			"caption": "Torre de mago",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/armour_picture.png",
+			"location": "ebwizardry:textures/gui/armour_picture.png",
 			"caption": "Conjunto de Armadura de mago",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/obelisk_picture.png",
 			"caption": "Obelisco",
 			"u": 0,
 			"v": 0,
@@ -79,7 +79,7 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/shrine_picture.png",
 			"caption": "Santuario de la tierra",
 			"u": 0,
 			"v": 0,
@@ -87,7 +87,7 @@
 			"height": 67
 		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/tiers_picture.png",
 			"caption": "Los 4 niveles en las Varitas",
 			"u": 0,
 			"v": 0,
@@ -96,7 +96,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/elements_picture.png",
+			"location": "ebwizardry:textures/gui/elements_picture.png",
 			"caption": "Los 7 elementos Arcanos",
 			"u": 0,
 			"v": 0,
@@ -226,36 +226,36 @@
 			"locations": [ "ebwizardry:spark_bomb" ]
 		}
 	},
-
+	
 	"sections": {
-
+		
 		"inside_cover": {
 			"centre": {
 				"x": true,
 				"y": true
 			},
 			"text": [
-
+			
 				"El Manual del Mago",
-
+				
 				"Por Electroblob"
 			]
 		},
-
+		
 		"introduction": {
 			"title": "Introduccion",
 			"text": [
+			
+				"Saludos Mago! Este gran libro te mostrara los secretos de las artes arcanas, y de como usarlas. Este no es un libro comun y corriente, ya que su conocimiento y sus paginas aumentaran a medida que descubres mas y mas sobre mundo magico.",
 
-				"¡Saludos Mago! Este libro te mostrara los secretos de las artes arcanas, y de cómo usarlas. Este no es un libro común y corriente, ya que su conocimiento y sus páginas aumentarán a medida que descubres más y más sobre mundo mágico.",
+				"Utiliza los botones en forma de flecha para pasar la pagina, y los botones de doble flecha para pasar de una seccion a otra. Usa el boton de menu central para regresar al indice.",
 
-				"Utiliza los botones en forma de flecha para pasar la página, y los botones de doble flecha para pasar de una sección a otra. Usa el botón de menú central para regresar al índice.",
-
-				"Haz clic en cualquier palabra en color purpura para ir directamente al tema en cuestión. Haz clic derecho al marcador rojo para moverlo a la página actual, y clic izquierdo para saltar a la página marcada."
+				"Haz clic en cualquier palabra en color purpura para ir directamente al tema en cuestion. Haz clic derecho al marcador rojo para moverlo a la pagina actual, y clic izquierdo para saltar a la pagina marcada."
 			]
 		},
 
 		"main_contents": {
-			"title": "Índice",
+			"title": "Indice",
 			"contents": {
 				"id": "main_contents",
 				"hyperlinks": true,
@@ -265,13 +265,13 @@
 		},
 
 		"setting_up": {
-			"title": "Iniciación",
+			"title": "Iniciacion",
 			"include_in_contents": "main_contents",
 			"text": [
 
-				"Para comenzar como mago, necesitarás conseguir lo siguiente:",
+				"Para comenzar como mago, necesitaras conseguir lo siguiente:",
 
-				"- Una Varita mágica, hecha de la siguiente forma:",
+				"- Una Varita magica, hecha de la siguiente forma:",
 
 				"#recipe magic_wand",
 
@@ -279,29 +279,29 @@
 
 				"#recipe arcane_workbench",
 
-				"- Un @spells Libro de hechizos@. Estos se pueden encontrar en cofres, recompensas por matar monstruos, y comprado a otros magos. Puedes crear el hechizo Misil Mágico, un hechizo de bajo nivel, de la siguiente forma:",
+				"- Un @spells Libro de hechizo@. Estos se pueden encontrar en cofres, recompensas por matar monstruos, y comprado a otros magos. Puedes crear el hechizo Misil Magico, un hechizo de bajo nivel, de la siguiente forma:",
 
 				"#recipe magic_missile_spell_book",
 
-				"También necesitaras bastantes Cristales Mágicos para suplir tu varita de @mana@."
+				"Tambien necesitaras bastantes Cristales Mágicos para suplir tu varita de @mana@."
 			]
 		},
 
 		"mana": {
-			"title": "Maná",
+			"title": "Mana",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:crystal"
 			],
 			"text": [
 
-				"El Maná es la energía mística que concede a los magos sus habilidades. Mucho más que una sustancia física, el Maná es un aura que impregna la realidad de forma omnipresente. En nuestro mundo, suele acumularse hasta formar cristales sólidos, los cuales pueden ser hallados incrustados en piedra en el subsuelo. Las @wands Varitas@ almacenan Maná dentro de ellas, y este Maná es canalizado hacia fuera al conjurar un @spells Hechizo@. Diferentes Hechizos requieren diferentes cantidades de Maná, dependiendo de que tan poderosos sean y de cuanto duren sus efectos.",
+				"El Mana es la energia mistica que concede a los magos sus habilidades. Mucho mas que una sustancia fisica, el Mana es un aura que impregna la realidad de forma omnipresente. En nuestro mundo, suele acumularse hasta formar cristales solidos, los cuales pueden ser hallados incrustados en piedra en el subsuelo. Las @wands Varitas@ almacenan Mana dentro de ellas, y este Mana es canalizado hacia fuera al conjurar un @spells Hechizo@. Diferentes Hechizos requieren diferentes cantidades de Mana, dependiendo de que tan poderosos sean y de cuanto duren sus efectos.",
 
 				"#image crystal_ore",
 
 				"#image magic_crystal",
 
-				"Al ser energía pura, el Maná no puede ser creado ni destruido. Cuando se conjura un hechizo, El Maná canalizado simplemente se disipa en el ambiente. Ciertamente, la mayoría de Maná se encuentra esparcido en pequeñas cantidades a través de todo el Cosmos. Sin embargo, para poder ser usado, el Maná debe de estar concentrado. Esto se puede lograr de forma natural a través de miles de años, como pasa con los cristales mágicos, o de forma artificial, un método avanzado no abordado en este libro. También existen diferentes formas de que el Maná sea mejor administrado al conjurar hechizos, y de recuperar una parte del Maná disipado en el ambiente."
+				"Al ser energia pura, el Mana no puede ser creado ni destruido. Cuando se conjura un hechizo, El Mana canalizado simplemente se disipa en el ambiente. Ciertamente, la mayoria de Mana se encuentra esparcido en peque\u00f1as cantidades a traves de todo el Cosmos. Sin embargo, para poder ser usado, el Mana debe de estar concentrado. Esto se puede lograr de forma natural a traves de miles de a\u00f1os, como pasa con los cristales magicos, o de forma artificial, un metodo avanzado no abordado en este libro. Tambien existen diferentes formas de que el Mana sea mejor administrado al conjurar hechizos, y de recuperar una parte del Mana disipado en el ambiente."
 			]
 		},
 
@@ -313,17 +313,17 @@
 			],
 			"text": [
 
-				"La varita es el arma y herramienta principal de un mago. Con ella, podrás conjurar cualquier @spells hechizo@ que la varita pueda canalizar (véase @tiers Niveles@). Las varitas vienen en diferentes variedades, pero es muy probable que empieces con una varita básica.",
+				"La varita es el arma y herramienta principal de un mago. Con ella, podras conjurar cualquier @spells hechizo@ que la varita pueda canalizar (vease @tiers Niveles@). Las varitas vienen en diferentes variedades, pero es muy probable que empieces con una varita basica.",
 
 				"#image magic_wand",
 
-				"La mayoria de varitas comienzan como una estructura simple de un cristal mágico unido a un palo de madera, con una pepita de oro unido en el otro extremo. El cristal es, claro está, la fuente de poder de la varita, ya que provee el foco necesario para canalizar @spells hechizos@. El resto de la varita es importante también, ya que no solo provee un medio para sostener la varita, sino también un circuito interno por el cual el @mana maná@ puede ser canalizado y dirigido.",
+				"La mayoria de varitas comienzan como una estructura simple de un cristal magico unido a un palo de madera, con una pepita de oro unido en el otro extremo. El cristal es, claro esta, la fuente de poder de la varita, ya que provee el foco necesario para canalizar @spells hechizos@. El resto de la varita es importante tambien, ya que no solo provee un medio para sostener la varita, sino tambien un circuito interno por el cual el @mana mana@ puede ser canalizado y dirigido.",
 
-				"A medida que se conjuren hechizos con la varita, esta se volverá más efectiva en canalizar dichos @spells hechizos@, y eventualmente, en conjurar hechizos mas poderosos. Esto se puede notar debido a ciertos cambios en la varita misma: Mientras mas poderosa se vuelva una varita, su cristal mágico se volverá más brillante, su color puede llegar a cambiar dependiendo de su @elements elemento@, y después de un tiempo, la madera de la que esta hecha comenzara a crecer por si sola y a retorcerse en figuras mas complejas.",
+				"A medida que se conjuren hechizos con la varita, esta se volvera mas efectiva en canalizar dichos @spells hechizos@, y eventualmente, en conjurar hechizos mas poderosos. Esto se puede notar debido a ciertos cambios en la varita misma: Mientras mas poderosa se vuelva una varita, su cristal magico se volvera mas brillante, su color puede llegar a cambiar dependiendo de su @elements elemento@, y despues de un tiempo, la madera de la que esta hecha comenzara a crecer por si sola y a retorcerse en figuras mas complejas.",
 
-				"Mientras sostienes una varita, un pequeño recuadro aparecerá en la esquina de tu pantalla. Este recuadro muestra el hechizo seleccionado actualmente, además de una imagen para representar tal hechizo, si el hechizo ya fue conjurado, y una barra de cooldown indicando el tiempo restante para poder conjurar el hechizo otra vez. Tambien muestra los nombres del hechizo anterior y el hechizo siguiente vinculados a la varita. Para cambiar de hechizo, utiliza las teclas #next_spell_key and #previous_spell_key (Estas pueden ser modificadas en Opciones > Controles). Tambien puedes cambiar de hechizo utilizando la rueda del mouse mientras estas agachado.",
+				"Mientras sostienes una varita, un peque\u00f1o recuadro aparecera en la esquina de tu pantalla. Este recuadro muestra el hechizo seleccionado actualmente, ademas de una imagen para representar tal hechizo, si el hechizo ya fue conjurado, y una barra de cooldown indicando el tiempo restante para poder conjurar el hechizo otra vez. Tambien muestra los nombres del hechizo anterior y el hechizo siguiente vinculados a la varita. Para cambiar de hechizo, utiliza las teclas #next_spell_key y #previous_spell_key (Estas pueden ser modificadas en Opciones > Controles). Tambien puedes cambiar de hechizo utilizando la rueda del mouse mientras estas agachado.",
 
-				"Cuando veas tu inventario, si pones el mouse sobre la varita, veras cuanto @mana mana@ le queda, junto con el @spells hechizo@ seleccionado actualmente y otras habilidades que tenga. Puedes visualizar más información sobre la varita colocándola en una @arcane_workbench mesa arcana@."
+				"Cuando veas tu inventario, si pones el mouse sobre la varita, veras cuanto @mana mana@ le queda, junto con el @spells hechizo@ seleccionado actualmente y otras habilidades que tenga. Puedes visualizar mas informacion sobre la varita colocandola en una @arcane_workbench mesa arcana@."
 			]
 		},
 
@@ -335,15 +335,15 @@
 			],
 			"text": [
 
-				"Sin hechizos para conjurar y lanzar, una @wands varita@ es prácticamente inútil. Los hechizos son grabados en dos formas: en libros, los cual los hace permanentes, y en pergaminos, los cuales son temporales.",
+				"Sin hechizos para conjurar y lanzar, una @wands varita@ es practicamente inutil. Los hechizos son grabados en dos formas: en libros, los cual los hace permanentes, y en pergaminos, los cuales son temporales.",
 
-				"Los libros de hechizos son inútiles por si mismos, por lo que son usados para vincular el hechizo que contienen a las @wands varitas@. Los libros de hechizos se encuentran pueden ser hallados a través de todo el planeta, y no tomara mucho tiempo encontrarte con uno. Cuando lo encuentres, puedes colocar el mouse sobre el libro de hechizo para ver información básica sobre el hechizo que contiene. También puedes darle clic derecho mientras lo sostienes para leer mas acerca de él.",
+				"Los libros de hechizos son inutiles por si mismos, por lo que son usados para vincular el hechizo que contienen a las @wands varitas@. Los libros de hechizos se encuentran pueden ser hallados a traves de todo el planeta, y no tomara mucho tiempo encontrarte con uno. Cuando lo encuentres, puedes colocar el mouse sobre el libro de hechizo para ver informacion basica sobre el hechizo que contiene. Tambien puedes darle clic derecho mientras lo sostienes para leer mas acerca de el.",
 
-				"Por otro lado, los pergaminos sirven otro propósito: Haciendo click derecho mientras sostienes uno conjurará el hechizo escrito en el, consumiendo el pergamino. Al igual que los libros de hechizos, los pergaminos pueden ser hallados en muchas partes del mundo, pero también puedes crearlos tu mismo(a) (véase @enchanting_scrolls Encantando Pergaminos@).",
+				"Por otro lado, los pergaminos sirven otro proposito: Haciendo click derecho mientras sostienes uno conjurara el hechizo escrito en el, consumiendo el pergamino. Al igual que los libros de hechizos, los pergaminos pueden ser hallados en muchas partes del mundo, pero tambien puedes crearlos tu mismo(a) (vease @enchanting_scrolls Encantando Pergaminos@).",
 
-				"Los pergaminos son bastante utiles cuando necesitas utilizar un hechizo una o dos veces en una misión específica, y no quieres que tome espacio innecesario en tu @wands varita@. De todas formas, cabe destacar que no son tan efectivas para conjurar hechizos en comparación con las varitas.",
+				"Los pergaminos son bastante utiles cuando necesitas utilizar un hechizo una o dos veces en una mision especifica, y no quieres que tome espacio innecesario en tu @wands varita@. De todas formas, cabe destacar que no son tan efectivas para conjurar hechizos en comparacion con las varitas.",
 
-				"Desde la perspectiva de alguien común y corriente, los símbolos y runas en los cuales están escritos los hechizos son solo garabatos ilegibles. Pero tú no eres alguien común. ¡Eres un mago, joder! Y como tal, poco a poco iras aprendiendo a descifrar este lenguaje. Para identificar un hechizo podrías, claro está, simplemente conjurarlo y ver que pasa. Pero ten en cuenta que al hacerlo puede haber efectos no deseados, además de que muchos hechizos necesitan ciertas condiciones para funcionar. Además de eso, para novatos es probable leer el hechizo de forma errónea y pueden llegar a haber consecuencias peligrosas dependiendo de que tan poderoso sea el hechizo. Una opción más segura es utilizar un pergamino de identificación, los cuales pueden ser encontrados en cofres o comprados a otros magos. Al hacer click derecho mientras se sostiene uno, se identificará el primer hechizo desconocido en tu inventario, consumiendo el pergamino de identificación."
+				"Desde la perspectiva de alguien comun y corriente, los simbolos y runas en los cuales estan escritos los hechizos son solo garabatos ilegibles. Pero tu no eres alguien comun. Eres un mago, joder! Y como tal, poco a poco iras aprendiendo a descifrar este lenguaje. Para identificar un hechizo podrias, claro esta, simplemente conjurarlo y ver que pasa. Pero ten en cuenta que al hacerlo puede haber efectos no deseados, ademas de que muchos hechizos necesitan ciertas condiciones para funcionar. Ademas de eso, para novatos es probable leer el hechizo de forma erronea y pueden llegar a haber consecuencias peligrosas dependiendo de que tan poderoso sea el hechizo. Una opcion mas segura es utilizar un pergamino de identificacion, los cuales pueden ser encontrados en cofres o comprados a otros magos. Al hacer click derecho mientras se sostiene uno, se identificara el primer hechizo desconocido en tu inventario, consumiendo el pergamino de identificacion."
 			]
 		},
 
@@ -361,7 +361,7 @@
 			],
 			"text": [
 
-				"La mesa arcana es un bloque similar a la mesa de encantamientos, donde podrás recargar, mejorar, y vincular @spells hechizos@ a tu @wands varita@. Puedes crearla de la siguiente forma:",
+				"La mesa arcana es un bloque similar a la mesa de encantamientos, donde podras recargar, mejorar, y vincular @spells hechizos@ a tu @wands varita@. Puedes crearla de la siguiente forma:",
 
 				"#recipe arcane_workbench",
 
@@ -378,7 +378,7 @@
 					],
 					"text": [
 
-						"Para vincular un @spells hechizo@ a tu @wands varita@, solo tienes que colocar la varita en la ranura central de la mesa arcana, luego colocar el libro de hechizo que desees en las ranuras alrededor y presionar “Aplicar”. Como habrás de notar, el acto de vincular un hechizo no afecta al libro, esto es porque al vincular un hechizo, la mesa arcana no “toma” el hechizo del libro, sino que de cierta forma “copia” de forma resumida el hechizo en la varita. De esta forma, puedes cambiar los hechizos vinculados a tu varita tantas veces como quieras con solo repetir el proceso. Puedes vincular hasta cinco hechizos diferentes a una sola varita cada vez, aunque este numero puede aumentar con mejoras de vinculación."
+						"Para vincular un @spells hechizo@ a tu @wands varita@, solo tienes que colocar la varita en la ranura central de la mesa arcana, luego colocar el libro de hechizo que desees en las ranuras alrededor y presionar \u0022Aplicar\u0022. Como habras de notar, el acto de vincular un hechizo no afecta al libro, esto es porque al vincular un hechizo, la mesa arcana no \u0022toma\u0022 el hechizo del libro, sino que de cierta forma \u0022copia\u0022 de forma resumida el hechizo en la varita. De esta forma, puedes cambiar los hechizos vinculados a tu varita tantas veces como quieras con solo repetir el proceso. Puedes vincular hasta cinco hechizos diferentes a una sola varita cada vez, aunque este numero puede aumentar con mejoras de vinculacion."
 					]
 				},
 				"charging_wands": {
@@ -389,7 +389,7 @@
 					],
 					"text": [
 
-						"Para recargar tu @wands varita@, coloca la varita en la ranura central de la mesa arcana, coloca algunos cristales mágicos en la ranura inferior izquierda y luego presiona “Aplicar”. Cada cristal vale #mana_per_crystal @mana maná@, y la varita solo tomara lo que necesita, por lo que puedes dejar una provision de cristales en la mesa arcana para cuando la necesites. Sin embargo, ten en cuenta que la varita solo puede tomar números de cristales enteros, así que si por ejemplo, la varita necesita 30 mas de maná, #example_charging_loss de maná se perderán al cargarla."
+						"Para recargar tu @wands varita@, coloca la varita en la ranura central de la mesa arcana, coloca algunos cristales magicos en la ranura inferior izquierda y luego presiona \u0022Aplicar\u0022. Cada cristal vale #mana_per_crystal @mana mana@, y la varita solo tomara lo que necesita, por lo que puedes dejar una provision de cristales en la mesa arcana para cuando la necesites. Sin embargo, ten en cuenta que la varita solo puede tomar numeros de cristales enteros, asi que si por ejemplo, la varita necesita 30 mas de mana, #example_charging_loss de mana se perderan al cargarla."
 					]
 				},
 				"upgrading_wands": {
@@ -400,7 +400,7 @@
 					],
 					"text": [
 
-						"Para mejorar tu @wands varita@, necesitaras un Tomo de Arcana del @tiers nivel@ adecuado, o también, una mejora especial para tu varita. Los Tomos de Arcana y las mejoras especiales pueden ser hallados en cofres o comprados a otros magos. Para mejorar tu varita, colocala en la ranura central, y coloca el objeto de mejora en la ranura superior derecha, luego presiona “Aplicar”.",
+						"Para mejorar tu @wands varita@, necesitaras un Tomo de Arcana del @tiers nivel@ adecuado, o tambien, una mejora especial para tu varita. Los Tomos de Arcana y las mejoras especiales pueden ser hallados en cofres o comprados a otros magos. Para mejorar tu varita, colocala en la ranura central, y coloca el objeto de mejora en la ranura superior derecha, luego presiona \u0022Aplicar\u0022.",
 
 						"Mejoras especiales para la varita cambian el aspecto de la varita. Cada tipo de mejora se puede acumular tres veces, y el total de mejoras que una varita puede tomar depende de su nivel. Solo recuerda que las mejoras no pueden ser removidas."
 					]
@@ -413,7 +413,7 @@
 					],
 					"text": [
 
-						"La mesa Arcana tambien puede ser usada para encantar @spells hechizos@ en pergaminos. Para hacerlo, necesitaras un pergamino en blanco, creado con papel y un poco de cuerda, un libro de hechizo de tu preferencia, y suficientes cristales mágicos para proveer @mana maná@ para conjurar.",
+						"La mesa Arcana tambien puede ser usada para encantar @spells hechizos@ en pergaminos. Para hacerlo, necesitaras un pergamino en blanco, creado con papel y un poco de cuerda, un libro de hechizo de tu preferencia, y suficientes cristales magicos para proveer @mana mana@ para conjurar.",
 
 						"#recipe blank_scroll",
 
@@ -431,11 +431,11 @@
 			],
 			"text": [
 
-				"Como el legendario y poderoso mago que eres, necesitaras algo para protegerte de las criaturas y monstruos que obviamente vencerás. Las armaduras normales son buenas, sí… pero checa eso: Sombrero, túnica, pantalones y botas. A diferencia de las armaduras normales, la armadura de mago no se rompe, ya que utiliza maná para endurecer su tela al punto de simular el metal, y proteger al usuario. Estas armaduras deben de ser recargadas con cristales mágicos, como las varitas. Afortunadamente, estas ropas no consumen mucho @mana maná@. Recárgalas como lo harías con una varita en la @arcane_workbench mesa arcana@ o con @mana_flasks frascos de mana@. Pero ten cuidado, si se le acaba el maná, lo único que te protegerá de aquellos monstruos será simple tela.",
+				"Como el legendario y poderoso mago que eres, necesitaras algo para protegerte de las criaturas y monstruos que obviamente venceras. Las armaduras normales son buenas, si... pero checa eso: Sombrero, tunica, pantalones y botas. A diferencia de las armaduras normales, la armadura de mago no se rompe, ya que utiliza mana para endurecer su tela al punto de simular el metal, y proteger al usuario. Estas armaduras deben de ser recargadas con cristales magicos, como las varitas. Afortunadamente, estas ropas no consumen mucho @mana mana@. Recargalas como lo harias con una varita en la @arcane_workbench mesa arcana@ o con @mana_flasks frascos de mana@. Pero ten cuidado, si se le acaba el mana, lo único que te protegera de aquellos monstruos sera simple tela.",
 
 				"#image wizard_armour",
 
-				"Puedes crear una armadura de mago a partir de tela mágica:",
+				"Puedes crear una armadura de mago a partir de tela magica:",
 
 				"#recipe magic_silk",
 				"#recipe wizard_hat",
@@ -443,11 +443,11 @@
 				"#recipe wizard_leggings",
 				"#recipe wizard_boots",
 
-				"Puedes encantar una armadura de mago usando una mesa de encantamientos común, y debido a las propiedades de la tela mágica, es bastante efectiva en retener encantamientos. Los encantamientos de Protección contra Magia, Hielo y Electricidad son de particular utilidad para magos como tú, especialmente en defensa contra otros magos.",
+				"Puedes encantar una armadura de mago usando una mesa de encantamientos comun, y debido a las propiedades de la tela magica, es bastante efectiva en retener encantamientos. Los encantamientos de Proteccion contra Magia, Hielo y Electricidad son de particular utilidad para magos como tu, especialmente en defensa contra otros magos.",
 
-				"Aquellos magos que se dedican a la práctica de un elemento particular suelen llevar ropas especiales que les proporcionan efectos adicionales para dominar tal elemento. Conjuntos enteros de aquellas ropas son muy buscadas por los magos y no son fáciles de encontrar.",
+				"Aquellos magos que se dedican a la practica de un elemento particular suelen llevar ropas especiales que les proporcionan efectos adicionales para dominar tal elemento. Conjuntos enteros de aquellas ropas son muy buscadas por los magos y no son faciles de encontrar.",
 
-				"Leyendas hablan sobre un sello arcano usado por los magos y brujas mas poderosos. Dicen que aquel sello volverá la armadura de cualquier mago tan resistente como su contraparte mundana…"
+				"Leyendas hablan sobre un sello arcano usado por los magos y brujas mas poderosos. Dicen que aquel sello volvera la armadura de cualquier mago tan resistente como su contraparte mundana..."
 			]
 		},
 
@@ -465,9 +465,9 @@
 			],
 			"text": [
 
-				"No puedes dominar las artes arcanas quedándote encerrado en tu cuarto ¿o sí? ¡Hay un mundo entero de magia allá afuera para explorar! Ruinas Antiguas, reliquias y seres misteriosos benévolos y malévolos esperan ser descubiertos – si sabes donde buscar. Los más grandes magos también son los más curiosos, y mucho de su conocimiento y poder lo encontraron explorando el mundo que los rodea, y experimentando con lo que encuentran.",
+				"No puedes dominar las artes arcanas quedandote encerrado en tu cuarto, o si? Hay un mundo entero de magia alla afuera para explorar! Ruinas Antiguas, reliquias y seres misteriosos benevolos y malevolos esperan ser descubiertos, si sabes donde buscar. Los mas grandes magos tambien son los mas curiosos, y mucho de su conocimiento y poder lo encontraron explorando el mundo que los rodea, y experimentando con lo que encuentran.",
 
-				"Aunque un mago pasa la mayoría de su tiempo solo, compartir conocimiento es vital para aprender las artes arcanas. Busca a otros practicantes de la magia y aprende todo lo que puedas de ellos. La comunicación es uno de los poderes mas grandes que puedas tener."
+				"Aunque un mago pasa la mayoria de su tiempo solo, compartir conocimiento es vital para aprender las artes arcanas. Busca a otros practicantes de la magia y aprende todo lo que puedas de ellos. La comunicacion es uno de los poderes mas grandes que puedas tener."
 			],
 			"sections": {
 				"crystal_flowers": {
@@ -478,7 +478,7 @@
 					],
 					"text": [
 
-						"Durante tu travesía, es probable que te encuentre una curiosa y colorida flor que emite luz. Estas interesantes flores se les conoce como flores de cristal, y son altamente concentradas en @mana maná@. Nade sabe el porque de esto, lo que si sabemos es que sus pétalos están hechos de cristales de mana, haciendo de estas flores una fuente útil de mana en la superficie. La cantidad de maná obtenida de esta forma es limitada debido al pequeño tamaño de las flores, y que suelen crecer en grupos pequeños.",
+						"Durante tu travesia, es probable que te encuentre una curiosa y colorida flor que emite luz. Estas interesantes flores se les conoce como flores de cristal, y son altamente concentradas en @mana mana@. Nade sabe el porque de esto, lo que si sabemos es que sus petalos están hechos de cristales de mana, haciendo de estas flores una fuente util de mana en la superficie. La cantidad de mana obtenida de esta forma es limitada debido al peque\u00f1o tama\u00f1o de las flores, y que suelen crecer en grupos peque\u00f1os.",
 
 						"#image crystal_flower",
 						"#recipe crystal_flower_to_crystals"
@@ -492,15 +492,15 @@
 					],
 					"text": [
 
-						"No temas, no eres el único practicante de magia en este mundo. En tus viajes, puede que te encuentres con una o dos altas torres con techos puntiagudos. Esta es la residencia de un mago. A veces una vida de soledad puede volver a los magos un poco gruñones, pero usualmente son personas amigables que están dispuestos a compartir su conocimiento contigo, por un precio. No te sorprendas si debes pagar raros y preciosos metales y gemas, ya que a cambio recibirás grandes maravillas arcanas.",
+						"No temas, no eres el unico practicante de magia en este mundo. En tus viajes, puede que te encuentres con una o dos altas torres con techos puntiagudos. Esta es la residencia de un mago. A veces una vida de soledad puede volver a los magos un poco gru\u00f1ones, pero usualmente son personas amigables que estan dispuestos a compartir su conocimiento contigo, por un precio. No te sorprendas si debes pagar raros y preciosos metales y gemas, ya que a cambio recibiras grandes maravillas arcanas.",
 
 						"En el caso de que fuese un hechizo de nivel @tiers maestro@ lo que buscas, necesitaras hablar con un especialista.",
 
 						"#image wizard_tower",
 
-						"Desafortunadamente, existen algunos magos en cuyas puertas los visitantes no son bienvenidos. Estos magos suelen ser marginados, y son hostiles hacia todo aquel que se cruce en su camino. Ten cuidado con estos individuos. Si los encuentras, prepárate para defenderte contra magia poderosa. Véncelos, y su conocimiento será tuyo.",
+						"Desafortunadamente, existen algunos magos en cuyas puertas los visitantes no son bienvenidos. Estos magos suelen ser marginados, y son hostiles hacia todo aquel que se cruce en su camino. Ten cuidado con estos individuos. Si los encuentras, preparate para defenderte contra magia poderosa. Vencelos, y su conocimiento sera tuyo.",
 
-						"Cabe destacar que los magos no toman de buena forma el ser atacados o robados, y siendo ese el caso, no dudarán en tomar la justicia por sus propias manos."
+						"Cabe destacar que los magos no toman de buena forma el ser atacados o robados, y siendo ese el caso, no dudaran en tomar la justicia por sus propias manos."
 					]
 				},
 				"obelisks": {
@@ -511,13 +511,13 @@
 					],
 					"text": [
 
-						"Vestigios de antiguas civilizaciones yacen esparcidas por todo el mundo. Los mas notables son estructuras de piedra tallada con símbolos y runas. Estas ruinas son todo lo que queda de lo que parece ser alguna clase de civilización antigua. Quien sea, o lo que sea que las haya construido, claramente tenían amplios conocimientos sobre magia, conocimientos que uso para conjurar encantamientos protectores que aun hoy día permanecen en aquellos lugares.",
+						"Vestigios de antiguas civilizaciones yacen esparcidas por todo el mundo. Los mas notables son estructuras de piedra tallada con simbolos y runas. Estas ruinas son todo lo que queda de lo que parece ser alguna clase de civilizacion antigua. Quien sea, o lo que sea que las haya construido, claramente tenian amplios conocimientos sobre magia, conocimientos que uso para conjurar encantamientos protectores que aun hoy dia permanecen en aquellos lugares.",
 
-						"Estas estructuras suelen ser de dos tipos. El primero, y el mas común, son los Obeliscos: altas construcciones puntiagudas hechas de piedras rúnicas, con una estructura inferior abierta que contiene reliquias arcanas menores, ya olvidadas en el pasado.",
+						"Estas estructuras suelen ser de dos tipos. El primero, y el mas comun, son los Obeliscos: altas construcciones puntiagudas hechas de piedras runicas, con una estructura inferior abierta que contiene reliquias arcanas menores, ya olvidadas en el pasado.",
 
 						"#image obelisk",
 
-						"Estas estructuras suelen estar protegidas por un encantamiento que invoca @creatures criaturas@ del Caos Elemental cuando un humano se acerca demasiado. Vence a estas criaturas, destruye su invocador, y las reliquias serán tuyas."
+						"Estas estructuras suelen estar protegidas por un encantamiento que invoca @creatures criaturas@ del Caos Elemental cuando un humano se acerca demasiado. Vence a estas criaturas, destruye su invocador, y las reliquias seran tuyas."
 					]
 				},
 				"shrines": {
@@ -528,11 +528,11 @@
 					],
 					"text": [
 
-						"El Segundo tipo es mucho mas raro, y son conocidos como santuarios. Estas estructuras consisten en un circulo de pilares de piedras rúnicas rodeando un pedestal central, en el cualse encuentra un cofre que contiene @artefacts artefactos@. Este cofre suele estar protegido por un encantamiento de Cerradura Arcana, impidiendo que cualquiera excepto el dueño lo abra. La estructura completa también esta protegida por un campo de contención, el cual impide el escape de cualquier cosa que se acerque demasiado.",
+						"El Segundo tipo es mucho mas raro, y son conocidos como santuarios. Estas estructuras consisten en un circulo de pilares de piedras runicas rodeando un pedestal central, en el cual se encuentra un cofre que contiene @artefacts artefactos@. Este cofre suele estar protegido por un encantamiento de Cerradura Arcana, impidiendo que cualquiera excepto el due\u00f1o lo abra. La estructura completa tambien esta protegida por un campo de contencion, el cual impide el escape de cualquier cosa que se acerque demasiado.",
 
 						"#image shrine",
 
-						"Debido al gran poder e importancia arcana, sin mencionar las riquezas que contiene, estas estructuras son particularmente atractivas para cualquier mago aspirante. Pero ten cuidado, ha habido reportes de magos quedando atrapados en en el campo de contención y lentamente perdiendo la cordura a medida que pasa el tiempo. Algunos otros, creen que aquellas ocurrencias es un deliberado esfuerzo de la magia protectora del santuario, y que aquellos magos atrapados son controlados para proteger la estructura. Una perspectiva escalofriante sin duda para todo aquel que se atreva a aventurarse cerca…."
+						"Debido al gran poder e importancia arcana, sin mencionar las riquezas que contiene, estas estructuras son particularmente atractivas para cualquier mago aspirante. Pero ten cuidado, ha habido reportes de magos quedando atrapados en en el campo de contencion y lentamente perdiendo la cordura a medida que pasa el tiempo. Algunos otros, creen que aquellas ocurrencias es un deliberado esfuerzo de la magia protectora del santuario, y que aquellos magos atrapados son controlados para proteger la estructura. Una perspectiva escalofriante sin duda para todo aquel que se atreva a aventurarse cerca...."
 					]
 				},
 				"creatures": {
@@ -543,7 +543,7 @@
 					],
 					"text": [
 
-						"Además de magos, una gran cantidad de criaturas utilizan magia. Muchas de estas criaturas son de origen arcano, y la mayoría pueden ser invocadas desde el Caos Elemental usando @spells hechizos@. Es posible encontrarse con estas criaturas protegiendo un obelisco o a un poderoso mago invocador. Seres arcanos menores pueden ser encontrados casualmente en la naturaleza."
+						"Ademas de magos, una gran cantidad de criaturas utilizan magia. Muchas de estas criaturas son de origen arcano, y la mayoria pueden ser invocadas desde el Caos Elemental usando @spells hechizos@. Es posible encontrarse con estas criaturas protegiendo un obelisco o a un poderoso mago invocador. Seres arcanos menores pueden ser encontrados casualmente en la naturaleza."
 					]
 				},
 				"artefacts": {
@@ -554,7 +554,7 @@
 					],
 					"text": [
 
-						"Al explorar un @shrines santuario@, puedes ser lo bastante afortunado(a) como para encontrar alguna clase de artefacto mágico antiguo, un objeto capaz de concederle a su portador poderes y habilidades únicas y poderosas. Tres tipos de artefactos se han encontrado son: anillos, lo cuales conceden efectos especiales a hechizos, amuletos, los cuales mejoran habilidades defensivas y talismanes, que conceden efectos de utilidad. Estos artefactos parecen funcionar solo si se llevan de forma apropiada, el simple hecho de tenerla en su persona es insuficiente."
+						"Al explorar un @shrines santuario@, puedes ser lo bastante afortunado(a) como para encontrar alguna clase de artefacto magico antiguo, un objeto capaz de concederle a su portador poderes y habilidades unicas y poderosas. Tres tipos de artefactos se han encontrado son: anillos, lo cuales conceden efectos especiales a hechizos, amuletos, los cuales mejoran habilidades defensivas y talismanes, que conceden efectos de utilidad. Estos artefactos parecen funcionar solo si se llevan de forma apropiada, el simple hecho de tenerla en su persona es insuficiente."
 					]
 				}
 			}
@@ -568,21 +568,21 @@
 			],
 			"text":[
 
-				"Las @wands varitas@ y @spells hechizos@ vienen en cuatro niveles: #colour_novicenovice#colour_reset, #colour_apprenticeapprentice#colour_reset, #colour_advancedadvanced #colour_resetand #colour_mastermaster#colour_reset. Cada nivel es mas poderoso que el anterior.",
+				"Las @wands varitas@ y @spells hechizos@ vienen en cuatro niveles: #colour_novicenovato#colour_reset, #colour_apprenticeapprendiz#colour_reset, #colour_advancedavanzado #colour_reset y #colour_mastermaestro#colour_reset. Cada nivel es mas poderoso que el anterior.",
 
 				"#image tiers",
 
-				"#colour_noviceNovice #colour_resetwands son las que pueden ser creadas. Pueden almacenar hasta #novice_max_charge maná, y solo pueden conjurar hechizos de nivel novato. Hechizos de nivel novato son lo bastante simples para ser conjurados por cualquiera y no suelen usar mucho maná. Esto no significa que son inútiles en niveles mas altos, ya que su bajo costo los hace bastante útiles incluso al tener acceso a hechizos de nivel maestro.",
+				"#colour_noviceNovato #colour_reset,es el nivel de varita en las que pueden ser creadas. Pueden almacenar hasta #novice_max_charge mana, y solo pueden conjurar hechizos de nivel novato. Hechizos de nivel novato son lo bastante simples para ser conjurados por cualquiera y no suelen usar mucho mana. Esto no significa que son inutiles en niveles mas altos, ya que su bajo costo los hace bastante utiles incluso al tener acceso a hechizos de nivel maestro.",
 
-				"#colour_apprenticeApprentice #colour_resetwands son el siguiente nivel de varitas después del nivel novato. Pueden almacenar hasta #apprentice_max_charge maná y puede conjurar hechizos de novato y hechizos de aprendiz. Los hechizos de aprendiz son mas impresionantes que los hechizos de novato, pero suelen costar más.",
+				"#colour_apprenticeApprendiz #colour_reset, es el siguiente nivel de varitas después del nivel novato. Pueden almacenar hasta #apprentice_max_charge mana y puede conjurar hechizos de novato y hechizos de aprendiz. Los hechizos de aprendiz son mas impresionantes que los hechizos de novato, pero suelen costar mas.",
 
-				"#colour_advancedAdvanced #colour_resetwands son mas raras y ponderosas. Pueden conjurar todos los hechizos excepto hechizos de nivel maestro, y almacenan hasta #advanced_max_charge maná. Hechizos de nivel avanzado pueden conceder poderes y habilidades super humanas como inivisibilidad y causar estragos en enemigos.",
+				"#colour_advancedAvanzado #colour_resetwands,las varitas de este nivel son mas raras y poderosas. Pueden conjurar todos los hechizos excepto hechizos de nivel maestro, y almacenan hasta #advanced_max_charge mana. Hechizos de nivel avanzado pueden conceder poderes y habilidades super humanas como invisibilidad y causar estragos en enemigos.",
 
-				"#colour_masterMaster #colour_resetwands son las varitas más poderosas que existen. Almacenan hasta #master_max_charge maná y pueden conjurar cualquier hechizo. Libros de hechizo de nivel maestro son muy raros, y ciertos hechizos pueden causar una terrible devastación no solo a enemigos, sino al mundo mismo. Usar con precaución.",
+				"#colour_masterMaestro #colour_reset,las varitas mas poderosas que existen. Almacenan hasta #master_max_charge mana y pueden conjurar cualquier hechizo. Libros de hechizo de nivel maestro son muy raros, y ciertos hechizos pueden causar una terrible devastacion no solo a enemigos, sino al mundo que los rodea. Usar con precaucion.",
 
-				"Para poder ser mejorada a un nivel mayor, la varita debe de volverse lo suficientemente poderosa como para canalizar hechizos de ese nivel. Las varitas ganan poder a medida de que hechizos son conjurados con ellas. Variedad, poder, efectos elementales y otros fatores externos pueden tener efecto en que tan rápido una varita gana este poder.",
+				"Para poder ser mejorada a un nivel mayor, la varita debe de volverse lo suficientemente poderosa como para canalizar hechizos de ese nivel. Las varitas ganan poder a medida de que hechizos son conjurados con ellas. Variedad, poder, efectos elementales y otros fatores externos pueden tener efecto en que tan rapido una varita gana este poder.",
 
-				"Una vez que una varita es lo suficientemente poderosa, un tomo de arcana proveerá el catalizador final para elevar a la varita al siguiente nivel (véase @upgrading_wands Mejorando varitas@), una vez que esto pasa, el proceso de maduración para la varita comienza de nuevo."
+				"Una vez que una varita es lo suficientemente poderosa, un tomo de arcana proveera el catalizador final para elevar a la varita al siguiente nivel (vease @upgrading_wands Mejorando varitas@), una vez que esto pasa, el proceso de maduracion para la varita comienza de nuevo."
 			]
 		},
 
@@ -598,23 +598,23 @@
 
 				"#image elements",
 
-				"#colour_fireFire#colour_reset \n Talvez el elemento mas destructivo. El fuego se trata sobre quemar, consumir, lava y explosiones. Un Pirómano poderoso desatará el infierno ante sus enemigos y probablemente incendie el mundo en el proceso. La mayoría de hechizos de fuego envuelven a los enemigos en llamas, causando Daño adicional con el tiempo. Sin embargo, ten en cuenta que los hechizos de fuego no tienen efecto sobre las criaturas provenientes del Nether.",
+				"#colour_fireFuego#colour_reset \n Talvez el elemento mas destructivo. El fuego se trata sobre quemar, consumir, lava y explosiones. Un Piromano poderoso desatara el infierno ante sus enemigos y probablemente incendie el mundo en el proceso. La mayoria de hechizos de fuego envuelven a los enemigos en llamas, causando Da\u00f1o adicional con el tiempo. Sin embargo, ten en cuenta que los hechizos de fuego no tienen efecto sobre las criaturas provenientes del Nether.",
 
-				"#colour_iceIce#colour_reset \n El elemento de hielo contiene todo lo que es frio. Los hechizos gélidos suelen ralentizar a los enemigos o congelarlos completamente, y son especialmente efectivos en criaturas de fuego. Los hechizos de hielo suelen también ser útiles fuera de combate, como por ejemplo, congelar el agua para cruzar un rio.",
+				"#colour_iceHielo#colour_reset \n El elemento de hielo contiene todo lo que es frio. Los hechizos gelidos suelen ralentizar a los enemigos o congelarlos completamente, y son especialmente efectivos en criaturas de fuego. Los hechizos de hielo suelen tambien ser utiles fuera de combate, como por ejemplo, congelar el agua para cruzar un rio.",
 
-				"#colour_lightningLightning#colour_reset \n Este es el element que concierne los relámpagos, truenos y rayos, tormentas, lluvias y el clima. Un poderoso mago de la tormenta es una fuerza a temer, y algunos poseen la habilidad de comandar a los rayos a voluntad. Los hechizos de tormenta suelen dañar múltiples enemigos al mismo tiempo e incluso siguen a sus objetivos, haciendo de estos un ataque efectivo contra cualquier enemigo…..pero ten cuidado con los creepers.",
+				"#colour_lightningElectricidad#colour_reset \n Este es el elemento que concierne los relampagos, truenos y rayos, tormentas, lluvias y el clima. Un poderoso mago de la tormenta es una fuerza a temer, y algunos poseen la habilidad de comandar a los rayos a voluntad. Los hechizos de tormenta suelen da\u00f1ar multiples enemigos al mismo tiempo e incluso siguen a sus objetivos, haciendo de estos un ataque efectivo contra cualquier enemigo....pero ten cuidado con los creepers.",
 
-				"#colour_necromancyNecromancy#colour_reset \n La necromancia es el elemento de la oscuridad, caos y de la no-muerte. Los necromagos son misteriosos, y suelen considerarse malvados, aunque este no suele ser el caso. Los hechizos de necromancia suelen ser usados para invocar @creatures criaturas@ para pelear por ti o incluso doblegar la voluntad de tus enemigos.",
+				"#colour_necromancyNecromancia#colour_reset \n La necromancia es el elemento de la oscuridad, caos y de la no-muerte. Los necromagos son misteriosos, y suelen considerarse malvados, aunque este no suele ser el caso. Los hechizos de necromancia suelen ser usados para invocar @creatures criaturas@ para pelear por ti o incluso doblegar la voluntad de tus enemigos.",
 
-				"#colour_earthEarth#colour_reset \n El elemento de la tierra se enfoca en el mundo natural: animales, plantas, el viento, y cosas por el estilo. Los hechizos de tierra son diversos y toman una gran variedad de formas, desde envenenar enemigos hasta desencadenar la furia del clima terrenal. Los hechizos de tierra suelen ser una mezcla de ataque, defensa y utilidad.",
+				"#colour_earthTierra#colour_reset \n El elemento de la tierra se enfoca en el mundo natural: animales, plantas, el viento, y cosas por el estilo. Los hechizos de tierra son diversos y toman una gran variedad de formas, desde envenenar enemigos hasta desencadenar la furia del clima terrenal. Los hechizos de tierra suelen ser una mezcla de ataque, defensa y utilidad.",
 
-				"#colour_sorcerySorcery#colour_reset \n La hechicería es el elemento del cambio y la fuerza. Los hechiceros manipulan la luz, la gravedad e incluso la realidad misma para que se ajuste a sus necesidades. Los hechizos de hechicería pueden ser usados, entre muchas otras cosas, para darle al mago poderes especiales o mover objetos a voluntad.",
+				"#colour_sorceryHechiceria#colour_reset \n La hechiceria es el elemento del cambio y la fuerza. Los hechiceros manipulan la luz, la gravedad e incluso la realidad misma para que se ajuste a sus necesidades. Los hechizos de hechiceria pueden ser usados, entre muchas otras cosas, para darle al mago poderes especiales o mover objetos a voluntad.",
 
-				"#colour_healingHealing#colour_reset \n El elemento de curación es un elemento perfectamente válido, ¿verdad? ¡¿Verdad?! Este elemento se trata sobre defensa y regeneración. Los curanderos buscan protegerse a ellos mismos y a sus aliados en los mas posible y por eso suelen ser oponentes formidables. Aunque no suele ser usado de forma ofensiva, la luz purificadora de algunos hechizos de curación hará un Daño considerable a los no-muertos. Los hechizos de curación son indispensables en combate",
+				"#colour_healingCuracion#colour_reset \n El elemento de curacion es un elemento perfectamente valido, verdad? Verdad?! Este elemento se trata sobre defensa y regeneracion. Los curanderos buscan protegerse a ellos mismos y a sus aliados en los mas posible y por eso suelen ser oponentes formidables. Aunque no suele ser usado de forma ofensiva, la luz purificadora de algunos hechizos de curacion hara un Da\u00f1o considerable a los no-muertos. Los hechizos de curacion son indispensables en combate",
 
-				"Los límites entre diferentes elementos no son siempre diferentes, y algunos hechizos suelen tener semejanza a otros elementos diferentes al suyo.",
+				"Los limites entre diferentes elementos no son siempre diferentes, y algunos hechizos suelen tener semejanza a otros elementos diferentes al suyo.",
 
-				"Si tienes suerte, podrás encontrar un cristal elemental. Los cristales elementales son cristales mágicos que absorbieron propiedades elementales mientras se formaban. Estos cristales pueden ser usados para crear varitas elementales, las cuales potencian los hechizos de tal elemento."
+				"Si tienes suerte, podras encontrar un cristal elemental. Los cristales elementales son cristales magicos que absorbieron propiedades elementales mientras se formaban. Estos cristales pueden ser usados para crear varitas elementales, las cuales potencian los hechizos de tal elemento."
 			]
 		},
 
@@ -639,18 +639,18 @@
 					],
 					"text": [
 
-						"Provisiones Arcanas de Arkendur inc. – ¡Objetos mágicos para todas tus necesidades!",
+						"Provisiones Arcanas de Arkendur inc. Objetos magicos para todas tus necesidades!",
 
-						"¿Necesitas recargar tu @wands varita@ de forma rápida? ¡No hay problema! El @mana mana@ ya puede ser embotellado. Simplemente creas un frasco de mana con una botella y ocho cristales mágicos. Cuando quieras usarlo, solo colócalo en la mesa de crafteo con tu varita y cargara cierta parte. *",
+						"Necesitas recargar tu @wands varita@ de forma rapida? No hay problema! El @mana mana@ ya puede ser embotellado. Simplemente creas un frasco de mana con una botella y ocho cristales magicos. Cuando quieras usarlo, solo colocalo en la mesa de crafteo con tu varita y cargara cierta parte. *",
 
 						"#recipe medium_mana_flask",
 
-						"¡NUEVO! Aquí llegaron los nuevos frascos de mana de tamaños pequeños y grandes – ¡ahora puedes seleccionar un frasco que satisface tus necesidades!",
+						"NUEVO! Aqui llegaron los nuevos frascos de mana de tama\u00f1os peque\u00f1os y grandes, ahora puedes seleccionar un frasco que satisface tus necesidades!",
 
 						"#recipe small_mana_flask",
 						"#recipe large_mana_flask",
 
-						"* Este proceso destruirá la botella. Cierto nivel de mana se pierde durante el embotellamiento."
+						"* Este proceso destruira la botella. Cierto nivel de mana se pierde durante el embotellamiento."
 					]
 				},
 				"throwable_items": {
@@ -661,7 +661,7 @@
 					],
 					"text": [
 
-						"Algunos @spells hechizos@ conjuran objetos físicos, algunos de estos pueden ser creados directamente. Bombas de fuego, Bombas de veneno, Bombas de chispas y Bombas de humo pueden todas ser creadas:",
+						"Algunos @spells hechizos@ conjuran objetos fisicos, algunos de estos pueden ser creados directamente. Bombas de fuego, Bombas de veneno, Bombas de chispas y Bombas de humo pueden todas ser creadas:",
 
 						"#recipe firebomb",
 						"#recipe poison_bomb",
@@ -676,13 +676,13 @@
 						"ebwizardry:enchant_scroll"
 					],
 					"text": [
-
-						"Experimentación reciente ha revelado que es posible automatizar la conjuración de @spells hechizos@, hasta cierto punto, usando nada mas que un dispensador simple. Nadie sabe porque, pero parece que las extrañas propiedades de la piedra roja se extienden hasta la conjuración de un pergamino de hechizo. Poniendo un par de estos en un dispensador y dándole poder serviría como una buena trampa…."
+					
+						"Experimentacion reciente ha revelado que es posible automatizar la conjuracion de @spells hechizos@, hasta cierto punto, usando nada mas que un dispensador simple. Nadie sabe porque, pero parece que las extra\u00f1as propiedades de la piedra roja se extienden hasta la conjuracion de un pergamino de hechizo. Poniendo un par de estos en un dispensador y dandole poder serviria como una buena trampa."
 					]
 				}
 			}
 		},
-
+		
 		"crafting_recipes": {
 			"title": "Recetas para crafteos",
 			"include_in_contents": "main_contents",
@@ -714,37 +714,37 @@
 				"#recipe spark_bomb"
 			]
 		},
-
+		
 		"credits": {
 			"title": "Creditos",
 			"include_in_contents": "main_contents",
 			"text": [
-
+				
 				"Electroblob's Wizardry \nVersion #version \nPara Minecraft #mcversion",
 
-				"Diseñado, programado y texturizado por Electroblob",
+				"Dise\u00f1ado, programado y texturizado por Electroblob",
 
 				"Gracias a Minecraft Forge y MCP, cuya presencia hizo posible este mod.",
 
-				"¡Gracias también a la Comunidad de Mods de Minecraft, que siempre tiene una respuesta para mis preguntas!",
+				"Gracias tambien a la Comunidad de Mods de Minecraft, que siempre tiene una respuesta para mis preguntas!",
 
-				"Adicionalmente, me gustaría agradecer a los siguientes individuos por sus contribuciones al mod:",
+				"Adicionalmente, me gustaria agradecer a los siguientes individuos por sus contribuciones al mod:",
 
 				"Codigo:",
 
-				"- Corail31 \n- 12foo \n- Shadows-of-Fire \n- HellFirePvP \n- Tora-B \n- Avatair \n- Aeronica \n- UltraHex \n- Azim-Palmer \n- raoulvdberge \n- rafasoares",
+				"- Corail31 \n- 12foo \n- Shadows-of-Fire \n- HellFirePvP \n- Tora-B \n- Avatair \n- Aeronica",
 
 				"Traducciones:",
 
-				"- Español: MadWrist, Alsentar \n- Español de Mexico: MadWrist \n- Ruso: VilagVil, kellixon, bigenergy \n- Frances: Hahdrim \n- Portuges Brasileño: lorrampi \n- Chino: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Koreano: shejery, rewi_wire \n- Polaco: Trozuu, \nAlemán: BirdyDragon",
+				"- Espa\u00f1ol de Espa\u00f1a y Mexico: MadWrist, Alsentar \n- Ruso: VilagVil, kellixon \n- Frances: Hahdrim \n- Portuges Brasile\u00f1o: lorrampi \n- Chino: ZHENGLOC, dragon-evol \n- Koreano: shejery, rewi_wire \n- Polaco: Trozuu",
 
-				"Efecto de sonido para los relámpagos por OhhWowProductions",
+				"Efecto de sonido para los relampagos por OhhWowProductions",
 
 				"Para mas informacion, revisa nuestra @https://github.com/Electroblob77/Wizardry/wiki wiki@.",
 
-				"¿Te encanta este mod? ¡unete al @https://discord.gg/MTmMzMv servidor de Discord@ para las ultimas noticias,discusiones y extras!"
+				"Te encanta este mod? unete al @https://discord.gg/MTmMzMv servidor de Discord@ para las ultimas noticias,discusiones y extras!"
 			]
 		}
-
+		
 	}
 }
