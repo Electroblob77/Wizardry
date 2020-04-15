@@ -1,6 +1,7 @@
 package electroblob.wizardry.integration.jei;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.item.IConjuredItem;
 import electroblob.wizardry.registry.WizardryBlocks;
 import mezz.jei.api.IModPlugin;
@@ -9,6 +10,8 @@ import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IIngredientBlacklist;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -39,6 +42,15 @@ public class WizardryJEIPlugin implements IModPlugin {
 		IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
 		for(Item item : Item.REGISTRY){
 			if(item instanceof IConjuredItem) blacklist.addIngredientToBlacklist(new ItemStack(item));
+		}
+
+		// Hide imbuements from JEI
+		for(Enchantment enchantment : Enchantment.REGISTRY){
+			if(enchantment instanceof Imbuement){
+				for(int level = enchantment.getMinLevel(); level <= enchantment.getMaxLevel(); level++){
+					blacklist.addIngredientToBlacklist(new EnchantmentData(enchantment, level));
+				}
+			}
 		}
 
 	}
