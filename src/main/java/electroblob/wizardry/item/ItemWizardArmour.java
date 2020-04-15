@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.event.SpellCastEvent;
@@ -81,6 +82,11 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	@Override
 	public int getManaCapacity(ItemStack stack){
 		return this.getMaxDamage(stack);
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return DrawingUtils.mix(0xff8bfe, 0x8e2ee4, (float)getDurabilityForDisplay(stack));
 	}
 
 	@Override
