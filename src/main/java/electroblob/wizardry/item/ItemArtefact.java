@@ -436,7 +436,6 @@ public class ItemArtefact extends Item {
 				}else if(artefact == WizardryItems.charm_flight){
 
 					if(event.getSpell() == Spells.flight || event.getSpell() == Spells.glide){
-						// FIXME: Does not appear to be working, for some reason
 						modifiers.set(SpellModifiers.POTENCY, 1.5f * potency, true);
 					}
 
