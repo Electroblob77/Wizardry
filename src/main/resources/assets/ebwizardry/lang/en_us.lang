@@ -359,7 +359,7 @@ item.ebwizardry\:charm_light.desc=Conjured light sources last forever and may be
 item.ebwizardry\:charm_transportation.name=Ancient Compass
 item.ebwizardry\:charm_transportation.desc=Up to four stone circles may be remembered and selected from when using transportation
 item.ebwizardry\:charm_feeding.name=Bottomless Provisions
-item.ebwizardry\:charm_feeding.desc=Replenish hunger triggers automatically when bound to a wand on your hotbar
+item.ebwizardry\:charm_feeding.desc=Replenish hunger and satiety trigger automatically when bound to a wand on your hotbar
 
 item.charge_status.full=Full
 item.charge_status.almost_full=Almost full

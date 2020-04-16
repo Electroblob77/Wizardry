@@ -349,9 +349,14 @@ public class ItemArtefact extends Item {
 					});
 
 				}else if(artefact == WizardryItems.charm_feeding){
-					// Every 5 seconds, feed the player if they are near starving
-					if(player.ticksExisted % 100 == 0 && player.getFoodStats().getFoodLevel() < 2){
-						findMatchingWandAndCast(player, Spells.replenish_hunger);
+					// Every 5 seconds, feed the player if they are hungry enough
+					if(player.ticksExisted % 100 == 0){
+						if(player.getFoodStats().getFoodLevel() < 20 - Spells.satiety.getProperty(Satiety.HUNGER_POINTS).intValue()){
+							if(findMatchingWandAndCast(player, Spells.satiety)) continue;
+						}
+						if(player.getFoodStats().getFoodLevel() < 20 - Spells.replenish_hunger.getProperty(ReplenishHunger.HUNGER_POINTS).intValue()){
+							findMatchingWandAndCast(player, Spells.replenish_hunger);
+						}
 					}
 				}
 			}
