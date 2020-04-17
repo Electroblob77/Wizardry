@@ -12,7 +12,7 @@
   },
   "tier": "novice",
   "element": "ice",
-  "type": "attack",
+  "type": "projectile",
   "cost": 1,
   "chargeup": 0,
   "cooldown": 1,
