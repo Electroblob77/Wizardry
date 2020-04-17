@@ -1012,21 +1012,6 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return getSpells(s -> true);
 	}
 
-	/** Predicate which allows all spells.
-	 * @deprecated Use {@link Spell#getAllSpells()}. */
-	@Deprecated
-	public static Predicate<Spell> allSpells = s -> true;
-
-	/** Predicate which allows all non-continuous spells, even those that have been disabled.
-	 * @deprecated Nobody ever uses this now we have continuous scrolls, if you really need it just use a lambda.  */
-	@Deprecated
-	public static Predicate<Spell> nonContinuousSpells = s -> !s.isContinuous;
-
-	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastBy(EntityLiving, boolean)} returns true.
-	 * @deprecated in favour of entity-sensitive version, use a lambda expression directly. */
-	@Deprecated
-	public static Predicate<Spell> npcSpells = s -> s.isEnabled(SpellProperties.Context.NPCS) && s.canBeCastByNPCs();
-
 	/**
 	 * Predicate which allows all enabled spells of the given tier and element (create an instance of this class each
 	 * time you want to use it). This is somewhat useless now that Wizardry uses Java 8, but it is more readable than a
