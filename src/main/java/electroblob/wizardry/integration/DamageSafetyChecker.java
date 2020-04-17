@@ -124,9 +124,9 @@ public final class DamageSafetyChecker {
 		boolean vanillaName = VANILLA_DAMAGE_NAMES.contains(originalSourceName);
 
 		if(aborted){
-			Wizardry.logger.warn("SoundLoopSpellEntity attack excessive call limit reached, aborting entity damage entirely!");
+			Wizardry.logger.warn("Entity attack excessive call limit reached, aborting entity damage entirely!");
 		}else{
-			Wizardry.logger.warn("SoundLoopSpellEntity attack excessive call threshold reached, substituting for non-entity-based " +
+			Wizardry.logger.warn("Entity attack excessive call threshold reached, substituting for non-entity-based " +
 					"damage to avert a crash.");
 		}
 
