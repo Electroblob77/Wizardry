@@ -48,19 +48,24 @@ tile.ebwizardry\:acacia_lectern.name=Acacia Lectern
 tile.ebwizardry\:dark_oak_lectern.name=Dark Oak Lectern
 
 item.ebwizardry\:crystal_magic.name=Magic Crystal
+item.ebwizardry\:crystal_magic.desc=The iridescent colors of this crystal seem to slowly shift and swirl, hinting at a magical energy within. Perhaps this magic could be harnessed, somehow...
 item.ebwizardry\:crystal_fire.name=Fiery Crystal
+item.ebwizardry\:crystal_fire.desc=A crystal that glows a fiery orange. Maybe it is the key to unlocking the element of fire...
 item.ebwizardry\:crystal_ice.name=Icy Crystal
+item.ebwizardry\:crystal_ice.desc=A crystal with a cold, bluish tint. Perhaps it holds the secrets to the power of frost...
 item.ebwizardry\:crystal_lightning.name=Stormy Crystal
+item.ebwizardry\:crystal_lightning.desc=A crystal that seems to swirl and flash with a chaotic energy. Maybe it hides a greater power within...
 item.ebwizardry\:crystal_necromancy.name=Dark Crystal
+item.ebwizardry\:crystal_necromancy.desc=A crystal with a deep, purplish appearance that seems to draw you in. Perhaps it is a gateway to something darker...
 item.ebwizardry\:crystal_earth.name=Verdant Crystal
+item.ebwizardry\:crystal_earth.desc=A crystal patterened with a great many greens and browns. Perhaps it holds a connection to the forces of nature...
 item.ebwizardry\:crystal_sorcery.name=Mystical Crystal
+item.ebwizardry\:crystal_sorcery.desc=A crystal that glimmers with a bluish-green light. Maybe it conceals the secrets of an ancient force...
 item.ebwizardry\:crystal_healing.name=Radiant Crystal
+item.ebwizardry\:crystal_healing.desc=A crystal that glints a golden yellow in the sunlight. Perhaps it possesses the link to a divine power...
 
-item.ebwizardry\:magic_wand.name=Magic Wand
-item.ebwizardry\:apprentice_wand.name=Apprentice Wand
-item.ebwizardry\:advanced_wand.name=Advanced Wand
-item.ebwizardry\:master_wand.name=Master Wand
 item.ebwizardry\:spell_book.name=Spell Book
+item.ebwizardry\:spell_book.desc=A book filled with the runes and glyphs of an ancient script. Perhaps with dedication, one might be able to decipher its contents...\n\nRight-click while holding this book to read it.
 
 item.ebwizardry\:spell_book.apply_to_wizard=Replaced %1$s's spell %2$s with %3$s
 
@@ -68,7 +73,8 @@ item.ebwizardry\:arcane_tome.name=Tome of Arcana
 item.ebwizardry\:arcane_tome.desc=Upgrades any %1$s wand with sufficient progression to %2$s tier
 
 item.ebwizardry\:wizard_handbook.name=The Wizard's Handbook
-item.ebwizardry\:wizard_handbook.desc=by %1$s
+item.ebwizardry\:wizard_handbook.author=by %1$s
+item.ebwizardry\:wizard_handbook.desc=Your not-so-pocket-sized guide to the arcane arts! A must-have for any aspiring wizard who seeks to learn the secrets of magic.\n\nRight-click while holding this book to read it.
 
 item.ebwizardry\:wand.generic=wand
 
@@ -81,6 +87,11 @@ item.ebwizardry\:wand.levelup=%1$s is ready to upgrade to %2$s tier
 
 item.ebwizardry\:wand.addally=%1$s has been added to your list of allies
 item.ebwizardry\:wand.removeally=%1$s has been removed from your list of allies
+
+item.ebwizardry\:magic_wand.name=Magic Wand
+item.ebwizardry\:apprentice_wand.name=Apprentice Wand
+item.ebwizardry\:advanced_wand.name=Advanced Wand
+item.ebwizardry\:master_wand.name=Master Wand
 
 item.ebwizardry\:novice_fire_wand.name=Wand of Embers
 item.ebwizardry\:novice_ice_wand.name=Wand of Frost
@@ -126,12 +137,16 @@ item.ebwizardry\:medium_mana_flask.name=Medium Mana Flask
 item.ebwizardry\:large_mana_flask.name=Large Mana Flask
 
 item.ebwizardry\:grand_crystal.name=Grand Magic Crystal
+item.ebwizardry\:grand_crystal.desc=A huge magic crystal, several times the size of those found naturally. Someone must have grown it artificially - but how?
 item.ebwizardry\:crystal_shard.name=Magic Crystal Shard
+item.ebwizardry\:crystal_shard.desc=A small piece of a shattered magic crystal. It contains little mana on its own, but it might have other uses...
 
 item.ebwizardry\:astral_diamond.name=Astral Diamond
+item.ebwizardry\:astral_diamond.desc=A highly-prized gemstone that sparkles brightly under starlight. It is said that the most powerful wizards seek astral diamonds in return for the most elusive arcane knowledge.
 
 item.ebwizardry\:purifying_elixir.name=Purifying Elixir
 item.ebwizardry\:purifying_elixir.desc=Removes curses when consumed
+item.ebwizardry\:purifying_elixir.desc_extended=A small vial of exotic-looking golden liquid, which clearly has powerful healing properties. It would probably be wise to save this for when it is needed.
 
 item.ebwizardry\:storage_upgrade.name=Wand Storage Upgrade
 item.ebwizardry\:siphon_upgrade.name=Wand Siphon Upgrade
@@ -142,6 +157,8 @@ item.ebwizardry\:cooldown_upgrade.name=Wand Cooldown Upgrade
 item.ebwizardry\:blast_upgrade.name=Wand Blast Upgrade
 item.ebwizardry\:attunement_upgrade.name=Wand Attunement Upgrade
 item.ebwizardry\:melee_upgrade.name=Wand Melee Upgrade
+
+item.ebwizardry\:wand_upgrade.generic.desc=Apply this upgrade to a wand in the arcane workbench.
 
 item.ebwizardry\:storage_upgrade.desc=Upgrades the mana capacity of a wand
 item.ebwizardry\:siphon_upgrade.desc=Upgrades a wand to extract mana from mobs when killed
@@ -168,13 +185,14 @@ item.ebwizardry\:blank_scroll.name=Blank Scroll
 item.ebwizardry\:scroll.generic=scroll
 item.ebwizardry\:scroll.name=Scroll of %1$s
 item.ebwizardry\:scroll.undiscovered.name=Scroll "%1$s"
+item.ebwizardry\:scroll.desc=An enchanted sheet of parchment bound loosely with string. Upon the parchment is written an incantation of some kind, presumably to be read aloud.\n\nRight-click while holding this scroll to use it.
 item.ebwizardry\:identification_scroll.name=Scroll of Identification
 item.ebwizardry\:identification_scroll.desc=Identifies an unknown spell book or scroll
 item.ebwizardry\:identification_scroll.nothing_to_identify=Nothing to identify!
 
 item.ebwizardry\:armour_upgrade.name=Arcane Seal of Protection
-item.ebwizardry\:armour_upgrade.desc1=%1$sUpgrades any wizard armour
-item.ebwizardry\:armour_upgrade.desc2=%1$sto make it %2$slegendary
+item.ebwizardry\:armour_upgrade.desc=Upgrades any wizard armour to make it %1$slegendary
+item.ebwizardry\:armour_upgrade.desc_extended=Apply this upgrade to a piece of wizard armour in the arcane workbench.
 
 item.ebwizardry\:magic_silk.name=Magical Silk
 
@@ -231,6 +249,10 @@ item.ebwizardry\:spectral_leggings.name=Spectral Leggings
 item.ebwizardry\:spectral_boots.name=Spectral Boots
 
 item.ebwizardry\:lightning_hammer.name=Lightning Hammer
+
+item.ebwizardry\:ring.generic.desc=Equip this ring in the Baubles inventory or by placing it on your hotbar. Up to 2 rings may be equipped at once.
+item.ebwizardry\:amulet.generic.desc=Equip this amulet in the Baubles inventory or by placing it on your hotbar. Only one amulet may be equipped at a time.
+item.ebwizardry\:charm.generic.desc=Equip this charm in the Baubles inventory or by placing it on your hotbar. Only one charm may be equipped at a time.
 
 item.ebwizardry\:ring_condensing.name=Ring of Condensing
 item.ebwizardry\:ring_condensing.desc=Slowly regenerates mana for all wands on your hotbar

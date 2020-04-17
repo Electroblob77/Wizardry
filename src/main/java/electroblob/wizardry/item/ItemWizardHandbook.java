@@ -27,8 +27,7 @@ public class ItemWizardHandbook extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag flag) {
-		tooltip.add(
-				"\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_handbook.desc", AUTHOR));
+		tooltip.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_handbook.author", AUTHOR));
 	}
 
 	@Override
