@@ -6,6 +6,7 @@ import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.*;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryRecipes;
 import electroblob.wizardry.spell.Spell;
@@ -251,6 +252,9 @@ public class ArcaneWorkbenchRecipeCategory implements IRecipeCategory<ArcaneWork
 		List<Item> scrolls = Streams.stream(Item.REGISTRY).filter(i -> i instanceof ItemScroll).collect(Collectors.toList());
 
 		for(Spell spell : Spell.getAllSpells()){
+
+			if(spell == Spells.none) continue;
+
 			for(Item spellBook : spellBooks){
 				for(Item scroll : scrolls){
 					if(spell.applicableForItem(spellBook) && spell.applicableForItem(scroll)){
