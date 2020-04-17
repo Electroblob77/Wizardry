@@ -996,7 +996,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return registry.getValuesCollection().stream().filter(filter.and(s -> s != Spells.none)).collect(Collectors.toList());
 	}
 
-	/** Returns all registered spells, except the {@link None} spell. */
+	/** Returns all registered spells, including the {@link None} spell. */
 	public static List<Spell> getAllSpells(){
 		return getSpells(s -> true);
 	}
