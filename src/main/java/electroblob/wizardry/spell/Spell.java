@@ -607,15 +607,26 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/**
+	 * Returns whether a property has been defined for the given identifier.
+	 * @param identifier The JSON identifier to check for.
+	 * @return True if a property has been defined for the given identifier, false if not.
+	 */
+	public final boolean hasProperty(String identifier){
+		return properties.hasBaseValue(identifier);
+	}
+
+	/**
 	 * Returns the base value specified in JSON for the given identifier. This may be used from within the spell
 	 * class, or from elsewhere (entities, items, etc.) via the spell's instance.
 	 *
 	 * @param identifier The JSON identifier for the required property. This <b>must</b> have been defined using
-	 *                   {@link Spell#addProperties(String...)} or an exception will be thrown.
+	 *                   {@link Spell#addProperties(String...)} or an exception will be thrown. To check if an
+	 *                   identifier exists, use {@link Spell#hasProperty(String)}.
 	 * @return The base value of the property, as a {@code Number} object. Internally this is handled as a float, but
 	 * it is passed through as a {@code Number} to avoid casting. <i>Be careful with rounding when extracting integer
 	 * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
-	 * @throws IllegalArgumentException if no property was defined with the given identifier. */
+	 * @throws IllegalArgumentException if no property was defined with the given identifier.
+	 */
 	public final Number getProperty(String identifier){
 		return properties.getBaseValue(identifier);
 	}
