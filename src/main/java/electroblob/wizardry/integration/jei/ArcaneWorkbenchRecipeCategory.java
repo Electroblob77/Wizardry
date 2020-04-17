@@ -198,8 +198,10 @@ public class ArcaneWorkbenchRecipeCategory implements IRecipeCategory<ArcaneWork
 					}
 				}
 
-				recipes.add(new ArcaneWorkbenchRecipe(original, Collections.emptyList(), Collections.emptyList(),
-						applicableSpecialUpgrades, original)); // Wands with special upgrades look no different anyway
+				if(!applicableSpecialUpgrades.isEmpty()){
+					recipes.add(new ArcaneWorkbenchRecipe(original, Collections.emptyList(), Collections.emptyList(),
+							applicableSpecialUpgrades, original)); // Wands with special upgrades look no different anyway
+				}
 
 			}
 		}
@@ -252,8 +254,6 @@ public class ArcaneWorkbenchRecipeCategory implements IRecipeCategory<ArcaneWork
 		List<Item> scrolls = Streams.stream(Item.REGISTRY).filter(i -> i instanceof ItemScroll).collect(Collectors.toList());
 
 		for(Spell spell : Spell.getAllSpells()){
-
-			if(spell == Spells.none) continue;
 
 			for(Item spellBook : spellBooks){
 				for(Item scroll : scrolls){
