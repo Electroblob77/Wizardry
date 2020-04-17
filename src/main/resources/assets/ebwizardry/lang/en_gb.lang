@@ -188,6 +188,7 @@ item.ebwizardry\:scroll.undiscovered.name=Scroll "%1$s"
 item.ebwizardry\:scroll.desc=An enchanted sheet of parchment bound loosely with string. Upon the parchment is written an incantation of some kind, presumably to be read aloud.\n\nRight-click while holding this scroll to use it.
 item.ebwizardry\:identification_scroll.name=Scroll of Identification
 item.ebwizardry\:identification_scroll.desc=Identifies an unknown spell book or scroll
+item.ebwizardry\:identification_scroll.desc_extended=Right-click while holding this scroll to identify the first undiscovered spell book or scroll on your hotbar.
 item.ebwizardry\:identification_scroll.nothing_to_identify=Nothing to identify!
 
 item.ebwizardry\:armour_upgrade.name=Arcane Seal of Protection

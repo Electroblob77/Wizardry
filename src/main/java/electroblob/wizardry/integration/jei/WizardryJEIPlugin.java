@@ -67,7 +67,7 @@ public class WizardryJEIPlugin implements IModPlugin {
 		addItemInfo(registry, WizardryItems.wizard_handbook);
 		addItemInfo(registry, WizardryItems.crystal_shard);
 		addItemInfo(registry, WizardryItems.grand_crystal);
-		addItemInfo(registry, WizardryItems.identification_scroll);
+		addItemInfo(registry, WizardryItems.identification_scroll, ".desc_extended");
 		addItemInfo(registry, WizardryItems.spell_book);
 		addItemInfo(registry, WizardryItems.scroll);
 		addItemInfo(registry, WizardryItems.armour_upgrade, ".desc_extended");
