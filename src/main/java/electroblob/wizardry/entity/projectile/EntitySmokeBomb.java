@@ -40,9 +40,9 @@ public class EntitySmokeBomb extends EntityBomb {
 						
 			for(int i = 0; i < 60 * blastMultiplier; i++){
 
-				float brightness = rand.nextFloat() * 0.3f;
+				float brightness = rand.nextFloat() * 0.1f + 0.1f;
 				ParticleBuilder.create(Type.CLOUD, rand, posX, posY, posZ, 2*blastMultiplier, false)
-						.clr(brightness, brightness, brightness).spawn(world);
+						.clr(brightness, brightness, brightness).time(80 + this.rand.nextInt(12)).spawn(world);
 
 				brightness = rand.nextFloat() * 0.3f;
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
