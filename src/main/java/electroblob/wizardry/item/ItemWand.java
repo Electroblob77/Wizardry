@@ -114,6 +114,11 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	}
 
 	@Override
+	public boolean selectSpell(ItemStack stack, int index){
+		return WandHelper.selectSpell(stack, index);
+	}
+
+	@Override
 	public boolean showSpellHUD(EntityPlayer player, ItemStack stack){
 		return true;
 	}

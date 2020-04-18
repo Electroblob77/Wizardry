@@ -170,6 +170,26 @@ public final class WandHelper {
 			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, getPreviousSpellIndex(wand));
 		}
 	}
+
+	/**
+	 * Selects the spell at the given index in this wand's list of spells.
+	 * @param wand The stack to set the spell of
+	 * @param index The spell index to set the wand to
+	 * @return False if the index was out-of-bounds, true otherwise
+	 */
+	public static boolean selectSpell(ItemStack wand, int index){
+
+		if(index < 0 || index > getSpells(wand).length) return false; // Out-of-bounds
+
+		// 5 here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
+		if(getSpells(wand).length < 0) setSpells(wand, new Spell[ItemWand.BASE_SPELL_SLOTS]);
+
+		if(wand.getTagCompound() != null){
+			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, index);
+		}
+
+		return true;
+	}
 	
 	private static int getNextSpellIndex(ItemStack wand){
 

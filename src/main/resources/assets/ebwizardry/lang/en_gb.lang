@@ -1076,6 +1076,14 @@ key.categories.ebwizardry=Wizardry
 
 key.ebwizardry.next_spell=Next Spell
 key.ebwizardry.previous_spell=Previous Spell
+key.ebwizardry.spell_1=Spell Slot 1
+key.ebwizardry.spell_2=Spell Slot 2
+key.ebwizardry.spell_3=Spell Slot 3
+key.ebwizardry.spell_4=Spell Slot 4
+key.ebwizardry.spell_5=Spell Slot 5
+key.ebwizardry.spell_6=Spell Slot 6
+key.ebwizardry.spell_7=Spell Slot 7
+key.ebwizardry.spell_8=Spell Slot 8
 
 death.attack.wizardry_magic=%1$s was killed by %2$s using magic
 death.attack.indirect_wizardry_magic=%1$s was killed by %2$s using magic

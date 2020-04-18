@@ -16,6 +16,7 @@ import electroblob.wizardry.client.particle.*;
 import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
 import electroblob.wizardry.client.renderer.*;
 import electroblob.wizardry.command.SpellEmitter;
+import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.SpellEmitterData;
 import electroblob.wizardry.data.SpellGlyphData;
@@ -72,6 +73,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.NumberSliderEntry;
@@ -103,6 +105,14 @@ public class ClientProxy extends CommonProxy {
 	// Key Bindings
 	public static final KeyBinding NEXT_SPELL = new KeyBinding("key." + Wizardry.MODID + ".next_spell", KeyConflictContext.IN_GAME, Keyboard.KEY_N, "key.categories." + Wizardry.MODID);
 	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key." + Wizardry.MODID + ".previous_spell", KeyConflictContext.IN_GAME, Keyboard.KEY_B, "key.categories." + Wizardry.MODID);
+	public static final KeyBinding[] SPELL_QUICK_ACCESS = new KeyBinding[ItemWand.BASE_SPELL_SLOTS + Constants.UPGRADE_STACK_LIMIT];
+
+	static {
+		for(int i = 0; i < SPELL_QUICK_ACCESS.length; i++){
+			SPELL_QUICK_ACCESS[i] = new KeyBinding("key." + Wizardry.MODID + ".spell_" + (i+1),
+					KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_1 + i, "key.categories." + Wizardry.MODID);
+		}
+	}
 
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
@@ -122,6 +132,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerKeyBindings(){
 		ClientRegistry.registerKeyBinding(NEXT_SPELL);
 		ClientRegistry.registerKeyBinding(PREVIOUS_SPELL);
+		for(KeyBinding key : SPELL_QUICK_ACCESS) ClientRegistry.registerKeyBinding(key);
 	}
 
 	@Override

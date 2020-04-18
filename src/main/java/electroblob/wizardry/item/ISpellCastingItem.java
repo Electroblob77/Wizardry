@@ -66,6 +66,16 @@ public interface ISpellCastingItem {
 	}
 
 	/**
+	 * Selects the spell at the given index bound to the given itemstack. The given itemstack will be of this item.
+	 * @param stack The itemstack to query.
+	 * @param index The index to set.
+	 * @return True if the operation succeeded, false if not.
+	 */
+	default boolean selectSpell(ItemStack stack, int index){
+		return false;
+	}
+
+	/**
 	 * Returns whether the spell HUD should be shown when a player is holding this item. Only called client-side.
 	 * @param player The player holding the item.
 	 * @param stack The itemstack to query.
