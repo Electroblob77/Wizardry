@@ -71,6 +71,7 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
+import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.config.GuiConfigEntries.NumberSliderEntry;
@@ -100,8 +101,8 @@ public class ClientProxy extends CommonProxy {
 	private static final Map<ResourceLocation, IWizardryParticleFactory> factories = new HashMap<>();
 
 	// Key Bindings
-	public static final KeyBinding NEXT_SPELL = new KeyBinding("key." + Wizardry.MODID + ".next_spell", Keyboard.KEY_N, "key.categories." + Wizardry.MODID);
-	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key." + Wizardry.MODID + ".previous_spell", Keyboard.KEY_B, "key.categories." + Wizardry.MODID);
+	public static final KeyBinding NEXT_SPELL = new KeyBinding("key." + Wizardry.MODID + ".next_spell", KeyConflictContext.IN_GAME, Keyboard.KEY_N, "key.categories." + Wizardry.MODID);
+	public static final KeyBinding PREVIOUS_SPELL = new KeyBinding("key." + Wizardry.MODID + ".previous_spell", KeyConflictContext.IN_GAME, Keyboard.KEY_B, "key.categories." + Wizardry.MODID);
 
 	// Armour Model
 	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
