@@ -135,6 +135,7 @@ item.ebwizardry\:spectral_pickaxe_upgraded.name=Spectral Pickaxe
 item.ebwizardry\:small_mana_flask.name=Small Mana Flask
 item.ebwizardry\:medium_mana_flask.name=Medium Mana Flask
 item.ebwizardry\:large_mana_flask.name=Large Mana Flask
+item.ebwizardry\:mana_flask.desc=Craft with a wand or piece of wizard armour to restore %s mana
 
 item.ebwizardry\:grand_crystal.name=Grand Magic Crystal
 item.ebwizardry\:grand_crystal.desc=A huge magic crystal, several times the size of those found naturally. Someone must have grown it artificially - but how?
