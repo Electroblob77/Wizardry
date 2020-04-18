@@ -9,6 +9,7 @@ import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCactus;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -39,7 +40,6 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * <i>"Where do you put random but useful bits and pieces? {@code WizardryUtilities} of course - the 'stuff that doesn't
@@ -305,6 +305,29 @@ public final class WizardryUtilities {
 		return block instanceof BlockLog || block instanceof BlockCactus
 				|| block.isLeaves(world.getBlockState(pos), world, pos) || block.isFoliage(world, pos)
 				|| Settings.containsMetaBlock(Wizardry.settings.treeBlocks, world.getBlockState(pos));
+	}
+
+	/**
+	 * Given the position of one half of a double chest, returns the position of the other half of that double chest.
+	 * @param world The world in which the chest is located
+	 * @param pos The position of one half of the double chest
+	 * @return The position of the other half of the double chest, or null if the given position is not part of a
+	 * double chest.
+	 */
+	public static BlockPos getConnectedChest(World world, BlockPos pos){
+
+		Block block = world.getBlockState(pos).getBlock();
+
+		if(block instanceof BlockChest){
+			for(EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL){
+				BlockPos pos1 = pos.offset(enumfacing);
+				if(world.getBlockState(pos1).getBlock() == block){
+					return pos1;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**

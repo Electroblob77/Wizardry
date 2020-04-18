@@ -47,25 +47,36 @@ public class ArcaneLock extends SpellRay {
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(caster instanceof EntityPlayer){
-			
-			TileEntity tileentity = world.getTileEntity(pos);
 
-			if(tileentity != null){
-
-				if(tileentity.getTileData().hasUniqueId(NBT_KEY)){
-					// Unlocking
-					if(world.getPlayerEntityByUUID(tileentity.getTileData().getUniqueId(NBT_KEY)) == caster){
-						NBTExtras.removeUniqueId(tileentity.getTileData(), NBT_KEY);
-						return true;
-					}
-				}else{
-					// Locking
-					tileentity.getTileData().setUniqueId(NBT_KEY, caster.getUniqueID());
-					return true;
-				}
+			if(toggleLock(world, pos, (EntityPlayer)caster)){
+				BlockPos otherHalf = WizardryUtilities.getConnectedChest(world, pos);
+				if(otherHalf != null) toggleLock(world, otherHalf, (EntityPlayer)caster);
+				return true;
 			}
 		}
 		
+		return false;
+	}
+
+	private boolean toggleLock(World world, BlockPos pos, EntityPlayer player){
+
+		TileEntity tileentity = world.getTileEntity(pos);
+
+		if(tileentity != null){
+
+			if(tileentity.getTileData().hasUniqueId(NBT_KEY)){
+				// Unlocking
+				if(world.getPlayerEntityByUUID(tileentity.getTileData().getUniqueId(NBT_KEY)) == player){
+					NBTExtras.removeUniqueId(tileentity.getTileData(), NBT_KEY);
+					return true;
+				}
+			}else{
+				// Locking
+				tileentity.getTileData().setUniqueId(NBT_KEY, player.getUniqueID());
+				return true;
+			}
+		}
+
 		return false;
 	}
 
