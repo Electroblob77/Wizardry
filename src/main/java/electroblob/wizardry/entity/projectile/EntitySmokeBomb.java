@@ -39,13 +39,12 @@ public class EntitySmokeBomb extends EntityBomb {
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
 						
 			for(int i = 0; i < 60 * blastMultiplier; i++){
-				
-				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0, 0, 0);
-				
+
 				float brightness = rand.nextFloat() * 0.3f;
+				ParticleBuilder.create(Type.CLOUD, rand, posX, posY, posZ, 2*blastMultiplier, false)
+						.clr(brightness, brightness, brightness).spawn(world);
+
+				brightness = rand.nextFloat() * 0.3f;
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
 				.clr(brightness, brightness, brightness).spawn(world);
 			}

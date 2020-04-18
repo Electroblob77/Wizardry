@@ -98,6 +98,8 @@ public final class ParticleBuilder {
 		/** Helical animated 'buffing' particle.<p></p><b>Defaults:</b><br>Lifetime: 15 ticks
 		 * <br>Velocity: (0, 0.27, 0)<br>Colour: white */
 		public static final ResourceLocation BUFF = new ResourceLocation(Wizardry.MODID,"buff");
+		/** Large, thick cloud.<p></p><b>Defaults:</b><br>Lifetime: 48-60 ticks<br> Colour: dark grey */
+		public static final ResourceLocation CLOUD = new ResourceLocation(Wizardry.MODID,"cloud");
 		/** Spiral particle, like potions.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Colour: white */
 		public static final ResourceLocation DARK_MAGIC = new ResourceLocation(Wizardry.MODID,"dark_magic");
 		/** Single pixel particle.<p></p><b>Defaults:</b><br>Lifetime: 16-80 ticks<br>Colour: white */
