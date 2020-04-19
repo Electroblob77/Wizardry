@@ -168,7 +168,17 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		if(itemstack == ItemStack.EMPTY) return true;
 
 		if(slotNumber >= 0 && slotNumber < ContainerArcaneWorkbench.CRYSTAL_SLOT){
-			return itemstack.getItem() instanceof ItemSpellBook;
+
+			if(!(itemstack.getItem() instanceof ItemSpellBook)) return false;
+
+			ItemStack centreStack = getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
+
+			if(centreStack.getItem() instanceof IWorkbenchItem){
+				int spellSlots = ((IWorkbenchItem)centreStack.getItem()).getSpellSlotCount(centreStack);
+				return slotNumber < spellSlots;
+			}
+
+			return false;
 
 		}else if(slotNumber == ContainerArcaneWorkbench.CRYSTAL_SLOT){
 			return itemstack.getItem() instanceof ItemCrystal;
