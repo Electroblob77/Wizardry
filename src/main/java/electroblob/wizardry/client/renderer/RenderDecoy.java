@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,8 +18,8 @@ public class RenderDecoy extends RenderBiped<EntityDecoy> {
 
 	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
 
-	private static final Method getEntityTexture = ReflectionHelper.findMethod(Render.class, "getEntityTexture",
-			"func_110775_a", Entity.class); // Generic parameter T is erased to Entity at runtime.
+	private static final Method getEntityTexture = ObfuscationReflectionHelper.findMethod(Render.class, "func_110775_a",
+			ResourceLocation.class, Entity.class); // Generic parameter T is erased to Entity at runtime.
 
 	public RenderDecoy(RenderManager manager){
 		super(manager, new ModelBiped(0.0f), 0.5f);
