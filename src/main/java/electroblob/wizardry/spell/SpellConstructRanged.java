@@ -129,7 +129,8 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 			SpellModifiers modifiers){
 
 		double range = getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade);
-		
+		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ);
+
 		if(target != null && caster.getDistance(target) <= range){
 
 			if(!world.isRemote){
@@ -137,6 +138,12 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				double x = target.posX;
 				double y = target.posY;
 				double z = target.posZ;
+
+				RayTraceResult hit = world.rayTraceBlocks(origin, new Vec3d(x, y, z), hitLiquids, ignoreUncollidables, false);
+
+				if(hit != null && hit.typeOfHit == RayTraceResult.Type.BLOCK && !hit.getBlockPos().equals(new BlockPos(x, y, z))){
+					return false; // Something was in the way
+				}
 
 				EnumFacing side = null;
 				

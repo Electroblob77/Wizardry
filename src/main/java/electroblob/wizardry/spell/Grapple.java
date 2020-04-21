@@ -218,6 +218,10 @@ public class Grapple extends Spell {
 		// because the entity will have moved!
 		Vec3d targetVec = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
 
+		RayTraceResult hit = findTarget(world, caster, origin, targetVec.subtract(origin).normalize(), modifiers);
+
+		if(hit.typeOfHit != RayTraceResult.Type.ENTITY || hit.entityHit != target) return false; // Something was in the way
+
 		double distance = origin.distanceTo(targetVec);
 
 		// Can't cast the spell at all if the target is too far away
