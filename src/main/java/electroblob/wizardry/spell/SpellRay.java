@@ -173,44 +173,28 @@ public abstract class SpellRay extends Spell {
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
 		// IDEA: Add in an aiming error and trigger onMiss accordingly
 		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
-		Vec3d direction = null;
-		
-		boolean flag = false;
-		
-		if(target != null){
+		Vec3d targetPos = null;
 
-			if((!ignoreLivingEntities || !WizardryUtilities.isLiving(target))
-					&& onEntityHit(world, target, null, caster, origin, ticksInUse, modifiers)){
-				
-				direction = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ)
-						.subtract(origin);
-				flag = true;
-				
-			}else{ // Will run if the spell does not do anything special on entity hit.
-				
-				int x = MathHelper.floor(target.posX);
-				int y = (int)target.getEntityBoundingBox().minY - 1; // -1 because we need the block under the target
-				int z = MathHelper.floor(target.posZ);
-				BlockPos pos = new BlockPos(x, y, z);
-				
-				// This works as if the NPC had actually aimed at the floor beneath the target, so it needs to check
-				// that the block is not air and (optionally) not a liquid.
-				if(!world.isAirBlock(pos) && (!world.getBlockState(pos).getMaterial().isLiquid() || hitLiquids)
-						&& onBlockHit(world, pos, EnumFacing.UP, null, caster, origin, ticksInUse, modifiers)){
-					
-					direction = new Vec3d(x + 0.5, y + 1, z + 0.5).subtract(origin);
-					flag = true;
-				}
+		if(!ignoreLivingEntities || !WizardryUtilities.isLiving(target)){
+			targetPos = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height / 2, target.posZ);
+
+		}else{
+
+			int x = MathHelper.floor(target.posX);
+			int y = (int)target.getEntityBoundingBox().minY - 1; // -1 because we need the block under the target
+			int z = MathHelper.floor(target.posZ);
+			BlockPos pos = new BlockPos(x, y, z);
+
+			// This works as if the NPC had actually aimed at the floor beneath the target, so it needs to check that
+			// the block is not air and (optionally) not a liquid.
+			if(!world.isAirBlock(pos) && (!world.getBlockState(pos).getMaterial().isLiquid() || hitLiquids)){
+				targetPos = new Vec3d(x + 0.5, y + 1, z + 0.5);
 			}
 		}
-		
-		// Wizards don't miss... yet
-		if(!flag) return false;
-		
-		// Particle spawning
-		if(world.isRemote){
-			spawnParticleRay(world, origin, direction.normalize(), caster, direction.length());
-		}
+
+		if(targetPos == null) return false; // If there was nothing to aim at (e.g. snare when the target is in the air)
+
+		if(!shootSpell(world, origin, targetPos.subtract(origin).normalize(), caster, ticksInUse, modifiers)) return false;
 
 		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
@@ -266,8 +250,8 @@ public abstract class SpellRay extends Spell {
 		return !this.isContinuous;
 	}
 	
-	/** Player and dispenser casting are almost identical so this takes care of the shared stuff. This is mainly for internal use. */
-	protected boolean shootSpell(World world, Vec3d origin, Vec3d direction, @Nullable EntityPlayer caster, int ticksInUse, SpellModifiers modifiers){
+	/** Takes care of the shared stuff for the three casting methods. This is mainly for internal use. */
+	protected boolean shootSpell(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		
 		double range = getRange(world, origin, direction, caster, ticksInUse, modifiers);
 		Vec3d endpoint = origin.add(direction.scale(range));
