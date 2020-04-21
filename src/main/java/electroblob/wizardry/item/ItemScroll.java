@@ -11,6 +11,7 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemScroll extends Item implements ISpellCastingItem {
+public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchItem {
 	
 	/** The maximum number of ticks a continuous spell scroll can be cast for (by holding the use item button). */
 	public static final int CASTING_TIME = 120;
@@ -221,5 +222,25 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
+	}
+
+	@Override
+	public int getSpellSlotCount(ItemStack stack){
+		return 1; // Stop spell books immediately leaving the workbench when a scroll is enchanted
+	}
+
+	@Override
+	public boolean canPlace(ItemStack stack){
+		return false; // Prevent players putting scrolls back in the workbench
+	}
+
+	@Override
+	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		return false;
+	}
+
+	@Override
+	public boolean showTooltip(ItemStack stack){
+		return false;
 	}
 }
