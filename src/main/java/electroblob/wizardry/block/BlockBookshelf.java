@@ -29,7 +29,6 @@ import net.minecraft.world.IWorldEventListener;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -143,6 +142,31 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 
 		player.openGui(Wizardry.instance, WizardryGuiHandler.BOOKSHELF, world, pos.getX(), pos.getY(), pos.getZ());
 		return true;
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos){
+
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if(tileEntity instanceof TileEntityBookshelf){
+
+			int slotsOccupied = 0;
+
+			for(int i = 0; i < ((TileEntityBookshelf)tileEntity).getSizeInventory(); i++){
+				if(!((TileEntityBookshelf)tileEntity).getStackInSlot(i).isEmpty()) slotsOccupied++;
+			}
+
+			return slotsOccupied;
+
+		}
+
+		return super.getComparatorInputOverride(state, world, pos);
 	}
 
 	@Override
