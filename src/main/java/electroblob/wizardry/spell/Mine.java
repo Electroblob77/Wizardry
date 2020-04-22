@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
@@ -15,7 +16,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -24,10 +24,19 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class Mine extends SpellRay {
+
+	private static final Method getSilkTouchDrop;
+
+	static {
+		getSilkTouchDrop = ObfuscationReflectionHelper.findMethod(Block.class, "func_180643_i", ItemStack.class, IBlockState.class);
+	}
 
 	public Mine(){
 		super("mine", false, EnumAction.NONE);
@@ -108,7 +117,10 @@ public class Mine extends SpellRay {
 
 							if(silkTouch){
 								flag = world.destroyBlock(pos1, false);
-								if(flag) Block.spawnAsEntity(world, pos1, getSilkTouchDrop(state1));
+								if(flag){
+									ItemStack stack = getSilkTouchDrop(state1);
+									if(stack != null) Block.spawnAsEntity(world, pos1, stack);
+								}
 							}else{
 								flag = world.destroyBlock(pos1, true);
 								if(flag) state1.getBlock().dropXpOnBlockBreak(world, pos1, xp);
@@ -141,17 +153,15 @@ public class Mine extends SpellRay {
 				.shaded(false).spawn(world);
 	}
 
-	// Copied from Block, where (for some reason) it's protected
 	private static ItemStack getSilkTouchDrop(IBlockState state){
 
-		Item item = Item.getItemFromBlock(state.getBlock());
-		int i = 0;
-
-		if(item.getHasSubtypes()){
-			i = state.getBlock().getMetaFromState(state);
+		try {
+			return (ItemStack)getSilkTouchDrop.invoke(state.getBlock(), state);
+		}catch(IllegalAccessException | InvocationTargetException e){
+			Wizardry.logger.error("Error while reflectively retrieving silk touch drop", e);
 		}
 
-		return new ItemStack(item, 1, i);
+		return null;
 	}
 
 }
