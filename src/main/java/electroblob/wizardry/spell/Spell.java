@@ -188,7 +188,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @param action The vanilla usage action to be displayed when casting this spell.
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
 	 */
-	public Spell(String name, EnumAction action, boolean isContinuous){
+	Spell(String name, EnumAction action, boolean isContinuous){
 		this(Wizardry.MODID, name, action, isContinuous);
 	}
 

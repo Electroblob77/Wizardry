@@ -547,7 +547,7 @@ public abstract class ParticleWizardry extends Particle {
 
 	/** Internal overload for {@link ParticleWizardry#generateTextures(String, String, int, int)} which uses wizardry's
 	 * mod ID automatically. */
-	public static ResourceLocation[][] generateTextures(String stem, int m, int n){
+	static ResourceLocation[][] generateTextures(String stem, int m, int n){
 		return generateTextures(Wizardry.MODID, stem, m, n);
 	}
 	
