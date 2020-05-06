@@ -8,7 +8,7 @@ When submitting an issue, I would be grateful if you could follow these few guid
 
 - Please stick to the issue template, it's there to help you provide the right information so I can fix the problem more easily. If you're not sure what to put for anything, that's ok, just leave it as it is.
 
-- One issue per issue please! Make a separate issue for each bug/suggestion. If you think multiple different issues may be related, reference between them using # followed by the issue number.
+- One issue per issue please! Make a separate issue for each bug/suggestion. If you think multiple different issues may be related, reference between them using # followed by the issue number, and github will automagically link them.
 
 - Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem!
 
@@ -17,6 +17,8 @@ When submitting an issue, I would be grateful if you could follow these few guid
 - There's no need to put 'tags' in square brackets in the issue title, I'll put proper github issue tags on it which will also help organise it. You can use them to search for issues too!
 
 - Don't close an issue unless it has actually been fixed or is no longer relevant - otherwise I might not end up fixing it at all! Usually I'll take care of closing issues anyway, so you don't have to worry about it.
+
+- Please don't revive old issues, _especially_ if they have been fixed, because I don't routinely check them. Make a new issue and link the old one to it if you think it's related.
 
 - Most importantly, use gist or pastebin to post crash reports. Do not paste the entire crash report inline, not even in a code block!
 > If you've got a git account (which you do, if you're posting an issue) you can access gist, and pastebin doesn't require an account at all, so there's no excuse!
