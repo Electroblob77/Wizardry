@@ -13,6 +13,9 @@ public class IndirectMagicDamage extends EntityDamageSourceIndirect implements I
 		super(name, magic, caster);
 		this.type = type;
 		this.isRetaliatory = isRetaliatory;
+		this.setMagicDamage();
+		if(type == DamageType.FIRE) this.setFireDamage();
+		if(type == DamageType.BLAST) this.setExplosion();
 	}
 
 	@Override
