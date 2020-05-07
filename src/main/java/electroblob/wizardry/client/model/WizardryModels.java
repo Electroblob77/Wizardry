@@ -378,9 +378,4 @@ public final class WizardryModels {
 				new ModelResourceLocation(item.getRegistryName(), variant));
 	}
 
-	@SubscribeEvent
-	public static void onTextureStitchEvent(TextureStitchEvent.Pre event){
-		event.getMap().registerSprite(new ResourceLocation(Wizardry.MODID, "blocks/books"));
-	}
-
 }
