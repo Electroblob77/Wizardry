@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
@@ -10,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityShulkerBullet;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ShulkerBullet extends Spell {
 
 	public ShulkerBullet(){
-		super("shulker_bullet", EnumAction.NONE, false);
+		super("shulker_bullet", SpellActions.POINT_DOWN, false);
 		this.soundValues(2, 1, 0.3f);
 		addProperties(RANGE);
 	}

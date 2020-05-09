@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockThorns;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityPlayerSaveTimed;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ForestOfThorns extends Spell {
 
 	public ForestOfThorns(){
-		super("forest_of_thorns", EnumAction.BOW, false);
+		super("forest_of_thorns", SpellActions.SUMMON, false);
 		addProperties(EFFECT_RADIUS, DURATION, DAMAGE);
 	}
 

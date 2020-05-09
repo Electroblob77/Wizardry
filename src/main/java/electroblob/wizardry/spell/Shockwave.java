@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -11,7 +12,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -27,7 +27,7 @@ public class Shockwave extends Spell {
 	private static final double EPICENTRE_RADIUS = 1;
 
 	public Shockwave(){
-		super("shockwave", EnumAction.BOW, false);
+		super("shockwave", SpellActions.POINT_DOWN, false);
 		this.soundValues(2, 0.5f, 0);
 		addProperties(BLAST_RADIUS, DAMAGE, MAX_REPULSION_VELOCITY);
 	}

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -8,7 +9,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -32,7 +32,7 @@ public class Thunderstorm extends Spell {
 	private static final float CENTRE_RADIUS_FRACTION = 0.5f;
 
 	public Thunderstorm(){
-		super("thunderstorm", EnumAction.BOW, false);
+		super("thunderstorm", SpellActions.POINT_UP, false);
 		this.soundValues(1, 1.7f, 0.2f);
 		addProperties(EFFECT_RADIUS, LIGHTNING_BOLTS, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE,
 				TERTIARY_RANGE, SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);

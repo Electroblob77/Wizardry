@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +20,7 @@ public class LightningBolt extends SpellRay {
 	public static final String NBT_KEY = "summoningPlayer";
 
 	public LightningBolt(){
-		super("lightning_bolt", false, EnumAction.NONE);
+		super("lightning_bolt", false, SpellActions.POINT);
 		this.ignoreLivingEntities(true);
 	}
 

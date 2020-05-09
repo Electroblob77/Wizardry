@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.projectile.EntityEmber;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -11,7 +12,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -26,7 +26,7 @@ public class Disintegration extends SpellRay {
 	public static final String EMBER_LIFETIME = "ember_lifetime";
 
 	public Disintegration(){
-		super("disintegration", false, EnumAction.NONE);
+		super("disintegration", false, SpellActions.POINT);
 		addProperties(DAMAGE, BURN_DURATION, EMBER_LIFETIME, EMBER_COUNT);
 	}
 

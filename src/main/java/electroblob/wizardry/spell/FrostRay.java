@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.MagicDamage;
@@ -13,7 +14,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 public class FrostRay extends SpellRay {
 
 	public FrostRay(){
-		super("frost_ray", true, EnumAction.NONE);
+		super("frost_ray", true, SpellActions.POINT);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);

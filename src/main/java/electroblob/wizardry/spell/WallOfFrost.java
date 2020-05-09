@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -11,7 +12,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +23,7 @@ public class WallOfFrost extends SpellRay {
 	private static final int MINIMUM_PLACEMENT_RANGE = 2;
 	
 	public WallOfFrost(){
-		super("wall_of_frost", true, EnumAction.NONE);
+		super("wall_of_frost", true, SpellActions.POINT);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DURATION);

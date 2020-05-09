@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -8,7 +9,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -63,7 +63,7 @@ public class SpellBuff extends Spell {
 
 	@SafeVarargs
 	public SpellBuff(String modID, String name, float r, float g, float b, Supplier<Potion>... effects){
-		super(modID, name, EnumAction.BOW, false);
+		super(modID, name, SpellActions.POINT_UP, false);
 		this.effects = effects;
 		this.r = r;
 		this.g = g;

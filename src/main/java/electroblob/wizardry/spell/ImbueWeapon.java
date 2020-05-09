@@ -4,6 +4,7 @@ import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -12,20 +13,16 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Arrays;
 
 public class ImbueWeapon extends Spell {
 
 	public ImbueWeapon(){
-		super("imbue_weapon", EnumAction.BOW, false);
+		super("imbue_weapon", SpellActions.IMBUE, false);
 		addProperties(EFFECT_DURATION);
 	}
 

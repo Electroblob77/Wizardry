@@ -37,6 +37,7 @@ import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -793,6 +794,21 @@ public final class WizardryUtilities {
 		return hotbar;
 	}
 
+	/** Returns which {@link EnumHandSide} the given {@link EnumHand} is on for the given entity. */
+	public static EnumHandSide getSideForHand(EntityLivingBase entity, EnumHand hand){
+		return hand == EnumHand.MAIN_HAND ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite();
+	}
+
+	/** Returns which {@link EnumHand} is on the given {@link EnumHandSide} for the given entity. */
+	public static EnumHand getHandForSide(EntityLivingBase entity, EnumHandSide side){
+		return side == entity.getPrimaryHand() ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+	}
+
+	/** Returns the opposite {@link EnumHand} to the one given. */
+	public static EnumHand getOpposite(EnumHand hand){
+		return hand == EnumHand.OFF_HAND ? EnumHand.MAIN_HAND : EnumHand.OFF_HAND;
+	}
+
 	/**
 	 * Tests whether the specified player has any of the specified item in their entire inventory, including armour
 	 * slots and offhand.
@@ -1007,5 +1023,16 @@ public final class WizardryUtilities {
 //		for(int n = random.nextInt(collection.size()); n > 0; n--) iterator.next();
 //		return iterator.next();
 //	}
+
+	/**
+	 * Returns a list of all fields belonging to the given class and all those belonging to all of its superclasses.
+	 * @param c The class to query
+	 * @return The resulting {@link List} of fields
+	 */
+	public static List<Field> getAllFields(Class<?> c){
+		List<Field> fields = new ArrayList<>(Arrays.asList(c.getDeclaredFields()));
+		if(c.getSuperclass() != null) fields.addAll(getAllFields(c.getSuperclass()));
+		return fields;
+	}
 
 }

@@ -4,6 +4,7 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.*;
@@ -12,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.potion.PotionEffect;
@@ -42,7 +42,7 @@ public class CurseOfSoulbinding extends SpellRay {
 			Persistence.DIMENSION_CHANGE);
 
 	public CurseOfSoulbinding(){
-		super("curse_of_soulbinding", false, EnumAction.NONE);
+		super("curse_of_soulbinding", false, SpellActions.POINT);
 		this.soundValues(1, 1.1f, 0.2f);
 		WizardData.registerStoredVariables(TARGETS_KEY);
 	}

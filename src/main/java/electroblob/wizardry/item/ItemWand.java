@@ -28,10 +28,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -91,6 +88,14 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		this.element = element;
 		setMaxDamage(this.tier.maxCharge);
 		WizardryRecipes.addToManaFlaskCharging(this);
+		// TODO: Hook to allow addon devs to have this override apply to their own animations
+		addPropertyOverride(new ResourceLocation("pointing"),
+				(s, w, e) -> e != null && e.getActiveItemStack() == s
+						&& (s.getItemUseAction() == SpellActions.POINT
+						|| s.getItemUseAction() == SpellActions.POINT_UP
+						|| s.getItemUseAction() == SpellActions.POINT_DOWN
+						|| s.getItemUseAction() == SpellActions.GRAPPLE
+						|| s.getItemUseAction() == SpellActions.SUMMON) ? 1 : 0);
 	}
 	
 	@Override
@@ -381,6 +386,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 			Spell spell = WandHelper.getCurrentSpell(stack);
 
+			if(!spell.isContinuous) return;
+
 			SpellModifiers modifiers;
 
 			if(WizardData.get(player) != null){
@@ -393,7 +400,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 			// Continuous spells (these must check if they can be cast each tick since the mana changes)
 			// Don't call canCast when castingTick == 0 because we already did it in onItemRightClick
-			if(spell.isContinuous && (castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers))){
+			if(castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
 				cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
 			}else{
 				// Stops the casting if it was interrupted, either by events or because the wand ran out of mana

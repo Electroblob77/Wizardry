@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.construct.EntityBubble;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -10,7 +11,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +22,7 @@ public class Entrapment extends SpellRay {
 	public static final String DAMAGE_INTERVAL = "damage_interval";
 
 	public Entrapment(){
-		super("entrapment", false, EnumAction.NONE);
+		super("entrapment", false, SpellActions.POINT);
 		this.soundValues(1, 0.85f, 0.3f);
 		addProperties(EFFECT_DURATION, DAMAGE_INTERVAL);
 	}

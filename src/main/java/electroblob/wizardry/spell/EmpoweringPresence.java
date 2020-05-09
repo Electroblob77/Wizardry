@@ -3,6 +3,7 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.AllyDesignationSystem;
@@ -11,7 +12,6 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
@@ -26,7 +26,7 @@ import java.util.List;
 public class EmpoweringPresence extends Spell {
 
 	public EmpoweringPresence(){
-		super("empowering_presence", EnumAction.BOW, false);
+		super("empowering_presence", SpellActions.POINT_UP, false);
 		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 

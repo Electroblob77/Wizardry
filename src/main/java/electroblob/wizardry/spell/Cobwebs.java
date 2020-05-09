@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityTimer;
@@ -8,7 +9,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ import java.util.List;
 public class Cobwebs extends SpellRay {
 
 	public Cobwebs(){
-		super("cobwebs", false, EnumAction.NONE);
+		super("cobwebs", false, SpellActions.POINT);
 		this.ignoreLivingEntities(true);
 		addProperties(EFFECT_RADIUS, DURATION);
 	}

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -8,7 +9,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +20,7 @@ public class LifeDrain extends SpellRay {
 	public static final String HEAL_FACTOR = "heal_factor";
 
 	public LifeDrain(){
-		super("life_drain", true, EnumAction.NONE);
+		super("life_drain", true, SpellActions.POINT);
 		this.particleVelocity(-0.5);
 		this.particleSpacing(0.4);
 		addProperties(DAMAGE, HEAL_FACTOR);

@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -53,7 +53,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 	}
 
 	public SpellConstructRanged(String modID, String name, Function<World, T> constructFactory, boolean permanent){
-		super(modID, name, EnumAction.NONE, constructFactory, permanent);
+		super(modID, name, SpellActions.POINT, constructFactory, permanent);
 		this.addProperties(RANGE);
 		this.npcSelector((e, o) -> true);
 	}
@@ -118,8 +118,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 		}else{
 			return false;
 		}
-		
-		caster.swingArm(hand);
+
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}

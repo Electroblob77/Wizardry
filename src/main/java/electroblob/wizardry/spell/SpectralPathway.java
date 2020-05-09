@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityTimer;
@@ -7,7 +8,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.AxisDirection;
 import net.minecraft.util.EnumHand;
@@ -20,7 +20,7 @@ public class SpectralPathway extends Spell {
 	public static final String LENGTH = "length";
 
 	public SpectralPathway(){
-		super("spectral_pathway", EnumAction.BOW, false);
+		super("spectral_pathway", SpellActions.POINT, false);
 		addProperties(LENGTH, DURATION);
 	}
 

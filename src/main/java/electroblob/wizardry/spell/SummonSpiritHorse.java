@@ -4,6 +4,7 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.EntitySpiritHorse;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import electroblob.wizardry.util.WizardryUtilities.Operations;
@@ -13,7 +14,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,7 +36,7 @@ public class SummonSpiritHorse extends Spell {
 	public static final IStoredVariable<UUID> UUID_KEY = IStoredVariable.StoredVariable.ofUUID("spiritHorseUUID", Persistence.ALWAYS);
 
 	public SummonSpiritHorse(){
-		super("summon_spirit_horse", EnumAction.BOW, false);
+		super("summon_spirit_horse", SpellActions.SUMMON, false);
 		addProperties(SpellMinion.SUMMON_RADIUS);
 		soundValues(0.7f, 1.2f, 0.4f);
 		WizardData.registerStoredVariables(UUID_KEY);

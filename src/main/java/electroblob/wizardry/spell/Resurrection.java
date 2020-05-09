@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketResurrection;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
@@ -10,7 +11,6 @@ import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
@@ -28,7 +28,7 @@ public class Resurrection extends Spell {
 	private static final String POTION_CORE_FIX_NBT_KEY = "Potion Core - Health Fix";
 
 	public Resurrection(){
-		super("resurrection", EnumAction.NONE, false);
+		super("resurrection", SpellActions.SUMMON, false);
 		addProperties(EFFECT_RADIUS, WAIT_TIME);
 	}
 

@@ -44,6 +44,8 @@ public class CommonProxy {
 
 	public void initialiseLayers(){}
 
+	public void initialiseAnimations(){}
+
 	public void registerKeyBindings(){}
 
 	public net.minecraft.client.model.ModelBiped getWizardArmourModel(){
@@ -264,6 +266,14 @@ public class CommonProxy {
 	 */
 	public World getTheWorld(){
 		return null;
+	}
+
+	/**
+	 * Returns true if the game is being viewed from the perspective of the given entity and is set to first-person
+	 * view. Always returns false on the server side.
+	 */
+	public boolean isFirstPerson(Entity entity){
+		return false;
 	}
 
 	/** Returns an unmodifiable set of the string keys for all of the loaded spell HUD skins. */

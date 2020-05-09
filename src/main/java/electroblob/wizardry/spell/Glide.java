@@ -1,13 +1,13 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -18,7 +18,7 @@ public class Glide extends Spell {
 	public static final String ACCELERATION = "acceleration";
 
 	public Glide(){
-		super("glide", EnumAction.NONE, true);
+		super("glide", SpellActions.POINT_DOWN, true);
 		addProperties(SPEED, FALL_SPEED, ACCELERATION);
 	}
 

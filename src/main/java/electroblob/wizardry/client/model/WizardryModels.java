@@ -308,11 +308,11 @@ public final class WizardryModels {
 
 			if(location.getNamespace().equals(Wizardry.MODID)){
 
+				IBakedModel original = event.getModelRegistry().getObject(location);
+
 				if(location.getPath().contains("runestone") || location.getPath().contains("runestone_pedestal")){
-					IBakedModel original = event.getModelRegistry().getObject(location);
 					event.getModelRegistry().putObject(location, new BakedModelGlowingOverlay(original, "overlay"));
 				}else if(location.getPath().contains("spectral_block")){
-					IBakedModel original = event.getModelRegistry().getObject(location);
 					event.getModelRegistry().putObject(location, new BakedModelGlowingOverlay(original, "spectral_block"));
 				}
 			}

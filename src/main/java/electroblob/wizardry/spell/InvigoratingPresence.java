@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
@@ -20,7 +20,7 @@ import java.util.List;
 public class InvigoratingPresence extends Spell {
 
 	public InvigoratingPresence(){
-		super("invigorating_presence", EnumAction.BOW, false);
+		super("invigorating_presence", SpellActions.POINT_UP, false);
 		this.soundValues(0.7f, 1.2f, 0.4f);
 		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
 	}

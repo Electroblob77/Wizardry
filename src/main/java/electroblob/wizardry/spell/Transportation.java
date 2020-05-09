@@ -5,6 +5,7 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketTransportation;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryItems;
@@ -14,7 +15,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -41,7 +41,7 @@ public class Transportation extends Spell {
 	public static final IStoredVariable<Integer> COUNTDOWN_KEY = IStoredVariable.StoredVariable.ofInt("tpCountdown", Persistence.NEVER).withTicker(Transportation::update);
 
 	public Transportation(){
-		super("transportation", EnumAction.BOW, false);
+		super("transportation", SpellActions.POINT_UP, false);
 		addProperties(TELEPORT_COUNTDOWN);
 		WizardData.registerStoredVariables(LOCATIONS_KEY, COUNTDOWN_KEY);
 	}

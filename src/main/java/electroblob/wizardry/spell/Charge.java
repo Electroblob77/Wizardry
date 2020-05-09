@@ -3,6 +3,7 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.data.IVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
@@ -13,7 +14,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
@@ -37,7 +37,7 @@ public class Charge extends Spell {
 	private static final double EXTRA_HIT_MARGIN = 1;
 
 	public Charge(){
-		super("charge", EnumAction.NONE, false);
+		super("charge", SpellActions.POINT, false);
 		addProperties(CHARGE_SPEED, DURATION, DAMAGE, KNOCKBACK_STRENGTH);
 		this.soundValues(0.6f, 1, 0);
 	}

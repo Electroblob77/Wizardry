@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -11,7 +12,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntitySpellcasterIllager;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -35,7 +35,7 @@ public class ArcaneJammer extends SpellRay {
 	}
 
 	public ArcaneJammer(){
-		super("arcane_jammer", false, EnumAction.NONE);
+		super("arcane_jammer", false, SpellActions.POINT);
 		this.soundValues(0.7f, 1, 0.4f);
 		this.addProperties(EFFECT_DURATION);
 	}

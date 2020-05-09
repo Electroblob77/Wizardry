@@ -1,13 +1,13 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class SummonSnowGolem extends Spell {
 
 	public SummonSnowGolem(){
-		super("summon_snow_golem", EnumAction.BOW, false);
+		super("summon_snow_golem", SpellActions.SUMMON, false);
 		this.soundValues(1, 1, 0.4f);
 		addProperties(SpellMinion.SUMMON_RADIUS);
 	}

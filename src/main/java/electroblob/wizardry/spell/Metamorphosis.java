@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.*;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -14,7 +15,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.*;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -49,7 +49,7 @@ public class Metamorphosis extends SpellRay {
 	}
 	
 	public Metamorphosis(){
-		super("metamorphosis", false, EnumAction.NONE);
+		super("metamorphosis", false, SpellActions.POINT);
 		this.soundValues(0.5f, 1f, 0);
 	}
 	

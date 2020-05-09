@@ -4,6 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.*;
 import electroblob.wizardry.entity.living.*;
 import electroblob.wizardry.entity.projectile.*;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.spell.*;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.MobEffects;
@@ -299,7 +300,7 @@ public final class Spells {
 		registry.register(new HealAlly());
 
 		registry.register(new SpellMinion<>("summon_blaze", EntityBlazeMinion::new).soundValues(1, 1.1f, 0.2f));
-		registry.register(new SpellConstruct<>("ring_of_fire", EnumAction.BOW, EntityFireRing::new, false).floor(true).addProperties(Spell.DAMAGE, Spell.BURN_DURATION));
+		registry.register(new SpellConstruct<>("ring_of_fire", SpellActions.POINT_DOWN, EntityFireRing::new, false).floor(true).addProperties(Spell.DAMAGE, Spell.BURN_DURATION));
 		registry.register(new Detonate());
 		registry.register(new SpellBuff("fire_resistance", 1, 0.5f, 0, () -> MobEffects.FIRE_RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new SpellBuff("fireskin", 1, 0.5f, 0, () -> WizardryPotions.fireskin).addProperties(Spell.BURN_DURATION));
@@ -337,7 +338,7 @@ public final class Spells {
 		registry.register(new PhaseStep());
 		registry.register(new VanishingBox());
 		registry.register(new GreaterHeal());
-		registry.register(new SpellConstruct<>("healing_aura", EnumAction.BOW, EntityHealAura::new, false).addProperties(Spell.DAMAGE, Spell.HEALTH));
+		registry.register(new SpellConstruct<>("healing_aura", SpellActions.POINT_DOWN, EntityHealAura::new, false).addProperties(Spell.DAMAGE, Spell.HEALTH));
 		registry.register(new Forcefield());
 		registry.register(new SpellBuff("ironflesh", 0.4f, 0.5f, 0.6f, () -> MobEffects.RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new Transience());

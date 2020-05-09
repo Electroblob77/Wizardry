@@ -11,6 +11,7 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.*;
 import electroblob.wizardry.entity.projectile.*;
 import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.PacketPossession;
 import electroblob.wizardry.packet.WizardryPacketHandler;
@@ -38,7 +39,6 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
@@ -121,7 +121,7 @@ public class Possession extends SpellRay {
 	}
 
 	public Possession(){
-		super("possession", false, EnumAction.NONE);
+		super("possession", false, SpellActions.POINT);
 		addProperties(EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 
@@ -146,7 +146,7 @@ public class Possession extends SpellRay {
 
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 
-		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
+//		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
 		this.playSound(world, caster, ticksInUse, -1, modifiers, "possess"); // TODO: There must be a better way...
 		return true;
 	}

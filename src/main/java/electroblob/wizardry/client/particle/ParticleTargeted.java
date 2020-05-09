@@ -1,6 +1,7 @@
 package electroblob.wizardry.client.particle;
 
 import electroblob.wizardry.Wizardry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,6 +15,8 @@ import javax.annotation.Nullable;
 
 /** Superclass for particles with a second target entity or target position. */
 public abstract class ParticleTargeted extends ParticleWizardry {
+
+	private static final double THIRD_PERSON_AXIAL_OFFSET = 1.2;
 
 	protected double targetX;
 	protected double targetY;
@@ -79,6 +82,16 @@ public abstract class ParticleTargeted extends ParticleWizardry {
 		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);
 		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks);
 
+		// Translates the particle a short distance in front of the entity
+		if(this.entity != null && this.shouldApplyOriginOffset()){ // TODO: Replace with a protected boolean method
+			if(this.entity != viewer || Minecraft.getMinecraft().gameSettings.thirdPersonView != 0){
+				Vec3d look = entity.getLook(partialTicks).scale(THIRD_PERSON_AXIAL_OFFSET);
+				x += look.x;
+				y += look.y;
+				z += look.z;
+			}
+		}
+
 		if(this.target != null){
 
 			this.targetX = this.target.prevPosX + (this.target.posX - this.target.prevPosX) * partialTicks;
@@ -131,6 +144,12 @@ public abstract class ParticleTargeted extends ParticleWizardry {
 		this.draw(tessellator, length, partialTicks);
 		
 		GlStateManager.popMatrix();
+	}
+
+	/** Returns whether the origin of this particle should be moved a short distance in front of the entity it is
+	 * linked to, if any. */
+	protected boolean shouldApplyOriginOffset(){
+		return true;
 	}
 
 	/** Called from {@link ParticleTargeted#renderParticle(BufferBuilder, Entity, float, float, float, float, float, float)},

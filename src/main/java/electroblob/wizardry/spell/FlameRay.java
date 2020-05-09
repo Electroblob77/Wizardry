@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -10,7 +11,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public class FlameRay extends SpellRay {
 
 	public FlameRay(){
-		super("flame_ray", true, EnumAction.NONE);
+		super("flame_ray", true, SpellActions.POINT);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DAMAGE, BURN_DURATION);

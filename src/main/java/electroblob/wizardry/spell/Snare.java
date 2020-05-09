@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.tileentity.TileEntityPlayerSave;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -8,7 +9,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class Snare extends SpellRay {
 
 	public Snare(){
-		super("snare", false, EnumAction.NONE);
+		super("snare", false, SpellActions.POINT);
 		this.soundValues(1, 1.4f, 0.4f);
 		this.ignoreLivingEntities(true);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);

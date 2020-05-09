@@ -4,6 +4,7 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.EntitySpiritWolf;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import electroblob.wizardry.util.WizardryUtilities.Operations;
@@ -11,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public class SummonSpiritWolf extends Spell {
 	public static final IStoredVariable<UUID> UUID_KEY = IStoredVariable.StoredVariable.ofUUID("spiritWolfUUID", Persistence.ALWAYS);
 
 	public SummonSpiritWolf(){
-		super("summon_spirit_wolf", EnumAction.BOW, false);
+		super("summon_spirit_wolf", SpellActions.SUMMON, false);
 		addProperties(SpellMinion.SUMMON_RADIUS);
 		soundValues(0.7f, 1.2f, 0.4f);
 		WizardData.registerStoredVariables(UUID_KEY);

@@ -2,12 +2,12 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -21,7 +21,7 @@ public class PhaseStep extends Spell {
 	public static final String WALL_THICKNESS = "wall_thickness";
 
 	public PhaseStep(){
-		super("phase_step", EnumAction.NONE, false);
+		super("phase_step", SpellActions.POINT, false);
 		addProperties(RANGE, WALL_THICKNESS);
 	}
 
@@ -78,7 +78,6 @@ public class PhaseStep extends Spell {
 						caster.setPositionAndUpdate(pos1.getX() + 0.5, pos1.getY() + 0.5, pos1.getZ() + 0.5);
 					}
 
-					caster.swingArm(hand);
 					this.playSound(world, caster, ticksInUse, -1, modifiers);
 					return true;
 				}

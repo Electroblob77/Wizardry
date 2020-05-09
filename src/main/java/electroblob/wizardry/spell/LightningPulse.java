@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -7,7 +8,6 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
@@ -21,7 +21,7 @@ public class LightningPulse extends Spell {
 	public static final String REPULSION_VELOCITY = "repulsion_velocity";
 
 	public LightningPulse(){
-		super("lightning_pulse", EnumAction.NONE, false);
+		super("lightning_pulse", SpellActions.POINT_DOWN, false);
 		addProperties(EFFECT_RADIUS, DAMAGE, REPULSION_VELOCITY);
 		this.soundValues(2, 1, 0);
 	}
@@ -74,8 +74,7 @@ public class LightningPulse extends Spell {
 						+ WizardryUtilities.ANTI_Z_FIGHTING_OFFSET, caster.posZ)
 				.scale(modifiers.get(WizardryItems.blast_upgrade)).spawn(world);
 			}
-			
-			caster.swingArm(hand);
+
 			this.playSound(world, caster, ticksInUse, -1, modifiers);
 			return true;
 		}

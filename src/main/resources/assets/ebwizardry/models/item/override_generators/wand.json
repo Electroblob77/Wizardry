@@ -1,0 +1,11 @@
+{
+    "parent": "item/handheld",
+    "overrides": [
+        {
+            "predicate": {
+                "pointing": 1
+            },
+            "model": "ebwizardry:item/wand_point"
+        }
+    ]
+}

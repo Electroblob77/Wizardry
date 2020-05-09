@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.living.EntityDecoy;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -16,7 +16,7 @@ public class Decoy extends Spell {
 	public static final String MOB_TRICK_CHANCE = "mob_trick_chance";
 
 	public Decoy(){
-		super("decoy", EnumAction.BOW, false);
+		super("decoy", SpellActions.SUMMON, false);
 		this.soundValues(1, 0.9f, 0.2f);
 		addProperties(DECOY_LIFETIME, MOB_TRICK_CHANCE);
 	}

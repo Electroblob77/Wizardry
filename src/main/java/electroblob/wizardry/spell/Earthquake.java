@@ -2,6 +2,7 @@
 
  import electroblob.wizardry.Wizardry;
  import electroblob.wizardry.entity.construct.EntityEarthquake;
+ import electroblob.wizardry.item.SpellActions;
  import electroblob.wizardry.registry.WizardryItems;
  import electroblob.wizardry.util.SpellModifiers;
  import electroblob.wizardry.util.WizardryUtilities;
@@ -9,7 +10,6 @@
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.EntityLivingBase;
  import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.item.EnumAction;
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.EnumParticleTypes;
  import net.minecraft.world.World;
@@ -19,7 +19,7 @@
 	public static final String SPREAD_SPEED = "spread_speed";
 
 	public Earthquake(){
-		super("earthquake", EnumAction.NONE, EntityEarthquake::new, true);
+		super("earthquake", SpellActions.POINT_DOWN, EntityEarthquake::new, true);
 		this.soundValues(2, 1, 0);
 		this.overlap(true);
 		this.floor(true);

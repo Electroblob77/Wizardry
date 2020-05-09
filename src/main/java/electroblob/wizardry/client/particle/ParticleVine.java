@@ -47,6 +47,11 @@ public class ParticleVine extends ParticleTargeted {
 	}
 
 	@Override
+	protected boolean shouldApplyOriginOffset(){
+		return false;
+	}
+
+	@Override
 	protected void draw(Tessellator tessellator, double length, float partialTicks){
 
 		random.setSeed(seed); // Reset the random so we get the same sequence of numbers each frame

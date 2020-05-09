@@ -1,11 +1,11 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -17,7 +17,7 @@ public class Flight extends Spell {
 	private static final double Y_NUDGE_ACCELERATION = 0.075;
 
 	public Flight(){
-		super("flight", EnumAction.NONE, true);
+		super("flight", SpellActions.POINT, true);
 		addProperties(SPEED, ACCELERATION);
 	}
 

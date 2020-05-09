@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -7,7 +8,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class CurseOfUndeath extends SpellRay {
 
 	public CurseOfUndeath(){
-		super("curse_of_undeath", false, EnumAction.NONE);
+		super("curse_of_undeath", false, SpellActions.POINT);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(EFFECT_STRENGTH);
 	}

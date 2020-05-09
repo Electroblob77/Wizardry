@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -15,7 +16,6 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -40,7 +40,7 @@ public class MindControl extends SpellRay {
 	public static final String NBT_KEY = "controllingEntity";
 
 	public MindControl(){
-		super("mind_control", false, EnumAction.NONE);
+		super("mind_control", false, SpellActions.POINT);
 		addProperties(EFFECT_DURATION);
 	}
 	

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -7,7 +8,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +22,7 @@ public class Detonate extends SpellRay {
 	public static final String MAX_DAMAGE = "max_damage";
 
 	public Detonate(){
-		super("detonate", false, EnumAction.NONE);
+		super("detonate", false, SpellActions.POINT);
 		this.soundValues(4, 0.7f, 0.14f);
 		this.ignoreLivingEntities(true);
 		addProperties(MAX_DAMAGE, BLAST_RADIUS);

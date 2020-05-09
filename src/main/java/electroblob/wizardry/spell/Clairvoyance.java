@@ -4,6 +4,7 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.misc.WizardryPathFinder;
 import electroblob.wizardry.packet.PacketClairvoyance;
 import electroblob.wizardry.packet.WizardryPacketHandler;
@@ -17,7 +18,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNodeType;
@@ -41,7 +41,7 @@ public class Clairvoyance extends Spell {
 	public static final IStoredVariable<Integer> DIMENSION_KEY = IStoredVariable.StoredVariable.ofInt("clairvoyanceDimension", Persistence.ALWAYS);
 
 	public Clairvoyance(){
-		super("clairvoyance", EnumAction.BOW, false);
+		super("clairvoyance", SpellActions.POINT_UP, false);
 		addProperties(RANGE, DURATION);
 		WizardData.registerStoredVariables(LOCATION_KEY, DIMENSION_KEY);
 	}

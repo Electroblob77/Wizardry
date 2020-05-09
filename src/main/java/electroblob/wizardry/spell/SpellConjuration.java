@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.IConjuredItem;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -46,7 +46,7 @@ public class SpellConjuration extends Spell {
 	}
 
 	public SpellConjuration(String modID, String name, Item item){
-		super(modID, name, EnumAction.BOW, false);
+		super(modID, name, SpellActions.IMBUE, false);
 		this.item = item;
 		addProperties(ITEM_LIFETIME);
 	}

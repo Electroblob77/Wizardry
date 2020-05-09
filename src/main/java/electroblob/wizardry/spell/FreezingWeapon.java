@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -10,7 +11,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ public class FreezingWeapon extends Spell {
 	public static final String FREEZING_ARROW_NBT_KEY = "frostLevel";
 
 	public FreezingWeapon(){
-		super("freezing_weapon", EnumAction.BOW, false);
+		super("freezing_weapon", SpellActions.IMBUE, false);
 		addProperties(EFFECT_DURATION);
 	}
 

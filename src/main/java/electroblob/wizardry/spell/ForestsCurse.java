@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -9,14 +10,13 @@ import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
 public class ForestsCurse extends SpellAreaEffect {
 
 	public ForestsCurse(){
-		super("forests_curse", EnumAction.BOW);
+		super("forests_curse", SpellActions.POINT_UP);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 	}

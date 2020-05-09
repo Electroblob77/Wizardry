@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class HealAlly extends SpellRay {
 
 	public HealAlly(){
-		super("heal_ally", false, EnumAction.NONE);
+		super("heal_ally", false, SpellActions.POINT);
 		this.soundValues(0.7f, 1.2f, 0.4f);
 		addProperties(HEALTH);
 	}

@@ -174,6 +174,7 @@ public class Wizardry {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event){
 		proxy.initialiseLayers();
+		proxy.initialiseAnimations();
 	}
 
 	@EventHandler

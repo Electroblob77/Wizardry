@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
@@ -8,7 +9,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class Blink extends Spell {
 
 	public Blink(){
-		super("blink", EnumAction.NONE, false);
+		super("blink", SpellActions.POINT, false);
 		addProperties(RANGE);
 	}
 
@@ -73,7 +73,6 @@ public class Blink extends Spell {
 			if(!world.isRemote) caster.setPositionAndUpdate(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 
 			this.playSound(world, caster, ticksInUse, -1, modifiers);
-			caster.swingArm(hand);
 			return true;
 		}
 

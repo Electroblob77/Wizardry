@@ -161,10 +161,13 @@ public abstract class SpellRay extends Spell {
 		
 		Vec3d look = caster.getLookVec();
 		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
-		
+		if(!this.isContinuous && world.isRemote && !Wizardry.proxy.isFirstPerson(caster)){
+			origin = origin.add(look.scale(1.2));
+		}
+
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 		
-		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
+		//if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
@@ -249,7 +252,7 @@ public abstract class SpellRay extends Spell {
 	protected boolean casterSwingsArm(World world, EntityLivingBase caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 		return !this.isContinuous;
 	}
-	
+
 	/** Takes care of the shared stuff for the three casting methods. This is mainly for internal use. */
 	protected boolean shootSpell(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		
@@ -267,6 +270,7 @@ public abstract class SpellRay extends Spell {
 			// Doesn't matter which way round these are, they're mutually exclusive
 			if(rayTrace.typeOfHit == RayTraceResult.Type.ENTITY){
 				// Do whatever the spell does when it hits an entity
+				// FIXME: Some spells (e.g. lightning web) seem to not render when aimed at item frames
 				flag = onEntityHit(world, rayTrace.entityHit, rayTrace.hitVec, caster, origin, ticksInUse, modifiers);
 				// If the spell succeeded, clip the particles to the correct distance so they don't go through the entity
 				if(flag) range = origin.distanceTo(rayTrace.hitVec);

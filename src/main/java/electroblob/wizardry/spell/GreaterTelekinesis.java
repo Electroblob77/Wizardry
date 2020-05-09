@@ -3,6 +3,7 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.EntityLevitatingBlock;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -14,7 +15,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
@@ -35,7 +35,7 @@ public class GreaterTelekinesis extends SpellRay {
 	private static final float UNDERSHOOT = 0.2f;
 
 	public GreaterTelekinesis(){
-		super("greater_telekinesis", true, EnumAction.NONE);
+		super("greater_telekinesis", true, SpellActions.POINT);
 		this.aimAssist(0.4f);
 		this.particleSpacing(1);
 		this.particleJitter(0.05);

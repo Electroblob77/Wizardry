@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -11,7 +12,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +22,7 @@ import java.util.List;
 public class IceAge extends Spell {
 
 	public IceAge(){
-		super("ice_age", EnumAction.BOW, false);
+		super("ice_age", SpellActions.POINT_DOWN, false);
 		this.soundValues(0.7f, 1.0f, 0);
 		addProperties(EFFECT_RADIUS, EFFECT_DURATION);
 	}

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -11,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
@@ -27,7 +27,7 @@ public class RayOfPurification extends SpellRay {
 	public static final String UNDEAD_DAMAGE_MULTIPLIER = "undead_damage_multiplier";
 
 	public RayOfPurification(){
-		super("ray_of_purification", true, EnumAction.NONE);
+		super("ray_of_purification", true, SpellActions.POINT);
 		addProperties(DAMAGE, EFFECT_DURATION, BURN_DURATION, UNDEAD_DAMAGE_MULTIPLIER);
 	}
 

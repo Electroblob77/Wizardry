@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class Arc extends SpellRay {
 
 	public Arc(){
-		super("arc", false, EnumAction.NONE);
+		super("arc", false, SpellActions.POINT);
 		this.aimAssist(0.6f);
 		this.soundValues(1, 1.7f, 0.2f);
 		this.addProperties(DAMAGE);

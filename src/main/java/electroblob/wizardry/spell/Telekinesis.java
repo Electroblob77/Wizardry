@@ -1,13 +1,13 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class Telekinesis extends SpellRay {
 
 	public Telekinesis(){
-		super("telekinesis", false, EnumAction.NONE);
+		super("telekinesis", false, SpellActions.POINT);
 	}
 
 	@Override public boolean requiresPacket(){ return false; }

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -11,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 public class FireBreath extends SpellRay {
 
 	public FireBreath(){
-		super("fire_breath", true, EnumAction.NONE);
+		super("fire_breath", true, SpellActions.POINT);
 		this.particleVelocity(1);
 		this.particleJitter(0.3);
 		this.particleSpacing(0.25);

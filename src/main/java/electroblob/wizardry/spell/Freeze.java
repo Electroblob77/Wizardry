@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.MagicDamage;
@@ -14,7 +15,6 @@ import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +25,7 @@ import net.minecraft.world.World;
 public class Freeze extends SpellRay {
 
 	public Freeze(){
-		super("freeze", false, EnumAction.NONE);
+		super("freeze", false, SpellActions.POINT);
 		this.soundValues(1, 1.4f, 0.4f);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 		this.hitLiquids(true);

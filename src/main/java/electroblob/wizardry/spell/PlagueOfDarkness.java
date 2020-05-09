@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -9,7 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -20,7 +20,7 @@ import java.util.List;
 public class PlagueOfDarkness extends Spell {
 
 	public PlagueOfDarkness(){
-		super("plague_of_darkness", EnumAction.BOW, false);
+		super("plague_of_darkness", SpellActions.POINT_DOWN, false);
 		addProperties(EFFECT_RADIUS, DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 		soundValues(1, 1.1f, 0.2f);
 	}

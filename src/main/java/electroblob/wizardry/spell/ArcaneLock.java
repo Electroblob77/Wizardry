@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
@@ -9,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -29,7 +29,7 @@ public class ArcaneLock extends SpellRay {
 	public static final String NBT_KEY = "arcaneLockOwner";
 
 	public ArcaneLock(){
-		super("arcane_lock", false, EnumAction.NONE);
+		super("arcane_lock", false, SpellActions.POINT);
 	}
 
 	@Override public boolean requiresPacket(){ return true; }

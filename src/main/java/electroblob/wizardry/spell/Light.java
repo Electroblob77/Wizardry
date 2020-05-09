@@ -1,13 +1,13 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityTimer;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class Light extends Spell {
 
 	public Light(){
-		super("light", EnumAction.NONE, false);
+		super("light", SpellActions.POINT, false);
 		addProperties(RANGE, DURATION);
 	}
 
@@ -47,7 +47,6 @@ public class Light extends Spell {
 					}
 				}
 
-				caster.swingArm(hand);
 				this.playSound(world, caster, ticksInUse, -1, modifiers);
 				return true;
 			}
@@ -68,7 +67,7 @@ public class Light extends Spell {
 						((TileEntityTimer)world.getTileEntity(pos)).setLifetime(lifetime);
 					}
 				}
-				caster.swingArm(hand);
+
 				this.playSound(world, caster, ticksInUse, -1, modifiers);
 				return true;
 			}

@@ -5,6 +5,7 @@ import electroblob.wizardry.data.IVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -17,7 +18,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
@@ -54,7 +54,7 @@ public class Grapple extends Spell {
 	protected static final double PARTICLE_JITTER = 0.04;
 
 	public Grapple(){
-		super("grapple", EnumAction.NONE, true);
+		super("grapple", SpellActions.GRAPPLE, true);
 		addProperties(RANGE, EXTENSION_SPEED, REEL_SPEED);
 	}
 

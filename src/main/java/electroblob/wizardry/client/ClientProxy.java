@@ -3,6 +3,8 @@ package electroblob.wizardry.client;
 import electroblob.wizardry.CommonProxy;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
+import electroblob.wizardry.client.animation.ActionAnimation;
+import electroblob.wizardry.client.animation.PlayerAnimator;
 import electroblob.wizardry.client.audio.MovingSoundEntity;
 import electroblob.wizardry.client.audio.SoundLoop;
 import electroblob.wizardry.client.audio.SoundLoopSpell;
@@ -140,7 +142,7 @@ public class ClientProxy extends CommonProxy {
 		mixedFontRenderer = new MixedFontRenderer(Minecraft.getMinecraft().gameSettings, new ResourceLocation("textures/font/ascii.png"),
 				Minecraft.getMinecraft().renderEngine, false);
 	}
-	
+
 	@Override
 	public void registerResourceReloadListeners(){
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
@@ -166,7 +168,7 @@ public class ClientProxy extends CommonProxy {
 	public void setToNumberSliderEntry(Property property){
 		property.setConfigEntryClass(NumberSliderEntry.class);
 	}
-	
+
 	@Override
 	public void setToHUDChooserEntry(Property property){
 		property.setConfigEntryClass(SpellHUDSkinChooserEntry.class);
@@ -183,10 +185,15 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public boolean isFirstPerson(Entity entity){
+		return entity == Minecraft.getMinecraft().getRenderViewEntity() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+	}
+
+	@Override
 	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){
 		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity<>(entity, sound, category, volume, pitch, repeat));
 	}
-	
+
 	@Override
 	public void playSpellSoundLoop(EntityLivingBase entity, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch){
 		SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellEntity(start, loop, end, spell, entity, volume, pitch));
@@ -363,7 +370,7 @@ public class ClientProxy extends CommonProxy {
 		ParticleWizardry.registerParticle(Type.SUMMON, ParticleSummon::new);
 		ParticleWizardry.registerParticle(Type.VINE, ParticleVine::new);
 	}
-	
+
 	@Override
 	public ParticleWizardry createParticle(ResourceLocation type, World world, double x, double y, double z){
 		IWizardryParticleFactory factory = factories.get(type);
@@ -483,36 +490,36 @@ public class ClientProxy extends CommonProxy {
 			Wizardry.logger.warn("Recieved a PacketNPCCastSpell, but the caster ID was not the ID of an EntityLiving");
 		}
 	}
-	
+
 	@Override
 	public void handleDispenserCastSpellPacket(PacketDispenserCastSpell.Message message){
-		
+
 		World world = Minecraft.getMinecraft().world;
-		
+
 		if(world.getTileEntity(message.pos) instanceof TileEntityDispenser){ // Should always be true
-			
+
 			Spell spell = Spell.byNetworkID(message.spellID);
-			
+
 			spell.cast(world, message.x, message.y, message.z, message.direction, 0, -1, message.modifiers);
 			// No need to check if the spell succeeded, because the packet is only ever sent when it succeeds.
 			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Post(Source.DISPENSER, spell, world, message.x, message.y,
 					message.z, message.direction, message.modifiers));
-			
+
 			if(spell.isContinuous || spell instanceof None){
-				
+
 				DispenserCastingData data = DispenserCastingData.get((TileEntityDispenser)world.getTileEntity(message.pos));
-				
+
 				if(spell.isContinuous){
 					data.startCasting(spell, message.x, message.y, message.z, message.duration, message.modifiers);
 				}else{
 					data.stopCasting();
 				}
 			}
-			
+
 		}else{
 			Wizardry.logger.warn("Recieved a PacketDispenserCastSpell, but no tileEntity was found at the supplied location.");
 		}
-		
+
 	}
 
 	@Override
@@ -680,6 +687,12 @@ public class ClientProxy extends CommonProxy {
 	public void initialiseLayers(){
 		LayerStone.initialiseLayers();
 		LayerFrost.initialiseLayers();
+	}
+
+	@Override
+	public void initialiseAnimations(){
+		PlayerAnimator.init();
+		ActionAnimation.register();
 	}
 
 	@Override

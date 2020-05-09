@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -11,7 +12,6 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.PotionEffect;
@@ -36,7 +36,7 @@ public class Intimidate extends Spell {
 	private static final double AVOID_DISTANCE_PER_LEVEL = 4;
 
 	public Intimidate(){
-		super("intimidate", EnumAction.BOW, false);
+		super("intimidate", SpellActions.SUMMON, false);
 		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 

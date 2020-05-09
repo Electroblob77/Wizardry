@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISummonedCreature;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -13,7 +14,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -64,7 +64,7 @@ public class SpellMinion<T extends EntityLiving & ISummonedCreature> extends Spe
 	}
 
 	public SpellMinion(String modID, String name, Function<World, T> minionFactory){
-		super(modID, name, EnumAction.BOW, false);
+		super(modID, name, SpellActions.SUMMON, false);
 		this.minionFactory = minionFactory;
 		addProperties(MINION_LIFETIME, MINION_COUNT, SUMMON_RADIUS);
 		this.npcSelector((e, o) -> true);

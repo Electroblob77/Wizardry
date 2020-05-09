@@ -2,11 +2,11 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -22,7 +22,7 @@ public class SixthSense extends Spell {
 	public static final ResourceLocation SHADER = new ResourceLocation(Wizardry.MODID, "shaders/post/sixth_sense.json");
 
 	public SixthSense(){
-		super("sixth_sense", EnumAction.BOW, false);
+		super("sixth_sense", SpellActions.POINT_UP, false);
 		addProperties(EFFECT_DURATION, EFFECT_RADIUS);
 		soundValues(1, 1.1f, 0.2f);
 	}

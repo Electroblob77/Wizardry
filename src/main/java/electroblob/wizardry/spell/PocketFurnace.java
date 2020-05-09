@@ -2,10 +2,14 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -16,7 +20,7 @@ public class PocketFurnace extends Spell {
 	public static final String ITEMS_SMELTED = "items_smelted";
 
 	public PocketFurnace(){
-		super("pocket_furnace", EnumAction.BOW, false);
+		super("pocket_furnace", SpellActions.IMBUE, false);
 		addProperties(ITEMS_SMELTED);
 		soundValues(1, 0.75f, 0);
 	}

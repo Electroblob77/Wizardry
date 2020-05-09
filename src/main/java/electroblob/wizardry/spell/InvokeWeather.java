@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -18,7 +18,7 @@ public class InvokeWeather extends Spell {
 	public static final String THUNDERSTORM_CHANCE = "thunderstorm_chance";
 
 	public InvokeWeather(){
-		super("invoke_weather", EnumAction.BOW, false);
+		super("invoke_weather", SpellActions.POINT_UP, false);
 		addProperties(THUNDERSTORM_CHANCE);
 		soundValues(0.5f, 1, 0);
 	}

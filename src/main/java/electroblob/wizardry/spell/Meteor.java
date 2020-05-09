@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.EntityMeteor;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -18,7 +18,7 @@ public class Meteor extends SpellRay {
 	public static final String BLAST_STRENGTH = "blast_strength";
 
 	public Meteor(){
-		super("meteor", false, EnumAction.NONE);
+		super("meteor", false, SpellActions.POINT);
 		this.soundValues(3, 1, 0);
 		this.ignoreLivingEntities(true);
 		addProperties(BLAST_STRENGTH);

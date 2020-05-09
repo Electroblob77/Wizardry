@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -13,7 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +34,7 @@ public class Paralysis extends SpellRay {
 	private static final String CRITICAL_HEALTH = "critical_health";
 
 	public Paralysis(){
-		super("paralysis", false, EnumAction.NONE);
+		super("paralysis", false, SpellActions.POINT);
 		addProperties(DAMAGE, EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 
