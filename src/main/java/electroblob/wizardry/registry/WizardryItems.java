@@ -154,6 +154,8 @@ public final class WizardryItems {
 	public static final Item smoke_bomb = placeholder();
 	public static final Item spark_bomb = placeholder();
 
+	public static final Item spectral_dust = placeholder();
+
 	public static final Item wizard_hat = placeholder();
 	public static final Item wizard_robe = placeholder();
 	public static final Item wizard_leggings = placeholder();
@@ -500,6 +502,8 @@ public final class WizardryItems {
 		registerItem(registry, "smoke_bomb", 					new ItemSmokeBomb());
 		registerItem(registry, "spark_bomb", 					new ItemSparkBomb());
 
+		registerItem(registry, "spectral_dust", 				new ItemSpectralDust());
+
 		registerItem(registry, "wizard_hat", 					new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.HEAD, null), true);
 		registerItem(registry, "wizard_robe", 				new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.CHEST, null));
 		registerItem(registry, "wizard_leggings", 			new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, null));
@@ -540,8 +544,8 @@ public final class WizardryItems {
 		registerItem(registry, "wizard_leggings_healing", 	new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.LEGS, Element.HEALING));
 		registerItem(registry, "wizard_boots_healing", 		new ItemWizardArmour(Materials.SILK, 1, EntityEquipmentSlot.FEET, Element.HEALING));
 
-		registerItem(registry, "spectral_helmet", 				new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.HEAD));
-		registerItem(registry, "spectral_chestplate", 			new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.CHEST));
+		registerItem(registry, "spectral_helmet", 			new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.HEAD));
+		registerItem(registry, "spectral_chestplate", 		new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.CHEST));
 		registerItem(registry, "spectral_leggings", 			new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.LEGS));
 		registerItem(registry, "spectral_boots", 				new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.FEET));
 

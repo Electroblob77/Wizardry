@@ -198,6 +198,8 @@ item.ebwizardry\:armour_upgrade.desc_extended=Apply this upgrade to a piece of w
 
 item.ebwizardry\:magic_silk.name=Magical Silk
 
+item.ebwizardry\:spectral_dust.name=Spectral Dust
+
 item.ebwizardry\:wizard_armour.legendary=Legendary
 item.ebwizardry\:wizard_armour.buff=-%1$s %2$s cost
 item.ebwizardry\:wizard_armour.mana=Mana\: %1$s/%2$s
