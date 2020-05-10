@@ -43,28 +43,33 @@ public final class WizardryBlocks {
 
 	public static final Block arcane_workbench = placeholder();
 	public static final Block crystal_ore = placeholder();
+	public static final Block crystal_flower = placeholder();
+	public static final Block transportation_stone = placeholder();
+	public static final Block crystal_block = placeholder();
+
 	public static final Block petrified_stone = placeholder();
 	public static final Block ice_statue = placeholder();
 	public static final Block magic_light = placeholder();
-	public static final Block crystal_flower = placeholder();
 	public static final Block snare = placeholder();
-	public static final Block transportation_stone = placeholder();
 	public static final Block spectral_block = placeholder();
-	public static final Block crystal_block = placeholder();
 	public static final Block meteor = placeholder();
 	public static final Block vanishing_cobweb = placeholder();
-	public static final Block runestone = placeholder();
-	public static final Block runestone_pedestal = placeholder();
 	public static final Block thorns = placeholder();
 	public static final Block obsidian_crust = placeholder();
 	public static final Block dry_frosted_ice = placeholder();
+
+	public static final Block runestone = placeholder();
+	public static final Block runestone_pedestal = placeholder();
+
 	public static final Block gilded_wood = placeholder();
+
 	public static final Block oak_bookshelf = placeholder();
 	public static final Block spruce_bookshelf = placeholder();
 	public static final Block birch_bookshelf = placeholder();
 	public static final Block jungle_bookshelf = placeholder();
 	public static final Block acacia_bookshelf = placeholder();
 	public static final Block dark_oak_bookshelf = placeholder();
+
 	public static final Block oak_lectern = placeholder();
 	public static final Block spruce_lectern = placeholder();
 	public static final Block birch_lectern = placeholder();
@@ -95,28 +100,33 @@ public final class WizardryBlocks {
 
 		registerBlock(registry, "arcane_workbench", 		new BlockArcaneWorkbench().setHardness(1.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "crystal_ore", 			new BlockCrystalOre(Material.ROCK).setHardness(3.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "crystal_flower", 		new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "transportation_stone", 	new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "crystal_block", 			new BlockCrystal(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+
 		registerBlock(registry, "petrified_stone", 		new BlockStatue(Material.ROCK).setHardness(1.5F).setResistance(10.0F));
 		registerBlock(registry, "ice_statue", 			new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3));
 		registerBlock(registry, "magic_light", 			new BlockMagicLight(Material.CIRCUITS));
-		registerBlock(registry, "crystal_flower", 		new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "snare", 					new BlockSnare(Material.PLANTS).setHardness(0.0F));
-		registerBlock(registry, "transportation_stone", 	new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "spectral_block", 		new BlockSpectral(Material.GLASS).setLightOpacity(1).setBlockUnbreakable().setResistance(6000000.0F));
-		registerBlock(registry, "crystal_block", 			new BlockCrystal(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "meteor", 				new Block(Material.ROCK).setLightLevel(1));
 		registerBlock(registry, "vanishing_cobweb", 		new BlockVanishingCobweb(Material.WEB).setLightOpacity(1).setHardness(4.0F));
-		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
-		registerBlock(registry, "runestone_pedestal", 	new BlockPedestal(Material.ROCK));
 		registerBlock(registry, "thorns", 				new BlockThorns());
 		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
+
+		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
+		registerBlock(registry, "runestone_pedestal", 	new BlockPedestal(Material.ROCK));
+
 		registerBlock(registry, "gilded_wood", 			new BlockGildedWood());
+
 		registerBlock(registry, "oak_bookshelf", 			new BlockBookshelf());
 		registerBlock(registry, "spruce_bookshelf", 		new BlockBookshelf());
 		registerBlock(registry, "birch_bookshelf", 		new BlockBookshelf());
 		registerBlock(registry, "jungle_bookshelf", 		new BlockBookshelf());
 		registerBlock(registry, "acacia_bookshelf", 		new BlockBookshelf());
 		registerBlock(registry, "dark_oak_bookshelf", 	new BlockBookshelf());
+
 		registerBlock(registry, "oak_lectern", 			new BlockLectern());
 		registerBlock(registry, "birch_lectern", 			new BlockLectern());
 		registerBlock(registry, "spruce_lectern", 		new BlockLectern());
