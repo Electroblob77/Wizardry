@@ -1,6 +1,7 @@
 package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,9 @@ public class Curse extends PotionMagicEffect {
 	
 	@Override
 	public List<ItemStack> getCurativeItems(){
-		return new ArrayList<>(); // Cannot be cured!
+		List<ItemStack> items = new ArrayList<>();
+		items.add(new ItemStack(WizardryItems.purifying_elixir));
+		return items;
 	}
 	
 	@Override
