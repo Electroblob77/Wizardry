@@ -416,6 +416,8 @@ public final class WizardryItems {
 		registerItemBlock(registry, WizardryBlocks.acacia_lectern);
 		registerItemBlock(registry, WizardryBlocks.dark_oak_lectern);
 
+		registerItemBlock(registry, WizardryBlocks.receptacle);
+
 		// Items
 
 		registerItem(registry, "magic_crystal", 				new ItemCrystal());

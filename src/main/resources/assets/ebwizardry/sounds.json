@@ -3,6 +3,7 @@
 	"block.pedestal.activate": 			{"category": "blocks", "sounds": ["mob/evocation_illager/prepare_summon"]},
 	"block.pedestal.conquer": 			{"category": "blocks", "sounds": ["ui/toast/challenge_complete"]},
 	"block.lectern.locate_spell": 		{"category": "blocks", "sounds": ["ebwizardry:conjure"]},
+	"block.receptacle.ignite": 			{"category": "blocks", "sounds": ["mob/evocation_illager/cast1", "mob/evocation_illager/cast2"]},
 
 	"item.wand.switch_spell": 			{"category": "player", "sounds": ["ebwizardry:select"]},
 	"item.wand.levelup": 				{"category": "player", "sounds": ["random/levelup"]},

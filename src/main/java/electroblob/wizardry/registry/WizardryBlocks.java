@@ -4,8 +4,6 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.*;
 import electroblob.wizardry.tileentity.*;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -77,6 +75,8 @@ public final class WizardryBlocks {
 	public static final Block acacia_lectern = placeholder();
 	public static final Block dark_oak_lectern = placeholder();
 
+	public static final Block receptacle = placeholder();
+
 	/**
 	 * Sets both the registry and unlocalised names of the given block, then registers it with the given registry. Use
 	 * this instead of {@link Block#setRegistryName(String)} and {@link Block#setTranslationKey(String)} during
@@ -134,6 +134,8 @@ public final class WizardryBlocks {
 		registerBlock(registry, "acacia_lectern", 		new BlockLectern());
 		registerBlock(registry, "dark_oak_lectern", 		new BlockLectern());
 
+		registerBlock(registry, "receptacle", 			new BlockReceptacle());
+
 	}
 
 	/** Called from the preInit method in the main mod class to register all the tile entities. */
@@ -148,5 +150,6 @@ public final class WizardryBlocks {
 		GameRegistry.registerTileEntity(TileEntityShrineCore.class, 		new ResourceLocation(Wizardry.MODID, "shrine_core"));
 		GameRegistry.registerTileEntity(TileEntityBookshelf.class, 			new ResourceLocation(Wizardry.MODID, "bookshelf"));
 		GameRegistry.registerTileEntity(TileEntityLectern.class, 			new ResourceLocation(Wizardry.MODID, "lectern"));
+		GameRegistry.registerTileEntity(TileEntityReceptacle.class, 		new ResourceLocation(Wizardry.MODID, "receptacle"));
 	}
 }

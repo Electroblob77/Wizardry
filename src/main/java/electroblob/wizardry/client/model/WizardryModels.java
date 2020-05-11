@@ -7,23 +7,20 @@ import electroblob.wizardry.block.BlockRunestone;
 import electroblob.wizardry.item.IMultiTexturedItem;
 import electroblob.wizardry.item.ItemBlockMultiTextured;
 import electroblob.wizardry.item.ItemCrystal;
+import electroblob.wizardry.item.ItemSpectralDust;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -90,6 +87,8 @@ public final class WizardryModels {
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.jungle_lectern));
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.acacia_lectern));
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_lectern));
+
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.receptacle));
 
 		// Items
 
@@ -178,6 +177,8 @@ public final class WizardryModels {
 		registerItemModel(WizardryItems.armour_upgrade);
 
 		registerItemModel(WizardryItems.magic_silk);
+
+		registerMultiTexturedModel((ItemSpectralDust)WizardryItems.spectral_dust);
 
 		registerItemModel(WizardryItems.wizard_hat);
 		registerItemModel(WizardryItems.wizard_robe);

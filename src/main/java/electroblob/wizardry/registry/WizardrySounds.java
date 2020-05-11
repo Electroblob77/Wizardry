@@ -29,6 +29,7 @@ public final class WizardrySounds {
 	public static final SoundEvent BLOCK_PEDESTAL_ACTIVATE = 		createSound("block.pedestal.activate");
 	public static final SoundEvent BLOCK_PEDESTAL_CONQUER = 		createSound("block.pedestal.conquer");
 	public static final SoundEvent BLOCK_LECTERN_LOCATE_SPELL = 	createSound("block.lectern.locate_spell");
+	public static final SoundEvent BLOCK_RECEPTACLE_IGNITE = 		createSound("block.receptacle.ignite");
 
 	public static final SoundEvent ITEM_WAND_SWITCH_SPELL = 		createSound("item.wand.switch_spell");
 	public static final SoundEvent ITEM_WAND_LEVELUP = 				createSound("item.wand.levelup");
@@ -156,6 +157,7 @@ public final class WizardrySounds {
 		event.getRegistry().register(BLOCK_PEDESTAL_ACTIVATE);
 		event.getRegistry().register(BLOCK_PEDESTAL_CONQUER);
 		event.getRegistry().register(BLOCK_LECTERN_LOCATE_SPELL);
+		event.getRegistry().register(BLOCK_RECEPTACLE_IGNITE);
 
 		event.getRegistry().register(ITEM_WAND_SWITCH_SPELL);
 		event.getRegistry().register(ITEM_WAND_LEVELUP);
