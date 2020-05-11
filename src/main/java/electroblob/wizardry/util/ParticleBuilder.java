@@ -328,7 +328,7 @@ public final class ParticleBuilder {
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
 	public ParticleBuilder fade(int r, int g, int b){
-		return this.clr(r/255f, g/255f, b/255f); // Yes, 255 is correct and not 256, or else we can't have pure white
+		return this.fade(r/255f, g/255f, b/255f); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 
 	/**
@@ -345,7 +345,7 @@ public final class ParticleBuilder {
 		int r = (hex & 0xFF0000) >> 16;
 		int g = (hex & 0xFF00) >> 8;
 		int b = (hex & 0xFF);
-		return this.clr(r, g, b);
+		return this.fade(r, g, b);
 	}
 	
 	/**
