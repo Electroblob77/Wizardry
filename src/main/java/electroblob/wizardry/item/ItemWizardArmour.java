@@ -25,11 +25,9 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHandSide;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -118,62 +116,12 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	@Override
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
-			EntityEquipmentSlot armourSlot, net.minecraft.client.model.ModelBiped _default){
+			EntityEquipmentSlot armourSlot, net.minecraft.client.model.ModelBiped original){
 
 		// Legs use modelBiped
 		if(armourSlot == EntityEquipmentSlot.LEGS && !entityLiving.isInvisible()) return null;
 
-		net.minecraft.client.model.ModelBiped model = Wizardry.proxy.getWizardArmourModel();
-
-		if(model != null){
-
-			model.bipedHead.showModel = armourSlot == EntityEquipmentSlot.HEAD;
-			model.bipedHeadwear.showModel = false;
-			model.bipedBody.showModel = armourSlot == EntityEquipmentSlot.CHEST;
-			model.bipedRightArm.showModel = armourSlot == EntityEquipmentSlot.CHEST;
-			model.bipedLeftArm.showModel = armourSlot == EntityEquipmentSlot.CHEST;
-			model.bipedRightLeg.showModel = armourSlot == EntityEquipmentSlot.FEET;
-			model.bipedLeftLeg.showModel = armourSlot == EntityEquipmentSlot.FEET;
-
-			model.isSneak = entityLiving.isSneaking();
-			model.isRiding = entityLiving.isRiding();
-			model.isChild = entityLiving.isChild();
-
-			boolean leftHanded = entityLiving.getPrimaryHand() == EnumHandSide.LEFT;
-
-			ItemStack itemstackR = leftHanded ? entityLiving.getHeldItemOffhand() : entityLiving.getHeldItemMainhand();
-			ItemStack itemstackL = leftHanded ? entityLiving.getHeldItemMainhand() : entityLiving.getHeldItemOffhand();
-
-			if(!itemstackR.isEmpty()){
-				model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
-
-				if(entityLiving.getItemInUseCount() > 0){
-					EnumAction enumaction = itemstackR.getItemUseAction();
-
-					if(enumaction == EnumAction.BLOCK){
-						model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BLOCK;
-					}else if(enumaction == EnumAction.BOW){
-						model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BOW_AND_ARROW;
-					}
-				}
-			}
-
-			if(!itemstackL.isEmpty()){
-				model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
-
-				if(entityLiving.getItemInUseCount() > 0){
-					EnumAction enumaction1 = itemstackL.getItemUseAction();
-
-					if(enumaction1 == EnumAction.BLOCK){
-						model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BLOCK;
-					}else if(enumaction1 == EnumAction.BOW){
-						model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BOW_AND_ARROW;
-					}
-				}
-			}
-		}
-
-		return model;
+		return Wizardry.proxy.getWizardArmourModel();
 	}
 
 	@Override
