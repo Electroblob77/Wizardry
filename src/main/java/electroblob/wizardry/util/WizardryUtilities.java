@@ -344,62 +344,6 @@ public final class WizardryUtilities {
 	}
 
 	/**
-	 * Finds the nearest floor level to the given y coord within the range specified at the given x and z coords.
-	 * As of Wizardry 4.2, this is now a wrapper for {@link WizardryUtilities#getNearestFloor(World, BlockPos, int)}
-	 * which retains the old functionality (i.e. returning an {@code int}, with -1 as 'not found') for compatibility.
-	 *
-	 * @param world The world to search in
-	 * @param pos The coordinates to search from
-	 * @param range The maximum distance from the given y coordinate to search.
-	 * @return The y coordinate of the closest floor level, or -1 if there is none. Returns the actual level of the
-	 *         floor as would be seen in the debug screen when the player is standing on it.
-	 * @deprecated Use {@link WizardryUtilities#getNearestFloor(World, BlockPos, int)}; this method may be removed in
-	 * future.
-	 */
-	// Since this is always a y-coordinate, the 'not found' value can just be any negative number.
-	@Deprecated
-	public static int getNearestFloorLevel(World world, BlockPos pos, int range){
-		Integer floor = getNearestFloor(world, pos, range);
-		return floor == null ? -1 : floor;
-	}
-
-	/**
-	 * Finds the nearest floor level to the given y coord within the range specified at the given x and z coords. Only
-	 * works if the block above the floor is actually air and the floor is solid or a liquid.
-	 * 
-	 * @param world The world to search in
-	 * @param pos The coordinates to search from
-	 * @param range The maximum distance from the given y coordinate to search.
-	 * @return The y coordinate of the closest floor level, or -1 if there is none. Returns the actual level of the
-	 *         floor as would be seen in the debug screen when the player is standing on it.
-	 * @deprecated Use {@link WizardryUtilities#getNearestSurface(World, BlockPos, EnumFacing, int, boolean, SurfaceCriteria)};
-	 * this method may be removed in future.
-	 */
-	@Deprecated
-	public static int getNearestFloorLevelB(World world, BlockPos pos, int range){
-		Integer floor = getNearestSurface(world, pos, EnumFacing.UP, range, true, SurfaceCriteria.SOLID_LIQUID_TO_AIR);
-		return floor == null ? -1 : floor;
-	}
-
-	/**
-	 * Finds the nearest floor level to the given y coord within the range specified at the given x and z coords.
-	 * Everything that is not air is treated as floor, even stuff that can't be walked on.
-	 *
-	 * @param world The world to search in
-	 * @param pos The coordinates to search from
-	 * @param range The maximum distance from the given y coordinate to search.
-	 * @return The y coordinate of the closest floor level, or -1 if there is none. Returns the actual level of the
-	 *         floor as would be seen in the debug screen when the player is standing on it.
-	 * @deprecated Use {@link WizardryUtilities#getNearestSurface(World, BlockPos, EnumFacing, int, boolean, SurfaceCriteria)};
-	 * this method may be removed in future.
-	 */
-	@Deprecated
-	public static int getNearestFloorLevelC(World world, BlockPos pos, int range){
-		Integer floor = getNearestSurface(world, pos, EnumFacing.UP, range, true, SurfaceCriteria.NOT_AIR_TO_AIR);
-		return floor == null ? -1 : floor;
-	}
-
-	/**
 	 * Gets a random position on the ground near the given entity within the specified horizontal and vertical ranges.
 	 * Used to find a position to spawn entities in summoning spells.
 	 * 
@@ -983,25 +927,6 @@ public final class WizardryUtilities {
 
 	// Miscellaneous
 	// ===============================================================================================================
-
-	/**
-	 * Verifies that the given string is a valid string representation of a UUID. More specifically, returns true if and
-	 * only if the given string is not null and matches the regular expression:
-	 * <p></p>
-	 * <center><code>/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/<p></code></center>
-	 * which is the regex equivalent of the standard string representation of a UUID as described in
-	 * {@link UUID#toString()}. This method is intended to be used as a check to prevent an
-	 * {@link IllegalArgumentException} from occurring when calling {@link UUID#fromString(String)}.
-	 * 
-	 * @param string The string to be checked
-	 * @return Whether the given string is a valid string representation of a UUID
-	 * @deprecated UUIDs can now be stored in NBT directly; use that in preference to storing them as strings.
-	 */
-	@Deprecated
-	public static boolean verifyUUIDString(String string){
-		return string != null
-				&& string.matches("/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/");
-	}
 
 	/**
 	 * Flattens the given nested collection. The returned collection is an unmodifiable collection of all the elements

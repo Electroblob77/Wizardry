@@ -75,39 +75,6 @@ public final class WizardryLoot {
 
 	}
 
-	/**
-	 * Helper method which gets a spell id according to the standard weighting. The tier is a weighted random value; the
-	 * actual spell within that tier is completely random. Will not return the id of a spell which has been disabled in
-	 * the config. This is for simple stuff like chests and drops; more complex generators like wizard trades don't use
-	 * this method.
-	 * <p></p>
-	 * For reference, the standard weighting is as follows: Novice: 60%, Apprentice: 25%, Advanced: 10%, Master: 5%
-	 *
-	 * @param random An instance of {@link Random} to use for RNG
-	 * @param filter A {@link Predicate} specifying any requirements the chosen spell must fulfil
-	 * @return A random spell id number, or -1 if no spell exists that satisfies the given filter
-	 * @deprecated Everything uses loot tables now, I may remove this as some point
-	 */
-	@Deprecated
-	public static int getStandardWeightedRandomSpellId(Random random, Predicate<Spell> filter){
-
-		Tier tier = Tier.getWeightedRandomTier(random);
-
-		List<Spell> spells = Spell.getSpells(new Spell.TierElementFilter(tier, null));
-		spells.removeIf(filter.negate());
-
-		// Ensures the tier chosen actually has spells in it, and if not uses NOVICE instead.
-		if(spells.isEmpty()){
-			spells = Spell.getSpells(new Spell.TierElementFilter(Tier.NOVICE, null));
-			spells.removeIf(filter.negate());
-		}
-
-		if(spells.isEmpty()) return -1;
-
-		// Finds a random spell in the list and returns its id.
-		return spells.get(random.nextInt(spells.size())).metadata();
-	}
-
 	@SubscribeEvent
 	public static void onLootTableLoadEvent(LootTableLoadEvent event){
 		// General dungeon loot

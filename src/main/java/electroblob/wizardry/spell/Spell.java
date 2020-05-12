@@ -211,7 +211,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		this.sounds = createSounds();
 		this.id = nextSpellId++;
 		this.items(WizardryItems.spell_book, WizardryItems.scroll);
-		this.npcSelector((e, o) -> canBeCastByNPCs()); // Fallback to old behaviour until we remove it entirely
+		this.npcSelector((e, o) -> false);
 	}
 
 	// ========================================= Initialisation methods ===========================================
@@ -489,34 +489,12 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/**
-	 * Whether NPCs such as wizards can cast this spell. If you have overridden
-	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
-	 * this to return true.
-	 * @deprecated Use the entity-sensitive version {@link Spell#canBeCastBy(EntityLiving, boolean)}.
-	 */
-	@Deprecated
-	public boolean canBeCastByNPCs(){
-		return false;
-	}
-
-	/**
 	 * Whether the given dispenser can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
 	 * to return true (either always or under certain circumstances).
 	 * @param dispenser The dispenser to query.
 	 */
 	public boolean canBeCastBy(TileEntityDispenser dispenser){
-		return canBeCastByDispensers();
-	}
-
-	/**
-	 * Whether dispensers can cast this spell. If you have overridden
-	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
-	 * to return true.
-	 * @deprecated Use the tileentity-sensitive version {@link Spell#canBeCastBy(TileEntityDispenser)}.
-	 */
-	@Deprecated
-	public boolean canBeCastByDispensers(){
 		return false;
 	}
 
