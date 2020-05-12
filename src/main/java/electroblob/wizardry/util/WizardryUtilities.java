@@ -366,11 +366,11 @@ public final class WizardryUtilities {
 		BlockPos origin = new BlockPos(entity);
 		return findNearbyFloorSpace(world, origin, horizontalRange, verticalRange);
 	}
-	
+
 	/**
 	 * Gets a random position on the ground near the given BlockPos within the specified horizontal and vertical ranges.
 	 * Used to find a position to spawn entities in summoning spells.
-	 * 
+	 *
 	 * @param world The world in which to search.
 	 * @param origin The BlockPos around which to search.
 	 * @param horizontalRange The maximum number of blocks on the x or z axis the returned position can be from the
@@ -386,13 +386,53 @@ public final class WizardryUtilities {
 	 */
 	@Nullable
 	public static BlockPos findNearbyFloorSpace(World world, BlockPos origin, int horizontalRange, int verticalRange){
+		return findNearbyFloorSpace(world, origin, horizontalRange, verticalRange, true);
+	}
+
+	/**
+	 * Gets a random position on the ground near the given BlockPos within the specified horizontal and vertical ranges.
+	 * Used to find a position to spawn entities in summoning spells.
+	 * 
+	 * @param world The world in which to search.
+	 * @param origin The BlockPos around which to search.
+	 * @param horizontalRange The maximum number of blocks on the x or z axis the returned position can be from the
+	 *        given position. <i>The number of operations performed by this method is proportional to the square of this
+	 *        parameter, so for performance reasons it is recommended that it does not exceed around 10.</i>
+	 * @param verticalRange The maximum number of blocks on the y axis the returned position can be from the given
+	 *        position.
+	 * @param lineOfSight Whether to require line-of-sight from the origin to the returned position.
+	 * @return A BlockPos with the coordinates of the block directly above the ground at the position found, or null if
+	 *         none were found within range. Importantly, since this method checks <i>all possible</i> positions within
+	 *         range (i.e. randomness only occurs when deciding between the possible positions), if it returns null once
+	 *         then it will always return null given the same circumstances and parameters. What this means is that you
+	 *         can (and should) immediately stop trying to cast a summoning spell if this returns null.
+	 */
+	@Nullable
+	public static BlockPos findNearbyFloorSpace(World world, BlockPos origin, int horizontalRange, int verticalRange, boolean lineOfSight){
 		
 		List<BlockPos> possibleLocations = new ArrayList<BlockPos>();
 
+		final Vec3d centre = WizardryUtilities.getCentre(origin);
+
 		for(int x = -horizontalRange; x <= horizontalRange; x++){
 			for(int z = -horizontalRange; z <= horizontalRange; z++){
+
 				Integer y = WizardryUtilities.getNearestFloor(world, origin.add(x, 0, z), verticalRange);
-				if(y != null) possibleLocations.add(new BlockPos(origin.getX() + x, y, origin.getZ() + z));
+
+				if(y != null){
+
+					BlockPos location = new BlockPos(origin.getX() + x, y, origin.getZ() + z);
+
+					if(lineOfSight){
+						// Since we're only using finding collidable surfaces, it doesn't make much sense to include
+						// non-collidable blocks here!
+						RayTraceResult rayTrace = world.rayTraceBlocks(centre, WizardryUtilities.getCentre(location),
+								false, true, false);
+						if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK) continue;
+					}
+
+					possibleLocations.add(location);
+				}
 			}
 		}
 

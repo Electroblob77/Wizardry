@@ -37,7 +37,7 @@ public class Decay extends SpellConstructRanged<EntityDecay> {
 		int verticalRange = (int)(6 * modifiers.get(WizardryItems.blast_upgrade));
 
 		for(int i=0; i<quantity; i++){
-			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(world, origin, horizontalRange, verticalRange);
+			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(world, origin, horizontalRange, verticalRange, false);
 			if(pos == null) break;
 			super.spawnConstruct(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, side, caster, modifiers);
 		}
