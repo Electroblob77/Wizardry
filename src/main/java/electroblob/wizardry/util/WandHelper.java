@@ -217,7 +217,7 @@ public final class WandHelper {
 		int spellIndex = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
 
 		if(spellIndex <= 0){
-			spellIndex = numberOfSpells - 1;
+			spellIndex = Math.max(0, numberOfSpells - 1);
 		}else{
 			spellIndex--;
 		}
@@ -370,7 +370,7 @@ public final class WandHelper {
 
 		int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
 
-		if(cooldowns.length <= selectedSpell) return 0;
+		if(selectedSpell < 0 || cooldowns.length <= selectedSpell) return 0;
 
 		return cooldowns[selectedSpell];
 	}
