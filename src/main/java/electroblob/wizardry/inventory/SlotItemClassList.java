@@ -23,10 +23,12 @@ public class SlotItemClassList extends Slot {
 		this.stackLimit = stackLimit;
 	}
 
+	@Override
 	public int getSlotStackLimit(){
 		return stackLimit;
 	}
 
+	@Override
 	public boolean isItemValid(ItemStack stack){
 
 		for(Class<? extends Item> itemClass : itemClasses){
