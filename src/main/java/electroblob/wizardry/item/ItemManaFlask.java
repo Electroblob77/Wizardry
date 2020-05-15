@@ -46,7 +46,7 @@ public class ItemManaFlask extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn){
-		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + Wizardry.MODID + "mana_flask.desc", size.capacity);
+		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + Wizardry.MODID + ":mana_flask.desc", size.capacity);
 	}
 
 }
