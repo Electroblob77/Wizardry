@@ -41,6 +41,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		Wizardry.settings.forfeitChance = message.settings.forfeitChance;
 		Wizardry.settings.bookshelfSearchRadius = message.settings.bookshelfSearchRadius;
 		Wizardry.settings.bookshelfBlocks = message.settings.bookshelfBlocks;
+		Wizardry.settings.bookItems = message.settings.bookItems;
 	}
 
 	public static class Message implements IMessage {
@@ -57,7 +58,6 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		}
 
 		@Override
-		@SuppressWarnings("unchecked")
 		public void fromBytes(ByteBuf buf){
 			// I'm guessing the settings field will be null here, so it needs initialising.
 			// This is also a great reason to have the settings as an actual object.
@@ -69,12 +69,8 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.replaceVanillaFireballs = buf.readBoolean();
 			settings.forfeitChance = buf.readFloat();
 			settings.bookshelfSearchRadius = buf.readInt();
-			int length = buf.readInt();
-			List<Pair<ResourceLocation, Short>> entries = new ArrayList<>();
-			for(int i=0; i<length; i++){
-				entries.add(Pair.of(new ResourceLocation(ByteBufUtils.readUTF8String(buf)), buf.readShort()));
-			}
-			settings.bookshelfBlocks = entries.toArray(new Pair[0]);
+			settings.bookshelfBlocks = readMetaItems(buf);
+			settings.bookItems = readMetaItems(buf);
 		}
 
 		@Override
@@ -85,11 +81,27 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeBoolean(settings.replaceVanillaFireballs);
 			buf.writeFloat((float)settings.forfeitChance); // Configs don't have floats but this can only be 0-1 anyway
 			buf.writeInt(settings.bookshelfSearchRadius);
-			buf.writeInt(settings.bookshelfBlocks.length);
-			for(Pair<ResourceLocation, Short> entry : settings.bookshelfBlocks){
+			writeMetaItems(buf, settings.bookshelfBlocks);
+			writeMetaItems(buf, settings.bookItems);
+		}
+
+		@SuppressWarnings("unchecked")
+		private static Pair<ResourceLocation, Short>[] readMetaItems(ByteBuf buf){
+			int length = buf.readInt();
+			List<Pair<ResourceLocation, Short>> entries = new ArrayList<>();
+			for(int i=0; i<length; i++){
+				entries.add(Pair.of(new ResourceLocation(ByteBufUtils.readUTF8String(buf)), buf.readShort()));
+			}
+			return entries.toArray(new Pair[0]);
+		}
+
+		private static void writeMetaItems(ByteBuf buf, Pair<ResourceLocation, Short>[] items){
+			buf.writeInt(items.length);
+			for(Pair<ResourceLocation, Short> entry : items){
 				ByteBufUtils.writeUTF8String(buf, entry.getLeft().toString());
 				buf.writeShort(entry.getRight());
 			}
 		}
+
 	}
 }

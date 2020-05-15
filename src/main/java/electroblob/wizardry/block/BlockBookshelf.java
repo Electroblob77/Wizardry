@@ -1,28 +1,29 @@
 package electroblob.wizardry.block;
 
+import com.google.common.collect.ImmutableList;
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.tileentity.TileEntityBookshelf;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.IWorldEventListener;
@@ -31,12 +32,17 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvider {
@@ -46,13 +52,11 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 	public static final double PLAYER_NOTIFY_RANGE = 32;
 	public static final int SLOT_COUNT = 12;
 
-	public static final UnlistedPropertyBool[] BOOKS = new UnlistedPropertyBool[SLOT_COUNT];
+	public static final UnlistedPropertyInt[] BOOKS = new UnlistedPropertyInt[SLOT_COUNT];
 
-	static {
-		for(int i=0; i<SLOT_COUNT; i++){
-			BOOKS[i] = new UnlistedPropertyBool("book" + i);
-		}
-	}
+	private static final Map<Supplier<Item>, ResourceLocation> BOOK_TEXTURE_MAP = new HashMap<>();
+	private static ImmutableList<Item> bookItems;
+	private static ImmutableList<ResourceLocation> bookTextures;
 
 	public BlockBookshelf(){
 		super(Material.WOOD);
@@ -115,9 +119,19 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		IExtendedBlockState s = (IExtendedBlockState)super.getExtendedState(state, world, pos);
 
 		if(world.getTileEntity(pos) instanceof TileEntityBookshelf){
+
 			TileEntityBookshelf tileentity = ((TileEntityBookshelf)world.getTileEntity(pos));
+
 			for(int i = 0; i < tileentity.getSizeInventory(); i++){
-				s = s.withProperty(BOOKS[i], !tileentity.getStackInSlot(i).isEmpty());
+
+				if(tileentity.getStackInSlot(i).isEmpty()){
+					s = s.withProperty(BOOKS[i], bookItems.size());
+
+				}else{
+					Item item = tileentity.getStackInSlot(i).getItem();
+					// Default to the standard spell book texture, which will always be the first item in the list
+					s = s.withProperty(BOOKS[i], bookItems.contains(item) ? bookItems.indexOf(item) : 0);
+				}
 			}
 		}
 
@@ -176,12 +190,69 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		return tileentity != null && tileentity.receiveClientEvent(id, param);
 	}
 
-	// Copied from BlockFluidBase, only reason it exists is because of java's weird restrictions on generics
-	private static final class UnlistedPropertyBool extends Properties.PropertyAdapter<Boolean> {
+	/** Returns the list of book textures, in ID order. */
+	public static ImmutableList<ResourceLocation> getBookTextures(){
+		// ModelBookshelf calls this before init() so we need to return the map values as a fallback
+		return bookTextures == null ? ImmutableList.copyOf(BOOK_TEXTURE_MAP.values()) : bookTextures;
+	}
 
-		public UnlistedPropertyBool(String name){
-			super(PropertyBool.create(name));
+	/** Called during block registration to initialise the block properties for each book. */
+	public static void initBookProperties(){
+		for(int i=0; i<SLOT_COUNT; i++){
+			BOOKS[i] = new UnlistedPropertyInt("book" + i);
 		}
+	}
+
+	// Based on BlockFluid's UnlistedPropertyBool; this is only needed because of Java's weird restrictions on generics
+	private static final class UnlistedPropertyInt extends Properties.PropertyAdapter<Integer> {
+
+		public UnlistedPropertyInt(String name){
+			// Max is inclusive here, but we're using the largest value for no book so there's an extra one (can't use -1)
+			super(PropertyInteger.create(name, 0, BOOK_TEXTURE_MAP.size()));
+		}
+	}
+
+	/** Called from {@link Wizardry#init(FMLInitializationEvent)} to retrieve the actual book items and compile them
+	 * and their textures into immutable lists. */
+	public static void compileBookModelTextures(){
+
+		ImmutableList.Builder<Item> itemListBuider = ImmutableList.builder();
+		ImmutableList.Builder<ResourceLocation> textureListBuilder = ImmutableList.builder();
+
+		for(Map.Entry<Supplier<Item>, ResourceLocation> entry : BOOK_TEXTURE_MAP.entrySet()){
+			itemListBuider.add(entry.getKey().get());
+			textureListBuilder.add(entry.getValue());
+		}
+
+		bookItems = itemListBuider.build();
+		bookTextures = textureListBuilder.build();
+	}
+
+	/** Called from {@link Wizardry#preInit(FMLPreInitializationEvent)} to register the default set of book textures. */
+	public static void registerStandardBookModelTextures(){
+		// Vanilla Minecraft books
+		// Regular brown books are the default so they're registered first
+		registerBookModelTexture(() -> Items.BOOK, 						new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
+		registerBookModelTexture(() -> Items.WRITABLE_BOOK, 			new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
+		registerBookModelTexture(() -> Items.WRITTEN_BOOK, 				new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
+		registerBookModelTexture(() -> Items.ENCHANTED_BOOK, 			new ResourceLocation(Wizardry.MODID, "blocks/books_enchanted"));
+		// Wizardry books
+		registerBookModelTexture(() -> WizardryItems.spell_book, 		new ResourceLocation(Wizardry.MODID, "blocks/books_red"));
+		registerBookModelTexture(() -> WizardryItems.wizard_handbook, 	new ResourceLocation(Wizardry.MODID, "blocks/books_blue"));
+		registerBookModelTexture(() -> WizardryItems.arcane_tome, 		new ResourceLocation(Wizardry.MODID, "blocks/books_purple"));
+	}
+
+	/**
+	 * Registers a book texture to be used for the book model when the given item is placed in a bookshelf. This method
+	 * <b>must</b> be called from {@code preInit} as the registered item count is required during block registration.
+	 * This also necessitates the use of a supplier to fetch the item, since the items will not yet be registered.
+	 * @param itemFactory A {@link Supplier} that returns the book item to link the texture to. This item need not
+	 *                    be an instance of {@link electroblob.wizardry.item.ItemSpellBook ItemSpellBook}. Duplicate
+	 *                    items will result in an {@link IllegalArgumentException} being thrown later.
+	 * @param texture The texture to apply to the book model.
+	 */
+	public static void registerBookModelTexture(Supplier<Item> itemFactory, ResourceLocation texture){
+		BOOK_TEXTURE_MAP.put(itemFactory, texture);
 	}
 
 	/**

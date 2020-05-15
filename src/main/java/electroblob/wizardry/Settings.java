@@ -296,6 +296,8 @@ public final class Settings {
 			Wizardry.MODID + ":acacia_bookshelf",
 			Wizardry.MODID + ":dark_oak_bookshelf"
 	);
+	/** <b>[Synchronised]</b> List of registry names of items that can be placed in a bookshelf. */
+	public Pair<ResourceLocation, Short>[] bookItems = parseItemMetaStrings();
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys
 	// its own values for these, and changing them on a dedicated server will have no effect.
@@ -733,6 +735,11 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_blocks");
 		property.setRequiresWorldRestart(true);
 		bookshelfBlocks = parseItemMetaStrings(property.getStringList());
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "bookItems", new String[0], "List of registry names of items which can be placed in a bookshelf, in addition to the defaults. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. thaumcraft:thaumonomicon).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".book_items");
+		bookItems = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "bookshelfSearchRadius", 4,

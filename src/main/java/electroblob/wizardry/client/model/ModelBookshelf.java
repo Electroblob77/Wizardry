@@ -1,6 +1,7 @@
 package electroblob.wizardry.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -19,7 +20,7 @@ import java.util.function.Function;
 
 public class ModelBookshelf implements IModel {
 
-	private static final ResourceLocation BOOK_TEXTURE = new ResourceLocation(Wizardry.MODID, "blocks/books");
+	private static final ResourceLocation DEFAULT_BOOK_TEXTURE = new ResourceLocation(Wizardry.MODID, "blocks/books");
 
 	private static final List<ResourceLocation> bookModelLocations = new ArrayList<>();
 
@@ -48,11 +49,18 @@ public class ModelBookshelf implements IModel {
 			// I don't know why default state works here (surely it ought to be the state param?), but it works so who cares
 			IBakedModel bookshelf = bookshelfModel.bake(bookshelfModel.getDefaultState(), format, bakedTextureGetter);
 
-			IBakedModel[] books = new IBakedModel[BlockBookshelf.SLOT_COUNT];
+			ImmutableList<ResourceLocation> textures = BlockBookshelf.getBookTextures();
 
-			for(int i = 0; i < BlockBookshelf.SLOT_COUNT; i++){
-				IModel bookModel = ModelLoaderRegistry.getModel(new ModelResourceLocation(bookModelLocations.get(i), variant));
-				books[i] = bookModel.bake(bookModel.getDefaultState(), format, bakedTextureGetter); // Same here!
+			IBakedModel[][] books = new IBakedModel[textures.size()][BlockBookshelf.SLOT_COUNT];
+
+			for(int i = 0; i < textures.size(); i++){
+
+				ImmutableMap<String, String> retexturer = ImmutableMap.of("books", textures.get(i).toString());
+
+				for(int j = 0; j < BlockBookshelf.SLOT_COUNT; j++){
+					IModel bookModel = ModelLoaderRegistry.getModel(new ModelResourceLocation(bookModelLocations.get(j), variant)).retexture(retexturer);
+					books[i][j] = bookModel.bake(bookModel.getDefaultState(), format, bakedTextureGetter); // Same here!
+				}
 			}
 
 			// To clarify: the whole point of doing this was to avoid having to bake 4 * 2^12 models per bookshelf type
@@ -85,7 +93,7 @@ public class ModelBookshelf implements IModel {
 		// 3. Is it correct to use getModel() to get the dependency models upon construction of this class so I can
 		// access their textures properly? Or is that too early?
 		// 4. If so, what's the point of getDependencies, and why should I override it?
-		return ImmutableList.of(BOOK_TEXTURE);
+		return BlockBookshelf.getBookTextures();// ImmutableList.of(DEFAULT_BOOK_TEXTURE);
 	}
 
 }

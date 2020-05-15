@@ -96,6 +96,8 @@ public final class WizardryBlocks {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event){
 
+		BlockBookshelf.initBookProperties();
+
 		IForgeRegistry<Block> registry = event.getRegistry();
 
 		registerBlock(registry, "arcane_workbench", 		new BlockArcaneWorkbench().setHardness(1.0F).setCreativeTab(WizardryTabs.WIZARDRY));

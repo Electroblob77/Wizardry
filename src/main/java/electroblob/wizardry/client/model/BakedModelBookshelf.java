@@ -17,9 +17,9 @@ import java.util.List;
 public class BakedModelBookshelf implements IBakedModel {
 
 	private final IBakedModel bookshelf;
-	private final IBakedModel[] books;
+	private final IBakedModel[][] books;
 
-	public BakedModelBookshelf(IBakedModel bookshelf, IBakedModel... books){
+	public BakedModelBookshelf(IBakedModel bookshelf, IBakedModel[][] books){
 		this.bookshelf = bookshelf;
 		this.books = books;
 	}
@@ -36,9 +36,9 @@ public class BakedModelBookshelf implements IBakedModel {
 		IExtendedBlockState extendedState = (IExtendedBlockState)state;
 
 		for(int i = 0; i<BlockBookshelf.SLOT_COUNT; i++){
-			Boolean value = extendedState.getValue(BlockBookshelf.BOOKS[i]);
-			if(value == null) return fallback.getQuads(null, side, rand);
-			if(value) quads.addAll(books[i].getQuads(state, side, rand));
+			Integer value = extendedState.getValue(BlockBookshelf.BOOKS[i]);
+			if(value == null || value < 0) return fallback.getQuads(null, side, rand);
+			if(value < books.length) quads.addAll(books[value][i].getQuads(state, side, rand)); // Empty slots use books.length
 		}
 
 		return quads;

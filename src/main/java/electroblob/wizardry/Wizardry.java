@@ -1,5 +1,6 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
 import electroblob.wizardry.command.CommandSetAlly;
@@ -8,6 +9,7 @@ import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
+import electroblob.wizardry.inventory.ContainerBookshelf;
 import electroblob.wizardry.misc.Forfeit;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.*;
@@ -123,6 +125,7 @@ public class Wizardry {
 		WizardryLoot.register();
 		WizardryAdvancementTriggers.register();
 		Forfeit.register();
+		BlockBookshelf.registerStandardBookModelTextures();
 
 		// Client-side stuff (via proxies)
 		proxy.registerRenderers();
@@ -159,6 +162,8 @@ public class Wizardry {
 		WizardryPacketHandler.initPackets();
 
 		// Post-registry extras
+		BlockBookshelf.compileBookModelTextures();
+		ContainerBookshelf.initDefaultBookItems();
 		WizardryItems.populateWandMap();
 		WizardryItems.populateArmourMap();
 		WizardryItems.registerDispenseBehaviours();

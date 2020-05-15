@@ -1,16 +1,28 @@
 package electroblob.wizardry.inventory;
 
+import electroblob.wizardry.Settings;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.item.ItemSpellBook;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityBookshelf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Supplier;
 
 public class ContainerBookshelf extends Container {
+
+	private static final Set<Item> validItems = new HashSet<>();
 
 	/** The bookshelf tile entity associated with this container. */
 	public TileEntityBookshelf tileentity;
@@ -21,7 +33,7 @@ public class ContainerBookshelf extends Container {
 
 		for(int y = 0; y < 2; y++){
 			for(int x = 0; x < BlockBookshelf.SLOT_COUNT / 2; x++){
-				this.addSlotToContainer(new SlotBookshelf(tileentity, x + BlockBookshelf.SLOT_COUNT / 2 * y, 35 + x * 18, 17 + y * 18, 64, ItemSpellBook.class));
+				this.addSlotToContainer(new SlotBookshelf(tileentity, x + BlockBookshelf.SLOT_COUNT / 2 * y, 35 + x * 18, 17 + y * 18));
 			}
 		}
 
@@ -94,11 +106,31 @@ public class ContainerBookshelf extends Container {
 		return remainder;
 	}
 
-	public class SlotBookshelf extends SlotItemClassList {
+	/**
+	 * Adds the given item to the set of items that can be put in a bookshelf. This method should be called from the
+	 * {@code init()} phase.
+	 * @param item The item to register
+	 * @see BlockBookshelf#registerBookModelTexture(Supplier, ResourceLocation)
+	 */
+	public static void registerBookItem(Item item){
+		validItems.add(item);
+	}
 
-		@SafeVarargs
-		public SlotBookshelf(IInventory inventory, int index, int x, int y, int stackLimit, Class<? extends Item>... allowedItemClasses){
-			super(inventory, index, x, y, stackLimit, allowedItemClasses);
+	/** Called from {@link Wizardry#init(FMLInitializationEvent)} to register the default book items. */
+	public static void initDefaultBookItems(){
+		registerBookItem(WizardryItems.spell_book);
+		registerBookItem(WizardryItems.arcane_tome);
+		registerBookItem(WizardryItems.wizard_handbook);
+		registerBookItem(Items.BOOK);
+		registerBookItem(Items.WRITTEN_BOOK);
+		registerBookItem(Items.WRITABLE_BOOK);
+		registerBookItem(Items.ENCHANTED_BOOK);
+	}
+
+	public class SlotBookshelf extends Slot {
+
+		public SlotBookshelf(IInventory inventory, int index, int x, int y){
+			super(inventory, index, x, y);
 		}
 
 		@Override
@@ -115,6 +147,10 @@ public class ContainerBookshelf extends Container {
 			return result;
 		}
 
+		@Override
+		public boolean isItemValid(ItemStack stack){
+			return validItems.contains(stack.getItem()) || Settings.containsMetaItem(Wizardry.settings.bookItems, stack);
+		}
 	}
 
 }
