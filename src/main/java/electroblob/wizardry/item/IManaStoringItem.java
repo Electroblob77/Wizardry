@@ -71,4 +71,10 @@ public interface IManaStoringItem {
 	default boolean isManaEmpty(ItemStack stack){
 		return getMana(stack) == 0;
 	}
+
+	/** Returns how full the given stack's mana is, as a fraction between 0 (empty) and 1 (full) */
+	default float getFullness(ItemStack stack){
+		return (float)getMana(stack) / getManaCapacity(stack);
+	}
+
 }

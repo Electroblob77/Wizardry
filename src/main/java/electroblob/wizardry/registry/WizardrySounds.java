@@ -36,6 +36,8 @@ public final class WizardrySounds {
 	public static final SoundEvent ITEM_WAND_MELEE = 				createSound("item.wand.melee");
 	public static final SoundEvent ITEM_ARMOUR_EQUIP_SILK = 		createSound("item.armour.equip_silk");
 	public static final SoundEvent ITEM_PURIFYING_ELIXIR_DRINK = 	createSound("item.purifying_elixir.drink");
+	public static final SoundEvent ITEM_MANA_FLASK_USE = 			createSound("item.mana_flask.use");
+	public static final SoundEvent ITEM_MANA_FLASK_RECHARGE = 		createSound("item.mana_flask.recharge");
 
 	public static final SoundEvent ENTITY_BLACK_HOLE_AMBIENT = 		createSound("entity.black_hole.ambient");
 	public static final SoundEvent ENTITY_BLACK_HOLE_VANISH = 		createSound("entity.black_hole.vanish");
@@ -164,6 +166,8 @@ public final class WizardrySounds {
 		event.getRegistry().register(ITEM_WAND_MELEE);
 		event.getRegistry().register(ITEM_ARMOUR_EQUIP_SILK);
 		event.getRegistry().register(ITEM_PURIFYING_ELIXIR_DRINK);
+		event.getRegistry().register(ITEM_MANA_FLASK_USE);
+		event.getRegistry().register(ITEM_MANA_FLASK_RECHARGE);
 
 		event.getRegistry().register(ENTITY_BLACK_HOLE_AMBIENT);
 		event.getRegistry().register(ENTITY_BLACK_HOLE_VANISH);

@@ -10,7 +10,9 @@
 	"item.wand.melee": 					{"category": "player", "sounds": ["ebwizardry:effect1", "ebwizardry:effect2"]},
 	"item.armour.equip_silk": 			{"category": "player", "sounds": ["item/armor/equip_leather1", "item/armor/equip_leather2", "item/armor/equip_leather3", "item/armor/equip_leather4", "item/armor/equip_leather5", "item/armor/equip_leather6"]},
 	"item.purifying_elixir.drink": 		{"category": "player", "sounds": ["ebwizardry:buff_large"]},
-	
+	"item.mana_flask.use": 				{"category": "player", "sounds": ["item/bottle/fill1", "item/bottle/fill2", "item/bottle/fill3", "item/bottle/fill4"]},
+	"item.mana_flask.recharge": 		{"category": "player", "sounds": ["ebwizardry:conjure"]},
+
 	"entity.black_hole.ambient": 		{"category": "spells", "sounds": ["portal/portal"]},
 	"entity.black_hole.vanish": 		{"category": "spells", "sounds": ["portal/trigger"]},
 	"entity.bubble.pop": 				{"category": "spells", "sounds": ["random/pop"]},
