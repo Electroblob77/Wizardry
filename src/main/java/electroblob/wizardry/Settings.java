@@ -739,6 +739,7 @@ public final class Settings {
 
 		property = config.get(TWEAKS_CATEGORY, "bookItems", new String[0], "List of registry names of items which can be placed in a bookshelf, in addition to the defaults. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. thaumcraft:thaumonomicon).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".book_items");
+		property.setRequiresWorldRestart(true);
 		bookItems = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
