@@ -190,6 +190,9 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 
 				// Scrolls are consumed upon successful use in survival mode
 				if(!spell.isContinuous && !caster.isCreative()) stack.shrink(1);
+
+				// Now uses the vanilla cooldown mechanic to prevent spamming of spells
+				if(!spell.isContinuous) caster.getCooldownTracker().setCooldown(this, spell.getCooldown());
 			}
 
 			return true;
@@ -201,21 +204,29 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft){
 		// Consumes a continuous spell scroll when a player in survival mode stops using it.
-		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
-				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
-			stack.shrink(1);
-		}
+		finishCasting(stack, user);
 	}
-	
+
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase user){
 		// Consumes a continuous spell scroll when the casting elapses whilst in use by a player in survival mode.
+		finishCasting(stack, user);
+		return stack;
+	}
+
+	private void finishCasting(ItemStack stack, EntityLivingBase user){
+
 		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
 				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
+
 			stack.shrink(1);
+
+			Spell spell = Spell.byMetadata(stack.getItemDamage());
+
+			if(user instanceof EntityPlayer){
+				((EntityPlayer)user).getCooldownTracker().setCooldown(this, spell.getCooldown());
+			}
 		}
-		
-		return stack;
 	}
 
 	@Override

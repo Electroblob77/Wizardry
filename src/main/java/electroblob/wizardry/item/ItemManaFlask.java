@@ -77,6 +77,7 @@ public class ItemManaFlask extends Item {
 			WizardryUtilities.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_RECHARGE, 0.7f, 1.1f);
 
 			if(!player.isCreative()) flask.shrink(1);
+			player.getCooldownTracker().setCooldown(this, 20);
 
 			return new ActionResult<>(EnumActionResult.SUCCESS, flask);
 
