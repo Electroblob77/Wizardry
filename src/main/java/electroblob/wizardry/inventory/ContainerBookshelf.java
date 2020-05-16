@@ -139,7 +139,9 @@ public class ContainerBookshelf extends Container {
 
 		@Override
 		public void putStack(ItemStack stack){
-			boolean statusChanged = this.getStack().isEmpty() != stack.isEmpty();
+			boolean statusChanged = this.getStack().isEmpty() != stack.isEmpty()
+					|| BlockBookshelf.getBookItems().indexOf(this.getStack().getItem())
+					!= BlockBookshelf.getBookItems().indexOf(stack.getItem());
 			super.putStack(stack);
 			if(statusChanged) ContainerBookshelf.this.onSlotChanged();
 		}

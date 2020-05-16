@@ -196,6 +196,11 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		return bookTextures == null ? ImmutableList.copyOf(BOOK_TEXTURE_MAP.values()) : bookTextures;
 	}
 
+	/** Returns the list of registered book items, in ID order. */
+	public static ImmutableList<Item> getBookItems(){
+		return bookItems;
+	}
+
 	/** Called during block registration to initialise the block properties for each book. */
 	public static void initBookProperties(){
 		for(int i=0; i<SLOT_COUNT; i++){
