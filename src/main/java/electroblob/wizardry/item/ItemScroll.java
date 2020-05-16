@@ -203,25 +203,29 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft){
-		// Consumes a continuous spell scroll when a player in survival mode stops using it.
-		finishCasting(stack, user);
+		// Casting has stopped before the full time has elapsed
+		finishCasting(stack, user, timeLeft);
 	}
 
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase user){
-		// Consumes a continuous spell scroll when the casting elapses whilst in use by a player in survival mode.
-		finishCasting(stack, user);
+		// Full casting time has elapsed
+		finishCasting(stack, user, 0);
 		return stack;
 	}
 
-	private void finishCasting(ItemStack stack, EntityLivingBase user){
+	private void finishCasting(ItemStack stack, EntityLivingBase user, int timeLeft){
 
-		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
-				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
-
-			stack.shrink(1);
+		if(Spell.byMetadata(stack.getItemDamage()).isContinuous){
+			// Consume scrolls in survival mode
+			if(!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative()) stack.shrink(1);
 
 			Spell spell = Spell.byMetadata(stack.getItemDamage());
+			SpellModifiers modifiers = new SpellModifiers();
+			int castingTick = stack.getMaxItemUseDuration() - timeLeft;
+
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Finish(Source.SCROLL, spell, user, modifiers, castingTick));
+			spell.finishCasting(user.world, user, Double.NaN, Double.NaN, Double.NaN, null, castingTick, modifiers);
 
 			if(user instanceof EntityPlayer){
 				((EntityPlayer)user).getCooldownTracker().setCooldown(this, spell.getCooldown());
