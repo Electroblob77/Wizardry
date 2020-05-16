@@ -4,6 +4,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 /**
  * Interface for any items that store mana. This interface simply specifies methods for setting and getting the amount
  * of mana held in the item (plus a few convenience methods); implementations may differ between items.
@@ -48,7 +50,7 @@ public interface IManaStoringItem {
 
 	/** Convenience method that decreases the amount of mana contained in the given item stack by the given value. This
 	 * method automatically limits the mana to a minimum of 0 and performs the relevant checks for creative mode, etc. */
-	default void consumeMana(ItemStack stack, int mana, EntityLivingBase wielder){
+	default void consumeMana(ItemStack stack, int mana, @Nullable EntityLivingBase wielder){
 		if(wielder instanceof EntityPlayer && ((EntityPlayer)wielder).isCreative()) return; // Mana isn't consumed in creative
 		setMana(stack, Math.max(getMana(stack) - mana, 0));
 	}
