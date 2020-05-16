@@ -3,7 +3,6 @@ package electroblob.wizardry.inventory;
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
-import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityBookshelf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -83,7 +82,7 @@ public class ContainerBookshelf extends Container {
 				int minSlotId = 0;
 				int maxSlotId = BlockBookshelf.SLOT_COUNT - 1;
 
-				if(!(stack.getItem() instanceof ItemSpellBook)) return ItemStack.EMPTY;
+				if(!isBook(stack)) return ItemStack.EMPTY;
 
 				if(!this.mergeItemStack(stack, minSlotId, maxSlotId + 1, false)){
 					return ItemStack.EMPTY;
@@ -104,6 +103,11 @@ public class ContainerBookshelf extends Container {
 		}
 
 		return remainder;
+	}
+
+	/** Returns true if the given stack counts as a book and can be placed in a bookshelf, false if not. */
+	public static boolean isBook(ItemStack stack){
+		return validItems.contains(stack.getItem()) || Settings.containsMetaItem(Wizardry.settings.bookItems, stack);
 	}
 
 	/**
@@ -149,7 +153,7 @@ public class ContainerBookshelf extends Container {
 
 		@Override
 		public boolean isItemValid(ItemStack stack){
-			return validItems.contains(stack.getItem()) || Settings.containsMetaItem(Wizardry.settings.bookItems, stack);
+			return isBook(stack);
 		}
 	}
 
