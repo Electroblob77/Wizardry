@@ -33,6 +33,8 @@
 	"entity.lightning_sigil.trigger": 	{"category": "spells", "sounds": ["ebwizardry:arc1", "ebwizardry:arc2", "ebwizardry:arc3"]},
 	"entity.meteor.falling": 			{"category": "spells", "sounds": ["ebwizardry:flames_loop"]},
 	"entity.shield.deflect": 			{"category": "spells", "sounds": ["ebwizardry:effect1", "ebwizardry:effect2"]},
+	"entity.stormcloud.thunder": 		{"category": "spells", "sounds": ["ambient/weather/thunder1", "ambient/weather/thunder2", "ambient/weather/thunder3"]},
+	"entity.stormcloud.attack": 		{"category": "spells", "sounds": ["ebwizardry:arc1", "ebwizardry:arc2", "ebwizardry:arc3"]},
 	"entity.tornado.ambient": 			{"category": "spells", "sounds": ["ebwizardry:wind"]},
 	
 	"entity.evil_wizard.ambient": 		{"category": "hostile", "sounds": ["mob/evocation_illager/idle1", "mob/evocation_illager/idle2", "mob/evocation_illager/idle3", "mob/evocation_illager/idle4"]},
@@ -285,6 +287,7 @@
 	"spell.spider_swarm": 				{"category": "spells", "sounds": ["random/fizz"]},
 	"spell.static_aura": 				{"category": "spells", "sounds": ["ebwizardry:buff"]},
 	"spell.static_aura.retaliate": 		{"category": "spells", "sounds": ["ebwizardry:arc1", "ebwizardry:arc2", "ebwizardry:arc3"]},
+	"spell.stormcloud": 				{"category": "spells", "sounds": ["ambient/weather/thunder1", "ambient/weather/thunder2", "ambient/weather/thunder3"]},
 	"spell.summon_blaze": 				{"category": "spells", "sounds": ["mob/wither/idle1", "mob/wither/idle2", "mob/wither/idle3", "mob/wither/idle4"]},
 	"spell.summon_ice_giant": 			{"category": "spells", "sounds": ["mob/evocation_illager/prepare_summon"]},
 	"spell.summon_ice_wraith": 			{"category": "spells", "sounds": ["mob/wither/idle1", "mob/wither/idle2", "mob/wither/idle3", "mob/wither/idle4"]},

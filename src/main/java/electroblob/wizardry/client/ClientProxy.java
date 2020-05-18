@@ -795,6 +795,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityStormElemental.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEarthquake.class, RenderBlank::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityHailstorm.class, RenderBlank::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityStormcloud.class, RenderBlank::new);
 
 		// Runes on ground
 		RenderingRegistry.registerEntityRenderingHandler(EntityHealAura.class,

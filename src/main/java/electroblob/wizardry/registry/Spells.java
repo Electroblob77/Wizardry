@@ -8,7 +8,6 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.spell.*;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -239,6 +238,10 @@ public final class Spells {
 	public static final Spell slow_time = placeholder();
 	public static final Spell resurrection = placeholder();
 
+	// Wizardry 4.3 spells
+
+	public static final Spell stormcloud = placeholder();
+
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Spell> event){
 
@@ -437,6 +440,11 @@ public final class Spells {
 		registry.register(new SpeedTime());
 		registry.register(new SlowTime());
 		registry.register(new Resurrection());
+
+		// Wizardry 4.3 spells
+
+		registry.register(new Stormcloud());
+
 	}
 
 }

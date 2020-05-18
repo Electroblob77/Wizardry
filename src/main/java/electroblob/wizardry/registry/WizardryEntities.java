@@ -150,6 +150,7 @@ public class WizardryEntities {
 		registry.register(createEntry(EntityArrowRain.class, 		"arrow_rain", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityEarthquake.class, 		"earthquake", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityHailstorm.class, 		"hailstorm", 			TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityStormcloud.class, 		"stormcloud", 		TrackingType.CONSTRUCT).build());
 
 		// These ones move, velocity updates are sent if that's not at constant velocity
 		registry.register(createEntry(EntityShield.class, 			"shield")				.tracker(160, 10, true).build());

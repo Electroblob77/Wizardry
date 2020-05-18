@@ -86,6 +86,8 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_STORM_ELEMENTAL_WIND = 	createSound("entity.storm_elemental.wind");
 	public static final SoundEvent ENTITY_STORM_ELEMENTAL_HURT = 	createSound("entity.storm_elemental.hurt");
 	public static final SoundEvent ENTITY_STORM_ELEMENTAL_DEATH = 	createSound("entity.storm_elemental.death");
+	public static final SoundEvent ENTITY_STORMCLOUD_THUNDER = 		createSound("entity.stormcloud.thunder");
+	public static final SoundEvent ENTITY_STORMCLOUD_ATTACK = 		createSound("entity.stormcloud.attack");
 	public static final SoundEvent ENTITY_WIZARD_YES = 				createSound("entity.wizard.yes");
 	public static final SoundEvent ENTITY_WIZARD_NO = 				createSound("entity.wizard.no");
 	public static final SoundEvent ENTITY_WIZARD_AMBIENT = 			createSound("entity.wizard.ambient");
