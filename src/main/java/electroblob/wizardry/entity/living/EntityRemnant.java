@@ -43,7 +43,6 @@ public class EntityRemnant extends EntityMob {
 	public EntityRemnant(World world){
 		super(world);
 		this.setSize(0.8f, 0.8f);
-		this.isImmuneToFire = true;
 		this.moveHelper = new EntityRemnant.AIMoveControl(this);
 		this.experienceValue = 8;
 	}
@@ -111,6 +110,19 @@ public class EntityRemnant extends EntityMob {
 	@Override
 	protected boolean isValidLightLevel(){
 		return true;
+	}
+
+	@Override
+	public float getBlockPathWeight(BlockPos pos){
+		// Goddamnit Minecraft, stop imposing obscure spawning restrictions
+		return 1; // This won't affect pathfinding since remnants are flying mobs anyway
+	}
+
+	@Override
+	protected float applyPotionDamageCalculations(DamageSource source, float damage){
+		damage = super.applyPotionDamageCalculations(source, damage);
+		if(source.isMagicDamage()) damage *= 0.25f; // Remnants are 75% resistant to magic damage
+		return damage;
 	}
 
 	@Override
