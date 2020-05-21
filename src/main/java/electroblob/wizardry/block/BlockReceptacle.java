@@ -40,7 +40,7 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 
 	private static final double WALL_PARTICLE_OFFSET = 3/16d;
 
-	private static final Map<Element, int[]> PARTICLE_COLOURS;
+	public static final Map<Element, int[]> PARTICLE_COLOURS;
 
 	static {
 

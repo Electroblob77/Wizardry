@@ -445,6 +445,7 @@ entity.ebwizardry\:storm_elemental.name=Storm Elemental
 entity.ebwizardry\:evil_wizard.name=Wizard
 entity.ebwizardry\:decoy.name=Decoy
 entity.ebwizardry\:vex_minion.name=Vex
+entity.ebwizardry\:remnant.name=Remnant
 
 entity.ebwizardry\:magic_missile.name=Magic
 entity.ebwizardry\:arc.name=Magic

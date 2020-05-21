@@ -75,6 +75,9 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_PHOENIX_FLAP = 			createSound("entity.phoenix.flap");
 	public static final SoundEvent ENTITY_PHOENIX_HURT = 			createSound("entity.phoenix.hurt");
 	public static final SoundEvent ENTITY_PHOENIX_DEATH = 			createSound("entity.phoenix.death");
+	public static final SoundEvent ENTITY_REMNANT_AMBIENT = 		createSound("entity.remnant.ambient");
+	public static final SoundEvent ENTITY_REMNANT_HURT = 			createSound("entity.remnant.hurt");
+	public static final SoundEvent ENTITY_REMNANT_DEATH = 			createSound("entity.remnant.death");
 	public static final SoundEvent ENTITY_SHADOW_WRAITH_AMBIENT = 	createSound("entity.shadow_wraith.ambient");
 	public static final SoundEvent ENTITY_SHADOW_WRAITH_NOISE = 	createSound("entity.shadow_wraith.noise");
 	public static final SoundEvent ENTITY_SHADOW_WRAITH_HURT = 		createSound("entity.shadow_wraith.hurt");
@@ -207,6 +210,9 @@ public final class WizardrySounds {
 		event.getRegistry().register(ENTITY_PHOENIX_FLAP);
 		event.getRegistry().register(ENTITY_PHOENIX_HURT);
 		event.getRegistry().register(ENTITY_PHOENIX_DEATH);
+		event.getRegistry().register(ENTITY_REMNANT_AMBIENT);
+		event.getRegistry().register(ENTITY_REMNANT_HURT);
+		event.getRegistry().register(ENTITY_REMNANT_DEATH);
 		event.getRegistry().register(ENTITY_SHADOW_WRAITH_AMBIENT);
 		event.getRegistry().register(ENTITY_SHADOW_WRAITH_NOISE);
 		event.getRegistry().register(ENTITY_SHADOW_WRAITH_HURT);

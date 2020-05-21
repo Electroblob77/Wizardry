@@ -103,6 +103,7 @@ public class WizardryEntities {
 				.spawn(EnumCreatureType.MONSTER, Wizardry.settings.evilWizardSpawnRate, 1, 1, ForgeRegistries.BIOMES.getValuesCollection().stream()
 						.filter(b -> !Arrays.asList(Wizardry.settings.mobSpawnBiomeBlacklist).contains(b.getRegistryName()))
 						.collect(Collectors.toSet())).build());
+		registry.register(createEntry(EntityRemnant.class, 			"remnant", 			TrackingType.LIVING).egg(0xe4c7cd, 0x9d2cf3).build());
 
 		// Directed projectiles
 		registry.register(createEntry(EntityMagicMissile.class, 	"magic_missile", 		TrackingType.PROJECTILE).build());

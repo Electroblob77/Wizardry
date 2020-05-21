@@ -746,6 +746,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityWizard.class, RenderWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityEvilWizard.class, RenderEvilWizard::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecoy.class, RenderDecoy::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityRemnant.class, RenderRemnant::new);
 
 		// Throwables
 		RenderingRegistry.registerEntityRenderingHandler(EntitySparkBomb.class,
