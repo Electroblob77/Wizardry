@@ -584,6 +584,7 @@ public final class Settings {
 				"Whether passive mobs should count as allies, i.e. they should not be damaged indirectly by spells.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".passive_mobs_are_allies");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
 		passiveMobsAreAllies = property.getBoolean();
 		propOrder.add(property.getName());
 
