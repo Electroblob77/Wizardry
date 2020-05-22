@@ -42,6 +42,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		Wizardry.settings.bookshelfSearchRadius = message.settings.bookshelfSearchRadius;
 		Wizardry.settings.bookshelfBlocks = message.settings.bookshelfBlocks;
 		Wizardry.settings.bookItems = message.settings.bookItems;
+		Wizardry.settings.passiveMobsAreAllies = message.settings.passiveMobsAreAllies;
 	}
 
 	public static class Message implements IMessage {
@@ -71,6 +72,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.bookshelfSearchRadius = buf.readInt();
 			settings.bookshelfBlocks = readMetaItems(buf);
 			settings.bookItems = readMetaItems(buf);
+			settings.passiveMobsAreAllies = buf.readBoolean();
 		}
 
 		@Override
@@ -83,6 +85,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeInt(settings.bookshelfSearchRadius);
 			writeMetaItems(buf, settings.bookshelfBlocks);
 			writeMetaItems(buf, settings.bookItems);
+			buf.writeBoolean(settings.passiveMobsAreAllies);
 		}
 
 		@SuppressWarnings("unchecked")

@@ -158,8 +158,6 @@ public final class Settings {
 	public boolean teleportThroughUnbreakableBlocks = false;
 	/** <b>[Server-only]</b> Whether to allow players to damage their designated allies using magic. */
 	public FriendlyFire friendlyFire = FriendlyFire.ALL;
-	/** <b>[Server-only]</b> Whether passive mobs should count as allies, i.e. they should not be targeted by minions, lightning chaining, etc. */
-	public boolean passiveMobsAreAllies = false;
 	/** <b>[Server-only]</b> Whether to allow players to disarm other players using the telekinesis spell. */
 	public boolean telekineticDisarmament = true;
 	/** <b>[Server-only]</b> Whether summoned creatures can revenge attack their caster if their caster attacks them. */
@@ -277,6 +275,8 @@ public final class Settings {
 	 * effect.
 	 */
 	public boolean slowTimeAffectsPlayers = true;
+	/** <b>[Synchronised]</b> Whether passive mobs should count as allies, i.e. they should not be damaged indirectly by spells */
+	public boolean passiveMobsAreAllies = false;
 	/** <b>[Synchronised]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
 	public boolean replaceVanillaFireballs = true;
 	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
@@ -581,10 +581,9 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(DIFFICULTY_CATEGORY, "passiveMobsAreAllies", false,
-				"Whether passive mobs should count as allies, i.e. they should not be targeted by minions, lightning chaining, etc.");
+				"Whether passive mobs should count as allies, i.e. they should not be damaged indirectly by spells.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".passive_mobs_are_allies");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
-		property.setRequiresWorldRestart(false);
 		passiveMobsAreAllies = property.getBoolean();
 		propOrder.add(property.getName());
 
