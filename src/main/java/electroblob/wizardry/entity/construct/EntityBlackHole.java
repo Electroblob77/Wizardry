@@ -1,19 +1,25 @@
 package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.entity.EntityLevitatingBlock;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,10 +88,42 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(6.0d, this.posX, this.posY,
-					this.posZ, this.world);
+			double radius = 6; // TODO: Support for spell properties and modifiers
 
-			for(EntityLivingBase target : targets){
+			boolean suckInBlocks = getCaster() instanceof EntityPlayer && WizardryUtilities.canDamageBlocks(getCaster(), world)
+					&& ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_black_hole);
+
+			if(suckInBlocks){
+
+				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(new BlockPos(this), radius);
+
+				for(BlockPos pos : sphere){
+
+					if(rand.nextInt(Math.max(1, (int)this.getDistanceSq(pos) * 3)) == 0){
+
+						if(!WizardryUtilities.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
+								&& world.isBlockNormalCube(pos, false)){
+							// Checks that the block above is not solid, since this causes the falling block to vanish.
+//							&& !world.isBlockNormalCube(pos.up(), false)){
+
+							EntityFallingBlock fallingBlock = new EntityLevitatingBlock(world, pos.getX() + 0.5,
+									pos.getY() + 0.5, pos.getZ() + 0.5, world.getBlockState(pos));
+//							fallingBlock.noClip = true;
+							fallingBlock.fallTime = 1; // Prevent it from trying to delete the block itself
+							world.spawnEntity(fallingBlock);
+							world.setBlockToAir(pos);
+						}
+					}
+				}
+
+			}
+
+			List<Entity> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
+					this.posZ, this.world, Entity.class);
+
+			targets.removeIf(t -> !(t instanceof EntityLivingBase || (suckInBlocks && t instanceof EntityFallingBlock)));
+
+			for(Entity target : targets){
 
 				if(this.isValidTarget(target)){
 
@@ -94,6 +132,7 @@ public class EntityBlackHole extends EntityMagicConstruct {
 							|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)))){
 
 						WizardryUtilities.undoGravity(target);
+						if(target instanceof EntityLevitatingBlock) ((EntityLevitatingBlock)target).suspend();
 
 						// Sucks the target in
 						if(this.posX > target.posX && target.motionX < 1){
@@ -121,13 +160,22 @@ public class EntityBlackHole extends EntityMagicConstruct {
 					}
 
 					if(this.getDistance(target) <= 2){
-						// Damages the target if it is close enough
-						if(this.getCaster() != null){
-							target.attackEntityFrom(
-									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC),
-									2 * damageMultiplier);
+						// Damages the target if it is close enough, or destroys it if it's a block
+						if(target instanceof EntityFallingBlock){
+							target.playSound(WizardrySounds.ENTITY_BLACK_HOLE_BREAK_BLOCK, 0.5f,
+									(rand.nextFloat() - rand.nextFloat()) * 0.2f + 1);
+							IBlockState state = ((EntityFallingBlock)target).getBlock();
+							if(state != null) world.playEvent(2001, new BlockPos(target), Block.getStateId(state));
+							target.setDead();
+
 						}else{
-							target.attackEntityFrom(DamageSource.MAGIC, 2 * damageMultiplier);
+							if(this.getCaster() != null){
+								target.attackEntityFrom(
+										MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC),
+										2 * damageMultiplier);
+							}else{
+								target.attackEntityFrom(DamageSource.MAGIC, 2 * damageMultiplier);
+							}
 						}
 					}
 				}

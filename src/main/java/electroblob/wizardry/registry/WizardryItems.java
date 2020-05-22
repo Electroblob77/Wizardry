@@ -262,6 +262,7 @@ public final class WizardryItems {
 
 	public static final Item charm_haggler = placeholder();
 	public static final Item charm_experience_tome = placeholder();
+	public static final Item charm_move_speed = placeholder();
 	public static final Item charm_auto_smelt = placeholder();
 	public static final Item charm_lava_walking = placeholder();
 	public static final Item charm_storm = placeholder();
@@ -274,6 +275,7 @@ public final class WizardryItems {
 	public static final Item charm_stop_time = placeholder();
 	public static final Item charm_light = placeholder();
 	public static final Item charm_transportation = placeholder();
+	public static final Item charm_black_hole = placeholder();
 	public static final Item charm_feeding = placeholder();
 
 	private static final Map<Pair<Tier, Element>, Item> WAND_MAP = new HashMap<>();
@@ -612,6 +614,7 @@ public final class WizardryItems {
 
 		registerItem(registry, "charm_haggler", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_experience_tome", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_move_speed", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_auto_smelt", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_lava_walking", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_storm", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
@@ -624,6 +627,7 @@ public final class WizardryItems {
 		registerItem(registry, "charm_stop_time", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_light", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_transportation", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_black_hole", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_feeding", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
 
 	}

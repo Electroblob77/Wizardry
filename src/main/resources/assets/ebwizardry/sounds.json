@@ -15,6 +15,7 @@
 
 	"entity.black_hole.ambient": 		{"category": "spells", "sounds": ["portal/portal"]},
 	"entity.black_hole.vanish": 		{"category": "spells", "sounds": ["portal/trigger"]},
+	"entity.black_hole.break_block": 	{"category": "spells", "sounds": ["mob/zombie/woodbreak"]},
 	"entity.bubble.pop": 				{"category": "spells", "sounds": ["random/pop"]},
 	"entity.blizzard.ambient": 			{"category": "spells", "sounds": ["ebwizardry:wind"]},
 	"entity.decay.ambient": 			{"category": "spells", "sounds": ["liquid/lava"]},

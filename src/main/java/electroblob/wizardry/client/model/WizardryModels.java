@@ -279,6 +279,7 @@ public final class WizardryModels {
 
 		registerItemModel(WizardryItems.charm_haggler);
 		registerItemModel(WizardryItems.charm_experience_tome);
+		registerItemModel(WizardryItems.charm_move_speed);
 		registerItemModel(WizardryItems.charm_auto_smelt);
 		registerItemModel(WizardryItems.charm_lava_walking);
 		registerItemModel(WizardryItems.charm_storm);
@@ -291,6 +292,7 @@ public final class WizardryModels {
 		registerItemModel(WizardryItems.charm_stop_time);
 		registerItemModel(WizardryItems.charm_light);
 		registerItemModel(WizardryItems.charm_transportation);
+		registerItemModel(WizardryItems.charm_black_hole);
 		registerItemModel(WizardryItems.charm_feeding);
 
 	}

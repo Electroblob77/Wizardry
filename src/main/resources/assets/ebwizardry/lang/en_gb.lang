@@ -362,6 +362,8 @@ item.ebwizardry\:charm_haggler.name=Haggler's Sign
 item.ebwizardry\:charm_haggler.desc=Wizards are guaranteed to offer a new trade every time you trade with them
 item.ebwizardry\:charm_experience_tome.name=Tome of the Diligent
 item.ebwizardry\:charm_experience_tome.desc=Increases the rate at which wands gain progression by 50%%
+item.ebwizardry\:charm_move_speed.name=Icarus Medallion
+item.ebwizardry\:charm_move_speed.desc=Move at near-full speed when casting spells
 item.ebwizardry\:charm_auto_smelt.name=Metallurgist's Mark
 item.ebwizardry\:charm_auto_smelt.desc=Pocket furnace triggers automatically when bound to a wand on your hotbar
 item.ebwizardry\:charm_lava_walking.name=Nether Ice Core
@@ -386,6 +388,8 @@ item.ebwizardry\:charm_light.name=Elevinia's Everburning Lantern
 item.ebwizardry\:charm_light.desc=Conjured light sources last forever and may be dispelled by right-clicking with a wand
 item.ebwizardry\:charm_transportation.name=Ancient Compass
 item.ebwizardry\:charm_transportation.desc=Up to four stone circles may be remembered and selected from when using transportation
+item.ebwizardry\:charm_black_hole.name=Void Opal
+item.ebwizardry\:charm_black_hole.desc=Black hole sucks in and destroys blocks
 item.ebwizardry\:charm_feeding.name=Bottomless Provisions
 item.ebwizardry\:charm_feeding.desc=Replenish hunger and satiety trigger automatically when bound to a wand on your hotbar
 

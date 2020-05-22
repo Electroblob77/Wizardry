@@ -9,6 +9,7 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.ItemSpectralBow;
+import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
@@ -172,6 +173,14 @@ public final class WizardryClientEventHandler {
 			event.getMovementInput().moveStrafe = 0;
 			event.getMovementInput().jump = false;
 			event.getMovementInput().sneak = false;
+		}
+
+		if(ItemArtefact.isArtefactActive(event.getEntityPlayer(), WizardryItems.charm_move_speed)
+				&& event.getEntityPlayer().isHandActive()
+				&& event.getEntityPlayer().getActiveItemStack().getItem() instanceof ItemWand){
+			// Normally speed is set to 20% when using items, this makes it 80%
+			event.getMovementInput().moveStrafe *= 4;
+			event.getMovementInput().moveForward *= 4;
 		}
 	}
 
