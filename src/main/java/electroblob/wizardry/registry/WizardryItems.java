@@ -370,8 +370,15 @@ public final class WizardryItems {
 	 * also automatically adds it to the order list for its creative tab if that tab is a {@link CreativeTabListed},
 	 * meaning the order can be defined simply by the order in which the items are registered in this class. */
 	private static void registerItemBlock(IForgeRegistry<Item> registry, Block block){
+		registerItemBlock(registry, block, new ItemBlock(block));
+	}
+
+	/** Registers the given ItemBlock for the given block, with the same registry name as that block. This
+	 * also automatically adds it to the order list for its creative tab if that tab is a {@link CreativeTabListed},
+	 * meaning the order can be defined simply by the order in which the items are registered in this class. */
+	private static void registerItemBlock(IForgeRegistry<Item> registry, Block block, ItemBlock itemblock){
 		// We don't need to keep a reference to the ItemBlock
-		Item itemblock = new ItemBlock(block).setRegistryName(block.getRegistryName());
+		itemblock.setRegistryName(block.getRegistryName());
 		registry.register(itemblock);
 
 		if(block.getCreativeTab() instanceof CreativeTabListed){
@@ -400,7 +407,7 @@ public final class WizardryItems {
 		// Not all blocks need an ItemBlock
 		registerItemBlock(registry, WizardryBlocks.arcane_workbench);
 		registerItemBlock(registry, WizardryBlocks.crystal_ore);
-		registerItemBlock(registry, WizardryBlocks.crystal_flower);
+		registerItemBlock(registry, WizardryBlocks.crystal_flower, new ItemCrystalFlower());
 		registerItemBlock(registry, WizardryBlocks.transportation_stone);
 
 		String[] elements = Arrays.stream(Element.values()).map(Element::getName).toArray(String[]::new);

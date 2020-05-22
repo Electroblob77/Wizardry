@@ -55,6 +55,7 @@ public final class WizardryBlocks {
 	public static final Block thorns = placeholder();
 	public static final Block obsidian_crust = placeholder();
 	public static final Block dry_frosted_ice = placeholder();
+	public static final Block crystal_flower_pot = placeholder();
 
 	public static final Block runestone = placeholder();
 	public static final Block runestone_pedestal = placeholder();
@@ -116,6 +117,7 @@ public final class WizardryBlocks {
 		registerBlock(registry, "thorns", 				new BlockThorns());
 		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
+		registerBlock(registry, "crystal_flower_pot", 	new BlockCrystalFlowerPot());
 
 		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
 		registerBlock(registry, "runestone_pedestal", 	new BlockPedestal(Material.ROCK));
