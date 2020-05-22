@@ -50,7 +50,7 @@ public class SixthSense extends Spell {
 
 	@SubscribeEvent
 	public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event){
-		if(event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == WizardryPotions.sixth_sense
+		if(Wizardry.settings.blinkEffect && event.getEntity().world.isRemote && event.getPotionEffect().getPotion() == WizardryPotions.sixth_sense
 				&& event.getEntity() instanceof EntityPlayer){
 			Wizardry.proxy.loadShader((EntityPlayer)event.getEntity(), SHADER);
 			Wizardry.proxy.playBlinkEffect((EntityPlayer)event.getEntity());
