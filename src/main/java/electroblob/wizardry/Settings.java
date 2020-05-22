@@ -158,6 +158,8 @@ public final class Settings {
 	public boolean teleportThroughUnbreakableBlocks = false;
 	/** <b>[Server-only]</b> Whether to allow players to damage their designated allies using magic. */
 	public FriendlyFire friendlyFire = FriendlyFire.ALL;
+	/** <b>[Server-only]</b> Whether passive mobs should count as allies, i.e. they should not be targeted by minions, lightning chaining, etc. */
+	public boolean passiveMobsAreAllies = false;
 	/** <b>[Server-only]</b> Whether to allow players to disarm other players using the telekinesis spell. */
 	public boolean telekineticDisarmament = true;
 	/** <b>[Server-only]</b> Whether summoned creatures can revenge attack their caster if their caster attacks them. */
@@ -576,6 +578,14 @@ public final class Settings {
 				"Controls which creatures may be damaged by your magic when allied to you. Your spells will not target your allies or creatures summoned/owned by them regardless of this setting, but this setting prevents all magic damage to allies.", FriendlyFire.names);
 		property.setLanguageKey("config." + Wizardry.MODID + ".friendly_fire");
 		friendlyFire = FriendlyFire.fromName(property.getString());
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "passiveMobsAreAllies", true,
+				"Whether passive mobs should count as allies, i.e. they should not be targeted by minions, lightning chaining, etc.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".passive_mobs_are_allies");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(false);
+		passiveMobsAreAllies = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(DIFFICULTY_CATEGORY, "minionRevengeTargeting", true,

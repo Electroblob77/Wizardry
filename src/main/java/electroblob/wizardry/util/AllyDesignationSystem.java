@@ -4,10 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.MindControl;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.FakePlayer;
@@ -122,6 +119,14 @@ public final class AllyDesignationSystem {
 
 		// I really shouldn't need to do this, but fake players seem to break stuff...
 		if(target instanceof FakePlayer) return false;
+
+		// Use a positive check for these rather than a negative check for monsters, because we only want mobs
+		// that are definitely passive
+		if(Wizardry.settings.passiveMobsAreAllies && (target.isCreatureType(EnumCreatureType.AMBIENT, false)
+				|| target.isCreatureType(EnumCreatureType.CREATURE, false)
+				|| target.isCreatureType(EnumCreatureType.WATER_CREATURE, false))){
+			return false;
+		}
 
 		// Tests whether the target is a creature that was summoned by the attacker
 //		if(target instanceof ISummonedCreature && ((ISummonedCreature)target).getCaster() == attacker){
