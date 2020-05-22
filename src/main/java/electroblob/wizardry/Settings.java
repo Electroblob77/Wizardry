@@ -441,7 +441,9 @@ public final class Settings {
 		Wizardry.logger.info("Saving in-game config changes");
 
 		setupGeneralConfig();
+		setupDifficultyConfig();
 		setupWorldgenConfig();
+		setupTweaksConfig();
 		setupClientConfig();
 		setupCommandsConfig();
 		setupCompatibilityConfig();
