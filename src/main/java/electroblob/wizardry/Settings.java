@@ -580,7 +580,7 @@ public final class Settings {
 		friendlyFire = FriendlyFire.fromName(property.getString());
 		propOrder.add(property.getName());
 
-		property = config.get(DIFFICULTY_CATEGORY, "passiveMobsAreAllies", true,
+		property = config.get(DIFFICULTY_CATEGORY, "passiveMobsAreAllies", false,
 				"Whether passive mobs should count as allies, i.e. they should not be targeted by minions, lightning chaining, etc.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".passive_mobs_are_allies");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
