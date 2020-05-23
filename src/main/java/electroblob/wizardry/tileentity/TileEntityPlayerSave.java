@@ -19,10 +19,6 @@ public class TileEntityPlayerSave extends TileEntity {
 
 	public TileEntityPlayerSave(){}
 
-	public TileEntityPlayerSave(EntityLivingBase caster){
-		this.casterUUID = caster.getUniqueID();
-	}
-
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 		super.readFromNBT(tagCompound);
