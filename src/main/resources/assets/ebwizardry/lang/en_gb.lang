@@ -1401,5 +1401,3 @@ spell.ebwizardry\:invigorating_presence_festive=Invigorating Presents
 spell.ebwizardry\:empowering_presence_festive=Empowering Presents
 
 wizard.debug=%1$s, %2$s, %3$s
-item.ebwizardry\:armour_upgrade.desc1=%1$sUpgrades any wizard armour
-item.ebwizardry\:armour_upgrade.desc2=%1$sto make it %2$slegendary
