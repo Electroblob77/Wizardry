@@ -6,7 +6,6 @@ import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.*;
-import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryRecipes;
 import electroblob.wizardry.spell.Spell;

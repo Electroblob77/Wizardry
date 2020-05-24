@@ -1,10 +1,8 @@
 package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
-import electroblob.wizardry.spell.Spell;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
@@ -17,9 +15,6 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
 
 /**
  * Class responsible for registering wizardry's loot functions and loot tables. Also handles loot injection and the

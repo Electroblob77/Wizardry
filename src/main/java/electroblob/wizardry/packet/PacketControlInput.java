@@ -1,12 +1,12 @@
 package electroblob.wizardry.packet;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.packet.PacketControlInput.Message;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Possession;
 import electroblob.wizardry.spell.Resurrection;
-import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;

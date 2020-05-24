@@ -2,8 +2,6 @@ package electroblob.wizardry.tileentity;
 
 import electroblob.wizardry.block.BlockThorns;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.ITickable;
 
 public class TileEntityPlayerSaveTimed extends TileEntityPlayerSave implements ITickable {
