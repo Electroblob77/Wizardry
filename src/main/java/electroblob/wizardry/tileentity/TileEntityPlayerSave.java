@@ -5,6 +5,8 @@ import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
@@ -18,6 +20,11 @@ public class TileEntityPlayerSave extends TileEntity {
 	private UUID casterUUID;
 
 	public TileEntityPlayerSave(){}
+
+	/** Called to manually sync the tile entity with clients. */
+	public void sync(){
+		this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
@@ -57,6 +64,22 @@ public class TileEntityPlayerSave extends TileEntity {
 
 	public void setCaster(@Nullable EntityLivingBase caster){
 		this.casterUUID = caster == null ? null : caster.getUniqueID();
+		this.sync();
+	}
+
+	@Override
+	public final NBTTagCompound getUpdateTag(){
+		return this.writeToNBT(new NBTTagCompound());
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket(){
+		return new SPacketUpdateTileEntity(pos, 0, this.getUpdateTag());
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
+		readFromNBT(pkt.getNbtCompound());
 	}
 
 }

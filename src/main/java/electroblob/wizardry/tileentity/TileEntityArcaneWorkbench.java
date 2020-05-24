@@ -237,7 +237,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), this.getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 0, this.getUpdateTag());
 	}
 
 	@Override

@@ -32,8 +32,10 @@ public class Snare extends SpellRay {
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
 		if(side == EnumFacing.UP && world.isSideSolid(pos, EnumFacing.UP) && WizardryUtilities.canBlockBeReplaced(world, pos.up())){
-			world.setBlockState(pos.up(), WizardryBlocks.snare.getDefaultState());
-			((TileEntityPlayerSave)world.getTileEntity(pos.up())).setCaster(caster);
+			if(!world.isRemote){
+				world.setBlockState(pos.up(), WizardryBlocks.snare.getDefaultState());
+				((TileEntityPlayerSave)world.getTileEntity(pos.up())).setCaster(caster);
+			}
 			return true;
 		}
 		

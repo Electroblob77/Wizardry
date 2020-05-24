@@ -48,22 +48,4 @@ public class TileEntityPlayerSaveTimed extends TileEntityPlayerSave implements I
 		return tagCompound;
 	}
 
-	@Override
-	public final NBTTagCompound getUpdateTag(){
-		return this.writeToNBT(new NBTTagCompound());
-	}
-
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket(){
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
-		return new SPacketUpdateTileEntity(pos, 1, tag);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
-		NBTTagCompound tag = pkt.getNbtCompound();
-		readFromNBT(tag);
-	}
-
 }

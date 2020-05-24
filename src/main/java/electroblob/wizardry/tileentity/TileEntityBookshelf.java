@@ -3,7 +3,6 @@ package electroblob.wizardry.tileentity;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.inventory.ContainerBookshelf;
-import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.util.NBTExtras;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -181,7 +180,7 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), this.getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 0, this.getUpdateTag());
 	}
 
 	@Override

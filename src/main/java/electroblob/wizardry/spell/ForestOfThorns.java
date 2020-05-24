@@ -89,7 +89,10 @@ public class ForestOfThorns extends Spell {
 					if(tileentity instanceof TileEntityPlayerSaveTimed){
 						((TileEntityPlayerSaveTimed)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
 								* modifiers.get(WizardryItems.duration_upgrade)));
-						if(caster != null) ((TileEntityPlayerSaveTimed)tileentity).setCaster(caster);
+						if(caster != null){
+							((TileEntityPlayerSaveTimed)tileentity).setCaster(caster);
+						}
+						((TileEntityPlayerSaveTimed)tileentity).sync();
 					}
 				}
 			}

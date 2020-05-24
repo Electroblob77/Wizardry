@@ -87,7 +87,7 @@ public class TileEntityLectern extends TileEntity implements ITickable {
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), this.getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 0, this.getUpdateTag());
 	}
 
 	@Override
