@@ -65,7 +65,9 @@ public final class WizardryBaublesIntegration {
 	}
 
 	/**
-	 * Returns a list of artefact stacks equipped of the given types.
+	 * Returns a list of artefact stacks equipped of the given types. <i>This method does not check whether artefacts
+	 * have been disabled in the config! {@link ItemArtefact#getActiveArtefacts(EntityPlayer, ItemArtefact.Type...)}
+	 * should be used instead of this method in nearly all cases.</i>
 	 * @param player The player whose inventory is to be checked.
 	 * @param types Zero or more artefact types to check for. If omitted, searches for all types.
 	 * @return A list of equipped artefact {@code ItemStacks}.

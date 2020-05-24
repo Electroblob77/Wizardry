@@ -30,6 +30,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
@@ -104,11 +106,19 @@ public class ItemArtefact extends Item {
 	private final EnumRarity rarity;
 	private final Type type;
 
+	/** False if this artefact has been disabled in the config, true otherwise. */
+	private boolean enabled = true;
+
 	public ItemArtefact(EnumRarity rarity, Type type){
 		setMaxStackSize(1);
 		setCreativeTab(WizardryTabs.GEAR);
 		this.rarity = rarity;
 		this.type = type;
+	}
+
+	/** Sets whether this artefact is enabled or not. */
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
 	}
 
 	@Override
@@ -127,8 +137,9 @@ public class ItemArtefact extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, net.minecraft.client.util.ITooltipFlag flagIn){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
 		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + this.getRegistryName() + ".desc");
+		if(!enabled) tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":generic.disabled", new Style().setColor(TextFormatting.RED)));
 	}
 
 	@Nullable
@@ -161,6 +172,8 @@ public class ItemArtefact extends Item {
 
 		if(!(artefact instanceof ItemArtefact)) throw new IllegalArgumentException("Not an artefact!");
 
+		if(!((ItemArtefact)artefact).enabled) return false; // Disabled in the config
+
 		if(WizardryBaublesIntegration.enabled()){
 			return WizardryBaublesIntegration.isBaubleEquipped(player, artefact);
 		}else{
@@ -192,7 +205,9 @@ public class ItemArtefact extends Item {
 		if(types.length == 0) types = Type.values();
 
 		if(WizardryBaublesIntegration.enabled()){
-			return WizardryBaublesIntegration.getEquippedArtefacts(player, types);
+			List<ItemArtefact> artefacts = WizardryBaublesIntegration.getEquippedArtefacts(player, types);
+			artefacts.removeIf(i -> !i.enabled); // Remove artefacts that are disabled in the config
+			return artefacts;
 		}else{
 
 			List<ItemArtefact> artefacts = new ArrayList<>();
@@ -201,7 +216,7 @@ public class ItemArtefact extends Item {
 				artefacts.addAll(WizardryUtilities.getPrioritisedHotbarAndOffhand(player).stream()
 						.filter(s -> s.getItem() instanceof ItemArtefact)
 						.map(s -> (ItemArtefact)s.getItem())
-						.filter(i -> type == i.type)
+						.filter(i -> type == i.type && i.enabled)
 						.limit(type.maxAtOnce)
 						.collect(Collectors.toList()));
 			}

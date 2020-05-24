@@ -257,6 +257,8 @@ item.ebwizardry\:spectral_boots.name=Spectral Boots
 
 item.ebwizardry\:lightning_hammer.name=Lightning Hammer
 
+item.ebwizardry\:generic.disabled=This item has been disabled in the config
+
 item.ebwizardry\:ring.generic.desc=Equip this ring in the Baubles inventory or by placing it on your hotbar. Up to 2 rings may be equipped at once.
 item.ebwizardry\:amulet.generic.desc=Equip this amulet in the Baubles inventory or by placing it on your hotbar. Only one amulet may be equipped at a time.
 item.ebwizardry\:charm.generic.desc=Equip this charm in the Baubles inventory or by placing it on your hotbar. Only one charm may be equipped at a time.
@@ -1145,6 +1147,11 @@ config.ebwizardry.category.spells=Spell Configuration
 config.ebwizardry.category.spells.tooltip=Select which spells are enabled
 config.ebwizardry.title.spells=Spell Configuration
 config.ebwizardry.subtitle.spells=Disabling a spell globally here will override the finer controls in the spell JSON file.
+
+config.ebwizardry.category.artefacts=Artifact Configuration
+config.ebwizardry.category.artefacts.tooltip=Select which artifacts are enabled
+config.ebwizardry.title.artefacts=Artifact Configuration
+config.ebwizardry.subtitle.artefacts=Disable individual rings, amulets or charms here.
 
 config.ebwizardry.category.gameplay=Gameplay Settings
 config.ebwizardry.category.gameplay.tooltip=Configure wizardry's general gameplay

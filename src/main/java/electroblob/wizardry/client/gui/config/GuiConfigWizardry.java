@@ -27,15 +27,16 @@ public class GuiConfigWizardry extends GuiConfig {
 		
 		List<IConfigElement> configList = new ArrayList<>(1);
 
-		configList.add(new DummyCategoryElement("gameplayConfig", "config." + Wizardry.MODID + ".category." + Settings.GAMEPLAY_CATEGORY, GameplayCategory.class));
-		configList.add(new DummyCategoryElement("difficultyConfig", "config." + Wizardry.MODID + ".category." + Settings.DIFFICULTY_CATEGORY, DifficultyCategory.class));
-		configList.add(new DummyCategoryElement("worldgenConfig", "config." + Wizardry.MODID + ".category." + Settings.WORLDGEN_CATEGORY, WorldgenCategory.class));
-		configList.add(new DummyCategoryElement("tweaksConfig", "config." + Wizardry.MODID + ".category." + Settings.TWEAKS_CATEGORY, TweaksCategory.class));
-		configList.add(new DummyCategoryElement("commandsConfig", "config." + Wizardry.MODID + ".category." + Settings.COMMANDS_CATEGORY, CommandsCategory.class));
-		configList.add(new DummyCategoryElement("clientConfig", "config." + Wizardry.MODID + ".category." + Settings.CLIENT_CATEGORY, ClientCategory.class));
-		configList.add(new DummyCategoryElement("spellsConfig", "config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY, SpellsCategory.class));
-		configList.add(new DummyCategoryElement("resistancesConfig", "config." + Wizardry.MODID + ".category." + Settings.RESISTANCES_CATEGORY, ResistancesCategory.class));
-		configList.add(new DummyCategoryElement("compatibilityConfig", "config." + Wizardry.MODID + ".category." + Settings.COMPATIBILITY_CATEGORY, CompatibilityCategory.class));
+		configList.add(new DummyCategoryElement("gameplayConfig",			"config." + Wizardry.MODID + ".category." + Settings.GAMEPLAY_CATEGORY, 		GameplayCategory.class));
+		configList.add(new DummyCategoryElement("difficultyConfig",		"config." + Wizardry.MODID + ".category." + Settings.DIFFICULTY_CATEGORY, 	DifficultyCategory.class));
+		configList.add(new DummyCategoryElement("worldgenConfig",			"config." + Wizardry.MODID + ".category." + Settings.WORLDGEN_CATEGORY, 		WorldgenCategory.class));
+		configList.add(new DummyCategoryElement("tweaksConfig",			"config." + Wizardry.MODID + ".category." + Settings.TWEAKS_CATEGORY, 		TweaksCategory.class));
+		configList.add(new DummyCategoryElement("commandsConfig",			"config." + Wizardry.MODID + ".category." + Settings.COMMANDS_CATEGORY, 		CommandsCategory.class));
+		configList.add(new DummyCategoryElement("clientConfig",			"config." + Wizardry.MODID + ".category." + Settings.CLIENT_CATEGORY, 		ClientCategory.class));
+		configList.add(new DummyCategoryElement("spellsConfig",			"config." + Wizardry.MODID + ".category." + Settings.SPELLS_CATEGORY, 		SpellsCategory.class));
+		configList.add(new DummyCategoryElement("artefactsConfig",		"config." + Wizardry.MODID + ".category." + Settings.ARTEFACTS_CATEGORY, 	ArtefactsCategory.class));
+		configList.add(new DummyCategoryElement("resistancesConfig",		"config." + Wizardry.MODID + ".category." + Settings.RESISTANCES_CATEGORY, 	ResistancesCategory.class));
+		configList.add(new DummyCategoryElement("compatibilityConfig",	"config." + Wizardry.MODID + ".category." + Settings.COMPATIBILITY_CATEGORY, CompatibilityCategory.class));
 
 		configList.addAll(new ConfigElement(Wizardry.settings.getConfigCategory(Configuration.CATEGORY_GENERAL)).getChildElements());
 		
@@ -139,6 +140,16 @@ public class GuiConfigWizardry extends GuiConfig {
 		}
 		
 		@Override protected String getCategory() { return Settings.SPELLS_CATEGORY; }
+	}
+
+	/** Artefacts category of the config gui. */
+	public static class ArtefactsCategory extends CategoryBase {
+
+		public ArtefactsCategory(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop){
+			super(owningScreen, owningEntryList, prop);
+		}
+
+		@Override protected String getCategory() { return Settings.ARTEFACTS_CATEGORY; }
 	}
 
 	/** Resistances category of the config gui. */

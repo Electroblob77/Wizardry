@@ -1,5 +1,6 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.packet.PacketSyncSettings;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.spell.Spell;
@@ -9,6 +10,7 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
@@ -63,6 +65,8 @@ public final class Settings {
 	public static final String TWEAKS_CATEGORY = "tweaks";
 	/** The unlocalised name of the spells config category. */
 	public static final String SPELLS_CATEGORY = "spells";
+	/** The unlocalised name of the artefacts config category. */
+	public static final String ARTEFACTS_CATEGORY = "artefacts";
 	/** The unlocalised name of the resistances config category. */
 	public static final String RESISTANCES_CATEGORY = "resistances";
 	/** The unlocalised name of the client config category. */
@@ -406,7 +410,7 @@ public final class Settings {
 
 		Wizardry.logger.info("Setting up main config");
 
-		setupGeneralConfig();
+		setupGameplayConfig();
 		setupDifficultyConfig();
 		setupWorldgenConfig();
 		setupTweaksConfig();
@@ -425,11 +429,12 @@ public final class Settings {
 	void initConfigExtras(){
 
 		Wizardry.logger.info("Setting up spells config for " + Spell.getTotalSpellCount() + " spells");
-
 		setupSpellsConfig();
 
-		Wizardry.logger.info("Setting up resistances config");
+		Wizardry.logger.info("Setting up artefacts config");
+		setupArtefactsConfig();
 
+		Wizardry.logger.info("Setting up resistances config");
 		setupResistancesConfig();
 
 		config.save();
@@ -440,7 +445,7 @@ public final class Settings {
 
 		Wizardry.logger.info("Saving in-game config changes");
 
-		setupGeneralConfig();
+		setupGameplayConfig();
 		setupDifficultyConfig();
 		setupWorldgenConfig();
 		setupTweaksConfig();
@@ -448,6 +453,7 @@ public final class Settings {
 		setupCommandsConfig();
 		setupCompatibilityConfig();
 		setupSpellsConfig();
+		setupArtefactsConfig();
 		setupResistancesConfig();
 
 		config.save();
@@ -482,7 +488,27 @@ public final class Settings {
 
 	}
 
-	private void setupGeneralConfig(){
+	private void setupArtefactsConfig(){
+
+		config.addCustomCategoryComment(ARTEFACTS_CATEGORY,
+				"Set an item to false to disable it. Disabled items will still appear in-game but will have no effect when worn. It is also advisable to remove disabled items from wizardry's (and addons') loot tables. Disable an item if it is causing problems, conflicts with another mod or creates an unintended exploit.");
+
+		Property property;
+
+		for(Item item : Item.REGISTRY){
+			if(item instanceof ItemArtefact){
+				property = config.get(ARTEFACTS_CATEGORY, item.getRegistryName().toString(), true,
+						"Set to false to disable this item");
+				// Uses the same config key as the item name, because - well, that's what it's called!
+				property.setLanguageKey(item.getTranslationKey() + ".name");
+				Wizardry.proxy.setToNamedBooleanEntry(property);
+				((ItemArtefact)item).setEnabled(property.getBoolean());
+			}
+		}
+
+	}
+
+	private void setupGameplayConfig(){
 
 		// This trick is borrowed from forge; it sorts the config options into the order you want them.
 		List<String> propOrder = new ArrayList<>();
