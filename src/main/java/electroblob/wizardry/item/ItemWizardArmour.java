@@ -28,6 +28,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -93,19 +95,14 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
 
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary"))
-			tooltip.add("\u00A7d" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.legendary"));
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.legendary",
+					new Style().setColor(TextFormatting.LIGHT_PURPLE)));
 
 		if(element != null){
-			tooltip.add("\u00A78" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.buff",
-					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100) + "%", element.getDisplayName()));
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.buff",
+					new Style().setColor(TextFormatting.DARK_GRAY),
+					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100), element.getDisplayName()));
 		}
-
-		//		tooltip.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.mana",
-//				(this.getMaxDamage(stack) - this.getDamage(stack)), this.getMaxDamage(stack)));
-
-//		ChargeStatus status = ChargeStatus.getChargeStatus(stack);
-//
-//		tooltip.add(status.getFormattingCode() + status.getDisplayName());
 	}
 
 	@Override

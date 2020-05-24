@@ -7,8 +7,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public enum Element implements IStringSerializable {
 
@@ -52,9 +50,8 @@ public enum Element implements IStringSerializable {
 	}
 
 	/** Returns the translated display name of this element, without formatting. */
-	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("element." + getName());
+		return Wizardry.proxy.translate("element." + getName());
 	}
 
 	/** Returns the {@link Style} object representing the colour of this element. */

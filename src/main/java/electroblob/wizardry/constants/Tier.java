@@ -1,11 +1,10 @@
 package electroblob.wizardry.constants;
 
+import electroblob.wizardry.Wizardry;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
@@ -53,9 +52,9 @@ public enum Tier {
 		throw new IllegalArgumentException("No such tier with unlocalised name: " + name);
 	}
 
-	@SideOnly(Side.CLIENT)
+	/** Returns the translated display name of this tier, without formatting. */
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("tier." + unlocalisedName);
+		return Wizardry.proxy.translate("tier." + unlocalisedName);
 	}
 
 	/**
@@ -66,9 +65,9 @@ public enum Tier {
 		return new TextComponentTranslation("tier." + unlocalisedName);
 	}
 
-	@SideOnly(Side.CLIENT)
+	/** Returns the translated display name of this tier, with formatting. */
 	public String getDisplayNameWithFormatting(){
-		return this.getFormattingCode() + net.minecraft.client.resources.I18n.format("tier." + unlocalisedName);
+		return Wizardry.proxy.translate("tier." + unlocalisedName, this.colour);
 	}
 
 	/**

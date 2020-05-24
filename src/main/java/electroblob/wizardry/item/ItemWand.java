@@ -32,7 +32,9 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -305,9 +307,9 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		EntityPlayer player = net.minecraft.client.Minecraft.getMinecraft().player;
 		if (player == null) { return; }
 		// +0.5f is necessary due to the error in the way floats are calculated.
-		if(element != null) text.add("\u00A78" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.buff",
-				(int)((tier.level + 1) * Constants.POTENCY_INCREASE_PER_TIER * 100 + 0.5f) + "%",
-				element.getDisplayName()));
+		if(element != null) text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.buff",
+				new Style().setColor(TextFormatting.DARK_GRAY),
+				(int)((tier.level + 1) * Constants.POTENCY_INCREASE_PER_TIER * 100 + 0.5f), element.getDisplayName()));
 
 		Spell spell = WandHelper.getCurrentSpell(stack);
 
@@ -317,22 +319,16 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			discovered = false;
 		}
 
-		text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.spell",
-				discovered ? "\u00A77" + spell.getDisplayNameWithFormatting()
-				: "#\u00A79" + SpellGlyphData.getGlyphName(spell, player.world)));
+		text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.spell", new Style().setColor(TextFormatting.GRAY),
+				discovered ? spell.getDisplayNameWithFormatting() : "#" + TextFormatting.BLUE + SpellGlyphData.getGlyphName(spell, player.world)));
 
 		if(advanced.isAdvanced()){
 			// Advanced tooltips for debugging
-			text.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.mana",
+			text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.mana", new Style().setColor(TextFormatting.BLUE),
 					this.getMana(stack), this.getManaCapacity(stack)));
 
-			text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.progression",
+			text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.progression", new Style().setColor(TextFormatting.GRAY),
 					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? Tier.values()[tier.ordinal() + 1].progression : 0));
-
-//		}else{
-//
-//			ChargeStatus status = ChargeStatus.getChargeStatus(stack);
-//			text.add(status.getFormattingCode() + status.getDisplayName());
 		}
 	}
 

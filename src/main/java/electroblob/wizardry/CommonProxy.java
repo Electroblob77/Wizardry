@@ -105,6 +105,29 @@ public class CommonProxy {
 		return ((ItemSpectralBow)WizardryItems.spectral_bow).getDefaultDurabilityForDisplay(stack);
 	}
 
+	/**
+	 * Translates the given key with no specified style. Client-side only; on the server this simply returns
+	 * the given translation key. Useful whenever translation from common classes is required, e.g. item tooltips.
+	 * @param key The unlocalised name to be translated.
+	 * @param args The format arguments to pass into the translation, if any.
+	 * @return The resulting translated text.
+	 */
+	public String translate(String key, Object... args){
+		return translate(key, new Style(), args);
+	}
+
+	/**
+	 * Translates the given key and formats it with the given style. Client-side only; on the server this simply returns
+	 * the given translation key. Useful whenever translation from common classes is required, e.g. item tooltips.
+	 * @param key The unlocalised name to be translated.
+	 * @param style The {@link Style} to use for the displayed text.
+	 * @param args The format arguments to pass into the translation, if any.
+	 * @return The resulting translated text.
+	 */
+	public String translate(String key, Style style, Object... args){
+		return key;
+	}
+
 	/** Like {@link CommonProxy#addMultiLineDescription(List, String, Style, Object...)}, but style defaults to light grey. */
 	public void addMultiLineDescription(List<String> tooltip, String key, Object... args){
 		this.addMultiLineDescription(tooltip, key, new Style().setColor(TextFormatting.GRAY), args);

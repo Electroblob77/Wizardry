@@ -331,9 +331,13 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public String translate(String key, Style style, Object... args){
+		return style.getFormattingCode() + I18n.format(key, args);
+	}
+
+	@Override
 	public void addMultiLineDescription(List<String> tooltip, String key, Style style, Object... args){
-		String description = style.getFormattingCode() + I18n.format(key, args);
-		tooltip.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(description, TOOLTIP_WRAP_WIDTH));
+		tooltip.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(translate(key, style, args), TOOLTIP_WRAP_WIDTH));
 	}
 
 	// SECTION Particles

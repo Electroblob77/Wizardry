@@ -34,8 +34,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -639,9 +637,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * Returns the translated display name of the spell, without formatting (i.e. not coloured). <b>Client-side
 	 * only!</b> On the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslation()}).
 	 */
-	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format(getTranslationKey());
+		return Wizardry.proxy.translate(getTranslationKey());
 	}
 
 	/**
@@ -656,9 +653,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * Returns the translated display name of the spell, with formatting (i.e. coloured). <b>Client-side only!</b> On
 	 * the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslationFormatted()}).
 	 */
-	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.getElement().getFormattingCode() + net.minecraft.client.resources.I18n.format(getTranslationKey());
+		return Wizardry.proxy.translate(getTranslationKey(), getElement().getColour());
 	}
 
 	/**
@@ -673,9 +669,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * Returns the translated description of the spell, without formatting. <b>Client-side only!</b> You should not need
 	 * to use this on the server side.
 	 */
-	@SideOnly(Side.CLIENT)
 	public String getDescription(){
-		return net.minecraft.client.resources.I18n.format(getDescriptionTranslationKey());
+		return Wizardry.proxy.translate(getDescriptionTranslationKey());
 	}
 
 	/**

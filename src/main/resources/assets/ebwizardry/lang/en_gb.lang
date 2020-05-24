@@ -81,7 +81,7 @@ item.ebwizardry\:wizard_handbook.desc=by %1$s
 
 item.ebwizardry\:wand.generic=wand
 
-item.ebwizardry\:wand.buff=+%1$s %2$s potency
+item.ebwizardry\:wand.buff=+%1$s%% %2$s potency
 item.ebwizardry\:wand.spell=Current Spell\: %1$s
 item.ebwizardry\:wand.mana=Mana\: %1$s/%2$s
 item.ebwizardry\:wand.progression=Progression\: %1$s/%2$s
@@ -204,7 +204,7 @@ item.ebwizardry\:magic_silk.name=Magical Silk
 item.ebwizardry\:spectral_dust.name=Spectral Dust
 
 item.ebwizardry\:wizard_armour.legendary=Legendary
-item.ebwizardry\:wizard_armour.buff=-%1$s %2$s cost
+item.ebwizardry\:wizard_armour.buff=-%1$s%% %2$s cost
 item.ebwizardry\:wizard_armour.mana=Mana\: %1$s/%2$s
 
 item.ebwizardry\:wizard_hat.name=Wizard Hat
