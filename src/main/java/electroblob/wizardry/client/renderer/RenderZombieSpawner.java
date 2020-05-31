@@ -20,7 +20,7 @@ public class RenderZombieSpawner extends Render<EntityZombieSpawner> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/zombie_spawner.png");
 
-	private static final Vec3d[] HIDDEN_BOX = WizardryUtilities.getVertices(new AxisAlignedBB(-1, 0, -1, 1, 2.1, 1));
+	private static final Vec3d[] HIDDEN_BOX = WizardryUtilities.getVertices(new AxisAlignedBB(-1, 0, -1, 1, 2.5, 1));
 
 	public RenderZombieSpawner(RenderManager renderManager){
 		super(renderManager);
@@ -49,18 +49,21 @@ public class RenderZombieSpawner extends Render<EntityZombieSpawner> {
 		s = (float)Math.pow(s, 0.4); // Smooths the animation
 
 		GlStateManager.scale(s, s, s);
-		GlStateManager.rotate(age, 0, 1, 0);
+		GlStateManager.rotate(age * 2, 0, 1, 0);
 
 		this.bindTexture(TEXTURE);
 
 		Vec3d[] vertices = WizardryUtilities.getVertices(entity.getEntityBoundingBox().offset(entity.getPositionVector().scale(-1)));
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-		drawFace(buffer, vertices[0], vertices[1], vertices[3], vertices[2], 0, 0, 1, 1); // Top
-		drawFace(buffer, vertices[1], vertices[0], vertices[2], vertices[3], 0, 0, 1, 1); // Bottom
-
+		drawFace(buffer, vertices[0], vertices[1], vertices[3], vertices[2], 0, 0, 1, 1); // Bottom
 		tessellator.draw();
+
+		GlStateManager.disableDepth(); // Disable depth for the top face
+		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		drawFace(buffer, vertices[1], vertices[0], vertices[2], vertices[3], 0, 0, 1, 1); // Top
+		tessellator.draw();
+		GlStateManager.enableDepth();
 
 		GlStateManager.popMatrix();
 

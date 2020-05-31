@@ -2,6 +2,7 @@ package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.entity.living.EntityZombieMinion;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.SpellMinion;
 import electroblob.wizardry.spell.ZombieApocalypse;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -24,23 +25,29 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		if(!world.isRemote && rand.nextInt(Spells.zombie_apocalypse.getProperty(ZombieApocalypse.MINION_SPAWN_INTERVAL).intValue()) == 0){
+		if(lifetime - ticksExisted > 10 && rand.nextInt(Spells.zombie_apocalypse.getProperty(ZombieApocalypse.MINION_SPAWN_INTERVAL).intValue()) == 0){
 
-			EntityZombieMinion zombie = new EntityZombieMinion(world);
+			if(world.isRemote){
+				this.playSound(WizardrySounds.ENTITY_ZOMBIE_SPAWNER_SPAWN, 1, 1);
 
-			zombie.setPosition(this.posX, this.posY, this.posZ);
-			zombie.setCaster(this.getCaster());
-			// Modifier implementation
-			// Attribute modifiers are pretty opaque, see https://minecraft.gamepedia.com/Attribute#Modifiers
-			zombie.setLifetime(Spells.zombie_apocalypse.getProperty(SpellMinion.MINION_LIFETIME).intValue());
-			IAttributeInstance attribute = zombie.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-			attribute.applyModifier(new AttributeModifier(SpellMinion.POTENCY_ATTRIBUTE_MODIFIER,
-					damageMultiplier - 1, Operations.MULTIPLY_CUMULATIVE));
-			zombie.setHealth(zombie.getMaxHealth()); // Need to set this because we may have just modified the value
-			zombie.hurtResistantTime = 30; // Prevent fall damage
-			zombie.hideParticles(); // Hide spawn particles or they pop out the top of the hidden box
+			}else{
 
-			world.spawnEntity(zombie);
+				EntityZombieMinion zombie = new EntityZombieMinion(world);
+
+				zombie.setPosition(this.posX, this.posY, this.posZ);
+				zombie.setCaster(this.getCaster());
+				// Modifier implementation
+				// Attribute modifiers are pretty opaque, see https://minecraft.gamepedia.com/Attribute#Modifiers
+				zombie.setLifetime(Spells.zombie_apocalypse.getProperty(SpellMinion.MINION_LIFETIME).intValue());
+				IAttributeInstance attribute = zombie.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+				attribute.applyModifier(new AttributeModifier(SpellMinion.POTENCY_ATTRIBUTE_MODIFIER,
+						damageMultiplier - 1, Operations.MULTIPLY_CUMULATIVE));
+				zombie.setHealth(zombie.getMaxHealth()); // Need to set this because we may have just modified the value
+				zombie.hurtResistantTime = 30; // Prevent fall damage
+				zombie.hideParticles(); // Hide spawn particles or they pop out the top of the hidden box
+
+				world.spawnEntity(zombie);
+			}
 		}
 
 		if(world.isRemote){

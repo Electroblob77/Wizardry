@@ -61,6 +61,7 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_METEOR_FALLING = 			createSound("entity.meteor.falling");
 	public static final SoundEvent ENTITY_SHIELD_DEFLECT = 			createSound("entity.shield.deflect");
 	public static final SoundEvent ENTITY_TORNADO_AMBIENT = 		createSound("entity.tornado.ambient");
+	public static final SoundEvent ENTITY_ZOMBIE_SPAWNER_SPAWN = 	createSound("entity.zombie_spawner.spawn");
 
 	public static final SoundEvent ENTITY_EVIL_WIZARD_AMBIENT = 	createSound("entity.evil_wizard.ambient");
 	public static final SoundEvent ENTITY_EVIL_WIZARD_HURT = 		createSound("entity.evil_wizard.hurt");
@@ -197,6 +198,7 @@ public final class WizardrySounds {
 		event.getRegistry().register(ENTITY_METEOR_FALLING);
 		event.getRegistry().register(ENTITY_SHIELD_DEFLECT);
 		event.getRegistry().register(ENTITY_TORNADO_AMBIENT);
+		event.getRegistry().register(ENTITY_ZOMBIE_SPAWNER_SPAWN);
 
 		event.getRegistry().register(ENTITY_EVIL_WIZARD_AMBIENT);
 		event.getRegistry().register(ENTITY_EVIL_WIZARD_HURT);
