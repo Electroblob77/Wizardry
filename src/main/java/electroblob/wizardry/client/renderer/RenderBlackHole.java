@@ -26,7 +26,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 	}
 
 	@Override
-	public void doRender(EntityBlackHole blackhole, double x, double y, double z, float fa, float fb){
+	public void doRender(EntityBlackHole entity, double x, double y, double z, float entityYaw, float partialTicks){
 
 		GlStateManager.pushMatrix();
 
@@ -48,14 +48,12 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		if(blackhole.ticksExisted < 10){
-			GlStateManager.scale((float)blackhole.ticksExisted / 10, (float)blackhole.ticksExisted / 10,
-					(float)blackhole.ticksExisted / 10);
-		}
-		if(blackhole.ticksExisted > blackhole.lifetime - 10){
-			float scale = Math.max(0, (float)(blackhole.lifetime - blackhole.ticksExisted) / 10);
-			GlStateManager.scale(scale, scale, scale);
-		}
+		int animationTicks = 10;
+		float age = entity.ticksExisted + partialTicks;
+		float s = age < animationTicks ? age/animationTicks : MathHelper.clamp((entity.lifetime - age) / animationTicks, 0, 1);
+		s = (float)Math.pow(s, 0.4); // Smooths the animation
+
+		GlStateManager.scale(s, s, s);
 
 		this.bindTexture(RAY_TEXTURE);
 
@@ -71,18 +69,18 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 			float scale = 3.0f;
 
-			int a = blackhole.randomiser[j];
-			int b = blackhole.randomiser2[j];
+			int a = entity.randomiser[j];
+			int b = entity.randomiser2[j];
 
 			int sliceAngle = 20 + a;
 
-			double x1 = scale * MathHelper.sin((blackhole.ticksExisted + 40 * j) * ((float)Math.PI / 180f));
+			double x1 = scale * MathHelper.sin((entity.ticksExisted + 40 * j) * ((float)Math.PI / 180f));
 			// double y1 = 0.7*MathHelper.cos((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
-			double z1 = scale * MathHelper.cos((blackhole.ticksExisted + 40 * j) * ((float)Math.PI / 180));
+			double z1 = scale * MathHelper.cos((entity.ticksExisted + 40 * j) * ((float)Math.PI / 180));
 
-			double x2 = scale * MathHelper.sin((blackhole.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
+			double x2 = scale * MathHelper.sin((entity.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
 			// double y2 = 0.7*MathHelper.sin((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
-			double z2 = scale * MathHelper.cos((blackhole.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
+			double z2 = scale * MathHelper.cos((entity.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
 
 			double absoluteX = x1 * MathHelper.cos(31 * b);
 			double absoluteY = z1 * MathHelper.sin(31 * a) + x1 * MathHelper.cos(31 * a) * MathHelper.sin(31 * b);

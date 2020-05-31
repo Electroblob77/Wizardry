@@ -18,7 +18,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 			"textures/entity/light/flare.png");
 
 	@Override
-	public void render(TileEntityMagicLight tileentity, double x, double y, double z, float f,
+	public void render(TileEntityMagicLight tileentity, double x, double y, double z, float partialTicks,
 			int destroyStage, float alpha){
 
 		GlStateManager.pushMatrix();
@@ -32,14 +32,12 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 
 		GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
 
-		if(tileentity.timer < 10){
-			GlStateManager.scale((float)tileentity.timer / 10, (float)tileentity.timer / 10,
-					(float)tileentity.timer / 10);
-		}
-		if(tileentity.maxTimer > 0 && tileentity.timer > tileentity.maxTimer - 10){
-			float scale = Math.max(0, (float)(tileentity.maxTimer - tileentity.timer) / 10);
-			GlStateManager.scale(scale, scale, scale);
-		}
+		int animationTicks = 10;
+		float age = tileentity.timer + partialTicks;
+		float s = age < animationTicks ? age/animationTicks : MathHelper.clamp((tileentity.getLifetime() - age) / animationTicks, 0, 1);
+		s = (float)Math.pow(s, 0.4); // Smooths the animation
+
+		GlStateManager.scale(s, s, s);
 
 		// Renders the aura effect
 
