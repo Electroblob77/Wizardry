@@ -113,7 +113,8 @@
 	"misc.book_open": 					{"category": "player", "sounds": ["ebwizardry:book"]},
 	
 	"misc.freeze": 						{"category": "spells", "sounds": ["ebwizardry:freeze"]},
-	
+	"misc.spell_fail": 					{"category": "spells", "sounds": ["random/fizz"]},
+
 	"spell.agility": 					{"category": "spells", "sounds": ["ebwizardry:heal"]},
 	"spell.arc": 						{"category": "spells", "sounds": ["ebwizardry:arc1", "ebwizardry:arc2", "ebwizardry:arc3"]},
 	"spell.arcane_jammer": 				{"category": "spells", "sounds": ["ebwizardry:effect1", "ebwizardry:effect2"]},

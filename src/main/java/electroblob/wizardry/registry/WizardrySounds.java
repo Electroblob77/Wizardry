@@ -143,6 +143,7 @@ public final class WizardrySounds {
 	public static final SoundEvent MISC_BOOK_OPEN = 				createSound("misc.book_open");
 	public static final SoundEvent MISC_PAGE_TURN = 				createSound("misc.page_turn");
 	public static final SoundEvent MISC_FREEZE = 					createSound("misc.freeze");
+	public static final SoundEvent MISC_SPELL_FAIL = 				createSound("misc.spell_fail");
 
 	// Trick borrowed from the Twilight Forest, makes things neater.
 
@@ -277,7 +278,8 @@ public final class WizardrySounds {
 		event.getRegistry().register(MISC_BOOK_OPEN);
 		event.getRegistry().register(MISC_PAGE_TURN);
 		event.getRegistry().register(MISC_FREEZE);
-		
+		event.getRegistry().register(MISC_SPELL_FAIL);
+
 		for(Spell spell : Spell.getAllSpells()){
 			event.getRegistry().registerAll(spell.getSounds());
 		}

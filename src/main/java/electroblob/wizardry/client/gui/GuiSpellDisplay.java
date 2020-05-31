@@ -224,9 +224,11 @@ public class GuiSpellDisplay {
 			discovered = WizardData.get(player).hasSpellBeenDiscovered(spell);
 		}
 		
-		// Makes spells greyed out if they are in cooldown or if the player has the arcane jammer effect
-		String format = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78" : spell.getElement().getFormattingCode();
+		// Makes spells greyed out if they are in cooldown
+		String format = cooldown > 0 ? "\u00A78" : spell.getElement().getFormattingCode();
 		if(!discovered) format = "\u00A79";
+		// Obfuscates the spell name if the player has the arcane jammer effect
+		if(player.isPotionActive(WizardryPotions.arcane_jammer)) format = format + "\u00A7k";
 		
 		String name = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
 		name = format + name;
@@ -479,7 +481,7 @@ public class GuiSpellDisplay {
 			int y1 = flipY && mirrorY ? y + spellIconInsetY : y - spellIconInsetY - SPELL_ICON_SIZE;
 
 			if(jammed){
-				random.setSeed(Minecraft.getMinecraft().world.getTotalWorldTime() * 3);
+				random.setSeed(Minecraft.getMinecraft().world.getTotalWorldTime() / 2);
 				DrawingUtils.drawGlitchRect(random, x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, false, false);
 			}else{
 				DrawingUtils.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
