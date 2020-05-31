@@ -242,6 +242,8 @@ public final class Spells {
 
 	public static final Spell stormcloud = placeholder();
 
+	public static final Spell zombie_apocalypse = placeholder();
+
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Spell> event){
 
@@ -444,6 +446,8 @@ public final class Spells {
 		// Wizardry 4.3 spells
 
 		registry.register(new Stormcloud());
+
+		registry.register(new ZombieApocalypse());
 
 	}
 

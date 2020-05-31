@@ -146,6 +146,7 @@ public class WizardryEntities {
 		registry.register(createEntry(EntityFireRing.class, 		"ring_of_fire", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityHealAura.class, 		"healing_aura", 		TrackingType.CONSTRUCT).build());
 		registry.register(createEntry(EntityDecay.class, 			"decay", 				TrackingType.CONSTRUCT).build());
+		registry.register(createEntry(EntityZombieSpawner.class, 	"zombie_spawner", 	TrackingType.CONSTRUCT).build());
 
 		// These ones don't render, currently that makes no difference here but we might as well separate them
 		registry.register(createEntry(EntityArrowRain.class, 		"arrow_rain", 		TrackingType.CONSTRUCT).build());

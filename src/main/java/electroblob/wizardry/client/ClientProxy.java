@@ -789,6 +789,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityHammer.class, RenderHammer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceSpike.class, RenderIceSpike::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityForcefield.class, RenderForcefield::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityZombieSpawner.class, RenderZombieSpawner::new);
 		//RenderingRegistry.registerEntityRenderingHandler(EntityContainmentField.class, RenderContainmentField::new);
 
 		// Stuff that doesn't render

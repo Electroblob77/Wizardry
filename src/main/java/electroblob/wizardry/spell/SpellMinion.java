@@ -52,7 +52,7 @@ public class SpellMinion<T extends EntityLiving & ISummonedCreature> extends Spe
 	 * entity attribute modifier. */
 	public static final String HEALTH_MODIFIER = "minion_health";
 	/** The string identifier for the potency attribute modifier. */
-	private static final String POTENCY_ATTRIBUTE_MODIFIER = "potency";
+	public static final String POTENCY_ATTRIBUTE_MODIFIER = "potency";
 	
 	/** A factory that creates summoned creature entities. */
 	protected final Function<World, T> minionFactory;

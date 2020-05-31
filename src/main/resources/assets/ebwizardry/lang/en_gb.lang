@@ -494,6 +494,7 @@ entity.ebwizardry\:earthquake.name=Earthquake
 entity.ebwizardry\:hailstorm.name=Hailstorm
 entity.ebwizardry\:lightning_pulse.name=Lightning Pulse
 entity.ebwizardry\:stormcloud.name=Stormcloud
+entity.ebwizardry\:zombie_spawner.name=Zombie Spawner
 
 itemGroup.ebwizardry=Wizardry
 itemGroup.ebwizardryspells=Spells
@@ -786,6 +787,7 @@ spell.ebwizardry\:water_breathing=Water Breathing
 spell.ebwizardry\:whirlwind=Whirlwind
 spell.ebwizardry\:wither=Wither
 spell.ebwizardry\:wither_skull=Wither Skull
+spell.ebwizardry\:zombie_apocalypse=Zombie Apocalypse
 
 spell.ebwizardry\:agility.desc=Grants the caster faster movement speed and greater jump height for 30 seconds.
 spell.ebwizardry\:arc.desc=Fires a spark of lightning at the target.
@@ -961,6 +963,7 @@ spell.ebwizardry\:water_breathing.desc=Allows the caster to breathe underwater f
 spell.ebwizardry\:whirlwind.desc=Causes the target to be blown upwards and away from you at speed.
 spell.ebwizardry\:wither.desc=Fires a ray of darkness which withers anything it touches.
 spell.ebwizardry\:wither_skull.desc=Launches a wither skull in the direction you are pointing.
+spell.ebwizardry\:zombie_apocalypse.desc=Opening a portal to the underworld is easy. The difficult part is shutting it again when things go wrong...
 
 spell.ebwizardry\:invoke_weather.sun=The rain begins to stop...
 spell.ebwizardry\:invoke_weather.rain=The heavens open...

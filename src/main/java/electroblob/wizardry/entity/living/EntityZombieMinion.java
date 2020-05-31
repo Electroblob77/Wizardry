@@ -24,6 +24,8 @@ import java.util.UUID;
 
 public class EntityZombieMinion extends EntityZombie implements ISummonedCreature {
 
+	public boolean showSpawnParticles = true;
+
 	// Field implementations
 	private int lifetime = -1;
 	private UUID casterUUID;
@@ -72,7 +74,7 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 
 	@Override
 	public void onSpawn(){
-		this.spawnParticleEffect();
+		if(showSpawnParticles) this.spawnParticleEffect();
 	}
 
 	@Override
