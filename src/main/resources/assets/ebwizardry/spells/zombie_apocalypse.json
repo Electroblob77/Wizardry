@@ -19,6 +19,6 @@
   "base_properties": {
     "duration": 500,
     "minion_lifetime": 600,
-    "minion_spawn_interval": 30
+    "minion_spawn_interval": 20
   }
 }

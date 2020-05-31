@@ -11,9 +11,12 @@ import electroblob.wizardry.util.WizardryUtilities.Operations;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class EntityZombieSpawner extends EntityMagicConstruct {
+
+	private int spawnTimer = 10;
 
 	public EntityZombieSpawner(World world){
 		super(world);
@@ -25,12 +28,11 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		if(lifetime - ticksExisted > 10 && rand.nextInt(Spells.zombie_apocalypse.getProperty(ZombieApocalypse.MINION_SPAWN_INTERVAL).intValue()) == 0){
+		if(lifetime - ticksExisted > 10 && spawnTimer-- == 0){
 
-			if(world.isRemote){
-				this.playSound(WizardrySounds.ENTITY_ZOMBIE_SPAWNER_SPAWN, 1, 1);
+			this.playSound(WizardrySounds.ENTITY_ZOMBIE_SPAWNER_SPAWN, 1, 1);
 
-			}else{
+			if(!world.isRemote){
 
 				EntityZombieMinion zombie = new EntityZombieMinion(world);
 
@@ -48,6 +50,8 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 
 				world.spawnEntity(zombie);
 			}
+
+			spawnTimer += Spells.zombie_apocalypse.getProperty(ZombieApocalypse.MINION_SPAWN_INTERVAL).intValue() + rand.nextInt(20);
 		}
 
 		if(world.isRemote){
@@ -67,4 +71,17 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 	public boolean shouldRenderInPass(int pass){
 		return super.shouldRenderInPass(pass);
 	}
+
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt){
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("spawnTimer", spawnTimer);
+	}
+
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt){
+		super.readEntityFromNBT(nbt);
+		this.spawnTimer = nbt.getInteger("spawnTimer");
+	}
+
 }
