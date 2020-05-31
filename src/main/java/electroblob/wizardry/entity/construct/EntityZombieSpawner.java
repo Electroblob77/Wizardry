@@ -38,7 +38,7 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 					damageMultiplier - 1, Operations.MULTIPLY_CUMULATIVE));
 			zombie.setHealth(zombie.getMaxHealth()); // Need to set this because we may have just modified the value
 			zombie.hurtResistantTime = 30; // Prevent fall damage
-			zombie.showSpawnParticles = false; // Hide spawn particles or they pop out the top of the hidden box
+			zombie.hideParticles(); // Hide spawn particles or they pop out the top of the hidden box
 
 			world.spawnEntity(zombie);
 		}

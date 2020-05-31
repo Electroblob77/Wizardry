@@ -11,6 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -24,7 +27,7 @@ import java.util.UUID;
 
 public class EntityZombieMinion extends EntityZombie implements ISummonedCreature {
 
-	public boolean showSpawnParticles = true;
+	private static final DataParameter<Boolean> SPAWN_PARTICLES = EntityDataManager.createKey(EntityZombieMinion.class, DataSerializers.BOOLEAN);
 
 	// Field implementations
 	private int lifetime = -1;
@@ -40,6 +43,12 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	public EntityZombieMinion(World world){
 		super(world);
 		this.experienceValue = 0;
+	}
+
+	@Override
+	protected void entityInit(){
+		super.entityInit();
+		this.dataManager.register(SPAWN_PARTICLES, true);
 	}
 
 	// EntityZombie overrides (EntityZombie is a complex class so there are lots of these)
@@ -74,7 +83,7 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 
 	@Override
 	public void onSpawn(){
-		if(showSpawnParticles) this.spawnParticleEffect();
+		if(this.dataManager.get(SPAWN_PARTICLES)) this.spawnParticleEffect();
 	}
 
 	@Override
@@ -94,6 +103,10 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override
 	public boolean hasParticleEffect(){
 		return true;
+	}
+
+	public void hideParticles(){
+		this.dataManager.set(SPAWN_PARTICLES, false);
 	}
 
 	@Override
