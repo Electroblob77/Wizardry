@@ -53,6 +53,7 @@ public class GuiSpellDisplay {
 	private static final Map<String, Skin> skins = new LinkedHashMap<>(14); // 14 is the number of skins packaged with the mod
 	
 	private static final Gson gson = new Gson();
+	private static final Random random = new Random();
 
 	/** Width and height of the spell icon (very unlikely to change!) */
 	private static final int SPELL_ICON_SIZE = 32;
@@ -200,7 +201,7 @@ public class GuiSpellDisplay {
 				progress = maxCooldown == 0 ? 1 : (maxCooldown - (float)cooldown + event.getPartialTicks()) / maxCooldown;
 			}
 			
-			skin.drawBackground(x, y, flipX, flipY, icon, progress, player.isCreative());
+			skin.drawBackground(x, y, flipX, flipY, icon, progress, player.isCreative(), player.isPotionActive(WizardryPotions.arcane_jammer));
 			
 		}
 
@@ -457,8 +458,9 @@ public class GuiSpellDisplay {
 		 * @param icon A {@code ResourceLocation} corresponding to the icon of the selected spell.
 		 * @param cooldownBarProgress The fraction of the cooldown bar to draw; must be between 0 and 1 (inclusive).
 		 * @param creativeMode True to draw the creative mode HUD, false for the survival mode version.
+		 * @param jammed True to show the 'glitch' effect (user for arcane jammer), false to draw normally.
 		 */
-		public void drawBackground(int x, int y, boolean flipX, boolean flipY, ResourceLocation icon, float cooldownBarProgress, boolean creativeMode){
+		public void drawBackground(int x, int y, boolean flipX, boolean flipY, ResourceLocation icon, float cooldownBarProgress, boolean creativeMode, boolean jammed){
 			
 			// Moves the origin if the HUD does not mirror; neatens the rest of the code.
 			if(flipX && !mirrorX) x -= width;
@@ -475,8 +477,13 @@ public class GuiSpellDisplay {
 			int x1 = flipX && mirrorX ? x - spellIconInsetX - SPELL_ICON_SIZE : x + spellIconInsetX;
 			// y is upside-down so this is the other way round
 			int y1 = flipY && mirrorY ? y + spellIconInsetY : y - spellIconInsetY - SPELL_ICON_SIZE;
-			
-			DrawingUtils.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
+
+			if(jammed){
+				random.setSeed(Minecraft.getMinecraft().world.getTotalWorldTime() * 3);
+				DrawingUtils.drawGlitchRect(random, x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, false, false);
+			}else{
+				DrawingUtils.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
+			}
 
 			// Background of spell hud
 			mc.renderEngine.bindTexture(texture);
@@ -485,7 +492,11 @@ public class GuiSpellDisplay {
 			y1 = flipY && mirrorY ? y : y - height;
 			// The 128 here is a uv value, not a dimension, and hence is left as a hardcoded number.
 			// TODO: Since the HUD is wider than it is tall, perhaps the creative mode texture should be in the bottom half instead of the right half?
-			DrawingUtils.drawTexturedFlippedRect(x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			if(jammed){
+				DrawingUtils.drawGlitchRect(random, x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			}else{
+				DrawingUtils.drawTexturedFlippedRect(x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			}
 
 			// Cooldown bar
 			if(!creativeMode && cooldownBarProgress > 0 && (showCooldownWhenFull || cooldownBarProgress < 1)){
@@ -497,8 +508,12 @@ public class GuiSpellDisplay {
 				
 				int u = cooldownBarX; // This doesn't change, even when cooldownBarMirrorX is true, because it should
 				int v = height;		  // always start with the left-hand in the actual texture file
-				
-				DrawingUtils.drawTexturedFlippedRect(x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+
+				if(jammed){
+					DrawingUtils.drawGlitchRect(random, x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+				}else{
+					DrawingUtils.drawTexturedFlippedRect(x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+				}
 			}
 
 			GlStateManager.popMatrix();

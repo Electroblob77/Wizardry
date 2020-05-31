@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 /**
  * Utility class containing some useful static methods for drawing GUIs. Previously these were spread across the main
  * {@code WizardryUtilities} class and various individual GUI classes.
@@ -122,6 +124,29 @@ public final class DrawingUtils {
 		buffer.pos((x), (y), 0).tex(u, v).endVertex();
 		
 		tessellator.draw();
+	}
+
+	/**
+	 * Draws a 'glitch' rectangle, with some rows of pixels shifted randomly to give a broken effect.
+	 *
+	 * @param random A random number generator to use
+	 * @param x The x position of the rectangle
+	 * @param y The y position of the rectangle
+	 * @param u The x position of the top left corner of the section of the image wanted
+	 * @param v The y position of the top left corner of the section of the image wanted
+	 * @param width The width of the section
+	 * @param height The height of the section
+	 * @param textureWidth The width of the actual image.
+	 * @param textureHeight The height of the actual image.
+	 * @param flipX Whether to flip the texture in the x direction.
+	 * @param flipY Whether to flip the texture in the y direction.
+	 */
+	public static void drawGlitchRect(Random random, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, boolean flipX, boolean flipY){
+		for(int i=0; i<height; i++){
+			if(flipY) i = height - i - 1;
+			int offset = random.nextInt(4) == 0 ? random.nextInt(6) - 3 : 0;
+			drawTexturedFlippedRect(x + offset, y + i, u, v + i, width, 1, textureWidth, textureHeight, flipX, flipY);
+		}
 	}
 
 	/**
