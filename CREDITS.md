@@ -38,5 +38,6 @@ In addition, I'd like to thank the following individuals for their contributions
 - Polish: Trozuu
 - German: BirdyDragon
 - Taiwanese: chesterccj305
+- Hungarian: Bombadil
 
 Lightning ray sound effect from OhhWowProductions
