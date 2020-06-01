@@ -34,7 +34,8 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 
 		int animationTicks = 10;
 		float age = tileentity.timer + partialTicks;
-		float s = age < animationTicks ? age/animationTicks : MathHelper.clamp((tileentity.getLifetime() - age) / animationTicks, 0, 1);
+		float s = tileentity.getLifetime() < 0 ? 1 : MathHelper.clamp((tileentity.getLifetime() - age) / animationTicks, 0, 1);
+		if(age < animationTicks) s = age/animationTicks;
 		s = (float)Math.pow(s, 0.4); // Smooths the animation
 
 		GlStateManager.scale(s, s, s);
