@@ -28,6 +28,7 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.BannerPattern;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -45,6 +46,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -720,6 +722,19 @@ public final class WizardryItems {
 			}
 		});
 
+	}
+
+	/** Called from init() in the main mod class to register wizardry's banner patterns. */
+	public static void registerBannerPatterns(){
+		for(Element element : Element.values()){
+			if(element != Element.MAGIC) addBannerPattern("WIZARDRY_" + element.getName().toUpperCase(Locale.ROOT),
+					"wizardry_" + element.getName(), "eb" + element.getName().charAt(0),
+					new ItemStack(WizardryItems.magic_crystal, 1, element.ordinal()));
+		}
+	}
+
+	private static void addBannerPattern(String codeName, String fileName, String hashName, ItemStack patternItem){
+		EnumHelper.addEnum(BannerPattern.class, codeName, new Class[]{String.class, String.class, ItemStack.class}, fileName, hashName, patternItem);
 	}
 
 	public static void populateWandMap(){

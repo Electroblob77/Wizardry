@@ -167,6 +167,7 @@ public class Wizardry {
 		WizardryItems.populateWandMap();
 		WizardryItems.populateArmourMap();
 		WizardryItems.registerDispenseBehaviours();
+		WizardryItems.registerBannerPatterns();
 		Spell.registry.forEach(Spell::init);
 		SpellProperties.init();
 
