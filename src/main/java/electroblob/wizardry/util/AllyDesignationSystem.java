@@ -169,7 +169,7 @@ public final class AllyDesignationSystem {
 
 			}else if(target instanceof IEntityOwnable){
 				// Tests whether the target is a creature that was summoned/tamed by an ally of the attacker
-				if(isOwnerAlly((EntityPlayer)attacker, (IEntityOwnable)target));
+				if(isOwnerAlly((EntityPlayer)attacker, (IEntityOwnable)target)) return false;
 
 			}else if(target instanceof EntityLiving && ((EntityLivingBase)target).isPotionActive(WizardryPotions.mind_control)){
 				// Tests whether the target is a creature that was mind controlled by an ally of the attacker
