@@ -261,6 +261,7 @@ public final class WizardryItems {
 	public static final Item amulet_transience = placeholder();
 	public static final Item amulet_resurrection = placeholder();
 	public static final Item amulet_auto_shield = placeholder();
+	public static final Item amulet_absorption = placeholder();
 
 	public static final Item charm_haggler = placeholder();
 	public static final Item charm_experience_tome = placeholder();
@@ -620,6 +621,7 @@ public final class WizardryItems {
 		registerItem(registry, "amulet_transience", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_resurrection", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_auto_shield", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.AMULET));
+		registerItem(registry, "amulet_absorption", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.AMULET));
 
 		registerItem(registry, "charm_haggler", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_experience_tome", 		new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));

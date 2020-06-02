@@ -276,6 +276,7 @@ public final class WizardryModels {
 		registerItemModel(WizardryItems.amulet_transience);
 		registerItemModel(WizardryItems.amulet_resurrection);
 		registerItemModel(WizardryItems.amulet_auto_shield);
+		registerItemModel(WizardryItems.amulet_absorption);
 
 		registerItemModel(WizardryItems.charm_haggler);
 		registerItemModel(WizardryItems.charm_experience_tome);

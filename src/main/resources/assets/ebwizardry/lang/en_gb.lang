@@ -360,6 +360,8 @@ item.ebwizardry\:amulet_resurrection.name=Amulet of the Immortal
 item.ebwizardry\:amulet_resurrection.desc=The resurrection spell can be used on yourself from beyond the grave
 item.ebwizardry\:amulet_auto_shield.name=Hyeleth's Amulet
 item.ebwizardry\:amulet_auto_shield.desc=Grants a 25%% chance to trigger the shield spell for a few seconds when bound to a wand on your hotbar
+item.ebwizardry\:amulet_absorption.name=Amulet of Vitality
+item.ebwizardry\:amulet_absorption.desc=Excess health from healing spells is converted into absorption hearts
 
 item.ebwizardry\:charm_haggler.name=Haggler's Sign
 item.ebwizardry\:charm_haggler.desc=Wizards are guaranteed to offer a new trade every time you trade with them

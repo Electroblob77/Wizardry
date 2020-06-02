@@ -35,7 +35,7 @@ public class GroupHeal extends Spell {
 
 				if(target.getHealth() < target.getMaxHealth() && target.getHealth() > 0){
 
-					target.heal(getProperty(HEALTH).floatValue() * modifiers.get(SpellModifiers.POTENCY));
+					Heal.heal(target, getProperty(HEALTH).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
 					if(world.isRemote) ParticleBuilder.spawnHealParticles(world, target);
 					playSound(world, target, ticksInUse, -1, modifiers);
