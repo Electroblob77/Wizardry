@@ -190,8 +190,8 @@ public final class Spells {
 	public static final Spell curse_of_soulbinding = placeholder();
 	public static final Spell cobwebs = placeholder();
 	public static final Spell decoy = placeholder();
-	public static final Spell arcane_jammer = placeholder();
 	public static final Spell conjure_armour = placeholder();
+	public static final Spell arcane_jammer = placeholder();
 	public static final Spell group_heal = placeholder();
 
 	public static final Spell hailstorm = placeholder();
@@ -395,8 +395,8 @@ public final class Spells {
 		registry.register(new CurseOfSoulbinding());
 		registry.register(new Cobwebs());
 		registry.register(new Decoy());
-		registry.register(new ArcaneJammer());
 		registry.register(new ConjureArmour());
+		registry.register(new ArcaneJammer());
 		registry.register(new GroupHeal());
 
 		registry.register(new Hailstorm());

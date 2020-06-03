@@ -11,7 +11,7 @@
     "looting": true
   },
   "tier": "advanced",
-  "element": "healing",
+  "element": "sorcery",
   "type": "defence",
   "cost": 45,
   "chargeup": 0,
