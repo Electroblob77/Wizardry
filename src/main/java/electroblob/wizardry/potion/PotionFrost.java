@@ -8,6 +8,7 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.BreakSpeed;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,7 +23,6 @@ public class PotionFrost extends PotionMagicEffect implements ICustomPotionParti
 		// With -0.5 as the 'amount', frost 1 slows the entity down by a half and frost 2 roots it to the spot
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED,
 				"35dded48-2f19-4541-8510-b29e2dc2cd51", -Constants.FROST_SLOWNESS_PER_LEVEL, 2);
-		// More UUIDs: 85602e0b-4801-4a87-94f3-bf617c97014e
 	}
 
 	@Override
@@ -36,6 +36,17 @@ public class PotionFrost extends PotionMagicEffect implements ICustomPotionParti
 			// Amplifier + 1 because it starts at 0
 			event.setNewSpeed(event.getOriginalSpeed() * (1 - Constants.FROST_FATIGUE_PER_LEVEL
 					* (event.getEntityPlayer().getActivePotionEffect(WizardryPotions.frost).getAmplifier() + 1)));
+		}
+	}
+
+	@SubscribeEvent
+	public static void onLivingJumpEvent(LivingJumpEvent event){
+		if(event.getEntityLiving().isPotionActive(WizardryPotions.frost)){
+			if(event.getEntityLiving().getActivePotionEffect(WizardryPotions.frost).getAmplifier() == 0){
+				event.getEntity().motionY *= 0.5;
+			}else{
+				event.getEntity().motionY = 0;
+			}
 		}
 	}
 
