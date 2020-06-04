@@ -126,8 +126,8 @@ public class EntityWitherSkeletonMinion extends EntityWitherSkeleton implements 
 	private void spawnParticleEffect(){
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
-				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + this.rand.nextFloat(),
-						this.posY + 1 + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0, 0, 0);
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + this.rand.nextFloat() - 0.5f,
+						this.posY + this.rand.nextFloat() * height, this.posZ + this.rand.nextFloat() - 0.5f, 0, 0, 0);
 			}
 		}
 	}
