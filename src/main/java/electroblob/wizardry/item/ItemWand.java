@@ -76,6 +76,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	private static final float ELEMENTAL_PROGRESSION_MODIFIER = 1.2f;
 	/** The increase in progression for casting an undiscovered spell (can only happen once per spell for each player). */
 	private static final float DISCOVERY_PROGRESSION_MODIFIER = 5f;
+	/** The increase in progression for tiers that the player has already reached. */
+	private static final float SECOND_TIME_PROGRESSION_MODIFIER = 1.5f;
 	/** The fraction of progression lost when all recently-cast spells are the same as the one being cast. */
 	private static final float MAX_PROGRESSION_REDUCTION = 0.75f;
 
@@ -182,7 +184,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	@Override
 	public boolean hasEffect(ItemStack stack){
 		return !Wizardry.settings.legacyWandLevelling && this.tier.level < Tier.MASTER.level
-				&& WandHelper.getProgression(stack) >= Tier.values()[tier.ordinal() + 1].progression;
+				&& WandHelper.getProgression(stack) >= tier.next().progression;
 	}
 
 	@Override
@@ -328,7 +330,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					this.getMana(stack), this.getManaCapacity(stack)));
 
 			text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.progression", new Style().setColor(TextFormatting.GRAY),
-					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? Tier.values()[tier.ordinal() + 1].progression : 0));
+					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? tier.next().progression : 0));
 		}
 	}
 
@@ -473,7 +475,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 				if(!Wizardry.settings.legacyWandLevelling){ // Don't display the message if legacy wand levelling is enabled
 					// If the wand just gained enough progression to be upgraded...
-					Tier nextTier = Tier.values()[tier.ordinal() + 1];
+					Tier nextTier = tier.next();
 					int excess = WandHelper.getProgression(stack) - nextTier.progression;
 					if(excess >= 0 && excess < progression){
 						// ...display a message above the player's hotbar
@@ -590,9 +592,17 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			progressionModifier *= ELEMENTAL_PROGRESSION_MODIFIER;
 		}
 
-		if(WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
-			// Casting an undiscovered spell now grants 5x progression
-			progressionModifier *= DISCOVERY_PROGRESSION_MODIFIER;
+		if(WizardData.get(player) != null){
+
+			if(!WizardData.get(player).hasSpellBeenDiscovered(spell)){
+				// Casting an undiscovered spell now grants 5x progression
+				progressionModifier *= DISCOVERY_PROGRESSION_MODIFIER;
+			}
+
+			if(!WizardData.get(player).hasReachedTier(this.tier.next())){
+				// 1.5x progression for tiers that have already been reached
+				progressionModifier *= SECOND_TIME_PROGRESSION_MODIFIER;
+			}
 		}
 
 		modifiers.set(SpellModifiers.PROGRESSION, progressionModifier, false);
@@ -646,7 +656,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			// progression or the player is in creative mode.
 			if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
 					|| WandHelper.getProgression(wand) >= tier.progression)
-					&& tier.ordinal() - 1 == this.tier.ordinal()){
+					&& tier == this.tier.next()){
 
 				// We're not carrying over excess progression for now, but if we do want to, this is how
 //				if(!Wizardry.settings.legacyWandLevelling){
@@ -655,6 +665,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 //				}
 
 				WandHelper.setProgression(wand, 0);
+
+				if(player != null) WizardData.get(player).setTierReached(tier);
 
 				ItemStack newWand = new ItemStack(WizardryItems.getWand(tier, this.element));
 				newWand.setTagCompound(wand.getTagCompound());

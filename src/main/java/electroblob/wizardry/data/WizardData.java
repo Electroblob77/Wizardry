@@ -2,6 +2,7 @@ package electroblob.wizardry.data;
 
 import com.google.common.collect.EvictingQueue;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.SpellCastEvent;
@@ -108,6 +109,9 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** Set of this player's discovered spells. <b>Do not write to this list directly</b>, use
 	 * {@link WizardData#discoverSpell(Spell)} instead. */
 	public Set<Spell> spellsDiscovered;
+
+	/** The highest {@link Tier} this player has upgraded a wand to, used to apply progression modifiers. */
+	private Tier maxTierReached = Tier.NOVICE;
 
 	private Set<UUID> allies;
 	/** List of usernames of this player's allies. May not be accurate 100% of the time. This is here so that a player
@@ -255,6 +259,24 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		if(spell instanceof None) return false;
 		// Tries to add the spell to the list of discovered spells, and returns false if it was already present
 		return spellsDiscovered.add(spell);
+	}
+
+	/**
+	 * Sets the tier this player has reached to the given tier, if they have not yet reached it.
+	 * @param tier The tier the player has reached
+	 */
+	public void setTierReached(Tier tier){
+		if(!hasReachedTier(tier)) this.maxTierReached = tier;
+	}
+
+	/**
+	 * Returns true if this player has previously upgraded a wand to the given tier.
+	 * @param tier The tier to check for
+	 * @return True if this player has already upgraded a wand to the given tier, false if not. This does not include
+	 * wands that were purchased at the given tier, unless they have since been upgraded.
+	 */
+	public boolean hasReachedTier(Tier tier){
+		return tier.level >= maxTierReached.level;
 	}
 
 	// Recent spell tracking
@@ -485,6 +507,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		this.allyNames = data.allyNames;
 		this.selectedMinion = data.selectedMinion;
 		this.spellsDiscovered = data.spellsDiscovered;
+		this.maxTierReached = data.maxTierReached;
 		this.recentSpells = data.recentSpells;
 
 		for(IVariable variable : data.spellData.keySet()){
@@ -530,6 +553,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 		properties.setIntArray("discoveredSpells", spells);
 
+		properties.setInteger("maxTierReached", maxTierReached.ordinal());
+
 		NBTExtras.storeTagSafely(properties, "recentSpells", NBTExtras.listToNBT(recentSpells, s -> new NBTTagInt(s.metadata())));
 
 		storedVariables.forEach(k -> k.write(properties, this.spellData.get(k)));
@@ -552,6 +577,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			for(int id : nbt.getIntArray("discoveredSpells")){
 				spellsDiscovered.add(Spell.byMetadata(id));
 			}
+
+			this.maxTierReached = Tier.values()[nbt.getInteger("maxTierReached")];
 
 			// Probably won't be null but we may as well just reinitialise it instead of clearing it
 			this.recentSpells = EvictingQueue.create(MAX_RECENT_SPELLS);

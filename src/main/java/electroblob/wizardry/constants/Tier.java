@@ -52,6 +52,16 @@ public enum Tier {
 		throw new IllegalArgumentException("No such tier with unlocalised name: " + name);
 	}
 
+	/** Returns the tier above this one, or the same tier if this is the highest tier. */
+	public Tier next(){
+		return ordinal() + 1 < values().length ? values()[ordinal() + 1] : this;
+	}
+
+	/** Returns the tier below this one, or the same tier if this is the lowest tier. */
+	public Tier previous(){
+		return ordinal() > 0 ? values()[ordinal() - 1] : this;
+	}
+
 	/** Returns the translated display name of this tier, without formatting. */
 	public String getDisplayName(){
 		return Wizardry.proxy.translate("tier." + unlocalisedName);

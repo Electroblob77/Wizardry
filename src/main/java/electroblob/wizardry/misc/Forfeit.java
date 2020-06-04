@@ -112,8 +112,8 @@ public abstract class Forfeit {
 
 	public static Forfeit getRandomForfeit(Random random, Tier tier, Element element){
 		float f = random.nextFloat();
-		if(f < TIER_CHANGE_CHANCE && tier.ordinal() > 0) tier = Tier.values()[tier.ordinal() - 1];
-		else if(f > 1 - TIER_CHANGE_CHANCE && tier.ordinal() < Tier.values().length-1) tier = Tier.values()[tier.ordinal() + 1];
+		if(f < TIER_CHANGE_CHANCE) tier = tier.previous();
+		else if(f > 1 - TIER_CHANGE_CHANCE) tier = tier.next();
 		List<Forfeit> matches = forfeits.get(Pair.of(tier, element));
 		if(matches.isEmpty()){
 			Wizardry.logger.warn("No forfeits with tier {} and element {}!", tier, element);
