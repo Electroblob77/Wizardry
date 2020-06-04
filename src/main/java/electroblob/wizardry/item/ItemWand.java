@@ -658,13 +658,15 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					|| WandHelper.getProgression(wand) >= tier.progression)
 					&& tier == this.tier.next()){
 
-				// We're not carrying over excess progression for now, but if we do want to, this is how
-//				if(!Wizardry.settings.legacyWandLevelling){
-//					// Easy way to carry excess progression over to the new stack
-//					WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.progression);
-//				}
-
-				WandHelper.setProgression(wand, 0);
+				if(Wizardry.settings.legacyWandLevelling){
+					// Progression has little meaning with legacy upgrade mechanics so just reset it
+					// In theory, you can get 'free' progression when upgrading since progression can't be negative,
+					// so the flipside of that is you lose any excess
+					WandHelper.setProgression(wand, 0);
+				}else{
+					// Carry excess progression over to the new stack
+					WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.progression);
+				}
 
 				if(player != null) WizardData.get(player).setTierReached(tier);
 
