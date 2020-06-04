@@ -689,8 +689,8 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void initialiseLayers(){
-		LayerStone.initialiseLayers();
-		LayerFrost.initialiseLayers();
+		LayerTiledOverlay.initialiseLayers(LayerStone::new);
+		LayerTiledOverlay.initialiseLayers(LayerFrost::new);
 	}
 
 	@Override
