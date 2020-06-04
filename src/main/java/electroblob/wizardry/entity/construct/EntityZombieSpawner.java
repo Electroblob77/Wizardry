@@ -1,5 +1,6 @@
 package electroblob.wizardry.entity.construct;
 
+import electroblob.wizardry.entity.living.EntityHuskMinion;
 import electroblob.wizardry.entity.living.EntityZombieMinion;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -15,6 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public class EntityZombieSpawner extends EntityMagicConstruct {
+
+	public boolean spawnHusks;
 
 	private int spawnTimer = 10;
 
@@ -34,7 +37,7 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 
 			if(!world.isRemote){
 
-				EntityZombieMinion zombie = new EntityZombieMinion(world);
+				EntityZombieMinion zombie = spawnHusks ? new EntityHuskMinion(world) : new EntityZombieMinion(world);
 
 				zombie.setPosition(this.posX, this.posY, this.posZ);
 				zombie.setCaster(this.getCaster());
@@ -76,12 +79,14 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 	protected void writeEntityToNBT(NBTTagCompound nbt){
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("spawnTimer", spawnTimer);
+		nbt.setBoolean("spawnHusks", spawnHusks);
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt){
 		super.readEntityFromNBT(nbt);
 		this.spawnTimer = nbt.getInteger("spawnTimer");
+		this.spawnHusks = nbt.getBoolean("spawnHusks");
 	}
 
 }

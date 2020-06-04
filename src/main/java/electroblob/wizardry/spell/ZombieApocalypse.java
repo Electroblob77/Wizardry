@@ -1,10 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.construct.EntityZombieSpawner;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -32,6 +34,11 @@ public class ZombieApocalypse extends SpellConstruct<EntityZombieSpawner> {
 	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 		y += SPAWNER_HEIGHT;
 		return super.spawnConstruct(world, x, y, z, side, caster, modifiers);
+	}
+
+	@Override
+	protected void addConstructExtras(EntityZombieSpawner construct, EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
+		construct.spawnHusks = caster instanceof EntityPlayer && ItemArtefact.isArtefactActive((EntityPlayer)caster, WizardryItems.charm_minion_variants);
 	}
 
 	@Override
