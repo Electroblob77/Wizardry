@@ -1,6 +1,7 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -103,6 +104,11 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	@Override
 	public boolean hasParticleEffect(){
 		return false;
+	}
+
+	@Override
+	public int getAnimationColour(float animationProgress){
+		return DrawingUtils.mix(0xffdd4d, 0xff6600, animationProgress);
 	}
 
 	@Override

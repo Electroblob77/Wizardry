@@ -1,6 +1,7 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -59,6 +60,11 @@ public class EntityIceWraith extends EntityBlazeMinion {
 				.spawn(world);
 			}
 		}
+	}
+
+	@Override
+	public int getAnimationColour(float animationProgress){
+		return DrawingUtils.mix(0xffffff, 0x73e1ff, animationProgress);
 	}
 
 	@Override

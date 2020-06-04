@@ -1,5 +1,6 @@
 package electroblob.wizardry.entity.living;
 
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
@@ -149,6 +150,11 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 						this.posY + 1 + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0, 0, 0);
 			}
 		}
+	}
+
+	@Override
+	public int getAnimationColour(float animationProgress){
+		return DrawingUtils.mix(0xffdd4d, 0xff6600, animationProgress);
 	}
 
 	@Override

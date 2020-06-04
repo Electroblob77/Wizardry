@@ -2,19 +2,12 @@ package electroblob.wizardry.client.renderer;
 
 import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.client.ClientProxy;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Layer used to render the stone texture on a petrified creature.
@@ -22,6 +15,8 @@ import org.lwjgl.opengl.GL11;
  * @author Electroblob
  * @since Wizardry 1.2
  */
+// N.B. The rule here is don't restrict the type any more than necessary, so even though we *know* petrified creatures
+// are always instances of EntityLiving, we don't need any methods/fields specific to EntityLiving so use ELB instead.
 public class LayerStone extends LayerTiledOverlay<EntityLivingBase> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation("textures/blocks/stone.png");

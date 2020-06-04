@@ -30,8 +30,19 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 
 	private final RenderLivingBase<?> renderer;
 
-	public LayerTiledOverlay(RenderLivingBase<?> renderer){
+	private final int textureWidth;
+	private final int textureHeight;
+
+	/** Creates a new {@code LayerTiledOverlay} with the given renderer parameters. */
+	public LayerTiledOverlay(RenderLivingBase<?> renderer, int textureWidth, int textureHeight){
+		this.textureWidth = textureWidth;
+		this.textureHeight = textureHeight;
 		this.renderer = renderer;
+	}
+
+	/** Creates a new {@code LayerTiledOverlay} with the given renderer. Texture width and height default to 16. */
+	public LayerTiledOverlay(RenderLivingBase<?> renderer){
+		this(renderer, 16, 16);
 	}
 
 	/**
@@ -58,26 +69,6 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 	 */
 	public ModelBase getModel(T entity, float partialTicks){
 		return renderer.getMainModel();
-	}
-
-	/**
-	 * Returns the width of the texture to use for the overlay. Defaults to 16.
-	 * @param entity The entity being rendered
-	 * @param partialTicks The current partial tick time
-	 * @return The width of the texture in pixels.
-	 */
-	public int getTextureWidth(T entity, float partialTicks){
-		return 16;
-	}
-
-	/**
-	 * Returns the height of the texture to use for the overlay. Defaults to 16.
-	 * @param entity The entity being rendered
-	 * @param partialTicks The current partial tick time
-	 * @return The height of the texture in pixels.
-	 */
-	public int getTextureHeight(T entity, float partialTicks){
-		return 16;
 	}
 
 	/**
@@ -138,19 +129,16 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 
 		ModelBase model = getModel(entity, partialTicks);
 
-		int width = getTextureWidth(entity, partialTicks);
-		int height = getTextureHeight(entity, partialTicks);
-
 		// Calculate the scaling required in each direction
 		double scaleX = 1, scaleY = 1;
 		// It's more logical to use the model's texture size, but some classes don't bother setting it properly
 		// (e.g. ModelVillager), so to get the correct dimensions I'm getting them from the first box instead.
 		if(model.boxList != null && model.boxList.get(0) != null){
-			scaleX = (double)model.boxList.get(0).textureWidth / width;
-			scaleY = (double)model.boxList.get(0).textureHeight / height;
+			scaleX = (double)model.boxList.get(0).textureWidth / textureWidth;
+			scaleY = (double)model.boxList.get(0).textureHeight / textureHeight;
 		}else{ // Fallback to model fields; should never be needed
-			scaleX = (double)model.textureWidth / width;
-			scaleY = (double)model.textureHeight / height;
+			scaleX = (double)model.textureWidth / textureWidth;
+			scaleY = (double)model.textureHeight / textureHeight;
 		}
 
 		GlStateManager.scale(scaleX, scaleY, 1);
@@ -220,13 +208,14 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 	 * @param <T> The type of entity this layer renderer is applicable for
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends EntityLivingBase> void initialiseLayers(Class<T> entityType, Function<RenderLivingBase<T>, LayerRenderer<T>> layerFactory){
+	public static <T extends EntityLivingBase> void initialiseLayers(Class<T> entityType, Function<RenderLivingBase<T>, LayerRenderer<? extends T>> layerFactory){
 
 		for(Class<? extends Entity> c : Minecraft.getMinecraft().getRenderManager().entityRenderMap.keySet()){
 			if(entityType.isAssignableFrom(c)){
 				Render<T> renderer = Minecraft.getMinecraft().getRenderManager().getEntityClassRenderObject(c);
-				if(renderer instanceof RenderLivingBase){ // Should always be true
+				if(renderer instanceof RenderLivingBase<?>){ // Should always be true
 					// For some reason IntelliJ is quite happy with this cast, even without suppress warnings
+					// Instinct suggests Java shouldn't be happy casting to RenderLivingBase<T> but somehow it works
 					((RenderLivingBase<T>)renderer).addLayer(layerFactory.apply((RenderLivingBase<T>)renderer));
 				}
 			}
@@ -235,7 +224,7 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 		// Players have a separate renderer map
 		if(entityType.isAssignableFrom(EntityPlayer.class)){
 			for(RenderPlayer renderer : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()){
-				renderer.addLayer(layerFactory.apply((RenderLivingBase<T>)renderer));
+				renderer.addLayer(layerFactory.apply((RenderLivingBase<T>)renderer)); // This does need suppress warnings
 			}
 		}
 	}
@@ -245,7 +234,7 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 	 * {@link LayerTiledOverlay#initialiseLayers(Class, Function)}.
 	 * @param layerFactory A function that creates a layer for a given renderer, usually a constructor reference
 	 */
-	public static void initialiseLayers(Function<RenderLivingBase<EntityLivingBase>, LayerRenderer<EntityLivingBase>> layerFactory){
+	public static void initialiseLayers(Function<RenderLivingBase<EntityLivingBase>, LayerRenderer<? extends EntityLivingBase>> layerFactory){
 		initialiseLayers(EntityLivingBase.class, layerFactory);
 	}
 

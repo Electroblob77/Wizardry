@@ -239,6 +239,16 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 	/** Whether this creature should spawn a subtle black swirl particle effect while alive. */
 	boolean hasParticleEffect();
 
+	/** Returns whether this creature has an animation when appearing and disappearing. */
+	default boolean hasAnimation(){
+		return true;
+	}
+
+	/** Returns the colour of this creature's appear/disappear animation. */
+	default int getAnimationColour(float animationProgress){
+		return 0x000000;
+	}
+
 	/**
 	 * Called from the event handler after the damage change is applied. Does nothing by default, but can be overridden
 	 * to do something when a successful attack is made. This was added because the event-based damage source system can

@@ -55,6 +55,11 @@ public class EntityDecoy extends EntitySummonedCreature {
 	}
 
 	@Override
+	public int getAnimationColour(float animationProgress){
+		return 0xffc600;
+	}
+
+	@Override
 	public boolean isEntityInvulnerable(DamageSource source){
 		return true;
 	}
