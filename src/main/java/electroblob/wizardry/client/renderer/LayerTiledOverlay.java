@@ -5,7 +5,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -97,18 +96,8 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 			float ageInTicks, float netHeadYaw, float headPitch, float scale){
 
 		if(shouldRender(entity, partialTicks)){
-
-			GlStateManager.enableLighting();
-			// TODO: Why is this here? Why don't other layers have it? What does RenderLivingBase do about brightness?
-			//       And why was there a partialTicks parameter?
-			int i = getBlockBrightnessForEntity(entity);
-			int j = i % 65536;
-			int k = i / 65536;
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
-
 			this.renderer.bindTexture(getTexture(entity, partialTicks));
-			this.renderEntityModel(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw,
-					headPitch, scale);
+			this.renderEntityModel(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 		}
 	}
 
