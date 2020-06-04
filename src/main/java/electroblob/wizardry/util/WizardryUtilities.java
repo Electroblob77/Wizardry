@@ -175,7 +175,7 @@ public final class WizardryUtilities {
 	 * @param source The block state to copy property values from
 	 * @return The resulting block state
 	 */
-	@SuppressWarnings("unchecked") // Don't complain to me about Mojang's code design...
+	@SuppressWarnings({"unchecked", "rawtypes"}) // Don't complain to me about Mojang's code design...
 	public static IBlockState copyState(Block block, IBlockState source){
 
 		IBlockState state = block.getDefaultState();
@@ -232,7 +232,7 @@ public final class WizardryUtilities {
 	/**
 	 * A {@code SurfaceCriteria} object is used to define a 'surface', a boundary between two blocks which differ in
 	 * some way, for use in {@link WizardryUtilities#getNearestSurface(World, BlockPos, EnumFacing, int, boolean, SurfaceCriteria)}.
-	 * This provides a more flexible replacement for the (now deprecated) {@code getNearestFloorLevel} methods.<br>
+	 * This provides a more flexible replacement for the old {@code getNearestFloorLevel} methods.<br>
 	 * <br>
 	 * <i>In the context of this class, 'outside' refers to the side of the surface that is in the supplied direction,
 	 * and 'inside' refers to the side which is in the opposite direction. For example, if the direction is {@code UP},
