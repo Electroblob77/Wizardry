@@ -62,7 +62,7 @@ public class ModelRendererExtended extends ModelRenderer {
 		if(box instanceof ModelRendererExtended) return (ModelRendererExtended)box; // Ignore already-wrapped parts
 		ModelRendererExtended wrapper = new ModelRendererExtended(model, box);
 		int index = model.boxList.indexOf(box);
-		if(index < 0) throw new IllegalArgumentException(String.format("The given ModelRenderer %s does not belong to the given model %s", model, box));
+		if(index < 0) throw new IllegalArgumentException(String.format("The given ModelRenderer %s does not belong to the given model %s", box, model));
 		model.boxList.set(index, wrapper); // I doubt the order matters but we may as well put it at the same index
 		return wrapper;
 	}
