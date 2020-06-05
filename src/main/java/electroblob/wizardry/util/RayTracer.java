@@ -80,15 +80,17 @@ public final class RayTracer {
 
 	/**
 	 * Helper method for use with {@link RayTracer#rayTrace(World, Vec3d, Vec3d, float, boolean, boolean, boolean, Class, Predicate)}
-	 * which returns a {@link Predicate} that returns true for the given entity, plus any entities that have zero health
-	 * or less (i.e. are in the process of dying). This is a commonly used filter in spells.
+	 * which returns a {@link Predicate} that returns true for the given entity, plus any entities that are in the
+	 * process of dying. This is a commonly used filter in spells.
 	 *
 	 * @param entity The entity that the returned predicate should return true for.
 	 * @return A {@link Predicate} that returns true for the given entity and any entities that are in the process of
 	 * dying, false for all other entities.
 	 */
 	public static Predicate<Entity> ignoreEntityFilter(Entity entity){
-		return e -> e == entity || (e instanceof EntityLivingBase && ((EntityLivingBase)e).getHealth() <= 0);
+		// Use deathTime > 0 so we still hit stuff that has *just* died, otherwise SpellRay#onEntityHit doesn't get
+		// called on the client side when the entity is killed
+		return e -> e == entity || (e instanceof EntityLivingBase && ((EntityLivingBase)e).deathTime > 0);
 	}
 
 	/**

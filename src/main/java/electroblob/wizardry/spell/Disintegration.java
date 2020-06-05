@@ -25,6 +25,8 @@ public class Disintegration extends SpellRay {
 	public static final String EMBER_COUNT = "ember_count";
 	public static final String EMBER_LIFETIME = "ember_lifetime";
 
+	public static final String NBT_KEY = "disintegrating";
+
 	public Disintegration(){
 		super("disintegration", false, SpellActions.POINT);
 		addProperties(DAMAGE, BURN_DURATION, EMBER_LIFETIME, EMBER_COUNT);
@@ -43,7 +45,7 @@ public class Disintegration extends SpellRay {
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.FIRE),
 					getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
-			if(!world.isRemote && target instanceof EntityLivingBase && ((EntityLivingBase)target).getHealth() <= 0){
+			if(target instanceof EntityLivingBase && ((EntityLivingBase)target).getHealth() <= 0){
 				spawnEmbers(world, caster, target, getProperty(EMBER_COUNT).intValue());
 			}
 		}
@@ -53,17 +55,28 @@ public class Disintegration extends SpellRay {
 
 	public static void spawnEmbers(World world, EntityLivingBase caster, Entity target, int count){
 
-		for(int i = 0; i < count; i++){
-			EntityEmber ember = new EntityEmber(world, caster);
-			double x = (world.rand.nextDouble() - 0.5) * target.width;
-			double y = world.rand.nextDouble() * target.height;
-			double z = (world.rand.nextDouble() - 0.5) * target.width;
-			ember.setPosition(target.posX + x, target.posY + y, target.posZ + z);
-			float speed = 0.2f;
-			ember.motionX = x * speed;
-			ember.motionY = y * 0.5f * speed;
-			ember.motionZ = z * speed;
-			world.spawnEntity(ember);
+		target.extinguish();
+
+		if(world.isRemote){ // FIXME: Various syncing issues here!
+			// Set NBT client-side, it's only for rendering
+			// Normally dying entities are ignored but we're fiddling with them here so double-check
+			if(!target.getEntityData().hasKey(NBT_KEY)){
+				target.getEntityData().setInteger(NBT_KEY, target.ticksExisted);
+			}
+		}else{
+			for(int i = 0; i < count; i++){
+				EntityEmber ember = new EntityEmber(world, caster);
+				double x = (world.rand.nextDouble() - 0.5) * target.width;
+				double y = world.rand.nextDouble() * target.height;
+				double z = (world.rand.nextDouble() - 0.5) * target.width;
+				ember.setPosition(target.posX + x, target.posY + y, target.posZ + z);
+				ember.ticksExisted = world.rand.nextInt(20);
+				float speed = 0.2f;
+				ember.motionX = x * speed;
+				ember.motionY = y * 0.5f * speed;
+				ember.motionZ = z * speed;
+				world.spawnEntity(ember);
+			}
 		}
 	}
 
