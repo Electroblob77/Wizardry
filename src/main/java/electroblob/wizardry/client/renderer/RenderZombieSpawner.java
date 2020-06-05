@@ -57,13 +57,8 @@ public class RenderZombieSpawner extends Render<EntityZombieSpawner> {
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		drawFace(buffer, vertices[0], vertices[1], vertices[3], vertices[2], 0, 0, 1, 1); // Bottom
-		tessellator.draw();
-
-		GlStateManager.disableDepth(); // Disable depth for the top face
-		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		drawFace(buffer, vertices[1], vertices[0], vertices[2], vertices[3], 0, 0, 1, 1); // Top
 		tessellator.draw();
-		GlStateManager.enableDepth();
 
 		GlStateManager.popMatrix();
 
