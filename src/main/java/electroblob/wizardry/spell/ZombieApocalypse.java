@@ -5,10 +5,13 @@ import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.WizardryUtilities.SurfaceCriteria;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -18,6 +21,7 @@ public class ZombieApocalypse extends SpellConstruct<EntityZombieSpawner> {
 	public static final String MINION_SPAWN_INTERVAL = "minion_spawn_interval";
 
 	private static final int SPAWNER_HEIGHT = 8;
+	private static final int MIN_SPAWNER_HEIGHT = 3;
 
 	public ZombieApocalypse(){
 		super("zombie_apocalypse", SpellActions.POINT_UP, EntityZombieSpawner::new, false);
@@ -32,7 +36,13 @@ public class ZombieApocalypse extends SpellConstruct<EntityZombieSpawner> {
 
 	@Override
 	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
-		y += SPAWNER_HEIGHT;
+
+		Integer ceiling = WizardryUtilities.getNearestSurface(world, new BlockPos(x, y + MIN_SPAWNER_HEIGHT, z),
+				EnumFacing.UP, SPAWNER_HEIGHT - MIN_SPAWNER_HEIGHT, false, SurfaceCriteria.COLLIDABLE.flip());
+
+		if(ceiling == null) y += SPAWNER_HEIGHT;
+		else y = ceiling - 0.5;
+
 		return super.spawnConstruct(world, x, y, z, side, caster, modifiers);
 	}
 
