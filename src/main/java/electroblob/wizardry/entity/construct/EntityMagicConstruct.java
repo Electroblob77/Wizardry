@@ -1,6 +1,7 @@
 package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.WizardryUtilities;
@@ -8,8 +9,12 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
@@ -68,6 +73,17 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 
 		super.onUpdate();
 
+	}
+
+	@Override
+	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand){
+
+		if(lifetime == -1 && getCaster() == player && player.isSneaking() && player.getHeldItem(hand).getItem() instanceof ISpellCastingItem){
+			this.despawn();
+			return EnumActionResult.SUCCESS;
+		}
+
+		return super.applyPlayerInteraction(player, vec, hand);
 	}
 
 	/**
