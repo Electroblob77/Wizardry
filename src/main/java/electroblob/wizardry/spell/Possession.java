@@ -417,7 +417,7 @@ public class Possession extends SpellRay {
 
 	/** Adds the given {@link BiConsumer} to the list of abilities. An <i>ability</i> is an entity-specific action or
 	 * effect that happens when a certain type of entity is possessed. For example, spiders can climb walls, endermen
-	 * can pick up blocks, creepers explode, etc. Other mods may use this method to */
+	 * can pick up blocks, creepers explode, etc. Other mods may use this method to add their own possession abilities. */
 	public static <T extends EntityLiving> void addAbility(Class<T> entityType, BiConsumer<T, EntityPlayer> ability){
 		abilities.put(entityType, ability);
 	}
