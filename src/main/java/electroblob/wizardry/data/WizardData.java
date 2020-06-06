@@ -192,7 +192,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	/** Registers the given {@link IStoredVariable} objects as keys that will be stored to NBT for each {@code WizardData}
 	 * instance. */
-	public static void registerStoredVariables(IStoredVariable... variables){
+	public static void registerStoredVariables(IStoredVariable<?>... variables){
 		storedVariables.addAll(Arrays.asList(variables));
 	}
 
@@ -211,7 +211,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 *           other words, if an {@code Integer} is stored under a {@code IVariable<Number>}, a {@code Number} will
 	 *           be returned when the value is retrieved.
 	 */
-	// This use of type parameters guarantees that spellData may only be stored (and therefore may only be accessed)
+	// This use of type parameters guarantees that data may only be stored (and therefore may only be accessed)
 	// using a compatible key. For instance, the following code will not compile:
 	// Number i = 1;
 	// setVariable(StoredVariable.ofInt("key", Persistence.ALWAYS), i);
@@ -484,7 +484,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		prevMotionY = player.motionY;
 
-		// This new system removes a lot of repetitive event handler code and inflexible spellData which had duplicate
+		// This new system removes a lot of repetitive event handler code and inflexible data which had duplicate
 		// functions, just for different enchantments.
 		updateImbuedItems();
 		updateContinuousSpellCasting();
@@ -495,10 +495,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	/**
 	 * Called from the event handler each time the associated player entity is cloned, i.e. on respawn or when
-	 * travelling to a different dimension. Used to copy over any spellData that should persist over player death. This
-	 * is the inverse of the old onPlayerDeath method, which reset the spellData that shouldn't persist.
+	 * travelling to a different dimension. Used to copy over any data that should persist over player death. This
+	 * is the inverse of the old onPlayerDeath method, which reset the data that shouldn't persist.
 	 * 
-	 * @param data The old WizardData whose spellData are to be copied over.
+	 * @param data The old WizardData whose data is to be copied over.
 	 * @param respawn True if the player died and is respawning, false if they are just travelling between dimensions.
 	 */
 	public void copyFrom(WizardData data, boolean respawn){

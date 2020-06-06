@@ -6,9 +6,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import java.util.function.BiFunction;
 
 /**
- * Instances of this interface act as keys which allow spellData of any type to be stored in {@link WizardData} at
- * runtime. This means spells (or anything else, for that matter) may define their own storedVariables to be stored
- * with the player and handle those storedVariables themselves. This prevents {@code WizardData} from being cluttered
+ * Instances of this interface act as keys which allow data of any type to be stored in {@link WizardData} at
+ * runtime. This means spells (or anything else, for that matter) may define their own variables to be stored
+ * with the player and handle those variables themselves. This prevents {@code WizardData} from being cluttered
  * with spell-specific fields and allows addon mods to leverage {@code WizardData} for their own spells or other data,
  * rather than defining their own capability. This system is somewhat similar to {@code DataManager}.
  * <p></p>
