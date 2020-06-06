@@ -16,7 +16,13 @@ import electroblob.wizardry.client.gui.handbook.GuiWizardHandbook;
 import electroblob.wizardry.client.model.ModelWizardArmour;
 import electroblob.wizardry.client.particle.*;
 import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
-import electroblob.wizardry.client.renderer.*;
+import electroblob.wizardry.client.renderer.entity.*;
+import electroblob.wizardry.client.renderer.entity.layers.*;
+import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
+import electroblob.wizardry.client.renderer.tileentity.RenderArcaneWorkbench;
+import electroblob.wizardry.client.renderer.tileentity.RenderLectern;
+import electroblob.wizardry.client.renderer.tileentity.RenderMagicLight;
+import electroblob.wizardry.client.renderer.tileentity.RenderStatue;
 import electroblob.wizardry.command.SpellEmitter;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.DispenserCastingData;
@@ -210,12 +216,12 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void playBlinkEffect(EntityPlayer player){
-		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.playBlinkEffect();
+		if(Minecraft.getMinecraft().player == player) RenderBlinkEffect.playBlinkEffect();
 	}
 
 	@Override
 	public void shakeScreen(EntityPlayer player, float intensity){
-		if(Minecraft.getMinecraft().player == player) WizardryClientEventHandler.shakeScreen(intensity);
+		if(Minecraft.getMinecraft().player == player) ScreenShakeHandler.shakeScreen(intensity);
 	}
 
 	@Override
