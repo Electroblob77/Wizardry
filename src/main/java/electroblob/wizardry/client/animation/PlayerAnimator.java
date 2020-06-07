@@ -77,6 +77,8 @@ public class PlayerAnimator {
 	@SuppressWarnings("unchecked")
 	public static void init(){
 
+		if(!Wizardry.settings.spellcastingAnimations) return;
+
 		for(RenderPlayer renderer : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()){
 
 			List<ModelBiped> models = new ArrayList<>();
@@ -182,6 +184,8 @@ public class PlayerAnimator {
 	@SubscribeEvent
 	public static void onRenderHandEvent(RenderSpecificHandEvent event){
 
+		if(!Wizardry.settings.spellcastingAnimations) return;
+
 		AbstractClientPlayer player = Minecraft.getMinecraft().player;
 
 		EnumAction action = event.getItemStack().getItemUseAction();
@@ -198,6 +202,8 @@ public class PlayerAnimator {
 
 	@SubscribeEvent
 	public static void onRenderPlayerPreEvent(RenderPlayerEvent.Pre event){
+
+		if(!Wizardry.settings.spellcastingAnimations) return;
 
 //		boolean firstPerson = event.getEntityPlayer() == Minecraft.getMinecraft().player
 //				&& Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;

@@ -1465,6 +1465,8 @@ config.ebwizardry.screen_shake=Screen Shake
 config.ebwizardry.screen_shake.tooltip=Whether to use the screen shake effect for certain spells.
 config.ebwizardry.blink_effect=Blink Effect
 config.ebwizardry.blink_effect.tooltip=Whether to use the screen blink effect for teleportation spells.
+config.ebwizardry.spellcasting_animations=Spellcasting Animations
+config.ebwizardry.spellcasting_animations.tooltip=Whether to use custom animations for players casting spells. Disable this option if it conflicts with other mods that add player animations.
 
 config.ebwizardry.category.commands=Command Settings
 config.ebwizardry.category.commands.tooltip=Configure wizardry's commands

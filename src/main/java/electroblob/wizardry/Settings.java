@@ -334,6 +334,8 @@ public final class Settings {
 	public boolean screenShake = true;
 	/** <b>[Client-only]</b> Whether to use the screen blink effect for teleportation spells. */
 	public boolean blinkEffect = true;
+	/** <b>[Client-only]</b> Whether to use spellcasting animations for players. */
+	public boolean spellcastingAnimations = true;
 	/** <b>[Client-only]</b> The position of the spell HUD. */
 	public GuiPosition spellHUDPosition = GuiPosition.BOTTOM_LEFT;
 
@@ -1000,6 +1002,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".blink_effect");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		blinkEffect = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "spellcastingAnimations", true, "Whether to use custom animations for players casting spells. Disable this option if it conflicts with other mods that add player animations.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".spellcasting_animations");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		spellcastingAnimations = property.getBoolean();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(CLIENT_CATEGORY, propOrder);
