@@ -3,38 +3,46 @@ package electroblob.wizardry.client;
 import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.SpellEmitterData;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.ItemSpectralBow;
+import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.spell.Possession;
-import electroblob.wizardry.spell.SixthSense;
-import electroblob.wizardry.spell.SlowTime;
-import electroblob.wizardry.spell.Transience;
+import electroblob.wizardry.spell.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMerchant;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -177,32 +185,6 @@ public final class WizardryClientEventHandler {
 			}
 
 			event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
-		}
-	}
-
-	// Brute-force fix for crystals not showing up when a wizard is given a spell book in the trade GUI.
-	@SubscribeEvent
-	public static void onGuiDrawForegroundEvent(GuiContainerEvent.DrawForeground event){
-
-		if(event.getGuiContainer() instanceof GuiMerchant){
-			
-			GuiMerchant gui = (GuiMerchant)event.getGuiContainer();
-			// Note that gui.getMerchant() returns an NpcMerchant, not an EntityWizard.
-			
-			// Using == the specific item rather than instanceof because that's how trades do it.
-			if(gui.inventorySlots.getSlot(0).getStack().getItem() == WizardryItems.spell_book
-					|| gui.inventorySlots.getSlot(1).getStack().getItem() == WizardryItems.spell_book){
-				
-				for(MerchantRecipe trade : gui.getMerchant().getRecipes(Minecraft.getMinecraft().player)){
-					if(trade.getItemToBuy().getItem() == WizardryItems.spell_book && trade.getSecondItemToBuy().isEmpty()){
-						Slot slot = gui.inventorySlots.getSlot(2);
-						// It still doesn't look quite right because the slot highlight is behind the item, but it'll do
-						// until/unless I find a better solution.
-						DrawingUtils.drawItemAndTooltip(gui, trade.getItemToSell(), slot.xPos, slot.yPos, event.getMouseX(), event.getMouseY(),
-								gui.getSlotUnderMouse() == slot);
-					}
-				}
-			}
 		}
 	}
 

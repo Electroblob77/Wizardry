@@ -16,6 +16,8 @@ import net.minecraftforge.oredict.OreDictionary;
 @SuppressWarnings("serial")
 public class WildcardTradeList extends MerchantRecipeList {
 
+	private int currentIndex;
+
 	public WildcardTradeList(){
 		super();
 	}
@@ -24,19 +26,26 @@ public class WildcardTradeList extends MerchantRecipeList {
 		super(tag);
 	}
 
+	/** Returns the current recipe  */
+	public MerchantRecipe getCurrentRecipe(){
+		return get(currentIndex); // Allows events to access the selected recipe without reflection
+	}
+
 	@Override
     public MerchantRecipe canRecipeBeUsed(ItemStack offer1, ItemStack offer2, int index){
+
+		currentIndex = index; // Update the index
 		
         if(index > 0 && index < this.size()){
         	
-            MerchantRecipe merchantrecipe1 = (MerchantRecipe)this.get(index);
+            MerchantRecipe merchantrecipe1 = this.get(index);
             return !this.areItemStacksExactlyEqual(offer1, merchantrecipe1.getItemToBuy()) || (!offer2.isEmpty() || merchantrecipe1.hasSecondItemToBuy()) && (!merchantrecipe1.hasSecondItemToBuy() || !this.areItemStacksExactlyEqual(offer2, merchantrecipe1.getSecondItemToBuy())) || offer1.getCount() < merchantrecipe1.getItemToBuy().getCount() || merchantrecipe1.hasSecondItemToBuy() && offer2.getCount() < merchantrecipe1.getSecondItemToBuy().getCount() ? null : merchantrecipe1;
         
         }else{
         	
             for(int i = 0; i < this.size(); ++i){
             	
-                MerchantRecipe merchantrecipe = (MerchantRecipe)this.get(i);
+                MerchantRecipe merchantrecipe = this.get(i);
 
                 if (this.areItemStacksExactlyEqual(offer1, merchantrecipe.getItemToBuy()) && offer1.getCount() >= merchantrecipe.getItemToBuy().getCount() && (!merchantrecipe.hasSecondItemToBuy() && offer2.isEmpty() || merchantrecipe.hasSecondItemToBuy() && this.areItemStacksExactlyEqual(offer2, merchantrecipe.getSecondItemToBuy()) && offer2.getCount() >= merchantrecipe.getSecondItemToBuy().getCount())){
                     return merchantrecipe;

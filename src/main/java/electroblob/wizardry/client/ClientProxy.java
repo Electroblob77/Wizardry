@@ -191,6 +191,11 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public EntityPlayer getThePlayer(){
+		return Minecraft.getMinecraft().player;
+	}
+
+	@Override
 	public boolean isFirstPerson(Entity entity){
 		return entity == Minecraft.getMinecraft().getRenderViewEntity() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
 	}
@@ -261,6 +266,9 @@ public class ClientProxy extends CommonProxy {
 		if(player == null) return false;
 
 		// Displayed recipe
+		// Weirdly, the gui is actually the only way of accessing the current IMerchant or their recipes, other than a
+		// brute-force search through all the entities in the world to find the merchant interacting with the player
+		// Since we only need this client-side anyway, we might as well go via the gui
 		if(Minecraft.getMinecraft().currentScreen instanceof GuiMerchant){
 			// It doesn't actually matter if the recipe is selected or not, since the itemstack will only ever
 			// match one of them anyway - and we'd have to reflect into GuiMerchant to get the selected recipe

@@ -5,6 +5,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -79,6 +82,14 @@ public class ItemSpellBook extends Item {
 					: "#\u00A79" + SpellGlyphData.getGlyphName(spell, world));
 
 			tooltip.add(spell.getTier().getDisplayNameWithFormatting());
+
+			EntityPlayer player = Wizardry.proxy.getThePlayer();
+
+			// If the spell should *appear* discovered but isn't *actually* discovered, show a 'new spell' message
+			// A bit annoying to check this again but it's the easiest way
+			if(discovered && WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+				tooltip.add(Wizardry.proxy.translate("item." + this.getRegistryName() + ".new", new Style().setColor(TextFormatting.LIGHT_PURPLE)));
+			}
 
 			// Advanced tooltips display more information, mainly for searching purposes in creative
 			if(discovered && advanced.isAdvanced()){ // No cheating!

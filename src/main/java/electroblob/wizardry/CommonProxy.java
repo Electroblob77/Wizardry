@@ -284,10 +284,18 @@ public class CommonProxy {
 	public void loadShader(EntityPlayer player, ResourceLocation shader){}
 	
 	/**
-	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns
-	 * null on the server side.
+	 * Gets the client-side world using {@code Minecraft.getMinecraft().world}. <b>Only to be called client side!</b>
+	 * Returns null on the server side.
 	 */
 	public World getTheWorld(){
+		return null;
+	}
+
+	/**
+	 * Gets the client-side player using Minecraft.getMinecraft().player. <b>Only to be called client side!</b> Returns
+	 * null on the server side.
+	 */
+	public EntityPlayer getThePlayer(){
 		return null;
 	}
 

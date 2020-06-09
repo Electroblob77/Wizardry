@@ -69,7 +69,7 @@ item.ebwizardry\:crystal_healing.desc=A crystal that glints a golden yellow in t
 
 item.ebwizardry\:spell_book.name=Spell Book
 item.ebwizardry\:spell_book.desc=A book filled with the runes and glyphs of an ancient script. Perhaps with dedication, one might be able to decipher its contents...\n\nRight-click while holding this book to read it.
-
+item.ebwizardry\:spell_book.new=Not yet discovered!
 item.ebwizardry\:spell_book.apply_to_wizard=Replaced %1$s's spell %2$s with %3$s
 
 item.ebwizardry\:arcane_tome.name=Tome of Arcana
