@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 public class ArcaneWorkbenchRecipeCategory implements IRecipeCategory<ArcaneWorkbenchRecipe> {
 
 	static final String UID = "ebwizardry:arcane_workbench";
-	static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/container/arcane_workbench_jei_background.png");
+	static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/integration/jei/arcane_workbench_background.png");
 
 	static final int WIDTH = 166;
 	static final int HEIGHT = 126;
