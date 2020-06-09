@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 
 public class EntityZombieSpawner extends EntityMagicConstruct {
 
+	private static final double MAX_NUDGE_DISTANCE = 0.1; // Prevents zombies all bunching up directly below the spawner
+
 	public boolean spawnHusks;
 
 	private int spawnTimer = 10;
@@ -39,7 +41,8 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 
 				EntityZombieMinion zombie = spawnHusks ? new EntityHuskMinion(world) : new EntityZombieMinion(world);
 
-				zombie.setPosition(this.posX, this.posY, this.posZ);
+				zombie.setPosition(this.posX + (rand.nextDouble() * 2 - 1) * MAX_NUDGE_DISTANCE, this.posY,
+						this.posZ + (rand.nextDouble() * 2 - 1) * MAX_NUDGE_DISTANCE);
 				zombie.setCaster(this.getCaster());
 				// Modifier implementation
 				// Attribute modifiers are pretty opaque, see https://minecraft.gamepedia.com/Attribute#Modifiers
