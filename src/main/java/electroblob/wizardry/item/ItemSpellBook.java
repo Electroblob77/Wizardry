@@ -87,7 +87,7 @@ public class ItemSpellBook extends Item {
 
 			// If the spell should *appear* discovered but isn't *actually* discovered, show a 'new spell' message
 			// A bit annoying to check this again but it's the easiest way
-			if(discovered && WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+			if(Wizardry.settings.discoveryMode && !player.isCreative() && discovered && WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
 				tooltip.add(Wizardry.proxy.translate("item." + this.getRegistryName() + ".new", new Style().setColor(TextFormatting.LIGHT_PURPLE)));
 			}
 
