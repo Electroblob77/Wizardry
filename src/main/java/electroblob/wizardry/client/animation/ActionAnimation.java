@@ -31,7 +31,7 @@ public abstract class ActionAnimation extends Animation {
 
 	@Override
 	public boolean shouldDisplay(EntityPlayer player, boolean firstPerson){
-		return !firstPerson && player.getItemInUseCount() > 0 && player.getActiveItemStack().getItemUseAction() == action;
+		return !firstPerson && player.getItemInUseMaxCount() > 0 && player.getActiveItemStack().getItemUseAction() == action;
 	}
 
 	/** Called from the client proxy to register all of wizardry's action animations. */
