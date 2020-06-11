@@ -14,6 +14,7 @@ import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -154,12 +155,19 @@ public class GuiSpellDisplay {
 
 		Spell spell = WandHelper.getCurrentSpell(wand);
 
-		if(spell.getChargeup() <= 0) return;
+		int chargeup = spell.getChargeup();
+
+		if(WizardData.get(player) != null){
+			// Pretty sure this is accessible client-side since it's only assigned from common code
+			chargeup = (int)(chargeup * WizardData.get(player).itemCastingModifiers.get(SpellModifiers.CHARGEUP));
+		}
+
+		if(chargeup <= 0) return;
 
 		// WHY WHY WHY are these methods named so misleadingly?! Sort yourselves out MCP!
 		// (getItemInUseCount returns the max count MINUS the use count, and getItemInUseMaxCount returns the use count)
 		if(player.getItemInUseMaxCount() == 0) return; // Not charging
-		float charge = (player.getItemInUseMaxCount() + partialTicks) / spell.getChargeup();
+		float charge = (player.getItemInUseMaxCount() + partialTicks) / chargeup;
 		if(charge > 1) return; // Done charging
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(CHARGE_METER);

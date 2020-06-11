@@ -355,8 +355,10 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		SpellModifiers modifiers = this.calculateModifiers(stack, player, spell);
 
 		if(canCast(stack, spell, player, hand, 0, modifiers)){
+			// Need to account for the modifier since it could be zero even if the original charge-up wasn't
+			int chargeup = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
 
-			if(spell.isContinuous || spell.getChargeup() > 0){
+			if(spell.isContinuous || chargeup > 0){
 				// Spells that need the mouse to be held (continuous, charge-up or both)
 				if(!player.isHandActive()){
 					player.setActiveHand(hand);
@@ -395,12 +397,13 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			}
 
 			int useTick = stack.getMaxItemUseDuration() - count;
+			int chargeup = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
 
 			if(spell.isContinuous){
 				// Continuous spell charge-up is simple, just don't do anything until it's charged
-				if(useTick >= spell.getChargeup()){
+				if(useTick >= chargeup){
 					// castingTick needs to be relative to when the spell actually started
-					int castingTick = useTick - spell.getChargeup();
+					int castingTick = useTick - chargeup;
 					// Continuous spells (these must check if they can be cast each tick since the mana changes)
 					// Don't call canCast when castingTick == 0 because we already did it in onItemRightClick - even
 					// with charge-up times, because we don't want to trigger events twice
@@ -413,7 +416,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				}
 			}else{
 				// Non-continuous spells need to check they actually have a charge-up since ALL spells call setActiveHand
-				if(spell.getChargeup() > 0 && useTick == spell.getChargeup()){
+				if(chargeup > 0 && useTick == chargeup){
 					// Once the spell is charged, it's exactly the same as in onItemRightClick
 					cast(stack, spell, player, player.getActiveHand(), 0, modifiers);
 				}

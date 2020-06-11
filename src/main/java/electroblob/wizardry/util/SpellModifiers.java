@@ -41,6 +41,8 @@ public final class SpellModifiers {
 	public static final String POTENCY = "potency";
 	/** Constant string identifier for the mana cost modifier. */
 	public static final String COST = "cost";
+	/** Constant string identifier for the wand charge-up modifier. */
+	public static final String CHARGEUP = "chargeup";
 	/** Constant string identifier for the wand progression modifier. */
 	public static final String PROGRESSION = "progression";
 
