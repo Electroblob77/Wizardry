@@ -1,6 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
@@ -121,6 +122,8 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 			if(spell.isContinuous){
 				if(!player.isHandActive()){
 					player.setActiveHand(hand);
+					// Store the modifiers for use each tick (there aren't any by default but there could be, as above)
+					if(WizardData.get(player) != null) WizardData.get(player).itemCastingModifiers = modifiers;
 					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}else{
