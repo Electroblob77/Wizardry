@@ -260,7 +260,7 @@ public class GuiSpellDisplay {
 
 			float progress = 1;
 			// Doesn't really matter what progress is when in creative, but we might as well avoid the calculation.
-			if(!player.isCreative() && !spell.isContinuous){
+			if(!player.isCreative()){
 				// Subtracted partial tick time to make it smoother
 				progress = maxCooldown == 0 ? 1 : (maxCooldown - (float)cooldown + partialTicks) / maxCooldown;
 			}
