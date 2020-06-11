@@ -14,7 +14,7 @@
   "element": "fire",
   "type": "projectile",
   "cost": 20,
-  "chargeup": 0,
+  "chargeup": 5,
   "cooldown": 30,
   "base_properties": {
     "range": 20,

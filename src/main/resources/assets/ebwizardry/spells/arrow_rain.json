@@ -14,7 +14,7 @@
   "element": "sorcery",
   "type": "attack",
   "cost": 75,
-  "chargeup": 0,
+  "chargeup": 20,
   "cooldown": 300,
   "base_properties": {
     "range": 20,

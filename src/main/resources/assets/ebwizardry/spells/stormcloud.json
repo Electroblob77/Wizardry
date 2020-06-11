@@ -14,7 +14,7 @@
   "element": "lightning",
   "type": "construct",
   "cost": 60,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 150,
   "base_properties": {
     "duration": 600,

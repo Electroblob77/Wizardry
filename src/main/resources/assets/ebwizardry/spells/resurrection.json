@@ -14,7 +14,7 @@
 	"element": "healing",
 	"type": "alteration",
 	"cost": 150,
-	"chargeup": 0,
+	"chargeup": 25,
 	"cooldown": 400,
 	"base_properties": {
 		"effect_radius": 8,

@@ -14,7 +14,7 @@
   "element": "necromancy",
   "type": "construct",
   "cost": 150,
-  "chargeup": 0,
+  "chargeup": 25,
   "cooldown": 300,
   "base_properties": {
     "duration": 500,

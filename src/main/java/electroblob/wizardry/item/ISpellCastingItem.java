@@ -117,7 +117,8 @@ public interface ISpellCastingItem {
 	/**
 	 * Casts the given spell using the given item stack. <b>This method does not perform any checks</b>; these are done
 	 * in {@link ISpellCastingItem#canCast(ItemStack, Spell, EntityPlayer, EnumHand, int, SpellModifiers)}. This method
-	 * also performs any post-casting logic, such as mana costs and cooldowns.
+	 * also performs any post-casting logic, such as mana costs and cooldowns. This method does not handle charge-up
+	 * times.
 	 * <p></p>
 	 * <i>N.B. Continuous spell casting from outside of the items requires a bit of extra legwork, see
 	 * {@link WizardData} for an example.</i>

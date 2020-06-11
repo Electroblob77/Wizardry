@@ -14,7 +14,7 @@
   "element": "earth",
   "type": "attack",
   "cost": 75,
-  "chargeup": 0,
+  "chargeup": 25,
   "cooldown": 250,
   "base_properties": {
     "effect_radius": 8,

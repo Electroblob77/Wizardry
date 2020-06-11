@@ -14,7 +14,7 @@
   "element": "earth",
   "type": "minion",
   "cost": 50,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 150,
   "base_properties": {
     "summon_radius": 2

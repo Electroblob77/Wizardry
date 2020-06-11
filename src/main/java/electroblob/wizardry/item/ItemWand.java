@@ -355,18 +355,19 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		SpellModifiers modifiers = this.calculateModifiers(stack, player, spell);
 
 		if(canCast(stack, spell, player, hand, 0, modifiers)){
-			// Now we can cast continuous spells with scrolls!
-			if(spell.isContinuous){
+
+			if(spell.isContinuous || spell.getChargeup() > 0){
+				// Spells that need the mouse to be held (continuous, charge-up or both)
 				if(!player.isHandActive()){
 					player.setActiveHand(hand);
-					// Store the modifiers for use each tick
+					// Store the modifiers for use later
 					if(WizardData.get(player) != null) WizardData.get(player).itemCastingModifiers = modifiers;
-					// Return the player's held item so spells can change it if they wish (e.g. possession)
-					return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}else{
+				// All other (instant) spells
 				if(cast(stack, spell, player, hand, 0, modifiers)){
-					return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}
 		}
@@ -374,7 +375,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	// For continuous spells. The count argument actually decrements by 1 each tick.
+	// For continuous spells and spells with a charge-up time. The count argument actually decrements by 1 each tick.
+	// N.B. The first time this gets called is the tick AFTER onItemRightClick is called, not the same tick
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase user, int count){
 
@@ -384,8 +386,6 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 			Spell spell = WandHelper.getCurrentSpell(stack);
 
-			if(!spell.isContinuous) return;
-
 			SpellModifiers modifiers;
 
 			if(WizardData.get(player) != null){
@@ -394,15 +394,29 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				modifiers = this.calculateModifiers(stack, (EntityPlayer)user, spell); // Fallback to the old way, should never be used
 			}
 
-			int castingTick = stack.getMaxItemUseDuration() - count;
+			int useTick = stack.getMaxItemUseDuration() - count;
 
-			// Continuous spells (these must check if they can be cast each tick since the mana changes)
-			// Don't call canCast when castingTick == 0 because we already did it in onItemRightClick
-			if(castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
-				cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
+			if(spell.isContinuous){
+				// Continuous spell charge-up is simple, just don't do anything until it's charged
+				if(useTick >= spell.getChargeup()){
+					// castingTick needs to be relative to when the spell actually started
+					int castingTick = useTick - spell.getChargeup();
+					// Continuous spells (these must check if they can be cast each tick since the mana changes)
+					// Don't call canCast when castingTick == 0 because we already did it in onItemRightClick - even
+					// with charge-up times, because we don't want to trigger events twice
+					if(castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
+						cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
+					}else{
+						// Stops the casting if it was interrupted, either by events or because the wand ran out of mana
+						player.stopActiveHand();
+					}
+				}
 			}else{
-				// Stops the casting if it was interrupted, either by events or because the wand ran out of mana
-				player.stopActiveHand();
+				// Non-continuous spells need to check they actually have a charge-up since ALL spells call setActiveHand
+				if(spell.getChargeup() > 0 && useTick == spell.getChargeup()){
+					// Once the spell is charged, it's exactly the same as in onItemRightClick
+					cast(stack, spell, player, player.getActiveHand(), 0, modifiers);
+				}
 			}
 		}
 	}
@@ -450,8 +464,6 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					WizardryPacketHandler.net.sendToDimension(msg, world.provider.getDimension());
 				}
 
-				caster.setActiveHand(hand);
-
 				// Mana cost
 				int cost = (int)(spell.getCost() * modifiers.get(SpellModifiers.COST) + 0.1f); // Weird floaty rounding
 				// As of wizardry 4.2 mana cost is only divided over two intervals each second
@@ -460,6 +472,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				if(cost > 0) this.consumeMana(stack, cost, caster);
 
 			}
+
+			caster.setActiveHand(hand);
 
 			// Cooldown
 			if(!spell.isContinuous && !caster.isCreative()){ // Spells only have a cooldown in survival
