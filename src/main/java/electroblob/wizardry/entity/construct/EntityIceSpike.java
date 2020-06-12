@@ -57,7 +57,7 @@ public class EntityIceSpike extends EntityMagicConstruct {
 					this.facing.getZOffset() * extensionSpeed);
 		}
 
-		if(lifetime - this.ticksExisted == 30) this.playSound(WizardrySounds.ENTITY_ICE_SPIKE_EXTEND, 1, 2);
+		if(lifetime - this.ticksExisted == 30) this.playSound(WizardrySounds.ENTITY_ICE_SPIKE_EXTEND, 1, 2.5f);
 
 		if(!this.world.isRemote){
 			for(Object entity : this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox())){

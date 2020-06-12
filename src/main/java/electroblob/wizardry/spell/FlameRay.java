@@ -25,7 +25,7 @@ public class FlameRay extends SpellRay {
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DAMAGE, BURN_DURATION);
-		this.soundValues(1.5f, 1, 0);
+		this.soundValues(2.5f, 1, 0);
 	}
 
 	// The following three methods serve as a good example of how to implement continuous spell sounds (hint: it's easy)

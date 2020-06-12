@@ -27,6 +27,7 @@ public class FireBreath extends SpellRay {
 		this.particleJitter(0.3);
 		this.particleSpacing(0.25);
 		addProperties(DAMAGE, BURN_DURATION);
+		this.soundValues(3f, 1, 0);
 	}
 
 	@Override

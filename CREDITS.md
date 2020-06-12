@@ -45,3 +45,4 @@ In addition, I'd like to thank the following individuals for their contributions
 - fredzed
 - deleted_user_3277771
 - DiscoveryME
+- OGSoundFX

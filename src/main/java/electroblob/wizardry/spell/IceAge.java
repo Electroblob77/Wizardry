@@ -23,7 +23,7 @@ public class IceAge extends Spell {
 
 	public IceAge(){
 		super("ice_age", SpellActions.POINT_DOWN, false);
-		this.soundValues(0.7f, 1.0f, 0);
+		this.soundValues(1.5f, 1.0f, 0);
 		addProperties(EFFECT_RADIUS, EFFECT_DURATION);
 	}
 

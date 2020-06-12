@@ -1,14 +1,15 @@
 package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.misc.Forfeit;
-import electroblob.wizardry.spell.Spell;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class responsible for defining, storing and registering all of wizardry's sound events.
@@ -24,6 +25,8 @@ public final class WizardrySounds {
 	/** Sound category for all spell-related sounds. This includes inanimate magical entities, but not minions.
 	 * @see electroblob.wizardry.util.CustomSoundCategory */
 	public static SoundCategory SPELLS;
+
+	private static final List<SoundEvent> sounds = new ArrayList<>();
 	
 	public static final SoundEvent BLOCK_ARCANE_WORKBENCH_SPELLBIND = createSound("block.arcane_workbench.bind_spell");
 	public static final SoundEvent BLOCK_PEDESTAL_ACTIVATE = 		createSound("block.pedestal.activate");
@@ -50,6 +53,7 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_ENTRAPMENT_VANISH = 		createSound("entity.entrapment.vanish");
 	public static final SoundEvent ENTITY_FIRE_RING_AMBIENT = 		createSound("entity.fire_ring.ambient");
 	public static final SoundEvent ENTITY_FIRE_SIGIL_TRIGGER = 		createSound("entity.fire_sigil.trigger");
+	public static final SoundEvent ENTITY_FORCEFIELD_AMBIENT = 		createSound("entity.forcefield.ambient");
 	public static final SoundEvent ENTITY_FORCEFIELD_DEFLECT = 		createSound("entity.forcefield.deflect");
 	public static final SoundEvent ENTITY_FROST_SIGIL_TRIGGER = 	createSound("entity.frost_sigil.trigger");
 	public static final SoundEvent ENTITY_HAMMER_ATTACK = 			createSound("entity.hammer.attack");
@@ -153,141 +157,20 @@ public final class WizardrySounds {
 		return createSound(Wizardry.MODID, name);
 	}
 
-	/** Creates a sound with the given name, to be read from {@code assets/[modID]/sounds.json}. */
+	/** Creates a sound with the given name, to be read from {@code assets/[modID]/sounds.json}. The sound will be
+	 * registered automatically later. */
 	public static SoundEvent createSound(String modID, String name){
 		// All the setRegistryName methods delegate to this one, it doesn't matter which you use.
-		return new SoundEvent(new ResourceLocation(modID, name)).setRegistryName(name);
+		SoundEvent sound = new SoundEvent(new ResourceLocation(modID, name)).setRegistryName(name);
+		sounds.add(sound);
+		return sound;
 	}
 
 	// For some reason, sound events seem to work even when they aren't registered, without even so much as a warning.
 	
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<SoundEvent> event){
-
-		event.getRegistry().register(BLOCK_ARCANE_WORKBENCH_SPELLBIND);
-		event.getRegistry().register(BLOCK_PEDESTAL_ACTIVATE);
-		event.getRegistry().register(BLOCK_PEDESTAL_CONQUER);
-		event.getRegistry().register(BLOCK_LECTERN_LOCATE_SPELL);
-		event.getRegistry().register(BLOCK_RECEPTACLE_IGNITE);
-
-		event.getRegistry().register(ITEM_WAND_SWITCH_SPELL);
-		event.getRegistry().register(ITEM_WAND_LEVELUP);
-		event.getRegistry().register(ITEM_WAND_MELEE);
-		event.getRegistry().register(ITEM_WAND_CHARGEUP);
-		event.getRegistry().register(ITEM_ARMOUR_EQUIP_SILK);
-		event.getRegistry().register(ITEM_PURIFYING_ELIXIR_DRINK);
-		event.getRegistry().register(ITEM_MANA_FLASK_USE);
-		event.getRegistry().register(ITEM_MANA_FLASK_RECHARGE);
-
-		event.getRegistry().register(ENTITY_BLACK_HOLE_AMBIENT);
-		event.getRegistry().register(ENTITY_BLACK_HOLE_VANISH);
-		event.getRegistry().register(ENTITY_BLACK_HOLE_BREAK_BLOCK);
-		event.getRegistry().register(ENTITY_BUBBLE_POP);
-		event.getRegistry().register(ENTITY_BLIZZARD_AMBIENT);
-		event.getRegistry().register(ENTITY_DECAY_AMBIENT);
-		event.getRegistry().register(ENTITY_ENTRAPMENT_AMBIENT);
-		event.getRegistry().register(ENTITY_ENTRAPMENT_VANISH);
-		event.getRegistry().register(ENTITY_FIRE_RING_AMBIENT);
-		event.getRegistry().register(ENTITY_FIRE_SIGIL_TRIGGER);
-		event.getRegistry().register(ENTITY_FORCEFIELD_DEFLECT);
-		event.getRegistry().register(ENTITY_FROST_SIGIL_TRIGGER);
-		event.getRegistry().register(ENTITY_HAMMER_ATTACK);
-		event.getRegistry().register(ENTITY_HAMMER_EXPLODE);
-		event.getRegistry().register(ENTITY_HAMMER_THROW);
-		event.getRegistry().register(ENTITY_HAMMER_LAND);
-		event.getRegistry().register(ENTITY_HEAL_AURA_AMBIENT);
-		event.getRegistry().register(ENTITY_ICE_SPIKE_EXTEND);
-		event.getRegistry().register(ENTITY_LIGHTNING_SIGIL_TRIGGER);
-		event.getRegistry().register(ENTITY_METEOR_FALLING);
-		event.getRegistry().register(ENTITY_SHIELD_DEFLECT);
-		event.getRegistry().register(ENTITY_TORNADO_AMBIENT);
-		event.getRegistry().register(ENTITY_ZOMBIE_SPAWNER_SPAWN);
-
-		event.getRegistry().register(ENTITY_EVIL_WIZARD_AMBIENT);
-		event.getRegistry().register(ENTITY_EVIL_WIZARD_HURT);
-		event.getRegistry().register(ENTITY_EVIL_WIZARD_DEATH);
-		event.getRegistry().register(ENTITY_ICE_GIANT_ATTACK);
-		event.getRegistry().register(ENTITY_ICE_GIANT_DESPAWN);
-		event.getRegistry().register(ENTITY_ICE_WRAITH_AMBIENT);
-		event.getRegistry().register(ENTITY_MAGIC_SLIME_ATTACK);
-		event.getRegistry().register(ENTITY_MAGIC_SLIME_EXPLODE);
-		event.getRegistry().register(ENTITY_MAGIC_SLIME_SPLAT);
-		event.getRegistry().register(ENTITY_PHOENIX_AMBIENT);
-		event.getRegistry().register(ENTITY_PHOENIX_BURN);
-		event.getRegistry().register(ENTITY_PHOENIX_FLAP);
-		event.getRegistry().register(ENTITY_PHOENIX_HURT);
-		event.getRegistry().register(ENTITY_PHOENIX_DEATH);
-		event.getRegistry().register(ENTITY_REMNANT_AMBIENT);
-		event.getRegistry().register(ENTITY_REMNANT_HURT);
-		event.getRegistry().register(ENTITY_REMNANT_DEATH);
-		event.getRegistry().register(ENTITY_SHADOW_WRAITH_AMBIENT);
-		event.getRegistry().register(ENTITY_SHADOW_WRAITH_NOISE);
-		event.getRegistry().register(ENTITY_SHADOW_WRAITH_HURT);
-		event.getRegistry().register(ENTITY_SHADOW_WRAITH_DEATH);
-		event.getRegistry().register(ENTITY_SPIRIT_HORSE_VANISH);
-		event.getRegistry().register(ENTITY_SPIRIT_WOLF_VANISH);
-		event.getRegistry().register(ENTITY_STORM_ELEMENTAL_AMBIENT);
-		event.getRegistry().register(ENTITY_STORM_ELEMENTAL_BURN);
-		event.getRegistry().register(ENTITY_STORM_ELEMENTAL_WIND);
-		event.getRegistry().register(ENTITY_STORM_ELEMENTAL_HURT);
-		event.getRegistry().register(ENTITY_STORM_ELEMENTAL_DEATH);
-		event.getRegistry().register(ENTITY_WIZARD_YES);
-		event.getRegistry().register(ENTITY_WIZARD_NO);
-		event.getRegistry().register(ENTITY_WIZARD_AMBIENT);
-		event.getRegistry().register(ENTITY_WIZARD_TRADING);
-		event.getRegistry().register(ENTITY_WIZARD_HURT);
-		event.getRegistry().register(ENTITY_WIZARD_DEATH);
-
-		event.getRegistry().register(ENTITY_DARKNESS_ORB_HIT);
-		event.getRegistry().register(ENTITY_DART_HIT);
-		event.getRegistry().register(ENTITY_DART_HIT_BLOCK);
-		event.getRegistry().register(ENTITY_FIREBOLT_HIT);
-		event.getRegistry().register(ENTITY_FIREBOMB_THROW);
-		event.getRegistry().register(ENTITY_FIREBOMB_SMASH);
-		event.getRegistry().register(ENTITY_FIREBOMB_FIRE);
-		event.getRegistry().register(ENTITY_FORCE_ARROW_HIT);
-		event.getRegistry().register(ENTITY_FORCE_ORB_HIT);
-		event.getRegistry().register(ENTITY_FORCE_ORB_HIT_BLOCK);
-		event.getRegistry().register(ENTITY_ICEBALL_HIT);
-		event.getRegistry().register(ENTITY_ICE_CHARGE_SMASH);
-		event.getRegistry().register(ENTITY_ICE_CHARGE_ICE);
-		event.getRegistry().register(ENTITY_ICE_LANCE_SMASH);
-		event.getRegistry().register(ENTITY_ICE_LANCE_HIT);
-		event.getRegistry().register(ENTITY_ICE_SHARD_SMASH);
-		event.getRegistry().register(ENTITY_ICE_SHARD_HIT);
-		event.getRegistry().register(ENTITY_LIGHTNING_ARROW_HIT);
-		event.getRegistry().register(ENTITY_LIGHTNING_DISC_HIT);
-//		event.getRegistry().register(ENTITY_MAGIC_FIREBALL_HIT);
-		event.getRegistry().register(ENTITY_MAGIC_MISSILE_HIT);
-		event.getRegistry().register(ENTITY_POISON_BOMB_THROW);
-		event.getRegistry().register(ENTITY_POISON_BOMB_SMASH);
-		event.getRegistry().register(ENTITY_POISON_BOMB_POISON);
-		event.getRegistry().register(ENTITY_SMOKE_BOMB_THROW);
-		event.getRegistry().register(ENTITY_SMOKE_BOMB_SMASH);
-		event.getRegistry().register(ENTITY_SMOKE_BOMB_SMOKE);
-		event.getRegistry().register(ENTITY_HOMING_SPARK_HIT);
-		event.getRegistry().register(ENTITY_SPARK_BOMB_THROW);
-		event.getRegistry().register(ENTITY_SPARK_BOMB_HIT);
-		event.getRegistry().register(ENTITY_SPARK_BOMB_HIT_BLOCK);
-		event.getRegistry().register(ENTITY_SPARK_BOMB_CHAIN);
-		event.getRegistry().register(ENTITY_THUNDERBOLT_HIT);
-
-		event.getRegistry().register(SPELL_STATIC_AURA_RETALIATE);
-		event.getRegistry().register(SPELL_CURSE_OF_SOULBINDING_RETALIATE);
-		event.getRegistry().register(SPELL_TRANSPORTATION_TRAVEL);
-
-		event.getRegistry().register(MISC_DISCOVER_SPELL);
-		event.getRegistry().register(MISC_BOOK_OPEN);
-		event.getRegistry().register(MISC_PAGE_TURN);
-		event.getRegistry().register(MISC_FREEZE);
-		event.getRegistry().register(MISC_SPELL_FAIL);
-
-		for(Spell spell : Spell.getAllSpells()){
-			event.getRegistry().registerAll(spell.getSounds());
-		}
-
-		for(Forfeit forfeit : Forfeit.getForfeits()){
-			event.getRegistry().register(forfeit.getSound());
-		}
+		event.getRegistry().registerAll(sounds.toArray(new SoundEvent[0]));
 	}
+
 }

@@ -91,6 +91,10 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 		super.onUpdate();
 
+		if(ticksExisted == 1 && world.isRemote){
+			Wizardry.proxy.playMovingSound(this, WizardrySounds.ENTITY_FORCEFIELD_AMBIENT, WizardrySounds.SPELLS, 0.5f, 1, true);
+		}
+
 		// New forcefield repulsion system:
 		// Searches for all entities near the forcefield and determines where they will be next tick.
 		// If they will be inside the forcefield next tick, sets their position and velocity such that they appear to
