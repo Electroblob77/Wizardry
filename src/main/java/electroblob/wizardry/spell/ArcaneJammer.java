@@ -98,6 +98,7 @@ public class ArcaneJammer extends SpellRay {
 
 			event.setCanceled(true);
 
+			// TODO: This currently doesn't play nicely with continuous or charge-up spells
 			if(event.getSource() == Source.WAND || event.getSource() == Source.SCROLL){
 				event.getCaster().setActiveHand(EnumHand.MAIN_HAND);
 			}

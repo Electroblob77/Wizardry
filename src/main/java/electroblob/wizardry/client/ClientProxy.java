@@ -128,7 +128,7 @@ public class ClientProxy extends CommonProxy {
 	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style, Object...)}). */
 	private static final int TOOLTIP_WRAP_WIDTH = 140;
 
-	// SECTION Registry
+	// Registry
 	// ===============================================================================================================
 
 	@Override
@@ -167,7 +167,7 @@ public class ClientProxy extends CommonProxy {
 		WizardryAntiqueAtlasIntegration.registerMarkers();
 	}
 
-	// SECTION Misc
+	// Misc
 	// ===============================================================================================================
 
 	@Override
@@ -255,7 +255,7 @@ public class ClientProxy extends CommonProxy {
 		}
 	}
 
-	// SECTION Items
+	// Items
 	// ===============================================================================================================
 
 	@Override
@@ -354,7 +354,7 @@ public class ClientProxy extends CommonProxy {
 		tooltip.addAll(Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(translate(key, style, args), TOOLTIP_WRAP_WIDTH));
 	}
 
-	// SECTION Particles
+	// Particles
 	// ===============================================================================================================
 
 	/** Use {@link ParticleWizardry#registerParticle(ResourceLocation, IWizardryParticleFactory)}, this is internal. */
@@ -405,7 +405,7 @@ public class ClientProxy extends CommonProxy {
 		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleTornado(world, maxAge, x, z, radius, y, velX, velZ, block).setBlockPos(pos));// , world.rand.nextInt(6)));
 	}
 
-	// SECTION Packet Handlers
+	// Packet Handlers
 	// ===============================================================================================================
 
 	@Override
@@ -692,7 +692,7 @@ public class ClientProxy extends CommonProxy {
 		}else Wizardry.logger.warn("Received a PacketConquerShrine, but there was no shrine core at the position sent");
 	}
 
-	// SECTION Rendering
+	// Rendering
 	// ===============================================================================================================
 
 	private static final ResourceLocation ICE_WRAITH_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/ice_wraith.png");
