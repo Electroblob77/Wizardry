@@ -247,7 +247,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void playChargeupSound(EntityLivingBase entity){
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundSpellCharge(entity, WizardrySounds.ITEM_WAND_CHARGEUP, WizardrySounds.SPELLS, 1.7f, 1.4f, false));
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundSpellCharge(entity, WizardrySounds.ITEM_WAND_CHARGEUP, WizardrySounds.SPELLS, 2.5f, 1.4f, false));
 	}
 
 	@Override
