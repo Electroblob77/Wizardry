@@ -27,8 +27,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.List;
 
 public class EntityBlackHole extends EntityMagicConstruct {
-	
+
 	private static final double SUCTION_STRENGTH = 0.075;
+	/** The maximum number of blocks that can be unhooked each tick, reduces lag from excessive numbers of entities. */
+	private static final int BLOCK_UNHOOK_LIMIT = 3;
 
 	public int[] randomiser;
 	public int[] randomiser2;
@@ -97,6 +99,8 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(new BlockPos(this), radius);
 
+				int blocksUnhooked = 0;
+
 				for(BlockPos pos : sphere){
 
 					if(rand.nextInt(Math.max(1, (int)this.getDistanceSq(pos) * 3)) == 0){
@@ -112,6 +116,8 @@ public class EntityBlackHole extends EntityMagicConstruct {
 							fallingBlock.fallTime = 1; // Prevent it from trying to delete the block itself
 							world.spawnEntity(fallingBlock);
 							world.setBlockToAir(pos);
+
+							if(++blocksUnhooked >= BLOCK_UNHOOK_LIMIT) break; // Lag prevention
 						}
 					}
 				}
