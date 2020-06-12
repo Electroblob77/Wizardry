@@ -62,10 +62,16 @@ public class EntityBlizzard extends EntityMagicConstruct {
 			
 		}else{
 			
-			for(int i=1; i<12; i++){
-				double speed = (rand.nextBoolean() ? 1 : -1) * 0.1 + 0.05 * rand.nextDouble();
+			for(int i=0; i<6; i++){
+				double speed = (rand.nextBoolean() ? 1 : -1) * (0.1 + 0.05 * rand.nextDouble());
 				ParticleBuilder.create(Type.SNOW).pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ).vel(0, 0, 0)
 				.time(100).scale(2).spin(rand.nextDouble() * (radius - 0.5) + 0.5, speed).spawn(world);
+			}
+
+			for(int i=0; i<3; i++){
+				double speed = (rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * rand.nextDouble());
+				ParticleBuilder.create(Type.CLOUD).pos(this.posX, this.posY + rand.nextDouble() * 2.5, this.posZ)
+						.clr(0xffffff).spin(rand.nextDouble() * (radius - 1) + 0.5, speed).spawn(world);
 			}
 		}
 	}

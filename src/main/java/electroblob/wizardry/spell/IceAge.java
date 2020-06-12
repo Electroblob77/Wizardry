@@ -6,6 +6,8 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
@@ -52,6 +54,7 @@ public class IceAge extends Spell {
 				}
 			}
 		}
+
 		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
 			for(int i = -(int)radius; i < (int)radius + 1; i++){
 				for(int j = -(int)radius; j < (int)radius + 1; j++){
@@ -80,6 +83,28 @@ public class IceAge extends Spell {
 						}
 					}
 				}
+			}
+		}
+
+		if(world.isRemote){
+
+			for(int i=0; i<100; i++){
+				double speed = (world.rand.nextBoolean() ? 1 : -1) * (0.1 + 0.05 * world.rand.nextDouble());
+				ParticleBuilder.create(Type.SNOW)
+						.pos(caster.posX, caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 3, caster.posZ)
+						.vel(0, 0, 0)
+						.scale(2)
+						.spin(world.rand.nextDouble() * (radius - 0.5) + 0.5, speed)
+						.spawn(world);
+			}
+
+			for(int i=0; i<60; i++){
+				double speed = (world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
+				ParticleBuilder.create(Type.CLOUD)
+						.pos(caster.posX, caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2.5, caster.posZ)
+						.clr(0xffffff)
+						.spin(world.rand.nextDouble() * (radius - 1) + 0.5, speed)
+						.spawn(world);
 			}
 		}
 
