@@ -6,6 +6,7 @@ import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.client.animation.ActionAnimation;
 import electroblob.wizardry.client.animation.PlayerAnimator;
 import electroblob.wizardry.client.audio.MovingSoundEntity;
+import electroblob.wizardry.client.audio.MovingSoundSpellCharge;
 import electroblob.wizardry.client.audio.SoundLoop;
 import electroblob.wizardry.client.audio.SoundLoopSpell;
 import electroblob.wizardry.client.gui.GuiLectern;
@@ -201,25 +202,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){
-		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity<>(entity, sound, category, volume, pitch, repeat));
-	}
-
-	@Override
-	public void playSpellSoundLoop(EntityLivingBase entity, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch){
-		SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellEntity(start, loop, end, spell, entity, volume, pitch));
-	}
-
-	@Override
-	public void playSpellSoundLoop(World world, double x, double y, double z, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch, int duration){
-		if(duration == -1){
-			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellDispenser(start, loop, end, spell, world, x, y, z, volume, pitch));
-		}else{
-			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellPosTimed(start, loop, end, spell, duration, x, y, z, volume, pitch));
-		}
-	}
-
-	@Override
 	public void playBlinkEffect(EntityPlayer player){
 		if(Minecraft.getMinecraft().player == player) RenderBlinkEffect.playBlinkEffect();
 	}
@@ -252,6 +234,33 @@ public class ClientProxy extends CommonProxy {
 			if(Minecraft.getMinecraft().currentScreen instanceof GuiLectern){
 				((GuiLectern)Minecraft.getMinecraft().currentScreen).refreshAvailableSpells();
 			}
+		}
+	}
+
+	// Sound
+	// ===============================================================================================================
+
+	@Override
+	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundEntity<>(entity, sound, category, volume, pitch, repeat));
+	}
+
+	@Override
+	public void playChargeupSound(EntityLivingBase entity){
+		Minecraft.getMinecraft().getSoundHandler().playSound(new MovingSoundSpellCharge(entity, WizardrySounds.ITEM_WAND_CHARGEUP, WizardrySounds.SPELLS, 1.7f, 1.4f, false));
+	}
+
+	@Override
+	public void playSpellSoundLoop(EntityLivingBase entity, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch){
+		SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellEntity(start, loop, end, spell, entity, volume, pitch));
+	}
+
+	@Override
+	public void playSpellSoundLoop(World world, double x, double y, double z, Spell spell, SoundEvent start, SoundEvent loop, SoundEvent end, SoundCategory category, float volume, float pitch, int duration){
+		if(duration == -1){
+			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellDispenser(start, loop, end, spell, world, x, y, z, volume, pitch));
+		}else{
+			SoundLoop.addLoop(new SoundLoopSpell.SoundLoopSpellPosTimed(start, loop, end, spell, duration, x, y, z, volume, pitch));
 		}
 	}
 

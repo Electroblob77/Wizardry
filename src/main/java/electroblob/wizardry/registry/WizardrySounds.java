@@ -34,6 +34,7 @@ public final class WizardrySounds {
 	public static final SoundEvent ITEM_WAND_SWITCH_SPELL = 		createSound("item.wand.switch_spell");
 	public static final SoundEvent ITEM_WAND_LEVELUP = 				createSound("item.wand.levelup");
 	public static final SoundEvent ITEM_WAND_MELEE = 				createSound("item.wand.melee");
+	public static final SoundEvent ITEM_WAND_CHARGEUP = 			createSound("item.wand.chargeup");
 	public static final SoundEvent ITEM_ARMOUR_EQUIP_SILK = 		createSound("item.armour.equip_silk");
 	public static final SoundEvent ITEM_PURIFYING_ELIXIR_DRINK = 	createSound("item.purifying_elixir.drink");
 	public static final SoundEvent ITEM_MANA_FLASK_USE = 			createSound("item.mana_flask.use");
@@ -172,6 +173,7 @@ public final class WizardrySounds {
 		event.getRegistry().register(ITEM_WAND_SWITCH_SPELL);
 		event.getRegistry().register(ITEM_WAND_LEVELUP);
 		event.getRegistry().register(ITEM_WAND_MELEE);
+		event.getRegistry().register(ITEM_WAND_CHARGEUP);
 		event.getRegistry().register(ITEM_ARMOUR_EQUIP_SILK);
 		event.getRegistry().register(ITEM_PURIFYING_ELIXIR_DRINK);
 		event.getRegistry().register(ITEM_MANA_FLASK_USE);

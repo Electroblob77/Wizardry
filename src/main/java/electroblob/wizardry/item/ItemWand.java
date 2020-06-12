@@ -364,6 +364,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					player.setActiveHand(hand);
 					// Store the modifiers for use later
 					if(WizardData.get(player) != null) WizardData.get(player).itemCastingModifiers = modifiers;
+					if(chargeup > 0 && world.isRemote) Wizardry.proxy.playChargeupSound(player);
 					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}else{

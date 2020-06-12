@@ -198,6 +198,12 @@ public class CommonProxy {
 	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){}
 
 	/**
+	 * Plays the spell charge-up sound at the given entity.
+	 * @param entity The source of the sound
+	 */
+	public void playChargeupSound(EntityLivingBase entity){}
+
+	/**
 	 * Plays a continuous spell sound which moves with the given entity.
 	 *
 	 * @param entity The source of the sound
