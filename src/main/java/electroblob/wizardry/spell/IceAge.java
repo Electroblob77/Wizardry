@@ -4,6 +4,7 @@ import electroblob.wizardry.block.BlockStatue;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -14,6 +15,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -23,10 +25,12 @@ import java.util.List;
 
 public class IceAge extends Spell {
 
+	public static final String FREEZE_DURATION = "freeze_duration";
+
 	public IceAge(){
 		super("ice_age", SpellActions.POINT_DOWN, false);
 		this.soundValues(1.5f, 1.0f, 0);
-		addProperties(EFFECT_RADIUS, EFFECT_DURATION);
+		addProperties(EFFECT_RADIUS, FREEZE_DURATION, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
@@ -47,9 +51,13 @@ public class IceAge extends Spell {
 
 					if(target instanceof EntityLiving){
 						if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-								(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+								(int)(getProperty(FREEZE_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 							target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 						}
+					}else if(target instanceof EntityPlayer){
+						target.addPotionEffect(new PotionEffect(WizardryPotions.frost,
+								(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+								getProperty(EFFECT_STRENGTH).intValue()));
 					}
 				}
 			}
