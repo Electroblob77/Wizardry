@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
@@ -43,13 +42,10 @@ public class RenderZombieSpawner extends Render<EntityZombieSpawner> {
 		// The visible bit
 		GlStateManager.pushMatrix();
 
-		int animationTicks = 10;
-		float age = entity.ticksExisted + partialTicks;
-		float s = age < animationTicks ? age/animationTicks : MathHelper.clamp((entity.lifetime - age) / animationTicks, 0, 1);
-		s = (float)Math.pow(s, 0.4); // Smooths the animation
-
+		float s = WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
 		GlStateManager.scale(s, s, s);
-		GlStateManager.rotate(age * 2, 0, 1, 0);
+
+		GlStateManager.rotate((entity.ticksExisted + partialTicks) * 2, 0, 1, 0);
 
 		this.bindTexture(TEXTURE);
 

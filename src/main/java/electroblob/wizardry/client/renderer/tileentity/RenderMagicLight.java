@@ -6,6 +6,7 @@ import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -42,12 +43,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 
 		GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
 
-		int animationTicks = 10;
-		float age = tileentity.timer + partialTicks;
-		float s = tileentity.getLifetime() < 0 ? 1 : MathHelper.clamp((tileentity.getLifetime() - age) / animationTicks, 0, 1);
-		if(age < animationTicks) s = age/animationTicks;
-		s = (float)Math.pow(s, 0.4); // Smooths the animation
-
+		float s = WizardryUtilities.smoothScaleFactor(tileentity.getLifetime(), tileentity.timer, partialTicks, 10, 10);
 		GlStateManager.scale(s, s, s);
 
 		// Renders the aura effect

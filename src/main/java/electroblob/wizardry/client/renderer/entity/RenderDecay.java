@@ -2,6 +2,7 @@ package electroblob.wizardry.client.renderer.entity;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityDecay;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -24,7 +25,7 @@ public class RenderDecay extends Render<EntityDecay> {
 	}
 
 	@Override
-	public void doRender(EntityDecay entity, double par2, double par4, double par6, float par8, float par9){
+	public void doRender(EntityDecay entity, double x, double y, double z, float entityYaw, float partialTicks){
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
@@ -34,28 +35,26 @@ public class RenderDecay extends Render<EntityDecay> {
 
 		float yOffset = 0;
 
-		GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
+		GlStateManager.translate((float)x, (float)y + yOffset, (float)z);
 
-		this.bindTexture(TEXTURES[((EntityDecay)entity).textureIndex]);
+		this.bindTexture(TEXTURES[entity.textureIndex]);
 		float f6 = 1.0F;
 		float f7 = 0.5F;
 		float f8 = 0.5F;
 
 		GlStateManager.rotate(-90, 1, 0, 0);
 
-		float scale = 2 * Math.min(1, (float)(entity.lifetime - entity.ticksExisted) / 50f);
-
-		GlStateManager.scale(scale, scale, scale);
+		float s = 2 * WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 50);
+		GlStateManager.scale(s, s, s);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		// tessellator.setColorRGBA_I(k1, 128);
-		// buffer.normal(0.0F, 1.0F, 0.0F);
-		buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.01).tex(0, 1).endVertex();
-		buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.01).tex(1, 1).endVertex();
-		buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.01).tex(1, 0).endVertex();
-		buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.01).tex(0, 0).endVertex();
+
+		buffer.pos(0.0F - f7, 0.0F - f8, 0.01).tex(0, 1).endVertex();
+		buffer.pos(f6   - f7, 0.0F - f8, 0.01).tex(1, 1).endVertex();
+		buffer.pos(f6   - f7, 1.0F - f8, 0.01).tex(1, 0).endVertex();
+		buffer.pos(0.0F - f7, 1.0F - f8, 0.01).tex(0, 0).endVertex();
 
 		tessellator.draw();
 

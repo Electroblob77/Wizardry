@@ -25,7 +25,7 @@ public class RenderBubble extends Render<EntityBubble> {
 	}
 
 	@Override
-	public void doRender(EntityBubble entity, double par2, double par4, double par6, float par8, float par9){
+	public void doRender(EntityBubble entity, double x, double y, double z, float entityYaw, float partialTicks){
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableBlend();
@@ -39,7 +39,7 @@ public class RenderBubble extends Render<EntityBubble> {
 			yOffset = rider.height / 2;
 		}
 
-		GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
+		GlStateManager.translate((float)x, (float)y + yOffset, (float)z);
 
 		this.bindTexture(entity.isDarkOrb ? ENTRAPMENT_TEXTURE : PARTICLE_TEXTURES);
 		float f6 = 1.0F;
@@ -65,16 +65,15 @@ public class RenderBubble extends Render<EntityBubble> {
 		GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
-		float f11 = 3.0F;
-		GlStateManager.scale(f11, f11, f11);
+		// Bubble 'bursts' so doesn't shrink when is disappears
+		float s = 3 * WizardryUtilities.smoothScaleFactor(entity.isDarkOrb ? entity.lifetime : -1, entity.ticksExisted, partialTicks, 10, 10);
+		GlStateManager.scale(s, s, s);
 
 		double pixelwidth = (1.0d / 128);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		// tessellator.setColorRGBA_I(k1, 128);
-		// buffer.normal(0.0F, 1.0F, 0.0F);
 
 		if(entity.isDarkOrb){
 			buffer.pos(0.0F - f7, 0.0F - f8, 0.0D).tex(0, 1).endVertex();

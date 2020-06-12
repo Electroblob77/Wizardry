@@ -3,6 +3,7 @@ package electroblob.wizardry.client.renderer.entity;
 import electroblob.wizardry.entity.construct.EntityHealAura;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -18,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 public class RenderSigil extends Render<EntityMagicConstruct> {
 
 	private final ResourceLocation texture;
-	private float scale = 1.0f;
+	private float scale;
 	private boolean invisibleToEnemies;
 
 	public RenderSigil(RenderManager renderManager, ResourceLocation texture, float scale, boolean invisibleToEnemies){
@@ -29,7 +30,7 @@ public class RenderSigil extends Render<EntityMagicConstruct> {
 	}
 
 	@Override
-	public void doRender(EntityMagicConstruct entity, double par2, double par4, double par6, float par8, float par9){
+	public void doRender(EntityMagicConstruct entity, double x, double y, double z, float entityYaw, float partialTicks){
 
 		// Makes the sigil invisible to enemies of the player that created it
 		if(this.invisibleToEnemies){
@@ -48,7 +49,7 @@ public class RenderSigil extends Render<EntityMagicConstruct> {
 
 		float yOffset = 0;
 
-		GlStateManager.translate((float)par2, (float)par4 + yOffset, (float)par6);
+		GlStateManager.translate((float)x, (float)y + yOffset, (float)z);
 
 		this.bindTexture(texture);
 		float f6 = 1.0F;
@@ -60,17 +61,17 @@ public class RenderSigil extends Render<EntityMagicConstruct> {
 		// Healing aura rotates slowly
 		if(entity instanceof EntityHealAura) GlStateManager.rotate(entity.ticksExisted / 3.0f, 0, 0, 1);
 
-		GlStateManager.scale(scale, scale, scale);
+		float s = WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
+		GlStateManager.scale(scale * s, scale * s, scale * s);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		// tessellator.setColorRGBA_I(k1, 128);
-		// buffer.normal(0.0F, 1.0F, 0.0F);
-		buffer.pos((double)(0.0F - f7), (double)(0.0F - f8), 0.01).tex(0, 1).endVertex();
-		buffer.pos((double)(f6 - f7), (double)(0.0F - f8), 0.01).tex(1, 1).endVertex();
-		buffer.pos((double)(f6 - f7), (double)(1.0F - f8), 0.01).tex(1, 0).endVertex();
-		buffer.pos((double)(0.0F - f7), (double)(1.0F - f8), 0.01).tex(0, 0).endVertex();
+
+		buffer.pos(0.0F - f7, 0.0F - f8, 0.01).tex(0, 1).endVertex();
+		buffer.pos(f6   - f7, 0.0F - f8, 0.01).tex(1, 1).endVertex();
+		buffer.pos(f6   - f7, 1.0F - f8, 0.01).tex(1, 0).endVertex();
+		buffer.pos(0.0F - f7, 1.0F - f8, 0.01).tex(0, 0).endVertex();
 
 		tessellator.draw();
 
