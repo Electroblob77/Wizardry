@@ -921,7 +921,7 @@ public final class WizardryUtilities {
 			
 			if(data != null && data.currentlyCasting() == spell) return true;
 
-			if(caster.isHandActive()){
+			if(caster.isHandActive() && caster.getItemInUseMaxCount() >= spell.getChargeup()){
 
 				ItemStack stack = caster.getHeldItem(caster.getActiveHand());
 
