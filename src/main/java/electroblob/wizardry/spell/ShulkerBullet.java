@@ -2,9 +2,9 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -62,7 +62,7 @@ public class ShulkerBullet extends Spell {
 
 			double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
 
-			List<EntityLivingBase> possibleTargets = WizardryUtilities.getEntitiesWithinRadius(range, x, y, z, world);
+			List<EntityLivingBase> possibleTargets = EntityUtils.getEntitiesWithinRadius(range, x, y, z, world);
 
 			possibleTargets.remove(caster);
 			possibleTargets.removeIf(t -> t instanceof EntityArmorStand);

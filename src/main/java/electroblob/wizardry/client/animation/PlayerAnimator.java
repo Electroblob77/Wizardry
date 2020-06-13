@@ -2,7 +2,8 @@ package electroblob.wizardry.client.animation;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.InventoryUtils;
+import electroblob.wizardry.util.JavaUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
@@ -93,7 +94,7 @@ public class PlayerAnimator {
 
 				for(LayerRenderer<?> layer : layers){
 
-					for(Field field : WizardryUtilities.getAllFields(layer.getClass())){
+					for(Field field : JavaUtils.getAllFields(layer.getClass())){
 
 						field.setAccessible(true);
 
@@ -123,7 +124,7 @@ public class PlayerAnimator {
 		// This needs to be lazy-loaded because we need access to an actual item
 		for(LayerRenderer<? extends EntityLivingBase> layer : playerLayers.get(renderer)){
 			if(layer instanceof LayerBipedArmor){
-				for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
+				for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
 
 					ItemStack armour = player.getItemStackFromSlot(slot);
 					ModelBiped model = ForgeHooksClient.getArmorModel(player, armour, slot, ((LayerBipedArmor)layer).getModelFromSlot(slot));

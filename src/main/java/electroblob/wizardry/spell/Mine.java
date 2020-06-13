@@ -6,10 +6,8 @@ import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -63,12 +61,12 @@ public class Mine extends SpellRay {
 
 		if(!world.isRemote){
 
-			if(WizardryUtilities.isBlockUnbreakable(world, pos)) return false;
+			if(BlockUtils.isBlockUnbreakable(world, pos)) return false;
 			// The mine spell ignores the block damage setting for players, since that's the entire point of the spell
 			// Instead, it triggers block break events at the appropriate points, which protection mods should be able to
 			// pick up and allow/disallow accordingly
 			// For the time being, dispensers respect the mobGriefing gamerule
-			if(!(caster instanceof EntityPlayer) && !WizardryUtilities.canDamageBlocks(caster, world)) return false;
+			if(!(caster instanceof EntityPlayer) && !EntityUtils.canDamageBlocks(caster, world)) return false;
 			// Can't mine arcane-locked blocks
 			if(world.getTileEntity(pos) != null && world.getTileEntity(pos).getTileData().hasUniqueId(ArcaneLock.NBT_KEY)) return false;
 
@@ -92,11 +90,11 @@ public class Mine extends SpellRay {
 				// 3 blast upgrades: 5x5 without corners or edges
 				float radius = 0.5f + 0.73f * blastUpgradeCount;
 
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(pos, radius);
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(pos, radius);
 
 				for(BlockPos pos1 : sphere){
 
-					if(WizardryUtilities.isBlockUnbreakable(world, pos1)) continue;
+					if(BlockUtils.isBlockUnbreakable(world, pos1)) continue;
 
 					IBlockState state1 = world.getBlockState(pos1);
 

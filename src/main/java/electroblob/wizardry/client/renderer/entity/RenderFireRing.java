@@ -1,7 +1,7 @@
 package electroblob.wizardry.client.renderer.entity;
 
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.construct.EntityFireRing;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -47,7 +47,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 
 		GlStateManager.rotate(-90, 1, 0, 0);
 
-		float s = WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
+		float s = DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
 		GlStateManager.scale(scale * s, scale * s, scale * s);
 
 		Tessellator tessellator = Tessellator.getInstance();

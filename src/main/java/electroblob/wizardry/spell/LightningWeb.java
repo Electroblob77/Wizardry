@@ -53,19 +53,19 @@ public class LightningWeb extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 
 			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
 					* modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 			
 			// Secondary chaining effect
 
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+			List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(
 					getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
 					target.posZ, world);
 			
 			secondaryTargets.remove(target);
-			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+			secondaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
 				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
@@ -77,13 +77,13 @@ public class LightningWeb extends SpellRay {
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+				List<EntityLivingBase> tertiaryTargets = EntityUtils.getEntitiesWithinRadius(
 						getProperty(TERTIARY_RANGE).floatValue(), secondaryTarget.posX,
 						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 				
 				tertiaryTargets.remove(target);
 				tertiaryTargets.removeAll(secondaryTargets);
-				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+				tertiaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
 					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
@@ -139,7 +139,7 @@ public class LightningWeb extends SpellRay {
 				((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
 						this.getNameForTranslationFormatted()), true);
 		}else{
-			WizardryUtilities.attackEntityWithoutKnockback(target,
+			EntityUtils.attackEntityWithoutKnockback(target,
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
 		}
 		

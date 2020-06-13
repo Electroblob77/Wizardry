@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 /**
  * Contains a number of useful static methods for interacting with NBT data, particularly involving collections.
- * This was split off from {@link WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
+ * This was split off from {@link JavaUtils} as of wizardry 4.2 in an effort to make the code easier to navigate.
  *
  * @author Electroblob
  * @since Wizardry 4.2

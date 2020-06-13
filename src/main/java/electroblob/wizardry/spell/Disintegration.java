@@ -3,12 +3,9 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.entity.projectile.EntityEmber;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +38,7 @@ public class Disintegration extends SpellRay {
 		}else{
 
 			target.setFire((int)(getProperty(BURN_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
-			WizardryUtilities.attackEntityWithoutKnockback(target, caster == null ? DamageSource.MAGIC :
+			EntityUtils.attackEntityWithoutKnockback(target, caster == null ? DamageSource.MAGIC :
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.FIRE),
 					getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
@@ -90,7 +87,7 @@ public class Disintegration extends SpellRay {
 			}
 			
 			if(world.getBlockState(pos).getMaterial().isSolid()){
-				Vec3d vec = hit.add(new Vec3d(side.getDirectionVec()).scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET));
+				Vec3d vec = hit.add(new Vec3d(side.getDirectionVec()).scale(GeometryUtils.ANTI_Z_FIGHTING_OFFSET));
 				ParticleBuilder.create(Type.SCORCH).pos(vec).face(side).clr(1, 0.2f, 0).spawn(world);
 			}
 		}

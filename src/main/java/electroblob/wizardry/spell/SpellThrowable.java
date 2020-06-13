@@ -3,8 +3,8 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -93,7 +93,7 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 				float velocity = calculateVelocity(modifiers, caster.getEyeHeight() - LAUNCH_Y_OFFSET);
 				T projectile = projectileFactory.apply(world, caster);
 				int aimingError = caster instanceof ISpellCaster ? ((ISpellCaster)caster).getAimingError(world.getDifficulty())
-						: WizardryUtilities.getDefaultAimingError(world.getDifficulty());
+						: EntityUtils.getDefaultAimingError(world.getDifficulty());
 				aim(projectile, caster, target, velocity, aimingError);
 				addProjectileExtras(projectile, caster, modifiers);
 				world.spawnEntity(projectile);

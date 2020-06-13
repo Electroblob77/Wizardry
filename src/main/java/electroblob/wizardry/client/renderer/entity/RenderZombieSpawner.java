@@ -1,8 +1,9 @@
 package electroblob.wizardry.client.renderer.entity;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.construct.EntityZombieSpawner;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.GeometryUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -19,7 +20,7 @@ public class RenderZombieSpawner extends Render<EntityZombieSpawner> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/zombie_spawner.png");
 
-	private static final Vec3d[] HIDDEN_BOX = WizardryUtilities.getVertices(new AxisAlignedBB(-1, 0, -1, 1, 2.5, 1));
+	private static final Vec3d[] HIDDEN_BOX = GeometryUtils.getVertices(new AxisAlignedBB(-1, 0, -1, 1, 2.5, 1));
 
 	public RenderZombieSpawner(RenderManager renderManager){
 		super(renderManager);
@@ -42,14 +43,14 @@ public class RenderZombieSpawner extends Render<EntityZombieSpawner> {
 		// The visible bit
 		GlStateManager.pushMatrix();
 
-		float s = WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
+		float s = DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
 		GlStateManager.scale(s, s, s);
 
 		GlStateManager.rotate((entity.ticksExisted + partialTicks) * 2, 0, 1, 0);
 
 		this.bindTexture(TEXTURE);
 
-		Vec3d[] vertices = WizardryUtilities.getVertices(entity.getEntityBoundingBox().offset(entity.getPositionVector().scale(-1)));
+		Vec3d[] vertices = GeometryUtils.getVertices(entity.getEntityBoundingBox().offset(entity.getPositionVector().scale(-1)));
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		drawFace(buffer, vertices[0], vertices[1], vertices[3], vertices[2], 0, 0, 1, 1); // Bottom

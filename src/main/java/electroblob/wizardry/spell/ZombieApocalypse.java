@@ -4,9 +4,8 @@ import electroblob.wizardry.entity.construct.EntityZombieSpawner;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import electroblob.wizardry.util.WizardryUtilities.SurfaceCriteria;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -37,8 +36,8 @@ public class ZombieApocalypse extends SpellConstruct<EntityZombieSpawner> {
 	@Override
 	protected boolean spawnConstruct(World world, double x, double y, double z, EnumFacing side, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 
-		Integer ceiling = WizardryUtilities.getNearestSurface(world, new BlockPos(x, y + MIN_SPAWNER_HEIGHT, z),
-				EnumFacing.UP, SPAWNER_HEIGHT - MIN_SPAWNER_HEIGHT, false, SurfaceCriteria.COLLIDABLE.flip());
+		Integer ceiling = BlockUtils.getNearestSurface(world, new BlockPos(x, y + MIN_SPAWNER_HEIGHT, z),
+				EnumFacing.UP, SPAWNER_HEIGHT - MIN_SPAWNER_HEIGHT, false, BlockUtils.SurfaceCriteria.COLLIDABLE.flip());
 
 		if(ceiling == null) y += SPAWNER_HEIGHT;
 		else y = ceiling - 0.5;

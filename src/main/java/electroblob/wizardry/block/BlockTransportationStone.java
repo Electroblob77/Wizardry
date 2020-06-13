@@ -8,9 +8,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Transportation;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.Location;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -162,7 +162,7 @@ public class BlockTransportationStone extends Block {
 						for(int z = -1; z <= 1; z++){
 							if(x == 0 && z == 0) continue;
 							ParticleBuilder.create(ParticleBuilder.Type.PATH)
-									.pos(WizardryUtilities.getCentre(centre).add(x, -0.3125, z)).clr(0x86ff65)
+									.pos(GeometryUtils.getCentre(centre).add(x, -0.3125, z)).clr(0x86ff65)
 									.time(200).scale(2).spawn(world);
 						}
 					}

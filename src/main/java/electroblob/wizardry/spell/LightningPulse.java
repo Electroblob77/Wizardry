@@ -38,7 +38,7 @@ public class LightningPulse extends Spell {
 
 		if(caster.onGround){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(
+			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(
 					getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade),
 					caster.posX, caster.posY, caster.posZ, world);
 
@@ -71,7 +71,7 @@ public class LightningPulse extends Spell {
 			
 			if(world.isRemote){
 				ParticleBuilder.create(Type.LIGHTNING_PULSE).pos(caster.posX, caster.getEntityBoundingBox().minY
-						+ WizardryUtilities.ANTI_Z_FIGHTING_OFFSET, caster.posZ)
+						+ GeometryUtils.ANTI_Z_FIGHTING_OFFSET, caster.posZ)
 				.scale(modifiers.get(WizardryItems.blast_upgrade)).spawn(world);
 			}
 

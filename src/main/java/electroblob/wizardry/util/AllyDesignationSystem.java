@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Contains some useful static methods for interacting with the ally designation system. Also handles the friendly fire
- * setting. This was split off from {@link WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to
+ * setting. This was split off from {@link JavaUtils} as of wizardry 4.2 in an effort to make the code easier to
  * navigate.
  */
 @Mod.EventBusSubscriber
@@ -144,7 +144,7 @@ public final class AllyDesignationSystem {
 			NBTTagCompound entityNBT = target.getEntityData();
 
 			if(entityNBT != null && entityNBT.hasUniqueId(MindControl.NBT_KEY)){
-				if(attacker == WizardryUtilities.getEntityByUUID(target.world,
+				if(attacker == EntityUtils.getEntityByUUID(target.world,
 						entityNBT.getUniqueId(MindControl.NBT_KEY))){
 					return false;
 				}
@@ -177,7 +177,7 @@ public final class AllyDesignationSystem {
 
 				if(entityNBT != null && entityNBT.hasKey(MindControl.NBT_KEY)){
 
-					Entity controller = WizardryUtilities.getEntityByUUID(target.world, entityNBT.getUniqueId(MindControl.NBT_KEY));
+					Entity controller = EntityUtils.getEntityByUUID(target.world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
 					if(controller instanceof EntityPlayer && WizardData.get((EntityPlayer)attacker).isPlayerAlly((EntityPlayer)controller)){
 						return false;

@@ -6,10 +6,8 @@ import electroblob.wizardry.entity.projectile.EntityMagicArrow;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.MagicDamage;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -100,7 +98,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 		// If they will be inside the forcefield next tick, sets their position and velocity such that they appear to
 		// bounce off the forcefield and creates impact particle effects and sounds where they hit it
 
-		List<Entity> targets = WizardryUtilities.getEntitiesWithinRadius(radius + SEARCH_BORDER_SIZE, posX, posY, posZ, world, Entity.class);
+		List<Entity> targets = EntityUtils.getEntitiesWithinRadius(radius + SEARCH_BORDER_SIZE, posX, posY, posZ, world, Entity.class);
 
 		targets.remove(this);
 		targets.removeIf(t -> t instanceof EntityXPOrb); // Gets annoying since they're attracted to the player
@@ -117,7 +115,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 			if(this.isValidTarget(target)){
 
-				Vec3d currentPos = Arrays.stream(WizardryUtilities.getVertices(target.getEntityBoundingBox()))
+				Vec3d currentPos = Arrays.stream(GeometryUtils.getVertices(target.getEntityBoundingBox()))
 						.min(Comparator.comparingDouble(v -> v.distanceTo(this.getPositionVector())))
 						.orElse(target.getPositionVector()); // This will never happen, it's just here to make the compiler happy
 
@@ -130,7 +128,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 				boolean flag;
 
-				if(WizardryUtilities.isLiving(target)){
+				if(EntityUtils.isLiving(target)){
 					// Non-allied living entities shouldn't be inside at all
 					flag = nextTickDistance <= radius;
 				}else{
@@ -143,7 +141,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 					// Ring of interdiction
 					if(getCaster() instanceof EntityPlayer && ItemArtefact.isArtefactActive((EntityPlayer)getCaster(),
-							WizardryItems.ring_interdiction) && WizardryUtilities.isLiving(target)){
+							WizardryItems.ring_interdiction) && EntityUtils.isLiving(target)){
 						target.attackEntityFrom(MagicDamage.causeIndirectMagicDamage(this, getCaster(),
 								MagicDamage.DamageType.MAGIC), 1);
 					}
@@ -151,7 +149,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 					Vec3d targetRelativePos = currentPos.subtract(this.getPositionVector());
 
 					double nudgeVelocity = this.contains(target) ? -0.1 : 0.1;
-					if(WizardryUtilities.isLiving(target)) nudgeVelocity = 0.25;
+					if(EntityUtils.isLiving(target)) nudgeVelocity = 0.25;
 					Vec3d extraVelocity = targetRelativePos.normalize().scale(nudgeVelocity);
 
 					// ...make it bounce off!
@@ -216,7 +214,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 	/** Returns true if the given bounding box is completely inside this forcefield (the surface counts as outside). */
 	public boolean contains(AxisAlignedBB box){
-		return Arrays.stream(WizardryUtilities.getVertices(box)).allMatch(this::contains);
+		return Arrays.stream(GeometryUtils.getVertices(box)).allMatch(this::contains);
 	}
 
 	/** Returns true if the given entity is completely inside this forcefield (the surface counts as outside). */
@@ -303,7 +301,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 		double searchRadius = 20;
 
-		List<EntityForcefield> forcefields = WizardryUtilities.getEntitiesWithinRadius(searchRadius, vec.x,
+		List<EntityForcefield> forcefields = EntityUtils.getEntitiesWithinRadius(searchRadius, vec.x,
 				vec.y, vec.z, world, EntityForcefield.class);
 
 		forcefields.removeIf(f -> !f.contains(vec));
@@ -317,7 +315,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 		double searchRadius = 20;
 
-		List<EntityForcefield> forcefields = WizardryUtilities.getEntitiesWithinRadius(searchRadius, vec.x,
+		List<EntityForcefield> forcefields = EntityUtils.getEntitiesWithinRadius(searchRadius, vec.x,
 				vec.y, vec.z, world, EntityForcefield.class);
 
 		forcefields.removeIf(f -> !f.contains(box));
@@ -348,7 +346,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 		// If the player is trying to interact across a forcefield boundary, cancel the event
 		// The most pragmatic solution here is to use the centres - it's not perfect, but it's simple!
-		if(getSurroundingForcefield(event.getWorld(), WizardryUtilities.getCentre(box))
+		if(getSurroundingForcefield(event.getWorld(), GeometryUtils.getCentre(box))
 				!= getSurroundingForcefield(event.getWorld(), event.getEntityPlayer().getPositionVector())){
 			event.setCanceled(true);
 		}

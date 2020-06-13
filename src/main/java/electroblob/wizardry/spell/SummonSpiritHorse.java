@@ -5,9 +5,9 @@ import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.EntitySpiritHorse;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import electroblob.wizardry.util.WizardryUtilities.Operations;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -54,11 +54,11 @@ public class SummonSpiritHorse extends Spell {
 
 		if(!world.isRemote){
 
-			Entity oldHorse = WizardryUtilities.getEntityByUUID(world, data.getVariable(UUID_KEY));
+			Entity oldHorse = EntityUtils.getEntityByUUID(world, data.getVariable(UUID_KEY));
 
 			if(oldHorse != null) oldHorse.setDead();
 
-			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
+			BlockPos pos = BlockUtils.findNearbyFloorSpace(caster, 2, 4);
 			if(pos == null) return false;
 
 			EntitySpiritHorse horse = new EntitySpiritHorse(world);
@@ -68,10 +68,10 @@ public class SummonSpiritHorse extends Spell {
 			world.spawnEntity(horse);
 
 			horse.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(
-					new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.get(SpellModifiers.POTENCY) - 1, Operations.MULTIPLY_CUMULATIVE));
+					new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.get(SpellModifiers.POTENCY) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 			// Jump strength increases ridiculously fast, so we're reducing the effect of the modifier by 75%
 			horse.getEntityAttribute(JUMP_STRENGTH).applyModifier(new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER,
-					modifiers.amplified(SpellModifiers.POTENCY, 0.25f) - 1, Operations.MULTIPLY_CUMULATIVE));
+					modifiers.amplified(SpellModifiers.POTENCY, 0.25f) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 
 			data.setVariable(UUID_KEY, horse.getUniqueID());
 		}

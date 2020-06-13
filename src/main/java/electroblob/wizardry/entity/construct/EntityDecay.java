@@ -4,9 +4,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -36,7 +36,7 @@ public class EntityDecay extends EntityMagicConstruct {
 					0.6F + rand.nextFloat() * 0.15F);
 
 		if(!this.world.isRemote){
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
 					this.posZ, this.world);
 			for(EntityLivingBase target : targets){
 				if(target != this.getCaster()){

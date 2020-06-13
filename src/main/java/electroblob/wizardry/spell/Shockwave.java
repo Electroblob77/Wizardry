@@ -37,7 +37,7 @@ public class Shockwave extends Spell {
 
 		double radius = getProperty(BLAST_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade);
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){
 
@@ -105,7 +105,7 @@ public class Shockwave extends Spell {
 
 				particleX = caster.posX - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = caster.posZ - 1.0d + 2 * world.rand.nextDouble();
-				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
+				IBlockState block = BlockUtils.getBlockEntityIsStandingOn(caster);
 
 				if(block != null){
 					world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, caster.getEntityBoundingBox().minY,

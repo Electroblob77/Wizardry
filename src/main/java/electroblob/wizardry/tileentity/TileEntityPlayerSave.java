@@ -1,7 +1,7 @@
 package electroblob.wizardry.tileentity;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,7 +52,7 @@ public class TileEntityPlayerSave extends TileEntity {
 	@Nullable
 	public EntityLivingBase getCaster(){
 
-		Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
+		Entity entity = EntityUtils.getEntityByUUID(world, casterUUID);
 
 		if(entity != null && !(entity instanceof EntityLivingBase)){ // Should never happen
 			Wizardry.logger.warn("{} has a non-living owner!", this);

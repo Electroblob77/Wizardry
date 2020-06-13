@@ -2,7 +2,7 @@ package electroblob.wizardry.command;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -72,7 +72,7 @@ public class CommandViewAllies extends CommandBase {
 			// Don't want to catch the exception here either, because there can be no other first argument.
 
 			if(player != sender && sender instanceof EntityPlayer
-					&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
+					&& !EntityUtils.isPlayerOp((EntityPlayer)sender, server)){
 				// Displays a chat message if a non-op tries to view another player's allies.
 				if(server.sendCommandFeedback()){
 					TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(

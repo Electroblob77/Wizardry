@@ -4,11 +4,11 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -38,7 +38,7 @@ public class EntityBlizzard extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
@@ -46,11 +46,11 @@ public class EntityBlizzard extends EntityMagicConstruct {
 				if(this.isValidTarget(target)){
 
 					if(this.getCaster() != null){
-						WizardryUtilities.attackEntityWithoutKnockback(target,
+						EntityUtils.attackEntityWithoutKnockback(target,
 								MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.FROST),
 								1 * damageMultiplier);
 					}else{
-						WizardryUtilities.attackEntityWithoutKnockback(target, DamageSource.MAGIC,
+						EntityUtils.attackEntityWithoutKnockback(target, DamageSource.MAGIC,
 								1 * damageMultiplier);
 					}
 				}

@@ -3,9 +3,9 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -90,7 +90,7 @@ public class Blink extends Spell {
 
 		int x = MathHelper.floor(target.posX + MathHelper.sin(angle) * radius);
 		int z = MathHelper.floor(target.posZ - MathHelper.cos(angle) * radius);
-		Integer y = WizardryUtilities.getNearestFloor(world, new BlockPos(caster), (int)radius);
+		Integer y = BlockUtils.getNearestFloor(world, new BlockPos(caster), (int)radius);
 
 		// It's worth noting that on the client side, the cast() method only gets called if the server side
 		// cast method succeeded, so you need not check any conditions for spawning particles.

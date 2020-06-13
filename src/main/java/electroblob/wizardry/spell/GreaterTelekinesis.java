@@ -5,10 +5,8 @@ import electroblob.wizardry.entity.EntityLevitatingBlock;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -92,7 +90,7 @@ public class GreaterTelekinesis extends SpellRay {
 				
 			}else{
 			
-				WizardryUtilities.undoGravity(target);
+				EntityUtils.undoGravity(target);
 				
 				// The following code extrapolates the entity's current velocity to determine whether it will pass the
 				// target position in the next tick, and adds or subtracts velocity accordingly.
@@ -132,7 +130,7 @@ public class GreaterTelekinesis extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.canDamageBlocks(caster, world) && !WizardryUtilities.isBlockUnbreakable(world, pos)
+		if(EntityUtils.canDamageBlocks(caster, world) && !BlockUtils.isBlockUnbreakable(world, pos)
 				&& world.getBlockState(pos).getMaterial().isSolid()
 				&& (world.getTileEntity(pos) == null || !world.getTileEntity(pos).getTileData().hasUniqueId(ArcaneLock.NBT_KEY))){
 			

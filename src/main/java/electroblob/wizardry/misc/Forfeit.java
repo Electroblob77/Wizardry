@@ -15,7 +15,8 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Banish;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.passive.EntitySquid;
@@ -173,7 +174,7 @@ public abstract class Forfeit {
 
 				WizardryAdvancementTriggers.spell_failure.triggerFor(player);
 
-				WizardryUtilities.playSoundAtPlayer(player, forfeit.getSound(), WizardrySounds.SPELLS, 1, 1);
+				EntityUtils.playSoundAtPlayer(player, forfeit.getSound(), WizardrySounds.SPELLS, 1, 1);
 
 				if(!event.getWorld().isRemote) player.sendMessage(
 						event.getSource() == SpellCastEvent.Source.WAND ? forfeit.getMessageForWand() : forfeit.getMessageForScroll());
@@ -209,7 +210,7 @@ public abstract class Forfeit {
 		add(Tier.ADVANCED, Element.FIRE, create("blazes", (w, p) -> {
 			if(!w.isRemote){
 				for(int i = 0; i < 3; i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(p, 4, 2);
+					BlockPos pos = BlockUtils.findNearbyFloorSpace(p, 4, 2);
 					if(pos == null) break;
 					EntityBlazeMinion blaze = new EntityBlazeMinion(w);
 					blaze.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
@@ -220,7 +221,7 @@ public abstract class Forfeit {
 
 		add(Tier.MASTER, Element.FIRE, create("burn_surroundings", (w, p) -> {
 			if(!w.isRemote){
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(p.getPosition(), 6);
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition(), 6);
 				for(BlockPos pos : sphere){
 					if(w.rand.nextBoolean() && w.isAirBlock(pos)) w.setBlockState(pos, Blocks.FIRE.getDefaultState());
 				}
@@ -230,7 +231,7 @@ public abstract class Forfeit {
 		add(Tier.MASTER, Element.FIRE, create("meteors", (w, p) -> {
 			if(!w.isRemote) for(int i=0; i<5; i++) w.spawnEntity(new EntityMeteor(w, p.posX + w.rand.nextDouble() * 16 - 8,
 						p.posY + 40 + w.rand.nextDouble() * 30, p.posZ + w.rand.nextDouble() * 16 - 8,
-						1, WizardryUtilities.canDamageBlocks(p, w)));
+						1, EntityUtils.canDamageBlocks(p, w)));
 		}));
 
 		add(Tier.NOVICE, Element.ICE, create("freeze_self", (w, p) -> p.addPotionEffect(new PotionEffect(WizardryPotions.frost, 200))));
@@ -243,8 +244,8 @@ public abstract class Forfeit {
 					EntityIceSpike iceSpike = new EntityIceSpike(w);
 					double x = p.posX + 2 - w.rand.nextFloat() * 4;
 					double z = p.posZ + 2 - w.rand.nextFloat() * 4;
-					Integer y = WizardryUtilities.getNearestSurface(w, new BlockPos(x, p.posY, z), EnumFacing.UP, 2, true,
-							WizardryUtilities.SurfaceCriteria.basedOn(World::isBlockFullCube));
+					Integer y = BlockUtils.getNearestSurface(w, new BlockPos(x, p.posY, z), EnumFacing.UP, 2, true,
+							BlockUtils.SurfaceCriteria.basedOn(World::isBlockFullCube));
 					if(y == null) break;
 					iceSpike.setFacing(EnumFacing.UP);
 					iceSpike.setPosition(x, y, z);
@@ -264,7 +265,7 @@ public abstract class Forfeit {
 		add(Tier.ADVANCED, Element.ICE, create("ice_wraiths", (w, p) -> {
 			if(!w.isRemote){
 				for(int i = 0; i < 3; i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(p, 4, 2);
+					BlockPos pos = BlockUtils.findNearbyFloorSpace(p, 4, 2);
 					if(pos == null) break;
 					EntityIceWraith iceWraith = new EntityIceWraith(w);
 					iceWraith.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
@@ -306,7 +307,7 @@ public abstract class Forfeit {
 			if(!w.isRemote){
 				for(EnumFacing direction : EnumFacing.HORIZONTALS){
 					BlockPos pos = p.getPosition().offset(direction, 2);
-					Integer y = WizardryUtilities.getNearestFloor(w, pos, 2);
+					Integer y = BlockUtils.getNearestFloor(w, pos, 2);
 					if(y == null) continue;
 					EntityLightningSigil sigil = new EntityLightningSigil(w);
 					sigil.setPosition(pos.getX() + 0.5, y, pos.getZ() + 0.5);
@@ -322,7 +323,7 @@ public abstract class Forfeit {
 		add(Tier.ADVANCED, Element.LIGHTNING, create("lightning_wraiths", (w, p) -> {
 			if(!w.isRemote){
 				for(int i = 0; i < 3; i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(p, 4, 2);
+					BlockPos pos = BlockUtils.findNearbyFloorSpace(p, 4, 2);
 					if(pos == null) break;
 					EntityLightningWraith lightningWraith = new EntityLightningWraith(w);
 					lightningWraith.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
@@ -347,7 +348,7 @@ public abstract class Forfeit {
 		add(Tier.APPRENTICE, Element.NECROMANCY, create("zombie_horde", (w, p) -> {
 			if(!w.isRemote){
 				for(int i = 0; i < 3; i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(p, 4, 2);
+					BlockPos pos = BlockUtils.findNearbyFloorSpace(p, 4, 2);
 					if(pos == null) break;
 					EntityZombieMinion zombie = new EntityZombieMinion(w);
 					zombie.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
@@ -375,7 +376,7 @@ public abstract class Forfeit {
 			if(!w.isRemote){
 				for(EnumFacing direction : EnumFacing.HORIZONTALS){
 					BlockPos pos = p.getPosition().offset(direction);
-					if(WizardryUtilities.canBlockBeReplaced(w, pos)) w.setBlockState(pos, WizardryBlocks.snare.getDefaultState());
+					if(BlockUtils.canBlockBeReplaced(w, pos)) w.setBlockState(pos, WizardryBlocks.snare.getDefaultState());
 				}
 			}
 		}));
@@ -390,7 +391,7 @@ public abstract class Forfeit {
 
 		add(Tier.APPRENTICE, Element.EARTH, create("uproot_plants", (w, p) -> {
 			if(!w.isRemote){
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(p.getPosition(), 5);
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition(), 5);
 				sphere.removeIf(pos -> !(w.getBlockState(pos).getBlock() instanceof IPlantable));
 				sphere.forEach(pos -> w.destroyBlock(pos, true));
 			}
@@ -400,17 +401,17 @@ public abstract class Forfeit {
 
 		add(Tier.ADVANCED, Element.EARTH, create("flood", (w, p) -> {
 			if(!w.isRemote){
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(p.getPosition().up(), 2);
-				sphere.removeIf(pos -> !WizardryUtilities.canBlockBeReplaced(w, pos, true));
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition().up(), 2);
+				sphere.removeIf(pos -> !BlockUtils.canBlockBeReplaced(w, pos, true));
 				sphere.forEach(pos -> w.setBlockState(pos, Blocks.WATER.getDefaultState()));
 			}
 		}));
 
 		add(Tier.MASTER, Element.EARTH, create("bury_self", (w, p) -> {
 			if(!w.isRemote){
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(p.getPosition(), 4);
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition(), 4);
 				sphere.removeIf(pos -> !w.getBlockState(pos).isFullCube());
-				sphere.removeIf(pos -> WizardryUtilities.isBlockUnbreakable(w, pos));
+				sphere.removeIf(pos -> BlockUtils.isBlockUnbreakable(w, pos));
 				sphere.forEach(pos -> {
 					EntityFallingBlock block = new EntityFallingBlock(w, pos.getX() + 0.5, pos.getY() + 0.5,
 							pos.getZ() + 0.5, w.getBlockState(pos));
@@ -437,7 +438,7 @@ public abstract class Forfeit {
 		add(Tier.ADVANCED, Element.SORCERY, create("vex_horde", (w, p) -> {
 			if(!w.isRemote){
 				for(int i = 0; i < 4; i++){
-					BlockPos pos = WizardryUtilities.findNearbyFloorSpace(p, 4, 2);
+					BlockPos pos = BlockUtils.findNearbyFloorSpace(p, 4, 2);
 					if(pos == null) break;
 					EntityVexMinion vex = new EntityVexMinion(w);
 					vex.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);

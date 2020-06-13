@@ -3,7 +3,7 @@ package electroblob.wizardry.client.renderer.effect;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.potion.PotionContainment;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.GeometryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,7 +42,7 @@ public class RenderContainmentField {
 
 		if(player.isPotionActive(WizardryPotions.containment)){
 
-			Vec3d centre = WizardryUtilities.getCentre(NBTUtil.getPosFromTag(player.getEntityData().getCompoundTag(PotionContainment.ENTITY_TAG)));
+			Vec3d centre = GeometryUtils.getCentre(NBTUtil.getPosFromTag(player.getEntityData().getCompoundTag(PotionContainment.ENTITY_TAG)));
 			float r = PotionContainment.getContainmentDistance(player.getActivePotionEffect(WizardryPotions.containment).getAmplifier());
 
 			GlStateManager.pushMatrix();

@@ -118,7 +118,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 
 		if(this instanceof Entity){ // Bit of a cheat but it saves having yet another method just to get the world
 
-			Entity entity = WizardryUtilities.getEntityByUUID(((Entity)this).world, getOwnerId());
+			Entity entity = EntityUtils.getEntityByUUID(((Entity)this).world, getOwnerId());
 
 			if(entity != null && !(entity instanceof EntityLivingBase)){ // Should never happen
 				Wizardry.logger.warn("{} has a non-living owner!", this);
@@ -395,7 +395,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 				// no summoner.
 				if(DamageSafetyChecker.attackEntitySafely(event.getEntity(), newSource, event.getAmount(), event.getSource(), false)){
 					// Uses event.getSource().getTrueSource() as this means the target is knocked back from the minion
-					WizardryUtilities.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
+					EntityUtils.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
 					((ISummonedCreature)event.getSource().getTrueSource()).onSuccessfulAttack(event.getEntityLiving());
 					// If the target revenge-targeted the summoner, make it revenge-target the minion instead
 					// (if it didn't revenge-target, do nothing)

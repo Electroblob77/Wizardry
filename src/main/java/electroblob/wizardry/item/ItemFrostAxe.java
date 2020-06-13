@@ -4,9 +4,9 @@ import com.google.common.collect.Multimap;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -41,7 +41,7 @@ public class ItemFrostAxe extends ItemAxe implements IConjuredItem {
 
 		if(slot == EntityEquipmentSlot.MAINHAND){
 			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(POTENCY_MODIFIER,
-					"Potency modifier", IConjuredItem.getDamageMultiplier(stack) - 1, WizardryUtilities.Operations.MULTIPLY_CUMULATIVE));
+					"Potency modifier", IConjuredItem.getDamageMultiplier(stack) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 		}
 
 		return multimap;

@@ -3,8 +3,8 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -46,7 +46,7 @@ public class PocketFurnace extends Spell {
 
 					if(stack.getCount() <= usesLeft){
 						ItemStack stack2 = new ItemStack(result.getItem(), stack.getCount(), result.getItemDamage());
-						if(WizardryUtilities.doesPlayerHaveItem(caster, result.getItem())){
+						if(InventoryUtils.doesPlayerHaveItem(caster, result.getItem())){
 							caster.inventory.addItemStackToInventory(stack2);
 							caster.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
 						}else{

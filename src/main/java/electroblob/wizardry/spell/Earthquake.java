@@ -4,8 +4,9 @@
  import electroblob.wizardry.entity.construct.EntityEarthquake;
  import electroblob.wizardry.item.SpellActions;
  import electroblob.wizardry.registry.WizardryItems;
+ import electroblob.wizardry.util.BlockUtils;
+ import electroblob.wizardry.util.EntityUtils;
  import electroblob.wizardry.util.SpellModifiers;
- import electroblob.wizardry.util.WizardryUtilities;
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.EntityLivingBase;
@@ -51,12 +52,12 @@
 				particleX = x - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = z - 1.0d + 2 * world.rand.nextDouble();
 
-				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
+				IBlockState block = BlockUtils.getBlockEntityIsStandingOn(caster);
 				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, y,
 						particleZ, particleX - x, 0, particleZ - z, Block.getStateId(block));
 			}
 
-			WizardryUtilities.getEntitiesWithinRadius(15, x, y, z, world, EntityPlayer.class)
+			EntityUtils.getEntitiesWithinRadius(15, x, y, z, world, EntityPlayer.class)
 					.forEach(p -> Wizardry.proxy.shakeScreen(p, 12));
 
 		}

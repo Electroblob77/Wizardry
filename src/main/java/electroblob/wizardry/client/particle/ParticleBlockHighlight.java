@@ -1,7 +1,7 @@
 package electroblob.wizardry.client.particle;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.GeometryUtils;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +24,7 @@ public class ParticleBlockHighlight extends ParticleWizardry {
 		this.particleGravity = 0;
 		this.setMaxAge(160);
 		// 5 makes it the exact size of a block face, plus a little bit to account for the anti-z-fighting offset
-		this.particleScale = 5 * (1 + 2 * (float)WizardryUtilities.ANTI_Z_FIGHTING_OFFSET);
+		this.particleScale = 5 * (1 + 2 * (float)GeometryUtils.ANTI_Z_FIGHTING_OFFSET);
 		this.shaded = false;
 	}
 

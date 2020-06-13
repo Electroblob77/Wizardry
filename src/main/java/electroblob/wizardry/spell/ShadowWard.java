@@ -2,11 +2,8 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.util.IElementalDamage;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -68,7 +65,7 @@ public class ShadowWard extends Spell {
 		
 		if(event.getSource() != null && event.getSource().getTrueSource() instanceof EntityLivingBase){
 
-			if(WizardryUtilities.isCasting(event.getEntityLiving(), Spells.shadow_ward) && !event.getSource().isUnblockable()
+			if(EntityUtils.isCasting(event.getEntityLiving(), Spells.shadow_ward) && !event.getSource().isUnblockable()
 					&& !(event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory())){
 
 				event.setCanceled(true);

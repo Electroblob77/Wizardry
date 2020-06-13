@@ -7,10 +7,10 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBow;
@@ -32,7 +32,7 @@ public class ImbueWeapon extends Spell {
 		// Won't work if the weapon already has the enchantment
 		if(WizardData.get(caster) != null){
 
-			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
+			for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(caster)){
 
 				if(isSword(stack)
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.magic_sword)

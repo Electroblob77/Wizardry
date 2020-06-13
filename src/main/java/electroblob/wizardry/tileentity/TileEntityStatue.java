@@ -1,7 +1,7 @@
 package electroblob.wizardry.tileentity;
 
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -108,7 +108,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 		// Breaks the block at light levels of 7 or below, with a higher chance the lower the light level.
 		// The chance is (8 - light level)/12, so at light 0 the chance is 3/4 and at light 7 the chance is 1/12.
 		if(!this.world.isRemote && this.timer % 200 == 0 && this.timer > lifetime && !this.isIce && this.position == 1){
-			if(WizardryUtilities.getLightLevel(world, pos) < this.world.rand.nextInt(12) - 3){
+			if(BlockUtils.getLightLevel(world, pos) < this.world.rand.nextInt(12) - 3){
 				// This is all that is needed because destroyBlock invokes the breakBlock function in
 				// BlockPetrifiedStone
 				// and that function handles all the spawning and stuff.

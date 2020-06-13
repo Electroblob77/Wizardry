@@ -3,8 +3,8 @@ package electroblob.wizardry.client.renderer.overlay;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.RayTracer;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -42,7 +42,7 @@ public class RenderTargetPointers {
 		}
 
 		// Target selection pointer
-		if(mc.player.isSneaking() && wand.getItem() instanceof ISpellCastingItem && WizardryUtilities.isLiving(event.getEntity())
+		if(mc.player.isSneaking() && wand.getItem() instanceof ISpellCastingItem && EntityUtils.isLiving(event.getEntity())
 				&& data != null && data.selectedMinion != null){
 
 			// -> Moved this in here so it isn't called every tick

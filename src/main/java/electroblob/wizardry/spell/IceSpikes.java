@@ -2,8 +2,9 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.construct.EntityIceSpike;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -48,15 +49,15 @@ public class IceSpikes extends SpellConstructRanged<EntityIceSpike> {
 			// First, generate a random vector of length radius with a z component of zero
 			// Then rotate it so that what was south is now the side that was hit
 			Vec3d offset = Vec3d.fromPitchYaw(world.rand.nextFloat() * 180 - 90, world.rand.nextBoolean() ? 0 : 180)
-					.scale(radius).rotateYaw(side.getHorizontalAngle() * (float)Math.PI/180).rotatePitch(WizardryUtilities.getPitch(side) * (float)Math.PI/180);
+					.scale(radius).rotateYaw(side.getHorizontalAngle() * (float)Math.PI/180).rotatePitch(GeometryUtils.getPitch(side) * (float)Math.PI/180);
 
 			if(side.getAxis().isHorizontal()) offset = offset.rotateYaw((float)Math.PI/2);
 
-			Integer surface = WizardryUtilities.getNearestSurface(world, new BlockPos(origin.add(offset)), side,
-					(int)maxRadius, true, WizardryUtilities.SurfaceCriteria.basedOn(World::isBlockFullCube));
+			Integer surface = BlockUtils.getNearestSurface(world, new BlockPos(origin.add(offset)), side,
+					(int)maxRadius, true, BlockUtils.SurfaceCriteria.basedOn(World::isBlockFullCube));
 
 			if(surface != null){
-				Vec3d vec = WizardryUtilities.replaceComponent(origin.add(offset), side.getAxis(), surface)
+				Vec3d vec = GeometryUtils.replaceComponent(origin.add(offset), side.getAxis(), surface)
 						.subtract(new Vec3d(side.getDirectionVec()));
 				super.spawnConstruct(world, vec.x, vec.y, vec.z, side, caster, modifiers);
 			}

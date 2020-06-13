@@ -4,11 +4,8 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -32,7 +29,7 @@ public class FontOfMana extends Spell {
 
 		double maxRadius = getProperty(EFFECT_RADIUS).doubleValue();
 
-		List<EntityPlayer> targets = WizardryUtilities.getEntitiesWithinRadius(
+		List<EntityPlayer> targets = EntityUtils.getEntitiesWithinRadius(
 				maxRadius * modifiers.get(WizardryItems.blast_upgrade),
 				caster.posX, caster.posY, caster.posZ, world, EntityPlayer.class);
 

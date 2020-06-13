@@ -632,7 +632,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 		RayTraceResult rayTrace = RayTracer.standardEntityRayTrace(world, player, 16, false);
 
-		if(rayTrace != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
+		if(rayTrace != null && EntityUtils.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase entity = (EntityLivingBase)rayTrace.entityHit;
 

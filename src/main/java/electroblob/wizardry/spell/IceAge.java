@@ -6,12 +6,8 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import electroblob.wizardry.util.WizardryUtilities.SurfaceCriteria;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +39,7 @@ public class IceAge extends Spell {
 
 		float radius = getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade);
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){
 			if(AllyDesignationSystem.isValidTarget(caster, target)){
@@ -63,13 +59,13 @@ public class IceAge extends Spell {
 			}
 		}
 
-		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
+		if(!world.isRemote && EntityUtils.canDamageBlocks(caster, world)){
 			for(int i = -(int)radius; i <= (int)radius; i++){
 				for(int j = -(int)radius; j <= (int)radius; j++){
 
 					BlockPos pos = new BlockPos(caster).add(i, 0, j);
 
-					Integer y = WizardryUtilities.getNearestSurface(world, new BlockPos(pos), EnumFacing.UP, (int)radius, true, SurfaceCriteria.SOLID_LIQUID_TO_AIR);
+					Integer y = BlockUtils.getNearestSurface(world, new BlockPos(pos), EnumFacing.UP, (int)radius, true, BlockUtils.SurfaceCriteria.SOLID_LIQUID_TO_AIR);
 
 					if(y != null){
 
@@ -79,7 +75,7 @@ public class IceAge extends Spell {
 
 						// Randomised with weighting so that the nearer the block the more likely it is to be snowed.
 						if(y != -1 && world.rand.nextInt((int)(dist * 2) + 1) < radius && dist < radius){
-							WizardryUtilities.freeze(world, pos.down(), true);
+							BlockUtils.freeze(world, pos.down(), true);
 						}
 					}
 				}

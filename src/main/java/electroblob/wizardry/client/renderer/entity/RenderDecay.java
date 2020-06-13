@@ -1,8 +1,8 @@
 package electroblob.wizardry.client.renderer.entity;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.construct.EntityDecay;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -44,7 +44,7 @@ public class RenderDecay extends Render<EntityDecay> {
 
 		GlStateManager.rotate(-90, 1, 0, 0);
 
-		float s = 2 * WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 50);
+		float s = 2 * DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 50);
 		GlStateManager.scale(s, s, s);
 
 		Tessellator tessellator = Tessellator.getInstance();

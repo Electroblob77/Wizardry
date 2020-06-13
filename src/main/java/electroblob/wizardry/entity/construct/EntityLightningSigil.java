@@ -3,11 +3,11 @@ package electroblob.wizardry.entity.construct;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -34,7 +34,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 			this.setDead();
 		}
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
 				this.posZ, this.world);
 
 		for(EntityLivingBase target : targets){
@@ -60,7 +60,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 					// Secondary chaining effect
 					double seekerRange = Spells.lightning_sigil.getProperty(Spell.EFFECT_RADIUS).doubleValue();
 
-					List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
+					List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(seekerRange,
 							target.posX, target.posY + target.height / 2, target.posZ, world);
 
 					for(int j = 0; j < Math.min(secondaryTargets.size(),

@@ -2,9 +2,9 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -178,7 +178,7 @@ public abstract class SpellRay extends Spell {
 		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
 		Vec3d targetPos = null;
 
-		if(!ignoreLivingEntities || !WizardryUtilities.isLiving(target)){
+		if(!ignoreLivingEntities || !EntityUtils.isLiving(target)){
 			targetPos = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height / 2, target.posZ);
 
 		}else{
@@ -261,7 +261,7 @@ public abstract class SpellRay extends Spell {
 			
 		// Change the filter depending on whether living entities are ignored or not
 		RayTraceResult rayTrace = RayTracer.rayTrace(world, origin, endpoint, aimAssist, hitLiquids,
-				ignoreUncollidables, false, Entity.class, ignoreLivingEntities ? WizardryUtilities::isLiving
+				ignoreUncollidables, false, Entity.class, ignoreLivingEntities ? EntityUtils::isLiving
 				: RayTracer.ignoreEntityFilter(caster));
 		
 		boolean flag = false;

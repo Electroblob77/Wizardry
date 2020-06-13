@@ -4,7 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Shield;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -34,7 +34,7 @@ public class RenderShield {
 
 			EntityPlayer player = Minecraft.getMinecraft().player;
 
-			if(WizardData.get(player).getVariable(Shield.SHIELD_KEY) != null && WizardryUtilities.isCasting(player, Spells.shield)){
+			if(WizardData.get(player).getVariable(Shield.SHIELD_KEY) != null && EntityUtils.isCasting(player, Spells.shield)){
 
 				GlStateManager.pushMatrix();
 
@@ -76,7 +76,7 @@ public class RenderShield {
 
 		EntityPlayer player = event.getEntityPlayer();
 
-		if(WizardData.get(player).getVariable(Shield.SHIELD_KEY) != null && WizardryUtilities.isCasting(player, Spells.shield)){
+		if(WizardData.get(player).getVariable(Shield.SHIELD_KEY) != null && EntityUtils.isCasting(player, Spells.shield)){
 
 			GlStateManager.pushMatrix();
 

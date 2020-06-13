@@ -2,8 +2,8 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.construct.EntityDecay;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -37,7 +37,7 @@ public class Decay extends SpellConstructRanged<EntityDecay> {
 		int verticalRange = (int)(6 * modifiers.get(WizardryItems.blast_upgrade));
 
 		for(int i=0; i<quantity; i++){
-			BlockPos pos = WizardryUtilities.findNearbyFloorSpace(world, origin, horizontalRange, verticalRange, false);
+			BlockPos pos = BlockUtils.findNearbyFloorSpace(world, origin, horizontalRange, verticalRange, false);
 			if(pos == null) break;
 			super.spawnConstruct(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, side, caster, modifiers);
 		}

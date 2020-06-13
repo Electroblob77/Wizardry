@@ -2,7 +2,7 @@ package electroblob.wizardry.client.renderer.effect;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,7 +32,7 @@ public class RenderShadowWard {
 
 			EntityPlayer player = Minecraft.getMinecraft().player;
 
-			if(WizardryUtilities.isCasting(player, Spells.shadow_ward)){
+			if(EntityUtils.isCasting(player, Spells.shadow_ward)){
 
 				GlStateManager.pushMatrix();
 
@@ -94,7 +94,7 @@ public class RenderShadowWard {
 
 		EntityPlayer player = event.getEntityPlayer();
 
-		if(WizardryUtilities.isCasting(player, Spells.shadow_ward)){
+		if(EntityUtils.isCasting(player, Spells.shadow_ward)){
 
 			GlStateManager.pushMatrix();
 

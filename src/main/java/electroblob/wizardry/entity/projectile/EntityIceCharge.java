@@ -4,11 +4,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -74,7 +72,7 @@ public class EntityIceCharge extends EntityBomb {
 
 			double radius = Spells.ice_charge.getProperty(Spell.EFFECT_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			// Slows targets
@@ -93,8 +91,8 @@ public class EntityIceCharge extends EntityBomb {
 
 					BlockPos pos = new BlockPos(this.posX + i, this.posY, this.posZ + j);
 
-					Integer y = WizardryUtilities.getNearestSurface(world, pos, EnumFacing.UP, 7, true,
-							WizardryUtilities.SurfaceCriteria.SOLID_LIQUID_TO_AIR);
+					Integer y = BlockUtils.getNearestSurface(world, pos, EnumFacing.UP, 7, true,
+							BlockUtils.SurfaceCriteria.SOLID_LIQUID_TO_AIR);
 
 					if(y != null){
 

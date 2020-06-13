@@ -12,8 +12,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.Random;
 
 /**
- * Utility class containing some useful static methods for drawing GUIs. Previously these were spread across the main
- * {@code WizardryUtilities} class and various individual GUI classes.
+ * Utility class containing some useful static methods for drawing GUIs, as well as general rendering.
  * 
  * @author Electroblob
  * @since Wizardry 4.2
@@ -267,6 +266,24 @@ public final class DrawingUtils {
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
+	}
+
+	/**
+	 * Calculates a factor between 0 and 1 that results in a smooth, aesthetically-pleasing animation when used to scale
+	 * things. Mainly for rendering, but can be used anywhere since it's just a mathematical formula.
+	 * @param lifetime The lifetime of the thing being animated, in ticks (if this is negative, disappearing is ignored)
+	 * @param ticksExisted The current age of the thing being animated, in ticks
+	 * @param partialTicks The current partial tick time
+	 * @param startLength The length of the appearing animation, in ticks
+	 * @param endLength The length of the disappearing animation, in ticks
+	 * @return A fraction between 0 and 1, with the value at the very start and end being 0 and the constant middle
+	 * section having a value of 1.
+	 */
+	public static float smoothScaleFactor(int lifetime, int ticksExisted, float partialTicks, int startLength, int endLength){
+		float age = ticksExisted + partialTicks;
+		float s = MathHelper.clamp(age < startLength || lifetime < 0 ? age/startLength : (lifetime - age) / endLength, 0, 1);
+		s = (float)Math.pow(s, 0.4); // Smooths the animation
+		return s;
 	}
 
 }

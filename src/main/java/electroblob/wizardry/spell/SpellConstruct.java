@@ -3,8 +3,8 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -122,7 +122,7 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 		Integer floor = (int)y;
 
 		if(requiresFloor){
-			floor = WizardryUtilities.getNearestFloor(world, new BlockPos(x, y, z), 1);
+			floor = BlockUtils.getNearestFloor(world, new BlockPos(x, y, z), 1);
 			direction = EnumFacing.UP;
 		}
 

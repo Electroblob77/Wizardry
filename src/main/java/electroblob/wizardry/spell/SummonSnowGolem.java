@@ -2,10 +2,10 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.monster.EntitySnowman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
@@ -23,7 +23,7 @@ public class SummonSnowGolem extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, 2, 4);
+		BlockPos pos = BlockUtils.findNearbyFloorSpace(caster, 2, 4);
 		if(pos == null) return false;
 
 		if(!world.isRemote){

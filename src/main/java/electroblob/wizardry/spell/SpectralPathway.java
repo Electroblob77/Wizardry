@@ -4,8 +4,8 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityTimer;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
@@ -33,8 +33,8 @@ public class SpectralPathway extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		// Won't work if caster is airborne or if they are already on a bridge (prevents infinite bridges)
-		if(WizardryUtilities.getBlockEntityIsStandingOn(caster).getBlock() == Blocks.AIR
-				|| WizardryUtilities.getBlockEntityIsStandingOn(caster).getBlock() == WizardryBlocks.spectral_block){
+		if(BlockUtils.getBlockEntityIsStandingOn(caster).getBlock() == Blocks.AIR
+				|| BlockUtils.getBlockEntityIsStandingOn(caster).getBlock() == WizardryBlocks.spectral_block){
 			return false;
 		}
 
@@ -68,7 +68,7 @@ public class SpectralPathway extends Spell {
 	}
 
 	private boolean placePathwayBlockIfPossible(World world, BlockPos pos, float durationMultiplier){
-		if(WizardryUtilities.canBlockBeReplaced(world, pos, true)){
+		if(BlockUtils.canBlockBeReplaced(world, pos, true)){
 			world.setBlockState(pos, WizardryBlocks.spectral_block.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityTimer){
 				((TileEntityTimer)world.getTileEntity(pos)).setLifetime((int)(getProperty(DURATION).floatValue() * durationMultiplier));

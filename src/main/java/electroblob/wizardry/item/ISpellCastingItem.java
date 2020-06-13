@@ -2,6 +2,7 @@ package electroblob.wizardry.item;
 
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,7 +19,7 @@ import javax.annotation.Nonnull;
  * this interface if appropriate.</i>
  * <p></p>
  * This interface is used for the following:<br>
- *     - General-purpose detection of continuous spell casting (see {@link electroblob.wizardry.util.WizardryUtilities#isCasting(EntityLivingBase, Spell)})<br>
+ *     - General-purpose detection of continuous spell casting (see {@link EntityUtils#isCasting(EntityLivingBase, Spell)})<br>
  *     - Display of the arcane workbench tooltip (in conjunction with {@link IManaStoringItem})<br>
  *     - Spell HUD visibility<br>
  *     - Spell switching controls (they won't do anything unless the player is holding an {@code ISpellCastingItem})<br>

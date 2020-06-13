@@ -1,6 +1,6 @@
 package electroblob.wizardry.worldgen;
 
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockWoodSlab;
@@ -75,13 +75,13 @@ public class WoodTypeTemplateProcessor implements ITemplateProcessor {
 			return new Template.BlockInfo(info.pos, info.blockState.withProperty(BlockWoodSlab.VARIANT, woodType), info.tileentityData);
 		// This is a mess, no wonder the flattening happened
 		}else if(DOORS.containsValue(info.blockState.getBlock())){
-			return new Template.BlockInfo(info.pos, WizardryUtilities.copyState(DOORS.get(woodType), info.blockState), info.tileentityData);
+			return new Template.BlockInfo(info.pos, BlockUtils.copyState(DOORS.get(woodType), info.blockState), info.tileentityData);
 		}else if(STAIRS.containsValue(info.blockState.getBlock())){
-			return new Template.BlockInfo(info.pos, WizardryUtilities.copyState(STAIRS.get(woodType), info.blockState), info.tileentityData);
+			return new Template.BlockInfo(info.pos, BlockUtils.copyState(STAIRS.get(woodType), info.blockState), info.tileentityData);
 		}else if(FENCES.containsValue(info.blockState.getBlock())){
-			return new Template.BlockInfo(info.pos, WizardryUtilities.copyState(FENCES.get(woodType), info.blockState), info.tileentityData);
+			return new Template.BlockInfo(info.pos, BlockUtils.copyState(FENCES.get(woodType), info.blockState), info.tileentityData);
 		}else if(FENCE_GATES.containsValue(info.blockState.getBlock())){
-			return new Template.BlockInfo(info.pos, WizardryUtilities.copyState(FENCE_GATES.get(woodType), info.blockState), info.tileentityData);
+			return new Template.BlockInfo(info.pos, BlockUtils.copyState(FENCE_GATES.get(woodType), info.blockState), info.tileentityData);
 		}
 
 		return info;

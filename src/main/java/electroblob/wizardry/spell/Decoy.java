@@ -2,8 +2,8 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.living.EntityDecoy;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,7 +57,7 @@ public class Decoy extends Spell {
 			world.spawnEntity(decoy);
 
 			// Tricks any mobs that are targeting the caster into targeting the decoy instead.
-			for(EntityLiving creature : WizardryUtilities.getEntitiesWithinRadius(16, caster.posX, caster.posY,
+			for(EntityLiving creature : EntityUtils.getEntitiesWithinRadius(16, caster.posX, caster.posY,
 					caster.posZ, world, EntityLiving.class)){
 				// More likely to trick mobs the higher the damage multiplier
 				// The default base value is 0.5, so modifiers of 2 or more will guarantee mobs are tricked

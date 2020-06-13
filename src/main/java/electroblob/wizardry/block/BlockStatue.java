@@ -1,7 +1,7 @@
 package electroblob.wizardry.block;
 
 import electroblob.wizardry.tileentity.TileEntityStatue;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -197,7 +197,7 @@ public class BlockStatue extends Block implements ITileEntityProvider {
 		entity.extinguish();
 
 		// Short mobs such as spiders and pigs
-		if((entity.height < 1.2 || entity.isChild()) && WizardryUtilities.canBlockBeReplaced(world, pos)){
+		if((entity.height < 1.2 || entity.isChild()) && BlockUtils.canBlockBeReplaced(world, pos)){
 			
 			world.setBlockState(pos, this.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityStatue){
@@ -210,8 +210,8 @@ public class BlockStatue extends Block implements ITileEntityProvider {
 			return true;
 		}
 		// Normal sized mobs like zombies and skeletons
-		else if(entity.height < 2.5 && WizardryUtilities.canBlockBeReplaced(world, pos)
-				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
+		else if(entity.height < 2.5 && BlockUtils.canBlockBeReplaced(world, pos)
+				&& BlockUtils.canBlockBeReplaced(world, pos.up())){
 			
 			world.setBlockState(pos, this.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityStatue){
@@ -229,9 +229,9 @@ public class BlockStatue extends Block implements ITileEntityProvider {
 			return true;
 		}
 		// Tall mobs like endermen
-		else if(WizardryUtilities.canBlockBeReplaced(world, pos)
-				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())
-				&& WizardryUtilities.canBlockBeReplaced(world, pos.up(2))){
+		else if(BlockUtils.canBlockBeReplaced(world, pos)
+				&& BlockUtils.canBlockBeReplaced(world, pos.up())
+				&& BlockUtils.canBlockBeReplaced(world, pos.up(2))){
 			
 			world.setBlockState(pos, this.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityStatue){

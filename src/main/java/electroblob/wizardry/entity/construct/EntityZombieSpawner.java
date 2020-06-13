@@ -6,9 +6,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.SpellMinion;
 import electroblob.wizardry.spell.ZombieApocalypse;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities.Operations;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -49,7 +49,7 @@ public class EntityZombieSpawner extends EntityMagicConstruct {
 				zombie.setLifetime(Spells.zombie_apocalypse.getProperty(SpellMinion.MINION_LIFETIME).intValue());
 				IAttributeInstance attribute = zombie.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
 				attribute.applyModifier(new AttributeModifier(SpellMinion.POTENCY_ATTRIBUTE_MODIFIER,
-						damageMultiplier - 1, Operations.MULTIPLY_CUMULATIVE));
+						damageMultiplier - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 				zombie.setHealth(zombie.getMaxHealth()); // Need to set this because we may have just modified the value
 				zombie.hurtResistantTime = 30; // Prevent fall damage
 				zombie.hideParticles(); // Hide spawn particles or they pop out the top of the hidden box

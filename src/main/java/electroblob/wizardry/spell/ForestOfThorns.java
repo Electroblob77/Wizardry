@@ -5,8 +5,8 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityPlayerSaveTimed;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -70,7 +70,7 @@ public class ForestOfThorns extends Spell {
 
 					if(distance > radius || distance < radius - 1.5) continue;
 
-					Integer y = WizardryUtilities.getNearestSurface(world, origin.add(x, 0, z), EnumFacing.UP, (int)radius, true, WizardryUtilities.SurfaceCriteria.BUILDABLE);
+					Integer y = BlockUtils.getNearestSurface(world, origin.add(x, 0, z), EnumFacing.UP, (int)radius, true, BlockUtils.SurfaceCriteria.BUILDABLE);
 					if(y != null) ring.add(new BlockPos(origin.getX() + x, y, origin.getZ() + z));
 				}
 			}

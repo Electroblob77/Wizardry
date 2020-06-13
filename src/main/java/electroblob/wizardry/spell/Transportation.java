@@ -9,10 +9,7 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketTransportation;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.Location;
-import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagList;
@@ -128,7 +125,7 @@ public class Transportation extends Spell {
 	public static boolean isLocationAimedAt(EntityPlayer player, BlockPos pos, float partialTicks){
 
 		Vec3d origin = player.getPositionEyes(partialTicks);
-		Vec3d centre = WizardryUtilities.getCentre(pos);
+		Vec3d centre = GeometryUtils.getCentre(pos);
 		Vec3d direction = centre.subtract(origin);
 		double distance = direction.length();
 
@@ -139,7 +136,7 @@ public class Transportation extends Spell {
 
 		Vec3d origin = player.getPositionEyes(partialTicks);
 		Vec3d look = player.getLook(partialTicks);
-		Vec3d centre = WizardryUtilities.getCentre(pos);
+		Vec3d centre = GeometryUtils.getCentre(pos);
 		Vec3d direction = centre.subtract(origin);
 		double distance = direction.length();
 

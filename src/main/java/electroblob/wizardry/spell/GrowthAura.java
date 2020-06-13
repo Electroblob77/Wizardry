@@ -3,8 +3,8 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +33,7 @@ public class GrowthAura extends Spell {
 
 		boolean flag = false;
 
-		List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(),
+		List<BlockPos> sphere = BlockUtils.getBlockSphere(caster.getPosition(),
 				getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade));
 
 		for(BlockPos pos : sphere){

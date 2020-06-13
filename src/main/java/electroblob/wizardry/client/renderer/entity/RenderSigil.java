@@ -1,9 +1,9 @@
 package electroblob.wizardry.client.renderer.entity;
 
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.construct.EntityHealAura;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -61,7 +61,7 @@ public class RenderSigil extends Render<EntityMagicConstruct> {
 		// Healing aura rotates slowly
 		if(entity instanceof EntityHealAura) GlStateManager.rotate(entity.ticksExisted / 3.0f, 0, 0, 1);
 
-		float s = WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
+		float s = DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
 		GlStateManager.scale(scale * s, scale * s, scale * s);
 
 		Tessellator tessellator = Tessellator.getInstance();

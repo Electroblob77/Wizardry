@@ -2,11 +2,11 @@ package electroblob.wizardry.client.renderer.tileentity;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockMagicLight;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityMagicLight;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -43,7 +43,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 
 		GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
 
-		float s = WizardryUtilities.smoothScaleFactor(tileentity.getLifetime(), tileentity.timer, partialTicks, 10, 10);
+		float s = DrawingUtils.smoothScaleFactor(tileentity.getLifetime(), tileentity.timer, partialTicks, 10, 10);
 		GlStateManager.scale(s, s, s);
 
 		// Renders the aura effect

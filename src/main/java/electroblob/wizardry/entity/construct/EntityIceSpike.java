@@ -4,9 +4,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
 import net.minecraft.potion.PotionEffect;
@@ -27,9 +27,9 @@ public class EntityIceSpike extends EntityMagicConstruct {
 
 	public void setFacing(EnumFacing facing){
 		this.facing = facing;
-		this.setRotation(-facing.getHorizontalAngle(), WizardryUtilities.getPitch(facing));
+		this.setRotation(-facing.getHorizontalAngle(), GeometryUtils.getPitch(facing));
 		float yaw = (-facing.getHorizontalAngle()) * (float)Math.PI/180;
-		float pitch = (WizardryUtilities.getPitch(facing) - 90) * (float)Math.PI/180;
+		float pitch = (GeometryUtils.getPitch(facing) - 90) * (float)Math.PI/180;
 		Vec3d min = this.getPositionVector().add(new Vec3d(-width/2, 0, -width/2).rotatePitch(pitch).rotateYaw(yaw));
 		Vec3d max = this.getPositionVector().add(new Vec3d(width/2, height, width/2).rotatePitch(pitch).rotateYaw(yaw));
 		this.setEntityBoundingBox(new AxisAlignedBB(min.x, min.y, min.z, max.x, max.y, max.z));

@@ -17,11 +17,8 @@ import electroblob.wizardry.packet.PacketPossession;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -249,7 +246,7 @@ public class Possession extends SpellRay {
 
 					possessor.getAttributeMap().getAttributeInstance(attribute).applyModifier(new AttributeModifier(
 							INHERITED_ATTRIBUTES.get(attribute), "possessionModifier", targetValue / currentValue,
-							WizardryUtilities.Operations.MULTIPLY_FLAT));
+							EntityUtils.Operations.MULTIPLY_FLAT));
 				}
 			}
 
@@ -262,7 +259,7 @@ public class Possession extends SpellRay {
 
 				// Targeting
 
-				for(EntityLiving creature : WizardryUtilities.getEntitiesWithinRadius(16, possessor.posX,
+				for(EntityLiving creature : EntityUtils.getEntitiesWithinRadius(16, possessor.posX,
 						possessor.posY, possessor.posZ, possessor.world, EntityLiving.class)){
 					// Mobs are dumb, if a player possesses something they're like "Huh?! Where'd you go?"
 					// Of course, this won't last long if the player attacks them, since they'll revenge-target them
@@ -607,7 +604,7 @@ public class Possession extends SpellRay {
 						IProjectile projectile = factory.apply(possessor.world);
 						Vec3d look = possessor.getLookVec();
 						((Entity)projectile).setPosition(possessor.posX + look.x, possessor.posY + possessor.getEyeHeight() + look.y, possessor.posZ + look.z);
-						projectile.shoot(look.x, look.y, look.z, 1.6f, WizardryUtilities.getDefaultAimingError(possessor.world.getDifficulty()));
+						projectile.shoot(look.x, look.y, look.z, 1.6f, EntityUtils.getDefaultAimingError(possessor.world.getDifficulty()));
 
 						if(projectile instanceof EntityMagicProjectile) ((EntityMagicProjectile)projectile).setCaster(possessor);
 						else if(projectile instanceof EntityMagicArrow) ((EntityMagicArrow)projectile).setCaster(possessor);

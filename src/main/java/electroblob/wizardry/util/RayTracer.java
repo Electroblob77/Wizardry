@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 /**
  * Contains a number of static methods that perform raytracing and related functions. This was split off from
- * {@link WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
+ * {@link JavaUtils} as of wizardry 4.2 in an effort to make the code easier to navigate.
  *
  * @author Electroblob
  * @since Wizardry 4.2
@@ -160,7 +160,7 @@ public final class RayTracer {
 			// ring of fire, but doing so will stop forcefields blocking particles
 			//if(!entity.canBeCollidedWith()) continue;
 
-			float fuzziness = WizardryUtilities.isLiving(entity) ? aimAssist : 0; // Only living entities have aim assist
+			float fuzziness = EntityUtils.isLiving(entity) ? aimAssist : 0; // Only living entities have aim assist
 
 			if(entity instanceof ICustomHitbox){ // Custom hitboxes
 				intercept = ((ICustomHitbox)entity).calculateIntercept(origin, endpoint, fuzziness);

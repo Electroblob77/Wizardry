@@ -3,7 +3,7 @@ package electroblob.wizardry.client.particle;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.entity.ICustomHitbox;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -467,7 +467,7 @@ public abstract class ParticleWizardry extends Particle {
 
 			double searchRadius = 20;
 
-			List<Entity> nearbyEntities = WizardryUtilities.getEntitiesWithinRadius(searchRadius, this.posX,
+			List<Entity> nearbyEntities = EntityUtils.getEntitiesWithinRadius(searchRadius, this.posX,
 					this.posY, this.posZ, world, Entity.class);
 
 			nearbyEntities.removeIf(e -> !(e instanceof ICustomHitbox && ((ICustomHitbox)e).contains(new Vec3d(this.posX, this.posY, this.posZ))));

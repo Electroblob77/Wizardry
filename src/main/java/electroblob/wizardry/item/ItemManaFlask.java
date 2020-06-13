@@ -3,7 +3,8 @@ package electroblob.wizardry.item;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.registry.WizardryTabs;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -61,7 +62,7 @@ public class ItemManaFlask extends Item {
 
 		ItemStack flask = player.getHeldItem(hand);
 
-		List<ItemStack> stacks = WizardryUtilities.getPrioritisedHotbarAndOffhand(player);
+		List<ItemStack> stacks = InventoryUtils.getPrioritisedHotbarAndOffhand(player);
 		stacks.addAll(player.inventory.armorInventory); // player#getArmorInventoryList() only returns an Iterable
 
 		// Find the chargeable item with the least mana
@@ -73,8 +74,8 @@ public class ItemManaFlask extends Item {
 
 			((IManaStoringItem)toCharge.getItem()).rechargeMana(toCharge, size.capacity);
 
-			WizardryUtilities.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_USE, 1, 1);
-			WizardryUtilities.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_RECHARGE, 0.7f, 1.1f);
+			EntityUtils.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_USE, 1, 1);
+			EntityUtils.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_RECHARGE, 0.7f, 1.1f);
 
 			if(!player.isCreative()) flask.shrink(1);
 			player.getCooldownTracker().setCooldown(this, 20);

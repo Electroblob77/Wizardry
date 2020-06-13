@@ -2,7 +2,7 @@ package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
@@ -25,7 +25,7 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(width/2, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(width/2, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 
@@ -34,7 +34,7 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue();
 
 					world.newExplosion(this.getCaster(), this.posX, this.posY, this.posZ, strength, true,
-							getCaster() != null && WizardryUtilities.canDamageBlocks(getCaster(), world));
+							getCaster() != null && EntityUtils.canDamageBlocks(getCaster(), world));
 
 					// The trap is destroyed once triggered.
 					this.setDead();

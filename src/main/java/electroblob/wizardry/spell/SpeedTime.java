@@ -3,9 +3,9 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -93,7 +93,7 @@ public class SpeedTime extends Spell {
 
 		if(!world.isRemote){
 
-			List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(), radius);
+			List<BlockPos> sphere = BlockUtils.getBlockSphere(caster.getPosition(), radius);
 
 			for(BlockPos pos : sphere){
 

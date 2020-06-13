@@ -2,7 +2,7 @@ package electroblob.wizardry.client.renderer.tileentity;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.spell.ArcaneLock;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.GeometryUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -74,7 +74,7 @@ public class RenderArcaneLock {
 					buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 				}
 
-				Vec3d[] vertices = WizardryUtilities.getVertices(world.getBlockState(tileentity.getPos()).getBoundingBox(world, tileentity.getPos()).grow(0.05).offset(tileentity.getPos()));
+				Vec3d[] vertices = GeometryUtils.getVertices(world.getBlockState(tileentity.getPos()).getBoundingBox(world, tileentity.getPos()).grow(0.05).offset(tileentity.getPos()));
 
 				drawFace(buffer, vertices[0], vertices[1], vertices[3], vertices[2], 0, 0, 1, 1); // Bottom
 				drawFace(buffer, vertices[6], vertices[7], vertices[2], vertices[3], 0, 0, 1, 1); // South

@@ -2,10 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
@@ -26,7 +23,7 @@ public class GroupHeal extends Spell {
 
 		boolean flag = false;
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(getProperty(EFFECT_RADIUS).floatValue()
+		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(getProperty(EFFECT_RADIUS).floatValue()
 				* modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){

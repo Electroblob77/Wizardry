@@ -4,9 +4,9 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -64,7 +64,7 @@ public class PhaseStep extends Spell {
 
 				// Prevents the player from teleporting through unbreakable blocks, so they cannot cheat in other
 				// mods' mazes and dungeons.
-				if((WizardryUtilities.isBlockUnbreakable(world, pos1) || WizardryUtilities.isBlockUnbreakable(world, pos1.up()))
+				if((BlockUtils.isBlockUnbreakable(world, pos1) || BlockUtils.isBlockUnbreakable(world, pos1.up()))
 						&& !Wizardry.settings.teleportThroughUnbreakableBlocks)
 					break; // Don't return false yet, there are other possible outcomes below now
 

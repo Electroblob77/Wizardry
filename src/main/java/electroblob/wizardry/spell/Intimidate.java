@@ -3,10 +3,10 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,7 +45,7 @@ public class Intimidate extends Spell {
 
 		if(!world.isRemote){
 
-			List<EntityCreature> entities = WizardryUtilities.getEntitiesWithinRadius(
+			List<EntityCreature> entities = EntityUtils.getEntitiesWithinRadius(
 					getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.range_upgrade),
 					caster.posX, caster.posY, caster.posZ, world, EntityCreature.class);
 
@@ -126,7 +126,7 @@ public class Intimidate extends Spell {
 
 			if(entityNBT != null && entityNBT.hasUniqueId(NBT_KEY)){
 
-				Entity caster = WizardryUtilities.getEntityByUUID(creature.world, entityNBT.getUniqueId(NBT_KEY));
+				Entity caster = EntityUtils.getEntityByUUID(creature.world, entityNBT.getUniqueId(NBT_KEY));
 
 				if(caster instanceof EntityLivingBase){
 					double distance = BASE_AVOID_DISTANCE + AVOID_DISTANCE_PER_LEVEL

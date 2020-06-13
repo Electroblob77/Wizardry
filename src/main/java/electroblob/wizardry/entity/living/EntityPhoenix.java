@@ -4,8 +4,8 @@ import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -161,7 +161,7 @@ public class EntityPhoenix extends EntitySummonedCreature implements ISpellCaste
 	public void onLivingUpdate(){
 
 		// Makes the phoenix hover.
-		Integer floorLevel = WizardryUtilities.getNearestFloor(world, new BlockPos(this), 4);
+		Integer floorLevel = BlockUtils.getNearestFloor(world, new BlockPos(this), 4);
 
 		if(floorLevel == null || this.posY - floorLevel > 3){
 			this.motionY = -0.1;

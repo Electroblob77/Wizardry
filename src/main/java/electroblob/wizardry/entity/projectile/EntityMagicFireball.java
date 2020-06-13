@@ -3,10 +3,10 @@ package electroblob.wizardry.entity.projectile;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -84,7 +84,7 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 
 			}else{
 
-				if(this.getThrower() == null || WizardryUtilities.canDamageBlocks(this.getThrower(), world)){
+				if(this.getThrower() == null || EntityUtils.canDamageBlocks(this.getThrower(), world)){
 
 					BlockPos blockpos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
 

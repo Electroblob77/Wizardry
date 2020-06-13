@@ -1,9 +1,9 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities.Operations;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -67,7 +67,7 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 
 		// Can't call super, so the code from the next level up (EntityLiving) had to be copied as well.
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE)
-				.applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, Operations.MULTIPLY_FLAT));
+				.applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, EntityUtils.Operations.MULTIPLY_FLAT));
 
 		if(this.rand.nextFloat() < 0.05F){
 			this.setLeftHanded(true);

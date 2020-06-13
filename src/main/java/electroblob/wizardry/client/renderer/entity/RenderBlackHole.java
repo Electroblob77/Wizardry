@@ -1,9 +1,9 @@
 package electroblob.wizardry.client.renderer.entity;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.client.renderer.RayHelper;
 import electroblob.wizardry.entity.construct.EntityBlackHole;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.Render;
@@ -50,7 +50,7 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		float s = WizardryUtilities.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
+		float s = DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
 		GlStateManager.scale(s, s, s);
 
 		this.bindTexture(RAY_TEXTURE);

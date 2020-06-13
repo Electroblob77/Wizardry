@@ -5,8 +5,8 @@ import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.entity.projectile.EntityBomb;
 import electroblob.wizardry.entity.projectile.EntityMagicProjectile;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -128,7 +128,7 @@ public class SpellProjectile<T extends EntityMagicProjectile> extends Spell {
 				T projectile = projectileFactory.apply(world);
 				// Sets the necessary parameters
 				int aimingError = caster instanceof ISpellCaster ? ((ISpellCaster)caster).getAimingError(world.getDifficulty())
-						: WizardryUtilities.getDefaultAimingError(world.getDifficulty());
+						: EntityUtils.getDefaultAimingError(world.getDifficulty());
 				projectile.aim(caster, target, calculateVelocity(projectile, modifiers, caster.getEyeHeight()
 						- (float)EntityMagicProjectile.LAUNCH_Y_OFFSET), aimingError);
 				projectile.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);

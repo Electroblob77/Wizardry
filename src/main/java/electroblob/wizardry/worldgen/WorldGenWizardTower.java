@@ -5,7 +5,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
 import electroblob.wizardry.entity.living.EntityWizard;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.GeometryUtils;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockStainedHardenedClay;
 import net.minecraft.block.state.IBlockState;
@@ -110,7 +110,7 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 
 		for(Map.Entry<BlockPos, String> entry : dataBlocks.entrySet()){
 
-			Vec3d vec = WizardryUtilities.getCentre(entry.getKey());
+			Vec3d vec = GeometryUtils.getCentre(entry.getKey());
 
 			if(entry.getValue().equals(WIZARD_DATA_BLOCK_TAG)){
 

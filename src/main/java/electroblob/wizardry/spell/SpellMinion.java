@@ -4,9 +4,9 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
-import electroblob.wizardry.util.WizardryUtilities.Operations;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -148,7 +148,7 @@ public class SpellMinion<T extends EntityLiving & ISummonedCreature> extends Spe
 				int range = getProperty(SUMMON_RADIUS).intValue();
 
 				// Try and find a nearby floor space
-				BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, range, range*2);
+				BlockPos pos = BlockUtils.findNearbyFloorSpace(caster, range, range*2);
 
 				if(flying){
 					if(pos != null){
@@ -174,10 +174,10 @@ public class SpellMinion<T extends EntityLiving & ISummonedCreature> extends Spe
 				minion.setLifetime((int)(getProperty(MINION_LIFETIME).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 				IAttributeInstance attribute = minion.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
 				if(attribute != null) attribute.applyModifier( // Apparently some things don't have an attack damage
-						new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.get(SpellModifiers.POTENCY) - 1, Operations.MULTIPLY_CUMULATIVE));
+						new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.get(SpellModifiers.POTENCY) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 				// This is only used for artefacts, but it's a nice example of custom spell modifiers
 				minion.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).applyModifier(
-						new AttributeModifier(HEALTH_MODIFIER, modifiers.get(HEALTH_MODIFIER) - 1, Operations.MULTIPLY_CUMULATIVE));
+						new AttributeModifier(HEALTH_MODIFIER, modifiers.get(HEALTH_MODIFIER) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 				minion.setHealth(minion.getMaxHealth()); // Need to set this because we may have just modified the value
 
 				this.addMinionExtras(minion, pos, caster, modifiers, i);

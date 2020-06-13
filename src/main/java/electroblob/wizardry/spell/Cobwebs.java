@@ -5,8 +5,8 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityTimer;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -42,7 +42,7 @@ public class Cobwebs extends SpellRay {
 
 		float radius = getProperty(EFFECT_RADIUS).floatValue() + 0.73f * blastUpgradeCount;
 
-		List<BlockPos> sphere = WizardryUtilities.getBlockSphere(pos, radius * modifiers.get(WizardryItems.blast_upgrade));
+		List<BlockPos> sphere = BlockUtils.getBlockSphere(pos, radius * modifiers.get(WizardryItems.blast_upgrade));
 
 		for(BlockPos pos1 : sphere){
 

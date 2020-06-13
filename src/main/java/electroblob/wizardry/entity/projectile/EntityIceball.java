@@ -4,10 +4,8 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -47,12 +45,12 @@ public class EntityIceball extends EntityMagicProjectile {
 
 			}else{
 
-				if(this.getThrower() == null || WizardryUtilities.canDamageBlocks(this.getThrower(), world)){
+				if(this.getThrower() == null || EntityUtils.canDamageBlocks(this.getThrower(), world)){
 
 					BlockPos pos = rayTrace.getBlockPos();
 
 					if(rayTrace.sideHit == EnumFacing.UP && !world.isRemote && world.isSideSolid(pos, EnumFacing.UP)
-							&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
+							&& BlockUtils.canBlockBeReplaced(world, pos.up())){
 						world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
 					}
 				}

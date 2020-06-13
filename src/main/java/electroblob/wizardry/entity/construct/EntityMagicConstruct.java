@@ -4,7 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -147,7 +147,7 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 	@Nullable
 	public EntityLivingBase getCaster(){ // Kept despite the above method because it returns an EntityLivingBase
 
-		Entity entity = WizardryUtilities.getEntityByUUID(world, getOwnerId());
+		Entity entity = EntityUtils.getEntityByUUID(world, getOwnerId());
 
 		if(entity != null && !(entity instanceof EntityLivingBase)){ // Should never happen
 			Wizardry.logger.warn("{} has a non-living owner!", this);

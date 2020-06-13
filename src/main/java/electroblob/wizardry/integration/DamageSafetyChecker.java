@@ -2,7 +2,7 @@ package electroblob.wizardry.integration;
 
 import com.google.common.collect.ImmutableSet;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.Mod;
@@ -58,7 +58,7 @@ public final class DamageSafetyChecker {
 	 * @param fallback The fallback damage source for when excessive looping is detected. This <b>must not</b> be the
 	 *                 same as the re-applied source, or this method is pointless! Usually it will be more general.
 	 * @param knockback True to apply knockback as normal, false to use the knockback-free methods in WizardryUtilities
-	 * (see {@link WizardryUtilities#attackEntityWithoutKnockback(Entity, DamageSource, float)}).
+	 * (see {@link EntityUtils#attackEntityWithoutKnockback(Entity, DamageSource, float)}).
 	 */
 	public static boolean attackEntitySafely(Entity target, DamageSource source, float damage,
 											 String originalSourceName, DamageSource fallback, boolean knockback){
@@ -70,7 +70,7 @@ public final class DamageSafetyChecker {
 				// No harm in still incrementing the counter
 				attacksThisTick++;
 				return knockback ? target.attackEntityFrom(fallback, damage)
-						: WizardryUtilities.attackEntityWithoutKnockback(target, fallback, damage);
+						: EntityUtils.attackEntityWithoutKnockback(target, fallback, damage);
 			}
 		}
 
@@ -88,13 +88,13 @@ public final class DamageSafetyChecker {
 			// Fallback behaviour
 			attacksThisTick++;
 			return knockback ? target.attackEntityFrom(fallback, damage)
-					: WizardryUtilities.attackEntityWithoutKnockback(target, fallback, damage);
+					: EntityUtils.attackEntityWithoutKnockback(target, fallback, damage);
 
 		}else{
 			// Normal behaviour
 			attacksThisTick++;
 			return knockback ? target.attackEntityFrom(source, damage)
-					: WizardryUtilities.attackEntityWithoutKnockback(target, source, damage);
+					: EntityUtils.attackEntityWithoutKnockback(target, source, damage);
 		}
 	}
 

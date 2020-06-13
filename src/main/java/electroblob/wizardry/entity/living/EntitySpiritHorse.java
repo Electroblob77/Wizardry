@@ -3,9 +3,9 @@ package electroblob.wizardry.entity.living;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -124,7 +124,7 @@ public class EntitySpiritHorse extends EntityHorse {
 	private EntityLivingBase getOwner(){
 
 		// I think the DataManager stores any objects, so it now stores the UUID instead of its string representation.
-		Entity owner = WizardryUtilities.getEntityByUUID(world, this.getOwnerUniqueId());
+		Entity owner = EntityUtils.getEntityByUUID(world, this.getOwnerUniqueId());
 
 		if(owner instanceof EntityLivingBase){
 			return (EntityLivingBase)owner;

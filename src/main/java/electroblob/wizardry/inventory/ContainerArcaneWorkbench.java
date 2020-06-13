@@ -10,8 +10,8 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.util.ISpellSortable;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ClickType;
@@ -371,10 +371,10 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		Set<VirtualSlot> slots = new LinkedHashSet<>(bookshelfSlots.size());
 
 		// Add all slots that currently contain a matching stack - collect to list to retain order
-		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getStack())).collect(Collectors.toList()));
+		slots.addAll(bookshelfSlots.stream().filter(s -> InventoryUtils.canMerge(stack, s.getStack())).collect(Collectors.toList()));
 		// Then add all empty slots that previously contained a matching stack, if they weren't already added
 		// No need to actually check if they're empty since inserting a new stack overwrites prevStack anyway
-		slots.addAll(bookshelfSlots.stream().filter(s -> WizardryUtilities.canMerge(stack, s.getPrevStack())).collect(Collectors.toList()));
+		slots.addAll(bookshelfSlots.stream().filter(s -> InventoryUtils.canMerge(stack, s.getPrevStack())).collect(Collectors.toList()));
 		// Then add all slots that did not previously contain anything
 		slots.addAll(bookshelfSlots.stream().filter(s -> s.getPrevStack().isEmpty()).collect(Collectors.toList()));
 		// Finally add all other empty slots (these will be the ones that used to contain something else)

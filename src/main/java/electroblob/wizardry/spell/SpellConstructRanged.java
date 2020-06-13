@@ -4,9 +4,9 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -149,7 +149,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				// If the target is not on the ground but the construct must be placed on the floor, searches for the
 				// floor under the caster and returns false if it does not find one within 3 blocks.
 				if(!target.onGround && requiresFloor){
-					Integer floor = WizardryUtilities.getNearestFloor(world, new BlockPos(x, y, z), 3);
+					Integer floor = BlockUtils.getNearestFloor(world, new BlockPos(x, y, z), 3);
 					if(floor == null) return false;
 					y = floor;
 					side = EnumFacing.UP;

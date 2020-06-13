@@ -8,11 +8,8 @@ import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.RayTracer;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -416,7 +413,7 @@ public class Grapple extends Spell {
 
 	private static RayTraceResult update(EntityPlayer player, RayTraceResult grapplingTarget){
 
-		if(grapplingTarget != null && (!WizardryUtilities.isCasting(player, Spells.grapple)
+		if(grapplingTarget != null && (!EntityUtils.isCasting(player, Spells.grapple)
 				|| (grapplingTarget.entityHit != null && !grapplingTarget.entityHit.isEntityAlive()))){
 			return null;
 		}

@@ -7,8 +7,8 @@ import electroblob.wizardry.packet.PacketControlInput.Message;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Possession;
 import electroblob.wizardry.spell.Resurrection;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -75,7 +75,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					if(player.isDead && Resurrection.getRemainingWaitTime(player.deathTime) == 0){
 
-						ItemStack stack = WizardryUtilities.getHotbar(player).stream()
+						ItemStack stack = InventoryUtils.getHotbar(player).stream()
 								.filter(s -> Resurrection.canStackResurrect(s, player)).findFirst().orElse(null);
 
 						if(stack != null){
@@ -96,7 +96,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					if(player.isDead){
 
-						ItemStack stack = WizardryUtilities.getHotbar(player).stream()
+						ItemStack stack = InventoryUtils.getHotbar(player).stream()
 								.filter(s -> Resurrection.canStackResurrect(s, player)).findFirst().orElse(null);
 
 						if(stack != null){

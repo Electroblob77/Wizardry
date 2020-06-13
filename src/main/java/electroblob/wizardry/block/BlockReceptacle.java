@@ -7,8 +7,8 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.tileentity.TileEntityReceptacle;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -178,7 +178,7 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 
 				EnumFacing facing = state.getValue(FACING).getOpposite();
 
-				Vec3d centre = WizardryUtilities.getCentre(pos);
+				Vec3d centre = GeometryUtils.getCentre(pos);
 				if(facing.getAxis().isHorizontal()){
 					centre = centre.add(new Vec3d(facing.getDirectionVec()).scale(WALL_PARTICLE_OFFSET)).add(0, 0.125, 0);
 				}

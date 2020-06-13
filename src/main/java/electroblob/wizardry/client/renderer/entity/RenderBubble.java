@@ -1,8 +1,9 @@
 package electroblob.wizardry.client.renderer.entity;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.construct.EntityBubble;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -33,7 +34,7 @@ public class RenderBubble extends Render<EntityBubble> {
 
 		float yOffset = 0;
 
-		Entity rider = WizardryUtilities.getRider(entity);
+		Entity rider = EntityUtils.getRider(entity);
 
 		if(rider != null){
 			yOffset = rider.height / 2;
@@ -66,7 +67,7 @@ public class RenderBubble extends Render<EntityBubble> {
 		GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
 		// Bubble 'bursts' so doesn't shrink when is disappears
-		float s = 3 * WizardryUtilities.smoothScaleFactor(entity.isDarkOrb ? entity.lifetime : -1, entity.ticksExisted, partialTicks, 10, 10);
+		float s = 3 * DrawingUtils.smoothScaleFactor(entity.isDarkOrb ? entity.lifetime : -1, entity.ticksExisted, partialTicks, 10, 10);
 		GlStateManager.scale(s, s, s);
 
 		double pixelwidth = (1.0d / 128);

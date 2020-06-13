@@ -3,7 +3,7 @@ package electroblob.wizardry.client.audio;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
@@ -49,7 +49,7 @@ public abstract class SoundLoopSpell extends SoundLoop {
 
 		@Override
 		protected boolean stillCasting(Spell spell){
-			return WizardryUtilities.isCasting(source, spell);
+			return EntityUtils.isCasting(source, spell);
 		}
 	}
 

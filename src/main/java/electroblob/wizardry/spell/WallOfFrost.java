@@ -5,10 +5,8 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -63,11 +61,11 @@ public class WallOfFrost extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
+		if(!world.isRemote && EntityUtils.canDamageBlocks(caster, world)){
 
 			// Stops the ice being placed floating above snow and grass. Directions other than up included for
 			// completeness.
-			if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+			if(BlockUtils.canBlockBeReplaced(world, pos)){
 				// Moves the blockpos back into the block
 				pos = pos.offset(side.getOpposite());
 			}
@@ -79,7 +77,7 @@ public class WallOfFrost extends SpellRay {
 				
 				int duration = (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 
-				if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+				if(BlockUtils.canBlockBeReplaced(world, pos)){
 					world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
 					world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 				}
@@ -88,7 +86,7 @@ public class WallOfFrost extends SpellRay {
 				if(side == EnumFacing.UP){
 					pos = pos.offset(side);
 
-					if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+					if(BlockUtils.canBlockBeReplaced(world, pos)){
 						world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
 						world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 					}

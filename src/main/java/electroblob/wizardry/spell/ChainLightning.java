@@ -40,17 +40,17 @@ public class ChainLightning extends SpellRay {
 
 		// Anything can be attacked with the initial arc, because the player has control over where it goes. If they
 		// hit a minion or an ally, it's their problem!
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 
 			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
 					* modifiers.get(SpellModifiers.POTENCY));
 
 			// Secondary chaining effect
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+			List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(
 					getProperty(SECONDARY_RANGE).doubleValue(), target.posX, target.posY + target.height / 2, target.posZ, world);
 
 			secondaryTargets.remove(target);
-			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+			secondaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
 				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
@@ -62,13 +62,13 @@ public class ChainLightning extends SpellRay {
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+				List<EntityLivingBase> tertiaryTargets = EntityUtils.getEntitiesWithinRadius(
 						getProperty(TERTIARY_RANGE).doubleValue(), secondaryTarget.posX,
 						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 
 				tertiaryTargets.remove(target);
 				tertiaryTargets.removeAll(secondaryTargets);
-				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+				tertiaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
 					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());

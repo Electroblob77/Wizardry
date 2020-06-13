@@ -2,10 +2,10 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -38,7 +38,7 @@ public class Detonate extends SpellRay {
 		
 		if(!world.isRemote){
 			
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(getProperty(BLAST_RADIUS).doubleValue()
+			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(getProperty(BLAST_RADIUS).doubleValue()
 					* modifiers.get(WizardryItems.blast_upgrade), pos.getX(), pos.getY(), pos.getZ(), world);
 			
 			for(EntityLivingBase target : targets){

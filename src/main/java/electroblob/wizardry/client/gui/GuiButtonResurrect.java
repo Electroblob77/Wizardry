@@ -7,8 +7,8 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Resurrection;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiGameOver;
@@ -52,7 +52,7 @@ public class GuiButtonResurrect extends GuiButton {
 	public static void onGuiScreenInitEvent(GuiScreenEvent.InitGuiEvent event){
 
 		if(event.getGui() instanceof GuiGameOver && ItemArtefact.isArtefactActive(Minecraft.getMinecraft().player, WizardryItems.amulet_resurrection)
-				&& WizardryUtilities.getHotbar(Minecraft.getMinecraft().player).stream().anyMatch(s -> Resurrection.canStackResurrect(s, Minecraft.getMinecraft().player))){
+				&& InventoryUtils.getHotbar(Minecraft.getMinecraft().player).stream().anyMatch(s -> Resurrection.canStackResurrect(s, Minecraft.getMinecraft().player))){
 
 			event.getButtonList().add(new GuiButtonResurrect(event.getButtonList().size(), event.getGui().width / 2 - 100,
 					event.getGui().height / 4 + 120, "spell." + Spells.resurrection.getRegistryName() + ".button"));
@@ -65,7 +65,7 @@ public class GuiButtonResurrect extends GuiButton {
 
 		if(event.getGui() instanceof GuiGameOver){
 
-			ItemStack stack = WizardryUtilities.getHotbar(Minecraft.getMinecraft().player).stream()
+			ItemStack stack = InventoryUtils.getHotbar(Minecraft.getMinecraft().player).stream()
 					.filter(s -> Resurrection.canStackResurrect(s, Minecraft.getMinecraft().player)).findFirst().orElse(null);
 
 			if(stack != null){

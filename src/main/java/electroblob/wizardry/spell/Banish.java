@@ -3,10 +3,10 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -67,7 +67,7 @@ public class Banish extends SpellRay {
 
 		int x = MathHelper.floor(entity.posX + MathHelper.sin(angle) * radius);
 		int z = MathHelper.floor(entity.posZ - MathHelper.cos(angle) * radius);
-		Integer y = WizardryUtilities.getNearestFloor(world,
+		Integer y = BlockUtils.getNearestFloor(world,
 				new BlockPos(x, (int)entity.getEntityBoundingBox().minY, z), (int)radius);
 
 		if(world.isRemote){

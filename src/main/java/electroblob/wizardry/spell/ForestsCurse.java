@@ -2,12 +2,9 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -24,7 +21,7 @@ public class ForestsCurse extends SpellAreaEffect {
 	@Override
 	protected void affectEntity(World world, EntityLivingBase caster, EntityLivingBase target, SpellModifiers modifiers){
 		
-		if(!MagicDamage.isEntityImmune(DamageType.POISON, target) && WizardryUtilities.isLiving(target)){
+		if(!MagicDamage.isEntityImmune(DamageType.POISON, target) && EntityUtils.isLiving(target)){
 			
 			target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.POISON),
 					getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));

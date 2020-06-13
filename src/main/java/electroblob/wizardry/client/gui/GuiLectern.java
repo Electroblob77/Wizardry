@@ -12,9 +12,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.TileEntityLectern;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ISpellSortable;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
@@ -278,9 +278,9 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
 							for(EnumFacing side : EnumFacing.VALUES){
 								ParticleBuilder.create(ParticleBuilder.Type.BLOCK_HIGHLIGHT).pos(
-												WizardryUtilities.getFaceCentre(pos, side)
+												GeometryUtils.getFaceCentre(pos, side)
 												.add(new Vec3d(side.getDirectionVec())
-												.scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET)))
+												.scale(GeometryUtils.ANTI_Z_FIGHTING_OFFSET)))
 										.face(side).clr(0.9f, 0.5f, 0.8f).fade(0.7f, 0, 1).spawn(mc.world);
 							}
 

@@ -1,6 +1,6 @@
 package electroblob.wizardry.misc;
 
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
@@ -74,18 +74,18 @@ public class WildcardTradeList extends MerchantRecipeList {
 		for(MerchantRecipe merchantrecipe : this){
 
 			ItemStack itemToBuy = merchantrecipe.getItemToBuy();
-			if(itemToBuy.getMetadata() == OreDictionary.WILDCARD_VALUE) itemToBuy = WizardryUtilities.copyWithMeta(itemToBuy, 0);
+			if(itemToBuy.getMetadata() == OreDictionary.WILDCARD_VALUE) itemToBuy = InventoryUtils.copyWithMeta(itemToBuy, 0);
 			buffer.writeItemStack(itemToBuy);
 
 			ItemStack itemToSell = merchantrecipe.getItemToSell();
-			if(itemToSell.getMetadata() == OreDictionary.WILDCARD_VALUE) itemToSell = WizardryUtilities.copyWithMeta(itemToSell, 0);
+			if(itemToSell.getMetadata() == OreDictionary.WILDCARD_VALUE) itemToSell = InventoryUtils.copyWithMeta(itemToSell, 0);
 			buffer.writeItemStack(itemToSell);
 
 			ItemStack secondItemToBuy = merchantrecipe.getSecondItemToBuy();
 			buffer.writeBoolean(!secondItemToBuy.isEmpty());
 
 			if(!secondItemToBuy.isEmpty()){
-				if(secondItemToBuy.getMetadata() == OreDictionary.WILDCARD_VALUE) secondItemToBuy = WizardryUtilities.copyWithMeta(secondItemToBuy, 0);
+				if(secondItemToBuy.getMetadata() == OreDictionary.WILDCARD_VALUE) secondItemToBuy = InventoryUtils.copyWithMeta(secondItemToBuy, 0);
 				buffer.writeItemStack(secondItemToBuy);
 			}
 

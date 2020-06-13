@@ -5,10 +5,10 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -29,7 +29,7 @@ public class FlamingWeapon extends Spell {
 		if(WizardData.get(caster) != null
 				&& WizardData.get(caster).getImbuementDuration(WizardryEnchantments.flaming_weapon) <= 0){
 
-			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
+			for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(caster)){
 
 				if((ImbueWeapon.isSword(stack) || ImbueWeapon.isBow(stack))
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.flaming_weapon)){

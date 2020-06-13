@@ -4,10 +4,10 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -69,7 +69,7 @@ public class EntityStormcloud extends EntityMagicConstruct {
 				if(target.ticksExisted % 150 == 0){ // Use target's lifetime so they don't all get hit at once, looks better
 
 					if(!this.world.isRemote){
-						WizardryUtilities.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(
+						EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(
 								this, this.getCaster(), MagicDamage.DamageType.SHOCK), damage);
 					}else{
 						ParticleBuilder.create(Type.LIGHTNING).pos(target.posX, posY + height/2, target.posZ)

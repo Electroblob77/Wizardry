@@ -2,9 +2,10 @@ package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Earthquake;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,7 +47,7 @@ public class EntityEarthquake extends EntityMagicConstruct {
 
 				BlockPos pos = new BlockPos(x, y, z);
 
-				if(!WizardryUtilities.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
+				if(!BlockUtils.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
 						&& world.isBlockNormalCube(pos, false)
 						// Checks that the block above is not solid, since this causes the falling sand to vanish.
 						&& !world.isBlockNormalCube(pos.up(), false)){
@@ -61,7 +62,7 @@ public class EntityEarthquake extends EntityMagicConstruct {
 
 		}
 
-		List<EntityLivingBase> targets = WizardryUtilities
+		List<EntityLivingBase> targets = EntityUtils
 				.getEntitiesWithinRadius((this.ticksExisted * speed) + 1.5, this.posX, this.posY, this.posZ, world);
 
 		// In this particular instance, the caster is completely unaffected because they will always be in the

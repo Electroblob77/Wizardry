@@ -2,10 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
-import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,7 +46,7 @@ public class ArcaneLock extends SpellRay {
 		if(caster instanceof EntityPlayer){
 
 			if(toggleLock(world, pos, (EntityPlayer)caster)){
-				BlockPos otherHalf = WizardryUtilities.getConnectedChest(world, pos);
+				BlockPos otherHalf = BlockUtils.getConnectedChest(world, pos);
 				if(otherHalf != null) toggleLock(world, otherHalf, (EntityPlayer)caster);
 				return true;
 			}
@@ -133,7 +130,7 @@ public class ArcaneLock extends SpellRay {
 		if(!player.isCreative()) return false;
 		if(Wizardry.settings.creativeBypassesArcaneLock) return true;
 		MinecraftServer server = player.world.getMinecraftServer();
-		return server != null && WizardryUtilities.isPlayerOp(player, server);
+		return server != null && EntityUtils.isPlayerOp(player, server);
 	}
 
 	@SubscribeEvent

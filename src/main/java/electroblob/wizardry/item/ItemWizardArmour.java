@@ -12,8 +12,8 @@ import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryRecipes;
 import electroblob.wizardry.registry.WizardryTabs;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentMending;
 import net.minecraft.entity.Entity;
@@ -271,13 +271,13 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		if(event.getCaster() == null) return;
 		int armourPieces = getMatchingArmourCount(event.getCaster(), event.getSpell().getElement());
 		float multiplier = 1f - armourPieces * Constants.COST_REDUCTION_PER_ARMOUR;
-		if(armourPieces == WizardryUtilities.ARMOUR_SLOTS.length) multiplier -= Constants.FULL_ARMOUR_SET_BONUS;
+		if(armourPieces == InventoryUtils.ARMOUR_SLOTS.length) multiplier -= Constants.FULL_ARMOUR_SET_BONUS;
 		event.getModifiers().set(SpellModifiers.COST, event.getModifiers().get(SpellModifiers.COST) * multiplier, false);
 	}
 
 	/** Counts the number of armour pieces the given entity is wearing that match the given element. */
 	public static int getMatchingArmourCount(EntityLivingBase entity, Element element){
-		return (int)Arrays.stream(WizardryUtilities.ARMOUR_SLOTS)
+		return (int)Arrays.stream(InventoryUtils.ARMOUR_SLOTS)
 				.map(s -> entity.getItemStackFromSlot(s).getItem())
 				.filter(i -> i instanceof ItemWizardArmour && ((ItemWizardArmour)i).element == element)
 				.count();

@@ -2,8 +2,9 @@ package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTUtil;
@@ -44,7 +45,7 @@ public class PotionContainment extends PotionMagicEffect {
 			NBTExtras.storeTagSafely(target.getEntityData(), ENTITY_TAG, NBTUtil.createPosTag(new BlockPos(target.getPositionVector().subtract(0.5, 0.5, 0.5))));
 		}
 
-		Vec3d origin = WizardryUtilities.getCentre(NBTUtil.getPosFromTag(target.getEntityData().getCompoundTag(ENTITY_TAG)));
+		Vec3d origin = GeometryUtils.getCentre(NBTUtil.getPosFromTag(target.getEntityData().getCompoundTag(ENTITY_TAG)));
 
 		double x = target.posX, y = target.posY, z = target.posZ;
 
@@ -93,7 +94,7 @@ public class PotionContainment extends PotionMagicEffect {
 //				}
 //			}
 
-			WizardryUtilities.undoGravity(target);
+			EntityUtils.undoGravity(target);
 			target.addVelocity(0.35 * Math.signum(x - target.posX), 0.35 * Math.signum(y - target.posY), 0.35 * Math.signum(z - target.posZ));
 			target.setPositionAndUpdate(x, y, z);
 			// Player motion is handled on that player's client so needs packets

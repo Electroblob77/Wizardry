@@ -3,11 +3,8 @@ package electroblob.wizardry.entity.projectile;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.AllyDesignationSystem;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.RayTracer;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -237,7 +234,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		}
 
 		if(this.getCaster() == null && this.casterUUID != null){
-			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
+			Entity entity = EntityUtils.getEntityByUUID(world, casterUUID);
 			if(entity instanceof EntityLivingBase){
 				this.caster = new WeakReference<>((EntityLivingBase)entity);
 			}

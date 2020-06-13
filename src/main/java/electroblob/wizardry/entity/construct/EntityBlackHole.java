@@ -5,9 +5,10 @@ import electroblob.wizardry.entity.EntityLevitatingBlock;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -92,12 +93,12 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 			double radius = 6; // TODO: Support for spell properties and modifiers
 
-			boolean suckInBlocks = getCaster() instanceof EntityPlayer && WizardryUtilities.canDamageBlocks(getCaster(), world)
+			boolean suckInBlocks = getCaster() instanceof EntityPlayer && EntityUtils.canDamageBlocks(getCaster(), world)
 					&& ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_black_hole);
 
 			if(suckInBlocks){
 
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(new BlockPos(this), radius);
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(new BlockPos(this), radius);
 
 				int blocksUnhooked = 0;
 
@@ -105,7 +106,7 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 					if(rand.nextInt(Math.max(1, (int)this.getDistanceSq(pos) * 3)) == 0){
 
-						if(!WizardryUtilities.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
+						if(!BlockUtils.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
 								&& world.isBlockNormalCube(pos, false)){
 							// Checks that the block above is not solid, since this causes the falling block to vanish.
 //							&& !world.isBlockNormalCube(pos.up(), false)){
@@ -124,7 +125,7 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 			}
 
-			List<Entity> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
+			List<Entity> targets = EntityUtils.getEntitiesWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world, Entity.class);
 
 			targets.removeIf(t -> !(t instanceof EntityLivingBase || (suckInBlocks && t instanceof EntityFallingBlock)));
@@ -137,7 +138,7 @@ public class EntityBlackHole extends EntityMagicConstruct {
 					if(!(target instanceof EntityPlayer && ((getCaster() instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
 							|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)))){
 
-						WizardryUtilities.undoGravity(target);
+						EntityUtils.undoGravity(target);
 						if(target instanceof EntityLevitatingBlock) ((EntityLevitatingBlock)target).suspend();
 
 						// Sucks the target in

@@ -3,8 +3,8 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.entity.EntityMeteor;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -38,7 +38,7 @@ public class Meteor extends SpellRay {
 
 			if(!world.isRemote){
 				EntityMeteor meteor = new EntityMeteor(world, pos.getX(), pos.getY() + 50, pos.getZ(),
-						modifiers.get(WizardryItems.blast_upgrade), WizardryUtilities.canDamageBlocks(caster, world));
+						modifiers.get(WizardryItems.blast_upgrade), EntityUtils.canDamageBlocks(caster, world));
 				world.spawnEntity(meteor);
 			}
 

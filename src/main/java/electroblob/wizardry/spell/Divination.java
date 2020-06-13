@@ -5,10 +5,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockCrystalOre;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.RelativeFacing;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
@@ -64,7 +61,7 @@ public class Divination extends Spell {
 
 		double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
 
-		List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(), range);
+		List<BlockPos> sphere = BlockUtils.getBlockSphere(caster.getPosition(), range);
 
 		sphere.removeIf(b -> {
 			Block block = world.getBlockState(b).getBlock();

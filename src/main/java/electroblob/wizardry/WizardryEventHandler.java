@@ -173,7 +173,7 @@ public final class WizardryEventHandler {
 							&& Wizardry.settings.discoveryMode){
 						// Sound and text only happen server-side, in survival, with discovery mode on, and only when
 						// the spell wasn't cast using commands.
-						WizardryUtilities.playSoundAtPlayer(player, WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
+						EntityUtils.playSoundAtPlayer(player, WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
 						player.sendMessage(new TextComponentTranslation("spell.discover",
 								event.getSpell().getNameForTranslationFormatted()));
 					}
@@ -389,7 +389,7 @@ public final class WizardryEventHandler {
 				}
 			}
 
-			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
+			for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(player)){
 
 				if(stack.getItem() instanceof IManaStoringItem && !((IManaStoringItem)stack.getItem()).isManaFull(stack)
 						&& WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) > 0){

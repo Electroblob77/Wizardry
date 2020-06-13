@@ -369,7 +369,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		Element element = this.getElement();
 
 		// Adds armour.
-		for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
+		for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
 			this.setItemStackToSlot(slot, new ItemStack(WizardryItems.getArmour(element, slot)));
 		}
 
