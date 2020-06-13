@@ -7,6 +7,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -103,7 +104,7 @@ public class PotionFrostStep extends PotionMagicEffect implements ICustomPotionP
 
 						IBlockState state2 = world.getBlockState(pos2);
 
-						if(state2.getMaterial() == Material.LAVA && (state2.getBlock() == Blocks.LAVA || state2.getBlock() == Blocks.FLOWING_LAVA) && state2.getValue(BlockLiquid.LEVEL) == 0 && world.mayPlace(WizardryBlocks.obsidian_crust, pos2, false, EnumFacing.DOWN, null)){
+						if(WizardryUtilities.isLavaSource(state2) && world.mayPlace(WizardryBlocks.obsidian_crust, pos2, false, EnumFacing.DOWN, null)){
 							world.setBlockState(pos2, WizardryBlocks.obsidian_crust.getDefaultState());
 							world.scheduleUpdate(pos2.toImmutable(), WizardryBlocks.obsidian_crust, MathHelper.getInt(living.getRNG(), 60, 120));
 						}

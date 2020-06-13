@@ -11,10 +11,10 @@ import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.WizardryUtilities.SurfaceCriteria;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -64,30 +64,22 @@ public class IceAge extends Spell {
 		}
 
 		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
-			for(int i = -(int)radius; i < (int)radius + 1; i++){
-				for(int j = -(int)radius; j < (int)radius + 1; j++){
+			for(int i = -(int)radius; i <= (int)radius; i++){
+				for(int j = -(int)radius; j <= (int)radius; j++){
 
 					BlockPos pos = new BlockPos(caster).add(i, 0, j);
 
-					Integer y = WizardryUtilities.getNearestSurface(world, new BlockPos(pos), EnumFacing.UP, (int)radius, true, WizardryUtilities.SurfaceCriteria.BUILDABLE);
+					Integer y = WizardryUtilities.getNearestSurface(world, new BlockPos(pos), EnumFacing.UP, (int)radius, true, SurfaceCriteria.SOLID_LIQUID_TO_AIR);
 
 					if(y != null){
 
 						pos = new BlockPos(pos.getX(), y, pos.getZ());
 
-						double dist = caster.getDistance((int)caster.posX + i, y, (int)caster.posZ + j);
+						double dist = caster.getDistance(caster.posX + i, y, caster.posZ + j);
 
 						// Randomised with weighting so that the nearer the block the more likely it is to be snowed.
-						if(y != -1 && world.rand.nextInt((int)dist * 2 + 1) < radius && dist < radius){
-							if(world.getBlockState(pos.down()) == Blocks.WATER.getDefaultState()){
-								world.setBlockState(pos.down(), Blocks.ICE.getDefaultState());
-							}else if(world.getBlockState(pos.down()) == Blocks.LAVA.getDefaultState()){
-								world.setBlockState(pos.down(), Blocks.OBSIDIAN.getDefaultState());
-							}else if(world.getBlockState(pos.down()) == Blocks.FLOWING_LAVA.getDefaultState()){
-								world.setBlockState(pos.down(), Blocks.COBBLESTONE.getDefaultState());
-							}else if(Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos)){
-								world.setBlockState(pos, Blocks.SNOW_LAYER.getDefaultState());
-							}
+						if(y != -1 && world.rand.nextInt((int)(dist * 2) + 1) < radius && dist < radius){
+							WizardryUtilities.freeze(world, pos.down(), true);
 						}
 					}
 				}

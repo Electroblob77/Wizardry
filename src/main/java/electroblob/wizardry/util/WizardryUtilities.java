@@ -7,10 +7,8 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.spell.Spell;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCactus;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockLog;
+import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -21,6 +19,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.Item;
@@ -329,6 +328,52 @@ public final class WizardryUtilities {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Returns true if the given block is a water source block (specifically, water or flowing water with a level of 0).
+	 * @param state The block state to query
+	 * @return True if the given block state is a water source block, false otherwise.
+	 */
+	public static boolean isWaterSource(IBlockState state){
+		return state.getMaterial() == Material.WATER && (state.getBlock() == Blocks.WATER || state.getBlock() == Blocks.FLOWING_WATER) && state.getValue(BlockLiquid.LEVEL) == 0;
+	}
+
+	/**
+	 * Returns true if the given block is a lava source block (specifically, lava or flowing lava with a level of 0).
+	 * @param state The block state to query
+	 * @return True if the given block state is a lava source block, false otherwise.
+	 */
+	public static boolean isLavaSource(IBlockState state){
+		return state.getMaterial() == Material.LAVA && (state.getBlock() == Blocks.LAVA || state.getBlock() == Blocks.FLOWING_LAVA) && state.getValue(BlockLiquid.LEVEL) == 0;
+	}
+
+	/**
+	 * Freezes the given block, either by turning water to ice, lava to obsidian/cobblestone or by placing snow on top
+	 * of it if possible.
+	 * @param world The world the block is in
+	 * @param pos The position of the block to freeze
+	 * @param freezeLava True to freeze lava into obsidian or cobblestone, false to leave it unchanged
+	 * @return True if any blocks were changed, false if not.
+	 */
+	public static boolean freeze(World world, BlockPos pos, boolean freezeLava){
+
+		IBlockState state = world.getBlockState(pos);
+		Block block = state.getBlock();
+
+		if(WizardryUtilities.isWaterSource(state)){
+			world.setBlockState(pos, Blocks.ICE.getDefaultState());
+		}else if(freezeLava && WizardryUtilities.isLavaSource(state)){
+			world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
+		}else if(freezeLava && (block == Blocks.LAVA || block == Blocks.FLOWING_LAVA)){
+			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+		}else if(block.isReplaceable(world, pos.up()) && Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos.up())){
+			world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
+		}else{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
