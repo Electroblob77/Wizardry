@@ -63,7 +63,7 @@ public class EmpoweringPresence extends Spell {
 			}
 		}
 
-		//WizardryUtilities.playSoundAtPlayer(caster, WizardrySounds.SPELL_CONJURATION, 1, 1 + 0.2f * world.rand.nextFloat());
+		playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 
