@@ -146,6 +146,11 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 	}
 
 	@Override
+	public boolean hasAnimation(){
+		return false;
+	}
+
+	@Override
 	protected boolean processInteract(EntityPlayer player, EnumHand hand){
 		// In this case, the delegate method determines whether super is called.
 		// Rather handily, we can make use of Java's short-circuiting method of evaluating OR statements.
