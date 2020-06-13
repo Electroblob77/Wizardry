@@ -68,9 +68,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -96,6 +94,7 @@ public class Possession extends SpellRay {
 
 	private static final Multimap<Class<? extends EntityLiving>, BiConsumer<?, EntityPlayer>> abilities = HashMultimap.create();
 	private static final Map<Class<? extends EntityLiving>, Function<World, ? extends IProjectile>> projectiles = new HashMap<>();
+	private static final Set<Class<? extends EntityLiving>> blacklist = new HashSet<>();
 
 	private static final Map<IAttribute, UUID> INHERITED_ATTRIBUTES;
 
@@ -118,6 +117,7 @@ public class Possession extends SpellRay {
 		addProjectile(EntityStormElemental.class, EntityLightningDisc::new);
 		addProjectile(EntityWitch.class, EntityPotion::new);
 
+		blacklist.add(EntityDecoy.class);
 	}
 
 	public Possession(){
@@ -155,7 +155,8 @@ public class Possession extends SpellRay {
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse,
 								  SpellModifiers modifiers){
 
-		if(target instanceof EntityLiving && caster instanceof EntityPlayer && !isPossessing((EntityPlayer)caster)){
+		if(target instanceof EntityLiving && !blacklist.contains(target.getClass()) && caster instanceof EntityPlayer
+				&& !isPossessing((EntityPlayer)caster)){
 
 			EntityPlayer player = (EntityPlayer)caster;
 
