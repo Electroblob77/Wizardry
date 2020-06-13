@@ -13,6 +13,7 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -23,6 +24,11 @@ public class Slime extends SpellRay {
 	public Slime(){
 		super("slime", false, SpellActions.POINT);
 		addProperties(DURATION);
+	}
+
+	@Override
+	protected SoundEvent[] createSounds(){
+		return this.createSoundsWithSuffixes("shoot", "squelch");
 	}
 
 	@Override

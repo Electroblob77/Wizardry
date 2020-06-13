@@ -281,7 +281,7 @@
 	"spell.shockwave": 					{"category": "spells", "sounds": ["ebwizardry:shockwave"]},
 	"spell.silverfish_swarm": 			{"category": "spells", "sounds": ["random/fizz"]},
 	"spell.sixth_sense": 				{"category": "spells", "sounds": ["mob/wither/shoot"]},
-	"spell.slime": 						{"category": "spells", "sounds": ["ebwizardry:ice"]},
+	"spell.slime.shoot": 				{"category": "spells", "sounds": ["ebwizardry:ice"]},
 	"spell.slime.squelch": 				{"category": "spells", "sounds": ["mob/slime/attack1", "mob/slime/attack2"], "pitch": 0.5},
 	"spell.slow_time": 					{"category": "spells", "sounds": ["portal/travel"]},
 	"spell.smoke_bomb": 				{"category": "spells", "sounds": ["random/bow"]},
