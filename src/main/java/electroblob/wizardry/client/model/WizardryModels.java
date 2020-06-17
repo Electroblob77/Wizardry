@@ -89,6 +89,7 @@ public final class WizardryModels {
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_lectern));
 
 		registerItemModel(Item.getItemFromBlock(WizardryBlocks.receptacle));
+		registerItemModel(Item.getItemFromBlock(WizardryBlocks.imbuement_altar));
 
 		// Items
 
@@ -314,7 +315,8 @@ public final class WizardryModels {
 
 				IBakedModel original = event.getModelRegistry().getObject(location);
 
-				if(location.getPath().contains("runestone") || location.getPath().contains("runestone_pedestal")){
+				if(location.getPath().contains("runestone") || location.getPath().contains("runestone_pedestal")
+						|| location.getPath().endsWith("imbuement_altar")){ // Ends with to exclude inactive version
 					event.getModelRegistry().putObject(location, new BakedModelGlowingOverlay(original, "overlay"));
 				}else if(location.getPath().contains("spectral_block")){
 					event.getModelRegistry().putObject(location, new BakedModelGlowingOverlay(original, "spectral_block"));

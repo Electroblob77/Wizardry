@@ -77,6 +77,7 @@ public final class WizardryBlocks {
 	public static final Block dark_oak_lectern = placeholder();
 
 	public static final Block receptacle = placeholder();
+	public static final Block imbuement_altar = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given block, then registers it with the given registry. Use
@@ -101,6 +102,7 @@ public final class WizardryBlocks {
 
 		IForgeRegistry<Block> registry = event.getRegistry();
 
+		// TODO: Put everything in block classes wherever possible
 		registerBlock(registry, "arcane_workbench", 		new BlockArcaneWorkbench().setHardness(1.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "crystal_ore", 			new BlockCrystalOre(Material.ROCK).setHardness(3.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "crystal_flower", 		new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
@@ -139,6 +141,7 @@ public final class WizardryBlocks {
 		registerBlock(registry, "dark_oak_lectern", 		new BlockLectern());
 
 		registerBlock(registry, "receptacle", 			new BlockReceptacle());
+		registerBlock(registry, "imbuement_altar", 		new BlockImbuementAltar());
 
 	}
 
@@ -155,5 +158,6 @@ public final class WizardryBlocks {
 		GameRegistry.registerTileEntity(TileEntityBookshelf.class, 			new ResourceLocation(Wizardry.MODID, "bookshelf"));
 		GameRegistry.registerTileEntity(TileEntityLectern.class, 			new ResourceLocation(Wizardry.MODID, "lectern"));
 		GameRegistry.registerTileEntity(TileEntityReceptacle.class, 		new ResourceLocation(Wizardry.MODID, "receptacle"));
+		GameRegistry.registerTileEntity(TileEntityImbuementAltar.class, 	new ResourceLocation(Wizardry.MODID, "imbuement_altar"));
 	}
 }

@@ -141,7 +141,6 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 					if(!player.capabilities.isCreativeMode) stack.shrink(1);
 					world.playSound(pos.getX(), pos.getY(), pos.getZ(), WizardrySounds.BLOCK_RECEPTACLE_IGNITE,
 							SoundCategory.BLOCKS, 0.7f, 0.7f, false);
-					world.checkLight(pos);
 					return true;
 				}
 
@@ -157,7 +156,6 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 					player.dropItem(dust, false);
 				}
 
-				world.checkLight(pos);
 				return true;
 			}
 		}

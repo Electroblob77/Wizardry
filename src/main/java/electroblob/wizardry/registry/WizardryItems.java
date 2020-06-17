@@ -436,6 +436,7 @@ public final class WizardryItems {
 		registerItemBlock(registry, WizardryBlocks.dark_oak_lectern);
 
 		registerItemBlock(registry, WizardryBlocks.receptacle);
+		registerItemBlock(registry, WizardryBlocks.imbuement_altar);
 
 		// Items
 
@@ -708,6 +709,7 @@ public final class WizardryItems {
 					((TileEntityReceptacle)tileEntity).setElement(Element.values()[stack.getMetadata()]);
 					stack.shrink(1);
 					world.checkLight(pos);
+					// TESTME: Do we need this?
 					world.notifyBlockUpdate(pos, source.getBlockState(), source.getBlockState(), 3);
 					return stack;
 				}

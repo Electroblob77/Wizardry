@@ -20,10 +20,7 @@ import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFa
 import electroblob.wizardry.client.renderer.entity.*;
 import electroblob.wizardry.client.renderer.entity.layers.*;
 import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
-import electroblob.wizardry.client.renderer.tileentity.RenderArcaneWorkbench;
-import electroblob.wizardry.client.renderer.tileentity.RenderLectern;
-import electroblob.wizardry.client.renderer.tileentity.RenderMagicLight;
-import electroblob.wizardry.client.renderer.tileentity.RenderStatue;
+import electroblob.wizardry.client.renderer.tileentity.*;
 import electroblob.wizardry.command.SpellEmitter;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.DispenserCastingData;
@@ -848,6 +845,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStatue.class, renderStatue = new RenderStatue());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMagicLight.class, new RenderMagicLight());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLectern.class, new RenderLectern());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityImbuementAltar.class, new RenderImbuementAltar());
 
 	}
 }

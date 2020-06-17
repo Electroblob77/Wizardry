@@ -49,6 +49,7 @@ tile.ebwizardry\:acacia_lectern.name=Acacia Lectern
 tile.ebwizardry\:dark_oak_lectern.name=Dark Oak Lectern
 
 tile.ebwizardry\:receptacle.name=Receptacle
+tile.ebwizardry\:imbuement_altar.name=Imbuement Altar
 
 item.ebwizardry\:crystal_magic.name=Magic Crystal
 item.ebwizardry\:crystal_magic.desc=The iridescent colors of this crystal seem to slowly shift and swirl, hinting at a magical energy within. Perhaps this magic could be harnessed, somehow...
