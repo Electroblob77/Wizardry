@@ -52,7 +52,7 @@ public class RenderShadowWard {
 				GlStateManager.pushMatrix();
 
 				GlStateManager.translate(0, 0, 1.2);
-				GlStateManager.rotate(player.world.getTotalWorldTime() * -2, 0, 0, 1);
+				GlStateManager.rotate(player.ticksExisted * -2, 0, 0, 1);
 				GlStateManager.scale(1.1, 1.1, 1.1);
 
 				Tessellator tessellator = Tessellator.getInstance();
@@ -116,7 +116,7 @@ public class RenderShadowWard {
 			BufferBuilder buffer = tessellator.getBuffer();
 
 			GlStateManager.translate(0, 1.2, 0);
-			GlStateManager.rotate(player.world.getTotalWorldTime() * -2, 0, 0, 1);
+			GlStateManager.rotate(player.ticksExisted * -2, 0, 0, 1);
 			GlStateManager.scale(1.1, 1.1, 1.1);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);

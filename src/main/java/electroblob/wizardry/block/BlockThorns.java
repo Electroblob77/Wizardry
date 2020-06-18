@@ -147,7 +147,7 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 			}
 		}
 
-		if(world.getTotalWorldTime() % 20 == 0) target.attackEntityFrom(source, Spells.forest_of_thorns.getProperty(Spell.DAMAGE).floatValue());
+		if(target.ticksExisted % 20 == 0) target.attackEntityFrom(source, Spells.forest_of_thorns.getProperty(Spell.DAMAGE).floatValue());
 
 		return true;
 	}
@@ -174,8 +174,7 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	@SubscribeEvent
 	public static void onLeftClickBlockEvent(PlayerInteractEvent.LeftClickBlock event){
-		if(!event.getWorld().isRemote && event.getWorld().getTotalWorldTime() % 20 == 0
-				&& event.getWorld().getBlockState(event.getPos()).getBlock() == WizardryBlocks.thorns){
+		if(!event.getWorld().isRemote && event.getWorld().getBlockState(event.getPos()).getBlock() == WizardryBlocks.thorns){
 			applyThornDamage(event.getWorld(), event.getPos(), event.getEntity());
 		}
 	}

@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
@@ -90,11 +91,11 @@ public class RayOfPurification extends SpellRay {
 		if(caster != null){
 			ParticleBuilder.create(Type.BEAM).entity(caster).pos(origin.subtract(caster.getPositionVector()))
 					.length(distance).clr(1, 0.6f + 0.3f * world.rand.nextFloat(), 0.2f)
-					.scale(MathHelper.sin(world.getTotalWorldTime() * 0.2f) * 0.1f + 1.4f).spawn(world);
+					.scale(MathHelper.sin(caster.ticksExisted * 0.2f) * 0.1f + 1.4f).spawn(world);
 		}else{
 			ParticleBuilder.create(Type.BEAM).pos(origin).target(origin.add(direction.scale(distance)))
 					.clr(1, 0.6f + 0.3f * world.rand.nextFloat(), 0.2f)
-					.scale(MathHelper.sin(world.getTotalWorldTime() * 0.2f) * 0.1f + 1.4f).spawn(world);
+					.scale(MathHelper.sin(Wizardry.proxy.getThePlayer().ticksExisted * 0.2f) * 0.1f + 1.4f).spawn(world);
 		}
 	}
 }
