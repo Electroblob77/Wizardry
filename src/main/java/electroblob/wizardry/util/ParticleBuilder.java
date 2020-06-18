@@ -132,8 +132,6 @@ public final class ParticleBuilder {
 		public static final ResourceLocation SPARKLE = new ResourceLocation(Wizardry.MODID,"sparkle");
 		/** 3D-rendered expanding sphere.<p></p><b>Defaults:</b><<br>Lifetime: 6 ticks<br>Colour: white */
 		public static final ResourceLocation SPHERE = new ResourceLocation(Wizardry.MODID,"sphere");
-		/** Wrapped animated 'summoning' particle.<p></p><b>Defaults:</b><<br>Lifetime: 15 ticks */
-		public static final ResourceLocation SUMMON = new ResourceLocation(Wizardry.MODID,"summon");
 		/** 3D-rendered vine particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: green */
 		public static final ResourceLocation VINE = new ResourceLocation(Wizardry.MODID,"vine");
 	}

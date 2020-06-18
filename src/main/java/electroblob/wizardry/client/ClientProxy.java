@@ -391,7 +391,6 @@ public class ClientProxy extends CommonProxy {
 		ParticleWizardry.registerParticle(Type.SPARK, ParticleSpark::new);
 		ParticleWizardry.registerParticle(Type.SPARKLE, ParticleSparkle::new);
 		ParticleWizardry.registerParticle(Type.SPHERE, ParticleSphere::new);
-		ParticleWizardry.registerParticle(Type.SUMMON, ParticleSummon::new);
 		ParticleWizardry.registerParticle(Type.VINE, ParticleVine::new);
 	}
 
