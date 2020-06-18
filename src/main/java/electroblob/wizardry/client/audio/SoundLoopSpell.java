@@ -17,8 +17,8 @@ public abstract class SoundLoopSpell extends SoundLoop {
 
 	private final Spell spell;
 
-	public SoundLoopSpell(SoundEvent start, SoundEvent loop, SoundEvent end, ISoundFactory factory, Spell spell){
-		super(start, loop, end, WizardrySounds.SPELLS, factory);
+	public SoundLoopSpell(SoundEvent start, SoundEvent loop, SoundEvent end, float volume, ISoundFactory factory, Spell spell){
+		super(start, loop, end, WizardrySounds.SPELLS, volume, factory);
 		this.spell = spell;
 	}
 
@@ -43,7 +43,7 @@ public abstract class SoundLoopSpell extends SoundLoop {
 		private final EntityLivingBase source;
 
 		public SoundLoopSpellEntity(SoundEvent start, SoundEvent loop, SoundEvent end, Spell spell, EntityLivingBase source, float volume, float pitch){
-			super(start, loop, end, (sound, category, repeat) -> new MovingSoundEntity<>(source, sound, category, volume, pitch, repeat), spell);
+			super(start, loop, end, volume, (sound, category, v, repeat) -> new MovingSoundEntity<>(source, sound, category, v, pitch, repeat), spell);
 			this.source = source;
 		}
 
@@ -58,13 +58,13 @@ public abstract class SoundLoopSpell extends SoundLoop {
 		public SoundLoopSpellPosition (SoundEvent start, SoundEvent loop, SoundEvent end, Spell spell,
 									   double x, double y, double z, float sndVolume, float sndPitch){
 			// Huh, I actually found a use for a non-static initialiser block - hence the double curly brackets...
-			super(start, loop, end, (sound, category, r) -> new PositionedSound(sound, category){{
+			super(start, loop, end, sndVolume, (sound, category, v, r) -> new PositionedSound(sound, category){{
 				// ...et voila, we can just set protected fields as we please using external variables
 				this.xPosF = (float)x;
 				this.yPosF = (float)y;
 				this.zPosF = (float)z;
 				this.repeat = r;
-				this.volume = sndVolume;
+				this.volume = v;
 				this.pitch = sndPitch;
 			}}, spell);
 		}
