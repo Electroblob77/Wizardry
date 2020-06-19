@@ -103,15 +103,15 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbttagcompound){
-		casterUUID = nbttagcompound.getUniqueId("casterUUID");
+		if(nbttagcompound.hasUniqueId("casterUUID")) casterUUID = nbttagcompound.getUniqueId("casterUUID");
 		lifetime = nbttagcompound.getInteger("lifetime");
 		damageMultiplier = nbttagcompound.getFloat("damageMultiplier");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbttagcompound){
-		if(this.getCaster() != null){
-			nbttagcompound.setUniqueId("casterUUID", this.getCaster().getUniqueID());
+		if(casterUUID != null){
+			nbttagcompound.setUniqueId("casterUUID", casterUUID);
 		}
 		nbttagcompound.setInteger("lifetime", lifetime);
 		nbttagcompound.setFloat("damageMultiplier", damageMultiplier);
