@@ -123,27 +123,25 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	@Override
 	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity){
-		if(!world.isRemote){
-			if(applyThornDamage(world, pos, entity)){
-				entity.setInWeb();
-			}
+		if(applyThornDamage(world, pos, state, entity)){
+			entity.setInWeb(); // Needs to be called client-side for players (and besides, all of this is common code)
 		}
 	}
 
-	private static boolean applyThornDamage(World world, BlockPos pos, Entity target){
+	private static boolean applyThornDamage(World world, BlockPos pos, IBlockState state, Entity target){
 
 		DamageSource source = DamageSource.CACTUS;
 
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tileentity = world.getTileEntity(state.getValue(HALF) == EnumBlockHalf.UPPER ? pos.down() : pos);
 
 		if(tileentity instanceof TileEntityPlayerSaveTimed){
 
 			EntityLivingBase caster = ((TileEntityPlayerSaveTimed)tileentity).getCaster();
 
-			if(caster != null && AllyDesignationSystem.isValidTarget(caster, target)){
+			if(!AllyDesignationSystem.isValidTarget(caster, target)) return false; // Don't attack or slow allies of the caster
+
+			if(caster != null){
 				source = MagicDamage.causeDirectMagicDamage(caster, MagicDamage.DamageType.MAGIC);
-			}else{
-				return false; // Don't attack or slow allies of the caster
 			}
 		}
 
@@ -159,12 +157,12 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata){
-		return new TileEntityPlayerSaveTimed(600);
+		return new TileEntityPlayerSaveTimed();
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state){
-		return true;
+		return state.getValue(HALF) == EnumBlockHalf.LOWER;
 	}
 
 	@Override public boolean isReplaceable(IBlockAccess world, BlockPos pos){ return false; }
@@ -175,7 +173,7 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 	@SubscribeEvent
 	public static void onLeftClickBlockEvent(PlayerInteractEvent.LeftClickBlock event){
 		if(!event.getWorld().isRemote && event.getWorld().getBlockState(event.getPos()).getBlock() == WizardryBlocks.thorns){
-			applyThornDamage(event.getWorld(), event.getPos(), event.getEntity());
+			applyThornDamage(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos()), event.getEntity());
 		}
 	}
 

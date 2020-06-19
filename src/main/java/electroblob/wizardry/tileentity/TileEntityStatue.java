@@ -46,7 +46,7 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 	/**
 	 * The position within the petrified creature this particular tileentity holds. 1 is at the bottom.
 	 */
-	public int position = 1;
+	public int position = 1; // TODO: Remove this, there is no need for more than 1 TE per statue
 
 	public void setCreatureAndPart(EntityLiving entity, int position, int parts){
 		this.creature = entity;

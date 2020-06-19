@@ -82,9 +82,9 @@ public class ForestOfThorns extends Spell {
 
 				((BlockThorns)WizardryBlocks.thorns).placeAt(world, pos, 3);
 
-				for(int i=0; i<2; i++){
+//				for(int i=0; i<2; i++){
 
-					TileEntity tileentity = world.getTileEntity(pos.up(i));
+					TileEntity tileentity = world.getTileEntity(pos);
 
 					if(tileentity instanceof TileEntityPlayerSaveTimed){
 						((TileEntityPlayerSaveTimed)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
@@ -92,9 +92,9 @@ public class ForestOfThorns extends Spell {
 						if(caster != null){
 							((TileEntityPlayerSaveTimed)tileentity).setCaster(caster);
 						}
-						((TileEntityPlayerSaveTimed)tileentity).sync();
+//						((TileEntityPlayerSaveTimed)tileentity).sync();
 					}
-				}
+//				}
 			}
 		}
 
