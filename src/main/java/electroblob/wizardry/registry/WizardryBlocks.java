@@ -153,7 +153,7 @@ public final class WizardryBlocks {
 		GameRegistry.registerTileEntity(TileEntityMagicLight.class, 		new ResourceLocation(Wizardry.MODID, "magic_light"));
 		GameRegistry.registerTileEntity(TileEntityTimer.class, 				new ResourceLocation(Wizardry.MODID, "timer"));
 		GameRegistry.registerTileEntity(TileEntityPlayerSave.class, 		new ResourceLocation(Wizardry.MODID, "player_save"));
-		GameRegistry.registerTileEntity(TileEntityPlayerSaveTimed.class, 	new ResourceLocation(Wizardry.MODID, "player_save_timed"));
+		GameRegistry.registerTileEntity(TileEntityThorns.class, 			new ResourceLocation(Wizardry.MODID, "player_save_timed"));
 		GameRegistry.registerTileEntity(TileEntityShrineCore.class, 		new ResourceLocation(Wizardry.MODID, "shrine_core"));
 		GameRegistry.registerTileEntity(TileEntityBookshelf.class, 			new ResourceLocation(Wizardry.MODID, "bookshelf"));
 		GameRegistry.registerTileEntity(TileEntityLectern.class, 			new ResourceLocation(Wizardry.MODID, "lectern"));

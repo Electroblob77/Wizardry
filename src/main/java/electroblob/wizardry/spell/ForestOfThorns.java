@@ -4,7 +4,7 @@ import electroblob.wizardry.block.BlockThorns;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.tileentity.TileEntityPlayerSaveTimed;
+import electroblob.wizardry.tileentity.TileEntityThorns;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
@@ -82,19 +82,18 @@ public class ForestOfThorns extends Spell {
 
 				((BlockThorns)WizardryBlocks.thorns).placeAt(world, pos, 3);
 
-//				for(int i=0; i<2; i++){
+				TileEntity tileentity = world.getTileEntity(pos);
 
-					TileEntity tileentity = world.getTileEntity(pos);
+				if(tileentity instanceof TileEntityThorns){
 
-					if(tileentity instanceof TileEntityPlayerSaveTimed){
-						((TileEntityPlayerSaveTimed)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
-								* modifiers.get(WizardryItems.duration_upgrade)));
-						if(caster != null){
-							((TileEntityPlayerSaveTimed)tileentity).setCaster(caster);
-						}
-//						((TileEntityPlayerSaveTimed)tileentity).sync();
+					((TileEntityThorns)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
+							* modifiers.get(WizardryItems.duration_upgrade)));
+					if(caster != null){
+						((TileEntityThorns)tileentity).setCaster(caster);
 					}
-//				}
+
+					((TileEntityThorns)tileentity).sync();
+				}
 			}
 		}
 
