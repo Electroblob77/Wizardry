@@ -80,19 +80,22 @@ public class ForestOfThorns extends Spell {
 			// Because we're always using EnumFacing.UP in the code above, we can be sure that pos is the block above the floor
 			for(BlockPos pos : ring){
 
-				((BlockThorns)WizardryBlocks.thorns).placeAt(world, pos, 3);
+				if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canBlockBeReplaced(world, pos.up())){
 
-				TileEntity tileentity = world.getTileEntity(pos);
+					((BlockThorns)WizardryBlocks.thorns).placeAt(world, pos, 3);
 
-				if(tileentity instanceof TileEntityThorns){
+					TileEntity tileentity = world.getTileEntity(pos);
 
-					((TileEntityThorns)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
-							* modifiers.get(WizardryItems.duration_upgrade)));
+					if(tileentity instanceof TileEntityThorns){
 
-					if(caster != null)((TileEntityThorns)tileentity).setCaster(caster);
-					((TileEntityThorns)tileentity).damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
+						((TileEntityThorns)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
+								* modifiers.get(WizardryItems.duration_upgrade)));
 
-					((TileEntityThorns)tileentity).sync();
+						if(caster != null) ((TileEntityThorns)tileentity).setCaster(caster);
+						((TileEntityThorns)tileentity).damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
+
+						((TileEntityThorns)tileentity).sync();
+					}
 				}
 			}
 		}
