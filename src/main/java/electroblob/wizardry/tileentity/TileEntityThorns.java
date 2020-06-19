@@ -10,6 +10,8 @@ public class TileEntityThorns extends TileEntityPlayerSave implements ITickable 
 	private int lifetime;
 	private int age;
 
+	public float damageMultiplier = 1;
+
 	public TileEntityThorns(){
 		this.lifetime = 600;
 	}
@@ -43,6 +45,7 @@ public class TileEntityThorns extends TileEntityPlayerSave implements ITickable 
 		ticksExisted = tagCompound.getInteger("timer");
 		lifetime = tagCompound.getInteger("maxTimer"); // Left as maxTimer for backwards compatibility
 		age = tagCompound.getInteger("age");
+		damageMultiplier = tagCompound.getFloat("damageMultiplier");
 	}
 
 	@Override
@@ -51,6 +54,7 @@ public class TileEntityThorns extends TileEntityPlayerSave implements ITickable 
 		tagCompound.setInteger("timer", ticksExisted);
 		tagCompound.setInteger("maxTimer", lifetime);
 		tagCompound.setInteger("age", age);
+		tagCompound.setFloat("damageMultiplier", damageMultiplier);
 		return tagCompound;
 	}
 

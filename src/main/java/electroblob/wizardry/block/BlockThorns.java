@@ -126,10 +126,13 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 	private static boolean applyThornDamage(World world, BlockPos pos, IBlockState state, Entity target){
 
 		DamageSource source = DamageSource.CACTUS;
+		float damage = Spells.forest_of_thorns.getProperty(Spell.DAMAGE).floatValue();
 
 		TileEntity tileentity = world.getTileEntity(state.getValue(HALF) == EnumBlockHalf.UPPER ? pos.down() : pos);
 
 		if(tileentity instanceof TileEntityThorns){
+
+			damage *= ((TileEntityThorns)tileentity).damageMultiplier;
 
 			EntityLivingBase caster = ((TileEntityThorns)tileentity).getCaster();
 
@@ -141,7 +144,6 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 		}
 
 		if(target.ticksExisted % 20 == 0){
-			float damage = Spells.forest_of_thorns.getProperty(Spell.DAMAGE).floatValue();
 			EntityUtils.attackEntityWithoutKnockback(target, source, damage);
 		}
 
