@@ -35,6 +35,7 @@ public class Snare extends SpellRay {
 			if(!world.isRemote){
 				world.setBlockState(pos.up(), WizardryBlocks.snare.getDefaultState());
 				((TileEntityPlayerSave)world.getTileEntity(pos.up())).setCaster(caster);
+				((TileEntityPlayerSave)world.getTileEntity(pos.up())).sync();
 			}
 			return true;
 		}

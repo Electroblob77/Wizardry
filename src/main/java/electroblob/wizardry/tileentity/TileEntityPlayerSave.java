@@ -64,7 +64,6 @@ public class TileEntityPlayerSave extends TileEntity {
 
 	public void setCaster(@Nullable EntityLivingBase caster){
 		this.casterUUID = caster == null ? null : caster.getUniqueID();
-		this.sync();
 	}
 
 	@Override
