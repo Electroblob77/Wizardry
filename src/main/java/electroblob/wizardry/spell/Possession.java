@@ -15,6 +15,7 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.PacketPossession;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
@@ -325,6 +326,7 @@ public class Possession extends SpellRay {
 			if(!player.world.isRemote) player.world.spawnEntity(victim);
 
 			for(PotionEffect effect : player.getActivePotionEffects()){
+				if(effect.getPotion() instanceof PotionSlowTime) continue; // Don't transfer slow time
 				victim.addPotionEffect(effect);
 			}
 		}
