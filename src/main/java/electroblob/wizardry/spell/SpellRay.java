@@ -167,7 +167,7 @@ public abstract class SpellRay extends Spell {
 
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 		
-		//if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
+		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
@@ -238,7 +238,7 @@ public abstract class SpellRay extends Spell {
 
 	/**
 	 * Hook allowing subclasses to determine whether the caster swings their arm when casting the spell. By default,
-	 * returns false for continuous spells and true for all others.
+	 * returns true for non-continuous spells without an action.
 	 *
 	 * @param world A reference to the world object. This is for convenience, you can also use caster.world.
 	 * @param caster The EntityLivingBase that cast the spell.
@@ -250,7 +250,7 @@ public abstract class SpellRay extends Spell {
 	 * @return True if the caster should swing their arm when casting this spell, false if not.
 	 */
 	protected boolean casterSwingsArm(World world, EntityLivingBase caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		return !this.isContinuous;
+		return !this.isContinuous && this.action == EnumAction.NONE;
 	}
 
 	/** Takes care of the shared stuff for the three casting methods. This is mainly for internal use. */
