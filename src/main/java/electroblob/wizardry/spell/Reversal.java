@@ -24,7 +24,7 @@ public class Reversal extends SpellRay {
 	public static final String REVERSED_EFFECTS = "reversed_effects";
 
 	public Reversal(){
-		super("reversal", false, SpellActions.POINT);
+		super("reversal", SpellActions.POINT, false);
 		addProperties(REVERSED_EFFECTS);
 	}
 

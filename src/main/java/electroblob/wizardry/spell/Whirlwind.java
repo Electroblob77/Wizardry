@@ -22,7 +22,7 @@ public class Whirlwind extends SpellRay {
 	public static final String REPULSION_VELOCITY = "repulsion_velocity";
 
 	public Whirlwind(){
-		super("whirlwind", false, SpellActions.POINT);
+		super("whirlwind", SpellActions.POINT, false);
 		this.soundValues(0.8f, 0.7f, 0.2f);
 		addProperties(REPULSION_VELOCITY);
 	}

@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class Snare extends SpellRay {
 
 	public Snare(){
-		super("snare", false, SpellActions.POINT);
+		super("snare", SpellActions.POINT, false);
 		this.soundValues(1, 1.4f, 0.4f);
 		this.ignoreLivingEntities(true);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);

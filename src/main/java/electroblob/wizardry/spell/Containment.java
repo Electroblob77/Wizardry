@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class Containment extends SpellRay {
 
 	public Containment(){
-		super("containment", false, SpellActions.POINT);
+		super("containment", SpellActions.POINT, false);
 		this.soundValues(1, 1, 0.2f);
 		addProperties(EFFECT_DURATION, EFFECT_STRENGTH);
 	}

@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class FlameRay extends SpellRay {
 
 	public FlameRay(){
-		super("flame_ray", true, SpellActions.POINT);
+		super("flame_ray", SpellActions.POINT, true);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DAMAGE, BURN_DURATION);

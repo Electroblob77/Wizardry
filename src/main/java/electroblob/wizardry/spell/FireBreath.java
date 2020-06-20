@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class FireBreath extends SpellRay {
 
 	public FireBreath(){
-		super("fire_breath", true, SpellActions.POINT);
+		super("fire_breath", SpellActions.POINT, true);
 		this.particleVelocity(1);
 		this.particleJitter(0.3);
 		this.particleSpacing(0.25);

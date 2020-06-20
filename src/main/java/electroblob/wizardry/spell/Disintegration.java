@@ -25,7 +25,7 @@ public class Disintegration extends SpellRay {
 	public static final String NBT_KEY = "disintegrating";
 
 	public Disintegration(){
-		super("disintegration", false, SpellActions.POINT);
+		super("disintegration", SpellActions.POINT, false);
 		addProperties(DAMAGE, BURN_DURATION, EMBER_LIFETIME, EMBER_COUNT);
 	}
 

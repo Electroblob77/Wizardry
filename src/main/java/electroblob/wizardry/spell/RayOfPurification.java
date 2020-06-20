@@ -25,7 +25,7 @@ public class RayOfPurification extends SpellRay {
 	public static final String UNDEAD_DAMAGE_MULTIPLIER = "undead_damage_multiplier";
 
 	public RayOfPurification(){
-		super("ray_of_purification", true, SpellActions.POINT);
+		super("ray_of_purification", SpellActions.POINT, true);
 		addProperties(DAMAGE, EFFECT_DURATION, BURN_DURATION, UNDEAD_DAMAGE_MULTIPLIER);
 	}
 

@@ -23,7 +23,7 @@ public class Banish extends SpellRay {
 	public static final String MAXIMUM_TELEPORT_DISTANCE = "maximum_teleport_distance";
 
 	public Banish(){
-		super("banish", false, SpellActions.POINT);
+		super("banish", SpellActions.POINT, false);
 		this.addProperties(MINIMUM_TELEPORT_DISTANCE, MAXIMUM_TELEPORT_DISTANCE);
 	}
 

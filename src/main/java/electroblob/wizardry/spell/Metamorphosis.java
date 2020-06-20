@@ -46,7 +46,7 @@ public class Metamorphosis extends SpellRay {
 	}
 	
 	public Metamorphosis(){
-		super("metamorphosis", false, SpellActions.POINT);
+		super("metamorphosis", SpellActions.POINT, false);
 		this.soundValues(0.5f, 1f, 0);
 	}
 	

@@ -37,7 +37,7 @@ public class MindControl extends SpellRay {
 	public static final String NBT_KEY = "controllingEntity";
 
 	public MindControl(){
-		super("mind_control", false, SpellActions.POINT);
+		super("mind_control", SpellActions.POINT, false);
 		addProperties(EFFECT_DURATION);
 	}
 	

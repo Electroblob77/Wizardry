@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class LightningRay extends SpellRay {
 
 	public LightningRay(){
-		super("lightning_ray", true, SpellActions.POINT);
+		super("lightning_ray", SpellActions.POINT, true);
 		this.aimAssist(0.6f);
 		addProperties(DAMAGE);
 	}

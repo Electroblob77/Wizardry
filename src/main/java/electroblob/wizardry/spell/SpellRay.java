@@ -66,11 +66,11 @@ public abstract class SpellRay extends Spell {
 	/** The aim assist to use when raytracing. Defaults to 0. */
 	protected float aimAssist = 0;
 
-	public SpellRay(String name, boolean isContinuous, EnumAction action){
-		this(Wizardry.MODID, name, isContinuous, action);
+	public SpellRay(String name, EnumAction action, boolean isContinuous){
+		this(Wizardry.MODID, name, action, isContinuous);
 	}
 
-	public SpellRay(String modID, String name, boolean isContinuous, EnumAction action){
+	public SpellRay(String modID, String name, EnumAction action, boolean isContinuous){
 		super(modID, name, action, isContinuous);
 		this.addProperties(RANGE);
 		this.npcSelector((e, o) -> true);

@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class Ignite extends SpellRay {
 	
 	public Ignite(){
-		super("ignite", false, SpellActions.POINT);
+		super("ignite", SpellActions.POINT, false);
 		this.soundValues(1, 1, 0.4f);
 		addProperties(BURN_DURATION);
 	}

@@ -46,7 +46,7 @@ public class ArcaneJammer extends SpellRay {
 	}
 
 	public ArcaneJammer(){
-		super("arcane_jammer", false, SpellActions.POINT);
+		super("arcane_jammer", SpellActions.POINT, false);
 		this.soundValues(0.7f, 1, 0.4f);
 		this.addProperties(EFFECT_DURATION, EFFECT_STRENGTH);
 	}

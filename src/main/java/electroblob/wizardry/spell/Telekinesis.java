@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class Telekinesis extends SpellRay {
 
 	public Telekinesis(){
-		super("telekinesis", false, SpellActions.POINT);
+		super("telekinesis", SpellActions.POINT, false);
 	}
 
 	@Override public boolean requiresPacket(){ return false; }

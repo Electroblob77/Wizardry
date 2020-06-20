@@ -19,7 +19,7 @@ import java.util.List;
 public class Cobwebs extends SpellRay {
 
 	public Cobwebs(){
-		super("cobwebs", false, SpellActions.POINT);
+		super("cobwebs", SpellActions.POINT, false);
 		this.ignoreLivingEntities(true);
 		addProperties(EFFECT_RADIUS, DURATION);
 	}

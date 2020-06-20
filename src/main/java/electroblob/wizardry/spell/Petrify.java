@@ -21,7 +21,7 @@ public class Petrify extends SpellRay {
 	public static final String MINIMUM_EFFECT_DURATION = "minimum_effect_duration";
 
 	public Petrify(){
-		super("petrify", false, SpellActions.POINT);
+		super("petrify", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(MINIMUM_EFFECT_DURATION);
 	}

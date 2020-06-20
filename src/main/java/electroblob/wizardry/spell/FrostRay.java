@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 public class FrostRay extends SpellRay {
 
 	public FrostRay(){
-		super("frost_ray", true, SpellActions.POINT);
+		super("frost_ray", SpellActions.POINT, true);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);

@@ -42,7 +42,7 @@ public class CurseOfSoulbinding extends SpellRay {
 			Persistence.DIMENSION_CHANGE);
 
 	public CurseOfSoulbinding(){
-		super("curse_of_soulbinding", false, SpellActions.POINT);
+		super("curse_of_soulbinding", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		WizardData.registerStoredVariables(TARGETS_KEY);
 	}

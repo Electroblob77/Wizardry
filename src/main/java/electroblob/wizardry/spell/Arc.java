@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 public class Arc extends SpellRay {
 
 	public Arc(){
-		super("arc", false, SpellActions.POINT);
+		super("arc", SpellActions.POINT, false);
 		this.aimAssist(0.6f);
 		this.soundValues(1, 1.7f, 0.2f);
 		this.addProperties(DAMAGE);

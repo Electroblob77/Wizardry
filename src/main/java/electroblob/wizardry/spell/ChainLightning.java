@@ -28,7 +28,7 @@ public class ChainLightning extends SpellRay {
 	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public ChainLightning(){
-		super("chain_lightning", false, SpellActions.POINT);
+		super("chain_lightning", SpellActions.POINT, false);
 		this.aimAssist(0.6f);
 		this.soundValues(1, 1.7f, 0.2f);
 		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,

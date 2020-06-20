@@ -20,7 +20,7 @@ public class ConjureBlock extends SpellRay {
 	private static final String BLOCK_LIFETIME = "block_lifetime";
 
 	public ConjureBlock(){
-		super("conjure_block", false, SpellActions.POINT);
+		super("conjure_block", SpellActions.POINT, false);
 		this.ignoreLivingEntities(true);
 		addProperties(BLOCK_LIFETIME);
 	}

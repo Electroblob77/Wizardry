@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 public class Bubble extends SpellRay {
 
 	public Bubble(){
-		super("bubble", false, SpellActions.POINT);
+		super("bubble", SpellActions.POINT, false);
 		this.soundValues(0.5f, 1.1f, 0.2f);
 		addProperties(DURATION);
 	}

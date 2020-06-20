@@ -29,7 +29,7 @@ public class LightningWeb extends SpellRay {
 	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public LightningWeb(){
-		super("lightning_web", true, SpellActions.POINT);
+		super("lightning_web", SpellActions.POINT, true);
 		this.aimAssist(0.6f);
 		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,
 				SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);

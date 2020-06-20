@@ -37,7 +37,7 @@ public class Mine extends SpellRay {
 	}
 
 	public Mine(){
-		super("mine", false, SpellActions.POINT);
+		super("mine", SpellActions.POINT, false);
 		this.ignoreLivingEntities(true);
 		this.particleSpacing(0.5);
 	}

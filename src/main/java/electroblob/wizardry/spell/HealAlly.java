@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class HealAlly extends SpellRay {
 
 	public HealAlly(){
-		super("heal_ally", false, SpellActions.POINT);
+		super("heal_ally", SpellActions.POINT, false);
 		this.soundValues(0.7f, 1.2f, 0.4f);
 		addProperties(HEALTH);
 	}

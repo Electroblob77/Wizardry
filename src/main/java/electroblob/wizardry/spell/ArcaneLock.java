@@ -26,7 +26,7 @@ public class ArcaneLock extends SpellRay {
 	public static final String NBT_KEY = "arcaneLockOwner";
 
 	public ArcaneLock(){
-		super("arcane_lock", false, SpellActions.POINT);
+		super("arcane_lock", SpellActions.POINT, false);
 	}
 
 	@Override public boolean requiresPacket(){ return true; }

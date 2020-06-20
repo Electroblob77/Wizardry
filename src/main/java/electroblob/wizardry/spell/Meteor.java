@@ -18,7 +18,7 @@ public class Meteor extends SpellRay {
 	public static final String BLAST_STRENGTH = "blast_strength";
 
 	public Meteor(){
-		super("meteor", false, SpellActions.POINT);
+		super("meteor", SpellActions.POINT, false);
 		this.soundValues(3, 1, 0);
 		this.ignoreLivingEntities(true);
 		addProperties(BLAST_STRENGTH);

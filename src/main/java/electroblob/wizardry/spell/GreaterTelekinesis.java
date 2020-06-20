@@ -33,7 +33,7 @@ public class GreaterTelekinesis extends SpellRay {
 	private static final float UNDERSHOOT = 0.2f;
 
 	public GreaterTelekinesis(){
-		super("greater_telekinesis", true, SpellActions.POINT);
+		super("greater_telekinesis", SpellActions.POINT, true);
 		this.aimAssist(0.4f);
 		this.particleSpacing(1);
 		this.particleJitter(0.05);

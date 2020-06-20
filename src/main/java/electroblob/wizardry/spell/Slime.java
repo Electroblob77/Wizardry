@@ -22,7 +22,7 @@ import net.minecraft.world.World;
 public class Slime extends SpellRay {
 
 	public Slime(){
-		super("slime", false, SpellActions.POINT);
+		super("slime", SpellActions.POINT, false);
 		addProperties(DURATION);
 	}
 

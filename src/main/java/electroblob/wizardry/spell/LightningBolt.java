@@ -20,7 +20,7 @@ public class LightningBolt extends SpellRay {
 	public static final String NBT_KEY = "summoningPlayer";
 
 	public LightningBolt(){
-		super("lightning_bolt", false, SpellActions.POINT);
+		super("lightning_bolt", SpellActions.POINT, false);
 		this.ignoreLivingEntities(true);
 	}
 

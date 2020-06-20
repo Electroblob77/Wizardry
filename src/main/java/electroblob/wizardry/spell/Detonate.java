@@ -22,7 +22,7 @@ public class Detonate extends SpellRay {
 	public static final String MAX_DAMAGE = "max_damage";
 
 	public Detonate(){
-		super("detonate", false, SpellActions.POINT);
+		super("detonate", SpellActions.POINT, false);
 		this.soundValues(4, 0.7f, 0.14f);
 		this.ignoreLivingEntities(true);
 		addProperties(MAX_DAMAGE, BLAST_RADIUS);

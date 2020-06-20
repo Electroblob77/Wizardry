@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class Wither extends SpellRay {
 
 	public Wither(){
-		super("wither", false, SpellActions.POINT);
+		super("wither", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 	}

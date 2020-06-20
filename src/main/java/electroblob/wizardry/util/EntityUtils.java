@@ -257,10 +257,11 @@ public final class EntityUtils {
 		return server.getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
 	}
 
-	/** Checks that the given entity is allowed to damage blocks in the given world. If the entity is a player, this
-	 * checks the player block damage config setting, otherwise it posts a mob griefing event and returns the result. */
+	/** Checks that the given entity is allowed to damage blocks in the given world. If the entity is a player or null,
+	 * this checks the player block damage config setting, otherwise it posts a mob griefing event and returns the result. */
 	public static boolean canDamageBlocks(EntityLivingBase entity, World world){
-		if(entity instanceof EntityPlayer) return Wizardry.settings.playerBlockDamage;
+		// TODO: Dispenser griefing!
+		if(entity == null || entity instanceof EntityPlayer) return Wizardry.settings.playerBlockDamage;
 		return ForgeEventFactory.getMobGriefingEvent(world, entity);
 	}
 

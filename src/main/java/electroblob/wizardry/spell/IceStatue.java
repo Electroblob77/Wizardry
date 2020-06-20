@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class IceStatue extends SpellRay {
 
 	public IceStatue(){
-		super("ice_statue", false, SpellActions.POINT);
+		super("ice_statue", SpellActions.POINT, false);
 		this.soundValues(1, 1.4f, 0.4f);
 		addProperties(EFFECT_DURATION);
 	}

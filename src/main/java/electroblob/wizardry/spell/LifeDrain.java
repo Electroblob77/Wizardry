@@ -17,7 +17,7 @@ public class LifeDrain extends SpellRay {
 	public static final String HEAL_FACTOR = "heal_factor";
 
 	public LifeDrain(){
-		super("life_drain", true, SpellActions.POINT);
+		super("life_drain", SpellActions.POINT, true);
 		this.particleVelocity(-0.5);
 		this.particleSpacing(0.4);
 		addProperties(DAMAGE, HEAL_FACTOR);

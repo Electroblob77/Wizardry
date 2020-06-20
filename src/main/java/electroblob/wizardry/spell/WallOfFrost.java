@@ -21,7 +21,7 @@ public class WallOfFrost extends SpellRay {
 	private static final int MINIMUM_PLACEMENT_RANGE = 2;
 	
 	public WallOfFrost(){
-		super("wall_of_frost", true, SpellActions.POINT);
+		super("wall_of_frost", SpellActions.POINT, true);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DURATION);

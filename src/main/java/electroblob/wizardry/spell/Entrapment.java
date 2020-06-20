@@ -19,7 +19,7 @@ public class Entrapment extends SpellRay {
 	public static final String DAMAGE_INTERVAL = "damage_interval";
 
 	public Entrapment(){
-		super("entrapment", false, SpellActions.POINT);
+		super("entrapment", SpellActions.POINT, false);
 		this.soundValues(1, 0.85f, 0.3f);
 		addProperties(EFFECT_DURATION, DAMAGE_INTERVAL);
 	}

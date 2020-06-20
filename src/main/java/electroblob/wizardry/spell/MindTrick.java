@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class MindTrick extends SpellRay {
 
 	public MindTrick(){
-		super("mind_trick", false, SpellActions.POINT);
+		super("mind_trick", SpellActions.POINT, false);
 		this.soundValues(0.7f, 1, 0.4f);
 		addProperties(EFFECT_DURATION);
 	}

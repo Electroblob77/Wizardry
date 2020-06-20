@@ -119,7 +119,7 @@ public class Possession extends SpellRay {
 	}
 
 	public Possession(){
-		super("possession", false, SpellActions.POINT);
+		super("possession", SpellActions.POINT, false);
 		addProperties(EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 

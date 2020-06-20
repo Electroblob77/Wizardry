@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class CurseOfUndeath extends SpellRay {
 
 	public CurseOfUndeath(){
-		super("curse_of_undeath", false, SpellActions.POINT);
+		super("curse_of_undeath", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(EFFECT_STRENGTH);
 	}

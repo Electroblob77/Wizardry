@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 public class Freeze extends SpellRay {
 
 	public Freeze(){
-		super("freeze", false, SpellActions.POINT);
+		super("freeze", SpellActions.POINT, false);
 		this.soundValues(1, 1.4f, 0.4f);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 		this.hitLiquids(true);

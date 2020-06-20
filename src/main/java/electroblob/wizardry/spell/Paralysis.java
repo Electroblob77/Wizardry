@@ -31,7 +31,7 @@ public class Paralysis extends SpellRay {
 	private static final String CRITICAL_HEALTH = "critical_health";
 
 	public Paralysis(){
-		super("paralysis", false, SpellActions.POINT);
+		super("paralysis", SpellActions.POINT, false);
 		addProperties(DAMAGE, EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 

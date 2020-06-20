@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class CurseOfEnfeeblement extends SpellRay {
 
 	public CurseOfEnfeeblement(){
-		super("curse_of_enfeeblement", false, SpellActions.POINT);
+		super("curse_of_enfeeblement", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(EFFECT_STRENGTH);
 	}

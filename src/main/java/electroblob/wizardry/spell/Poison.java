@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class Poison extends SpellRay {
 
 	public Poison(){
-		super("poison", false, SpellActions.POINT);
+		super("poison", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
