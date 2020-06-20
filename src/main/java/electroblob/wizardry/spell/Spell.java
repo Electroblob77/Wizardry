@@ -185,6 +185,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 *        unlocalised name will be a resource location with the format [modid]:[name].
 	 * @param action The vanilla usage action to be displayed when casting this spell.
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
+	 *                     use item button.
 	 */
 	Spell(String name, EnumAction action, boolean isContinuous){
 		this(Wizardry.MODID, name, action, isContinuous);
@@ -199,6 +200,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 *        file. The spell's unlocalised name will be a resource location with the format [modid]:[name].
 	 * @param action The vanilla usage action to be displayed when casting this spell (see {@link}EnumAction)
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
+	 *                     use item button.
 	 */
 	public Spell(String modID, String name, EnumAction action, boolean isContinuous){
 		this.setRegistryName(modID, name);
