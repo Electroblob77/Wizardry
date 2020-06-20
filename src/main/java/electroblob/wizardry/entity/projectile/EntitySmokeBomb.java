@@ -1,13 +1,11 @@
 package electroblob.wizardry.entity.projectile;
 
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -64,14 +62,7 @@ public class EntitySmokeBomb extends EntityBomb {
 
 			for(EntityLivingBase target : targets){
 				if(target != this.getThrower()){
-					// Gives the target blindness, and mind trick if it's not a player (since this has the desired
-					// effect of preventing targeting)
 					target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
-
-					if(target instanceof EntityLiving){
-						((EntityLiving)target).setAttackTarget(null);
-						target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick, duration, 0));
-					}
 				}
 			}
 

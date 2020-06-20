@@ -26,6 +26,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -192,16 +193,27 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
 
-		if(event.getTarget() != null && event.getEntityLiving() instanceof EntityLiving
-				&& event.getTarget().isPotionActive(WizardryPotions.muffle)){
+		if(event.getEntityLiving() instanceof EntityLiving && event.getTarget() != null){
 
-			Vec3d vec = event.getTarget().getPositionEyes(1).subtract(event.getEntity().getPositionEyes(1));
-			// Find the angle between the direction the mob is looking and the direction the player is in
-			// Angle between a and b = acos((a.b) / (|a|*|b|))
-			double angle = Math.acos(vec.dotProduct(event.getEntity().getLookVec()) / vec.length());
-			System.out.println(angle);
-			// If the player is not within the 144-degree arc in front of the mob, it won't detect them
-			if(angle > 0.4 * Math.PI){
+			// Muffle
+			if(event.getTarget().isPotionActive(WizardryPotions.muffle)){
+
+				Vec3d vec = event.getTarget().getPositionEyes(1).subtract(event.getEntity().getPositionEyes(1));
+				// Find the angle between the direction the mob is looking and the direction the player is in
+				// Angle between a and b = acos((a.b) / (|a|*|b|))
+				double angle = Math.acos(vec.dotProduct(event.getEntity().getLookVec()) / vec.length());
+				System.out.println(angle);
+				// If the player is not within the 144-degree arc in front of the mob, it won't detect them
+				if(angle > 0.4 * Math.PI){
+					((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+				}
+			}
+
+			// Blindness tweak
+			// I'm not going as far as potion core's implementation, this is just so it does *something* to mobs
+			if(event.getEntityLiving().isPotionActive(MobEffects.BLINDNESS) && !Loader.isModLoaded("potioncore")
+					&& Wizardry.settings.blindnessTweak && event.getTarget().getDistanceSq(event.getEntity()) > 2.5 * 2.5){
+				// Can't detect anything more than 2.5 blocks away (roughly the player's view distance when blinded)
 				((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
 			}
 		}

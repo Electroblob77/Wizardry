@@ -179,6 +179,8 @@ public final class Settings {
 	 * velocity-based one.
 	 */
 	public boolean replaceVanillaFallDamage = true; // TODO: This should be synced
+	/** <b>[Server-only]</b> Whether to tweak the blindness effect to reduce follow distance when used on non-players. */
+	public boolean blindnessTweak = true;
 	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
 	public boolean bonemealGrowsCrystalFlowers = true;
 	/**
@@ -702,6 +704,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fall_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		replaceVanillaFallDamage = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "blindnessTweak", true,
+				"Whether to tweak the blindness effect to reduce follow distance when used on non-players. This automatically disables itself in favour of Potion Core's implementation if installed.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".blindness_tweak");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		blindnessTweak = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
