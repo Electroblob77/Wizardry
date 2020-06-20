@@ -195,7 +195,7 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 
 			if(attackStrength == 1){ // Only chains when the attack meter is full
 
-				List<EntityLivingBase> nearby = EntityUtils.getEntitiesWithinRadius(CHAINING_RANGE, hit.posX, hit.posY, hit.posZ, hit.world);
+				List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(CHAINING_RANGE, hit.posX, hit.posY, hit.posZ, hit.world);
 
 				nearby.remove(hit);
 				nearby.remove(wielder);

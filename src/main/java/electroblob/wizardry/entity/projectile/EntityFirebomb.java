@@ -69,7 +69,7 @@ public class EntityFirebomb extends EntityBomb {
 
 			double range = Spells.firebomb.getProperty(Spell.BLAST_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(range, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(range, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){

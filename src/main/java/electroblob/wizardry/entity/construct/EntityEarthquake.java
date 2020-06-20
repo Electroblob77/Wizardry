@@ -63,7 +63,7 @@ public class EntityEarthquake extends EntityMagicConstruct {
 		}
 
 		List<EntityLivingBase> targets = EntityUtils
-				.getEntitiesWithinRadius((this.ticksExisted * speed) + 1.5, this.posX, this.posY, this.posZ, world);
+				.getLivingWithinRadius((this.ticksExisted * speed) + 1.5, this.posX, this.posY, this.posZ, world);
 
 		// In this particular instance, the caster is completely unaffected because they will always be in the
 		// centre.

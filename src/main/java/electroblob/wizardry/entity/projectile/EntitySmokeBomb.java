@@ -55,7 +55,7 @@ public class EntitySmokeBomb extends EntityBomb {
 
 			double range = Spells.smoke_bomb.getProperty(Spell.BLAST_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(range, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(range, this.posX, this.posY,
 					this.posZ, this.world);
 
 			int duration = Spells.smoke_bomb.getProperty(Spell.EFFECT_DURATION).intValue();

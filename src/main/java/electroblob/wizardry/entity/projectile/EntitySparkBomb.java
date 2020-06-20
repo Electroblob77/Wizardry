@@ -55,7 +55,7 @@ public class EntitySparkBomb extends EntityBomb {
 
 		double seekerRange = Spells.spark_bomb.getProperty(Spell.EFFECT_RADIUS).doubleValue() * blastMultiplier;
 
-		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(seekerRange, this.posX, this.posY,
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(seekerRange, this.posX, this.posY,
 				this.posZ, this.world);
 
 		for(int i = 0; i < Math.min(targets.size(), Spells.spark_bomb.getProperty(SECONDARY_MAX_TARGETS).intValue()); i++){

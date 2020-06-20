@@ -132,7 +132,7 @@ public class MindControl extends SpellRay {
 		// As of 1.1, this now uses the creature's follow range, like normal targeting. It also
 		// no longer lasts until the creature dies; instead it is a potion effect which continues to
 		// set the target until it wears off.
-		List<EntityLivingBase> possibleTargets = EntityUtils.getEntitiesWithinRadius(
+		List<EntityLivingBase> possibleTargets = EntityUtils.getLivingWithinRadius(
 				target.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).getAttributeValue(),
 				target.posX, target.posY, target.posZ, world);
 

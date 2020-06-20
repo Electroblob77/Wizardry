@@ -480,7 +480,7 @@ public class ItemArtefact extends Item {
 					// Spell properties allow all three of the above spells to be dealt with the same way - neat!
 					float healthGained = event.getSpell().getProperty(Spell.HEALTH).floatValue() * event.getModifiers().get(SpellModifiers.POTENCY);
 
-					List<EntityLivingBase> nearby = EntityUtils.getEntitiesWithinRadius(4, player.posX, player.posY, player.posZ, event.getWorld());
+					List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(4, player.posX, player.posY, player.posZ, event.getWorld());
 
 					for(EntityLivingBase entity : nearby){
 						if(AllyDesignationSystem.isAllied(player, entity) && entity.getHealth() > 0 && entity.getHealth() < entity.getMaxHealth()){
@@ -656,7 +656,7 @@ public class ItemArtefact extends Item {
 					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.LIGHTNING){
 
-						EntityUtils.getEntitiesWithinRadius(3, player.posX, player.posY, player.posZ, world).stream()
+						EntityUtils.getLivingWithinRadius(3, player.posX, player.posY, player.posZ, world).stream()
 								.filter(EntityUtils::isLiving)
 								.filter(e -> e != player)
 								.min(Comparator.comparingDouble(player::getDistanceSq))

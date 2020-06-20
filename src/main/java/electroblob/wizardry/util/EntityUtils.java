@@ -79,7 +79,7 @@ public final class EntityUtils {
 	 * @param z The z coordinate to search around
 	 * @param world The world to search in
 	 */
-	public static List<EntityLivingBase> getEntitiesWithinRadius(double radius, double x, double y, double z, World world){
+	public static List<EntityLivingBase> getLivingWithinRadius(double radius, double x, double y, double z, World world){
 		return getEntitiesWithinRadius(radius, x, y, z, world, EntityLivingBase.class);
 	}
 
@@ -89,7 +89,7 @@ public final class EntityUtils {
 	 * this does not exclude any entities; if any specific entities are to be excluded this must be checked when
 	 * iterating through the list.
 	 *
-	 * @see EntityUtils#getEntitiesWithinRadius(double, double, double, double, World)
+	 * @see EntityUtils#getLivingWithinRadius(double, double, double, double, World)
 	 * @param radius The search radius
 	 * @param x The x coordinate to search around
 	 * @param y The y coordinate to search around

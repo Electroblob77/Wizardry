@@ -38,7 +38,7 @@ public class Detonate extends SpellRay {
 		
 		if(!world.isRemote){
 			
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(getProperty(BLAST_RADIUS).doubleValue()
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(getProperty(BLAST_RADIUS).doubleValue()
 					* modifiers.get(WizardryItems.blast_upgrade), pos.getX(), pos.getY(), pos.getZ(), world);
 			
 			for(EntityLivingBase target : targets){

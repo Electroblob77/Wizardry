@@ -29,7 +29,7 @@ public class EntityFireSigil extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(width/2, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 

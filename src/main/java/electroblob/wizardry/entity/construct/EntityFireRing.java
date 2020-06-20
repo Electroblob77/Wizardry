@@ -32,7 +32,7 @@ public class EntityFireRing extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(2.5d, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(2.5d, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){

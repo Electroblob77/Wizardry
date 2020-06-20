@@ -77,7 +77,7 @@ public class Thunderstorm extends Spell {
 					// entityNBT.setInteger("summoningPlayer", entityplayer.entityId);
 
 					// Secondary chaining effect
-					List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(
+					List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
 							getProperty(SECONDARY_RANGE).doubleValue(), x, y + 1, z, world);
 
 					for(int j = 0; j < Math.min(secondaryTargets.size(), getProperty(SECONDARY_MAX_TARGETS).intValue()); j++){
@@ -102,7 +102,7 @@ public class Thunderstorm extends Spell {
 
 							// Tertiary chaining effect
 
-							List<EntityLivingBase> tertiaryTargets = EntityUtils.getEntitiesWithinRadius(
+							List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
 									getProperty(TERTIARY_RANGE).doubleValue(), secondaryTarget.posX,
 									secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 

@@ -30,7 +30,7 @@ public class PlagueOfDarkness extends Spell {
 
 		double radius = getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade);
 
-		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){
 			if(AllyDesignationSystem.isValidTarget(caster, target)
@@ -75,8 +75,7 @@ public class PlagueOfDarkness extends Spell {
 					.clr(0.8f, 0, 0.05f)
 					.spawn(world);
 		}
-		
-		caster.swingArm(hand);
+
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}

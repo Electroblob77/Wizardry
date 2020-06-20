@@ -36,7 +36,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(2.5, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(2.5, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 

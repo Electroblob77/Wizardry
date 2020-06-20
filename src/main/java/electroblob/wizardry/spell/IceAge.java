@@ -39,7 +39,7 @@ public class IceAge extends Spell {
 
 		float radius = getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade);
 
-		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){
 			if(AllyDesignationSystem.isValidTarget(caster, target)){

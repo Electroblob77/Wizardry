@@ -38,7 +38,7 @@ public class LightningPulse extends Spell {
 
 		if(caster.onGround){
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(
 					getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade),
 					caster.posX, caster.posY, caster.posZ, world);
 

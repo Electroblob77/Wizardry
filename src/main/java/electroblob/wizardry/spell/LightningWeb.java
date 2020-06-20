@@ -60,7 +60,7 @@ public class LightningWeb extends SpellRay {
 			
 			// Secondary chaining effect
 
-			List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(
+			List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
 					getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
 					target.posZ, world);
 			
@@ -77,7 +77,7 @@ public class LightningWeb extends SpellRay {
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = EntityUtils.getEntitiesWithinRadius(
+				List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
 						getProperty(TERTIARY_RANGE).floatValue(), secondaryTarget.posX,
 						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 				

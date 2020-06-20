@@ -38,7 +38,7 @@ public class EntityBlizzard extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){

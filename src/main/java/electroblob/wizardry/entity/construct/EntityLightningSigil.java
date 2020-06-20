@@ -34,7 +34,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 			this.setDead();
 		}
 
-		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(1.0d, this.posX, this.posY,
 				this.posZ, this.world);
 
 		for(EntityLivingBase target : targets){
@@ -60,7 +60,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 					// Secondary chaining effect
 					double seekerRange = Spells.lightning_sigil.getProperty(Spell.EFFECT_RADIUS).doubleValue();
 
-					List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(seekerRange,
+					List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(seekerRange,
 							target.posX, target.posY + target.height / 2, target.posZ, world);
 
 					for(int j = 0; j < Math.min(secondaryTargets.size(),

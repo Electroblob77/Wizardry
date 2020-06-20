@@ -105,7 +105,7 @@ public class EntityHammer extends EntityMagicConstruct {
 
 			double seekerRange = Spells.lightning_hammer.getProperty(Spell.EFFECT_RADIUS).doubleValue();
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(seekerRange, this.posX,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(seekerRange, this.posX,
 					this.posY + 1, this.posZ, world);
 
 			int maxTargets = Spells.lightning_hammer.getProperty(LightningHammer.SECONDARY_MAX_TARGETS).intValue();

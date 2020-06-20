@@ -72,7 +72,7 @@ public class EntityIceCharge extends EntityBomb {
 
 			double radius = Spells.ice_charge.getProperty(Spell.EFFECT_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(radius, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			// Slows targets

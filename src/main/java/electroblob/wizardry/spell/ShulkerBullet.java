@@ -62,7 +62,7 @@ public class ShulkerBullet extends Spell {
 
 			double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
 
-			List<EntityLivingBase> possibleTargets = EntityUtils.getEntitiesWithinRadius(range, x, y, z, world);
+			List<EntityLivingBase> possibleTargets = EntityUtils.getLivingWithinRadius(range, x, y, z, world);
 
 			possibleTargets.remove(caster);
 			possibleTargets.removeIf(t -> t instanceof EntityArmorStand);

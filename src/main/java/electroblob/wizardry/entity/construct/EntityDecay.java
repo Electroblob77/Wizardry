@@ -36,7 +36,7 @@ public class EntityDecay extends EntityMagicConstruct {
 					0.6F + rand.nextFloat() * 0.15F);
 
 		if(!this.world.isRemote){
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(1.0d, this.posX, this.posY,
 					this.posZ, this.world);
 			for(EntityLivingBase target : targets){
 				if(target != this.getCaster()){

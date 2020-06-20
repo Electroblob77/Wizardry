@@ -46,7 +46,7 @@ public class ChainLightning extends SpellRay {
 					* modifiers.get(SpellModifiers.POTENCY));
 
 			// Secondary chaining effect
-			List<EntityLivingBase> secondaryTargets = EntityUtils.getEntitiesWithinRadius(
+			List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
 					getProperty(SECONDARY_RANGE).doubleValue(), target.posX, target.posY + target.height / 2, target.posZ, world);
 
 			secondaryTargets.remove(target);
@@ -62,7 +62,7 @@ public class ChainLightning extends SpellRay {
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = EntityUtils.getEntitiesWithinRadius(
+				List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
 						getProperty(TERTIARY_RANGE).doubleValue(), secondaryTarget.posX,
 						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 

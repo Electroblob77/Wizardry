@@ -23,7 +23,7 @@ public class GroupHeal extends Spell {
 
 		boolean flag = false;
 
-		List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(getProperty(EFFECT_RADIUS).floatValue()
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(getProperty(EFFECT_RADIUS).floatValue()
 				* modifiers.get(WizardryItems.blast_upgrade), caster.posX, caster.posY, caster.posZ, world);
 
 		for(EntityLivingBase target : targets){

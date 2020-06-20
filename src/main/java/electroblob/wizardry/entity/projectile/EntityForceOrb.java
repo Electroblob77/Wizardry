@@ -53,7 +53,7 @@ public class EntityForceOrb extends EntityBomb {
 
 			double blastRadius = Spells.force_orb.getProperty(Spell.BLAST_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(blastRadius, this.posX,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(blastRadius, this.posX,
 					this.posY, this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){

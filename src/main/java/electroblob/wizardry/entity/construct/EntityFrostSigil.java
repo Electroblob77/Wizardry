@@ -32,7 +32,7 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(1.0d, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){

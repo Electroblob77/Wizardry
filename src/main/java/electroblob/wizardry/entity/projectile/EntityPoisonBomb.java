@@ -74,7 +74,7 @@ public class EntityPoisonBomb extends EntityBomb {
 
 			double range = Spells.poison_bomb.getProperty(Spell.EFFECT_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = EntityUtils.getEntitiesWithinRadius(range, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(range, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
