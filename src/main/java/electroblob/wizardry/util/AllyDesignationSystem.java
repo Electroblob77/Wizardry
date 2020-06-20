@@ -190,13 +190,23 @@ public final class AllyDesignationSystem {
 	}
 
 	/** Umbrella method that covers both {@link AllyDesignationSystem#isPlayerAlly(EntityPlayer, EntityPlayer)} and
-	 * {@link AllyDesignationSystem#isOwnerAlly(EntityPlayer, IEntityOwnable)}, returning true if the given
-	 * {@link EntityLivingBase} is either owned by the given player, an ally of the given player or owned by an ally
-	 * of the given player. This is generally used to determine targets for healing or other group buffs. */
-	public static boolean isAllied(EntityPlayer allyOf, EntityLivingBase possibleAlly){
-		return (possibleAlly instanceof EntityPlayer && isPlayerAlly(allyOf, (EntityPlayer)possibleAlly))
-				|| (possibleAlly instanceof IEntityOwnable && (((IEntityOwnable)possibleAlly).getOwner() == allyOf
-				|| isOwnerAlly(allyOf, (IEntityOwnable)possibleAlly)));
+	 * {@link AllyDesignationSystem#isOwnerAlly(EntityPlayer, IEntityOwnable)}, returning true if the second entity is
+	 * either owned by the first entity, an ally of the first entity, or owned by an ally of the first entity. This is
+	 * generally used to determine targets for healing or other group buffs. */
+	public static boolean isAllied(EntityLivingBase allyOf, EntityLivingBase possibleAlly){
+
+		if(allyOf instanceof EntityPlayer && possibleAlly instanceof EntityPlayer
+				&& isPlayerAlly((EntityPlayer)allyOf, (EntityPlayer)possibleAlly)){
+			return true;
+		}
+
+		if(possibleAlly instanceof IEntityOwnable){
+			IEntityOwnable pet = (IEntityOwnable)possibleAlly;
+			if(pet.getOwner() == allyOf) return true;
+			if(allyOf instanceof EntityPlayer && isOwnerAlly((EntityPlayer)allyOf, pet)) return true;
+		}
+
+		return false;
 	}
 
 	/** Helper method for testing if the second player is an ally of the first player. Makes the code neater.
