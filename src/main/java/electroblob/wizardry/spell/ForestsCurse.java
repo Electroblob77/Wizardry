@@ -8,23 +8,28 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class ForestsCurse extends SpellAreaEffect {
 
 	public ForestsCurse(){
-		super("forests_curse", SpellActions.POINT_UP);
+		super("forests_curse", SpellActions.POINT_UP, false);
+		this.alwaysSucceed(true);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 	
 	@Override
-	protected void affectEntity(World world, EntityLivingBase caster, EntityLivingBase target, SpellModifiers modifiers){
+	protected boolean affectEntity(World world, Vec3d origin, @Nullable EntityLivingBase caster, EntityLivingBase target, int targetCount, int ticksInUse, SpellModifiers modifiers){
 		
 		if(!MagicDamage.isEntityImmune(DamageType.POISON, target) && EntityUtils.isLiving(target)){
-			
-			target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.POISON),
-					getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
+
+			DamageSource source = caster != null ? MagicDamage.causeDirectMagicDamage(caster, DamageType.POISON) : DamageSource.MAGIC;
+			target.attackEntityFrom(source, getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 
 			int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
 			int duration = (int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
@@ -34,6 +39,8 @@ public class ForestsCurse extends SpellAreaEffect {
 			target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, amplifier));
 			target.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, duration, amplifier));
 		}
+
+		return true;
 	}
 	
 	@Override

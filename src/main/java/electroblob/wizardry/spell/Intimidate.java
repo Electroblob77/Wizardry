@@ -11,21 +11,20 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber
-public class Intimidate extends Spell {
+public class Intimidate extends SpellAreaEffect {
 
 	/** The NBT tag name for storing the feared entity's UUID in the target's tag compound. */
 	public static final String NBT_KEY = "fearedEntity";
@@ -37,42 +36,44 @@ public class Intimidate extends Spell {
 
 	public Intimidate(){
 		super("intimidate", SpellActions.SUMMON, false);
-		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
+		this.alwaysSucceed(true);
+		addProperties(EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
+		return false;
+	}
 
-		if(!world.isRemote){
+	@Override
+	protected boolean affectEntity(World world, Vec3d origin, @Nullable EntityLivingBase caster, EntityLivingBase target, int targetCount, int ticksInUse, SpellModifiers modifiers){
 
-			List<EntityCreature> entities = EntityUtils.getEntitiesWithinRadius(
-					getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.range_upgrade),
-					caster.posX, caster.posY, caster.posZ, world, EntityCreature.class);
+		if(caster != null && target instanceof EntityCreature){
 
-			for(EntityCreature target : entities){
-				// Why do we need this here?
-				//runAway(target, caster);
+			int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
 
-				int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
+			NBTTagCompound entityNBT = target.getEntityData();
+			if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
 
-				NBTTagCompound entityNBT = target.getEntityData();
-				if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
-
-				target.addPotionEffect(new PotionEffect(WizardryPotions.fear,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-						getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
-			}
-
-		}else{
-			for(int i = 0; i < 30; i++){
-				double x = caster.posX - 1 + world.rand.nextDouble() * 2;
-				double y = caster.getEntityBoundingBox().minY + 1.5 + world.rand.nextDouble() * 0.5;
-				double z = caster.posZ - 1 + world.rand.nextDouble() * 2;
-				ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.9f, 0.1f, 0).spawn(world);
-			}
+			target.addPotionEffect(new PotionEffect(WizardryPotions.fear,
+					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+					getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
 		}
-		this.playSound(world, caster, ticksInUse, -1, modifiers);
+
 		return true;
+	}
+
+	@Override
+	protected void spawnParticleEffect(World world, Vec3d origin, double radius, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
+
+		if(caster != null) origin = caster.getPositionEyes(0);
+
+		for(int i = 0; i < 30; i++){
+			double x = origin.x - 1 + world.rand.nextDouble() * 2;
+			double y = origin.y - 0.25 + world.rand.nextDouble() * 0.5;
+			double z = origin.z - 1 + world.rand.nextDouble() * 2;
+			ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.9f, 0.1f, 0).spawn(world);
+		}
 	}
 
 	/**

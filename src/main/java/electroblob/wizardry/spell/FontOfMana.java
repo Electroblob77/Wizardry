@@ -4,63 +4,47 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
-public class FontOfMana extends Spell {
+public class FontOfMana extends SpellAreaEffect {
 
 	public FontOfMana(){
 		super("font_of_mana", SpellActions.POINT_UP, false);
 		this.soundValues(0.7f, 1.2f, 0.4f);
-		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
+		this.particleDensity(1.25f);
+		this.targetAllies(true);
+		this.alwaysSucceed(true);
+		addProperties(EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected boolean affectEntity(World world, Vec3d origin, @Nullable EntityLivingBase caster, EntityLivingBase target, int targetCount, int ticksInUse, SpellModifiers modifiers){
 
-		double maxRadius = getProperty(EFFECT_RADIUS).doubleValue();
-
-		List<EntityPlayer> targets = EntityUtils.getEntitiesWithinRadius(
-				maxRadius * modifiers.get(WizardryItems.blast_upgrade),
-				caster.posX, caster.posY, caster.posZ, world, EntityPlayer.class);
-
-		for(EntityPlayer target : targets){
-			if(AllyDesignationSystem.isPlayerAlly(caster, target) || target == caster){
-				target.addPotionEffect(new PotionEffect(WizardryPotions.font_of_mana,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-						(int)(getProperty(EFFECT_STRENGTH).intValue() + (modifiers.get(SpellModifiers.POTENCY) - 1) * 2)));
-			}
+		if(target instanceof EntityPlayer){ // Font of mana is only useful to players
+			target.addPotionEffect(new PotionEffect(WizardryPotions.font_of_mana,
+					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+					(int)(getProperty(EFFECT_STRENGTH).intValue() + (modifiers.get(SpellModifiers.POTENCY) - 1) * 2)));
 		}
-
-		if(world.isRemote){
-			for(int i = 0; i < 100 * modifiers.get(WizardryItems.blast_upgrade); i++){
-
-				double radius = (1 + world.rand.nextDouble() * (maxRadius - 1)) * modifiers.get(WizardryItems.blast_upgrade);
-				float angle = world.rand.nextFloat() * (float)Math.PI * 2;
-				;
-				float hue = world.rand.nextFloat() * 0.4f;
-
-				double x = caster.posX + radius * MathHelper.cos(angle);
-				double y = caster.getEntityBoundingBox().minY;
-				double z = caster.posZ + radius * MathHelper.sin(angle);
-
-				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).time(50)
-						.clr(1, 1 - hue, 0.6f + hue).spawn(world);
-			}
-		}
-
-		playSound(world, caster, ticksInUse, -1, modifiers);
 
 		return true;
+	}
+
+	@Override
+	protected void spawnParticle(World world, double x, double y, double z){
+		float hue = world.rand.nextFloat() * 0.4f;
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).time(50)
+				.clr(1, 1 - hue, 0.6f + hue).spawn(world);
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOW) // Doesn't really matter but there's no point processing it if casting is blocked

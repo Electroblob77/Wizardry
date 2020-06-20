@@ -3,61 +3,42 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import net.minecraft.entity.player.EntityPlayer;
+import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
-public class InvigoratingPresence extends Spell {
+public class InvigoratingPresence extends SpellAreaEffect {
 
 	public InvigoratingPresence(){
 		super("invigorating_presence", SpellActions.POINT_UP, false);
 		this.soundValues(0.7f, 1.2f, 0.4f);
-		addProperties(EFFECT_RADIUS, EFFECT_DURATION, EFFECT_STRENGTH);
+		this.alwaysSucceed(true);
+		this.targetAllies(true);
+		addProperties(EFFECT_DURATION, EFFECT_STRENGTH);
 	}
 
 	@Override
-	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
+	protected boolean affectEntity(World world, Vec3d origin, @Nullable EntityLivingBase caster, EntityLivingBase target, int targetCount, int ticksInUse, SpellModifiers modifiers){
 
-		List<EntityPlayer> targets = EntityUtils.getEntitiesWithinRadius(
-				getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade),
-				caster.posX, caster.posY, caster.posZ, world, EntityPlayer.class);
+		int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
 
-		for(EntityPlayer target : targets){
-			if(AllyDesignationSystem.isPlayerAlly(caster, target) || target == caster){
+		target.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,
+				(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+				getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
 
-				int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
-
-				target.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-						getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
-			}
-		}
-
-		if(world.isRemote){
-			
-			for(int i = 0; i < 50 * modifiers.get(WizardryItems.blast_upgrade); i++){
-				
-				double radius = (1 + world.rand.nextDouble() * 4) * modifiers.get(WizardryItems.blast_upgrade);
-				float angle = world.rand.nextFloat() * (float)Math.PI * 2;;
-				
-				double x = caster.posX + radius * MathHelper.cos(angle);
-				double y = caster.getEntityBoundingBox().minY;
-				double z = caster.posZ + radius * MathHelper.sin(angle);
-				
-				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).time(50).clr(1, 0.2f, 0.2f).spawn(world);
-
-			}
-		}
-
-		playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
+	}
+
+	@Override
+	protected void spawnParticle(World world, double x, double y, double z){
+		ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.03, 0).time(50).clr(1, 0.2f, 0.2f).spawn(world);
 	}
 
 	@Override
