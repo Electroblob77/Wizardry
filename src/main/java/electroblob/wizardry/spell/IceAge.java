@@ -79,6 +79,7 @@ public class IceAge extends SpellAreaEffect {
 					.vel(0, 0, 0)
 					.scale(2)
 					.spin(world.rand.nextDouble() * (radius - 0.5) + 0.5, speed)
+					.shaded(true)
 					.spawn(world);
 		}
 
@@ -88,6 +89,7 @@ public class IceAge extends SpellAreaEffect {
 					.pos(origin.x, origin.y + world.rand.nextDouble() * 2.5, origin.z)
 					.clr(0xffffff)
 					.spin(world.rand.nextDouble() * (radius - 1) + 0.5, speed)
+					.shaded(true)
 					.spawn(world);
 		}
 	}
