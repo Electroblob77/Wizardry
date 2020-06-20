@@ -336,7 +336,7 @@ public abstract class ParticleWizardry extends Particle {
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY,
 			float lookX, float lookXY, float lookYZ){
 
-		updateEntityLinking(partialTicks);
+		updateEntityLinking(viewer, partialTicks);
 		
 		if(Float.isNaN(this.yaw) || Float.isNaN(this.pitch)){
 			// Normal behaviour (rotates to face the viewer)
@@ -369,12 +369,18 @@ public abstract class ParticleWizardry extends Particle {
 		super.renderParticle(buffer, viewer, partialTicks, rotationX, rotationY, rotationZ, rotationYZ, rotationXY);
 	}
 
-	protected void updateEntityLinking(float partialTicks){
+	protected void updateEntityLinking(Entity viewer, float partialTicks){
+		// TODO: Still not working, it seems this bug was a thing back in 4.2.x anyway
 		if(this.entity != null){
 			// This is kind of cheating but we know it's always a constant velocity so it works fine
 			prevPosX = posX + entity.prevPosX - entity.posX - relativeMotionX * (1-partialTicks);
 			prevPosY = posY + entity.prevPosY - entity.posY - relativeMotionY * (1-partialTicks);
 			prevPosZ = posZ + entity.prevPosZ - entity.posZ - relativeMotionZ * (1-partialTicks);
+		}else if(this.getFXLayer() == 3){
+			// Not sure why, but when fx layer is 3, the interp pos is wrong when not linked to an entity
+			interpPosX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * (double)partialTicks;
+			interpPosY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * (double)partialTicks;
+			interpPosZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * (double)partialTicks;
 		}
 	}
 	

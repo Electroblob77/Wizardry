@@ -59,13 +59,7 @@ public class ParticleBuff extends ParticleWizardry {
 			float rotationYZ, float rotationXY, float rotationXZ){
 
 		// Copied from ParticleWizardry, needs to be here since we're not calling super
-		updateEntityLinking(partialTicks);
-
-		// I don't know why, but despite not being in any superclass renderParticle these also need to be here if we're
-		// not calling super
-		interpPosX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * (double)partialTicks;
-		interpPosY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * (double)partialTicks;
-		interpPosZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * (double)partialTicks;
+		updateEntityLinking(viewer, partialTicks);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();
