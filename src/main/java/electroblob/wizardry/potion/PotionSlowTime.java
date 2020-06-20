@@ -150,7 +150,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 		for(Entity entity : loadedEntityList){
 			if(entity.getEntityData().getBoolean(NBT_KEY)){
 				// Currently only players can cast slow time, but you could apply the effect to NPCs with commands
-				List<EntityLivingBase> nearby = EntityUtils.getEntitiesWithinRadius(getEffectRadius(), entity.posX, entity.posY, entity.posZ, entity.world, EntityLivingBase.class);
+				List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(getEffectRadius(), entity.posX, entity.posY, entity.posZ, entity.world);
 				if(nearby.stream().noneMatch(e -> e.isPotionActive(WizardryPotions.slow_time))){
 					entity.getEntityData().removeTag(NBT_KEY);
 					entity.updateBlocked = false;
