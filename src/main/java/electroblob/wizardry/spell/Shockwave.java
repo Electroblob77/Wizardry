@@ -33,6 +33,7 @@ public class Shockwave extends SpellAreaEffect {
 	public Shockwave(){
 		super("shockwave", SpellActions.POINT_DOWN, false);
 		this.soundValues(2, 0.5f, 0);
+		this.alwaysSucceed(true);
 		addProperties(DAMAGE, MAX_REPULSION_VELOCITY);
 	}
 
