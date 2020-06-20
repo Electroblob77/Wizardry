@@ -366,7 +366,7 @@ public abstract class SpellRay extends Spell {
 	 * @param distance The length of the line of particles, already set to the appropriate distance based on the spell's
 	 */
 	// The caster argument is only really useful for spawning targeted particles continuously
-	protected void spawnParticleRay(World world, Vec3d origin, Vec3d direction, EntityLivingBase caster, double distance){
+	protected void spawnParticleRay(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, double distance){
 		
 		Vec3d velocity = direction.scale(particleVelocity);
 		
