@@ -19,11 +19,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class represents a blank spell used to fill empty slots on wands. It is unobtainable in-game, except via
- * commands, and does nothing when the player attempts to cast it. Its instance can be referenced directly using
- * {@link electroblob.wizardry.registry.Spells#none Spells.none}
- */
 public class SpeedTime extends Spell {
 
 	/** The base number of ticks to add to the world time for each tick the spell is cast. */
