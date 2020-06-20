@@ -125,6 +125,7 @@
 	"spell.arrow_rain": 				{"category": "spells", "sounds": ["mob/illusion_illager/prepare_blind"]},
 	"spell.banish": 					{"category": "spells", "sounds": ["mob/endermen/portal", "mob/endermen/portal2"]},
 	"spell.black_hole": 				{"category": "spells", "sounds": ["mob/evocation_illager/prepare_attack1", "mob/evocation_illager/prepare_attack2"]},
+	"spell.blinding_flash": 			{"category": "spells", "sounds": ["ebwizardry:flash"]},
 	"spell.blink": 						{"category": "spells", "sounds": ["mob/endermen/portal", "mob/endermen/portal2"]},
 	"spell.blizzard": 					{"category": "spells", "sounds": ["ebwizardry:ice_age"]},
 	"spell.bubble.shoot": 				{"category": "spells", "sounds": ["ebwizardry:ice"]},

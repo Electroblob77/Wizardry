@@ -240,6 +240,8 @@ public final class Spells {
 
 	// Wizardry 4.3 spells
 
+	public static final Spell blinding_flash = placeholder();
+
 	public static final Spell stormcloud = placeholder();
 
 	public static final Spell zombie_apocalypse = placeholder();
@@ -444,6 +446,8 @@ public final class Spells {
 		registry.register(new Resurrection());
 
 		// Wizardry 4.3 spells
+
+		registry.register(new BlindingFlash());
 
 		registry.register(new Stormcloud());
 
