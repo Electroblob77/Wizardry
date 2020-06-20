@@ -212,8 +212,8 @@ public final class WizardryEventHandler {
 			// Blindness tweak
 			// I'm not going as far as potion core's implementation, this is just so it does *something* to mobs
 			if(event.getEntityLiving().isPotionActive(MobEffects.BLINDNESS) && !Loader.isModLoaded("potioncore")
-					&& Wizardry.settings.blindnessTweak && event.getTarget().getDistanceSq(event.getEntity()) > 2.5 * 2.5){
-				// Can't detect anything more than 2.5 blocks away (roughly the player's view distance when blinded)
+					&& Wizardry.settings.blindnessTweak && event.getTarget().getDistanceSq(event.getEntity()) > 3.5 * 3.5){
+				// Can't detect anything more than 3.5 blocks away (roughly the player's view distance when blinded)
 				((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
 			}
 		}
