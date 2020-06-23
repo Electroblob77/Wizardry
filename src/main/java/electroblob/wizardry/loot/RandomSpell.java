@@ -165,7 +165,7 @@ public class RandomSpell extends LootFunction {
 			// If none have been discovered or they've all been discovered, don't bother!
 			if(discoveredCount > 0 && discoveredCount < possibleSpells.size()){
 				// Kinda unintuitive but it's very neat!
-				boolean keepDiscovered = random.nextFloat() < 0.5f + 0.5f * bias;
+				boolean keepDiscovered = random.nextFloat() > 0.5f + 0.5f * bias;
 				possibleSpells.removeIf(s -> keepDiscovered != data.hasSpellBeenDiscovered(s));
 			}
 		}
