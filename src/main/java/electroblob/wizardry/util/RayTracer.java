@@ -32,7 +32,10 @@ public final class RayTracer {
 	 * position and proceed in the direction the entity is looking.
 	 * @param range The distance over which the ray trace will be performed.
 	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
-	 * not there.
+	 * not there. {@code ignoreUncollidables} must be set to false for this setting to have an effect.
+	 * @param ignoreUncollidables Whether blocks with no collisions should be ignored
+	 * @param returnLastUncollidable If blocks with no collisions are ignored, whether to return the last one (useful if,
+	 *                               for example, you want to replace snow layers or tall grass)
 	 * @return A {@link RayTraceResult} representing the object that was hit, which may be either a block or nothing.
 	 * Returns {@code null} only if the origin and endpoint are within the same block.
 	 */
@@ -66,7 +69,7 @@ public final class RayTracer {
 	 * position and proceed in the direction the entity is looking. This entity will be ignored when ray tracing.
 	 * @param range The distance over which the ray trace will be performed.
 	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
-	 * not there.
+	 * not there. {@code ignoreUncollidables} must be set to false for this setting to have an effect.
 	 * @return A {@link RayTraceResult} representing the object that was hit, which may be an entity, a block or
 	 * nothing. Returns {@code null} only if the origin and endpoint are within the same block and no entity was hit.
 	 */
@@ -107,7 +110,8 @@ public final class RayTracer {
 	 * @param endpoint A vector representing the coordinates of the finish point of the ray trace.
 	 * @param aimAssist In addition to direct hits, the ray trace will also hit entities that are up to this distance
 	 * from its path. For a normal ray trace, this should be 0. Values greater than 0 will give an 'aim assist' effect.
-	 * @param hitLiquids Whether liquids should be ignored when ray tracing blocks
+	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
+	 * not there. {@code ignoreUncollidables} must be set to false for this setting to have an effect.
 	 * @param ignoreUncollidables Whether blocks with no collisions should be ignored
 	 * @param returnLastUncollidable If blocks with no collisions are ignored, whether to return the last one (useful if,
 	 *                               for example, you want to replace snow layers or tall grass)
