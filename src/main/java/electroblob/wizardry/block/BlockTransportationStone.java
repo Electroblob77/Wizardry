@@ -174,10 +174,11 @@ public class BlockTransportationStone extends Block {
 		return false;
 	}
 
-	/** Returns whether the specified location is surrounded by a complete cicle of 8 transportation stones. */
+	/** Returns whether the specified location is surrounded by a complete circle of 8 transportation stones. */
 	public static boolean testForCircle(World world, BlockPos pos){
 
-		if(world.getBlockState(pos).getMaterial().blocksMovement()) return false;
+		if(world.getBlockState(pos).getMaterial().blocksMovement() || world.getBlockState(pos.up()).getMaterial()
+				.blocksMovement()) return false;
 
 		for(int x = -1; x <= 1; x++){
 			for(int z = -1; z <= 1; z++){

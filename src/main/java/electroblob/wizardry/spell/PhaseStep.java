@@ -2,11 +2,12 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.BlockUtils;
-import electroblob.wizardry.util.RayTracer;
-import electroblob.wizardry.util.SpellModifiers;
+import electroblob.wizardry.util.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,8 +29,12 @@ public class PhaseStep extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
+		boolean teleportMount = caster.isRiding() && ItemArtefact.isArtefactActive(caster, WizardryItems.charm_mount_teleporting);
+		boolean hitLiquids = teleportMount && caster.getRidingEntity() instanceof EntityBoat; // Boats teleport to the surface
+
 		double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
-		RayTraceResult rayTrace = RayTracer.standardBlockRayTrace(world, caster, range, false);
+
+		RayTraceResult rayTrace = RayTracer.standardBlockRayTrace(world, caster, range, hitLiquids, !hitLiquids, false);
 
 		// This is here because the conditions are false on the client for whatever reason. (see the Javadoc for cast()
 		// for an explanation)
@@ -45,6 +50,8 @@ public class PhaseStep extends Spell {
 
 			Wizardry.proxy.playBlinkEffect(caster);
 		}
+
+		Entity toTeleport = teleportMount ? caster.getRidingEntity() : caster;
 
 		if(rayTrace != null && rayTrace.typeOfHit == RayTraceResult.Type.BLOCK){
 
@@ -68,66 +75,40 @@ public class PhaseStep extends Spell {
 						&& !Wizardry.settings.teleportThroughUnbreakableBlocks)
 					break; // Don't return false yet, there are other possible outcomes below now
 
-				if(!world.getBlockState(pos1).getMaterial().blocksMovement()
-						&& !world.getBlockState(pos1.up()).getMaterial().blocksMovement()){
-
-					// Plays before and after so it is heard from both positions
-					this.playSound(world, caster, ticksInUse, -1, modifiers);
-
-					if(!world.isRemote){
-						caster.setPositionAndUpdate(pos1.getX() + 0.5, pos1.getY() + 0.5, pos1.getZ() + 0.5);
-					}
-
-					this.playSound(world, caster, ticksInUse, -1, modifiers);
-					return true;
-				}
+				Vec3d vec = GeometryUtils.getFaceCentre(pos1, EnumFacing.DOWN);
+				if(attemptTeleport(world, toTeleport, vec, teleportMount, caster, ticksInUse, modifiers)) return true;
 			}
 
 			// If no suitable position was found on the other side of the wall, works like blink instead
-
-			// Leave space for the player's head
-			if(rayTrace.sideHit == EnumFacing.DOWN) pos = pos.down();
-
-			// This means stuff like snow layers is ignored, meaning when on snow-covered ground the player does
-			// not teleport 1 block above the ground.
-			if(rayTrace.sideHit == EnumFacing.UP && !world.getBlockState(pos).getMaterial().blocksMovement()){
-				pos = pos.down();
-			}
-
 			pos = pos.offset(rayTrace.sideHit);
 
-			// Prevents the player from teleporting into blocks and suffocating
-			if(world.getBlockState(pos).getMaterial().blocksMovement()
-					|| world.getBlockState(pos.up()).getMaterial().blocksMovement()){
-				return false;
-			}
+			Vec3d vec = GeometryUtils.getFaceCentre(pos, EnumFacing.DOWN);
+			if(attemptTeleport(world, toTeleport, vec, teleportMount, caster, ticksInUse, modifiers)) return true;
 
+		}else{ // The ray trace missed
+			Vec3d vec = caster.getPositionVector().add(caster.getLookVec().scale(range));
+			if(attemptTeleport(world, toTeleport, vec, teleportMount, caster, ticksInUse, modifiers)) return true;
+		}
+
+		return false;
+	}
+
+	protected boolean attemptTeleport(World world, Entity toTeleport, Vec3d destination, boolean teleportMount, EntityPlayer caster, int ticksInUse, SpellModifiers modifiers){
+
+		destination = EntityUtils.findSpaceForTeleport(toTeleport, destination, teleportMount);
+
+		if(destination != null){
 			// Plays before and after so it is heard from both positions
 			this.playSound(world, caster, ticksInUse, -1, modifiers);
 
-			if(!world.isRemote) caster.setPositionAndUpdate(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+			if(!teleportMount && caster.isRiding()) caster.dismountRidingEntity();
+			if(!world.isRemote) toTeleport.setPositionAndUpdate(destination.x, destination.y, destination.z);
 
 			this.playSound(world, caster, ticksInUse, -1, modifiers);
-			caster.swingArm(hand);
-			return true;
-
-		}else{ // The ray trace missed
-
-			Vec3d destination = caster.getPositionVector().add(caster.getLookVec().scale(range));
-			BlockPos pos = new BlockPos(destination);
-
-			// Prevents the player from teleporting into blocks and suffocating.
-			if(world.getBlockState(pos).getMaterial().blocksMovement()
-					|| world.getBlockState(pos.up()).getMaterial().blocksMovement()){
-				return false;
-			}
-
-			if(!world.isRemote) caster.setPositionAndUpdate(destination.x, destination.y, destination.z);
-
-			this.playSound(world, caster, ticksInUse, -1, modifiers);
-			caster.swingArm(hand);
 			return true;
 		}
+
+		return false;
 	}
 
 }

@@ -1,5 +1,6 @@
 package electroblob.wizardry.util;
 
+import com.google.common.collect.Streams;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.ISpellCaster;
@@ -17,17 +18,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Contains useful static methods for retrieving and interacting with players, mobs and other entities. These methods
@@ -180,6 +188,83 @@ public final class EntityUtils {
 			dx = (Math.random() - Math.random()) * 0.01D;
 		}
 		target.knockBack(attacker, 0.4f, dx, dz);
+	}
+
+	/**
+	 * Finds the nearest space to the specified position that the given entity can teleport to without being inside one
+	 * or more solid blocks. The search volume is twice the size of the entity's bounding box (meaning that when
+	 * teleported to the returned position, the original destination remains within the entity's bounding box).
+	 * @param entity The entity being teleported
+	 * @param destination The target position to search around
+	 * @param accountForPassengers True to take passengers into account when searching for a space, false to ignore them
+	 * @return The resulting position, or null if no space was found.
+	 */
+	public static Vec3d findSpaceForTeleport(Entity entity, Vec3d destination, boolean accountForPassengers){
+
+		World world = entity.world;
+		AxisAlignedBB box = entity.getEntityBoundingBox();
+
+		if(accountForPassengers){
+			for(Entity passenger : entity.getPassengers()){
+				box = box.union(passenger.getEntityBoundingBox());
+			}
+		}
+
+		box = box.offset(destination.subtract(entity.posX, box.minY, entity.posZ));
+
+		// All the parameters of this method are INCLUSIVE, so even the max coordinates should be rounded down
+		Iterable<BlockPos> cuboid = BlockPos.getAllInBox(MathHelper.floor(box.minX), MathHelper.floor(box.minY),
+				MathHelper.floor(box.minZ), MathHelper.floor(box.maxX), MathHelper.floor(box.maxY), MathHelper.floor(box.maxZ));
+
+		if(Streams.stream(cuboid).noneMatch(b -> world.collidesWithAnyBlock(new AxisAlignedBB(b)))){
+			// Nothing in the way
+			return destination;
+
+		}else{
+			// Nearby position search
+			double dx = box.maxX - box.minX;
+			double dy = box.maxY - box.minY;
+			double dz = box.maxZ - box.minZ;
+
+			// Minimum space required is (nx + px) blocks * (ny + py) blocks * (nz + pz) blocks
+			int nx = MathHelper.ceil(dx) / 2;
+			int px = MathHelper.ceil(dx) - nx;
+			int ny = MathHelper.ceil(dy) / 2;
+			int py = MathHelper.ceil(dy) - ny;
+			int nz = MathHelper.ceil(dz) / 2;
+			int pz = MathHelper.ceil(dz) - nz;
+
+			// Check all the blocks in and around the bounding box...
+			List<BlockPos> nearby = Streams.stream(BlockPos.getAllInBox(MathHelper.floor(box.minX) - 1,
+					MathHelper.floor(box.minY) - 1, MathHelper.floor(box.minZ) - 1,
+					MathHelper.floor(box.maxX) + 1, MathHelper.floor(box.maxY) + 1,
+					MathHelper.floor(box.maxZ) + 1)).collect(Collectors.toList());
+
+			// ... but only return positions actually inside the box
+			List<BlockPos> possiblePositions = Streams.stream(cuboid).collect(Collectors.toList());
+
+			// Rather than iterate over each position and check if the box fits, find all solid blocks and cut out all
+			// positions whose corresponding box would include them - this is waaay more efficient!
+			while(!nearby.isEmpty()){
+
+				BlockPos pos = nearby.remove(0);
+
+				if(world.collidesWithAnyBlock(new AxisAlignedBB(pos))){
+					Predicate<BlockPos> nearSolidBlock = b -> b.getX() >= pos.getX() - nx && b.getX() <= pos.getX() + px
+														   && b.getY() >= pos.getY() - ny && b.getY() <= pos.getY() + py
+														   && b.getZ() >= pos.getZ() - nz && b.getZ() <= pos.getZ() + pz;
+					nearby.removeIf(nearSolidBlock);
+					possiblePositions.removeIf(nearSolidBlock);
+				}
+			}
+
+			if(possiblePositions.isEmpty()) return null; // No space nearby
+
+			BlockPos nearest = possiblePositions.stream().min(Comparator.comparingDouble(b -> destination.squareDistanceTo(
+					b.getX() + 0.5, b.getY() + 0.5, b.getZ() + 0.5))).get(); // The list can't be empty
+
+			return GeometryUtils.getFaceCentre(nearest, EnumFacing.DOWN);
+		}
 	}
 
 	// Damage

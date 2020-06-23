@@ -9,7 +9,11 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketTransportation;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.GeometryUtils;
+import electroblob.wizardry.util.Location;
+import electroblob.wizardry.util.NBTExtras;
+import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagList;
@@ -177,9 +181,21 @@ public class Transportation extends Spell {
 			Location destination = locations.get(locations.size() - 1);
 
 			if(countdown == 1 && destination.dimension == player.dimension){
+
+				Entity mount = player.getRidingEntity();
+				if(mount != null) player.dismountRidingEntity();
+
 				player.setPositionAndUpdate(destination.pos.getX() + 0.5, destination.pos.getY(), destination.pos.getZ() + 0.5);
+
+				boolean teleportMount = mount != null && ItemArtefact.isArtefactActive(player, WizardryItems.charm_mount_teleporting);
+
+				if(teleportMount){
+					mount.setPositionAndUpdate(destination.pos.getX() + 0.5, destination.pos.getY(), destination.pos.getZ() + 0.5);
+					player.startRiding(mount);
+				}
+
 				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50, 0));
-				IMessage msg = new PacketTransportation.Message(player.getEntityId());
+				IMessage msg = new PacketTransportation.Message(destination.pos, teleportMount ? null : player);
 				WizardryPacketHandler.net.sendToDimension(msg, player.world.provider.getDimension());
 			}
 

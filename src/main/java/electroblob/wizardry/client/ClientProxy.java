@@ -549,36 +549,38 @@ public class ClientProxy extends CommonProxy {
 	public void handleTransportationPacket(PacketTransportation.Message message){
 
 		World world = Minecraft.getMinecraft().world;
-		Entity caster = world.getEntityByID(message.casterID);
+		BlockPos pos = message.destination;
 
-		if(caster == null) return; // Shouldn't happen
+		Entity entity = world.getEntityByID(message.dismountEntityID);
+		if(message.dismountEntityID != -1 && entity != null) entity.dismountRidingEntity();
 
 		// Moved from when the packet is sent to when it is received; fixes the sound not playing in first person.
-		caster.playSound(WizardrySounds.SPELL_TRANSPORTATION_TRAVEL, 1, 1);
+		// Changed to a position to avoid syncing issues
+		world.playSound(pos.getX(), pos.getY(), pos.getZ(), WizardrySounds.SPELL_TRANSPORTATION_TRAVEL, WizardrySounds.SPELLS, 1, 1, false);
 
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
 			float angle = world.rand.nextFloat() * (float)Math.PI * 2;
-			double x = caster.posX + radius * MathHelper.cos(angle);
-			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
-			double z = caster.posZ + radius * MathHelper.sin(angle);
+			double x = pos.getX() + 0.5 + radius * MathHelper.cos(angle);
+			double y = pos.getY() + world.rand.nextDouble() * 2;
+			double z = pos.getZ() + 0.5 + radius * MathHelper.sin(angle);
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.02, 0).clr(0.6f, 1, 0.6f)
 			.time(80 + world.rand.nextInt(10)).spawn(world);
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
 			float angle = world.rand.nextFloat() * (float)Math.PI * 2;
-			double x = caster.posX + radius * MathHelper.cos(angle);
-			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
-			double z = caster.posZ + radius * MathHelper.sin(angle);
+			double x = pos.getX() + 0.5 + radius * MathHelper.cos(angle);
+			double y = pos.getY() + world.rand.nextDouble() * 2;
+			double z = pos.getZ() + 0.5 + radius * MathHelper.sin(angle);
 			world.spawnParticle(EnumParticleTypes.VILLAGER_HAPPY, x, y, z, 0, 0.02, 0);
 		}
 		for(int i = 0; i < 20; i++){
 			double radius = 1;
 			float angle = world.rand.nextFloat() * (float)Math.PI * 2;
-			double x = caster.posX + radius * MathHelper.cos(angle);
-			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble() * 2;
-			double z = caster.posZ + radius * MathHelper.sin(angle);
+			double x = pos.getX() + 0.5 + radius * MathHelper.cos(angle);
+			double y = pos.getY() + world.rand.nextDouble() * 2;
+			double z = pos.getZ() + 0.5 + radius * MathHelper.sin(angle);
 			world.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, x, y, z, 0, 0.02, 0);
 		}
 	}

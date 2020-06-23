@@ -3,9 +3,13 @@ package electroblob.wizardry.packet;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.packet.PacketTransportation.Message;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import javax.annotation.Nullable;
 
 /**
  * <b>[Server -> Client]</b> This packet is sent when a player is teleported due to the transportation spell to spawn
@@ -26,26 +30,31 @@ public class PacketTransportation implements IMessageHandler<Message, IMessage> 
 	}
 
 	public static class Message implements IMessage {
-		/** EntityID of the caster */
-		public int casterID;
+
+		/** The destination that was teleported to */
+		public BlockPos destination;
+		public int dismountEntityID;
 
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
 		public Message(){
 		}
 
-		public Message(int casterID){
-			this.casterID = casterID;
+		public Message(BlockPos destination, @Nullable Entity toDismount){
+			this.destination = destination;
+			this.dismountEntityID = toDismount == null ? -1 : toDismount.getEntityId();
 		}
 
 		@Override
 		public void fromBytes(ByteBuf buf){
 			// The order is important
-			this.casterID = buf.readInt();
+			this.destination = BlockPos.fromLong(buf.readLong());
+			this.dismountEntityID = buf.readInt();
 		}
 
 		@Override
 		public void toBytes(ByteBuf buf){
-			buf.writeInt(casterID);
+			buf.writeLong(destination.toLong());
+			buf.writeInt(dismountEntityID);
 		}
 	}
 }
