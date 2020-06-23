@@ -38,6 +38,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 		GlStateManager.enableBlend();
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 		GlStateManager.disableLighting();
+		GlStateManager.depthMask(false);
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		RenderHelper.disableStandardItemLighting();
 
@@ -126,6 +127,7 @@ public class RenderMagicLight extends TileEntitySpecialRenderer<TileEntityMagicL
 		GlStateManager.enableCull();
 		GlStateManager.disableBlend();
 		GlStateManager.enableLighting();
+		GlStateManager.depthMask(true);
 		RenderHelper.enableStandardItemLighting();
 
 		GlStateManager.popMatrix();
