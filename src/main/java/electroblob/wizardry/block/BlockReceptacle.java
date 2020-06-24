@@ -206,4 +206,23 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 		return new TileEntityReceptacle();
 	}
 
+	@Override
+	public boolean hasComparatorInputOverride(IBlockState state){
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(IBlockState state, World world, BlockPos pos){
+
+		TileEntity tileEntity = world.getTileEntity(pos);
+
+		if(tileEntity instanceof TileEntityReceptacle){
+			Element element = ((TileEntityReceptacle)tileEntity).getElement();
+			return element == null ? 0 : element.ordinal() + 1;
+		}
+
+		return super.getComparatorInputOverride(state, world, pos);
+	}
+
+
 }

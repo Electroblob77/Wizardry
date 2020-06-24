@@ -20,11 +20,12 @@ public class TileEntityReceptacle extends TileEntity {
 		this.element = element;
 	}
 
+	@Nullable
 	public Element getElement(){
 		return element;
 	}
 
-	public void setElement(Element element){
+	public void setElement(@Nullable Element element){
 		this.element = element;
 		world.notifyNeighborsRespectDebug(pos, blockType, true); // Update altar if connected
 		world.checkLight(pos);
