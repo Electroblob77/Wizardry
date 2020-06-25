@@ -24,6 +24,7 @@ public final class WizardryAdvancementTriggers {
     public static final CustomAdvancementTrigger buy_master_spell = new CustomAdvancementTrigger("trigger_buy_master_spell");
   	public static final CustomAdvancementTrigger wizard_trade = new CustomAdvancementTrigger("trigger_wizard_trade");
 	public static final CustomAdvancementTrigger spell_failure = new CustomAdvancementTrigger("trigger_spell_failure");
+	public static final CustomAdvancementTrigger wand_levelup = new CustomAdvancementTrigger("trigger_wand_levelup");
 
 	public static final StructureTrigger visit_structure = new StructureTrigger(new ResourceLocation(Wizardry.MODID, "visit_structure"));
 	public static final ArcaneWorkbenchTrigger arcane_workbench = new ArcaneWorkbenchTrigger(new ResourceLocation(Wizardry.MODID, "arcane_workbench"));
@@ -39,6 +40,7 @@ public final class WizardryAdvancementTriggers {
 		CriteriaTriggers.register(buy_master_spell);
 		CriteriaTriggers.register(wizard_trade);
 		CriteriaTriggers.register(spell_failure);
+		CriteriaTriggers.register(wand_levelup);
 
 		CriteriaTriggers.register(visit_structure);
 		CriteriaTriggers.register(arcane_workbench);

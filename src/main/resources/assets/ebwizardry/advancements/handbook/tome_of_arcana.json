@@ -9,6 +9,9 @@
                     }
                 ]
             }
+        },
+        "criteria_1": {
+            "trigger": "ebwizardry:trigger_wand_levelup"
         }
     }
 }

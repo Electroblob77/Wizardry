@@ -498,6 +498,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					if(excess >= 0 && excess < progression){
 						// ...display a message above the player's hotbar
 						caster.playSound(WizardrySounds.ITEM_WAND_LEVELUP, 1.25f, 1);
+						WizardryAdvancementTriggers.wand_levelup.triggerFor(caster);
 						if(!world.isRemote)
 							caster.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":wand.levelup",
 									this.getItemStackDisplayName(stack), nextTier.getNameForTranslationFormatted()));
