@@ -492,6 +492,16 @@
 				]
 			}
 		},
+		"amulet_absorption": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_absorption"
+					}
+				]
+			}
+		},
 		"charm_haggler": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -508,6 +518,26 @@
 				"items": [
 					{
 						"item": "ebwizardry:charm_experience_tome"
+					}
+				]
+			}
+		},
+		"charm_move_speed": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_move_speed"
+					}
+				]
+			}
+		},
+		"charm_spell_discovery": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_spell_discovery"
 					}
 				]
 			}
@@ -632,6 +662,26 @@
 				]
 			}
 		},
+		"charm_black_hole": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_black_hole"
+					}
+				]
+			}
+		},
+		"charm_mount_teleporting": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_mount_teleporting"
+					}
+				]
+			}
+		},
 		"charm_feeding": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -693,8 +743,11 @@
 			"amulet_transience",
 			"amulet_resurrection",
 			"amulet_auto_shield",
+			"amulet_absorption",
 			"charm_haggler",
 			"charm_experience_tome",
+			"charm_move_speed",
+			"charm_spell_discovery",
 			"charm_auto_smelt",
 			"charm_lava_walking",
 			"charm_storm",
@@ -707,6 +760,8 @@
 			"charm_stop_time",
 			"charm_light",
 			"charm_transportation",
+			"charm_black_hole",
+			"charm_mount_teleporting",
 			"charm_feeding"
 		]
 	]

@@ -69,6 +69,14 @@
                 }
             }
         },
+        "blinding_flash": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "blinding_flash"
+                }
+            }
+        },
         "blink": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
@@ -370,6 +378,14 @@
             "conditions": {
                 "spell": {
                     "spell": "fireskin"
+                }
+            }
+        },
+        "firestorm": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "firestorm"
                 }
             }
         },
@@ -1157,6 +1173,14 @@
                 }
             }
         },
+        "stormcloud": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "stormcloud"
+                }
+            }
+        },
         "summon_blaze": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
@@ -1386,6 +1410,14 @@
             "conditions": {
                 "spell": {
                     "spell": "wither_skull"
+                }
+            }
+        },
+        "zombie_apocalypse": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "zombie_apocalypse"
                 }
             }
         }

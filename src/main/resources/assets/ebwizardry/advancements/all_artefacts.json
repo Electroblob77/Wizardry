@@ -493,6 +493,16 @@
 				]
 			}
 		},
+		"amulet_absorption": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_absorption"
+					}
+				]
+			}
+		},
 		"charm_haggler": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -509,6 +519,26 @@
 				"items": [
 					{
 						"item": "ebwizardry:charm_experience_tome"
+					}
+				]
+			}
+		},
+		"charm_move_speed": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_move_speed"
+					}
+				]
+			}
+		},
+		"charm_spell_discovery": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_spell_discovery"
 					}
 				]
 			}
@@ -629,6 +659,26 @@
 				"items": [
 					{
 						"item": "ebwizardry:charm_transportation"
+					}
+				]
+			}
+		},
+		"charm_black_hole": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_black_hole"
+					}
+				]
+			}
+		},
+		"charm_mount_teleporting": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_mount_teleporting"
 					}
 				]
 			}
