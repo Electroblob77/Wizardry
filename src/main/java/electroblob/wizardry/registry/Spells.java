@@ -244,6 +244,7 @@ public final class Spells {
 
 	public static final Spell stormcloud = placeholder();
 
+	public static final Spell firestorm = placeholder();
 	public static final Spell zombie_apocalypse = placeholder();
 
 	@SubscribeEvent
@@ -451,6 +452,7 @@ public final class Spells {
 
 		registry.register(new Stormcloud());
 
+		registry.register(new Firestorm());
 		registry.register(new ZombieApocalypse());
 
 	}

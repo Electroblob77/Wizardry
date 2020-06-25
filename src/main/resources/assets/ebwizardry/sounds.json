@@ -166,6 +166,7 @@
 	"spell.fire_resistance": 			{"category": "spells", "sounds": ["ebwizardry:buff"]},
 	"spell.fire_sigil": 				{"category": "spells", "sounds": ["fire/ignite"]},
 	"spell.fireskin": 					{"category": "spells", "sounds": ["ebwizardry:buff"]},
+	"spell.firestorm": 					{"category": "spells", "sounds": ["ebwizardry:firestorm"]},
 	"spell.fire_breath.start": 			{"category": "spells", "sounds": ["ebwizardry:flames_start"]},
 	"spell.fire_breath.loop": 			{"category": "spells", "sounds": ["ebwizardry:flames_loop"]},
 	"spell.fire_breath.end": 			{"category": "spells", "sounds": ["ebwizardry:flames_end"]},

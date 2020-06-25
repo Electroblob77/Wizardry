@@ -460,7 +460,7 @@ public final class BlockUtils {
 				|| world.isSideSolid(pos, side) && world.isAirBlock(pos.offset(side)));
 
 		/** Surface criterion which defines a surface as the boundary between any non-air block and an air block.
-		 * Used for particles. */
+		 * Used for particles, and is also good for placing fire. */
 		// Was getNearestFloorLevelC
 		SurfaceCriteria NOT_AIR_TO_AIR = basedOn(World::isAirBlock).flip();
 

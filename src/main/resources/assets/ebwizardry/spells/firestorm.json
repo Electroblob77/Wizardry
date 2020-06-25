@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "master",
+  "element": "fire",
+  "type": "attack",
+  "cost": 80,
+  "chargeup": 20,
+  "cooldown": 250,
+  "base_properties": {
+    "effect_radius": 6,
+    "burn_duration": 15
+  }
+}
