@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 public abstract class EntityMagicConstruct extends Entity implements IEntityOwnable, IEntityAdditionalSpawnData {
 
-	/** The UUID of the caster. As of Wizardry 4.2, this <b>is</b> synced, and rather than storing the caster
+	/** The UUID of the caster. As of Wizardry 4.3, this <b>is</b> synced, and rather than storing the caster
 	 * instance via a weak reference, it is fetched from the UUID each time it is needed in
 	 * {@link EntityMagicConstruct#getCaster()}. */
 	private UUID casterUUID;
@@ -120,11 +120,26 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 	@Override
 	public void writeSpawnData(ByteBuf data){
 		data.writeInt(lifetime);
+		data.writeInt(getCaster() == null ? -1 : getCaster().getEntityId());
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf data){
+
 		lifetime = data.readInt();
+
+		int id = data.readInt();
+
+		if(id == -1){
+			setCaster(null);
+		}else{
+			Entity entity = world.getEntityByID(id);
+			if(entity instanceof EntityLivingBase){
+				setCaster((EntityLivingBase)entity);
+			}else{
+				Wizardry.logger.warn("Construct caster with ID in spawn data not found");
+			}
+		}
 	}
 
 	@Nullable

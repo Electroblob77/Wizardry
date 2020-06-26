@@ -95,28 +95,4 @@ public class EntityStormcloud extends EntityMagicConstruct {
 
 	}
 
-	// Need to sync the caster so they don't have particles spawned at them
-
-	@Override
-	public void writeSpawnData(ByteBuf data){
-		super.writeSpawnData(data);
-		if(getCaster() != null) data.writeInt(getCaster().getEntityId());
-	}
-
-	@Override
-	public void readSpawnData(ByteBuf data){
-
-		super.readSpawnData(data);
-
-		if(!data.isReadable()) return;
-
-		Entity entity = world.getEntityByID(data.readInt());
-
-		if(entity instanceof EntityLivingBase){
-			setCaster((EntityLivingBase)entity);
-		}else{
-			Wizardry.logger.warn("Stormcloud caster with ID in spawn data not found");
-		}
-	}
-
 }

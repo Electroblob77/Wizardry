@@ -245,24 +245,4 @@ public class RenderContainmentField {
 		buffer.pos(x, y, z).tex(u, v).color(1, 1, 1, f * alpha).endVertex();
 	}
 
-	// Useful to keep this mapping in case I ever want to draw cubes again
-
-//			Vec3d[] vertices = WizardryUtilities.getVertices(entity.getEntityBoundingBox().offset(entity.getPositionVector().scale(-1)));
-//
-//			// Outside
-//			drawFace(tessellator, vertices[0], vertices[1], vertices[3], vertices[2], u1, v1, u2, v2); // Bottom
-//			drawFace(tessellator, vertices[6], vertices[7], vertices[2], vertices[3], u1, v1, u2, v2); // South
-//			drawFace(tessellator, vertices[5], vertices[6], vertices[1], vertices[2], u1, v1, u2, v2); // East
-//			drawFace(tessellator, vertices[4], vertices[5], vertices[0], vertices[1], u1, v1, u2, v2); // North
-//			drawFace(tessellator, vertices[7], vertices[4], vertices[3], vertices[0], u1, v1, u2, v2); // West
-//			drawFace(tessellator, vertices[5], vertices[4], vertices[6], vertices[7], u1, v1, u2, v2); // Top
-//
-//			// Inside
-//			drawFace(tessellator, vertices[1], vertices[0], vertices[2], vertices[3], u1, v1, u2, v2); // Bottom
-//			drawFace(tessellator, vertices[7], vertices[6], vertices[3], vertices[2], u1, v1, u2, v2); // South
-//			drawFace(tessellator, vertices[6], vertices[5], vertices[2], vertices[1], u1, v1, u2, v2); // East
-//			drawFace(tessellator, vertices[5], vertices[4], vertices[1], vertices[0], u1, v1, u2, v2); // North
-//			drawFace(tessellator, vertices[4], vertices[7], vertices[0], vertices[3], u1, v1, u2, v2); // West
-//			drawFace(tessellator, vertices[4], vertices[5], vertices[7], vertices[6], u1, v1, u2, v2); // Top
-
 }

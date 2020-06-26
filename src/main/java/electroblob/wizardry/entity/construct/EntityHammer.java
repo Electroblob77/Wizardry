@@ -241,23 +241,12 @@ public class EntityHammer extends EntityMagicConstruct {
 	public void writeSpawnData(ByteBuf data){
 		super.writeSpawnData(data);
 		data.writeBoolean(spin);
-		if(getCaster() != null) data.writeInt(getCaster().getEntityId());
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf data){
 		super.readSpawnData(data);
 		spin = data.readBoolean();
-
-		if(!data.isReadable()) return;
-
-		Entity entity = world.getEntityByID(data.readInt());
-
-		if(entity instanceof EntityLivingBase){
-			setCaster((EntityLivingBase)entity);
-		}else{
-			Wizardry.logger.warn("Lightning hammer caster with ID in spawn data not found");
-		}
 	}
 
 	@Override
