@@ -5,6 +5,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -54,7 +55,7 @@ public class IceSpikes extends SpellConstructRanged<EntityIceSpike> {
 			if(side.getAxis().isHorizontal()) offset = offset.rotateYaw((float)Math.PI/2);
 
 			Integer surface = BlockUtils.getNearestSurface(world, new BlockPos(origin.add(offset)), side,
-					(int)maxRadius, true, BlockUtils.SurfaceCriteria.basedOn(World::isBlockFullCube));
+					(int)maxRadius, true, BlockUtils.SurfaceCriteria.basedOn(IBlockState::isNormalCube));
 
 			if(surface != null){
 				Vec3d vec = GeometryUtils.replaceComponent(origin.add(offset), side.getAxis(), surface)
