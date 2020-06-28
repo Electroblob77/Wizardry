@@ -115,12 +115,17 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public static final String SPLASH_EFFECT_DURATION = "splash_effect_duration";
 	public static final String SPLASH_EFFECT_STRENGTH = "splash_effect_strength";
 
-	// TODO: Translations for these?
 	public static final String TIER_MATCH_PREFIX = "tier";
 	public static final String ELEMENT_MATCH_PREFIX = "element";
 	public static final String TYPE_MATCH_PREFIX = "type";
 	public static final String DISCOVERED_MATCH_PREFIX = "discovered";
 	public static final String MODID_MATCH_PREFIX = "modid";
+
+	public static final String TIER_MATCH_ALIAS = "t";
+	public static final String ELEMENT_MATCH_ALIAS = "e";
+	public static final String TYPE_MATCH_ALIAS = "p";
+	public static final String DISCOVERED_MATCH_ALIAS = "d";
+	public static final String MODID_MATCH_ALIAS = "m";
 
 	public static final String MATCH_CONDITION_SEPARATOR = ";";
 	public static final String MATCH_KEY_VALUE_SEPARATOR = "=";
@@ -676,15 +681,28 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/**
-	 * Returns whether this spell matches the given string. <b>Client-side only!</b> A spell matches a particular string
-	 * if any of the following conditions are true:
+	 * Returns whether this spell matches the given string. <b>Client-side only!</b> Matches are determined as follows:
 	 * <p></p>
-	 * - The spell's localised name contains the given string<br>
-	 * - The string starts with "tier:", and the localised name of the spell's tier contains the given string<br>
-	 * - The string starts with "element:", and the localised name of the spell's element contains the given string<br>
-	 * - The string starts with "type:", and the localised name of the spell's type contains the given string
+	 * First, attempt to parse the string as one or more <i>conditions</i> separated by semicolons ({@code ;}). Each
+	 * condition has the syntax {@code key=value1,value2,value3,...}, where {@code key} is one of several predefined
+	 * strings (or aliases) pointing to a particular property of the spell, and each {@code value} is a string to match
+	 * to that property. Valid keys are:
 	 * <p></p>
-	 * <i>Matches are not case-sensitive.</i>
+	 * - {@code tier} (alias {@code t}), specifies the tiers that the spell can match<br>
+	 * - {@code element} (alias {@code e}), specifies the elements that the spell can match<br>
+	 * - {@code type} (alias {@code p}), specifies the spell types that the spell can match<br>
+	 * - {@code modid} (alias {@code m}), specifies the mod IDs that the spell can be from<br>
+	 * - {@code discovered} (alias {@code d}), specifies the discovery status ({@code true} or {@code false}) that the
+	 * spell can match<br>
+	 * <p></p>
+	 * The spell must match all conditions to count as a match, but only needs to match one of the values for each
+	 * condition.
+	 * <p></p>
+	 * If, at any point, a condition is not of valid syntax (or if the string does not contain {@code ;} or {@code =}),
+	 * the input is instead treated as verbatim, and the spell matches if it has been discovered and its localised name
+	 * contains the given string.
+	 * <p></p>
+	 * <i>Keys are case-sensitive, but everything else is not.</i>
 	 * @param text The string to tested
 	 * @return True if this spell matches the given string, false otherwise.
 	 */
@@ -710,22 +728,27 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 			switch(key){
 				case TIER_MATCH_PREFIX:
+				case TIER_MATCH_ALIAS:
 					// Tier IS known for undiscovered spells so we can match it
 					target = getTier().getDisplayName().toLowerCase(Locale.ROOT);
 					break;
 				case ELEMENT_MATCH_PREFIX:
+				case ELEMENT_MATCH_ALIAS:
 					if(!discovered) return false; // Element is unknown so doesn't match
 					target = getElement().getDisplayName().toLowerCase(Locale.ROOT);
 					break;
 				case TYPE_MATCH_PREFIX:
+				case TYPE_MATCH_ALIAS:
 					if(!discovered) return false; // Type is unknown so doesn't match
 					target = getType().getDisplayName().toLowerCase(Locale.ROOT);
 					break;
 				case MODID_MATCH_PREFIX:
+				case MODID_MATCH_ALIAS:
 					if(!discovered) return false; // Mod ID is unknown so doesn't match
 					target = getRegistryName().getNamespace().toLowerCase(Locale.ROOT);
 					break;
 				case DISCOVERED_MATCH_PREFIX:
+				case DISCOVERED_MATCH_ALIAS:
 					target = Boolean.toString(discovered);
 					break;
 				default:
