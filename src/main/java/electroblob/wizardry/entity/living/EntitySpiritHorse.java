@@ -10,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,8 @@ import net.minecraft.world.World;
  */
 @SuppressWarnings("deprecation") // It's what Entity does, so...
 public class EntitySpiritHorse extends EntityHorse {
+
+	public static final IAttribute JUMP_STRENGTH = AbstractHorse.JUMP_STRENGTH;
 
 	private int idleTimer = 0;
 

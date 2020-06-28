@@ -11,13 +11,10 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
-import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.util.UUID;
 
@@ -25,13 +22,6 @@ public class SummonSpiritHorse extends Spell {
 
 	/** The string identifier for the potency attribute modifier. */
 	private static final String POTENCY_ATTRIBUTE_MODIFIER = "potency";
-
-	private static final IAttribute JUMP_STRENGTH;
-	// Why is this protected? Doesn't that defeat the point of the attribute system?
-	static {
-		// Great, now I have to reflect into this class too.
-		JUMP_STRENGTH = ObfuscationReflectionHelper.getPrivateValue(AbstractHorse.class, null, "field_110271_bv");
-	}
 
 	public static final IStoredVariable<UUID> UUID_KEY = IStoredVariable.StoredVariable.ofUUID("spiritHorseUUID", Persistence.ALWAYS);
 
@@ -70,7 +60,7 @@ public class SummonSpiritHorse extends Spell {
 			horse.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(
 					new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER, modifiers.get(SpellModifiers.POTENCY) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 			// Jump strength increases ridiculously fast, so we're reducing the effect of the modifier by 75%
-			horse.getEntityAttribute(JUMP_STRENGTH).applyModifier(new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER,
+			horse.getEntityAttribute(EntitySpiritHorse.JUMP_STRENGTH).applyModifier(new AttributeModifier(POTENCY_ATTRIBUTE_MODIFIER,
 					modifiers.amplified(SpellModifiers.POTENCY, 0.25f) - 1, EntityUtils.Operations.MULTIPLY_CUMULATIVE));
 
 			data.setVariable(UUID_KEY, horse.getUniqueID());
