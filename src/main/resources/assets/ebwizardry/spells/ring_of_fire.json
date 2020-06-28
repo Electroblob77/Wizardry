@@ -18,6 +18,7 @@
   "cooldown": 100,
   "base_properties": {
     "duration": 600,
+    "effect_radius": 2.5,
     "damage": 1,
     "burn_duration": 10
   }

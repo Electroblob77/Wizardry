@@ -3,8 +3,10 @@ package electroblob.wizardry.entity.construct;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.EntityLevitatingBlock;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
@@ -27,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class EntityBlackHole extends EntityMagicConstruct {
+public class EntityBlackHole extends EntityScaledConstruct {
 
 	private static final double SUCTION_STRENGTH = 0.075;
 	/** The maximum number of blocks that can be unhooked each tick, reduces lag from excessive numbers of entities. */
@@ -38,8 +40,8 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 	public EntityBlackHole(World world){
 		super(world);
-		this.width = 6.0f;
-		this.height = 3.0f;
+		float r = Spells.black_hole.getProperty(Spell.EFFECT_RADIUS).floatValue();
+		setSize(r * 2, r);
 		randomiser = new int[30];
 		for(int i = 0; i < randomiser.length; i++){
 			randomiser[i] = this.rand.nextInt(10);
@@ -91,7 +93,7 @@ public class EntityBlackHole extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			double radius = 6; // TODO: Support for spell properties and modifiers
+			double radius = 6 * sizeMultiplier; // TODO: Support for spell properties
 
 			boolean suckInBlocks = getCaster() instanceof EntityPlayer && EntityUtils.canDamageBlocks(getCaster(), world)
 					&& ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_black_hole);

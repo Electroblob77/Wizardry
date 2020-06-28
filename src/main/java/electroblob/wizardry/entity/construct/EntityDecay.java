@@ -17,7 +17,7 @@ import java.util.List;
 
 public class EntityDecay extends EntityMagicConstruct {
 
-	public int textureIndex = 0;
+	public int textureIndex;
 
 	public EntityDecay(World world){
 		super(world);
@@ -62,8 +62,7 @@ public class EntityDecay extends EntityMagicConstruct {
 		}
 	}
 
-	@Override protected void entityInit(){}
-
+	// TESTME: What the heck are these two doing?! (Are they a throwback to when this was not a construct?)
 	@Override protected void readEntityFromNBT(NBTTagCompound nbttagcompound){}
 
 	@Override protected void writeEntityToNBT(NBTTagCompound nbttagcompound){}

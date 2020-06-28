@@ -275,17 +275,17 @@ public final class Spells {
 		registry.register(new SpellProjectile<>("fireball", EntityMagicFireball::new).addProperties(Spell.DAMAGE, Spell.BURN_DURATION));//new Fireball());
 		registry.register(new FlameRay());
 		registry.register(new SpellProjectile<>("firebomb", EntityFirebomb::new).addProperties(Spell.DIRECT_DAMAGE, Spell.SPLASH_DAMAGE, Spell.BLAST_RADIUS, Spell.BURN_DURATION).soundValues(0.5f, 0.4f, 0.2f));
-		registry.register(new SpellConstructRanged<>("fire_sigil", EntityFireSigil::new, true).floor(true).addProperties(Spell.DAMAGE, Spell.BURN_DURATION));
+		registry.register(new SpellConstructRanged<>("fire_sigil", EntityFireSigil::new, true).floor(true).addProperties(Spell.EFFECT_RADIUS, Spell.DAMAGE, Spell.BURN_DURATION));
 		registry.register(new SpellProjectile<>("firebolt", EntityFirebolt::new).addProperties(Spell.DAMAGE, Spell.BURN_DURATION));
 		registry.register(new FrostRay());
 		registry.register(new SummonSnowGolem());
 		registry.register(new SpellArrow<>("ice_shard", EntityIceShard::new).addProperties(Spell.DAMAGE, Spell.EFFECT_DURATION, Spell.EFFECT_STRENGTH).soundValues(1, 1.6f, 0.4f));
 		registry.register(new IceStatue());
-		registry.register(new SpellConstructRanged<>("frost_sigil", EntityFrostSigil::new, true).floor(true).addProperties(Spell.DAMAGE, Spell.EFFECT_DURATION, Spell.EFFECT_STRENGTH));
+		registry.register(new SpellConstructRanged<>("frost_sigil", EntityFrostSigil::new, true).floor(true).addProperties(Spell.EFFECT_RADIUS, Spell.DAMAGE, Spell.EFFECT_DURATION, Spell.EFFECT_STRENGTH));
 		registry.register(new LightningRay());
 		registry.register(new SpellProjectile<>("spark_bomb", EntitySparkBomb::new).addProperties(Spell.DIRECT_DAMAGE, Spell.EFFECT_RADIUS, EntitySparkBomb.SECONDARY_MAX_TARGETS, Spell.SPLASH_DAMAGE).soundValues(0.5f, 0.4f, 0.2f));
 		registry.register(new SpellProjectile<>("homing_spark", EntitySpark::new).addProperties(Spell.DAMAGE, Spell.SEEKING_STRENGTH).soundValues(1.0f, 0.4f, 0.2f));
-		registry.register(new SpellConstructRanged<>("lightning_sigil", EntityLightningSigil::new, true).floor(true).addProperties(Spell.DIRECT_DAMAGE, Spell.EFFECT_RADIUS, EntityLightningSigil.SECONDARY_MAX_TARGETS, Spell.SPLASH_DAMAGE));
+		registry.register(new SpellConstructRanged<>("lightning_sigil", EntityLightningSigil::new, true).floor(true).addProperties(Spell.EFFECT_RADIUS, Spell.DIRECT_DAMAGE, Spell.EFFECT_RADIUS, EntityLightningSigil.SECONDARY_RANGE, EntityLightningSigil.SECONDARY_MAX_TARGETS, Spell.SPLASH_DAMAGE));
 		registry.register(new SpellArrow<>("lightning_arrow", EntityLightningArrow::new).addProperties(Spell.DAMAGE).soundValues(1, 1.45f, 0.3f));
 		registry.register(new LifeDrain());
 		registry.register(new SummonSkeleton());
@@ -309,7 +309,7 @@ public final class Spells {
 		registry.register(new HealAlly());
 
 		registry.register(new SpellMinion<>("summon_blaze", EntityBlazeMinion::new).soundValues(1, 1.1f, 0.2f));
-		registry.register(new SpellConstruct<>("ring_of_fire", SpellActions.POINT_DOWN, EntityFireRing::new, false).floor(true).addProperties(Spell.DAMAGE, Spell.BURN_DURATION));
+		registry.register(new SpellConstruct<>("ring_of_fire", SpellActions.POINT_DOWN, EntityFireRing::new, false).floor(true).addProperties(Spell.EFFECT_RADIUS, Spell.DAMAGE, Spell.BURN_DURATION));
 		registry.register(new Detonate());
 		registry.register(new SpellBuff("fire_resistance", 1, 0.5f, 0, () -> MobEffects.FIRE_RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new SpellBuff("fireskin", 1, 0.5f, 0, () -> WizardryPotions.fireskin).addProperties(Spell.BURN_DURATION));
@@ -347,7 +347,7 @@ public final class Spells {
 		registry.register(new PhaseStep());
 		registry.register(new VanishingBox());
 		registry.register(new GreaterHeal());
-		registry.register(new SpellConstruct<>("healing_aura", SpellActions.POINT_DOWN, EntityHealAura::new, false).addProperties(Spell.DAMAGE, Spell.HEALTH));
+		registry.register(new SpellConstruct<>("healing_aura", SpellActions.POINT_DOWN, EntityHealAura::new, false).addProperties(Spell.EFFECT_RADIUS, Spell.DAMAGE, Spell.HEALTH));
 		registry.register(new Forcefield());
 		registry.register(new SpellBuff("ironflesh", 0.4f, 0.5f, 0.6f, () -> MobEffects.RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new Transience());
@@ -366,7 +366,7 @@ public final class Spells {
 		registry.register(new ForestsCurse());
 		registry.register(new Flight());
 		registry.register(new SpellMinion<>("silverfish_swarm", EntitySilverfishMinion::new).soundValues(1, 1.1f, 0.1f));
-		registry.register(new SpellConstructRanged<>("black_hole", EntityBlackHole::new, false).soundValues(2, 0.7f, 0));
+		registry.register(new SpellConstructRanged<>("black_hole", EntityBlackHole::new, false).addProperties(Spell.EFFECT_RADIUS).soundValues(2, 0.7f, 0));
 		registry.register(new Shockwave());
 		registry.register(new SummonIronGolem());
 		registry.register(new ArrowRain());

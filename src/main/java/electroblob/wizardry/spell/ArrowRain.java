@@ -11,6 +11,7 @@ public class ArrowRain extends SpellConstructRanged<EntityArrowRain> {
 	public ArrowRain(){
 		super("arrow_rain", EntityArrowRain::new, false);
 		this.floor(true);
+		addProperties(EFFECT_RADIUS);
 	}
 	
 	@Override

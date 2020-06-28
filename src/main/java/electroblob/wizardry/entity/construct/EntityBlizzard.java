@@ -16,12 +16,18 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityBlizzard extends EntityMagicConstruct {
+public class EntityBlizzard extends EntityScaledConstruct {
 
 	public EntityBlizzard(World world){
 		super(world);
-		this.height = 1.0f;
-		this.width = 1.0f;
+		// TODO: Set the size properly and do whatever forcefield does to allow block and entity interaction inside it
+		// 		 (Probably need to do this for several others too)
+		setSize(Spells.blizzard.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 3);
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	public void onUpdate(){
@@ -34,7 +40,7 @@ public class EntityBlizzard extends EntityMagicConstruct {
 
 		// This is a good example of why you might define a spell base property without necessarily using it in the
 		// spell - in fact, blizzard doesn't even have a spell class (yet)
-		double radius = Spells.blizzard.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+		double radius = Spells.blizzard.getProperty(Spell.EFFECT_RADIUS).doubleValue() * sizeMultiplier;
 
 		if(!this.world.isRemote){
 
@@ -64,13 +70,13 @@ public class EntityBlizzard extends EntityMagicConstruct {
 			
 			for(int i=0; i<6; i++){
 				double speed = (rand.nextBoolean() ? 1 : -1) * (0.1 + 0.05 * rand.nextDouble());
-				ParticleBuilder.create(Type.SNOW).pos(this.posX, this.posY + rand.nextDouble() * 3, this.posZ).vel(0, 0, 0)
+				ParticleBuilder.create(Type.SNOW).pos(this.posX, this.posY + rand.nextDouble() * height, this.posZ).vel(0, 0, 0)
 				.time(100).scale(2).spin(rand.nextDouble() * (radius - 0.5) + 0.5, speed).shaded(true).spawn(world);
 			}
 
 			for(int i=0; i<3; i++){
 				double speed = (rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * rand.nextDouble());
-				ParticleBuilder.create(Type.CLOUD).pos(this.posX, this.posY + rand.nextDouble() * 2.5, this.posZ)
+				ParticleBuilder.create(Type.CLOUD).pos(this.posX, this.posY + rand.nextDouble() * (height - 0.5), this.posZ)
 						.clr(0xffffff).shaded(true).spin(rand.nextDouble() * (radius - 1) + 0.5, speed).spawn(world);
 			}
 		}

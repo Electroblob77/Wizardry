@@ -24,13 +24,10 @@ import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
- * This class is for all inanimate magical constructs which are not projectiles. It was made from scratch to provide a
- * unifying superclass for black hole, blizzard, tornado and a few others which all share some characteristics. The
- * caster UUID, lifetime and damage multiplier are stored here, and lifetime is also synced here.
- * <p></p>
- * When extending this class, override both constructors. Generally speaking, subclasses of this class are areas of
- * effect which deal damage or apply effects over time.
- * 
+ * This class is for all inanimate magical constructs which are not projectiles. Generally speaking, subclasses of this
+ * class are areas of effect which deal damage or apply effects over time, including black hole, blizzard, tornado and
+ * a few others. The caster UUID, lifetime and damage multiplier are stored here, and lifetime is also synced here.
+ *
  * @since Wizardry 1.0
  */
 public abstract class EntityMagicConstruct extends Entity implements IEntityOwnable, IEntityAdditionalSpawnData {
@@ -40,10 +37,8 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 	 * {@link EntityMagicConstruct#getCaster()}. */
 	private UUID casterUUID;
 
-	/**
-	 * The time in ticks this magical construct lasts for; defaults to 600 (30 seconds). If this is -1 the construct
-	 * doesn't despawn.
-	 */
+	/** The time in ticks this magical construct lasts for; defaults to 600 (30 seconds). If this is -1 the construct
+	 * doesn't despawn. */
 	public int lifetime = 600;
 
 	/** The damage multiplier for this construct, determined by the wand with which it was cast. */
@@ -78,6 +73,7 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 	@Override
 	public EnumActionResult applyPlayerInteraction(EntityPlayer player, Vec3d vec, EnumHand hand){
 
+		// Permanent constructs can now be dispelled by sneak-right-clicking
 		if(lifetime == -1 && getCaster() == player && player.isSneaking() && player.getHeldItem(hand).getItem() instanceof ISpellCastingItem){
 			this.despawn();
 			return EnumActionResult.SUCCESS;
@@ -98,7 +94,7 @@ public abstract class EntityMagicConstruct extends Entity implements IEntityOwna
 
 	@Override
 	protected void entityInit(){
-
+		// We could leave this unimplemented, but since the majority of subclasses don't use it, let's make it optional
 	}
 
 	@Override

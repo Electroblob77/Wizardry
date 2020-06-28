@@ -12,14 +12,16 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityFireRing extends EntityMagicConstruct {
-
-	// TODO: Implement blast modifiers
+public class EntityFireRing extends EntityScaledConstruct {
 
 	public EntityFireRing(World world){
 		super(world);
-		this.height = 1.0f;
-		this.width = 5.0f;
+		setSize(Spells.ring_of_fire.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 1);
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	public void onUpdate(){
@@ -32,8 +34,7 @@ public class EntityFireRing extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(2.5d, this.posX, this.posY,
-					this.posZ, this.world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, this.posX, this.posY, this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
 

@@ -17,12 +17,16 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityFrostSigil extends EntityMagicConstruct {
+public class EntityFrostSigil extends EntityScaledConstruct {
 
 	public EntityFrostSigil(World world){
 		super(world);
-		this.height = 0.2f;
-		this.width = 2.0f;
+		setSize(Spells.frost_sigil.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 0.2f);
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	@Override
@@ -32,7 +36,7 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(1.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
@@ -56,17 +60,14 @@ public class EntityFrostSigil extends EntityMagicConstruct {
 				}
 			}
 		}else if(this.rand.nextInt(15) == 0){
-			double radius = 0.5 + rand.nextDouble() * 0.3;
-			float angle = rand.nextFloat() * (float)Math.PI * 2;;
+			double radius = (0.5 + rand.nextDouble() * 0.3) * width/2;
+			float angle = rand.nextFloat() * (float)Math.PI * 2;
 			ParticleBuilder.create(Type.SNOW)
 			.pos(this.posX + radius * MathHelper.cos(angle), this.posY + 0.1, this.posZ + radius * MathHelper.sin(angle))
 			.vel(0, 0, 0) // Required since default for snow is not stationary
 			.spawn(world);
 		}
 	}
-
-	@Override
-	protected void entityInit(){}
 
 	@Override
 	public boolean canRenderOnFire(){

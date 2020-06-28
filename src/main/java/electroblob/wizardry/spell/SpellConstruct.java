@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
+import electroblob.wizardry.entity.construct.EntityScaledConstruct;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
@@ -160,6 +161,7 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 			construct.setCaster(caster);
 			construct.lifetime = permanent ? -1 : (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 			construct.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
+			if(construct instanceof EntityScaledConstruct) ((EntityScaledConstruct)construct).setSizeMultiplier(modifiers.get(WizardryItems.blast_upgrade));
 			addConstructExtras(construct, side, caster, modifiers);
 			// Prevents overlapping of multiple constructs of the same type. Since we have an instance here this is
 			// very simple. The trade-off is that we have to create the entity before the spell fails, but unless

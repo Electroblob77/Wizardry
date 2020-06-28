@@ -6,16 +6,19 @@ import electroblob.wizardry.entity.projectile.EntityMagicArrow;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.GeometryUtils;
+import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -32,6 +35,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+// TODO: Possibly convert this to EntityScaledConstruct
 @Mod.EventBusSubscriber
 public class EntityForcefield extends EntityMagicConstruct implements ICustomHitbox {
 
@@ -61,16 +65,6 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 
 	public float getRadius(){
 		return radius;
-	}
-
-	@Override
-	public boolean canBeCollidedWith(){
-		return false;//!this.isDead;
-	}
-
-	@Override
-	public AxisAlignedBB getCollisionBox(Entity entity){
-		return null;//entity.getEntityBoundingBox();
 	}
 
 	@Nullable
@@ -244,31 +238,28 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 		return closestPoint.subtract(line.normalize().scale(MathHelper.sqrt(rsquared - dsquared)));
 	}
 
-	// Need to sync the caster because we're now dealing with client-side motion
-
 	@Override
 	public void writeSpawnData(ByteBuf data){
 		super.writeSpawnData(data);
 		data.writeFloat(getRadius());
-		if(getCaster() != null) data.writeInt(getCaster().getEntityId());
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf data){
-
 		super.readSpawnData(data);
-
 		setRadius(data.readFloat());
+	}
 
-		if(!data.isReadable()) return;
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound nbt){
+		super.writeEntityToNBT(nbt);
+		nbt.setFloat("radius", radius);
+	}
 
-		Entity entity = world.getEntityByID(data.readInt());
-
-		if(entity instanceof EntityLivingBase){
-			setCaster((EntityLivingBase)entity);
-		}else{
-			Wizardry.logger.warn("Forcefield caster with ID in spawn data not found");
-		}
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound nbt){
+		super.readEntityFromNBT(nbt);
+		radius = nbt.getFloat("radius");
 	}
 
 	@Override

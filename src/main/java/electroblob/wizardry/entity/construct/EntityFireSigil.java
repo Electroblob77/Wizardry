@@ -14,12 +14,17 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityFireSigil extends EntityMagicConstruct {
+// TODO: Try to collect sigils into one superclass
+public class EntityFireSigil extends EntityScaledConstruct {
 
 	public EntityFireSigil(World world){
 		super(world);
-		this.height = 0.2f;
-		this.width = 2.0f;
+		setSize(Spells.fire_sigil.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 0.2f);
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	@Override
@@ -59,15 +64,12 @@ public class EntityFireSigil extends EntityMagicConstruct {
 				}
 			}
 		}else if(this.rand.nextInt(15) == 0){
-			double radius = 0.5 + rand.nextDouble() * 0.3;
-			float angle = rand.nextFloat() * (float)Math.PI * 2;;
+			double radius = (0.5 + rand.nextDouble() * 0.3) * width/2;
+			float angle = rand.nextFloat() * (float)Math.PI * 2;
 			world.spawnParticle(EnumParticleTypes.FLAME, this.posX + radius * MathHelper.cos(angle), this.posY + 0.1,
 					this.posZ + radius * MathHelper.sin(angle), 0, 0, 0);
 		}
 	}
-
-	@Override
-	protected void entityInit(){}
 
 	@Override
 	public boolean canRenderOnFire(){

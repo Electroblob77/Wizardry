@@ -10,12 +10,21 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityCombustionRune extends EntityMagicConstruct {
+public class EntityCombustionRune extends EntityScaledConstruct {
 
 	public EntityCombustionRune(World world){
 		super(world);
-		this.height = 0.2f;
-		this.width = 2.0f;
+		setSize(2, 0.2f);
+	}
+
+	@Override
+	protected boolean shouldScaleWidth(){
+		return false; // We're using the blast modifier for an actual explosion here, rather than the entity size
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	@Override
@@ -31,7 +40,7 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 
 				if(this.isValidTarget(target)){
 
-					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue();
+					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue() * sizeMultiplier;
 
 					world.newExplosion(this.getCaster(), this.posX, this.posY, this.posZ, strength, true,
 							getCaster() != null && EntityUtils.canDamageBlocks(getCaster(), world));
@@ -47,9 +56,6 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 					this.posZ + radius * MathHelper.sin(angle), 0, 0, 0);
 		}
 	}
-
-	@Override
-	protected void entityInit(){}
 
 	@Override
 	public boolean canRenderOnFire(){

@@ -18,12 +18,11 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityEarthquake extends EntityMagicConstruct {
+public class EntityEarthquake extends EntityMagicConstruct { // NOT a scaled construct, the size is controlled by time
 
 	public EntityEarthquake(World world){
 		super(world);
-		this.height = 1.0f;
-		this.width = 1.0f;
+		setSize(1, 1); // This one probably should be small
 	}
 
 	public void onUpdate(){

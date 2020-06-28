@@ -829,18 +829,18 @@ public class ClientProxy extends CommonProxy {
 
 		// Runes on ground
 		RenderingRegistry.registerEntityRenderingHandler(EntityHealAura.class,
-				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/healing_aura.png"), 5.0f, false));
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/healing_aura.png"), 0.3f, false));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireSigil.class,
-				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/fire_sigil.png"), 2.0f, true));
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/fire_sigil.png"), 0, true));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFrostSigil.class,
-				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/frost_sigil.png"), 2.0f, true));
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/frost_sigil.png"), 0, true));
 		RenderingRegistry.registerEntityRenderingHandler(EntityLightningSigil.class,
-				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 2.0f, true));
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/lightning_sigil.png"), 0, true));
 		RenderingRegistry.registerEntityRenderingHandler(EntityFireRing.class,
-				manager -> new RenderFireRing(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/ring_of_fire.png"), 5.0f));
+				manager -> new RenderFireRing(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/ring_of_fire.png")));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDecay.class, RenderDecay::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityCombustionRune.class,
-				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/combustion_rune.png"), 2.0f, true));
+				manager -> new RenderSigil(manager, new ResourceLocation(Wizardry.MODID, "textures/entity/combustion_rune.png"), 0, true));
 
 		// TESRs
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityArcaneWorkbench.class, new RenderArcaneWorkbench());

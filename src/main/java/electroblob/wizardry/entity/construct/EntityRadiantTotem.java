@@ -19,13 +19,23 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EntityRadiantTotem extends EntityMagicConstruct {
+public class EntityRadiantTotem extends EntityScaledConstruct {
 
 	private static final int PERIMETER_PARTICLE_DENSITY = 6;
 
 	public EntityRadiantTotem(World world){
 		super(world);
-		this.setSize(1, 1);
+		this.setSize(1, 1); // This entity is different in that its area of effect is kind of 'outside' it
+	}
+
+	@Override
+	protected boolean shouldScaleWidth(){
+		return false;
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	@Override
@@ -37,7 +47,7 @@ public class EntityRadiantTotem extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		double radius = Spells.radiant_totem.getProperty(Spell.EFFECT_RADIUS).floatValue(); // TODO: Blast modifiers
+		double radius = Spells.radiant_totem.getProperty(Spell.EFFECT_RADIUS).floatValue() * sizeMultiplier;
 
 		if(world.isRemote){
 

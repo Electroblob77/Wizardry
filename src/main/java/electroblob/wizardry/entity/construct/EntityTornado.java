@@ -7,8 +7,11 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.spell.Tornado;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
@@ -27,17 +30,21 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityTornado extends EntityMagicConstruct {
+public class EntityTornado extends EntityScaledConstruct {
 
 	private double velX, velZ;
 
 	public EntityTornado(World world){
 		super(world);
-		this.height = 8.0f;
-		this.width = 5.0f;
+		setSize(Spells.tornado.getProperty(Spell.EFFECT_RADIUS).floatValue(), 8);
 		this.isImmuneToFire = false;
 	}
-	
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
+	}
+
 	public void setHorizontalVelocity(double velX, double velZ){
 		this.velX = velX;
 		this.velZ = velZ;
@@ -48,7 +55,7 @@ public class EntityTornado extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		double radius = Spells.tornado.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+		double radius = width/2;
 
 		if(this.ticksExisted % 120 == 1 && world.isRemote){
 			// Repeat is false so that the sound fades out when the tornado does rather than stopping suddenly

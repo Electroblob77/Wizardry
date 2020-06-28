@@ -107,9 +107,9 @@ public class RenderRadiantTotem extends Render<EntityRadiantTotem> {
 		float age = entity.ticksExisted + partialTicks;
 		float rotationSpeed = 2;
 
-//		GlStateManager.rotate(age * rotationSpeed/2, 0.0F, 1.0F, 0.0F);
-//		GlStateManager.rotate(60.0F, 0.7071F, 0.0F, 0.7071F);
-//		GlStateManager.rotate(age * rotationSpeed, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(age * rotationSpeed/2, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(60.0F, 0.7071F, 0.0F, 0.7071F);
+		GlStateManager.rotate(age * rotationSpeed, 0.0F, 1.0F, 0.0F);
 
 		GlStateManager.scale(0.5, 0.5, 0.5);
 

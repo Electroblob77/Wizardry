@@ -19,12 +19,10 @@ import org.lwjgl.opengl.GL11;
 public class RenderFireRing extends Render<EntityFireRing> {
 
 	private final ResourceLocation texture;
-	private float scale;
 
-	public RenderFireRing(RenderManager renderManager, ResourceLocation texture, float scale){
+	public RenderFireRing(RenderManager renderManager, ResourceLocation texture){
 		super(renderManager);
 		this.texture = texture;
-		this.scale = scale;
 	}
 
 	@Override
@@ -48,7 +46,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 		GlStateManager.rotate(-90, 1, 0, 0);
 
 		float s = DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
-		GlStateManager.scale(scale * s, scale * s, scale * s);
+		GlStateManager.scale(entity.width * s, entity.width * s, entity.width * s);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
@@ -66,20 +64,21 @@ public class RenderFireRing extends Render<EntityFireRing> {
 		GlStateManager.popMatrix();
 
 		// Fire
+		// TODO: Bleeeuuurugh this is disgusting must fix :0
 
 		if(s >= 1){
 			GlStateManager.disableLighting();
 			TextureAtlasSprite icon = Minecraft.getMinecraft().getBlockRendererDispatcher()
 					.getModelForState(Blocks.FIRE.getDefaultState()).getParticleTexture();
-			int sides = 16;
+			float s1 = entity.width/5;
+			int sides = (int)(16 * s1);
 			float height = 1.0f;
 
 			for(int k = 0; k < sides; k++){
 
 				GlStateManager.pushMatrix();
 				GlStateManager.translate((float)x, (float)y + 0.05f, (float)z);
-				float f1 = 1.0f;
-				GlStateManager.scale(f1, f1, f1);
+//				GlStateManager.scale(s1, s1, s1);
 				float f2 = 0.5F;
 				float f3 = 0.0F;
 				float f4 = 0.2f;
@@ -89,7 +88,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 				int i = 0;
 
 				GlStateManager.rotate((360f / (float)sides) * k, 0, 1, 0);
-				GlStateManager.translate(0, 0, -2.3f);
+				GlStateManager.translate(0, 0, -2.3f * s1);
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
@@ -126,8 +125,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 
 				GlStateManager.pushMatrix();
 				GlStateManager.translate((float)x, (float)y + 0.05f, (float)z);
-				float f1 = 1.0f;
-				GlStateManager.scale(f1, f1, f1);
+//				GlStateManager.scale(s1, s1, s1);
 				float f2 = 0.5F;
 				float f3 = 0.0F;
 				float f4 = 0.2f;
@@ -137,7 +135,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 				int i = 0;
 
 				GlStateManager.rotate((360f / (float)sides) * k, 0, 1, 0);
-				GlStateManager.translate(0, 0, 2.3f);
+				GlStateManager.translate(0, 0, 2.3f * s1);
 
 				buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 

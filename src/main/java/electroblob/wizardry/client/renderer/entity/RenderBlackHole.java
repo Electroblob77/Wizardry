@@ -18,6 +18,7 @@ import java.util.Collections;
 
 public class RenderBlackHole extends Render<EntityBlackHole> {
 
+	// TODO: Remove RayHelper and the ray texture entirely and use colours with depth mask off (like imbuement altar)
 	private static final ResourceLocation RAY_TEXTURE = new ResourceLocation(Wizardry.MODID,
 			"textures/entity/black_hole/ray.png");
 	private static final ResourceLocation CENTRE_TEXTURE = new ResourceLocation(Wizardry.MODID,
@@ -65,20 +66,20 @@ public class RenderBlackHole extends Render<EntityBlackHole> {
 
 		for(int j = 0; j < 30; j++){
 
-			float scale = 3.0f;
+			float radius = 3.0f * entity.getSizeMultiplier();
 
 			int a = entity.randomiser[j];
 			int b = entity.randomiser2[j];
 
 			int sliceAngle = 20 + a;
 
-			double x1 = scale * MathHelper.sin((entity.ticksExisted + 40 * j) * ((float)Math.PI / 180f));
+			double x1 = radius * MathHelper.sin((entity.ticksExisted + 40 * j) * ((float)Math.PI / 180f));
 			// double y1 = 0.7*MathHelper.cos((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
-			double z1 = scale * MathHelper.cos((entity.ticksExisted + 40 * j) * ((float)Math.PI / 180));
+			double z1 = radius * MathHelper.cos((entity.ticksExisted + 40 * j) * ((float)Math.PI / 180));
 
-			double x2 = scale * MathHelper.sin((entity.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
+			double x2 = radius * MathHelper.sin((entity.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
 			// double y2 = 0.7*MathHelper.sin((blackhole.timer - 40*j)*(Math.PI/180))*j/10;
-			double z2 = scale * MathHelper.cos((entity.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
+			double z2 = radius * MathHelper.cos((entity.ticksExisted + 40 * j - sliceAngle) * ((float)Math.PI / 180));
 
 			double absoluteX = x1 * MathHelper.cos(31 * b);
 			double absoluteY = z1 * MathHelper.sin(31 * a) + x1 * MathHelper.cos(31 * a) * MathHelper.sin(31 * b);

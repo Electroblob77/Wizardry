@@ -1,7 +1,6 @@
 package electroblob.wizardry.client.renderer.entity;
 
 import electroblob.wizardry.client.DrawingUtils;
-import electroblob.wizardry.entity.construct.EntityHealAura;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import net.minecraft.client.Minecraft;
@@ -19,13 +18,13 @@ import org.lwjgl.opengl.GL11;
 public class RenderSigil extends Render<EntityMagicConstruct> {
 
 	private final ResourceLocation texture;
-	private float scale;
+	private float rotationSpeed;
 	private boolean invisibleToEnemies;
 
-	public RenderSigil(RenderManager renderManager, ResourceLocation texture, float scale, boolean invisibleToEnemies){
+	public RenderSigil(RenderManager renderManager, ResourceLocation texture, float rotationSpeed, boolean invisibleToEnemies){
 		super(renderManager);
 		this.texture = texture;
-		this.scale = scale;
+		this.rotationSpeed = rotationSpeed;
 		this.invisibleToEnemies = invisibleToEnemies;
 	}
 
@@ -35,8 +34,8 @@ public class RenderSigil extends Render<EntityMagicConstruct> {
 		// Makes the sigil invisible to enemies of the player that created it
 		if(this.invisibleToEnemies){
 			// Unfortunately we can't access the caster's allies if they're not online, it only works the other way round
-			if(entity.getCaster() instanceof EntityPlayer && !AllyDesignationSystem
-					.isPlayerAlly((EntityPlayer)entity.getCaster(), Minecraft.getMinecraft().player)){
+			if(entity.getCaster() != Minecraft.getMinecraft().player && entity.getCaster() instanceof EntityPlayer
+					&& !AllyDesignationSystem.isPlayerAlly((EntityPlayer)entity.getCaster(), Minecraft.getMinecraft().player)){
 				return;
 			}
 		}
@@ -59,10 +58,10 @@ public class RenderSigil extends Render<EntityMagicConstruct> {
 		GlStateManager.rotate(-90, 1, 0, 0);
 
 		// Healing aura rotates slowly
-		if(entity instanceof EntityHealAura) GlStateManager.rotate(entity.ticksExisted / 3.0f, 0, 0, 1);
+		if(rotationSpeed != 0) GlStateManager.rotate(entity.ticksExisted * rotationSpeed, 0, 0, 1);
 
-		float s = DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
-		GlStateManager.scale(scale * s, scale * s, scale * s);
+		float s = entity.width * DrawingUtils.smoothScaleFactor(entity.lifetime, entity.ticksExisted, partialTicks, 10, 10);
+		GlStateManager.scale(s, s, s);
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();

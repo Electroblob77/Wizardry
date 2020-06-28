@@ -1,6 +1,5 @@
 package electroblob.wizardry.entity.construct;
 
-import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
@@ -8,46 +7,26 @@ import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityStormcloud extends EntityMagicConstruct {
-
-//	private static final DataParameter<Float> RADIUS = new DataParameter<>(21, DataSerializers.FLOAT);
+public class EntityStormcloud extends EntityScaledConstruct {
 
 	public EntityStormcloud(World world){
 		super(world);
-		this.height = 2.0f;
-		this.width = Spells.stormcloud.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2;
+		setSize(Spells.stormcloud.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 2);
 	}
 
-//	@Override
-//	protected void entityInit(){
-//		super.entityInit();
-//		this.getDataManager().register(RADIUS, width); // TODO: This doesn't work, implement blast modifiers properly into SpellConstruct
-//	}
-
-//	public void multiplyWidth(float multiplier){
-//		this.setSize(width * multiplier, height);
-//		this.getDataManager().set(RADIUS, width);
-//	}
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
+	}
 
 	public void onUpdate(){
 
 		super.onUpdate();
-
-//		if(world.isRemote){
-//			float radius = this.getDataManager().get(RADIUS);
-//			if(radius != width) this.setSize(radius, height);
-//		}else{
-//			if(this.getDataManager().get(RADIUS) != width) this.getDataManager().set(RADIUS, width);
-//		}
-
-//		if(this.ticksExisted % 35 == 0) this.playSound(WizardrySounds.ENTITY_STORMCLOUD_AMBIENT, 1, 1);
 
 		if(this.world.isRemote){
 
@@ -82,16 +61,6 @@ public class EntityStormcloud extends EntityMagicConstruct {
 				}
 			}
 		}
-
-//		BlockPos pos = new BlockPos(this);
-//
-//		for(int x = -(int)(this.width/2); x <= this.width/2 + 0.5; x++){
-//			for(int z = -(int)(this.width/2); z <= this.width/2 + 0.5; z++){
-//
-//				int y = WizardryUtilities.getNearestFloor()
-//
-//			}
-//		}
 
 	}
 
