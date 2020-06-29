@@ -33,14 +33,14 @@ public class Fangs extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 		if(!spawnFangs(world, new Vec3d(caster.posX, caster.getEntityBoundingBox().minY, caster.posZ),
-				GeometryUtils.replaceComponent(caster.getLookVec(), Axis.Y, 0), caster, modifiers)) return false;
+				GeometryUtils.replaceComponent(caster.getLookVec(), Axis.Y, 0).normalize(), caster, modifiers)) return false;
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
 
 	@Override
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
-		if(!spawnFangs(world, caster.getPositionVector(), target.getPositionVector().subtract(caster.getPositionVector()), caster, modifiers)) return false;
+		if(!spawnFangs(world, caster.getPositionVector(), target.getPositionVector().subtract(caster.getPositionVector()).normalize(), caster, modifiers)) return false;
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
