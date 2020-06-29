@@ -143,8 +143,11 @@ public final class WizardryPotions {
 		registerPotion(registry, "mind_trick", new PotionMagicEffect(true, 0x601683,
 				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mind_trick.png")));
 
-		registerPotion(registry, "mind_control", new PotionMagicEffect(true, 0x320b44,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mind_control.png")));
+		registerPotion(registry, "mind_control", new PotionMagicEffectParticles(true, 0x320b44,
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mind_control.png")) {
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){} // We only want the syncing
+		});
 
 		registerPotion(registry, "font_of_mana", new PotionMagicEffect(false, 0xffe5bb,
 				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/font_of_mana.png")).setBeneficial());

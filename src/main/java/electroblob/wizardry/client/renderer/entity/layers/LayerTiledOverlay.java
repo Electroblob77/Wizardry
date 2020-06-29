@@ -82,6 +82,16 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 		return false; // Normally it looks kind of weird because second layers typically have holes in them
 	}
 
+	/**
+	 * Allows subclasses to perform additional transformations in the texture space before the model is rendered. This
+	 * can be used for a creeper-charge-like effect. To do this, simply override this method and call the appropriate
+	 * transformation method(s) (translate, rotate, scale) in {@link GlStateManager}. This method does nothing by
+	 * default.
+	 * @param entity The entity being rendered
+	 * @param partialTicks The current partial tick time
+	 */
+	protected void applyTextureSpaceTransformations(T entity, float partialTicks){}
+
 	@Override
 	public void doRenderLayer(T entity, float limbSwing, float limbSwingAmount, float partialTicks,
 			float ageInTicks, float netHeadYaw, float headPitch, float scale){
@@ -142,6 +152,8 @@ public abstract class LayerTiledOverlay<T extends EntityLivingBase> implements L
 		}
 
 		GlStateManager.scale(scaleX, scaleY, 1);
+
+		applyTextureSpaceTransformations(entity, partialTicks);
 
 		GlStateManager.matrixMode(GL11.GL_MODELVIEW); // Switch back to the 3D model space
 
