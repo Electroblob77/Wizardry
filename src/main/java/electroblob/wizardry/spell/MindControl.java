@@ -24,6 +24,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -212,6 +213,14 @@ public class MindControl extends SpellRay {
 		// The != null check prevents infinite loops with mind trick
 		if(event.getTarget() != null && event.getEntityLiving() instanceof EntityLiving)
 			processTargeting(event.getEntity().world, (EntityLiving)event.getEntityLiving(), event.getTarget());
+	}
+
+	@SubscribeEvent
+	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
+		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == WizardryPotions.mind_control
+				&& event.getEntity() instanceof EntityLiving){
+			((EntityLiving)event.getEntity()).setAttackTarget(null); // End effect
+		}
 	}
 
 }
