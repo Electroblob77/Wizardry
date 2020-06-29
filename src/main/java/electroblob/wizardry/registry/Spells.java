@@ -243,6 +243,7 @@ public final class Spells {
 	public static final Spell blinding_flash = placeholder();
 
 	public static final Spell stormcloud = placeholder();
+	public static final Spell fangs = placeholder();
 	public static final Spell radiant_totem = placeholder();
 
 	public static final Spell firestorm = placeholder();
@@ -452,6 +453,7 @@ public final class Spells {
 		registry.register(new BlindingFlash());
 
 		registry.register(new Stormcloud());
+		registry.register(new Fangs());
 		registry.register(new RadiantTotem());
 
 		registry.register(new Firestorm());

@@ -162,6 +162,7 @@
 	"spell.empowering_presence": 		{"category": "spells", "sounds": ["ebwizardry:buff"]},
 	"spell.entrapment": 				{"category": "spells", "sounds": ["mob/evocation_illager/prepare_attack1", "mob/evocation_illager/prepare_attack2"]},
 	"spell.evade": 						{"category": "spells", "sounds": ["random/bow"]},
+	"spell.fangs": 						{"category": "spells", "sounds": ["mob/evocation_illager/prepare_attack1", "mob/evocation_illager/prepare_attack2"]},
 	"spell.fireball": 					{"category": "spells", "sounds": ["mob/ghast/fireball4"]},
 	"spell.firebolt": 					{"category": "spells", "sounds": ["mob/ghast/fireball4"]},
 	"spell.firebomb": 					{"category": "spells", "sounds": ["random/bow"]},
