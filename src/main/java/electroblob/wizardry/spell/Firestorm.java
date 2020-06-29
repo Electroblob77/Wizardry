@@ -25,7 +25,7 @@ public class Firestorm extends SpellAreaEffect {
 
 	public Firestorm(){
 		super("firestorm", SpellActions.POINT_DOWN, false);
-		this.soundValues(1.5f, 1.0f, 0);
+		this.soundValues(2f, 1.0f, 0);
 		this.alwaysSucceed(true);
 		addProperties(BURN_DURATION);
 	}
@@ -58,7 +58,8 @@ public class Firestorm extends SpellAreaEffect {
 	protected void spawnParticleEffect(World world, Vec3d origin, double radius, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 
 		for(int i=0; i<100; i++){
-			double speed = (world.rand.nextBoolean() ? 1 : -1) * (0.1 + 0.05 * world.rand.nextDouble());
+			float r = world.rand.nextFloat();
+			double speed = 0.02/r * (1 + world.rand.nextDouble());//(world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
 			ParticleBuilder.create(Type.MAGIC_FIRE)
 					.pos(origin.x, origin.y + world.rand.nextDouble() * 3, origin.z)
 					.vel(0, 0, 0)
@@ -69,8 +70,8 @@ public class Firestorm extends SpellAreaEffect {
 		}
 
 		for(int i=0; i<60; i++){
-			double speed = (world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
 			float r = world.rand.nextFloat();
+			double speed = 0.02/r * (1 + world.rand.nextDouble());//(world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
 			ParticleBuilder.create(Type.CLOUD)
 					.pos(origin.x, origin.y + world.rand.nextDouble() * 2.5, origin.z)
 					.clr(DrawingUtils.mix(DrawingUtils.mix(0xffbe00, 0xff3600, r/0.6f), 0x222222, (r - 0.6f)/0.4f))

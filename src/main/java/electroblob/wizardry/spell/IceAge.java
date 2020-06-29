@@ -73,7 +73,8 @@ public class IceAge extends SpellAreaEffect {
 	protected void spawnParticleEffect(World world, Vec3d origin, double radius, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 
 		for(int i=0; i<100; i++){
-			double speed = (world.rand.nextBoolean() ? 1 : -1) * (0.1 + 0.05 * world.rand.nextDouble());
+			float r = world.rand.nextFloat();
+			double speed = 0.02/r * (1 + world.rand.nextDouble());//(world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
 			ParticleBuilder.create(Type.SNOW)
 					.pos(origin.x, origin.y + world.rand.nextDouble() * 3, origin.z)
 					.vel(0, 0, 0)
@@ -84,7 +85,8 @@ public class IceAge extends SpellAreaEffect {
 		}
 
 		for(int i=0; i<60; i++){
-			double speed = (world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
+			float r = world.rand.nextFloat();
+			double speed = 0.02/r * (1 + world.rand.nextDouble());//(world.rand.nextBoolean() ? 1 : -1) * (0.05 + 0.02 * world.rand.nextDouble());
 			ParticleBuilder.create(Type.CLOUD)
 					.pos(origin.x, origin.y + world.rand.nextDouble() * 2.5, origin.z)
 					.clr(0xffffff)
