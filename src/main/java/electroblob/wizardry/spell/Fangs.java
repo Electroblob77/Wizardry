@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityEvokerFangs;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
@@ -28,6 +29,12 @@ public class Fangs extends Spell {
 	public Fangs(){
 		super("fangs", SpellActions.SUMMON, false);
 		addProperties(RANGE);
+		this.npcSelector((e, o) -> true);
+	}
+
+	@Override
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
+		return true;
 	}
 
 	@Override
