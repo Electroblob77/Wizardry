@@ -54,6 +54,8 @@ public class Fangs extends Spell {
 
 	protected boolean spawnFangs(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 
+		if(direction.lengthSquared() == 0) return false; // Prevent casting directly down/up
+
 		boolean flag = false;
 
 		if(world.isRemote){
