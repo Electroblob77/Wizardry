@@ -74,7 +74,7 @@ public class Fangs extends Spell {
 
 			for(int i = 0; i < count; i++){
 
-				Vec3d vec = origin.add(direction.scale(i * FANG_SPACING));
+				Vec3d vec = origin.add(direction.scale((i + 1) * FANG_SPACING));
 				// Not exactly the same as evokers but it's how constructs work so it kinda fits
 				Integer y = BlockUtils.getNearestFloor(world, new BlockPos(vec), 5);
 
