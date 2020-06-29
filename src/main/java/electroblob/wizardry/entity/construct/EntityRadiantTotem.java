@@ -43,7 +43,7 @@ public class EntityRadiantTotem extends EntityScaledConstruct {
 	@Override
 	public void onUpdate(){
 
-		if(this.ticksExisted == 1){
+		if(world.isRemote && this.ticksExisted == 1){
 			Wizardry.proxy.playMovingSound(this, WizardrySounds.ENTITY_RADIANT_TOTEM_AMBIENT, WizardrySounds.SPELLS, 1, 1, true);
 		}
 
