@@ -6,8 +6,11 @@ import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.passive.EntitySheep;
@@ -217,9 +220,17 @@ public class MindControl extends SpellRay {
 
 	@SubscribeEvent
 	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
-		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == WizardryPotions.mind_control
-				&& event.getEntity() instanceof EntityLiving){
-			((EntityLiving)event.getEntity()).setAttackTarget(null); // End effect
+		onEffectEnd(event.getPotionEffect(), event.getEntity());
+	}
+
+	@SubscribeEvent
+	public static void onPotionExpiryEvent(PotionEvent.PotionRemoveEvent event){
+		onEffectEnd(event.getPotionEffect(), event.getEntity());
+	}
+
+	private static void onEffectEnd(PotionEffect effect, Entity entity){
+		if(effect != null && effect.getPotion() == WizardryPotions.mind_control && entity instanceof EntityLiving){
+			((EntityLiving)entity).setAttackTarget(null); // End effect
 		}
 	}
 
