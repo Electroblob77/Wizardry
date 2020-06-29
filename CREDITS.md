@@ -46,3 +46,4 @@ In addition, I'd like to thank the following individuals for their contributions
 - deleted_user_3277771
 - DiscoveryME
 - OGSoundFX
+- leosalom

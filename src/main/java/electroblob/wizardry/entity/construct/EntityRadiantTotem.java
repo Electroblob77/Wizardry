@@ -1,7 +1,9 @@
 package electroblob.wizardry.entity.construct;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.RadiantTotem;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.*;
@@ -41,8 +43,8 @@ public class EntityRadiantTotem extends EntityScaledConstruct {
 	@Override
 	public void onUpdate(){
 
-		if(this.ticksExisted % 25 == 1){
-			// TODO: Sound
+		if(this.ticksExisted == 1){
+			Wizardry.proxy.playMovingSound(this, WizardrySounds.ENTITY_RADIANT_TOTEM_AMBIENT, WizardrySounds.SPELLS, 1, 1, true);
 		}
 
 		super.onUpdate();
@@ -122,6 +124,12 @@ public class EntityRadiantTotem extends EntityScaledConstruct {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void despawn(){
+		this.playSound(WizardrySounds.ENTITY_RADIANT_TOTEM_VANISH, 1, 1);
+		super.despawn();
 	}
 
 	// Usually damage multipliers don't need syncing, but here we're using it for the non-standard purpose of targeting

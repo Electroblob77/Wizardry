@@ -65,6 +65,8 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_ICE_SPIKE_EXTEND = 		createSound("entity.ice_spike.extend");
 	public static final SoundEvent ENTITY_LIGHTNING_SIGIL_TRIGGER = createSound("entity.lightning_sigil.trigger");
 	public static final SoundEvent ENTITY_METEOR_FALLING = 			createSound("entity.meteor.falling");
+	public static final SoundEvent ENTITY_RADIANT_TOTEM_AMBIENT = 	createSound("entity.radiant_totem.ambient");
+	public static final SoundEvent ENTITY_RADIANT_TOTEM_VANISH = 	createSound("entity.radiant_totem.vanish");
 	public static final SoundEvent ENTITY_SHIELD_DEFLECT = 			createSound("entity.shield.deflect");
 	public static final SoundEvent ENTITY_TORNADO_AMBIENT = 		createSound("entity.tornado.ambient");
 	public static final SoundEvent ENTITY_ZOMBIE_SPAWNER_SPAWN = 	createSound("entity.zombie_spawner.spawn");
