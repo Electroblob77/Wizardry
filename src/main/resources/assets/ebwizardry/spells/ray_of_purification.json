@@ -20,7 +20,6 @@
     "range": 10,
     "damage": 2,
     "effect_duration": 60,
-    "burn_duration": 5,
     "undead_damage_multiplier": 2
   }
 }

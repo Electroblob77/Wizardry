@@ -22,7 +22,6 @@
     "effect_radius": 6,
     "max_targets": 1,
     "health": 1,
-    "damage": 1,
-    "burn_duration": 5
+    "damage": 1
   }
 }

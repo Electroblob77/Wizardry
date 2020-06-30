@@ -71,7 +71,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 		FIRE,
 		/** Frost (ice) damage from wizardry. Snow golems, ice wraiths and ice giants are immune. */
 		FROST,
-		/** Shock (lightning) damage from wizardry. Lightning wraiths and storm elementals are immune. */
+		/** Shock (lightning) damage from wizardry. Charges creepers. Lightning wraiths and storm elementals are immune. */
 		SHOCK,
 		/** Wither damage from wizardry. Withers, wither skeletons and shadow wraiths are immune. */
 		WITHER,
@@ -81,7 +81,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 		FORCE,
 		/** Blast damage from wizardry. Affected by the blast protection enchantment. */
 		BLAST,
-		/** Radiant damage from wizardry. */
+		/** Radiant damage from wizardry. Sets fire to undead entities. */
 		RADIANT
 	}
 

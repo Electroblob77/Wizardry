@@ -107,11 +107,6 @@ public class EntityRadiantTotem extends EntityScaledConstruct {
 
 					float damage = Spells.radiant_totem.getProperty(Spell.DAMAGE).floatValue();
 
-					if(target.isEntityUndead()){
-						target.setFire(Spells.radiant_totem.getProperty(Spell.BURN_DURATION).intValue());
-//						damage *= getProperty(UNDEAD_DAMAGE_MULTIPLIER).floatValue();
-					}
-
 					EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(this,
 							getCaster(), DamageType.RADIANT), damage);
 				}

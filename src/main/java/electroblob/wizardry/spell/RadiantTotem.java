@@ -13,7 +13,7 @@ public class RadiantTotem extends SpellConstructRanged<EntityRadiantTotem> {
 
 	public RadiantTotem(){
 		super("radiant_totem", EntityRadiantTotem::new, false);
-		this.addProperties(EFFECT_RADIUS, MAX_TARGETS, HEALTH, DAMAGE, BURN_DURATION);
+		this.addProperties(EFFECT_RADIUS, MAX_TARGETS, HEALTH, DAMAGE);
 		this.floor(false);
 	}
 

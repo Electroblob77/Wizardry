@@ -3,9 +3,12 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +29,7 @@ public class RayOfPurification extends SpellRay {
 
 	public RayOfPurification(){
 		super("ray_of_purification", SpellActions.POINT, true);
-		addProperties(DAMAGE, EFFECT_DURATION, BURN_DURATION, UNDEAD_DAMAGE_MULTIPLIER);
+		addProperties(DAMAGE, EFFECT_DURATION, UNDEAD_DAMAGE_MULTIPLIER);
 	}
 
 	// The following three methods serve as a good example of how to implement continuous spell sounds (hint: it's easy)
@@ -60,7 +63,6 @@ public class RayOfPurification extends SpellRay {
 				float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
 				// Fire
 				if(((EntityLivingBase)target).isEntityUndead()){
-					target.setFire((int)(getProperty(BURN_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 					damage *= getProperty(UNDEAD_DAMAGE_MULTIPLIER).floatValue();
 				}
 				// Damage

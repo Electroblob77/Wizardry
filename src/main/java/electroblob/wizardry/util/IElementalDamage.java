@@ -42,6 +42,11 @@ public interface IElementalDamage {
 				// Charges creepers when they are hit by shock damage
 				EntityUtils.chargeCreeper((EntityCreeper)event.getEntityLiving());
 			}
+
+			if(event.getEntityLiving().isEntityUndead()
+					&& ((IElementalDamage)event.getSource()).getType() == DamageType.RADIANT){
+				event.getEntityLiving().setFire(8); // Same as zombies/skeletons in sunlight
+			}
 		}
 	}
 }
