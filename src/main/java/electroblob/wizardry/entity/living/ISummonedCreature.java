@@ -20,6 +20,7 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -352,7 +353,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 
 	// Damage system
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST) // Needs to be first because we're replacing damage entirely
 	static void onLivingAttackEvent(LivingAttackEvent event){
 
 		// Rather than bother overriding entire attack methods in ISummonedCreature implementations, it's easier (and
