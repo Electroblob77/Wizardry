@@ -78,7 +78,7 @@ public class ShulkerBullet extends Spell {
 			if(caster != null){
 				world.spawnEntity(new EntityShulkerBullet(world, caster, target, direction.getAxis()));
 			}else{
-				// Can't use the normal constructor because doesn't accept null for the owner
+				// Can't use the normal constructor because it doesn't accept null for the owner
 				EntityShulkerBullet bullet = new EntityShulkerBullet(world);
 				bullet.setLocationAndAngles(x, y, z, bullet.rotationYaw, bullet.rotationPitch);
 
@@ -93,6 +93,8 @@ public class ShulkerBullet extends Spell {
 				targetTag.setInteger("Z", pos.getZ());
 				NBTExtras.storeTagSafely(nbt, "Target", targetTag);
 				bullet.readFromNBT(nbt); // LOL I just modified private fields without reflection
+
+				bullet.getEntityData().setFloat(SpellThrowable.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
 
 				world.spawnEntity(bullet);
 			}

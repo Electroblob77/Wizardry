@@ -88,7 +88,9 @@ public class Fangs extends Spell {
 				Integer y = BlockUtils.getNearestFloor(world, new BlockPos(vec), 5);
 
 				if(y != null){
-					world.spawnEntity(new EntityEvokerFangs(world, vec.x, y, vec.z, yaw, i, caster)); // null is fine here
+					EntityEvokerFangs fangs = new EntityEvokerFangs(world, vec.x, y, vec.z, yaw, i, caster); // null is fine here
+					fangs.getEntityData().setFloat(SpellThrowable.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
+					world.spawnEntity(fangs);
 					flag = true;
 				}
 			}
