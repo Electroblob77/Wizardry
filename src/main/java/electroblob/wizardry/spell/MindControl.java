@@ -141,6 +141,7 @@ public class MindControl extends SpellRay {
 				target.posX, target.posY, target.posZ, world);
 
 		possibleTargets.remove(target);
+		possibleTargets.remove(target.getRidingEntity());
 		possibleTargets.removeIf(e -> e instanceof EntityArmorStand);
 
 		EntityLivingBase newAITarget = null;
@@ -153,10 +154,7 @@ public class MindControl extends SpellRay {
 		}
 
 		if(newAITarget != null){
-			// From 1.7.10 - this seems not to work quite right; the entity appears to continue attacking this target
-			// after it gets killed (not noticeable in survival since it will target the player again immediately.)
 			target.setAttackTarget(newAITarget);
-
 			return true;
 		}
 
@@ -206,7 +204,7 @@ public class MindControl extends SpellRay {
 			if(((EntityLiving)event.getEntityLiving()).getAttackTarget() == null
 				|| !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive()){
 			
-				processTargeting(entity.world, entity, entity.getAttackTarget());
+				processTargeting(entity.world, entity, null);
 			}
 		}
 	}
@@ -231,6 +229,7 @@ public class MindControl extends SpellRay {
 	private static void onEffectEnd(PotionEffect effect, Entity entity){
 		if(effect != null && effect.getPotion() == WizardryPotions.mind_control && entity instanceof EntityLiving){
 			((EntityLiving)entity).setAttackTarget(null); // End effect
+			((EntityLiving)entity).setRevengeTarget(null); // End effect
 		}
 	}
 
