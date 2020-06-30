@@ -68,13 +68,11 @@ public class Thunderstorm extends Spell {
 				if(y != null){
 
 					if(!world.isRemote){
-						EntityLightningBolt entitylightning = new EntityLightningBolt(world, x, y, z, false);
-						world.addWeatherEffect(entitylightning);
+						EntityLightningBolt lightning = new EntityLightningBolt(world, x, y, z, false);
+						lightning.getEntityData().setUniqueId(LightningBolt.SUMMONER_NBT_KEY, caster.getUniqueID());
+						lightning.getEntityData().setFloat(LightningBolt.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
+						world.addWeatherEffect(lightning);
 					}
-
-					// Code for eventhandler recognition; for achievements and such like. Left in for future use.
-					// NBTTagCompound entityNBT = entitylightning.getEntityData();
-					// entityNBT.setInteger("summoningPlayer", entityplayer.entityId);
 
 					// Secondary chaining effect
 					List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
