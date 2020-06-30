@@ -157,7 +157,7 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 	public static void onLivingAttackEvent(LivingAttackEvent event){
 
 		// TODO: Annoyingly, wither skulls apply 'direct' damage from their shooter so they won't be recognised here
-		if(!(event.getSource() instanceof MagicDamage)){ // Prevent infinite looping
+		if(event.getSource().getImmediateSource() != null && !(event.getSource() instanceof MagicDamage)){ // Prevent infinite looping
 
 			float damageModifier = event.getSource().getImmediateSource().getEntityData().getFloat(DAMAGE_MODIFIER_NBT_KEY);
 
