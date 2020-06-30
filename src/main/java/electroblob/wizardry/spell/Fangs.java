@@ -2,11 +2,8 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.BlockUtils;
-import electroblob.wizardry.util.GeometryUtils;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,9 +16,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
+@EventBusSubscriber
 public class Fangs extends Spell {
 
 	private static final double FANG_SPACING = 1.25;
@@ -99,6 +101,13 @@ public class Fangs extends Spell {
 		return flag;
 	}
 
-	// TODO: Events to handle damage modifiers, ADS, etc. for fang entities (probably could do with this for other vanilla-entity spells)
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onLivingAttackEvent(LivingAttackEvent event){
+		if(event.getSource().getImmediateSource() instanceof EntityEvokerFangs){
+			if(!AllyDesignationSystem.isValidTarget(event.getSource().getTrueSource(), event.getEntityLiving())){
+				event.setCanceled(true); // Don't attack allies
+			}
+		}
+	}
 
 }
