@@ -5,6 +5,7 @@ import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
@@ -157,7 +158,7 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 	public static void onLivingAttackEvent(LivingAttackEvent event){
 
 		// TODO: Annoyingly, wither skulls apply 'direct' damage from their shooter so they won't be recognised here
-		if(event.getSource().getImmediateSource() != null && !(event.getSource() instanceof MagicDamage)){ // Prevent infinite looping
+		if(event.getSource().getImmediateSource() != null && !(event.getSource() instanceof IElementalDamage)){ // Prevent infinite looping
 
 			float damageModifier = event.getSource().getImmediateSource().getEntityData().getFloat(DAMAGE_MODIFIER_NBT_KEY);
 
