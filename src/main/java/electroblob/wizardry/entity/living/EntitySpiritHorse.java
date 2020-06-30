@@ -101,7 +101,7 @@ public class EntitySpiritHorse extends EntityHorse {
 		// clicking mounts the horse in this case).
 		if(itemstack.getItem() instanceof ISpellCastingItem && this.getOwner() == player && player.isSneaking()){
 			// Prevents accidental double clicking.
-			if(this.ticksExisted > 20){
+			if(this.ticksExisted > 20 && dispelTimer == 0){
 
 				this.dispelTimer++;
 				
@@ -167,7 +167,7 @@ public class EntitySpiritHorse extends EntityHorse {
 			this.idleTimer = 0;
 		}
 
-		if(this.idleTimer > 200){
+		if(this.idleTimer > 200 && dispelTimer == 0){
 			
 			this.playSound(WizardrySounds.ENTITY_SPIRIT_HORSE_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 			
