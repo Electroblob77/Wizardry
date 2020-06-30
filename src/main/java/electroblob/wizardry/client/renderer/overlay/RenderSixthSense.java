@@ -80,6 +80,8 @@ public class RenderSixthSense {
 			GlStateManager.rotate(180 - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
+			GlStateManager.color(1, 1, 1, 1);
+
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
 			mc.renderEngine.bindTexture(MARKER_TEXTURE);
