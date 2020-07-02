@@ -338,6 +338,10 @@ public final class Settings {
 	public boolean blinkEffect = true;
 	/** <b>[Client-only]</b> Whether to use spellcasting animations for players. */
 	public boolean spellcastingAnimations = true;
+	/** <b>[Client-only]</b> Whether to show the spell HUD when holding a wand. */
+	public boolean showSpellHUD = true;
+	/** <b>[Client-only]</b> Whether to show the charge meter when charging up a spell. */
+	public boolean showChargeMeter = true;
 	/** <b>[Client-only]</b> The position of the spell HUD. */
 	public GuiPosition spellHUDPosition = GuiPosition.BOTTOM_LEFT;
 
@@ -964,6 +968,20 @@ public final class Settings {
 		property.setRequiresWorldRestart(false);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		reverseScrollDirection = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "showSpellHUD", false, "Whether to show the spell HUD in the corner of the screen when holding a wand.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".show_spell_hud");
+		property.setRequiresWorldRestart(false);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		showSpellHUD = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "showChargeMeter", false, "Whether to show the spell charge-up meter around the crosshairs when charging up a spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".show_charge_meter");
+		property.setRequiresWorldRestart(false);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		showChargeMeter = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(CLIENT_CATEGORY, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name, "The position of the spell HUD.", GuiPosition.names);

@@ -106,6 +106,8 @@ public class GuiSpellDisplay {
 	@SubscribeEvent
 	public static void draw(RenderGameOverlayEvent.Post event){
 
+		if(!Wizardry.settings.showSpellHUD && !Wizardry.settings.showChargeMeter) return; // Optimisation
+
 		EntityPlayer player = Minecraft.getMinecraft().player;
 
 		if(player.isSpectator()) return; // Spectators shouldn't have the spell HUD!
@@ -150,6 +152,7 @@ public class GuiSpellDisplay {
 	 */
 	private static void renderChargeMeter(EntityPlayer player, ItemStack wand, int width, int height, float partialTicks){
 
+		if(!Wizardry.settings.showChargeMeter) return;
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) return; // Don't show charge meter in the debug screen
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) return; // Don't show in third person
 
@@ -193,6 +196,8 @@ public class GuiSpellDisplay {
 	 * @param textLayer True to render the text layer, false to render the background (hotbar layer)
 	 */
 	private static void renderSpellHUD(EntityPlayer player, ItemStack wand, boolean mainHand, int width, int height, float partialTicks, boolean textLayer){
+
+		if(!Wizardry.settings.showSpellHUD) return;
 
 		boolean flipX = Wizardry.settings.spellHUDPosition.flipX;
 		boolean flipY = Wizardry.settings.spellHUDPosition.flipY;
