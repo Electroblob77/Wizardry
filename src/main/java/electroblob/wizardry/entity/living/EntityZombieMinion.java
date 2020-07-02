@@ -1,6 +1,8 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -8,6 +10,8 @@ import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -84,6 +88,10 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override
 	public void onSpawn(){
 		if(this.dataManager.get(SPAWN_PARTICLES)) this.spawnParticleEffect();
+		if(shouldBurnInDay() && getCaster() instanceof EntityPlayer
+				&& ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_undead_helmets)){
+			setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
+		}
 	}
 
 	@Override

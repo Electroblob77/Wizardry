@@ -1,6 +1,8 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
@@ -117,6 +119,9 @@ public class EntitySkeletonMinion extends AbstractSkeleton implements ISummonedC
 	@Override
 	public void onSpawn(){
 		this.spawnParticleEffect();
+		if(getCaster() instanceof EntityPlayer && ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_undead_helmets)){
+			setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
+		}
 	}
 
 	@Override

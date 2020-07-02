@@ -288,6 +288,7 @@ public final class WizardryModels {
 		registerItemModel(WizardryItems.charm_storm);
 		registerItemModel(WizardryItems.charm_minion_health);
 		registerItemModel(WizardryItems.charm_minion_variants);
+		registerItemModel(WizardryItems.charm_undead_helmets);
 		registerItemModel(WizardryItems.charm_flight);
 		registerItemModel(WizardryItems.charm_growth);
 		registerItemModel(WizardryItems.charm_abseiling);
