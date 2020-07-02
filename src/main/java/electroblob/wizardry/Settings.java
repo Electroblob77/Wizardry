@@ -970,14 +970,14 @@ public final class Settings {
 		reverseScrollDirection = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(CLIENT_CATEGORY, "showSpellHUD", false, "Whether to show the spell HUD in the corner of the screen when holding a wand.");
+		property = config.get(CLIENT_CATEGORY, "showSpellHUD", true, "Whether to show the spell HUD in the corner of the screen when holding a wand.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".show_spell_hud");
 		property.setRequiresWorldRestart(false);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		showSpellHUD = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(CLIENT_CATEGORY, "showChargeMeter", false, "Whether to show the spell charge-up meter around the crosshairs when charging up a spell.");
+		property = config.get(CLIENT_CATEGORY, "showChargeMeter", true, "Whether to show the spell charge-up meter around the crosshairs when charging up a spell.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".show_charge_meter");
 		property.setRequiresWorldRestart(false);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
