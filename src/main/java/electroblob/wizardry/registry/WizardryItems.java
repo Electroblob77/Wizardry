@@ -636,7 +636,7 @@ public final class WizardryItems {
 		registerItem(registry, "charm_lava_walking", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_storm", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_minion_health", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
-		registerItem(registry, "charm_minion_variants", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_minion_variants", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_undead_helmets", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_hunger_casting", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_flight", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
