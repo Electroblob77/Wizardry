@@ -706,7 +706,10 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			// Special upgrades
 			Item specialUpgrade = upgrade.getItem();
 
-			if(WandHelper.getTotalUpgrades(wand) < this.tier.upgradeLimit
+			int maxUpgrades = this.tier.upgradeLimit;
+			if(this.element == Element.MAGIC) maxUpgrades += Constants.NON_ELEMENTAL_UPGRADE_BONUS;
+
+			if(WandHelper.getTotalUpgrades(wand) < maxUpgrades
 					&& WandHelper.getUpgradeLevel(wand, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
 
 				// Used to preserve existing mana when upgrading storage rather than creating free mana.

@@ -14,6 +14,8 @@ public final class Constants {
 	public static final int GRAND_CRYSTAL_MANA = 400;
 	/** The maximum number of one type of wand upgrade which can be applied to a wand. */
 	public static final int UPGRADE_STACK_LIMIT = 3;
+	/** The bonus amount of wand upgrades that can be applied to a non-elemental wand. */
+	public static final int NON_ELEMENTAL_UPGRADE_BONUS = 3;
 	/** The fraction by which cooldowns are reduced for each level of cooldown upgrade. */
 	public static final float COOLDOWN_REDUCTION_PER_LEVEL = 0.15f;
 	/** The fraction by which maximum charge is increased for each level of storage upgrade. */
