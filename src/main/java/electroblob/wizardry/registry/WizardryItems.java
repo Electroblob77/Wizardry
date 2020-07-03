@@ -273,6 +273,7 @@ public final class WizardryItems {
 	public static final Item charm_minion_health = placeholder();
 	public static final Item charm_minion_variants = placeholder();
 	public static final Item charm_undead_helmets = placeholder();
+	public static final Item charm_hunger_casting = placeholder();
 	public static final Item charm_flight = placeholder();
 	public static final Item charm_growth = placeholder();
 	public static final Item charm_abseiling = placeholder();
@@ -637,6 +638,7 @@ public final class WizardryItems {
 		registerItem(registry, "charm_minion_health", 		new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_minion_variants", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_undead_helmets", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
+		registerItem(registry, "charm_hunger_casting", 		new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_flight", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_growth", 				new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.CHARM));
 		registerItem(registry, "charm_abseiling", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.CHARM));

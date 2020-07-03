@@ -10,6 +10,7 @@ import electroblob.wizardry.entity.projectile.EntityDart;
 import electroblob.wizardry.entity.projectile.EntityForceOrb;
 import electroblob.wizardry.entity.projectile.EntityIceShard;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
 import electroblob.wizardry.registry.*;
@@ -462,6 +463,30 @@ public class ItemArtefact extends Item {
 				}else if(artefact == WizardryItems.charm_experience_tome){
 
 					modifiers.set(SpellModifiers.PROGRESSION, modifiers.get(SpellModifiers.PROGRESSION) * 1.5f, false);
+
+				}else if(artefact == WizardryItems.charm_hunger_casting){
+
+					if(!player.capabilities.isCreativeMode && event.getSource() == Source.WAND && !event.getSpell().isContinuous){ // TODO: Continuous spells?
+
+						ItemStack wand = player.getHeldItemMainhand();
+
+						if(!(wand.getItem() instanceof ISpellCastingItem && wand.getItem() instanceof IManaStoringItem)){
+							wand = player.getHeldItemOffhand();
+							if(!(wand.getItem() instanceof ISpellCastingItem && wand.getItem() instanceof IManaStoringItem)) return;
+						}
+
+						if(((IManaStoringItem)wand.getItem()).getMana(wand) < event.getSpell().getCost() * modifiers.get(SpellModifiers.COST)){
+
+							int hunger = event.getSpell().getCost() / 5;
+
+							if(player.getFoodStats().getFoodLevel() >= hunger){
+								player.getFoodStats().addStats(-hunger, 0);
+								modifiers.set(SpellModifiers.COST, 0, false);
+							}
+						}
+
+					}
+
 				}
 			}
 		}
