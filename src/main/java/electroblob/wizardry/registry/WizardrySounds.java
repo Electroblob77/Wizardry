@@ -47,8 +47,12 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_BLACK_HOLE_AMBIENT = 		createSound("entity.black_hole.ambient");
 	public static final SoundEvent ENTITY_BLACK_HOLE_VANISH = 		createSound("entity.black_hole.vanish");
 	public static final SoundEvent ENTITY_BLACK_HOLE_BREAK_BLOCK = 	createSound("entity.black_hole.break_block");
-	public static final SoundEvent ENTITY_BUBBLE_POP = 				createSound("entity.bubble.pop");
 	public static final SoundEvent ENTITY_BLIZZARD_AMBIENT = 		createSound("entity.blizzard.ambient");
+	public static final SoundEvent ENTITY_BOULDER_ROLL = 			createSound("entity.boulder.roll");
+	public static final SoundEvent ENTITY_BOULDER_LAND = 			createSound("entity.boulder.land");
+	public static final SoundEvent ENTITY_BOULDER_HIT = 			createSound("entity.boulder.hit");
+	public static final SoundEvent ENTITY_BOULDER_BREAK_BLOCK = 	createSound("entity.boulder.break_block");
+	public static final SoundEvent ENTITY_BUBBLE_POP = 				createSound("entity.bubble.pop");
 	public static final SoundEvent ENTITY_DECAY_AMBIENT = 			createSound("entity.decay.ambient");
 	public static final SoundEvent ENTITY_ENTRAPMENT_AMBIENT = 		createSound("entity.entrapment.ambient");
 	public static final SoundEvent ENTITY_ENTRAPMENT_VANISH = 		createSound("entity.entrapment.vanish");

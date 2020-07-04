@@ -248,6 +248,7 @@ public final class Spells {
 
 	public static final Spell firestorm = placeholder();
 	public static final Spell zombie_apocalypse = placeholder();
+	public static final Spell boulder = placeholder();
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Spell> event){
@@ -458,6 +459,7 @@ public final class Spells {
 
 		registry.register(new Firestorm());
 		registry.register(new ZombieApocalypse());
+		registry.register(new Boulder());
 
 	}
 

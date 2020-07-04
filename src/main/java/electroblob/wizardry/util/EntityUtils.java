@@ -172,22 +172,34 @@ public final class EntityUtils {
 	}
 
 	/**
-	 * Applies the standard (non-enchanted) amount of knockback to the given target, using the same calculation as
-	 * {@link EntityLivingBase#attackEntityFrom(DamageSource, float)}. Use in conjunction with
+	 * Applies the standard (non-enchanted) amount of knockback to the given target, using the same calculation and
+	 * strength value (0.4) as {@link EntityLivingBase#attackEntityFrom(DamageSource, float)}. Use in conjunction with
 	 * {@link EntityUtils#attackEntityWithoutKnockback(Entity, DamageSource, float)} to change the source of
 	 * knockback for an attack.
 	 *
-	 * @param attacker The entity that caused the knockback; the target will be pushed away from this entity.
-	 * @param target The entity to be knocked back.
+	 * @param attacker The entity that caused the knockback; the target will be pushed away from this entity
+	 * @param target The entity to be knocked back
 	 */
 	public static void applyStandardKnockback(Entity attacker, EntityLivingBase target){
+		applyStandardKnockback(attacker, target, 0.4f);
+	}
+
+	/**
+	 * Applies the standard knockback calculation to the given target, using the same calculation as
+	 * {@link EntityLivingBase#attackEntityFrom(DamageSource, float)}.
+	 *
+	 * @param attacker The entity that caused the knockback; the target will be pushed away from this entity
+	 * @param target The entity to be knocked back
+	 * @param strength The strength of the knockback
+	 */
+	public static void applyStandardKnockback(Entity attacker, EntityLivingBase target, float strength){
 		double dx = attacker.posX - target.posX;
 		double dz;
 		for(dz = attacker.posZ - target.posZ; dx * dx + dz * dz < 1.0E-4D; dz = (Math.random() - Math.random())
 				* 0.01D){
 			dx = (Math.random() - Math.random()) * 0.01D;
 		}
-		target.knockBack(attacker, 0.4f, dx, dz);
+		target.knockBack(attacker, strength, dx, dz);
 	}
 
 	/**
@@ -344,7 +356,7 @@ public final class EntityUtils {
 
 	/** Checks that the given entity is allowed to damage blocks in the given world. If the entity is a player or null,
 	 * this checks the player block damage config setting, otherwise it posts a mob griefing event and returns the result. */
-	public static boolean canDamageBlocks(EntityLivingBase entity, World world){
+	public static boolean canDamageBlocks(@Nullable EntityLivingBase entity, World world){
 		// TODO: Dispenser griefing!
 		if(entity == null || entity instanceof EntityPlayer) return Wizardry.settings.playerBlockDamage;
 		return ForgeEventFactory.getMobGriefingEvent(world, entity);

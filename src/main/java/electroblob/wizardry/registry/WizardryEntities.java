@@ -160,6 +160,7 @@ public class WizardryEntities {
 		registry.register(createEntry(EntityBubble.class, 			"bubble")				.tracker(160, 3, false).build());
 		registry.register(createEntry(EntityTornado.class, 			"tornado")			.tracker(160, 3, false).build());
 		registry.register(createEntry(EntityIceSpike.class, 		"ice_spike")			.tracker(160, 1, true).build());
+		registry.register(createEntry(EntityBoulder.class, 			"boulder")			.tracker(160, 1, true).build()); // Vertical velocity is not constant
 
 	}
 
