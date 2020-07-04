@@ -48,7 +48,7 @@ public abstract class EntityMagicProjectile extends EntityThrowable implements I
 	/** Sets the shooter of the projectile to the given caster, positions the projectile at the given caster's eyes and
 	 * aims it in the direction they are looking with the given speed. */
 	public void aim(EntityLivingBase caster, float speed){
-		this.setPosition(caster.posX, caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET, caster.posZ);
+		this.setPosition(caster.posX, caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET, caster.posZ);
 		// This is the standard set of parameters for this method, used by snowballs and ender pearls amongst others.
 		this.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, speed, 1.0f);
 		this.thrower = caster;
@@ -66,10 +66,10 @@ public abstract class EntityMagicProjectile extends EntityThrowable implements I
 		// Mojang's 'fix' for the projectile-hitting-thrower bug actually made the problem worse, hence the following line.
 		this.ignoreEntity = thrower;
 
-		this.posY = caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
+		this.posY = caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
 		double dx = target.posX - caster.posX;
-		double dy = !this.hasNoGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - this.posY
-				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - this.posY;
+		double dy = !this.hasNoGravity() ? target.posY + (double)(target.height / 3.0f) - this.posY
+				: target.posY + (double)(target.height / 2.0f) - this.posY;
 		double dz = target.posZ - caster.posZ;
 		double horizontalDistance = MathHelper.sqrt(dx * dx + dz * dz);
 

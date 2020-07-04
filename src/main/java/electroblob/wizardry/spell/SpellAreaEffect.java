@@ -4,6 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -104,7 +105,7 @@ public abstract class SpellAreaEffect extends Spell {
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		boolean result = findAndAffectEntities(world, new Vec3d(caster.posX, caster.getEntityBoundingBox().minY, caster.posZ),
+		boolean result = findAndAffectEntities(world, caster.getPositionVector(),
 				caster, ticksInUse, modifiers);
 		if(result) this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return result;

@@ -70,7 +70,7 @@ public class Shockwave extends SpellAreaEffect {
 			double velocityFactor = proximity * getProperty(MAX_REPULSION_VELOCITY).floatValue();
 
 			double dx = target.posX - origin.x;
-			double dy = target.getEntityBoundingBox().minY + 1 - origin.y;
+			double dy = target.posY + 1 - origin.y;
 			double dz = target.posZ - origin.z;
 
 			target.motionX = velocityFactor * dx;

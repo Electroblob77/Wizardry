@@ -609,7 +609,7 @@ public class ItemArtefact extends Item {
 									.pos(0, event.getEntity().height/2, 0).target(target).spawn(player.world);
 
 							ParticleBuilder.spawnShockParticles(player.world, target.posX,
-									target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+									target.posY + target.height/2, target.posZ);
 						}
 
 						DamageSafetyChecker.attackEntitySafely(target, MagicDamage.causeDirectMagicDamage(player,
@@ -693,7 +693,7 @@ public class ItemArtefact extends Item {
 												.pos(0, event.getEntity().height/2, 0).target(target).spawn(world);
 
 										ParticleBuilder.spawnShockParticles(world, target.posX,
-												target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+												target.posY + target.height/2, target.posZ);
 									}
 
 									DamageSafetyChecker.attackEntitySafely(target, MagicDamage.causeDirectMagicDamage(player,

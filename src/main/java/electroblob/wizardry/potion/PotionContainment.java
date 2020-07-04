@@ -54,7 +54,7 @@ public class PotionContainment extends PotionMagicEffect {
 		if(target.getEntityBoundingBox().minX < origin.x - maxDistance) x = origin.x - maxDistance + target.width/2;
 
 		if(target.getEntityBoundingBox().maxY > origin.y + maxDistance) y = origin.y + maxDistance - target.height;
-		if(target.getEntityBoundingBox().minY < origin.y - maxDistance) y = origin.y - maxDistance;
+		if(target.posY < origin.y - maxDistance) y = origin.y - maxDistance;
 
 		if(target.getEntityBoundingBox().maxZ > origin.z + maxDistance) z = origin.z + maxDistance - target.width/2;
 		if(target.getEntityBoundingBox().minZ < origin.z - maxDistance) z = origin.z - maxDistance + target.width/2;
@@ -67,7 +67,7 @@ public class PotionContainment extends PotionMagicEffect {
 //					for(int i = 0; i < 20; i++){
 //						ParticleBuilder.create(ParticleBuilder.Type.DUST).pos(
 //								x,
-//								target.getEntityBoundingBox().minY + target.height * target.world.rand.nextFloat(),
+//								target.posY + target.height * target.world.rand.nextFloat(),
 //								target.posZ + target.width * (target.world.rand.nextFloat() - 0.5f))
 //								.face(EnumFacing.EAST).clr(0.8f, 0.9f, 1).spawn(target.world);
 //					}
@@ -87,7 +87,7 @@ public class PotionContainment extends PotionMagicEffect {
 //					for(int i = 0; i < 20; i++){
 //						ParticleBuilder.create(ParticleBuilder.Type.DUST).pos(
 //								target.posX + target.width * (target.world.rand.nextFloat() - 0.5f),
-//								target.getEntityBoundingBox().minY + target.height * target.world.rand.nextFloat(),
+//								target.posY + target.height * target.world.rand.nextFloat(),
 //								z)
 //								.face(EnumFacing.SOUTH).clr(0.8f, 0.9f, 1).spawn(target.world);
 //					}

@@ -43,7 +43,7 @@ public final class RayTracer {
 	public static RayTraceResult standardBlockRayTrace(World world, EntityLivingBase entity, double range, boolean hitLiquids,
 													   boolean ignoreUncollidables, boolean returnLastUncollidable){
 		// This method does not apply an offset like ray spells do, since it is not desirable in most other use cases.
-		Vec3d origin = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
+		Vec3d origin = entity.getPositionEyes(1);
 		Vec3d endpoint = origin.add(entity.getLookVec().scale(range));
 		return world.rayTraceBlocks(origin, endpoint, hitLiquids, ignoreUncollidables, returnLastUncollidable);
 	}
@@ -76,7 +76,7 @@ public final class RayTracer {
 	@Nullable
 	public static RayTraceResult standardEntityRayTrace(World world, Entity entity, double range, boolean hitLiquids){
 		// This method does not apply an offset like ray spells do, since it is not desirable in most other use cases.
-		Vec3d origin = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
+		Vec3d origin = entity.getPositionEyes(1);
 		Vec3d endpoint = origin.add(entity.getLookVec().scale(range));
 		return rayTrace(world, origin, endpoint, 0, hitLiquids, false, false, Entity.class, ignoreEntityFilter(entity));
 	}

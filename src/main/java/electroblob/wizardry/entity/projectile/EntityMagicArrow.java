@@ -90,7 +90,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		
 		this.setCaster(caster);
 		
-		this.setLocationAndAngles(caster.posX, caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET,
+		this.setLocationAndAngles(caster.posX, caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET,
 				caster.posZ, caster.rotationYaw, caster.rotationPitch);
 		
 		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
@@ -117,10 +117,10 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		
 		this.setCaster(caster);
 
-		this.posY = caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
+		this.posY = caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
 		double dx = target.posX - caster.posX;
-		double dy = this.doGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - this.posY
-				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - this.posY;
+		double dy = this.doGravity() ? target.posY + (double)(target.height / 3.0f) - this.posY
+				: target.posY + (double)(target.height / 2.0f) - this.posY;
 		double dz = target.posZ - caster.posZ;
 		double horizontalDistance = (double)MathHelper.sqrt(dx * dx + dz * dz);
 

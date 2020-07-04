@@ -210,7 +210,7 @@ public final class EntityUtils {
 			}
 		}
 
-		box = box.offset(destination.subtract(entity.posX, box.minY, entity.posZ));
+		box = box.offset(destination.subtract(entity.posX, entity.posY, entity.posZ));
 
 		// All the parameters of this method are INCLUSIVE, so even the max coordinates should be rounded down
 		Iterable<BlockPos> cuboid = BlockPos.getAllInBox(MathHelper.floor(box.minX), MathHelper.floor(box.minY),

@@ -81,7 +81,7 @@ public class EntityLightningSigil extends EntityScaledConstruct {
 								.pos(0, target.height/2, 0).target(secondaryTarget).spawn(world);
 								
 								ParticleBuilder.spawnShockParticles(world, secondaryTarget.posX,
-										secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2,
+										secondaryTarget.posY + secondaryTarget.height / 2,
 										secondaryTarget.posZ);
 							}
 

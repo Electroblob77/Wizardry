@@ -46,11 +46,11 @@ public class Flight extends Spell {
 		
 		if(world.isRemote){
 			double x = caster.posX - 1 + world.rand.nextDouble() * 2;
-			double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = caster.posZ - 1 + world.rand.nextDouble() * 2;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(0.8f, 1, 0.5f).spawn(world);
 			x = caster.posX - 1 + world.rand.nextDouble() * 2;
-			y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			z = caster.posZ - 1 + world.rand.nextDouble() * 2;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(1f, 1f, 1f).spawn(world);
 		}

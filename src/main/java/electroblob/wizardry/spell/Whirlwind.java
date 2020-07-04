@@ -41,7 +41,7 @@ public class Whirlwind extends SpellRay {
 		// Left as EntityLivingBase because why not be able to move armour stands around?
 		if(target instanceof EntityLivingBase){
 			
-			Vec3d vec = target.getPositionVector().add(0, target.getEyeHeight(), 0).subtract(origin).normalize();
+			Vec3d vec = target.getPositionEyes(1).subtract(origin).normalize();
 
 			if(!world.isRemote){
 

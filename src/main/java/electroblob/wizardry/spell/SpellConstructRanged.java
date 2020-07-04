@@ -109,7 +109,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				Vec3d look = caster.getLookVec();
 				
 				double x = caster.posX + look.x * range;
-				double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() + look.y * range;
+				double y = caster.posY + caster.getEyeHeight() + look.y * range;
 				double z = caster.posZ + look.z * range;
 				
 				if(!spawnConstruct(world, x, y, z, null, caster, modifiers)) return false;
@@ -128,7 +128,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 			SpellModifiers modifiers){
 
 		double range = getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade);
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ);
+		Vec3d origin = caster.getPositionEyes(1);
 
 		if(target != null && caster.getDistance(target) <= range){
 

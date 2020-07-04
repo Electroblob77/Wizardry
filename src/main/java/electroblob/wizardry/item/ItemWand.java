@@ -847,7 +847,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 				if(player.world.isRemote){
 
-					Vec3d origin = new Vec3d(player.posX, player.getEntityBoundingBox().minY + player.getEyeHeight(), player.posZ);
+					Vec3d origin = player.getPositionEyes(1);
 					Vec3d hit = origin.add(player.getLookVec().scale(player.getDistance(event.getTarget())));
 					// Generate two perpendicular vectors in the plane perpendicular to the look vec
 					Vec3d vec1 = player.getLookVec().rotatePitch(90);

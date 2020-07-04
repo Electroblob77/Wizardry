@@ -68,13 +68,13 @@ public class Banish extends SpellRay {
 		int x = MathHelper.floor(entity.posX + MathHelper.sin(angle) * radius);
 		int z = MathHelper.floor(entity.posZ - MathHelper.cos(angle) * radius);
 		Integer y = BlockUtils.getNearestFloor(world,
-				new BlockPos(x, (int)entity.getEntityBoundingBox().minY, z), (int)radius);
+				new BlockPos(x, (int)entity.posY, z), (int)radius);
 
 		if(world.isRemote){
 
 			for(int i=0; i<10; i++){
 				double dx1 = entity.posX;
-				double dy1 = entity.getEntityBoundingBox().minY + entity.height * world.rand.nextFloat();
+				double dy1 = entity.posY + entity.height * world.rand.nextFloat();
 				double dz1 = entity.posZ;
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);

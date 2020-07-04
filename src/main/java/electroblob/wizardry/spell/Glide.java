@@ -57,11 +57,11 @@ public class Glide extends Spell {
 
 		if(world.isRemote){
 			double x = caster.posX - 0.25 + world.rand.nextDouble() / 2;
-			double y = caster.getEntityBoundingBox().minY + world.rand.nextDouble();
+			double y = caster.posY + world.rand.nextDouble();
 			double z = caster.posZ - 0.25 + world.rand.nextDouble() / 2;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(1f, 1f, 1f).spawn(world);
 			x = caster.posX - 0.25 + world.rand.nextDouble() / 2;
-			y = caster.getEntityBoundingBox().minY + world.rand.nextDouble();
+			y = caster.posY + world.rand.nextDouble();
 			z = caster.posZ - 0.25 + world.rand.nextDouble() / 2;
 			ParticleBuilder.create(Type.LEAF).pos(x, y, z).time(20).spawn(world);
 		}

@@ -53,7 +53,7 @@ public class MindTrick extends SpellRay {
 			}else{
 				for(int i=0; i<10; i++){
 					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, target.posX,
-							target.getEntityBoundingBox().minY + target.getEyeHeight(), target.posZ, 0.25, false)
+							target.posY + target.getEyeHeight(), target.posZ, 0.25, false)
 					.clr(0.8f, 0.2f, 1.0f).spawn(world);
 				}
 			}

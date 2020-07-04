@@ -53,7 +53,7 @@ public class EntityStormcloud extends EntityScaledConstruct {
 					}else{
 						ParticleBuilder.create(Type.LIGHTNING).pos(target.posX, posY + height/2, target.posZ)
 								.target(target).scale(2).spawn(world);
-						ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height, target.posZ);
+						ParticleBuilder.spawnShockParticles(world, target.posX, target.posY + target.height, target.posZ);
 					}
 
 					target.playSound(WizardrySounds.ENTITY_STORMCLOUD_THUNDER, 1, 1.6f);

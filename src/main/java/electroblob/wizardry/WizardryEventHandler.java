@@ -281,7 +281,7 @@ public final class WizardryEventHandler {
 								.target(attacker).spawn(world);
 
 						ParticleBuilder.spawnShockParticles(world, attacker.posX,
-								attacker.getEntityBoundingBox().minY + attacker.height / 2, attacker.posZ);
+								attacker.posY + attacker.height / 2, attacker.posZ);
 					}
 
 					DamageSafetyChecker.attackEntitySafely(attacker, MagicDamage.causeDirectMagicDamage(event.getEntityLiving(),

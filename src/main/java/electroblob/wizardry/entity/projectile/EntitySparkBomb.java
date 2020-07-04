@@ -81,7 +81,7 @@ public class EntitySparkBomb extends EntityBomb {
 
 				}else{
 					ParticleBuilder.create(Type.LIGHTNING).pos(this.getPositionVector()).target(target).spawn(world);
-					ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+					ParticleBuilder.spawnShockParticles(world, target.posX, target.posY + target.height/2, target.posZ);
 				}
 			}
 		}

@@ -121,7 +121,7 @@ public class EntityHammer extends EntityMagicConstruct {
 						ParticleBuilder.create(Type.LIGHTNING).pos(posX, posY + height - 0.1, posZ) .target(target).spawn(world);
 
 						ParticleBuilder.spawnShockParticles(world, target.posX,
-								target.getEntityBoundingBox().minY + target.height, target.posZ);
+								target.posY + target.height, target.posZ);
 					}
 
 					target.playSound(WizardrySounds.ENTITY_HAMMER_ATTACK, 1.0F, rand.nextFloat() * 0.4F + 1.5F);

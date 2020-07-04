@@ -75,7 +75,7 @@ public class Grapple extends Spell {
 
 		WizardData data = WizardData.get(caster);
 
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ);
+		Vec3d origin = caster.getPositionEyes(1);
 
 		float extensionSpeed = getProperty(EXTENSION_SPEED).floatValue() * modifiers.get(SpellModifiers.POTENCY);
 
@@ -98,7 +98,7 @@ public class Grapple extends Spell {
 		if(hit.entityHit instanceof EntityLivingBase){
 			// If the target is an entity, we need to use the entity's centre rather than the original hit position
 			// because the entity will have moved!
-			target = new Vec3d(hit.entityHit.posX, hit.entityHit.getEntityBoundingBox().minY + hit.entityHit.height/2, hit.entityHit.posZ);
+			target = GeometryUtils.getCentre(hit.entityHit);
 		}
 
 		double distance = origin.distanceTo(target);
@@ -209,11 +209,11 @@ public class Grapple extends Spell {
 
 		if(target == null) return false;
 
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ);
+		Vec3d origin = caster.getPositionEyes(1);
 
 		// If the target is an entity, we need to use the entity's centre rather than the original hit position
 		// because the entity will have moved!
-		Vec3d targetVec = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+		Vec3d targetVec = GeometryUtils.getCentre(target);
 
 		RayTraceResult hit = findTarget(world, caster, origin, targetVec.subtract(origin).normalize(), modifiers);
 
@@ -284,7 +284,7 @@ public class Grapple extends Spell {
 
 			// If the target is an entity, we need to use the entity's centre rather than the original hit position
 			// because the entity will have moved!
-			Vec3d target = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height/2, entity.posZ);
+			Vec3d target = GeometryUtils.getCentre(entity);
 
 			double distance = origin.distanceTo(target);
 			Vec3d vec = target.subtract(origin).normalize();
@@ -344,7 +344,7 @@ public class Grapple extends Spell {
 
 		if(caster != null){
 
-			origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ);
+			origin = caster.getPositionEyes(1);
 
 			if(caster instanceof EntityPlayer){
 				WizardData data = WizardData.get((EntityPlayer)caster);
@@ -354,7 +354,7 @@ public class Grapple extends Spell {
 				}
 			}else if(caster instanceof EntityLiving){
 				Entity entity = ((EntityLiving)caster).getAttackTarget();
-				if(entity != null) target = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.height/2, entity.posZ);
+				if(entity != null) target = GeometryUtils.getCentre(entity);
 			}
 
 			if(target != null) direction = target.subtract(origin).normalize();

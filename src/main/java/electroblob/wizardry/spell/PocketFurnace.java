@@ -68,7 +68,7 @@ public class PocketFurnace extends Spell {
 		if(world.isRemote){
 			for(int i = 0; i < 10; i++){
 				double x1 = (double)((float)caster.posX + world.rand.nextFloat() * 2 - 1.0F);
-				double y1 = (double)((float)caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5F + world.rand.nextFloat());
+				double y1 = (double)((float)caster.posY + caster.getEyeHeight() - 0.5F + world.rand.nextFloat());
 				double z1 = (double)((float)caster.posZ + world.rand.nextFloat() * 2 - 1.0F);
 				world.spawnParticle(EnumParticleTypes.FLAME, x1, y1, z1, 0, 0.01F, 0);
 			}

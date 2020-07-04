@@ -74,7 +74,7 @@ public class WitherSkull extends Spell {
 				EntityWitherSkull witherskull = new EntityWitherSkull(world, caster, 1, 1, 1);
 
 				double dx = target.posX - caster.posX;
-				double dy = target.getEntityBoundingBox().minY + (double)(target.height / 2.0F)
+				double dy = target.posY + (double)(target.height / 2.0F)
 						- (caster.posY + (double)(caster.height / 2.0F));
 				double dz = target.posZ - caster.posZ;
 

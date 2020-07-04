@@ -82,7 +82,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 				float f2 = 0.5F;
 				float f3 = 0.0F;
 				float f4 = 0.2f;
-				float f5 = (float)(entity.posY - entity.getEntityBoundingBox().minY);
+				float f5 = (float)(entity.posY - entity.posY);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				float f61 = 0.0F;
 				int i = 0;
@@ -129,7 +129,7 @@ public class RenderFireRing extends Render<EntityFireRing> {
 				float f2 = 0.5F;
 				float f3 = 0.0F;
 				float f4 = 0.2f;
-				float f5 = (float)(entity.posY - entity.getEntityBoundingBox().minY);
+				float f5 = (float)(entity.posY - entity.posY);
 				GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 				float f61 = 0.0F;
 				int i = 0;

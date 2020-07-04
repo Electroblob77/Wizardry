@@ -108,7 +108,7 @@ public class SpeedTime extends Spell {
 
 				double particleSpread = 2;
 				double x = caster.posX + 2;
-				double y = caster.getEntityBoundingBox().minY + caster.height / 2;
+				double y = caster.posY + caster.height / 2;
 				double z = caster.posZ;
 
 				ParticleBuilder.create(ParticleBuilder.Type.SPARKLE, world.rand, x, y, z, particleSpread, false)

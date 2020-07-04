@@ -140,7 +140,7 @@ public class Possession extends SpellRay {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		Vec3d look = caster.getLookVec();
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
+		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
 
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 

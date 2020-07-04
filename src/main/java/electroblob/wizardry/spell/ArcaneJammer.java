@@ -109,7 +109,7 @@ public class ArcaneJammer extends SpellRay {
 
 			if(event.getWorld().isRemote){
 
-				Vec3d centre = event.getCaster().getPositionEyes(0).add(event.getCaster().getLookVec());
+				Vec3d centre = event.getCaster().getPositionEyes(1).add(event.getCaster().getLookVec());
 
 				for(int i = 0; i < 5; i++){
 					double x = centre.x + 0.5f * (event.getWorld().rand.nextFloat() - 0.5f);

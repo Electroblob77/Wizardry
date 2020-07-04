@@ -89,7 +89,7 @@ public class Thunderstorm extends Spell {
 								ParticleBuilder.create(Type.LIGHTNING).pos(x, y, z).target(secondaryTarget).spawn(world);
 
 								ParticleBuilder.spawnShockParticles(world, secondaryTarget.posX,
-										secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2,
+										secondaryTarget.posY + secondaryTarget.height / 2,
 										secondaryTarget.posZ);
 							}
 
@@ -115,7 +115,7 @@ public class Thunderstorm extends Spell {
 										ParticleBuilder.create(Type.LIGHTNING).entity(secondaryTarget)
 												.pos(0, secondaryTarget.height / 2, 0).target(tertiaryTarget).spawn(world);
 										ParticleBuilder.spawnShockParticles(world, tertiaryTarget.posX,
-												tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height / 2,
+												tertiaryTarget.posY + tertiaryTarget.height / 2,
 												tertiaryTarget.posZ);
 									}
 

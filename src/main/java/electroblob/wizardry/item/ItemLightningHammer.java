@@ -210,7 +210,7 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 					if(hit.world.isRemote){
 						ParticleBuilder.create(Type.LIGHTNING).pos(hit.getPositionVector().add(0, hit.height / 2, 0))
 								.target(target).spawn(hit.world);
-						ParticleBuilder.spawnShockParticles(hit.world, target.posX, target.getEntityBoundingBox().minY + target.height / 2, target.posZ);
+						ParticleBuilder.spawnShockParticles(hit.world, target.posX, target.posY + target.height / 2, target.posZ);
 					}
 
 					//target.playSound(WizardrySounds.SPELL_SPARK, 1, 1.5f + 0.4f * world.rand.nextFloat());

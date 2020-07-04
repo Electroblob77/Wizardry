@@ -70,7 +70,7 @@ public class LightningPulse extends Spell {
 			}
 			
 			if(world.isRemote){
-				ParticleBuilder.create(Type.LIGHTNING_PULSE).pos(caster.posX, caster.getEntityBoundingBox().minY
+				ParticleBuilder.create(Type.LIGHTNING_PULSE).pos(caster.posX, caster.posY
 						+ GeometryUtils.ANTI_Z_FIGHTING_OFFSET, caster.posZ)
 				.scale(modifiers.get(WizardryItems.blast_upgrade)).spawn(world);
 			}

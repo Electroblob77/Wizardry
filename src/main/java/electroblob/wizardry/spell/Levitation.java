@@ -47,7 +47,7 @@ public class Levitation extends Spell {
 
 		if(world.isRemote){
 			double x = caster.posX - 0.25 + world.rand.nextDouble() * 0.5;
-			double y = caster.getEntityBoundingBox().minY;
+			double y = caster.getPositionEyes(1).y;
 			double z = caster.posZ - 0.25 + world.rand.nextDouble() * 0.5;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(0.5f, 1, 0.7f).spawn(world);
 		}

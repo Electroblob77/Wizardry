@@ -6,11 +6,8 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.util.BlockUtils;
-import electroblob.wizardry.util.EntityUtils;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +33,7 @@ public class IceAge extends SpellAreaEffect {
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		freezeNearbyBlocks(world, new Vec3d(caster.posX, caster.getEntityBoundingBox().minY, caster.posZ), caster, modifiers);
+		freezeNearbyBlocks(world, caster.getPositionVector(), caster, modifiers);
 		return super.cast(world, caster, hand, ticksInUse, modifiers);
 	}
 

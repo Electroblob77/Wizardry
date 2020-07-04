@@ -206,7 +206,7 @@ public abstract class ParticleWizardry extends Particle {
 		this.entity = entity;
 		// Set these to the correct values
 		if(entity != null){
-			this.setPosition(this.entity.posX + relativeX, this.entity.getEntityBoundingBox().minY
+			this.setPosition(this.entity.posX + relativeX, this.entity.posY
 					+ relativeY, this.entity.posZ + relativeZ);
 			this.prevPosX = this.posX;
 			this.prevPosY = this.posY;

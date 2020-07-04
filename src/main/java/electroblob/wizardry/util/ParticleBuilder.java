@@ -768,7 +768,7 @@ public final class ParticleBuilder {
 
 		for(int i = 0; i < 10; i++){
 			double x = entity.posX + world.rand.nextDouble() * 2 - 1;
-			double y = entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double y = entity.posY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = entity.posZ + world.rand.nextDouble() * 2 - 1;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(1, 1, 0.3f).spawn(world);
 		}

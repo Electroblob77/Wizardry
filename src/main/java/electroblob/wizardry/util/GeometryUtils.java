@@ -1,5 +1,6 @@
 package electroblob.wizardry.util;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -47,6 +48,14 @@ public final class GeometryUtils {
 	 */
 	public static Vec3d getCentre(AxisAlignedBB box){
 		return new Vec3d(box.minX + (box.maxX - box.minX) * 0.5, box.minY + (box.maxY - box.minY) * 0.5, box.minZ + (box.maxZ - box.minZ) * 0.5);
+	}
+
+	/**
+	 * Returns a {@link Vec3d} of the coordinates at the centre of the given entity's bounding box. This is more
+	 * efficient than {@code GeometryUtils.getCentre(entity.getEntityBoundingBox())} as it can use the entity's fields.
+	 */
+	public static Vec3d getCentre(Entity entity){
+		return new Vec3d(entity.posX, entity.posY + entity.height/2, entity.posZ);
 	}
 
 	/**

@@ -42,7 +42,7 @@ public class PhaseStep extends Spell {
 
 			for(int i = 0; i < 10; i++){
 				double dx1 = caster.posX;
-				double dy1 = caster.getEntityBoundingBox().minY + 2 * world.rand.nextFloat();
+				double dy1 = caster.posY + 2 * world.rand.nextFloat();
 				double dz1 = caster.posZ;
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);

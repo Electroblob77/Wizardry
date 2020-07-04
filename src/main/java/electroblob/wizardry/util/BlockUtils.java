@@ -125,7 +125,7 @@ public final class BlockUtils {
 	 * is negative.
 	 */
 	public static IBlockState getBlockEntityIsStandingOn(Entity entity){
-		BlockPos pos = new BlockPos(MathHelper.floor(entity.posX), (int)entity.getEntityBoundingBox().minY - 1,
+		BlockPos pos = new BlockPos(MathHelper.floor(entity.posX), (int)entity.posY - 1,
 				MathHelper.floor(entity.posZ));
 		return entity.world.getBlockState(pos);
 	}

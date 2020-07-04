@@ -127,10 +127,10 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 
 		throwable.ignoreEntity = caster;
 
-		throwable.posY = caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
+		throwable.posY = caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
 		double dx = target.posX - caster.posX;
-		double dy = !throwable.hasNoGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - throwable.posY
-				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - throwable.posY;
+		double dy = !throwable.hasNoGravity() ? target.posY + (double)(target.height / 3.0f) - throwable.posY
+				: target.posY + (double)(target.height / 2.0f) - throwable.posY;
 		double dz = target.posZ - caster.posZ;
 		double horizontalDistance = MathHelper.sqrt(dx * dx + dz * dz);
 

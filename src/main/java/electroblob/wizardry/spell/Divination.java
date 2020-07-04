@@ -84,7 +84,7 @@ public class Divination extends Spell {
 			BlockPos target = sphere.get(sphere.size() - 1);
 
 			direction = EnumFacing.getFacingFromVector((float)(target.getX() + 0.5 - caster.posX),
-					(float)(target.getY() + 0.5 - (caster.getEntityBoundingBox().minY + caster.getEyeHeight())),
+					(float)(target.getY() + 0.5 - (caster.posY + caster.getEyeHeight())),
 					(float)(target.getZ() + 0.5 - caster.posZ));
 
 			strength = Strength.forWeight(calculateWeight(world, caster, target, range, modifiers));

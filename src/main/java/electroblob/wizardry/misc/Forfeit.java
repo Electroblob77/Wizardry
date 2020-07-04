@@ -190,7 +190,7 @@ public abstract class Forfeit {
 		add(Tier.APPRENTICE, Element.FIRE, create("fireball", (w, p) -> {
 			if(!w.isRemote){
 				EntityMagicFireball fireball = new EntityMagicFireball(w);
-				Vec3d vec = p.getPositionEyes(0).add(p.getLookVec().scale(6));
+				Vec3d vec = p.getPositionEyes(1).add(p.getLookVec().scale(6));
 				fireball.setPosition(vec.x, vec.y, vec.z);
 				fireball.shoot(p.posX, p.posY + p.getEyeHeight(), p.posZ, 1.5f, 1);
 				w.spawnEntity(fireball);

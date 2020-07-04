@@ -31,7 +31,7 @@ public class Arc extends SpellRay {
 				// Rather neatly, the entity can be set here and if it's null nothing will happen.
 				ParticleBuilder.create(Type.LIGHTNING).entity(caster)
 				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
-				ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+				ParticleBuilder.spawnShockParticles(world, target.posX, target.posY + target.height/2, target.posZ);
 			}
 	
 			// This is a lot neater than it was, thanks to the damage type system.

@@ -41,7 +41,7 @@ public class Blink extends Spell {
 		if(world.isRemote){
 			for(int i = 0; i < 10; i++){
 				double dx = caster.posX;
-				double dy = caster.getEntityBoundingBox().minY + 2 * world.rand.nextFloat();
+				double dy = caster.posY + 2 * world.rand.nextFloat();
 				double dz = caster.posZ;
 				// For portal particles, velocity is not velocity but the offset where they start, then drift to
 				// the actual position given.
@@ -80,7 +80,7 @@ public class Blink extends Spell {
 
 		float angle = (float)(Math.atan2(target.posZ - caster.posZ, target.posX - caster.posX)
 				+ world.rand.nextDouble() * Math.PI);
-		double radius = caster.getDistance(target.posX, target.getEntityBoundingBox().minY, target.posZ)
+		double radius = caster.getDistance(target.posX, target.posY, target.posZ)
 				+ world.rand.nextDouble() * 3.0d;
 
 		int x = MathHelper.floor(target.posX + MathHelper.sin(angle) * radius);
@@ -94,7 +94,7 @@ public class Blink extends Spell {
 		if(world.isRemote){
 			for(int i = 0; i < 10; i++){
 				double dx1 = caster.posX;
-				double dy1 = caster.getEntityBoundingBox().minY + caster.height * world.rand.nextFloat();
+				double dy1 = caster.posY + caster.height * world.rand.nextFloat();
 				double dz1 = caster.posZ;
 				world.spawnParticle(EnumParticleTypes.PORTAL, dx1, dy1, dz1, world.rand.nextDouble() - 0.5,
 						world.rand.nextDouble() - 0.5, world.rand.nextDouble() - 0.5);

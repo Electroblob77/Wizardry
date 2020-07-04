@@ -110,7 +110,7 @@ public class ChainLightning extends SpellRay {
 			ParticleBuilder.create(Type.LIGHTNING).entity(caster)
 			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
 			
-			ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+			ParticleBuilder.spawnShockParticles(world, target.posX, target.posY + target.height/2, target.posZ);
 		}
 
 		//target.playSound(WizardrySounds.SPELL_SPARK, 1, 1.5f + 0.4f * world.rand.nextFloat());

@@ -95,7 +95,7 @@ public abstract class ParticleTargeted extends ParticleWizardry {
 		if(this.target != null){
 
 			this.targetX = this.target.prevPosX + (this.target.posX - this.target.prevPosX) * partialTicks;
-			double correction = this.target.getEntityBoundingBox().minY - this.target.posY;
+			double correction = this.target.posY - this.target.posY;
 			this.targetY = this.target.prevPosY + (this.target.posY - this.target.prevPosY) * partialTicks
 					+ target.height/2 + correction;
 			this.targetZ = this.target.prevPosZ + (this.target.posZ - this.target.prevPosZ) * partialTicks;

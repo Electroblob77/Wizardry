@@ -3,6 +3,7 @@ package electroblob.wizardry.client.animation;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.spell.Grapple;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
@@ -100,7 +101,7 @@ public abstract class ActionAnimation extends Animation {
 				if(hit.entityHit instanceof EntityLivingBase){
 					// If the target is an entity, we need to use the entity's centre rather than the original hit position
 					// because the entity will have moved!
-					target = new Vec3d(hit.entityHit.posX, hit.entityHit.getEntityBoundingBox().minY + hit.entityHit.height/2, hit.entityHit.posZ);
+					target = GeometryUtils.getCentre(hit.entityHit);
 				}
 
 				EnumHandSide side = InventoryUtils.getSideForHand(player, player.getActiveHand());

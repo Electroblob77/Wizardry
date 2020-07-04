@@ -160,7 +160,7 @@ public abstract class SpellRay extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 		
 		Vec3d look = caster.getLookVec();
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
+		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
 		if(!this.isContinuous && world.isRemote && !Wizardry.proxy.isFirstPerson(caster)){
 			origin = origin.add(look.scale(1.2));
 		}
@@ -175,16 +175,16 @@ public abstract class SpellRay extends Spell {
 	@Override
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
 		// IDEA: Add in an aiming error and trigger onMiss accordingly
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
+		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
 		Vec3d targetPos = null;
 
 		if(!ignoreLivingEntities || !EntityUtils.isLiving(target)){
-			targetPos = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height / 2, target.posZ);
+			targetPos = new Vec3d(target.posX, target.posY + target.height / 2, target.posZ);
 
 		}else{
 
 			int x = MathHelper.floor(target.posX);
-			int y = (int)target.getEntityBoundingBox().minY - 1; // -1 because we need the block under the target
+			int y = (int)target.posY - 1; // -1 because we need the block under the target
 			int z = MathHelper.floor(target.posZ);
 			BlockPos pos = new BlockPos(x, y, z);
 
