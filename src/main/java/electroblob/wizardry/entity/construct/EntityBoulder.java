@@ -1,11 +1,11 @@
 package electroblob.wizardry.entity.construct;
 
+import com.google.common.collect.Lists;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Boulder;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -56,9 +56,11 @@ public class EntityBoulder extends EntityScaledConstruct {
 
 		super.onUpdate();
 
-		this.motionY -= 0.03999999910593033D;
+		this.motionY -= 0.03999999910593033D; // Gravity
+
 		this.move(MoverType.SELF, velX, motionY, velZ);
 
+		// Entity damage
 		List<EntityLivingBase> collided = world.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox());
 
 		float damage = Spells.boulder.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier;
@@ -68,7 +70,15 @@ public class EntityBoulder extends EntityScaledConstruct {
 
 			if(!isValidTarget(entity)) break;
 
-			if(EntityUtils.attackEntityWithoutKnockback(entity, MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.MAGIC), damage)){
+			boolean crushBonus = entity.posY < this.posY
+					&& entity.getEntityBoundingBox().minX > this.getEntityBoundingBox().minX
+					&& entity.getEntityBoundingBox().maxX < this.getEntityBoundingBox().maxX
+					&& entity.getEntityBoundingBox().minZ > this.getEntityBoundingBox().minZ
+					&& entity.getEntityBoundingBox().maxZ < this.getEntityBoundingBox().maxZ;
+
+			if(EntityUtils.attackEntityWithoutKnockback(entity, MagicDamage.causeIndirectMagicDamage(this,
+					getCaster(), DamageType.MAGIC), crushBonus ? damage * 1.5f : damage) && !crushBonus){
+				// Only knock back if not crushing
 				EntityUtils.applyStandardKnockback(this, entity, knockback);
 				entity.motionX += this.motionX;
 				entity.motionZ += this.motionZ;
@@ -76,8 +86,26 @@ public class EntityBoulder extends EntityScaledConstruct {
 			entity.playSound(WizardrySounds.ENTITY_BOULDER_HIT, 1, 1);
 		}
 
+		// Wall smashing
 		if(EntityUtils.canDamageBlocks(getCaster(), world) && collidedHorizontally){
-			smashBlocks(BlockUtils.getBlockSphere(new BlockPos(posX + velX, posY + height / 2, posZ + velZ), height * 0.8), true);
+			AxisAlignedBB box = getEntityBoundingBox().offset(velX, 0, velZ);
+			List<BlockPos> cuboid = Lists.newArrayList(BlockPos.getAllInBox(MathHelper.floor(box.minX), MathHelper.floor(box.minY),
+					MathHelper.floor(box.minZ), MathHelper.floor(box.maxX), MathHelper.floor(box.maxY), MathHelper.floor(box.maxZ)));
+			smashBlocks(cuboid, true);
+		}
+
+		// Trailing particles
+		for(int i = 0; i < 10; i++){
+
+			double particleX = this.posX + width * 0.7 * (rand.nextDouble() - 0.5);
+			double particleZ = this.posZ + width * 0.7 * (rand.nextDouble() - 0.5);
+
+			IBlockState block = world.getBlockState(new BlockPos(this).down());
+
+			if(block.getBlock() != Blocks.AIR){
+				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, this.posY, particleZ,
+						0, 0.2, 0, Block.getStateId(block));
+			}
 		}
 	}
 
@@ -123,7 +151,7 @@ public class EntityBoulder extends EntityScaledConstruct {
 
 		if(world.isRemote){
 
-			for(int i = 0; i < 100; i++){
+			for(int i = 0; i < 200; i++){
 				double x = posX + (rand.nextDouble() - 0.5) * width;
 				double y = posY + rand.nextDouble() * height;
 				double z = posZ + (rand.nextDouble() - 0.5) * width;
@@ -148,14 +176,18 @@ public class EntityBoulder extends EntityScaledConstruct {
 
 		super.fall(distance, damageMultiplier);
 
+		// Floor smashing
 		if(EntityUtils.canDamageBlocks(getCaster(), world) && distance > 3){
-			List<BlockPos> sphere = BlockUtils.getBlockSphere(new BlockPos(posX + velX, posY + height / 2 + motionY, posZ + velZ), height * 0.8);
-			if(smashBlocks(sphere, distance > 8)) return;
+			AxisAlignedBB box = getEntityBoundingBox().offset(velX, motionY, velZ);
+			List<BlockPos> cuboid = Lists.newArrayList(BlockPos.getAllInBox(MathHelper.floor(box.minX), MathHelper.floor(box.minY),
+					MathHelper.floor(box.minZ), MathHelper.floor(box.maxX), MathHelper.floor(box.maxY), MathHelper.floor(box.maxZ)));
+			if(smashBlocks(cuboid, distance > 8)) return;
 			hitsRemaining--;
 		}
 
 		if(world.isRemote){
 
+			// Landing particles
 			for(int i = 0; i < 40; i++){
 
 				double particleX = this.posX - 1.5 + 3 * rand.nextDouble();
@@ -169,6 +201,7 @@ public class EntityBoulder extends EntityScaledConstruct {
 				}
 			}
 
+			// Other landing effects
 			if(distance > 1.2){
 				world.playSound(posX, posY, posZ, WizardrySounds.ENTITY_BOULDER_LAND, SoundCategory.BLOCKS, Math.min(2, distance / 4), 1, false);
 				shakeNearbyPlayers();
