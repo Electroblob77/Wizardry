@@ -152,21 +152,25 @@ public class RandomSpell extends LootFunction {
 		possibleSpells.removeIf(s -> s.getElement() != element);
 		if(possibleSpells.isEmpty()) return Spells.none; // If it fails anywhere, it'll most likely be here
 
-		float bias = undiscoveredBias;
-		// Archivist's eyeglass increases undiscovered bias by 0.4 up to a maximum of 0.9
-		if(ItemArtefact.isArtefactActive(player, WizardryItems.charm_spell_discovery)) bias = Math.min(bias + 0.4f, 0.9f);
+		if(player != null){
 
-		// Remove either the undiscovered spells or the discovered ones, depending on the bias
-		if(bias > 0 && player != null){
+			float bias = undiscoveredBias;
+			// Archivist's eyeglass increases undiscovered bias by 0.4 up to a maximum of 0.9
+			if(ItemArtefact.isArtefactActive(player, WizardryItems.charm_spell_discovery))
+				bias = Math.min(bias + 0.4f, 0.9f);
 
-			WizardData data = WizardData.get(player);
+			// Remove either the undiscovered spells or the discovered ones, depending on the bias
+			if(bias > 0){
 
-			int discoveredCount = (int)possibleSpells.stream().filter(data::hasSpellBeenDiscovered).count();
-			// If none have been discovered or they've all been discovered, don't bother!
-			if(discoveredCount > 0 && discoveredCount < possibleSpells.size()){
-				// Kinda unintuitive but it's very neat!
-				boolean keepDiscovered = random.nextFloat() > 0.5f + 0.5f * bias;
-				possibleSpells.removeIf(s -> keepDiscovered != data.hasSpellBeenDiscovered(s));
+				WizardData data = WizardData.get(player);
+
+				int discoveredCount = (int)possibleSpells.stream().filter(data::hasSpellBeenDiscovered).count();
+				// If none have been discovered or they've all been discovered, don't bother!
+				if(discoveredCount > 0 && discoveredCount < possibleSpells.size()){
+					// Kinda unintuitive but it's very neat!
+					boolean keepDiscovered = random.nextFloat() > 0.5f + 0.5f * bias;
+					possibleSpells.removeIf(s -> keepDiscovered != data.hasSpellBeenDiscovered(s));
+				}
 			}
 		}
 
