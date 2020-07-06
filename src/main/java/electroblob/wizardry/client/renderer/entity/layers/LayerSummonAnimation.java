@@ -39,7 +39,7 @@ public class LayerSummonAnimation<T extends EntityLivingBase> extends LayerTiled
 	@Override
 	public boolean shouldRender(T entity, float partialTicks){
 		return entity instanceof ISummonedCreature && ((ISummonedCreature)entity).hasAnimation()
-				&& getFrameNumber(entity) < ANIMATION_TICKS;
+				&& ((ISummonedCreature)entity).getLifetime() > 0 && getFrameNumber(entity) < ANIMATION_TICKS;
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class LayerSummonAnimation<T extends EntityLivingBase> extends LayerTiled
 
 	private static boolean shouldHideMainModel(EntityLivingBase entity){
 		return entity instanceof ISummonedCreature && ((ISummonedCreature)entity).hasAnimation()
-				&& (entity.ticksExisted < HIDE_MODEL_TICKS
+				&& ((ISummonedCreature)entity).getLifetime() > 0 && (entity.ticksExisted < HIDE_MODEL_TICKS
 				|| ((ISummonedCreature)entity).getLifetime() - entity.ticksExisted < HIDE_MODEL_TICKS);
 	}
 
