@@ -47,3 +47,4 @@ In addition, I'd like to thank the following individuals for their contributions
 - DiscoveryME
 - OGSoundFX
 - leosalom
+- juskiddink
