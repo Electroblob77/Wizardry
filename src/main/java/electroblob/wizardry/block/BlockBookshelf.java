@@ -237,14 +237,28 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 	public static void registerStandardBookModelTextures(){
 		// Vanilla Minecraft books
 		// Regular brown books are the default so they're registered first
-		registerBookModelTexture(() -> Items.BOOK, 						new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
-		registerBookModelTexture(() -> Items.WRITABLE_BOOK, 			new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
-		registerBookModelTexture(() -> Items.WRITTEN_BOOK, 				new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
-		registerBookModelTexture(() -> Items.ENCHANTED_BOOK, 			new ResourceLocation(Wizardry.MODID, "blocks/books_enchanted"));
+		registerBookModelTexture(() -> Items.BOOK, 							new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
+		registerBookModelTexture(() -> Items.WRITABLE_BOOK, 				new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
+		registerBookModelTexture(() -> Items.WRITTEN_BOOK, 					new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
+		registerBookModelTexture(() -> Items.ENCHANTED_BOOK, 				new ResourceLocation(Wizardry.MODID, "blocks/books_enchanted"));
 		// Wizardry books
-		registerBookModelTexture(() -> WizardryItems.spell_book, 		new ResourceLocation(Wizardry.MODID, "blocks/books_red"));
-		registerBookModelTexture(() -> WizardryItems.wizard_handbook, 	new ResourceLocation(Wizardry.MODID, "blocks/books_blue"));
-		registerBookModelTexture(() -> WizardryItems.arcane_tome, 		new ResourceLocation(Wizardry.MODID, "blocks/books_purple"));
+		registerBookModelTexture(() -> WizardryItems.spell_book, 			new ResourceLocation(Wizardry.MODID, "blocks/books_red"));
+		registerBookModelTexture(() -> WizardryItems.wizard_handbook, 		new ResourceLocation(Wizardry.MODID, "blocks/books_blue"));
+		registerBookModelTexture(() -> WizardryItems.arcane_tome, 			new ResourceLocation(Wizardry.MODID, "blocks/books_purple"));
+		registerBookModelTexture(() -> WizardryItems.scroll, 				new ResourceLocation(Wizardry.MODID, "blocks/scrolls_blue"));
+		registerBookModelTexture(() -> WizardryItems.blank_scroll, 			new ResourceLocation(Wizardry.MODID, "blocks/scrolls_blue"));
+		registerBookModelTexture(() -> WizardryItems.identification_scroll, new ResourceLocation(Wizardry.MODID, "blocks/scrolls_purple"));
+		registerBookModelTexture(() -> WizardryItems.armour_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_red"));
+		// Can't use the map in WandHelper because this is called from preInit (addons will have to add theirs manually)
+		registerBookModelTexture(() -> WizardryItems.storage_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.siphon_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.condenser_upgrade, 	new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.range_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.duration_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.cooldown_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.blast_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.attunement_upgrade, 	new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
+		registerBookModelTexture(() -> WizardryItems.melee_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
 	}
 
 	/**

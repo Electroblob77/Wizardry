@@ -122,13 +122,27 @@ public class ContainerBookshelf extends Container {
 
 	/** Called from {@link Wizardry#init(FMLInitializationEvent)} to register the default book items. */
 	public static void initDefaultBookItems(){
-		registerBookItem(WizardryItems.spell_book);
-		registerBookItem(WizardryItems.arcane_tome);
-		registerBookItem(WizardryItems.wizard_handbook);
 		registerBookItem(Items.BOOK);
 		registerBookItem(Items.WRITTEN_BOOK);
 		registerBookItem(Items.WRITABLE_BOOK);
 		registerBookItem(Items.ENCHANTED_BOOK);
+		registerBookItem(WizardryItems.spell_book);
+		registerBookItem(WizardryItems.arcane_tome);
+		registerBookItem(WizardryItems.wizard_handbook);
+		registerBookItem(WizardryItems.scroll);
+		registerBookItem(WizardryItems.blank_scroll);
+		registerBookItem(WizardryItems.identification_scroll);
+		registerBookItem(WizardryItems.armour_upgrade);
+		// Not using the map in WandHelper for consistency with BlockBookshelf (again, addons must add theirs manually)
+		registerBookItem(WizardryItems.storage_upgrade);
+		registerBookItem(WizardryItems.siphon_upgrade);
+		registerBookItem(WizardryItems.condenser_upgrade);
+		registerBookItem(WizardryItems.range_upgrade);
+		registerBookItem(WizardryItems.duration_upgrade);
+		registerBookItem(WizardryItems.cooldown_upgrade);
+		registerBookItem(WizardryItems.blast_upgrade);
+		registerBookItem(WizardryItems.attunement_upgrade);
+		registerBookItem(WizardryItems.melee_upgrade);
 	}
 
 	public class SlotBookshelf extends Slot {
