@@ -108,6 +108,9 @@ public final class AllyDesignationSystem {
 	 */
 	public static boolean isValidTarget(Entity attacker, Entity target){
 
+		// Owned entities inherit their owner's allies
+		if(attacker instanceof IEntityOwnable && !isValidTarget(((IEntityOwnable)attacker).getOwner(), target)) return false;
+
 		// Always return false if the target is null
 		if(target == null) return false;
 
@@ -194,6 +197,12 @@ public final class AllyDesignationSystem {
 	 * either owned by the first entity, an ally of the first entity, or owned by an ally of the first entity. This is
 	 * generally used to determine targets for healing or other group buffs. */
 	public static boolean isAllied(EntityLivingBase allyOf, EntityLivingBase possibleAlly){
+
+		// Owned entities inherit their owner's allies
+		if(allyOf instanceof IEntityOwnable){
+			Entity owner = ((IEntityOwnable)allyOf).getOwner();
+			if(owner instanceof EntityLivingBase && isAllied((EntityLivingBase)owner, possibleAlly)) return true;
+		}
 
 		if(allyOf instanceof EntityPlayer && possibleAlly instanceof EntityPlayer
 				&& isPlayerAlly((EntityPlayer)allyOf, (EntityPlayer)possibleAlly)){
