@@ -229,7 +229,7 @@ public final class ParticleBuilder {
 	 * Sets the velocity of the particle being built. This is a vector-based alternative to {@link ParticleBuilder#vel(
 	 * double, double, double)}, allowing for even more concise code when a vector is available.
 	 * <p></p>
-	 * <b>Affects:</b> All particle types except
+	 * <b>Affects:</b> All particle types
 	 * @param vel A vector representing the velocity of the particle to be built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
@@ -605,9 +605,9 @@ public final class ParticleBuilder {
 	public void spawn(World world){
 		
 		if(!building) throw new IllegalStateException("Not building yet!");
-		
-		if(y < 0 && entity == null) Wizardry.logger.warn("Spawning particle below y = 0 - are you sure the position/entity "
-				+ "has been set correctly?");
+
+		if(x == 0 && y == 0 && z == 0 && entity == null) Wizardry.logger.warn("Spawning particle at (0, 0, 0) - are you"
+				+ " sure the position/entity has been set correctly?");
 		
 		if(!world.isRemote){
 			Wizardry.logger.warn("ParticleBuilder.spawn(...) called on the server side! ParticleBuilder has prevented a "

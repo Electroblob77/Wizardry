@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * Abstract superclass for all of wizardry's particles. This replaces {@code ParticleCustomTexture} (the functionality of
  * which is no longer necessary since wizardry now uses {@code TextureAtlasSprite}s to do the rendering), and fits into
- * {@code ParticleBuilder} by exposing all the necessary variables through getters, allowing them to be set on the fly
+ * {@code ParticleBuilder} by exposing all the necessary variables through setters, allowing them to be set on the fly
  * rather than needing to be passed into the  constructor.
  * <p></p>
  * The new system is as follows:

@@ -63,12 +63,12 @@ public class BakedModelBookshelf implements IBakedModel {
 
 	@Override
 	public TextureAtlasSprite getParticleTexture(){
-		return bookshelf.getParticleTexture(); // TESTME: May need to do this manually
+		return bookshelf.getParticleTexture();
 	}
 
 	@Override
 	public ItemOverrideList getOverrides(){
-		return bookshelf.getOverrides(); // TESTME: Same here
+		return bookshelf.getOverrides();
 	}
 
 }
