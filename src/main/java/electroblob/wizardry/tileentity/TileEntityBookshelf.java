@@ -93,16 +93,17 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack){
+		this.fillWithLoot(null);
 		boolean wasEmpty = inventory.get(slot).isEmpty();
 		super.setInventorySlotContents(slot, stack);
 		// This must be done in the tile entity because containers only exist for player interaction, not hoppers etc.
 		if(wasEmpty != stack.isEmpty()) this.sync();
-
+		this.markDirty();
 	}
 
 	@Override
 	public void fillWithLoot(@Nullable EntityPlayer player){
-		if(world.getLootTableManager() != null) super.fillWithLoot(player); // IntelliJ is wrong, it can be null
+		if(world != null && world.getLootTableManager() != null) super.fillWithLoot(player); // IntelliJ is wrong, it can be null
 	}
 
 	@Override
