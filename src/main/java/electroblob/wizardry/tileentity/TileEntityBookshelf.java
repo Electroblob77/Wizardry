@@ -5,13 +5,14 @@ import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.inventory.ContainerBookshelf;
 import electroblob.wizardry.util.NBTExtras;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityLockableLoot;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
@@ -19,7 +20,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants.NBT;
 
-public class TileEntityBookshelf extends TileEntity implements IInventory, ITickable {
+import javax.annotation.Nullable;
+
+public class TileEntityBookshelf extends TileEntityLockableLoot implements ITickable {
 
 	/** The inventory of the bookshelf. */
 	private NonNullList<ItemStack> inventory;
@@ -35,7 +38,8 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 
 	/** Called to manually sync the tile entity with clients. */
 	public void sync(){
-		if(!this.doNotSync) this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
+		if(!this.doNotSync)
+			this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 
 	@Override
@@ -49,16 +53,15 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 		return inventory.size();
 	}
 
-	@Override
-	public ItemStack getStackInSlot(int slot){
-		return inventory.get(slot);
-	}
+	// Still better to override these three because then we can sync only when necessary
 
 	@Override
 	public ItemStack decrStackSize(int slot, int amount){
-		
+
+		this.fillWithLoot(null);
+
 		ItemStack stack = getStackInSlot(slot);
-		
+
 		if(!stack.isEmpty()){
 			if(stack.getCount() <= amount){
 				setInventorySlotContents(slot, ItemStack.EMPTY);
@@ -70,34 +73,36 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 			}
 			this.markDirty();
 		}
-		
+
 		return stack;
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int slot){
-		
+
+		this.fillWithLoot(null);
+
 		ItemStack stack = getStackInSlot(slot);
-		
+
 		if(!stack.isEmpty()){
 			setInventorySlotContents(slot, ItemStack.EMPTY);
 		}
-		
+
 		return stack;
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack){
-		
-		ItemStack previous = inventory.set(slot, stack);
-
+		boolean wasEmpty = inventory.get(slot).isEmpty();
+		super.setInventorySlotContents(slot, stack);
 		// This must be done in the tile entity because containers only exist for player interaction, not hoppers etc.
-		if(previous.isEmpty() != stack.isEmpty()) this.sync();
-		
-		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
-			stack.setCount(getInventoryStackLimit());
-		}
+		if(wasEmpty != stack.isEmpty()) this.sync();
 
+	}
+
+	@Override
+	public void fillWithLoot(@Nullable EntityPlayer player){
+		if(world.getLootTableManager() != null) super.fillWithLoot(player); // IntelliJ is wrong, it can be null
 	}
 
 	@Override
@@ -145,14 +150,20 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 
 		super.readFromNBT(tagCompound);
 
-		NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
-		for(int i = 0; i < tagList.tagCount(); i++){
-			NBTTagCompound tag = tagList.getCompoundTagAt(i);
-			byte slot = tag.getByte("Slot");
-			if(slot >= 0 && slot < getSizeInventory()){
-				setInventorySlotContents(slot, new ItemStack(tag));
+		if(!this.checkLootAndRead(tagCompound)){
+			// TODO: Replace with ItemStackHelper#loadAllItems
+			NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
+
+			for(int i = 0; i < tagList.tagCount(); i++){
+				NBTTagCompound tag = tagList.getCompoundTagAt(i);
+				byte slot = tag.getByte("Slot");
+				if(slot >= 0 && slot < getSizeInventory()){
+					setInventorySlotContents(slot, new ItemStack(tag));
+				}
 			}
 		}
+
+		if(tagCompound.hasKey("CustomName", NBT.TAG_STRING)) this.customName = tagCompound.getString("CustomName");
 	}
 
 	@Override
@@ -160,16 +171,25 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 
 		super.writeToNBT(tagCompound);
 
-		NBTTagList itemList = new NBTTagList();
-		for(int i = 0; i < getSizeInventory(); i++){
-			ItemStack stack = getStackInSlot(i);
-			NBTTagCompound tag = new NBTTagCompound();
-			tag.setByte("Slot", (byte)i);
-			stack.writeToNBT(tag);
-			itemList.appendTag(tag);
+		if(!this.checkLootAndWrite(tagCompound)){
+
+			// TODO: Replace with ItemStackHelper#saveAllItems
+
+			NBTTagList itemList = new NBTTagList();
+
+			for(int i = 0; i < getSizeInventory(); i++){
+				ItemStack stack = getStackInSlot(i);
+				NBTTagCompound tag = new NBTTagCompound();
+				tag.setByte("Slot", (byte)i);
+				stack.writeToNBT(tag);
+				itemList.appendTag(tag);
+			}
+
+			NBTExtras.storeTagSafely(tagCompound, "Inventory", itemList);
 		}
 
-		NBTExtras.storeTagSafely(tagCompound, "Inventory", itemList);
+		if(this.hasCustomName()) tagCompound.setString("CustomName", this.customName);
+
 		return tagCompound;
 	}
 
@@ -221,6 +241,22 @@ public class TileEntityBookshelf extends TileEntity implements IInventory, ITick
 			}
 		}
 		return true;
+	}
+
+	@Override
+	protected NonNullList<ItemStack> getItems(){
+		return inventory;
+	}
+
+	@Override
+	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer player){
+		this.fillWithLoot(player);
+		return new ContainerBookshelf(playerInventory, this);
+	}
+
+	@Override
+	public String getGuiID(){
+		return Wizardry.MODID + ":bookshelf";
 	}
 
 }
