@@ -41,7 +41,8 @@ public class WorldGenLibraryRuins extends WorldGenSurfaceStructure {
 	@Override
 	public boolean canGenerate(Random random, World world, int chunkX, int chunkZ){
 		return ArrayUtils.contains(Wizardry.settings.libraryDimensions, world.provider.getDimension())
-				&& BiomeDictionary.getTypes(world.getBiome(new BlockPos(chunkX * 16 + 8, 0, chunkZ * 16 + 8)))
+				// +8 for the anti-cascading offset, and +8 for the middle of the generated area makes +16 in total
+				&& BiomeDictionary.getTypes(world.getBiome(new BlockPos(chunkX * 16 + 16, 0, chunkZ * 16 + 16)))
 				.stream().anyMatch(BIOME_TYPES::contains)
 				&& Wizardry.settings.libraryRarity > 0 && random.nextInt(Wizardry.settings.libraryRarity) == 0;
 	}
@@ -91,7 +92,7 @@ public class WorldGenLibraryRuins extends WorldGenSurfaceStructure {
 				}
 		);
 
-		template.addBlocksToWorld(world, origin, processor, settings, 2);
+		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
 		WizardryAntiqueAtlasIntegration.markLibrary(world, origin.getX(), origin.getZ());
 	}

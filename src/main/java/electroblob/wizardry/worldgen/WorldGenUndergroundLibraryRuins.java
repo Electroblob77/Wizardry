@@ -96,7 +96,7 @@ public class WorldGenUndergroundLibraryRuins extends WorldGenUndergroundStructur
 				}
 		);
 
-		template.addBlocksToWorld(world, origin, processor, settings, 2);
+		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
 		WizardryAntiqueAtlasIntegration.markLibrary(world, origin.getX(), origin.getZ());
 	}

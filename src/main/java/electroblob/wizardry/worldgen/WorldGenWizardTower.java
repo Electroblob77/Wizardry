@@ -101,7 +101,7 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 				(w, p, i) -> {if(i.blockState.getBlock() != Blocks.AIR) blocksPlaced.add(p); return i;}
 		);
 
-		template.addBlocksToWorld(world, origin, processor, settings, 2);
+		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
 		WizardryAntiqueAtlasIntegration.markTower(world, origin.getX(), origin.getZ());
 

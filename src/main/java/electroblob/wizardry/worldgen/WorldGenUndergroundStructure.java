@@ -25,9 +25,13 @@ public abstract class WorldGenUndergroundStructure extends WorldGenWizardryStruc
 	@Override
 	protected BlockPos attemptPosition(Template template, PlacementSettings settings, Random random, World world, int chunkX, int chunkZ, String structureFile){
 
-		BlockPos origin = new BlockPos(8 + (chunkX << 4) + random.nextInt(16), 20 + random.nextInt(40), 8 + (chunkZ << 4) + random.nextInt(16));
-
 		BlockPos size = template.transformedSize(settings.getRotation());
+
+		// Offset by (8, 8) to minimise cascading worldgen lag, MINUS half the width of the structure (important!)
+		// See https://www.reddit.com/r/feedthebeast/cowmments/5x0twz/investigating_extreme_worldgen_lag/?ref=share&ref_source=embed&utm_content=title&utm_medium=post_embed&utm_name=c07cbb545f74487793783012794733d8&utm_source=embedly&utm_term=5x0twz
+		// Multiplying and left-shifting are identical but it's good practice to bitshift here I guess
+		BlockPos origin = new BlockPos((chunkX << 4) + random.nextInt(16) + 8 - size.getX()/2, 20 + random.nextInt(40), (chunkZ << 4) + random.nextInt(16) + 8 - size.getZ()/2);
+
 		BlockPos corner = origin.add(size.getX(), 1, size.getZ()); // Need not iterate through everything
 
 		// Criteria for a valid position:
