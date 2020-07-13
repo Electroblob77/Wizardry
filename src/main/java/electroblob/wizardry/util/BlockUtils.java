@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -14,6 +15,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -179,6 +182,25 @@ public final class BlockUtils {
 		return block instanceof BlockLog || block instanceof BlockCactus
 				|| block.isLeaves(world.getBlockState(pos), world, pos) || block.isFoliage(world, pos)
 				|| Settings.containsMetaBlock(Wizardry.settings.treeBlocks, world.getBlockState(pos));
+	}
+
+	/**
+	 * Returns the predominant wood type (see {@link net.minecraft.block.BlockPlanks.EnumType}) for the given biome, or
+	 * the default {@link net.minecraft.block.BlockPlanks.EnumType#OAK} for biomes with no trees. This is accurate for
+	 * most vanilla biomes
+	 * @param biome The biome to query
+	 * @return The wood type for the given biome
+	 */
+	public static BlockPlanks.EnumType getBiomeWoodVariant(Biome biome){
+		// Unfortunately, I can't check all the wood types with the biome dictionary
+		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.CONIFEROUS)) 	return BlockPlanks.EnumType.SPRUCE;
+		if(biome == Biomes.BIRCH_FOREST || biome == Biomes.BIRCH_FOREST_HILLS) 	return BlockPlanks.EnumType.BIRCH;
+		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE)) 		return BlockPlanks.EnumType.JUNGLE;
+		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.SAVANNA)) 		return BlockPlanks.EnumType.ACACIA;
+		// Not technically a tree type, but I think it fits quite well anyway
+		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY)) 		return BlockPlanks.EnumType.DARK_OAK;
+		// Everything else is oak
+		return BlockPlanks.EnumType.OAK;
 	}
 
 	/**

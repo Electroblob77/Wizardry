@@ -1,5 +1,6 @@
 package electroblob.wizardry.worldgen;
 
+import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
@@ -18,10 +19,13 @@ public class WoodTypeTemplateProcessor implements ITemplateProcessor {
 
 	private final BlockPlanks.EnumType woodType;
 
+	// Not all of these are used in wizardry's structures, but they're included for completeness
 	private final EnumMap<BlockPlanks.EnumType, Block> DOORS;
 	private final EnumMap<BlockPlanks.EnumType, Block> STAIRS;
 	private final EnumMap<BlockPlanks.EnumType, Block> FENCES;
 	private final EnumMap<BlockPlanks.EnumType, Block> FENCE_GATES;
+	private final EnumMap<BlockPlanks.EnumType, Block> BOOKSHELVES;
+	private final EnumMap<BlockPlanks.EnumType, Block> LECTERNS;
 
 	/**
 	 * Creates a new {@code WoodTypeTemplateProcessor} of the given type.
@@ -32,36 +36,52 @@ public class WoodTypeTemplateProcessor implements ITemplateProcessor {
 		this.woodType = woodType;
 
 		DOORS = new EnumMap<>(BlockPlanks.EnumType.class);
-		DOORS.put(BlockPlanks.EnumType.OAK, Blocks.OAK_DOOR);
-		DOORS.put(BlockPlanks.EnumType.SPRUCE, Blocks.SPRUCE_DOOR);
-		DOORS.put(BlockPlanks.EnumType.BIRCH, Blocks.BIRCH_DOOR);
-		DOORS.put(BlockPlanks.EnumType.JUNGLE, Blocks.JUNGLE_DOOR);
-		DOORS.put(BlockPlanks.EnumType.ACACIA, Blocks.ACACIA_DOOR);
-		DOORS.put(BlockPlanks.EnumType.DARK_OAK, Blocks.DARK_OAK_DOOR);
+		DOORS.put(BlockPlanks.EnumType.OAK, 			Blocks.OAK_DOOR);
+		DOORS.put(BlockPlanks.EnumType.SPRUCE, 			Blocks.SPRUCE_DOOR);
+		DOORS.put(BlockPlanks.EnumType.BIRCH, 			Blocks.BIRCH_DOOR);
+		DOORS.put(BlockPlanks.EnumType.JUNGLE, 			Blocks.JUNGLE_DOOR);
+		DOORS.put(BlockPlanks.EnumType.ACACIA, 			Blocks.ACACIA_DOOR);
+		DOORS.put(BlockPlanks.EnumType.DARK_OAK, 		Blocks.DARK_OAK_DOOR);
 
 		STAIRS = new EnumMap<>(BlockPlanks.EnumType.class);
-		STAIRS.put(BlockPlanks.EnumType.OAK, Blocks.OAK_STAIRS);
-		STAIRS.put(BlockPlanks.EnumType.SPRUCE, Blocks.SPRUCE_STAIRS);
-		STAIRS.put(BlockPlanks.EnumType.BIRCH, Blocks.BIRCH_STAIRS);
-		STAIRS.put(BlockPlanks.EnumType.JUNGLE, Blocks.JUNGLE_STAIRS);
-		STAIRS.put(BlockPlanks.EnumType.ACACIA, Blocks.ACACIA_STAIRS);
-		STAIRS.put(BlockPlanks.EnumType.DARK_OAK, Blocks.DARK_OAK_STAIRS);
+		STAIRS.put(BlockPlanks.EnumType.OAK, 			Blocks.OAK_STAIRS);
+		STAIRS.put(BlockPlanks.EnumType.SPRUCE, 		Blocks.SPRUCE_STAIRS);
+		STAIRS.put(BlockPlanks.EnumType.BIRCH, 			Blocks.BIRCH_STAIRS);
+		STAIRS.put(BlockPlanks.EnumType.JUNGLE, 		Blocks.JUNGLE_STAIRS);
+		STAIRS.put(BlockPlanks.EnumType.ACACIA, 		Blocks.ACACIA_STAIRS);
+		STAIRS.put(BlockPlanks.EnumType.DARK_OAK, 		Blocks.DARK_OAK_STAIRS);
 
 		FENCES = new EnumMap<>(BlockPlanks.EnumType.class);
-		FENCES.put(BlockPlanks.EnumType.OAK, Blocks.OAK_FENCE);
-		FENCES.put(BlockPlanks.EnumType.SPRUCE, Blocks.SPRUCE_FENCE);
-		FENCES.put(BlockPlanks.EnumType.BIRCH, Blocks.BIRCH_FENCE);
-		FENCES.put(BlockPlanks.EnumType.JUNGLE, Blocks.JUNGLE_FENCE);
-		FENCES.put(BlockPlanks.EnumType.ACACIA, Blocks.ACACIA_FENCE);
-		FENCES.put(BlockPlanks.EnumType.DARK_OAK, Blocks.DARK_OAK_FENCE);
+		FENCES.put(BlockPlanks.EnumType.OAK, 			Blocks.OAK_FENCE);
+		FENCES.put(BlockPlanks.EnumType.SPRUCE, 		Blocks.SPRUCE_FENCE);
+		FENCES.put(BlockPlanks.EnumType.BIRCH, 			Blocks.BIRCH_FENCE);
+		FENCES.put(BlockPlanks.EnumType.JUNGLE, 		Blocks.JUNGLE_FENCE);
+		FENCES.put(BlockPlanks.EnumType.ACACIA, 		Blocks.ACACIA_FENCE);
+		FENCES.put(BlockPlanks.EnumType.DARK_OAK, 		Blocks.DARK_OAK_FENCE);
 
 		FENCE_GATES = new EnumMap<>(BlockPlanks.EnumType.class);
-		FENCE_GATES.put(BlockPlanks.EnumType.OAK, Blocks.OAK_FENCE_GATE);
-		FENCE_GATES.put(BlockPlanks.EnumType.SPRUCE, Blocks.SPRUCE_FENCE_GATE);
-		FENCE_GATES.put(BlockPlanks.EnumType.BIRCH, Blocks.BIRCH_FENCE_GATE);
-		FENCE_GATES.put(BlockPlanks.EnumType.JUNGLE, Blocks.JUNGLE_FENCE_GATE);
-		FENCE_GATES.put(BlockPlanks.EnumType.ACACIA, Blocks.ACACIA_FENCE_GATE);
-		FENCE_GATES.put(BlockPlanks.EnumType.DARK_OAK, Blocks.DARK_OAK_FENCE_GATE);
+		FENCE_GATES.put(BlockPlanks.EnumType.OAK, 		Blocks.OAK_FENCE_GATE);
+		FENCE_GATES.put(BlockPlanks.EnumType.SPRUCE, 	Blocks.SPRUCE_FENCE_GATE);
+		FENCE_GATES.put(BlockPlanks.EnumType.BIRCH, 	Blocks.BIRCH_FENCE_GATE);
+		FENCE_GATES.put(BlockPlanks.EnumType.JUNGLE, 	Blocks.JUNGLE_FENCE_GATE);
+		FENCE_GATES.put(BlockPlanks.EnumType.ACACIA, 	Blocks.ACACIA_FENCE_GATE);
+		FENCE_GATES.put(BlockPlanks.EnumType.DARK_OAK, 	Blocks.DARK_OAK_FENCE_GATE);
+
+		BOOKSHELVES = new EnumMap<>(BlockPlanks.EnumType.class);
+		BOOKSHELVES.put(BlockPlanks.EnumType.OAK, 		WizardryBlocks.oak_bookshelf);
+		BOOKSHELVES.put(BlockPlanks.EnumType.SPRUCE, 	WizardryBlocks.spruce_bookshelf);
+		BOOKSHELVES.put(BlockPlanks.EnumType.BIRCH, 	WizardryBlocks.birch_bookshelf);
+		BOOKSHELVES.put(BlockPlanks.EnumType.JUNGLE, 	WizardryBlocks.jungle_bookshelf);
+		BOOKSHELVES.put(BlockPlanks.EnumType.ACACIA, 	WizardryBlocks.acacia_bookshelf);
+		BOOKSHELVES.put(BlockPlanks.EnumType.DARK_OAK, 	WizardryBlocks.dark_oak_bookshelf);
+
+		LECTERNS = new EnumMap<>(BlockPlanks.EnumType.class);
+		LECTERNS.put(BlockPlanks.EnumType.OAK, 			WizardryBlocks.oak_lectern);
+		LECTERNS.put(BlockPlanks.EnumType.SPRUCE, 		WizardryBlocks.spruce_lectern);
+		LECTERNS.put(BlockPlanks.EnumType.BIRCH, 		WizardryBlocks.birch_lectern);
+		LECTERNS.put(BlockPlanks.EnumType.JUNGLE, 		WizardryBlocks.jungle_lectern);
+		LECTERNS.put(BlockPlanks.EnumType.ACACIA, 		WizardryBlocks.acacia_lectern);
+		LECTERNS.put(BlockPlanks.EnumType.DARK_OAK, 	WizardryBlocks.dark_oak_lectern);
 	}
 
 	@Nullable
@@ -69,7 +89,7 @@ public class WoodTypeTemplateProcessor implements ITemplateProcessor {
 	public Template.BlockInfo processBlock(World world, BlockPos pos, Template.BlockInfo info){
 
 		// Why do these each have their own property key?
-		if(info.blockState.getBlock() instanceof BlockPlanks){
+		if(info.blockState.getBlock() instanceof BlockPlanks){ // This covers gilded wood too
 			return new Template.BlockInfo(info.pos, info.blockState.withProperty(BlockPlanks.VARIANT, woodType), info.tileentityData);
 		}else if(info.blockState.getBlock() instanceof BlockWoodSlab){
 			return new Template.BlockInfo(info.pos, info.blockState.withProperty(BlockWoodSlab.VARIANT, woodType), info.tileentityData);
@@ -82,6 +102,10 @@ public class WoodTypeTemplateProcessor implements ITemplateProcessor {
 			return new Template.BlockInfo(info.pos, BlockUtils.copyState(FENCES.get(woodType), info.blockState), info.tileentityData);
 		}else if(FENCE_GATES.containsValue(info.blockState.getBlock())){
 			return new Template.BlockInfo(info.pos, BlockUtils.copyState(FENCE_GATES.get(woodType), info.blockState), info.tileentityData);
+		}else if(BOOKSHELVES.containsValue(info.blockState.getBlock())){
+			return new Template.BlockInfo(info.pos, BlockUtils.copyState(BOOKSHELVES.get(woodType), info.blockState), info.tileentityData);
+		}else if(LECTERNS.containsValue(info.blockState.getBlock())){
+			return new Template.BlockInfo(info.pos, BlockUtils.copyState(LECTERNS.get(woodType), info.blockState), info.tileentityData);
 		}
 
 		return info;

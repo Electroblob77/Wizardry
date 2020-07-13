@@ -1442,6 +1442,14 @@ config.ebwizardry.shrine_rarity=Shrine Rarity
 config.ebwizardry.shrine_rarity.tooltip=Rarity of shrines. 1 in this many chunks will contain a shrine, meaning higher numbers are rarer.
 config.ebwizardry.shrine_files=Shrine Structure Files
 config.ebwizardry.shrine_files.tooltip=List of structure file locations for shrines. One of these files will be randomly selected each time a shrine is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable shrines, use the shrine dimensions setting.
+config.ebwizardry.library_dimensions=Library Ruin Dimensions
+config.ebwizardry.library_dimensions.tooltip=List of ids of dimensions in which library ruins will generate. Remove all dimensions to disable library ruins completely.
+config.ebwizardry.library_rarity=Library Ruin Rarity
+config.ebwizardry.library_rarity.tooltip=Rarity of library ruins. 1 in this many chunks will contain a shrine, meaning higher numbers are rarer.
+config.ebwizardry.library_files=Library Ruin Structure Files
+config.ebwizardry.library_files.tooltip=List of structure file locations for surface library ruins. One of these files will be randomly selected each time a library ruin is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable library ruins, use the library ruin dimensions setting.
+config.ebwizardry.underground_library_files=Underground Library Ruin Structure Files
+config.ebwizardry.underground_library_files.tooltip=List of structure file locations for underground library ruins. One of these files will be randomly selected each time a library ruin is generated. File locations are of the format [mod id]\:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable library ruins, use the library ruin dimensions setting.
 config.ebwizardry.tree_blocks=Tree Blocks
 config.ebwizardry.tree_blocks.tooltip=List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).
 config.ebwizardry.ore_dimensions=Ore Dimensions
@@ -1551,12 +1559,15 @@ config.ebwizardry.auto_place_obelisk_markers=Auto-Place Obelisk Markers
 config.ebwizardry.auto_place_obelisk_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of obelisks.
 config.ebwizardry.auto_place_shrine_markers=Auto-Place Shrine Markers
 config.ebwizardry.auto_place_shrine_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of shrines.
+config.ebwizardry.auto_place_library_markers=Auto-Place Library Markers
+config.ebwizardry.auto_place_library_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of library ruins.
 
 integration.jei.category.ebwizardry\:arcane_workbench=Arcane Workbench
 
 integration.antiqueatlas.marker.ebwizardry.wizard_tower=Wizard Tower
 integration.antiqueatlas.marker.ebwizardry.obelisk=Obelisk
 integration.antiqueatlas.marker.ebwizardry.shrine=Shrine
+integration.antiqueatlas.marker.ebwizardry.library_ruins=Library Ruins
 
 spell.ebwizardry\:magic_missile_festive=Magic Mistletoe
 spell.ebwizardry\:summon_snow_golem_festive=Summon Frosty The Snowman

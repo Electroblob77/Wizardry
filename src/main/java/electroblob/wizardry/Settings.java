@@ -134,6 +134,20 @@ public final class Settings {
 			new ResourceLocation(Wizardry.MODID, "shrine_5"),
 			new ResourceLocation(Wizardry.MODID, "shrine_6"),
 			new ResourceLocation(Wizardry.MODID, "shrine_7")};
+	/** <b>[Server-only]</b> List of dimension ids in which to generate library ruins. */
+	public int[] libraryDimensions = {0};
+	/** <b>[Server-only]</b> The rarity of library ruins, used by the world generator. Larger numbers are rarer. */
+	public int libraryRarity = 900;
+	/** <b>[Server-only]</b> List of structure file locations for surface library ruins. */
+	public ResourceLocation[] libraryFiles = {new ResourceLocation(Wizardry.MODID, "library_ruins_0"),
+			new ResourceLocation(Wizardry.MODID, "library_ruins_1"),
+			new ResourceLocation(Wizardry.MODID, "library_ruins_2"),
+			new ResourceLocation(Wizardry.MODID, "library_ruins_3")};
+	/** <b>[Server-only]</b> List of structure file locations for underground library ruins. */
+	public ResourceLocation[] undergroundLibraryFiles = {new ResourceLocation(Wizardry.MODID, "underground_library_ruins_0"),
+			new ResourceLocation(Wizardry.MODID, "underground_library_ruins_1"),
+			new ResourceLocation(Wizardry.MODID, "underground_library_ruins_2"),
+			new ResourceLocation(Wizardry.MODID, "underground_library_ruins_3")};
 	/** <b>[Server-only]</b> List of solid blocks (usually trees) which are ignored by the structure generators. */
 	public Pair<ResourceLocation, Short>[] treeBlocks = parseItemMetaStrings(DEFAULT_TREE_BLOCKS);
 	/** <b>[Server-only]</b> The chance for wizard towers to generate with an evil wizard and chest inside. */
@@ -254,12 +268,15 @@ public final class Settings {
 	public boolean jeiIntegration = true;
 	/** <b>[Server-only]</b> Whether Antique Atlas integration features are enabled. */
 	public boolean antiqueAtlasIntegration = true;
+	// These are server-only because that's where markers are stored
 	/** <b>[Server-only]</b> Whether global markers for wizard towers are added to antique atlases. */
 	public boolean autoTowerMarkers = true;
 	/** <b>[Server-only]</b> Whether global markers for obelisks are added to antique atlases. */
 	public boolean autoObeliskMarkers = true;
 	/** <b>[Server-only]</b> Whether global markers for shrines are added to antique atlases. */
 	public boolean autoShrineMarkers = true;
+	/** <b>[Server-only]</b> Whether global markers for library ruins are added to antique atlases. */
+	public boolean autoLibraryMarkers = true;
 
 	// Synchronised settings. These settings affect both client-side AND server-side code. Changing these locally
 	// only has an effect if the local game is the host, i.e. a dedicated server, a LAN host or a singleplayer world.
@@ -920,6 +937,33 @@ public final class Settings {
 		shrineFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
+		property = config.get(WORLDGEN_CATEGORY, "libraryDimensions", new int[]{0}, "List of dimension ids in which library ruins will generate. Remove all dimensions to disable library ruins completely.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".library_dimensions");
+		property.setRequiresWorldRestart(true);
+		libraryDimensions = property.getIntList();
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "libraryRarity", 900, "Rarity of library ruins. 1 in this many chunks will contain a library ruin, meaning higher numbers are rarer.", 20, 5000);
+		property.setLanguageKey("config." + Wizardry.MODID + ".library_rarity");
+		property.setRequiresWorldRestart(true);
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		libraryRarity = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "libraryFiles", new String[]{Wizardry.MODID + ":library_ruins_0", Wizardry.MODID + ":library_ruins_1", Wizardry.MODID + ":library_ruins_2", Wizardry.MODID + ":library_ruins_3"},
+				"List of structure file locations for surface library ruins. One of these files will be randomly selected each time a surface library ruin is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable library ruins, use the library dimensions setting.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".library_files");
+		property.setRequiresWorldRestart(true);
+		libraryFiles = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "undergroundLibraryFiles", new String[]{Wizardry.MODID + ":underground_library_ruins_0", Wizardry.MODID + ":underground_library_ruins_1", Wizardry.MODID + ":underground_library_ruins_2", Wizardry.MODID + ":underground_library_ruins_3"},
+				"List of structure file locations for underground library ruins. One of these files will be randomly selected each time an underground library ruin is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable library ruins, use the library dimensions setting.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".underground_library_files");
+		property.setRequiresWorldRestart(true);
+		undergroundLibraryFiles = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
 		property = config.get(WORLDGEN_CATEGORY, "treeBlocks", DEFAULT_TREE_BLOCKS, "List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tree_blocks");
 		property.setRequiresWorldRestart(true);
@@ -1232,6 +1276,14 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		autoShrineMarkers = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(COMPATIBILITY_CATEGORY, "autoPlaceLibraryMarkers", true,
+				"Controls whether wizardry automatically places antique atlas markers at the locations of library ruins.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".auto_place_library_markers");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		autoLibraryMarkers = property.getBoolean();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(COMPATIBILITY_CATEGORY, propOrder);

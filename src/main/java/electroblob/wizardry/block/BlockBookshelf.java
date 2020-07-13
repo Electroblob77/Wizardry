@@ -84,6 +84,18 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
 
+	// Why on earth are these two not in BlockHorizontal?
+
+	@Override
+	public IBlockState withRotation(IBlockState state, Rotation rotation){
+		return state.withProperty(FACING, rotation.rotate(state.getValue(FACING)));
+	}
+
+	@Override
+	public IBlockState withMirror(IBlockState state, Mirror mirror){
+		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
+	}
+
 	@Override
 	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state){
 		super.onBlockAdded(worldIn, pos, state);

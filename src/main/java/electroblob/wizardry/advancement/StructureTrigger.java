@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import electroblob.wizardry.worldgen.WorldGenSurfaceStructure;
+import electroblob.wizardry.worldgen.WorldGenWizardryStructure;
 import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
@@ -77,11 +77,11 @@ public class StructureTrigger implements ICriterionTrigger<StructureTrigger.Inst
 
 	public static class Instance extends AbstractCriterionInstance {
 
-		private final WorldGenSurfaceStructure structureType;
+		private final WorldGenWizardryStructure structureType;
 
 		public Instance(ResourceLocation criterionIn, String name){
 			super(criterionIn);
-			this.structureType = WorldGenSurfaceStructure.byName(name);
+			this.structureType = WorldGenWizardryStructure.byName(name);
 		}
 
 		public boolean test(WorldServer world, double x, double y, double z){

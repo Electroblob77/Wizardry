@@ -154,6 +154,8 @@ public class Wizardry {
 		GameRegistry.registerWorldGenerator(new WorldGenWizardTower(), 20);
 		GameRegistry.registerWorldGenerator(new WorldGenObelisk(), 20);
 		GameRegistry.registerWorldGenerator(new WorldGenShrine(), 20);
+		GameRegistry.registerWorldGenerator(new WorldGenLibraryRuins(), 20);
+		GameRegistry.registerWorldGenerator(new WorldGenUndergroundLibraryRuins(), 20);
 
 		// This is for the config change and missing mappings events
 		MinecraftForge.EVENT_BUS.register(instance); // Since there's already an instance we might as well use it

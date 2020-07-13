@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityLockableLoot;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
@@ -24,9 +25,21 @@ import javax.annotation.Nullable;
 
 public class TileEntityBookshelf extends TileEntityLockableLoot implements ITickable {
 
+	/** NBT key for the boolean flag specifying if this bookshelf was generated naturally as part of a structure or not.
+	 * This flag is set via {@link TileEntityBookshelf#markAsNatural(NBTTagCompound)}. */
+	private static final String NATURAL_NBT_KEY = "NaturallyGenerated";
+	/** When a non-spectating player comes within this distance of a naturally-generated bookshelf, it will automatically
+	 * generate its loot if a loot table was set. This means the bookshelves do not incorrectly appear empty before a
+	 * player looks inside. */ // Kind of a trade-off between not seeing them appear and not triggering from miles away
+	private static final int LOOT_GEN_DISTANCE = 32; // Nobody is likely to be looking from more than 32 blocks away
+
 	/** The inventory of the bookshelf. */
 	private NonNullList<ItemStack> inventory;
 
+	/** Whether this bookshelf was generated naturally as part of a structure. This determines whether the loot is
+	 * automatically generated (and synced) when a non-spectating player comes within {@value LOOT_GEN_DISTANCE} blocks,
+	 * so the bookshelf doesn't look empty until opened (loot is generated with that player in the context). */
+	private boolean natural;
 	private boolean doNotSync;
 
 	public TileEntityBookshelf(){
@@ -44,8 +57,19 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 
 	@Override
 	public void update(){
+
 		this.doNotSync = false;
-		// Nothing here for now
+
+		// When a player gets near, generate the books so they can actually see them (if it was generated naturally)
+		if(lootTable != null && natural){
+			EntityPlayer player = world.getClosestPlayer(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+					LOOT_GEN_DISTANCE, false);
+			if(player != null){
+				natural = false; // It's a normal bookshelf now (unlikely to matter but you never know)
+				fillWithLoot(player);
+				sync();
+			}
+		}
 	}
 
 	@Override
@@ -101,6 +125,14 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 		this.markDirty();
 	}
 
+	/** Sets the {@value NATURAL_NBT_KEY} flag to true in the given NBT tag compound, <b>if</b> the compound belongs to
+	 * a bookshelf tile entity (more specifically, if it has an "id" tag matching the bookshelf TE's registry name). */
+	public static void markAsNatural(NBTTagCompound nbt){
+		if(nbt != null && nbt.getString("id").equals(TileEntity.getKey(TileEntityBookshelf.class).toString())){
+			nbt.setBoolean(NATURAL_NBT_KEY, true);
+		}
+	}
+
 	@Override
 	public void fillWithLoot(@Nullable EntityPlayer player){
 		if(world != null && world.getLootTableManager() != null) super.fillWithLoot(player); // IntelliJ is wrong, it can be null
@@ -147,13 +179,15 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound tagCompound){
+	public void readFromNBT(NBTTagCompound nbt){
 
-		super.readFromNBT(tagCompound);
+		super.readFromNBT(nbt);
 
-		if(!this.checkLootAndRead(tagCompound)){
+		natural = nbt.getBoolean(NATURAL_NBT_KEY);
+
+		if(!this.checkLootAndRead(nbt)){
 			// TODO: Replace with ItemStackHelper#loadAllItems
-			NBTTagList tagList = tagCompound.getTagList("Inventory", NBT.TAG_COMPOUND);
+			NBTTagList tagList = nbt.getTagList("Inventory", NBT.TAG_COMPOUND);
 
 			for(int i = 0; i < tagList.tagCount(); i++){
 				NBTTagCompound tag = tagList.getCompoundTagAt(i);
@@ -164,15 +198,18 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 			}
 		}
 
-		if(tagCompound.hasKey("CustomName", NBT.TAG_STRING)) this.customName = tagCompound.getString("CustomName");
+		if(nbt.hasKey("CustomName", NBT.TAG_STRING)) this.customName = nbt.getString("CustomName");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tagCompound){
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt){
 
-		super.writeToNBT(tagCompound);
+		super.writeToNBT(nbt);
 
-		if(!this.checkLootAndWrite(tagCompound)){
+		// Need to save this in case the block was generated but no players came near enough to trigger loot gen
+		nbt.setBoolean(NATURAL_NBT_KEY, natural);
+
+		if(!this.checkLootAndWrite(nbt)){
 
 			// TODO: Replace with ItemStackHelper#saveAllItems
 
@@ -186,12 +223,12 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 				itemList.appendTag(tag);
 			}
 
-			NBTExtras.storeTagSafely(tagCompound, "Inventory", itemList);
+			NBTExtras.storeTagSafely(nbt, "Inventory", itemList);
 		}
 
-		if(this.hasCustomName()) tagCompound.setString("CustomName", this.customName);
+		if(this.hasCustomName()) nbt.setString("CustomName", this.customName);
 
-		return tagCompound;
+		return nbt;
 	}
 
 	@Override
