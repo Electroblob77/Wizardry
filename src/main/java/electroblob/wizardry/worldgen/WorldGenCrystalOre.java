@@ -15,6 +15,8 @@ import java.util.Random;
 
 public class WorldGenCrystalOre implements IWorldGenerator {
 
+	// TODO: Probably this and the flowers are causing cascading lag!
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider){
 

@@ -52,7 +52,7 @@ public final class WandHelper {
 
 	private static final HashMap<Item, String> upgradeMap = new HashMap<>();
 
-	static {
+	static { // TODO: Move these to a proper initialisation method, at the moment we're relying on class load order!
 		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
 		upgradeMap.put(WizardryItems.storage_upgrade, "storage");
 		upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");

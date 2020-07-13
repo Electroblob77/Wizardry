@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 /**
  * Contains a number of static methods that perform raytracing and related functions. This was split off from
- * {@link JavaUtils} as of wizardry 4.2 in an effort to make the code easier to navigate.
+ * {@code WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
  *
  * @author Electroblob
  * @since Wizardry 4.2
