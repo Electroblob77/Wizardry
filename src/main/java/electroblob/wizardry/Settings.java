@@ -277,6 +277,8 @@ public final class Settings {
 	public boolean autoShrineMarkers = true;
 	/** <b>[Server-only]</b> Whether global markers for library ruins are added to antique atlases. */
 	public boolean autoLibraryMarkers = true;
+	/** <b>[Server-only]</b> Whether global markers for underground library ruins are added to antique atlases. */
+	public boolean autoUndergroundLibraryMarkers = false;
 
 	// Synchronised settings. These settings affect both client-side AND server-side code. Changing these locally
 	// only has an effect if the local game is the host, i.e. a dedicated server, a LAN host or a singleplayer world.
@@ -1284,6 +1286,14 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		autoLibraryMarkers = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(COMPATIBILITY_CATEGORY, "autoPlaceUndergroundLibraryMarkers", false,
+				"Controls whether wizardry automatically places antique atlas markers at the locations of underground library ruins.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".auto_place_underground_library_markers");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		autoUndergroundLibraryMarkers = property.getBoolean();
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(COMPATIBILITY_CATEGORY, propOrder);

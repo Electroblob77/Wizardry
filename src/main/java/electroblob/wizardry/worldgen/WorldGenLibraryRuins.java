@@ -94,7 +94,7 @@ public class WorldGenLibraryRuins extends WorldGenSurfaceStructure {
 
 		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
-		WizardryAntiqueAtlasIntegration.markLibrary(world, origin.getX(), origin.getZ());
+		WizardryAntiqueAtlasIntegration.markLibrary(world, origin.getX(), origin.getZ(), false);
 	}
 
 }

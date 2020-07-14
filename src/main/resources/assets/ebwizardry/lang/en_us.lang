@@ -1560,7 +1560,9 @@ config.ebwizardry.auto_place_obelisk_markers.tooltip=Controls whether wizardry a
 config.ebwizardry.auto_place_shrine_markers=Auto-Place Shrine Markers
 config.ebwizardry.auto_place_shrine_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of shrines.
 config.ebwizardry.auto_place_library_markers=Auto-Place Library Markers
-config.ebwizardry.auto_place_library_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of library ruins.
+config.ebwizardry.auto_place_library_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of surface library ruins.
+config.ebwizardry.auto_place_underground_library_markers=Auto-Place Underground Library Markers
+config.ebwizardry.auto_place_underground_library_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of underground library ruins.
 
 integration.jei.category.ebwizardry\:arcane_workbench=Arcane Workbench
 

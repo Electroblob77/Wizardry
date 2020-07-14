@@ -68,8 +68,8 @@ public class WizardryAntiqueAtlasIntegration {
 
 	/** Places a global library ruins marker in all antique atlases at the given coordinates in the given world if
 	 * {@link electroblob.wizardry.Settings#autoLibraryMarkers} is enabled. Server side only! */
-	public static void markLibrary(World world, int x, int z){
-		if(enabled() && Wizardry.settings.autoLibraryMarkers){ // TODO: More granular settings for above/below ground
+	public static void markLibrary(World world, int x, int z, boolean underground){
+		if(enabled() && (underground ? Wizardry.settings.autoUndergroundLibraryMarkers : Wizardry.settings.autoLibraryMarkers)){
 			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, LIBRARY_MARKER.toString(), "integration.antiqueatlas.marker." + LIBRARY_MARKER.toString().replace(':', '.'), x, z);
 		}
 	}
