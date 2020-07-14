@@ -95,9 +95,11 @@ public class WizardTradeTweaksHandler {
 				if(recipe != null && recipe.getItemToSell().getItem() instanceof ItemSpellBook){
 
 					EntityPlayer player = Minecraft.getMinecraft().player;
+					Spell spell = Spell.byMetadata(recipe.getItemToSell().getMetadata());
 
-					if(!WizardData.get(player).hasSpellBeenDiscovered(Spell.byMetadata(recipe.getItemToSell().getMetadata()))){
-
+					if(Wizardry.settings.discoveryMode && !player.isCreative() && Wizardry.proxy.shouldDisplayDiscovered(spell, recipe.getItemToSell())
+							&& WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+						
 						int x = gui.inventorySlots.getSlot(2).xPos + 14;
 						int y = gui.inventorySlots.getSlot(2).yPos - 17;
 
