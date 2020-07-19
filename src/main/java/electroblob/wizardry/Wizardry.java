@@ -10,6 +10,7 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
 import electroblob.wizardry.inventory.ContainerBookshelf;
+import electroblob.wizardry.misc.DonationPerksHandler;
 import electroblob.wizardry.misc.Forfeit;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.*;
@@ -197,7 +198,12 @@ public class Wizardry {
 	public void onConfigChanged(net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent event){
 		if(event.getModID().equals(Wizardry.MODID)){
 			settings.saveConfigChanges();
-			// All of the synchronised settings require a world restart anyway so this doesn't need syncing.
+			// All of the synchronised settings require a world restart anyway so don't need syncing, except for the
+			// donor perks which have special behaviour (since we have to update everyone when a donor logs in anyway,
+			// we might as well reuse the packet and let them change the setting mid-game)
+			if(event.isWorldRunning() && DonationPerksHandler.isDonor(proxy.getThePlayer())){
+				DonationPerksHandler.sendToServer(proxy.getThePlayer());
+			}
 		}
 	}
 

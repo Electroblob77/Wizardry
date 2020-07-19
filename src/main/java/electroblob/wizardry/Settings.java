@@ -1,5 +1,6 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.packet.PacketSyncSettings;
 import electroblob.wizardry.packet.WizardryPacketHandler;
@@ -25,6 +26,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Singleton class which deals with everything related to wizardry's config file. To access individual settings, use
@@ -325,6 +327,14 @@ public final class Settings {
 	);
 	/** <b>[Synchronised]</b> List of registry names of items that can be placed in a bookshelf. */
 	public Pair<ResourceLocation, Short>[] bookItems = parseItemMetaStrings();
+
+	/**
+	 * <b>[Synchronised*]</b> The element to render for donation perks, or null if it should not be rendered.
+	 * <p></p>
+	 * * Unlike the other options, <b>this is synchronised client -> server</b>, then the data for all players is sent
+	 * back to every client when they join the game, or whenever it changes.
+	 */
+	public Element donationPerkElement = Element.MAGIC;
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys
 	// its own values for these, and changing them on a dedicated server will have no effect.
@@ -1082,6 +1092,13 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		spellcastingAnimations = property.getBoolean();
+		propOrder.add(property.getName());
+
+		List<String> elementNames = Arrays.stream(Element.values()).map(Element::getName).collect(Collectors.toList());
+		elementNames.add("");
+		property = config.get(CLIENT_CATEGORY, "donationPerkElement", Element.MAGIC.getName(), "The element colour to use for the flying companion orb rendered on donor players, leave empty to disable the effect. If you're someone who was kind enough to donate, this setting will change what all players see (if not, it won't do anything).", elementNames.toArray(new String[0]));
+		property.setLanguageKey("config." + Wizardry.MODID + ".donation_perk_element");
+		donationPerkElement = Element.fromName(property.getString(), null); // Fallback to null for no element
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(CLIENT_CATEGORY, propOrder);

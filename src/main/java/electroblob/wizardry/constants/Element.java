@@ -8,6 +8,8 @@ import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
+
 public enum Element implements IStringSerializable {
 
 	/** The 'default' element, with {@link electroblob.wizardry.registry.Spells#magic_missile magic missile} being its
@@ -47,6 +49,18 @@ public enum Element implements IStringSerializable {
 		}
 
 		throw new IllegalArgumentException("No such element with unlocalised name: " + name);
+	}
+
+	/** Same as {@link Element#fromName(String)}, but returns the given fallback instead of throwing an exception if no
+	 * element matches the given string. */
+	@Nullable
+	public static Element fromName(String name, @Nullable Element fallback){
+
+		for(Element element : values()){
+			if(element.unlocalisedName.equals(name)) return element;
+		}
+
+		return fallback;
 	}
 
 	/** Returns the translated display name of this element, without formatting. */

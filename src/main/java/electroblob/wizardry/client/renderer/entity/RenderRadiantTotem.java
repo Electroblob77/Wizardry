@@ -20,11 +20,11 @@ import javax.annotation.Nullable;
 
 public class RenderRadiantTotem extends Render<EntityRadiantTotem> {
 
-	private static final ResourceLocation FLARE_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/radiant_totem/flare.png");
+	private static final ResourceLocation FLARE_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/entity/totem/flare.png");
 	private static final ResourceLocation[] CUBE_TEXTURES = new ResourceLocation[14];
 
 	static {
-		for(int i = 0; i< CUBE_TEXTURES.length; i++) CUBE_TEXTURES[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/radiant_totem/cube_" + i + ".png");
+		for(int i = 0; i< CUBE_TEXTURES.length; i++) CUBE_TEXTURES[i] = new ResourceLocation(Wizardry.MODID, "textures/entity/totem/cube_" + i + ".png");
 	}
 
 	public RenderRadiantTotem(RenderManager manager){
@@ -72,6 +72,9 @@ public class RenderRadiantTotem extends Render<EntityRadiantTotem> {
 
 		GlStateManager.pushMatrix();
 
+		// Makes the colour add to the colour of the texture pixels, rather than the default multiplying
+		GlStateManager.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_ADD);
+		GlStateManager.color(1, 0.957f, 0.608f);
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		bindTexture(FLARE_TEXTURE);
@@ -95,6 +98,9 @@ public class RenderRadiantTotem extends Render<EntityRadiantTotem> {
 
 		tessellator.draw();
 
+		// Reverses the colour addition change
+		GlStateManager.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.popMatrix();
 	}
 
