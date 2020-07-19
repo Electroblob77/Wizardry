@@ -53,7 +53,7 @@ public class RenderDonationPerks {
 			int g1 = (c1 & 0xFF00) >> 8;
 			int b1 = (c1 & 0xFF);
 
-			int c2 = BlockReceptacle.PARTICLE_COLOURS.get(element)[1];
+			int c2 = BlockReceptacle.PARTICLE_COLOURS.get(element)[2];
 			int r2 = (c2 & 0xFF0000) >> 16;
 			int g2 = (c2 & 0xFF00) >> 8;
 			int b2 = (c2 & 0xFF);
