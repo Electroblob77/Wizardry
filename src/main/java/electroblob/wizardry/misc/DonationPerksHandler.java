@@ -29,12 +29,15 @@ public class DonationPerksHandler {
 	// sensitive info, they're just player identifiers that won't ever change, even if you change your username)
 	// Convert between usernames and UUIDs here https://mcuuid.net/
 	// Normally I'd use an EnumMap for this, but somehow making the UUIDs into an enum doesn't seem right
-	private static final Map<UUID, Box<Element>> DONOR_UUID_MAP = ImmutableMap.of(
-			UUID.fromString("4b29263e-007b-48ef-b3e6-ce86cca989e9"), new Box<>(Element.MAGIC), // Me!
-			UUID.fromString("2b583703-1407-4ec6-93d2-d9c03b0c08fc"), new Box<>(Element.MAGIC),
-			UUID.fromString("f6c7001f-4ce8-43f7-b4a1-a9d9d5fadb93"), new Box<>(Element.MAGIC),
-			UUID.fromString("01535a73-ff8d-4d6c-851e-c71f89e936aa"), new Box<>(Element.MAGIC)
-	);
+	private static final Map<UUID, Box<Element>> DONOR_UUID_MAP = ImmutableMap.<UUID, Box<Element>>builder()
+			.put(UUID.fromString("4b29263e-007b-48ef-b3e6-ce86cca989e9"), new Box<>(Element.MAGIC)) // Me!
+			.put(UUID.fromString("2b583703-1407-4ec6-93d2-d9c03b0c08fc"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("f6c7001f-4ce8-43f7-b4a1-a9d9d5fadb93"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("01535a73-ff8d-4d6c-851e-c71f89e936aa"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("32ca0099-c1d6-4682-82ab-8f06059bb801"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("0a704e20-1e7a-413e-9122-fae5b244a05e"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("41fec037-12a5-4b19-868e-b62e39952e96"), new Box<>(Element.MAGIC))
+	.build();
 
 	/** Returns true if the given player's UUID appears in the list of donor UUIDs, false otherwise (thread-safe). */
 	public static boolean isDonor(EntityPlayer player){
