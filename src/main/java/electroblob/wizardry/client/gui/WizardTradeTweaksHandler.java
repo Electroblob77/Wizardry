@@ -22,8 +22,9 @@ import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber
+@EventBusSubscriber(Side.CLIENT)
 public class WizardTradeTweaksHandler {
 
 	private static final ResourceLocation NEW_SPELL_ICON = new ResourceLocation(Wizardry.MODID, "textures/gui/container/new_spell_indicator.png");

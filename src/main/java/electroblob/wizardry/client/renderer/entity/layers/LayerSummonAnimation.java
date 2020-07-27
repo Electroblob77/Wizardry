@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * Layer used to render the appear/disappear animation for summoned creatures.
@@ -18,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author Electroblob
  * @since Wizardry 4.3
  */
-@EventBusSubscriber
+@EventBusSubscriber(Side.CLIENT)
 public class LayerSummonAnimation<T extends EntityLivingBase> extends LayerTiledOverlay<T> {
 
 	private static final int ANIMATION_TICKS = 19;
