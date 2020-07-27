@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * GUI class for the wizard's handbook. Like any GUI class, this is instantiated each time the book is opened. As of
@@ -409,7 +410,7 @@ public class GuiWizardHandbook extends GuiScreen {
 
 			bookmarkSection = null; // Also need to wipe the reference to the old bookmarked section
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(handbookFile.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(handbookFile.getInputStream(), StandardCharsets.UTF_8));
 
 			JsonElement je = gson.fromJson(reader, JsonElement.class);
 			JsonObject json = je.getAsJsonObject();
