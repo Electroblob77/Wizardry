@@ -298,6 +298,13 @@ public final class WizardryEventHandler {
 	@SubscribeEvent(priority = EventPriority.LOW) // Again, we don't want these effects if the event is cancelled
 	public static void onLivingHurtEvent(LivingHurtEvent event){
 
+		// Ward
+		PotionEffect effect = event.getEntityLiving().getActivePotionEffect(WizardryPotions.ward);
+
+		if(effect != null && event.getSource().isMagicDamage()){
+			event.setAmount(event.getAmount() * Math.max(0, 1 - 0.4f * effect.getAmplifier())); // Resistance is 20%
+		}
+
 		// Flaming and freezing swords
 		if(event.getSource().getTrueSource() instanceof EntityLivingBase){
 
