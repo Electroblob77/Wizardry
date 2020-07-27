@@ -365,7 +365,7 @@ public class GuiSpellDisplay {
 			try {
 				// This time we only want the highest priority file
 				IResource metadataFile = Minecraft.getMinecraft().getResourceManager().getResource(metadata);
-				BufferedReader reader = new BufferedReader(new InputStreamReader(metadataFile.getInputStream()));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(metadataFile.getInputStream(), StandardCharsets.UTF_8));
 					
 				JsonElement je = gson.fromJson(reader, JsonElement.class);
 				
