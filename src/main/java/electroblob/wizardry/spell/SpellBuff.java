@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -83,6 +84,11 @@ public class SpellBuff extends Spell {
 			addProperties(getStrengthKey(potion));
 			if(!potion.isInstant()) addProperties(getDurationKey(potion));
 		}
+	}
+
+	/** Returns an unmodifiable view of the set of {@link Potion} objects that this spell applies to its caster. */
+	public Set<Potion> getPotionSet(){
+		return Collections.unmodifiableSet(potionSet);
 	}
 
 	// Potion-specific equivalent to defining the identifiers as constants
