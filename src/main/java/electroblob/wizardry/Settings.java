@@ -1096,7 +1096,7 @@ public final class Settings {
 
 		List<String> elementNames = Arrays.stream(Element.values()).map(Element::getName).collect(Collectors.toList());
 		elementNames.add("");
-		property = config.get(CLIENT_CATEGORY, "donationPerkElement", Element.MAGIC.getName(), "The element colour to use for the flying companion orb rendered on donor players, leave empty to disable the effect. If you're someone who was kind enough to donate, this setting will change what all players see (if not, it won't do anything).", elementNames.toArray(new String[0]));
+		property = config.get(CLIENT_CATEGORY, "donationPerkElement", Element.MAGIC.getName(), "The element of the flying companion orb rendered on donor and contributor players, leave empty to disable the effect. If you're one of them, this setting will change how all players see you (if not, it won't do anything).", elementNames.toArray(new String[0]));
 		property.setLanguageKey("config." + Wizardry.MODID + ".donation_perk_element");
 		donationPerkElement = Element.fromName(property.getString(), null); // Fallback to null for no element
 		propOrder.add(property.getName());

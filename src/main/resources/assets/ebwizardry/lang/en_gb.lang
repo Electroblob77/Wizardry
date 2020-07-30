@@ -1505,6 +1505,8 @@ config.ebwizardry.blink_effect=Blink Effect
 config.ebwizardry.blink_effect.tooltip=Whether to use the screen blink effect for teleportation spells.
 config.ebwizardry.spellcasting_animations=Spellcasting Animations
 config.ebwizardry.spellcasting_animations.tooltip=Whether to use custom animations for players casting spells. Disable this option if it conflicts with other mods that add player animations.
+config.ebwizardry.donation_perk_element=Donation Perk Element
+config.ebwizardry.donation_perk_element.tooltip=The element of the flying companion orb rendered on donor and contributor players, leave empty to disable the effect. If you're one of them, this setting will change how all players see you (if not, it won't do anything).
 
 config.ebwizardry.category.commands=Command Settings
 config.ebwizardry.category.commands.tooltip=Configure wizardry's commands
