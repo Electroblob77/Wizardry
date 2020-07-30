@@ -30,7 +30,7 @@ In addition, I'd like to thank the following individuals for their contributions
 
 - Spanish: MadWrist, Alsentar
 - Mexican Spanish: MadWrist
-- Russian: VilagVil, kellixon, bigenergy
+- Russian: VilagVil, kellixon, bigenergy, MugGod2
 - French: Hahdrim
 - Brazilian Portuguese: lorrampi
 - Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
