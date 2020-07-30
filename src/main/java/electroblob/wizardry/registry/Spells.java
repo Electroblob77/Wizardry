@@ -241,6 +241,7 @@ public final class Spells {
 	// Wizardry 4.3 spells
 
 	public static final Spell blinding_flash = placeholder();
+	public static final Spell mark_sacrifice = placeholder();
 
 	public static final Spell stormcloud = placeholder();
 	public static final Spell fangs = placeholder();
@@ -452,6 +453,7 @@ public final class Spells {
 		// Wizardry 4.3 spells
 
 		registry.register(new BlindingFlash());
+		registry.register(new MarkSacrifice());
 
 		registry.register(new Stormcloud());
 		registry.register(new Fangs());

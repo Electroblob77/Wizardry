@@ -493,7 +493,7 @@ public class ItemArtefact extends Item {
 	}
 
 	@SubscribeEvent
-	public static void onSpellCastPostEvent(SpellCastEvent.Pre event){
+	public static void onSpellCastPostEvent(SpellCastEvent.Post event){
 
 		if(event.getCaster() instanceof EntityPlayer){
 

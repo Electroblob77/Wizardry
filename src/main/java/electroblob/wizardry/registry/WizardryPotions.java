@@ -55,6 +55,7 @@ public final class WizardryPotions {
 	public static final Potion curse_of_undeath = placeholder();
 	public static final Potion containment = placeholder();
 	public static final Potion frost_step = placeholder();
+	public static final Potion mark_of_sacrifice = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given potion, then registers it with the given registry. Use
@@ -189,6 +190,9 @@ public final class WizardryPotions {
 		registerPotion(registry, "containment", new PotionContainment(true, 0x7988cc));
 
 		registerPotion(registry, "frost_step", new PotionFrostStep(false, 0).setBeneficial());
+
+		registerPotion(registry, "mark_of_sacrifice", new PotionMagicEffect(true, 0xe90e48,
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mark_of_sacrifice.png")));
 
 	}
 
