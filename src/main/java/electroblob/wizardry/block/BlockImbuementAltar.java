@@ -1,5 +1,7 @@
 package electroblob.wizardry.block;
 
+import electroblob.wizardry.item.ItemWizardArmour;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
@@ -148,6 +150,11 @@ public class BlockImbuementAltar extends Block implements ITileEntityProvider {
 			}
 
 			((TileEntityImbuementAltar)tileEntity).setStack(ItemStack.EMPTY);
+
+			if(currentStack.getItem() instanceof ItemWizardArmour && ((ItemWizardArmour)currentStack.getItem()).element != null){
+				// Not perfect since we don't know if the player actually imbued the armour, but it's good enough for now
+				WizardryAdvancementTriggers.create_elemental_armour.triggerFor(player);
+			}
 		}
 
 		return true;

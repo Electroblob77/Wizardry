@@ -1,0 +1,19 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:create_elemental_armour"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:create_elemental_armour.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:wizard_hat_lightning"
+        }
+    },
+    "parent": "ebwizardry:restore_imbuement_altar",
+    "criteria": {
+        "criteria_0": {
+            "trigger": "ebwizardry:create_elemental_armour"
+        }
+    }
+}

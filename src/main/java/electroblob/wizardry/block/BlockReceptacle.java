@@ -3,9 +3,7 @@ package electroblob.wizardry.block;
 import com.google.common.collect.Maps;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.ItemSpectralDust;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardrySounds;
-import electroblob.wizardry.registry.WizardryTabs;
+import electroblob.wizardry.registry.*;
 import electroblob.wizardry.tileentity.TileEntityReceptacle;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -13,6 +11,7 @@ import net.minecraft.block.BlockTorch;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +26,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
@@ -196,6 +196,17 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 					ParticleBuilder.create(ParticleBuilder.Type.DUST).pos(centre.x + x, centre.y + y, centre.z + z)
 							.vel(x * -0.03, 0.02, z * -0.03).time(24 + rand.nextInt(8)).clr(colours[1]).fade(colours[2]).spawn(world);
 				}
+			}
+		}
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack){
+		if(placer instanceof EntityPlayer){
+			BlockPos centre = pos.offset(world.getBlockState(pos).getValue(FACING).getOpposite());
+			if(world.getBlockState(centre).getBlock() == WizardryBlocks.imbuement_altar
+					&& Arrays.stream(EnumFacing.HORIZONTALS).allMatch(f -> world.getBlockState(centre.offset(f)).getBlock() == WizardryBlocks.receptacle)){
+				WizardryAdvancementTriggers.restore_imbuement_altar.triggerFor((EntityPlayer)placer);
 			}
 		}
 	}

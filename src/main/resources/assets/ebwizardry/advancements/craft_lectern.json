@@ -1,0 +1,86 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:craft_lectern"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:craft_lectern.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:spruce_lectern"
+        }
+    },
+    "parent": "ebwizardry:find_library_ruins",
+    "criteria": {
+        "oak": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:oak_lectern"
+                    }
+                ]
+            }
+        },
+        "spruce": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:spruce_lectern"
+                    }
+                ]
+            }
+        },
+        "birch": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:birch_lectern"
+                    }
+                ]
+            }
+        },
+        "jungle": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:jungle_lectern"
+                    }
+                ]
+            }
+        },
+        "acacia": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:acacia_lectern"
+                    }
+                ]
+            }
+        },
+        "dark_oak": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "ebwizardry:dark_oak_lectern"
+                    }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "oak",
+            "spruce",
+            "birch",
+            "jungle",
+            "acacia",
+            "dark_oak"
+        ]
+    ]
+}
