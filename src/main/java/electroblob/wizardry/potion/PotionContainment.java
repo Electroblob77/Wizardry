@@ -96,7 +96,7 @@ public class PotionContainment extends PotionMagicEffect {
 
 			EntityUtils.undoGravity(target);
 			target.addVelocity(0.35 * Math.signum(x - target.posX), 0.35 * Math.signum(y - target.posY), 0.35 * Math.signum(z - target.posZ));
-			target.setPositionAndUpdate(x, y, z);
+			target.setPositionAndUpdate(x, y, z); // FIXME: This line must be causing the server rubberbanding, not sure why
 			// Player motion is handled on that player's client so needs packets
 			if(target instanceof EntityPlayerMP){
 				((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
