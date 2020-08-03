@@ -352,14 +352,6 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 
-		// Experimental animation feature
-//		if(event.getEntityLiving().isHandActive() && event.getEntityLiving().getActiveItemStack().getItemUseAction() == WizardryUtilities.POINT){
-//			event.getEntityLiving().isSwingInProgress = true;
-//			event.getEntityLiving().swingProgress = 1f;
-//			event.getEntityLiving().prevSwingProgress = 1;
-//			event.getEntityLiving().swingingHand = event.getEntityLiving().getActiveHand();
-//		}
-
 		if(event.getEntityLiving().world.isRemote){
 
 			// Client-side continuous spell casting for NPCs
@@ -379,10 +371,10 @@ public final class WizardryEventHandler {
 								// TODO: This implementation of modifiers relies on them being accessible client-side.
 								// 		 Right now that doesn't matter because NPCs don't use modifiers, but they might in future
 								((EntityLiving)event.getEntity()).getAttackTarget(), modifiers);
+
+						((ISpellCaster)event.getEntity()).setSpellCounter(count + 1);
 					}
 				}
-
-				((ISpellCaster)event.getEntity()).setSpellCounter(count + 1);
 			}
 		}
 	}

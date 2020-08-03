@@ -119,7 +119,8 @@ public class Intimidate extends SpellAreaEffect {
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.fear)
+		// No need to do this every tick either
+		if(event.getEntity().ticksExisted % 50 == 0 && event.getEntityLiving().isPotionActive(WizardryPotions.fear)
 				&& event.getEntityLiving() instanceof EntityCreature){
 
 			NBTTagCompound entityNBT = event.getEntityLiving().getEntityData();

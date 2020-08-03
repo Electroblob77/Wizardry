@@ -336,6 +336,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 */
 	private void updateImbuedItems(){
 
+		// FIXME: Iterating through the entire inventory each tick is an AWFUL way of doing this, and is super-slow!
+		//        Change the imbuement durations map to be ItemStack -> Integer and just decrement them, adding entries
+		//		  whenever an item with an imbuement enters the inventory and removing them when the time expires.
+
 		Set<Imbuement> activeImbuements = new HashSet<Imbuement>();
 
 		// For each item in the player's inventory

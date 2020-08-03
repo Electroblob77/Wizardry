@@ -114,7 +114,8 @@ public class PotionContainment extends PotionMagicEffect {
 
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
-		if(event.getEntityLiving().getEntityData().hasKey(ENTITY_TAG)
+		// This is LAST-RESORT CLEANUP. It does NOT need checking every tick! We always check for the actual potion anyway.
+		if(event.getEntity().ticksExisted % 20 == 0 && event.getEntityLiving().getEntityData().hasKey(ENTITY_TAG)
 				&& !event.getEntityLiving().isPotionActive(WizardryPotions.containment)){
 			event.getEntityLiving().getEntityData().removeTag(ENTITY_TAG);
 		}

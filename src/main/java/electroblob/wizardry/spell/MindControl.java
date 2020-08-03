@@ -196,7 +196,9 @@ public class MindControl extends SpellRay {
 		// more efficient (because it only fires when the entity tries to set a target)
 		// Of course, in survival this code is unlikely to be used much because the entity will always try to target the
 		// player and hence will rarely have no target.
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving){
+		// No need to do it every tick either!
+		if(event.getEntity().ticksExisted % 50 == 0 && event.getEntityLiving().isPotionActive(WizardryPotions.mind_control)
+				&& event.getEntityLiving() instanceof EntityLiving){
 			
 			EntityLiving entity = (EntityLiving)event.getEntityLiving();
 			
