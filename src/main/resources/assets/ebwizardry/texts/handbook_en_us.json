@@ -86,6 +86,14 @@
 			"width": 110,
 			"height": 67
 		},
+		"library_ruins": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins_picture.png",
+			"caption": "Library Ruins",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 57
+		},
 		"tiers": {
 			"location": "ebwizardry:textures/gui/handbook/pictures/tiers_picture.png",
 			"caption": "The 4 Tiers Of Wand",
@@ -341,7 +349,7 @@
 
 				"Scrolls, on the other hand, serve a different purpose: right-clicking whilst holding one will cast the spell that is bound to it, destroying the scroll in the process. Like spell books, scrolls can be found throughout the world, but you can also make them yourself (see @enchanting_scrolls Enchanting Scrolls@).",
 
-				"Scrolls are quite useful when you need to use a spell once or twice on a particular quest but don't want it to take up a slot on your @wands wand@. It should be noted, however, that they are an inefficient method of casting spells compared to using a wand.",
+				"Scrolls are quite useful when you need to use a spell once or twice on a particular quest but don't want it to take up a slot on your @wands wand@. They also have the advantage of being able to instantly cast spells that would normally require a charge-up period. It should be noted, however, that they are an inefficient method of casting spells compared to using a wand.",
 
 				"To the untrained eye, the magical runes with which spells are written are unreadable. In order to identify a spell, you could, of course, cast it and see what happens - though doing so may cause unwanted side-effects, and many spells need certain conditions in order to work. Futhermore, there is always a chance of misreading an unknown spell when casting, with potentially dangerous consequences depending on how powerful the spell is. A safer and more reliable option is to use a scroll of identification, which can be found in chests or purchased from a wizard. Right-clicking whilst holding one will identify the first unknown spell book or scroll on your hotbar, consuming the scroll of identification in the process."
 			]
@@ -535,6 +543,21 @@
 						"Due to their great arcane power and significance, not to mention the riches within, these structures are particularly attractive to any aspiring wizard - but be cautious. There are numerous reports of wizards becoming trapped within containment fields and slowly being driven insane, perhaps by claustrophobia. A growing number, however, believe such occurences to be a deliberate part of the shrine's protective magic, and that the wizards trapped within are in fact being controlled to protect the structure. A chilling prospect, surely, for anyone who dares to venture near..."
 					]
 				},
+				"library_ruins": {
+					"title": "Library Ruins",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:find_library_ruins"
+					],
+					"text": [
+
+						"Wizards tend to accumulate rather a lot of spell books during their lifetime, and it is therefore usual for a wizard to build a library to store their collection. Some particularly secretive wizards have even been known to store their arcane knowledge underground, away from prying eyes. However, a library requires upkeep, and if its owner dies without an apprentice to inherit the books, the structure will quickly fall into disrepair. Thousands of years of magic use have seen more and more libraries left abandoned in this way, and you may perhaps stumble across one when exploring. They are often worth searching for any spell books or other items that might have survived the ravages of time.",
+
+						"#image library_ruins",
+
+						"Libraries are not just used for storing books, though. Wizards of the past harnessed the power of the imbuement altar, used to perform elemental imbuement rituals on magical materials. The positioning of the altar is a precise and difficult art as it must be aligned according to particular celestial movements and local mana fluctuations. The practice of building them has become much rarer in recent history, mainly because once built, a solid rock altar lasts for centuries, so there is little need for new ones. Instead, most wizards find and repair an existing altar for when they need to perform imbuement rituals - and library ruins are the perfect place to look."
+					]
+				},
 				"creatures": {
 					"title": "Magical Creatures",
 					"include_in_contents": "magical_world_subsections",
@@ -543,7 +566,9 @@
 					],
 					"text": [
 
-						"Besides wizards, a multitude of other creatures also use magic. Many of these creatures are arcane in origin, and most can be summoned using certain magical @spells spells@. One may encounter these creatures guarding an @obelisks obelisk@, or perhaps a powerful summoner. Lesser arcane beings are even found occasionally in the wilderness."
+						"Besides wizards, a multitude of other creatures also use magic. Many of these creatures are arcane in origin, and most can be summoned using certain magical @spells spells@. One may encounter these creatures guarding an @obelisks obelisk@, or perhaps a powerful summoner. Lesser arcane beings are even found occasionally in the wilderness.",
+
+						"A notable example is the remnant, a spirit-like being that forms naturally from the traces left behind by powerful magic and typically takes on one of the seven arcane @elements@. On their own, they are little more than a nuisance, but a swarm can quickly overwhelm the unprepared adventurer, and their innate resistance to magic makes it advisable to carry a bow or other ranged weapon. Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties."
 					]
 				},
 				"artefacts": {
