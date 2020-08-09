@@ -235,6 +235,7 @@ public final class WizardryItems {
 	public static final Item ring_earth_melee = placeholder();
 	public static final Item ring_earth_biome = placeholder();
 	public static final Item ring_full_moon = placeholder();
+	public static final Item ring_evoker = placeholder();
 	public static final Item ring_extraction = placeholder();
 	public static final Item ring_mana_return = placeholder();
 	public static final Item ring_blockwrangler = placeholder();
@@ -600,6 +601,7 @@ public final class WizardryItems {
 		registerItem(registry, "ring_earth_melee", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_earth_biome", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_full_moon", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
+		registerItem(registry, "ring_evoker", 				new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_extraction", 			new ItemArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_mana_return", 			new ItemArtefact(EnumRarity.EPIC, ItemArtefact.Type.RING));
 		registerItem(registry, "ring_blockwrangler", 			new ItemArtefact(EnumRarity.RARE, ItemArtefact.Type.RING));

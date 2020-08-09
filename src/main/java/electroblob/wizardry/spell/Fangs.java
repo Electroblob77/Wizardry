@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
@@ -63,7 +64,10 @@ public class Fangs extends Spell {
 
 	protected boolean spawnFangs(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, SpellModifiers modifiers){
 
-		if(direction.lengthSquared() == 0) return false; // Prevent casting directly down/up
+		boolean defensiveCircle = caster instanceof EntityPlayer && caster.isSneaking()
+				&& ItemArtefact.isArtefactActive((EntityPlayer)caster, WizardryItems.ring_evoker);
+
+		if(!defensiveCircle && direction.lengthSquared() == 0) return false; // Prevent casting directly down/up
 
 		boolean flag = false;
 
@@ -80,25 +84,46 @@ public class Fangs extends Spell {
 
 		}else{
 
-			int count = (int)(getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade));
-			float yaw = (float)MathHelper.atan2(direction.z, direction.x); // Yes, this is the right way round!
+			if(defensiveCircle){
 
-			for(int i = 0; i < count; i++){
+				for(int i = 0; i < 5; i++){
+					float yaw = i * (float)Math.PI * 0.4f;
+					flag |= this.spawnFangsAt(world, caster, modifiers, yaw, 0, origin.add(MathHelper.cos(yaw) * 1.5, 0, MathHelper.sin(yaw) * 1.5));
+				}
 
-				Vec3d vec = origin.add(direction.scale((i + 1) * FANG_SPACING));
-				// Not exactly the same as evokers but it's how constructs work so it kinda fits
-				Integer y = BlockUtils.getNearestFloor(world, new BlockPos(vec), 5);
+				for(int k = 0; k < 8; k++){
+					float yaw = k * (float)Math.PI * 2f / 8f + ((float)Math.PI * 2f / 5f);
+					flag |= this.spawnFangsAt(world, caster, modifiers, yaw, 3, origin.add(MathHelper.cos(yaw) * 2.5, 0, MathHelper.sin(yaw) * 2.5));
+				}
 
-				if(y != null){
-					EntityEvokerFangs fangs = new EntityEvokerFangs(world, vec.x, y, vec.z, yaw, i, caster); // null is fine here
-					fangs.getEntityData().setFloat(SpellThrowable.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
-					world.spawnEntity(fangs);
-					flag = true;
+			}else{
+
+				int count = (int)(getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade));
+				float yaw = (float)MathHelper.atan2(direction.z, direction.x); // Yes, this is the right way round!
+
+				for(int i = 0; i < count; i++){
+					Vec3d vec = origin.add(direction.scale((i + 1) * FANG_SPACING));
+					flag |= spawnFangsAt(world, caster, modifiers, yaw, i, vec);
 				}
 			}
 		}
 
 		return flag;
+	}
+
+	private boolean spawnFangsAt(World world, @Nullable EntityLivingBase caster, SpellModifiers modifiers, float yaw, int delay, Vec3d vec){
+
+		// Not exactly the same as evokers but it's how constructs work so it kinda fits
+		Integer y = BlockUtils.getNearestFloor(world, new BlockPos(vec), 5);
+
+		if(y != null){
+			EntityEvokerFangs fangs = new EntityEvokerFangs(world, vec.x, y, vec.z, yaw, delay, caster); // null is fine here
+			fangs.getEntityData().setFloat(SpellThrowable.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
+			world.spawnEntity(fangs);
+			return true;
+		}
+
+		return false;
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
