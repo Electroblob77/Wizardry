@@ -255,6 +255,7 @@
 	"spell.lightning_web.loop": 		{"category": "spells", "sounds": ["ebwizardry:lightning_ray_loop"]},
 	"spell.lightning_web.end": 			{"category": "spells", "sounds": ["ebwizardry:lightning_ray_end"]},
 	"spell.magic_missile": 				{"category": "spells", "sounds": ["ebwizardry:magic"]},
+	"spell.mark_sacrifice": 			{"category": "spells", "sounds": ["mob/guardian/curse"]},
 	"spell.metamorphosis": 				{"category": "spells", "sounds": ["mob/illusion_illager/prepare_mirror"]},
 	"spell.meteor": 					{"category": "spells", "sounds": ["mob/illusion_illager/prepare_blind"]},
 	"spell.mind_control": 				{"category": "spells", "sounds": ["mob/guardian/elder_death"]},
