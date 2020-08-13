@@ -28,6 +28,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Class responsible for registering all of wizardry's item and block models.
  * 
@@ -40,15 +43,14 @@ public final class WizardryModels {
 
 	private WizardryModels(){} // No instances!
 
+	/** Keeps track of all items whose models have been registered manually to exclude them from automatic registry of
+	 * standard item models. Internal only, this gets cleared once model registry is complete. */
+	private static final List<Item> registeredItems = new ArrayList<>();
+
 	@SubscribeEvent
 	public static void register(ModelRegistryEvent event){
 
 		// ItemBlocks
-
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.arcane_workbench));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.crystal_ore));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.crystal_flower));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.transportation_stone));
 
 		ModelLoader.setCustomStateMapper(WizardryBlocks.crystal_block, new StateMap.Builder()
 				.withName(BlockCrystal.ELEMENT).withSuffix("_crystal_block").build());
@@ -74,23 +76,6 @@ public final class WizardryModels {
 		// Explanation for all this here -> https://github.com/TheGreyGhost/MinecraftByExample/tree/master/src/main/java/minecraftbyexample/mbe05_block_dynamic_block_model2
 		ModelLoaderRegistry.registerLoader(new ModelLoaderBookshelf());
 
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.oak_bookshelf));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.spruce_bookshelf));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.birch_bookshelf));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.jungle_bookshelf));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.acacia_bookshelf));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_bookshelf));
-
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.oak_lectern));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.spruce_lectern));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.birch_lectern));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.jungle_lectern));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.acacia_lectern));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.dark_oak_lectern));
-
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.receptacle));
-		registerItemModel(Item.getItemFromBlock(WizardryBlocks.imbuement_altar));
-
 		// Items
 
 		registerMultiTexturedModel((ItemCrystal)WizardryItems.magic_crystal);
@@ -100,11 +85,9 @@ public final class WizardryModels {
 		registerWandModel(WizardryItems.advanced_wand);
 		registerWandModel(WizardryItems.master_wand);
 
-		registerItemModel(WizardryItems.spell_book);
+		registerItemModel(WizardryItems.spell_book); // Also need this or auto-registry will ignore it
 		// Wildcard registered for wizard trades.
 		registerItemModel(WizardryItems.spell_book, OreDictionary.WILDCARD_VALUE, "normal");
-		registerItemModel(WizardryItems.arcane_tome);
-		registerItemModel(WizardryItems.wizard_handbook);
 
 		registerWandModel(WizardryItems.novice_fire_wand);
 		registerWandModel(WizardryItems.novice_ice_wand);
@@ -138,169 +121,16 @@ public final class WizardryModels {
 		registerWandModel(WizardryItems.master_sorcery_wand);
 		registerWandModel(WizardryItems.master_healing_wand);
 
-		registerItemModel(WizardryItems.spectral_sword);
-		registerItemModel(WizardryItems.spectral_pickaxe);
-		registerItemModel(WizardryItems.spectral_bow);
-
-		registerItemModel(WizardryItems.small_mana_flask);
-		registerItemModel(WizardryItems.medium_mana_flask);
-		registerItemModel(WizardryItems.large_mana_flask);
-
-		registerItemModel(WizardryItems.crystal_shard);
-		registerItemModel(WizardryItems.grand_crystal);
-
-		registerItemModel(WizardryItems.astral_diamond);
-
-		registerItemModel(WizardryItems.purifying_elixir);
-
-		registerItemModel(WizardryItems.storage_upgrade);
-		registerItemModel(WizardryItems.siphon_upgrade);
-		registerItemModel(WizardryItems.condenser_upgrade);
-		registerItemModel(WizardryItems.range_upgrade);
-		registerItemModel(WizardryItems.duration_upgrade);
-		registerItemModel(WizardryItems.cooldown_upgrade);
-		registerItemModel(WizardryItems.blast_upgrade);
-		registerItemModel(WizardryItems.attunement_upgrade);
-		registerItemModel(WizardryItems.melee_upgrade);
-
-		registerItemModel(WizardryItems.flaming_axe);
-		registerItemModel(WizardryItems.frost_axe);
-
-		registerItemModel(WizardryItems.firebomb);
-		registerItemModel(WizardryItems.poison_bomb);
-		registerItemModel(WizardryItems.smoke_bomb);
-		registerItemModel(WizardryItems.spark_bomb);
-
-		registerItemModel(WizardryItems.blank_scroll);
-		registerItemModel(WizardryItems.scroll);
-		registerItemModel(WizardryItems.identification_scroll);
-
-		registerItemModel(WizardryItems.armour_upgrade);
-
-		registerItemModel(WizardryItems.magic_silk);
-
 		registerMultiTexturedModel((ItemSpectralDust)WizardryItems.spectral_dust);
 
-		registerItemModel(WizardryItems.wizard_hat);
-		registerItemModel(WizardryItems.wizard_robe);
-		registerItemModel(WizardryItems.wizard_leggings);
-		registerItemModel(WizardryItems.wizard_boots);
+		// Automatic item model registry
+		for(Item item : Item.REGISTRY){
+			if(!registeredItems.contains(item) && item.getRegistryName().getNamespace().equals(Wizardry.MODID)){
+				registerItemModel(item); // Standard item model
+			}
+		}
 
-		registerItemModel(WizardryItems.wizard_hat_fire);
-		registerItemModel(WizardryItems.wizard_robe_fire);
-		registerItemModel(WizardryItems.wizard_leggings_fire);
-		registerItemModel(WizardryItems.wizard_boots_fire);
-
-		registerItemModel(WizardryItems.wizard_hat_ice);
-		registerItemModel(WizardryItems.wizard_robe_ice);
-		registerItemModel(WizardryItems.wizard_leggings_ice);
-		registerItemModel(WizardryItems.wizard_boots_ice);
-
-		registerItemModel(WizardryItems.wizard_hat_lightning);
-		registerItemModel(WizardryItems.wizard_robe_lightning);
-		registerItemModel(WizardryItems.wizard_leggings_lightning);
-		registerItemModel(WizardryItems.wizard_boots_lightning);
-
-		registerItemModel(WizardryItems.wizard_hat_necromancy);
-		registerItemModel(WizardryItems.wizard_robe_necromancy);
-		registerItemModel(WizardryItems.wizard_leggings_necromancy);
-		registerItemModel(WizardryItems.wizard_boots_necromancy);
-
-		registerItemModel(WizardryItems.wizard_hat_earth);
-		registerItemModel(WizardryItems.wizard_robe_earth);
-		registerItemModel(WizardryItems.wizard_leggings_earth);
-		registerItemModel(WizardryItems.wizard_boots_earth);
-
-		registerItemModel(WizardryItems.wizard_hat_sorcery);
-		registerItemModel(WizardryItems.wizard_robe_sorcery);
-		registerItemModel(WizardryItems.wizard_leggings_sorcery);
-		registerItemModel(WizardryItems.wizard_boots_sorcery);
-
-		registerItemModel(WizardryItems.wizard_hat_healing);
-		registerItemModel(WizardryItems.wizard_robe_healing);
-		registerItemModel(WizardryItems.wizard_leggings_healing);
-		registerItemModel(WizardryItems.wizard_boots_healing);
-
-		registerItemModel(WizardryItems.spectral_helmet);
-		registerItemModel(WizardryItems.spectral_chestplate);
-		registerItemModel(WizardryItems.spectral_leggings);
-		registerItemModel(WizardryItems.spectral_boots);
-
-		registerItemModel(WizardryItems.lightning_hammer);
-
-		registerItemModel(WizardryItems.ring_condensing);
-		registerItemModel(WizardryItems.ring_siphoning);
-		registerItemModel(WizardryItems.ring_battlemage);
-		registerItemModel(WizardryItems.ring_combustion);
-		registerItemModel(WizardryItems.ring_fire_melee);
-		registerItemModel(WizardryItems.ring_fire_biome);
-		registerItemModel(WizardryItems.ring_disintegration);
-		registerItemModel(WizardryItems.ring_ice_melee);
-		registerItemModel(WizardryItems.ring_ice_biome);
-		registerItemModel(WizardryItems.ring_arcane_frost);
-		registerItemModel(WizardryItems.ring_shattering);
-		registerItemModel(WizardryItems.ring_lightning_melee);
-		registerItemModel(WizardryItems.ring_storm);
-		registerItemModel(WizardryItems.ring_seeking);
-		registerItemModel(WizardryItems.ring_hammer);
-		registerItemModel(WizardryItems.ring_soulbinding);
-		registerItemModel(WizardryItems.ring_leeching);
-		registerItemModel(WizardryItems.ring_necromancy_melee);
-		registerItemModel(WizardryItems.ring_mind_control);
-		registerItemModel(WizardryItems.ring_poison);
-		registerItemModel(WizardryItems.ring_earth_melee);
-		registerItemModel(WizardryItems.ring_earth_biome);
-		registerItemModel(WizardryItems.ring_full_moon);
-		registerItemModel(WizardryItems.ring_extraction);
-		registerItemModel(WizardryItems.ring_mana_return);
-		registerItemModel(WizardryItems.ring_blockwrangler);
-		registerItemModel(WizardryItems.ring_conjurer);
-		registerItemModel(WizardryItems.ring_defender);
-		registerItemModel(WizardryItems.ring_paladin);
-		registerItemModel(WizardryItems.ring_interdiction);
-
-		registerItemModel(WizardryItems.amulet_arcane_defence);
-		registerItemModel(WizardryItems.amulet_warding);
-		registerItemModel(WizardryItems.amulet_wisdom);
-		registerItemModel(WizardryItems.amulet_fire_protection);
-		registerItemModel(WizardryItems.amulet_fire_cloaking);
-		registerItemModel(WizardryItems.amulet_ice_immunity);
-		registerItemModel(WizardryItems.amulet_ice_protection);
-		registerItemModel(WizardryItems.amulet_potential);
-		registerItemModel(WizardryItems.amulet_channeling);
-		registerItemModel(WizardryItems.amulet_lich);
-		registerItemModel(WizardryItems.amulet_wither_immunity);
-		registerItemModel(WizardryItems.amulet_glide);
-		registerItemModel(WizardryItems.amulet_banishing);
-		registerItemModel(WizardryItems.amulet_anchoring);
-		registerItemModel(WizardryItems.amulet_recovery);
-		registerItemModel(WizardryItems.amulet_transience);
-		registerItemModel(WizardryItems.amulet_resurrection);
-		registerItemModel(WizardryItems.amulet_auto_shield);
-		registerItemModel(WizardryItems.amulet_absorption);
-
-		registerItemModel(WizardryItems.charm_haggler);
-		registerItemModel(WizardryItems.charm_experience_tome);
-		registerItemModel(WizardryItems.charm_move_speed);
-		registerItemModel(WizardryItems.charm_spell_discovery);
-		registerItemModel(WizardryItems.charm_auto_smelt);
-		registerItemModel(WizardryItems.charm_lava_walking);
-		registerItemModel(WizardryItems.charm_storm);
-		registerItemModel(WizardryItems.charm_minion_health);
-		registerItemModel(WizardryItems.charm_minion_variants);
-		registerItemModel(WizardryItems.charm_undead_helmets);
-		registerItemModel(WizardryItems.charm_hunger_casting);
-		registerItemModel(WizardryItems.charm_flight);
-		registerItemModel(WizardryItems.charm_growth);
-		registerItemModel(WizardryItems.charm_abseiling);
-		registerItemModel(WizardryItems.charm_silk_touch);
-		registerItemModel(WizardryItems.charm_stop_time);
-		registerItemModel(WizardryItems.charm_light);
-		registerItemModel(WizardryItems.charm_transportation);
-		registerItemModel(WizardryItems.charm_black_hole);
-		registerItemModel(WizardryItems.charm_mount_teleporting);
-		registerItemModel(WizardryItems.charm_feeding);
-
+		registeredItems.clear(); // Might as well clean this up
 	}
 
 	@SubscribeEvent
@@ -340,6 +170,7 @@ public final class WizardryModels {
 		ModelBakery.registerItemVariants(item, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 		// Assigns the model for all metadata values
 		ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		registeredItems.add(item);
 	}
 
 	/**
@@ -353,6 +184,7 @@ public final class WizardryModels {
 			ModelBakery.registerItemVariants(item, new ModelResourceLocation("ebwizardry:festive_wand", "inventory"));
 			// Assigns the model for all metadata values
 			ModelLoader.setCustomMeshDefinition(item, s -> new ModelResourceLocation("ebwizardry:festive_wand", "inventory"));
+			registeredItems.add(item);
 		}else{
 			registerItemModel(item);
 		}
@@ -376,6 +208,8 @@ public final class WizardryModels {
 						new ModelResourceLocation(item.getModelName(stack), "inventory"));
 			}
 		}
+
+		registeredItems.add(item);
 	}
 
 	/**
@@ -386,6 +220,7 @@ public final class WizardryModels {
 	private static void registerItemModel(Item item, int metadata, String variant){
 		ModelLoader.setCustomModelResourceLocation(item, metadata,
 				new ModelResourceLocation(item.getRegistryName(), variant));
+		registeredItems.add(item); // Still ought to do this in case I ever use this method alone for an item
 	}
 
 }
