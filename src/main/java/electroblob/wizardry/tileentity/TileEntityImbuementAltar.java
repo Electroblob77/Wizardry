@@ -140,7 +140,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
 			if(Arrays.stream(elements).distinct().count() == 1 && elements[0] != null){ // All the same element
 				displayElement = elements[0];
-				return new ItemStack(stack.getItem(), elements[0].ordinal());
+				return new ItemStack(stack.getItem(), stack.getCount(), elements[0].ordinal());
 			}
 		}
 
