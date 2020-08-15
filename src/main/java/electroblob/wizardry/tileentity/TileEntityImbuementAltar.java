@@ -4,11 +4,13 @@ import electroblob.wizardry.block.BlockReceptacle;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ItemWizardArmour;
+import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -128,6 +130,17 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 				((IManaStoringItem)result.getItem()).setMana(result, ((ItemWizardArmour)stack.getItem()).getMana(stack));
 
 				return result;
+			}
+		}
+
+		if((stack.getItem() == WizardryItems.magic_crystal || stack.getItem() == Item.getItemFromBlock(WizardryBlocks.crystal_block))
+				&& stack.getMetadata() == 0){
+
+			Element[] elements = getReceptacleElements();
+
+			if(Arrays.stream(elements).distinct().count() == 1 && elements[0] != null){ // All the same element
+				displayElement = elements[0];
+				return new ItemStack(stack.getItem(), elements[0].ordinal());
 			}
 		}
 
