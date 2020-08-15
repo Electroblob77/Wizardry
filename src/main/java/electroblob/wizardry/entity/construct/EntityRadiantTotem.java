@@ -101,7 +101,7 @@ public class EntityRadiantTotem extends EntityScaledConstruct {
 
 			EntityLivingBase target = nearby.remove(0);
 
-			if(EntityUtils.isLiving(target)){
+			if(EntityUtils.isLiving(target) && isValidTarget(target)){
 
 				if(target.ticksExisted % target.maxHurtResistantTime == 1){
 
