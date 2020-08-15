@@ -628,6 +628,7 @@ entity.ebwizardry\:lightning_pulse.name=Lightning Pulse
 entity.ebwizardry\:stormcloud.name=Stormcloud
 entity.ebwizardry\:zombie_spawner.name=Zombie Spawner
 entity.ebwizardry\:boulder.name=Boulder
+entity.ebwizardry\:radiant_totem.name=Radiant Totem
 
 itemGroup.ebwizardry=Wizardry
 itemGroup.ebwizardryspells=Spells
