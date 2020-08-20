@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/arcane_workbench.png",
 			"caption": "\u0427\u0430\u0440\u043e\u0434\u0435\u0439\u0441\u043a\u0438\u0439 \u0421\u0442\u043e\u043b",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/ore_picture.png",
+			"location": "ebwizardry:textures/gui/crystal_ore.png",
 			"caption": "\u041a\u0440\u0438\u0441\u0442\u0430\u043b\u044c\u043d\u0430\u044f \u0420\u0443\u0434\u0430",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/flower_picture.png",
+			"location": "ebwizardry:textures/gui/crystal_flower.png",
 			"caption": "\u041a\u0440\u0438\u0441\u0442\u0430\u043b\u044c\u043d\u044b\u0439 \u0426\u0432\u0435\u0442\u043e\u043a\n",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/tower_picture.png",
+			"location": "ebwizardry:textures/gui/wizard_tower.png",
 			"caption": "\u0411\u0430\u0448\u043d\u044f Ma\u0433\u043e\u0432\n",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/armour_picture.png",
+			"location": "ebwizardry:textures/gui/wizard_armour.png",
 			"caption": "\u041e\u0434\u0435\u044f\u043d\u0438\u044f \u0412\u043e\u043b\u0448\u0435\u0431\u043d\u0438\u043a\u043e\u0432\n",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/obelisk.png",
 			"caption": "\u041e\u0431\u0435\u043b\u0438\u0441\u043a\n",
 			"u": 0,
 			"v": 0,
@@ -79,7 +79,7 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/shrine.png",
 			"caption": "\u0417\u0435\u043c\u043d\u043e\u0435 \u0421\u0432\u044f\u0442\u0438\u043b\u0438\u0449\u0435\n",
 			"u": 0,
 			"v": 0,
@@ -87,7 +87,7 @@
 			"height": 67
 		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/tiers.png",
 			"caption": "4 \u0423\u0440\u043e\u0432\u043d\u044f \u0416\u0435\u0437\u043b\u0430\n",
 			"u": 0,
 			"v": 0,
@@ -96,7 +96,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/elements_picture.png",
+			"location": "ebwizardry:textures/gui/elements.png",
 			"caption": "7 \u0422\u0430\u0439\u043d\u044b\u0445 \u042d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432\n",
 			"u": 0,
 			"v": 0,

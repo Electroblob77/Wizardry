@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench.png",
 			"caption": "The Arcane Workbench",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/ore_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_ore.png",
 			"caption": "Crystal Ore",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/flower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_flower.png",
 			"caption": "A Crystal Flower",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_tower.png",
 			"caption": "A Wizard's Tower",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/armour_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_armour.png",
 			"caption": "A Set Of Wizard Armour",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
 			"caption": "An Obelisk",
 			"u": 0,
 			"v": 0,
@@ -79,7 +79,7 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine.png",
 			"caption": "An Earth Shrine",
 			"u": 0,
 			"v": 0,
@@ -87,15 +87,23 @@
 			"height": 67
 		},
 		"library_ruins": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins.png",
 			"caption": "Library Ruins",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 57
 		},
+		"remnant": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/remnant.png",
+			"caption": "A Fire Remnant",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 73
+		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers.png",
 			"caption": "The 4 Tiers Of Wand",
 			"u": 0,
 			"v": 0,
@@ -104,7 +112,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/elements_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements.png",
 			"caption": "The 7 Arcane Elements",
 			"u": 0,
 			"v": 0,
@@ -568,7 +576,11 @@
 
 						"Besides wizards, a multitude of other creatures also use magic. Many of these creatures are arcane in origin, and most can be summoned using certain magical @spells spells@. One may encounter these creatures guarding an @obelisks obelisk@, or perhaps a powerful summoner. Lesser arcane beings are even found occasionally in the wilderness.",
 
-						"A notable example is the remnant, a spirit-like being that forms naturally from the traces left behind by powerful magic and typically takes on one of the seven arcane @elements@. On their own, they are little more than a nuisance, but a swarm can quickly overwhelm the unprepared adventurer, and their innate resistance to magic makes it advisable to carry a bow or other ranged weapon. Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties."
+						"A notable example is the remnant, a spirit-like being that forms naturally from the traces left behind by powerful magic and typically takes on one of the seven arcane @elements@. On their own, they are little more than a nuisance, but a swarm can quickly overwhelm the unprepared adventurer, and their innate resistance to magic makes it advisable to carry a bow or other ranged weapon.",
+
+						"#image remnant",
+
+						"Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties."
 					]
 				},
 				"artefacts": {
@@ -765,7 +777,7 @@
 
 				"Sound Effects:",
 
-				"- OhhWowProductions\n- fredzed\n- deleted_user_3277771\n- DiscoveryME\n- OGSoundFX",
+				"- OhhWowProductions\n- fredzed\n- deleted_user_3277771\n- DiscoveryME\n- OGSoundFX\n- leosalom\n- juskiddink",
 
 				"For more information, check out the @https://github.com/Electroblob77/Wizardry/wiki wiki@.",
 

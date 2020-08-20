@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/arcane_workbench.png",
 			"caption": "Mesa Arcana",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/ore_picture.png",
+			"location": "ebwizardry:textures/gui/crystal_ore.png",
 			"caption": "Mena de Cristal Magico",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/flower_picture.png",
+			"location": "ebwizardry:textures/gui/crystal_flower.png",
 			"caption": "Flor de Cristal",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/tower_picture.png",
+			"location": "ebwizardry:textures/gui/wizard_tower.png",
 			"caption": "Torre de mago",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/armour_picture.png",
+			"location": "ebwizardry:textures/gui/wizard_armour.png",
 			"caption": "Conjunto de Armadura de mago",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/obelisk.png",
 			"caption": "Obelisco",
 			"u": 0,
 			"v": 0,
@@ -79,7 +79,7 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/shrine.png",
 			"caption": "Santuario de la tierra",
 			"u": 0,
 			"v": 0,
@@ -87,7 +87,7 @@
 			"height": 67
 		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/tiers.png",
 			"caption": "Los 4 niveles en las Varitas",
 			"u": 0,
 			"v": 0,
@@ -96,7 +96,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/elements_picture.png",
+			"location": "ebwizardry:textures/gui/elements.png",
 			"caption": "Los 7 elementos Arcanos",
 			"u": 0,
 			"v": 0,
