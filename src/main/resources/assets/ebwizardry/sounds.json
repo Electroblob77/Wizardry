@@ -46,6 +46,8 @@
 	"entity.stormcloud.thunder": 		{"category": "spells", "sounds": ["ambient/weather/thunder1", "ambient/weather/thunder2", "ambient/weather/thunder3"]},
 	"entity.stormcloud.attack": 		{"category": "spells", "sounds": ["ebwizardry:arc1", "ebwizardry:arc2", "ebwizardry:arc3"]},
 	"entity.tornado.ambient": 			{"category": "spells", "sounds": ["ebwizardry:wind"]},
+	"entity.withering_totem.ambient": 	{"category": "spells", "sounds": ["ebwizardry:dark_aura_loop"]},
+	"entity.withering_totem.explode": 	{"category": "spells", "sounds": ["mob/wither/death"]},
 	"entity.zombie_spawner.spawn": 		{"category": "spells", "sounds": ["mob/guardian/elder_death"]},
 	
 	"entity.evil_wizard.ambient": 		{"category": "hostile", "sounds": ["mob/evocation_illager/idle1", "mob/evocation_illager/idle2", "mob/evocation_illager/idle3", "mob/evocation_illager/idle4"]},
@@ -341,6 +343,7 @@
 	"spell.whirlwind": 					{"category": "spells", "sounds": ["ebwizardry:ice"]},
 	"spell.wither": 					{"category": "spells", "sounds": ["mob/wither/hurt1", "mob/wither/hurt2", "mob/wither/hurt3", "mob/wither/hurt4"]},
 	"spell.wither_skull":				{"category": "spells", "sounds": ["mob/wither/shoot"]},
+	"spell.withering_totem": 			{"category": "spells", "sounds": ["ebwizardry:beam_start"]},
 	"spell.zombie_apocalypse.start": 	{"category": "spells", "sounds": ["ebwizardry:dark_aura_start"]},
 	"spell.zombie_apocalypse.loop": 	{"category": "spells", "sounds": ["ebwizardry:dark_aura_loop"]},
 	"spell.zombie_apocalypse.end": 		{"category": "spells", "sounds": ["ebwizardry:dark_aura_end"]},

@@ -244,6 +244,7 @@ public final class Spells {
 	public static final Spell mark_sacrifice = placeholder();
 
 	public static final Spell stormcloud = placeholder();
+	public static final Spell withering_totem = placeholder();
 	public static final Spell fangs = placeholder();
 	public static final Spell radiant_totem = placeholder();
 
@@ -456,6 +457,7 @@ public final class Spells {
 		registry.register(new MarkSacrifice());
 
 		registry.register(new Stormcloud());
+		registry.register(new WitheringTotem());
 		registry.register(new Fangs());
 		registry.register(new RadiantTotem());
 
