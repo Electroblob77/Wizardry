@@ -254,7 +254,7 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
 		if(button == indexButton){
 			currentSpell = Spells.none;
-			currentPage = 0;
+//			currentPage = 0;
 
 		}else if(button == locateButton){
 			// Close the GUI
