@@ -625,9 +625,11 @@
 
 						"#image remnant",
 
-						"Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties. A receptacle, crafted as shown, provides a convenient means of containing it. Receptacles may be placed atop a surface or affixed to a wall and right-clicked with spectral dust to fill them, acting as a soft light source. Right-clicking a filled receptacle empties it and retreives the dust.",
+						"Once slain, their spectral dust can be collected, which, besides emitting a colorful glow, has a variety of useful properties. A receptacle, crafted as shown, provides a convenient means of containing it.",
 
-						"#recipe receptacle"
+						"#recipe receptacle",
+
+						"Receptacles may be placed atop a surface or affixed to a wall and right-clicked with spectral dust to fill them, acting as a soft light source. Right-clicking a filled receptacle empties it and retreives the dust."
 					]
 				},
 				"artefacts": {
