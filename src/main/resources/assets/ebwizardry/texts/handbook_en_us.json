@@ -240,6 +240,39 @@
 		},
 		"spark_bomb": {
 			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+		"gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
 		}
 	},
 	
@@ -563,7 +596,19 @@
 
 						"#image library_ruins",
 
-						"Libraries are not just used for storing books, though. Wizards of the past harnessed the power of the imbuement altar, used to perform elemental imbuement rituals on magical materials. The positioning of the altar is a precise and difficult art as it must be aligned according to particular celestial movements and local mana fluctuations. The practice of building them has become much rarer in recent history, mainly because once built, a solid rock altar lasts for centuries, so there is little need for new ones. Instead, most wizards find and repair an existing altar for when they need to perform imbuement rituals - and library ruins are the perfect place to look."
+						"Libraries are not just used for storing books, though. Wizards of the past harnessed the power of the imbuement altar, used to perform elemental imbuement rituals on magical materials. The positioning of the altar is a precise and difficult art as it must be aligned according to particular celestial movements and local mana fluctuations. The practice of building them has become much rarer in recent history, mainly because once built, a solid rock altar lasts for centuries, so there is little need for new ones. Instead, most wizards find and repair an existing altar for when they need to perform imbuement rituals - and library ruins are the perfect place to look.",
+
+						"You, too, may at some point find it useful to construct your own library, which will of course require some bookshelves:",
+
+						"#recipe bookshelves",
+
+						"#recipe gilded_wood",
+
+						"These bookshelves are not mere furniture, however. Infusing the most potent magic crystals into your bookshelves allows effortless transfer of knowledge between them and a nearby @arcane_workbench arcane workbench@ - very handy as one's collection expands. Equally useful is a lectern:",
+
+						"#recipe lecterns",
+
+						"The tome that floats above a lectern gathers the knowledge from nearby spell books, allowing each to be perused at leisure without remembering its precise location."
 					]
 				},
 				"creatures": {
@@ -580,7 +625,9 @@
 
 						"#image remnant",
 
-						"Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties."
+						"Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties. A receptacle, crafted as shown, provides a convenient means of containing it. Receptacles may be placed atop a surface or affixed to a wall and right-clicked with spectral dust to fill them, acting as a soft light source. Right-clicking a filled receptacle empties it and retreives the dust.",
+
+						"#recipe receptacle"
 					]
 				},
 				"artefacts": {
@@ -748,7 +795,11 @@
 				"#recipe firebomb",
 				"#recipe poison_bomb",
 				"#recipe smoke_bomb",
-				"#recipe spark_bomb"
+				"#recipe spark_bomb",
+				"#recipe gilded_wood",
+				"#recipe bookshelves",
+				"#recipe lecterns",
+				"#recipe receptacle"
 			]
 		},
 		
