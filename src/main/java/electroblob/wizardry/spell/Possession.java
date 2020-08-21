@@ -18,8 +18,11 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.NBTExtras;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -76,8 +79,8 @@ public class Possession extends SpellRay {
 	/** A {@code ResourceLocation} representing the shader file used when possessing an entity. */
 	public static final ResourceLocation SHADER = new ResourceLocation(Wizardry.MODID, "shaders/post/possession.json");
 
-	/** The NBT tag name for storing the possessing entity's UUID in the target's tag compound. */
-	public static final String NBT_KEY = "possessor";
+	/** The NBT tag name for storing the possessed flag in the target's tag compound, used only for rendering. */
+	public static final String NBT_KEY = "possessed";
 	/** The NBT tag name for storing the possessor's previous inventory in their tag compound. */
 	public static final String INVENTORY_NBT_KEY = "prevInventory";
 
@@ -215,6 +218,7 @@ public class Possession extends SpellRay {
 			target.setDead();
 			target.setNoAI(true);
 			target.setAttackTarget(null);
+			target.getEntityData().setBoolean(NBT_KEY, true);
 
 			// Attributes
 
@@ -322,6 +326,7 @@ public class Possession extends SpellRay {
 
 			victim.isDead = false;
 			victim.setNoAI(false);
+			victim.getEntityData().removeTag(NBT_KEY);
 			victim.setPosition(player.posX, player.posY, player.posZ);
 			if(!player.world.isRemote) player.world.spawnEntity(victim);
 

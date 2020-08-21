@@ -2,6 +2,7 @@ package electroblob.wizardry.client.renderer.entity.layers;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.spell.Possession;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
@@ -26,7 +27,7 @@ public class LayerMindControl extends LayerTiledOverlay<EntityLivingBase> {
 
 	@Override
 	public boolean shouldRender(EntityLivingBase entity, float partialTicks){
-		return !entity.isInvisible() && entity.isPotionActive(WizardryPotions.mind_control);
+		return !entity.isInvisible() && (entity.isPotionActive(WizardryPotions.mind_control) || entity.getEntityData().getBoolean(Possession.NBT_KEY));
 	}
 
 	@Override
