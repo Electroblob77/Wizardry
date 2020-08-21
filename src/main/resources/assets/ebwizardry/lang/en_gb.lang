@@ -1122,7 +1122,7 @@ spell.ebwizardry\:water_breathing.desc=Allows the caster to breathe underwater f
 spell.ebwizardry\:whirlwind.desc=Causes the target to be blown upwards and away from you at speed.
 spell.ebwizardry\:wither.desc=Fires a ray of darkness which withers anything it touches.
 spell.ebwizardry\:wither_skull.desc=Launches a wither skull in the direction you are pointing.
-spell.ebwizardry\:withering_totem.desc=Summons a withering totem where you are pointing, which slowly drains health from nearby creatures. After 30 seconds, the totem explodes, releasing a wave of withering energy that deals more damage the more health that was drained.
+spell.ebwizardry\:withering_totem.desc=Summons a withering totem where you are pointing, which slowly drains nearby creatures' health. The totem explodes after 30 seconds, dealing more damage the more health it drained.
 spell.ebwizardry\:zombie_apocalypse.desc=Opening a portal to the underworld is easy. The difficult part is shutting it again when things go wrong...
 
 spell.ebwizardry\:invoke_weather.sun=The rain begins to stop...
