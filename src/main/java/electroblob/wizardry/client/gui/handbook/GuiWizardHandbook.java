@@ -400,6 +400,11 @@ public class GuiWizardHandbook extends GuiScreen {
 	 */
 	public static void loadHandbookFile(IResourceManager manager){
 
+		if(manager == null){
+			Wizardry.logger.error("Tried to reload the handbook file, but received a null resource manager. Aborting!");
+			return;
+		}
+
 		IResource handbookFile = getHandbookResource(manager);
 
 		if(handbookFile != null){
