@@ -10,6 +10,11 @@
                     "weight": 1
                 },
 				{
+					"type": "item",
+					"name": "ebwizardry:ring_battlemage",
+					"weight": 1
+				},
+				{
                     "type": "item",
                     "name": "ebwizardry:ring_fire_melee",
                     "weight": 1
@@ -95,10 +100,20 @@
                     "weight": 1
                 },
 				{
+					"type": "item",
+					"name": "ebwizardry:charm_spell_discovery",
+					"weight": 1
+				},
+				{
                     "type": "item",
                     "name": "ebwizardry:charm_minion_health",
                     "weight": 1
                 },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_minion_variants",
+					"weight": 1
+				},
 				{
                     "type": "item",
                     "name": "ebwizardry:charm_growth",
