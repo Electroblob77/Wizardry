@@ -85,7 +85,8 @@ public class CustomCreativeSearchHandler {
 
 	@SubscribeEvent
 	public static void onDrawScreenPostEvent(GuiScreenEvent.DrawScreenEvent.Post event){
-		if(currentSearchField != null && DrawingUtils.isPointInRegion(currentSearchField.x, currentSearchField.y, currentSearchField.width, currentSearchField.height, event.getMouseX(), event.getMouseY())){
+		if(event.getGui() instanceof GuiContainerCreative && currentSearchField != null
+				&& DrawingUtils.isPointInRegion(currentSearchField.x, currentSearchField.y, currentSearchField.width, currentSearchField.height, event.getMouseX(), event.getMouseY())){
 			if(searchBarHoverTime == 0){
 				searchBarHoverTime++;
 			}else if(searchBarHoverTime == SEARCH_TOOLTIP_HOVER_TIME){
