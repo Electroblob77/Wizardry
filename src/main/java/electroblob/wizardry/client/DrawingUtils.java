@@ -286,4 +286,19 @@ public final class DrawingUtils {
 		return s;
 	}
 
+	/**
+	 * Tests if the point with the given coordinates lies within the rectangle specified. The check is identical to
+	 * {@link GuiContainer#isPointInRegion(int, int, int, int, int, int)}, but without the adjustment relative to the GUI.
+	 * @param left The minimum x coordinate of the rectangle
+	 * @param top The minimum y coordinate of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param x The x coordinate of the point to test
+	 * @param y The y coordinate of the point to test
+	 * @return True if the given point is in the rectangle, false otherwise
+	 */
+	public static boolean isPointInRegion(int left, int top, int width, int height, int x, int y){
+		return x >= left - 1 && x < left + width + 1 && y >= top - 1 && y < top + height + 1;
+	}
+
 }

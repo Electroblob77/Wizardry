@@ -32,6 +32,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,6 +61,11 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 	private static final int SPELL_ROWS = 3, SPELL_COLUMNS = 3;
 	public static final int SPELL_BUTTON_COUNT = SPELL_ROWS * SPELL_COLUMNS * 2; // x2 because there are 2 pages
 
+	private static final int SEARCH_TOOLTIP_HOVER_TIME = 20;
+
+	private static final Style TOOLTIP_SYNTAX = new Style().setColor(TextFormatting.YELLOW);
+	private static final Style TOOLTIP_BODY = new Style().setColor(TextFormatting.WHITE);
+
 	private final TileEntityLectern lectern;
 
 	private GuiButton nextPageButton;
@@ -84,6 +91,7 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
 	private GuiTextField searchField;
 	private boolean searchNeedsClearing;
+	private int searchBarHoverTime;
 
 	private int currentPage = 0;
 
@@ -184,6 +192,12 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 	}
 
 	@Override
+	public void updateScreen(){
+		super.updateScreen();
+		if(searchBarHoverTime > 0 && searchBarHoverTime < SEARCH_TOOLTIP_HOVER_TIME) searchBarHoverTime++;
+	}
+
+	@Override
 	public void onGuiClosed(){
 		WizardryPacketHandler.net.sendToServer(new PacketLectern.Message(lectern.getPos(), currentSpell));
 		super.onGuiClosed();
@@ -209,6 +223,18 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 		}
 
 		this.buttonList.forEach(b -> b.drawButtonForegroundLayer(mouseX, mouseY));
+
+		// Search tooltip
+		if(DrawingUtils.isPointInRegion(searchField.x, searchField.y, searchField.width, searchField.height, mouseX, mouseY)){
+			if(searchBarHoverTime == 0){
+				searchBarHoverTime++;
+			}else if(searchBarHoverTime == SEARCH_TOOLTIP_HOVER_TIME){
+				drawHoveringText(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.search_tooltip",
+						TOOLTIP_SYNTAX.getFormattingCode(), TOOLTIP_BODY.getFormattingCode()), mouseX, mouseY);
+			}
+		}else{
+			searchBarHoverTime = 0;
+		}
 	}
 
 	private void drawIndexPage(int left, int top){

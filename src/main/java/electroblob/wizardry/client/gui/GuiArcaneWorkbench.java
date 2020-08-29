@@ -83,6 +83,11 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 	private static final int ANIMATION_DURATION = 20;
 
+	private static final int SEARCH_TOOLTIP_HOVER_TIME = 20;
+
+	private static final Style TOOLTIP_SYNTAX = new Style().setColor(TextFormatting.YELLOW);
+	private static final Style TOOLTIP_BODY = new Style().setColor(TextFormatting.WHITE);
+
 	private InventoryPlayer playerInventory;
 	private IInventory arcaneWorkbenchInventory;
 	private ContainerArcaneWorkbench arcaneWorkbenchContainer;
@@ -92,6 +97,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 	private GuiTextField searchField;
 	private boolean searchNeedsClearing;
+	private int searchBarHoverTime;
 
 	private final List<TooltipElement> tooltipElements = new ArrayList<>();
 
@@ -155,6 +161,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			arcaneWorkbenchContainer.refreshBookshelfSlots();
 			arcaneWorkbenchContainer.needsRefresh = false;
 		}
+		if(searchBarHoverTime > 0 && searchBarHoverTime < SEARCH_TOOLTIP_HOVER_TIME) searchBarHoverTime++;
 	}
 
 	@Override
@@ -405,6 +412,18 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 
 		this.buttonList.forEach(b -> b.drawButtonForegroundLayer(mouseX - guiLeft, mouseY - guiTop));
+
+		// Search tooltip
+		if(isPointInRegion(searchField.x, searchField.y, searchField.width, searchField.height, mouseX + guiLeft, mouseY + guiTop)){
+			if(searchBarHoverTime == 0){
+				searchBarHoverTime++;
+			}else if(searchBarHoverTime == SEARCH_TOOLTIP_HOVER_TIME){
+				drawHoveringText(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.search_tooltip",
+						TOOLTIP_SYNTAX.getFormattingCode(), TOOLTIP_BODY.getFormattingCode()), mouseX - guiLeft, mouseY - guiTop);
+			}
+		}else{
+			searchBarHoverTime = 0;
+		}
 	}
 
 	// Controls
