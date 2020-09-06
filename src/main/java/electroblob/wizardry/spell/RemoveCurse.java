@@ -8,6 +8,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+
 public class RemoveCurse extends SpellBuff {
 
 	public RemoveCurse(){
@@ -22,7 +24,7 @@ public class RemoveCurse extends SpellBuff {
 
 			boolean flag = false;
 
-			for(PotionEffect effect : caster.getActivePotionEffects()){
+			for(PotionEffect effect : new ArrayList<>(caster.getActivePotionEffects())){ // Get outta here, CMEs
 				// The PotionEffect version (as opposed to Potion) does not call cleanup callbacks
 				if(effect.getPotion() instanceof Curse){
 					caster.removePotionEffect(effect.getPotion());
