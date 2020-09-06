@@ -129,6 +129,7 @@ public class ContainerBookshelf extends Container {
 		registerBookItem(WizardryItems.spell_book);
 		registerBookItem(WizardryItems.arcane_tome);
 		registerBookItem(WizardryItems.wizard_handbook);
+		registerBookItem(WizardryItems.ruined_spell_book);
 		registerBookItem(WizardryItems.scroll);
 		registerBookItem(WizardryItems.blank_scroll);
 		registerBookItem(WizardryItems.identification_scroll);

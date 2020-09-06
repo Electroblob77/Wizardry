@@ -257,6 +257,7 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		registerBookModelTexture(() -> WizardryItems.spell_book, 			new ResourceLocation(Wizardry.MODID, "blocks/books_red"));
 		registerBookModelTexture(() -> WizardryItems.wizard_handbook, 		new ResourceLocation(Wizardry.MODID, "blocks/books_blue"));
 		registerBookModelTexture(() -> WizardryItems.arcane_tome, 			new ResourceLocation(Wizardry.MODID, "blocks/books_purple"));
+		registerBookModelTexture(() -> WizardryItems.ruined_spell_book, 	new ResourceLocation(Wizardry.MODID, "blocks/books_brown"));
 		registerBookModelTexture(() -> WizardryItems.scroll, 				new ResourceLocation(Wizardry.MODID, "blocks/scrolls_blue"));
 		registerBookModelTexture(() -> WizardryItems.blank_scroll, 			new ResourceLocation(Wizardry.MODID, "blocks/scrolls_blue"));
 		registerBookModelTexture(() -> WizardryItems.identification_scroll, new ResourceLocation(Wizardry.MODID, "blocks/scrolls_purple"));

@@ -91,6 +91,7 @@ public final class WizardryItems {
 	public static final Item arcane_tome = placeholder();
 	public static final Item spell_book = placeholder();
 	public static final Item scroll = placeholder();
+	public static final Item ruined_spell_book = placeholder();
 
 	public static final Item magic_wand = placeholder();
 	public static final Item apprentice_wand = placeholder();
@@ -454,6 +455,7 @@ public final class WizardryItems {
 		registerItem(registry, "arcane_tome", 				new ItemArcaneTome());
 		registerItem(registry, "spell_book", 					new ItemSpellBook(), true);
 		registerItem(registry, "scroll", 						new ItemScroll());
+		registerItem(registry, "ruined_spell_book", 			new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 
 		registerItem(registry, "magic_wand", 					new ItemWand(Tier.NOVICE, null));
 		registerItem(registry, "apprentice_wand", 			new ItemWand(Tier.APPRENTICE, null));

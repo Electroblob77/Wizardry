@@ -73,6 +73,7 @@ public class WizardryJEIPlugin implements IModPlugin {
 		addItemInfo(registry, WizardryItems.armour_upgrade, ".desc_extended");
 		addItemInfo(registry, WizardryItems.purifying_elixir, ".desc_extended");
 		addItemInfo(registry, WizardryItems.astral_diamond);
+		addItemInfo(registry, WizardryItems.ruined_spell_book);
 
 		for(Item item : Item.REGISTRY){
 

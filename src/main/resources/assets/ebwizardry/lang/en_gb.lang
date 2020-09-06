@@ -73,6 +73,9 @@ item.ebwizardry\:spell_book.desc=A book filled with the runes and glyphs of an a
 item.ebwizardry\:spell_book.new=Not yet discovered!
 item.ebwizardry\:spell_book.apply_to_wizard=Replaced %1$s's spell %2$s with %3$s
 
+item.ebwizardry\:ruined_spell_book.name=Ruined Spell Book
+item.ebwizardry\:ruined_spell_book.desc=The pages of this tattered spell book are too damaged to be read properly, but somehow, you feel there is still magic left within it - if only it could be restored...
+
 item.ebwizardry\:arcane_tome.name=Tome of Arcana
 item.ebwizardry\:arcane_tome.desc=Upgrades any %1$s wand with sufficient progression to %2$s tier
 
