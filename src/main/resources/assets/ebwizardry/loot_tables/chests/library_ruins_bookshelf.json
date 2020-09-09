@@ -26,13 +26,18 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:spell_book",
-                    "weight": 20,
+                    "weight": 15,
                     "functions": [
                         {
                             "function": "ebwizardry:random_spell",
                             "undiscovered_bias": 0.3
                         }
                     ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:ruined_spell_book",
+                    "weight": 5
                 },
                 {
                     "type": "item",
