@@ -11,7 +11,11 @@
                     "functions": [
                         {
                             "function": "ebwizardry:random_spell",
-                            "undiscovered_bias": 0.3
+                            "tiers": [
+                                "novice",
+                                "apprentice",
+                                "advanced"
+                            ]
                         }
                     ]
                 }
