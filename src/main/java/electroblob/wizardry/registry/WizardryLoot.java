@@ -67,6 +67,8 @@ public final class WizardryLoot {
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/epic_artefacts"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/evil_wizard"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/junk_additions"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/treasure_additions"));
 
 	}
 
@@ -99,6 +101,15 @@ public final class WizardryLoot {
 			if(EnumCreatureType.MONSTER.getCreatureClass().isAssignableFrom(entityClass)){
 				event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
 			}
+		}
+		// Fishing loot
+		// This works slightly differently in that it modifies the existing pools rather than adding new ones
+		// This is because you are supposed to only catch one item at a time!
+		if(event.getName().toString().matches("minecraft:gameplay/fishing/junk")){
+			// The first (and in this case, only) vanilla loot pool is named "main"
+			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/junk_additions", 2));
+		}else if(event.getName().toString().matches("minecraft:gameplay/fishing/treasure")){
+			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/treasure_additions", 1));
 		}
 	}
 
