@@ -107,7 +107,7 @@ public final class WizardryLoot {
 		// This is because you are supposed to only catch one item at a time!
 		if(event.getName().toString().matches("minecraft:gameplay/fishing/junk")){
 			// The first (and in this case, only) vanilla loot pool is named "main"
-			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/junk_additions", 3));
+			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/junk_additions", 4));
 		}else if(event.getName().toString().matches("minecraft:gameplay/fishing/treasure")){
 			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/treasure_additions", 1));
 		}

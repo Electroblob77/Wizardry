@@ -455,7 +455,7 @@ public final class WizardryItems {
 		registerItem(registry, "arcane_tome", 				new ItemArcaneTome());
 		registerItem(registry, "spell_book", 					new ItemSpellBook(), true);
 		registerItem(registry, "scroll", 						new ItemScroll());
-		registerItem(registry, "ruined_spell_book", 			new Item().setCreativeTab(WizardryTabs.WIZARDRY));
+		registerItem(registry, "ruined_spell_book", 			new Item().setCreativeTab(WizardryTabs.WIZARDRY).setMaxStackSize(16));
 
 		registerItem(registry, "magic_wand", 					new ItemWand(Tier.NOVICE, null));
 		registerItem(registry, "apprentice_wand", 			new ItemWand(Tier.APPRENTICE, null));
