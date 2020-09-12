@@ -12,7 +12,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -41,9 +40,7 @@ public class RenderWings {
 			GlStateManager.disableLighting();
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 
-			Vec3d delta = player.getPositionEyes(event.getPartialRenderTick())
-					.subtract(Minecraft.getMinecraft().player.getPositionEyes(event.getPartialRenderTick()));
-			GlStateManager.translate(delta.x, delta.y, delta.z);
+			GlStateManager.translate(event.getX(), event.getY(), event.getZ());
 
 			// GlStateManager.rotate(-entityplayer.rotationYawHead, 0, 1, 0);
 			GlStateManager.rotate(-player.renderYawOffset, 0, 1, 0);
