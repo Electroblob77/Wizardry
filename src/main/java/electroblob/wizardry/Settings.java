@@ -520,7 +520,7 @@ public final class Settings {
 			// Uses the same config key as the spell name, because - well, that's what it's called!
 			property.setLanguageKey("spell." + spell.getUnlocalisedName());
 			Wizardry.proxy.setToNamedBooleanEntry(property);
-			spell.setEnabled(property.getBoolean());
+			spell.setEnabled(property.getBoolean(true));
 		}
 
 	}
