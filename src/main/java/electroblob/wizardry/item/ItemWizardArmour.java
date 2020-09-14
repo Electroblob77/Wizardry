@@ -229,7 +229,11 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 			int chargeDepleted = this.getManaCapacity(centre.getStack()) - this.getMana(centre.getStack());
 
-			if(crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL < chargeDepleted){
+			int manaPerItem = Constants.MANA_PER_CRYSTAL;
+			if(crystals.getStack().getItem() == WizardryItems.crystal_shard) manaPerItem = Constants.MANA_PER_SHARD;
+			if(crystals.getStack().getItem() == WizardryItems.grand_crystal) manaPerItem = Constants.GRAND_CRYSTAL_MANA;
+
+			if(crystals.getStack().getCount() * manaPerItem < chargeDepleted){
 				// If there aren't enough crystals to fully charge the armour
 				this.rechargeMana(centre.getStack(), crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL);
 				crystals.decrStackSize(crystals.getStack().getCount());
