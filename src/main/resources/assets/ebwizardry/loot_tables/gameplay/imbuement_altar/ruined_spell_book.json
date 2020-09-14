@@ -1,0 +1,21 @@
+{
+    "pools": [
+        {
+			"name": "spell_book",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "ebwizardry:spell_book",
+                    "weight": 1,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "undiscovered_bias": 0.3
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

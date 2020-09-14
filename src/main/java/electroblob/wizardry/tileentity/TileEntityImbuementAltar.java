@@ -6,10 +6,12 @@ import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.registry.WizardryLoot;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,9 +22,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
+import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.List;
 
 public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
@@ -31,6 +38,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 	private ItemStack stack;
 	private int imbuementTimer;
 	private Element displayElement;
+	private EntityPlayer lastUser;
 
 	public TileEntityImbuementAltar(){
 		stack = ItemStack.EMPTY;
@@ -39,6 +47,10 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 	public void setStack(ItemStack stack){
 		this.stack = stack;
 		checkRecipe();
+	}
+
+	public void setLastUser(EntityPlayer player){
+		this.lastUser = player;
 	}
 
 	public void checkRecipe(){
@@ -144,6 +156,26 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 			}
 		}
 
+		if(stack.getItem() == WizardryItems.ruined_spell_book){
+
+			if(!ArrayUtils.contains(getReceptacleElements(), null)){ // All receptacles filled (any element)
+
+				if(imbuementTimer >= IMBUEMENT_DURATION - 1 && world instanceof WorldServer){
+
+					LootTable table = this.world.getLootTableManager().getLootTableFromLocation(WizardryLoot.RUINED_SPELL_BOOK_LOOT_TABLE);
+					LootContext context = new LootContext.Builder((WorldServer)world).withPlayer(lastUser)
+							.withLuck(lastUser == null ? 0 : lastUser.getLuck()).build();
+
+					List<ItemStack> stacks = table.generateLootForPools(world.rand, context);
+					return stacks.isEmpty() ? ItemStack.EMPTY : stacks.get(0);
+				}
+
+				displayElement = Element.MAGIC;
+
+				return new ItemStack(WizardryItems.spell_book); // No point generating loot every tick just to check the recipe
+			}
+		}
+
 		displayElement = null;
 		return ItemStack.EMPTY;
 	}
@@ -187,6 +219,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 		stack.writeToNBT(itemTag);
 		nbt.setTag("item", itemTag);
 		nbt.setInteger("imbuementTimer", imbuementTimer);
+		if(lastUser != null) nbt.setUniqueId("lastUser", lastUser.getUniqueID());
 		return nbt;
 	}
 
@@ -196,6 +229,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 		NBTTagCompound itemTag = nbt.getCompoundTag("item");
 		this.stack = new ItemStack(itemTag);
 		this.imbuementTimer = nbt.getInteger("imbuementTimer");
+		this.lastUser = world.getPlayerEntityByUUID(nbt.getUniqueId("lastUser"));
 	}
 
 	@Override

@@ -693,6 +693,8 @@ advancement.ebwizardry\:restore_imbuement_altar=Good As New
 advancement.ebwizardry\:restore_imbuement_altar.desc=Restore an imbuement altar to its former glory
 advancement.ebwizardry\:create_elemental_armour=Changing Clothes
 advancement.ebwizardry\:create_elemental_armour.desc=Imbue a piece of wizard armor with spectral dust of one of the arcane elements
+advancement.ebwizardry\:restore_ruined_book=Arcane Archaeologist
+advancement.ebwizardry\:restore_ruined_book.desc=Restore a ruined spell book at an imbuement altar
 advancement.ebwizardry\:craft_lectern=Arcane Encyclopedia
 advancement.ebwizardry\:craft_lectern.desc=Craft a lectern to keep track of your spell library
 

@@ -139,6 +139,7 @@ public class BlockImbuementAltar extends Block implements ITileEntityProvider {
 			ItemStack stack = toInsert.copy();
 			stack.setCount(1);
 			((TileEntityImbuementAltar)tileEntity).setStack(stack);
+			((TileEntityImbuementAltar)tileEntity).setLastUser(player);
 			if(!player.isCreative()) toInsert.shrink(1);
 
 		}else{
@@ -150,6 +151,7 @@ public class BlockImbuementAltar extends Block implements ITileEntityProvider {
 			}
 
 			((TileEntityImbuementAltar)tileEntity).setStack(ItemStack.EMPTY);
+			((TileEntityImbuementAltar)tileEntity).setLastUser(null);
 
 			if(currentStack.getItem() instanceof ItemWizardArmour && ((ItemWizardArmour)currentStack.getItem()).element != null){
 				// Not perfect since we don't know if the player actually imbued the armour, but it's good enough for now

@@ -28,6 +28,8 @@ public final class WizardryLoot {
 
 	//public static final String FROM_SPAWNER_NBT_FLAG = "fromSpawner";
 
+	public static final ResourceLocation RUINED_SPELL_BOOK_LOOT_TABLE = new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book");
+
 	private WizardryLoot(){} // No instances!
 
 	/** Called from the preInit method in the main mod class to register the custom dungeon loot. */
@@ -69,6 +71,7 @@ public final class WizardryLoot {
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/junk_additions"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/treasure_additions"));
+		LootTableList.register(RUINED_SPELL_BOOK_LOOT_TABLE);
 
 	}
 
