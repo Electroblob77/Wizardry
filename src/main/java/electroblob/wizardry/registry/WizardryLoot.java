@@ -29,8 +29,9 @@ public final class WizardryLoot {
 
 	//public static final String FROM_SPAWNER_NBT_FLAG = "fromSpawner";
 
-	public static final ResourceLocation[] RUINED_SPELL_BOOK_LOOT_TABLES = Arrays.stream(Element.values()).map(e ->
-			new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book_" + e.getName()))
+	public static final ResourceLocation[] RUINED_SPELL_BOOK_LOOT_TABLES = Arrays.stream(Element.values())
+			.filter(e -> e != Element.MAGIC)
+			.map(e -> new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book_" + e.getName()))
 			.toArray(ResourceLocation[]::new);
 
 	private WizardryLoot(){} // No instances!
