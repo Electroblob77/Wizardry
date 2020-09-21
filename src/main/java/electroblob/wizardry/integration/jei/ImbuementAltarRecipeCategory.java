@@ -119,7 +119,13 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 
 		NonNullList<ItemStack> variants = NonNullList.create();
 		WizardryItems.spectral_dust.getSubItems(WizardryItems.spectral_dust.getCreativeTab(), variants);
-		List<List<ItemStack>> dusts = Collections.nCopies(4, variants);
+
+		List<List<ItemStack>> dusts = new ArrayList<>();
+		// Generate 4 separate lists, each in a different order to make it obvious they can be any element
+		for(int i = 0; i < 4; i++){
+			Collections.shuffle(variants);
+			dusts.add(new ArrayList<>(variants));
+		}
 
 		recipes.add(new ImbuementAltarRecipe(new ItemStack(WizardryItems.ruined_spell_book), dusts, new ItemStack(WizardryItems.spell_book, 1, OreDictionary.WILDCARD_VALUE)));
 
