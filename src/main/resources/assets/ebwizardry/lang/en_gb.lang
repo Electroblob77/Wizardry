@@ -1592,6 +1592,7 @@ config.ebwizardry.auto_place_underground_library_markers=Auto-Place Underground 
 config.ebwizardry.auto_place_underground_library_markers.tooltip=Controls whether wizardry automatically places antique atlas markers at the locations of underground library ruins.
 
 integration.jei.category.ebwizardry\:arcane_workbench=Arcane Workbench
+integration.jei.category.ebwizardry\:imbuement_altar=Imbuement Altar
 
 integration.antiqueatlas.marker.ebwizardry.wizard_tower=Wizard Tower
 integration.antiqueatlas.marker.ebwizardry.obelisk=Obelisk

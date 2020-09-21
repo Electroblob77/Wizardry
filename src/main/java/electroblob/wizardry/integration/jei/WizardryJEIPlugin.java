@@ -34,6 +34,7 @@ public class WizardryJEIPlugin implements IModPlugin {
 		if(!Wizardry.settings.jeiIntegration) return;
 
 		registry.addRecipeCategories(new ArcaneWorkbenchRecipeCategory(registry));
+		registry.addRecipeCategories(new ImbuementAltarRecipeCategory(registry));
 	}
 
 	@Override
@@ -43,10 +44,12 @@ public class WizardryJEIPlugin implements IModPlugin {
 
 		// Add arcane workbench as the item required to use arcane workbench recipes
 		registry.addRecipeCatalyst(new ItemStack(WizardryBlocks.arcane_workbench), ArcaneWorkbenchRecipeCategory.UID);
-
 		registry.addRecipes(ArcaneWorkbenchRecipeCategory.generateRecipes(), ArcaneWorkbenchRecipeCategory.UID);
-
 		registry.getRecipeTransferRegistry().addRecipeTransferHandler(new ArcaneWorkbenchTransferHandler());
+
+		// Add imbuement altar as the item required to use imbuement altar recipes
+		registry.addRecipeCatalyst(new ItemStack(WizardryBlocks.imbuement_altar), ImbuementAltarRecipeCategory.UID);
+		registry.addRecipes(ImbuementAltarRecipeCategory.generateRecipes(), ImbuementAltarRecipeCategory.UID);
 
 		// Hide conjured items from JEI
 		IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();

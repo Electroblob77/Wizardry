@@ -22,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
@@ -134,55 +135,20 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
 	private ItemStack getResult(){
 
-		if(stack.getItem() instanceof ItemWizardArmour && ((ItemWizardArmour)stack.getItem()).element == null){
+		boolean actuallyCrafting = imbuementTimer >= IMBUEMENT_DURATION - 1 && world instanceof WorldServer;
+		Element[] elements = getReceptacleElements();
 
-			Element[] elements = getReceptacleElements();
+		ItemStack result = getImbuementResult(stack, elements, actuallyCrafting, world, lastUser);
 
-			if(Arrays.stream(elements).distinct().count() == 1 && elements[0] != null){ // All the same element
-
-				ItemStack result = new ItemStack(WizardryItems.getArmour(elements[0], ((ItemWizardArmour)stack.getItem()).armorType));
-				displayElement = elements[0];
-
-				result.setTagCompound(stack.getTagCompound());
-				((IManaStoringItem)result.getItem()).setMana(result, ((ItemWizardArmour)stack.getItem()).getMana(stack));
-
-				return result;
-			}
+		if(result.isEmpty()){
+			displayElement = null;
+		}else if(Arrays.stream(elements).distinct().count() == 1){ // All the same element
+			displayElement = elements[0];
+		}else{
+			displayElement = Element.MAGIC;
 		}
 
-		if((stack.getItem() == WizardryItems.magic_crystal || stack.getItem() == Item.getItemFromBlock(WizardryBlocks.crystal_block))
-				&& stack.getMetadata() == 0){
-
-			Element[] elements = getReceptacleElements();
-
-			if(Arrays.stream(elements).distinct().count() == 1 && elements[0] != null){ // All the same element
-				displayElement = elements[0];
-				return new ItemStack(stack.getItem(), stack.getCount(), elements[0].ordinal());
-			}
-		}
-
-		if(stack.getItem() == WizardryItems.ruined_spell_book){
-
-			if(!ArrayUtils.contains(getReceptacleElements(), null)){ // All receptacles filled (any element)
-
-				if(imbuementTimer >= IMBUEMENT_DURATION - 1 && world instanceof WorldServer){
-
-					LootTable table = this.world.getLootTableManager().getLootTableFromLocation(WizardryLoot.RUINED_SPELL_BOOK_LOOT_TABLE);
-					LootContext context = new LootContext.Builder((WorldServer)world).withPlayer(lastUser)
-							.withLuck(lastUser == null ? 0 : lastUser.getLuck()).build();
-
-					List<ItemStack> stacks = table.generateLootForPools(world.rand, context);
-					return stacks.isEmpty() ? ItemStack.EMPTY : stacks.get(0);
-				}
-
-				displayElement = Element.MAGIC;
-
-				return new ItemStack(WizardryItems.spell_book); // No point generating loot every tick just to check the recipe
-			}
-		}
-
-		displayElement = null;
-		return ItemStack.EMPTY;
+		return result;
 	}
 
 	/** Returns the elements of the 4 adjacent receptacles, in SWNE order. Null means an empty or missing receptacle. */
@@ -251,6 +217,61 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt){
 		readFromNBT(pkt.getNbtCompound());
+	}
+
+	/**
+	 * Returns the stack that results from imbuing the given input with the given elements.
+	 * @param input The item stack being imbued
+	 * @param receptacleElements The elements of the four receptacles
+	 * @param fullLootGen True to perform full loot generation from loot tables, false if this is just being queried for
+	 *                    visuals or other purposes.
+	 * @param world A reference to the current world object (may be null if {@code fullLootGen} is false)
+	 * @param lastUser The player that last interacted with the imbuement altar, or null if there isn't one (or if this
+	 *                 is being queried for other reasons, e.g. JEI)
+	 * @return The resulting item stack, or an empty stack if the given combination is not a valid imbuement
+	 */
+	public static ItemStack getImbuementResult(ItemStack input, Element[] receptacleElements, boolean fullLootGen, World world, EntityPlayer lastUser){
+
+		if(input.getItem() instanceof ItemWizardArmour && ((ItemWizardArmour)input.getItem()).element == null){
+
+			if(Arrays.stream(receptacleElements).distinct().count() == 1 && receptacleElements[0] != null){ // All the same element
+
+				ItemStack result = new ItemStack(WizardryItems.getArmour(receptacleElements[0], ((ItemWizardArmour)input.getItem()).armorType));
+
+				result.setTagCompound(input.getTagCompound());
+				((IManaStoringItem)result.getItem()).setMana(result, ((ItemWizardArmour)input.getItem()).getMana(input));
+
+				return result;
+			}
+		}
+
+		if((input.getItem() == WizardryItems.magic_crystal || input.getItem() == Item.getItemFromBlock(WizardryBlocks.crystal_block))
+				&& input.getMetadata() == 0){
+
+			if(Arrays.stream(receptacleElements).distinct().count() == 1 && receptacleElements[0] != null){ // All the same element
+				return new ItemStack(input.getItem(), input.getCount(), receptacleElements[0].ordinal());
+			}
+		}
+
+		if(input.getItem() == WizardryItems.ruined_spell_book){
+
+			if(!ArrayUtils.contains(receptacleElements, null)){ // All receptacles filled (any element)
+
+				if(fullLootGen){
+
+					LootTable table = world.getLootTableManager().getLootTableFromLocation(WizardryLoot.RUINED_SPELL_BOOK_LOOT_TABLE);
+					LootContext context = new LootContext.Builder((WorldServer)world).withPlayer(lastUser)
+							.withLuck(lastUser == null ? 0 : lastUser.getLuck()).build();
+
+					List<ItemStack> stacks = table.generateLootForPools(world.rand, context);
+					return stacks.isEmpty() ? ItemStack.EMPTY : stacks.get(0);
+				}
+
+				return new ItemStack(WizardryItems.spell_book); // No point generating loot every tick just to check the recipe
+			}
+		}
+
+		return ItemStack.EMPTY;
 	}
 
 }
