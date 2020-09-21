@@ -7,6 +7,7 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:spell_book",
+                    "entryName": "matching_book",
                     "weight": 1,
                     "functions": [
                         {
@@ -21,6 +22,7 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:spell_book",
+                    "entryName": "random_book",
                     "weight": 1,
                     "functions": [
                         {
