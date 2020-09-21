@@ -259,7 +259,14 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
 				if(fullLootGen){
 
-					LootTable table = world.getLootTableManager().getLootTableFromLocation(WizardryLoot.RUINED_SPELL_BOOK_LOOT_TABLE);
+					// Pick a random element out of the receptacles and use its loot table
+					// This is an elegant way of having the dust elements affect the spell outcome without hardcoding
+					// any actual numbers, thus allowing packmakers as much control as possible over the weighting
+					// The probabilities are a little complicated but work out quite nicely at 57% chance with 4 of the
+					// same element of spectral dust
+					Element element = receptacleElements[world.rand.nextInt(receptacleElements.length)];
+					LootTable table = world.getLootTableManager().getLootTableFromLocation(
+							WizardryLoot.RUINED_SPELL_BOOK_LOOT_TABLES[element.ordinal() - 1]);
 					LootContext context = new LootContext.Builder((WorldServer)world).withPlayer(lastUser)
 							.withLuck(lastUser == null ? 0 : lastUser.getLuck()).build();
 

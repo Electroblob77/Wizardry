@@ -1,6 +1,7 @@
 package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
@@ -28,7 +29,9 @@ public final class WizardryLoot {
 
 	//public static final String FROM_SPAWNER_NBT_FLAG = "fromSpawner";
 
-	public static final ResourceLocation RUINED_SPELL_BOOK_LOOT_TABLE = new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book");
+	public static final ResourceLocation[] RUINED_SPELL_BOOK_LOOT_TABLES = Arrays.stream(Element.values()).map(e ->
+			new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book_" + e.getName()))
+			.toArray(ResourceLocation[]::new);
 
 	private WizardryLoot(){} // No instances!
 
@@ -71,7 +74,7 @@ public final class WizardryLoot {
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/junk_additions"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/treasure_additions"));
-		LootTableList.register(RUINED_SPELL_BOOK_LOOT_TABLE);
+		for(ResourceLocation location : RUINED_SPELL_BOOK_LOOT_TABLES) LootTableList.register(location);
 
 	}
 
