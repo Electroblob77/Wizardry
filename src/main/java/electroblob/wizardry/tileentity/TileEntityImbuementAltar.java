@@ -30,6 +30,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
@@ -39,6 +40,8 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 	private int imbuementTimer;
 	private Element displayElement;
 	private EntityPlayer lastUser;
+	/** For loading purposes only. This does not get updated once loaded! */
+	private UUID lastUserUUID;
 
 	public TileEntityImbuementAltar(){
 		stack = ItemStack.EMPTY;
@@ -72,6 +75,8 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
 	@Override
 	public void update(){
+
+		if(lastUserUUID != null && lastUser == null) lastUser = world.getPlayerEntityByUUID(lastUserUUID);
 
 		if(imbuementTimer > 0){
 
@@ -229,7 +234,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 		NBTTagCompound itemTag = nbt.getCompoundTag("item");
 		this.stack = new ItemStack(itemTag);
 		this.imbuementTimer = nbt.getInteger("imbuementTimer");
-		this.lastUser = world.getPlayerEntityByUUID(nbt.getUniqueId("lastUser"));
+		this.lastUserUUID = nbt.getUniqueId("lastUser");
 	}
 
 	@Override
