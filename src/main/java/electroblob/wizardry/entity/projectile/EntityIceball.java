@@ -45,14 +45,11 @@ public class EntityIceball extends EntityMagicProjectile {
 
 			}else{
 
-				if(this.getThrower() == null || EntityUtils.canDamageBlocks(this.getThrower(), world)){
+				BlockPos pos = rayTrace.getBlockPos();
 
-					BlockPos pos = rayTrace.getBlockPos();
-
-					if(rayTrace.sideHit == EnumFacing.UP && !world.isRemote && world.isSideSolid(pos, EnumFacing.UP)
-							&& BlockUtils.canBlockBeReplaced(world, pos.up())){
-						world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
-					}
+				if(rayTrace.sideHit == EnumFacing.UP && !world.isRemote && world.isSideSolid(pos, EnumFacing.UP)
+						&& BlockUtils.canBlockBeReplaced(world, pos.up()) && BlockUtils.canPlaceBlock(thrower, world, pos)){
+					world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
 				}
 			}
 

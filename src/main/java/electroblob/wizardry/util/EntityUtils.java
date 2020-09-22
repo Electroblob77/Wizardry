@@ -354,11 +354,20 @@ public final class EntityUtils {
 		return server.getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
 	}
 
-	/** Checks that the given entity is allowed to damage blocks in the given world. If the entity is a player or null,
-	 * this checks the player block damage config setting, otherwise it posts a mob griefing event and returns the result. */
-	public static boolean canDamageBlocks(@Nullable EntityLivingBase entity, World world){
-		// TODO: Dispenser griefing!
-		if(entity == null || entity instanceof EntityPlayer) return Wizardry.settings.playerBlockDamage;
+	/**
+	 * Checks that the given entity is allowed to damage blocks in the given world. If the entity is a player or null,
+	 * this checks the player block damage config setting and (for players only) the {@code PlayerCapabilities} object,
+	 * otherwise it posts a mob griefing event and returns the result.
+	 * <p></p>
+	 * This method only checks whether the entity can damage blocks <i>in general</i>. It can be useful in certain
+	 * situations where breaking of individual blocks is out of the caller's control (e.g. explosions, which have their
+	 * own events anyway) or as an optimisation where multiple blocks are affected. In most cases, however, it is
+	 * advisable to use the location-specific methods in {@link BlockUtils}, as they call this method anyway and allow
+	 * for better compatibility with other mods, particularly region protection mods.
+	 */
+	public static boolean canDamageBlocks(@Nullable Entity entity, World world){
+		if(entity == null) return Wizardry.settings.dispenserBlockDamage;
+		else if(entity instanceof EntityPlayer) return ((EntityPlayer)entity).isAllowEdit() && Wizardry.settings.playerBlockDamage;
 		return ForgeEventFactory.getMobGriefingEvent(world, entity);
 	}
 

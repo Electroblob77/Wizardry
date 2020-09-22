@@ -54,7 +54,7 @@ public class IceAge extends SpellAreaEffect {
 
 		if(target instanceof EntityLiving){
 			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-					(int)(getProperty(FREEZE_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+					caster, (int)(getProperty(FREEZE_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 				target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}
 		}else if(target instanceof EntityPlayer){
@@ -113,7 +113,8 @@ public class IceAge extends SpellAreaEffect {
 						double dist = origin.distanceTo(new Vec3d(origin.x + i, y, origin.z + j));
 
 						// Randomised with weighting so that the nearer the block the more likely it is to be snowed.
-						if(y != -1 && world.rand.nextInt((int)(dist * 2) + 1) < radius && dist < radius){
+						if(y != -1 && world.rand.nextInt((int)(dist * 2) + 1) < radius && dist < radius
+								&& BlockUtils.canPlaceBlock(caster, world, pos)){
 							BlockUtils.freeze(world, pos.down(), true);
 						}
 					}

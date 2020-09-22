@@ -43,7 +43,7 @@ public class EntityCombustionRune extends EntityScaledConstruct {
 					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue() * sizeMultiplier;
 
 					world.newExplosion(this.getCaster(), this.posX, this.posY, this.posZ, strength, true,
-							getCaster() != null && EntityUtils.canDamageBlocks(getCaster(), world));
+							EntityUtils.canDamageBlocks(getCaster(), world));
 
 					// The trap is destroyed once triggered.
 					this.setDead();

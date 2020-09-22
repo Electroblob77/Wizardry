@@ -31,7 +31,7 @@ public class EntityEarthquake extends EntityMagicConstruct { // NOT a scaled con
 
 		double speed = Spells.earthquake.getProperty(Earthquake.SPREAD_SPEED).doubleValue();
 
-		if(!world.isRemote){
+		if(!world.isRemote && EntityUtils.canDamageBlocks(getCaster(), world)){
 
 			// The further the earthquake is going to spread, the finer the angle increments.
 			for(float angle = 0; angle < 2 * Math.PI; angle += Math.PI / (lifetime * 1.5)){
@@ -46,10 +46,9 @@ public class EntityEarthquake extends EntityMagicConstruct { // NOT a scaled con
 
 				BlockPos pos = new BlockPos(x, y, z);
 
-				if(!BlockUtils.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
-						&& world.isBlockNormalCube(pos, false)
+				if(!BlockUtils.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos) && world.isBlockNormalCube(pos, false)
 						// Checks that the block above is not solid, since this causes the falling sand to vanish.
-						&& !world.isBlockNormalCube(pos.up(), false)){
+						&& !world.isBlockNormalCube(pos.up(), false) && BlockUtils.canBreakBlock(getCaster(), world, pos)){
 
 					// Falling blocks do the setting block to air themselves.
 					EntityFallingBlock fallingblock = new EntityFallingBlock(world, x + 0.5, y + 0.5, z + 0.5,

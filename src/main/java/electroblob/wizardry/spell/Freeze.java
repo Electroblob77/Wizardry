@@ -58,7 +58,7 @@ public class Freeze extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(!world.isRemote && EntityUtils.canDamageBlocks(caster, world)){
+		if(!world.isRemote && BlockUtils.canPlaceBlock(caster, world, pos)){
 			BlockUtils.freeze(world, pos, true);
 		}
 		

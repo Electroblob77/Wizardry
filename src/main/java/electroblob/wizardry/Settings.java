@@ -188,6 +188,8 @@ public final class Settings {
 	public boolean playersMoveEachOther = true;
 	/** <b>[Server-only]</b> Whether spells cast by players can destroy blocks in the world. */
 	public boolean playerBlockDamage = true;
+	/** <b>[Server-only]</b> Whether spells cast by dispensers can destroy blocks in the world. */
+	public boolean dispenserBlockDamage = true;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
 	/**
@@ -555,7 +557,14 @@ public final class Settings {
 		config.addCustomCategoryComment(GAMEPLAY_CATEGORY, "Global settings that affect game mechanics. In multiplayer, the server/LAN host settings will apply. Please note that changing some of these settings may make the mod very difficult to play.");
 
 		property = config.get(GAMEPLAY_CATEGORY, "playerBlockDamage", true,
-				"Whether spells cast by players can destroy blocks in the world. Set to false to prevent griefing. To prevent non-players from destroying blocks with magic, use the mobGriefing gamerule.");
+				"Whether spells cast by players can destroy blocks in the world. Wizardry makes every attempt to respect protection mods and plugins, but cannot guarantee it will work in all cases for every mod. If you need absolutely watertight anti-grief, disable this setting. (N.B. This setting only affects players. To prevent mobs from destroying blocks with magic, use the mobGriefing gamerule.)");
+		property.setLanguageKey("config." + Wizardry.MODID + ".player_block_damage");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		playerBlockDamage = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "dispenserBlockDamage", true,
+				"Whether spells cast by dispensers can destroy blocks in the world. Wizardry makes every attempt to respect protection mods and plugins, but cannot guarantee it will work in all cases for every mod. If you need absolutely watertight anti-grief, disable this setting.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".player_block_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		playerBlockDamage = property.getBoolean();

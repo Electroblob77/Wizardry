@@ -72,7 +72,7 @@ public class FireBreath extends SpellRay {
 		pos = pos.offset(side);
 
 		if(world.isAirBlock(pos)){
-			if(!world.isRemote) world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			if(!world.isRemote && BlockUtils.canPlaceBlock(caster, world, pos)) world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 			return true;
 		}
 		

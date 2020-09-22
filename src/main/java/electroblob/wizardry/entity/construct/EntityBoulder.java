@@ -6,6 +6,7 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Boulder;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -119,7 +120,8 @@ public class EntityBoulder extends EntityScaledConstruct {
 	 */
 	private boolean smashBlocks(List<BlockPos> blocks, boolean breakIfTooHard){
 
-		if(blocks.removeIf(p -> world.getBlockState(p).getBlock().getExplosionResistance(world, p, this, null) > 3)){
+		if(blocks.removeIf(p -> world.getBlockState(p).getBlock().getExplosionResistance(world, p, this, null) > 3
+				|| (!world.isRemote && !BlockUtils.canBreakBlock(getCaster(), world, p)))){
 			// If any of the blocks were not breakable, the boulder is smashed
 			if(breakIfTooHard){
 				this.despawn();

@@ -6,8 +6,11 @@ import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -20,8 +23,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.InvocationTargetException;
@@ -62,13 +63,8 @@ public class Mine extends SpellRay {
 		if(!world.isRemote){
 
 			if(BlockUtils.isBlockUnbreakable(world, pos)) return false;
-			// The mine spell ignores the block damage setting for players, since that's the entire point of the spell
-			// Instead, it triggers block break events at the appropriate points, which protection mods should be able to
-			// pick up and allow/disallow accordingly
-			// For the time being, dispensers respect the mobGriefing gamerule
-			if(!(caster instanceof EntityPlayer) && !EntityUtils.canDamageBlocks(caster, world)) return false;
-			// Can't mine arcane-locked blocks
-			if(world.getTileEntity(pos) != null && world.getTileEntity(pos).getTileData().hasUniqueId(ArcaneLock.NBT_KEY)) return false;
+			// Reworked to respect the rules, but since we might break multiple blocks this is left as an optimisation
+			if(!EntityUtils.canDamageBlocks(caster, world)) return false;
 
 			IBlockState state = world.getBlockState(pos);
 			// The maximum harvest level as determined by the potency multiplier. The + 0.5f is so that
@@ -105,13 +101,9 @@ public class Mine extends SpellRay {
 							boolean silkTouch = state1.getBlock().canSilkHarvest(world, pos1, state1, (EntityPlayer)caster)
 									&& ItemArtefact.isArtefactActive((EntityPlayer)caster, WizardryItems.charm_silk_touch);
 
-							// Some protection mods seem to use this event instead so let's trigger it to check
-							if(ForgeEventFactory.getBreakSpeed((EntityPlayer)caster, state1, 1, pos1) <= 0) continue;
+							int xp = BlockUtils.checkBlockBreakXP(caster, world, pos);
 
-							int xp = ForgeHooks.onBlockBreakEvent(world,
-									((EntityPlayerMP)caster).interactionManager.getGameType(), (EntityPlayerMP)caster, pos1);
-
-							if(xp == -1) continue; // Event was cancelled
+							if(xp < 0) continue; // Not allowed to break the block
 
 							if(silkTouch){
 								flag = world.destroyBlock(pos1, false);
@@ -124,7 +116,7 @@ public class Mine extends SpellRay {
 								if(flag) state1.getBlock().dropXpOnBlockBreak(world, pos1, xp);
 							}
 
-						}else{
+						}else if(BlockUtils.canBreakBlock(caster, world, pos)){
 							// NPCs can dig the block under the target's feet
 							flag = world.destroyBlock(pos1, true) || flag;
 						}

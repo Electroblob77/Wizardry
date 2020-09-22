@@ -49,7 +49,7 @@ public class WallOfFrost extends SpellRay {
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-					(int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+					caster, (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 				
 				target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}
@@ -77,7 +77,7 @@ public class WallOfFrost extends SpellRay {
 				
 				int duration = (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 
-				if(BlockUtils.canBlockBeReplaced(world, pos)){
+				if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canPlaceBlock(caster, world, pos)){
 					world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
 					world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 				}
@@ -86,7 +86,7 @@ public class WallOfFrost extends SpellRay {
 				if(side == EnumFacing.UP){
 					pos = pos.offset(side);
 
-					if(BlockUtils.canBlockBeReplaced(world, pos)){
+					if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canPlaceBlock(caster, world, pos)){
 						world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
 						world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 					}

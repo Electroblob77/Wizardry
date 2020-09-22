@@ -7,9 +7,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
@@ -17,6 +22,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -165,6 +173,136 @@ public final class BlockUtils {
 		}
 
 		return sphere;
+	}
+
+	// Region protection compatibility
+	// ===============================================================================================================
+
+	// This is the best I can do to play nicely with world protection mods/plugins like WorldGuard. As before, the
+	// playerBlockDamage config option is the ONLY anti-grief feature that is guaranteed to be 100% watertight.
+
+	// For Forge mods, it's not too bad, we can just make sure we trigger the appropriate Forge events (or call other
+	// methods that subsequently trigger them). For breaking, there are four events that claim mods might hook into:
+	// - PlayerInteractEvent.LeftClickBlock (I actually use this one myself for arcane lock, it's completely seamless)
+	// - PlayerEvent.BreakSpeed (not really what it's for, but it is possible to prevent it this way. Can show the first
+	// frame of the breaking animation but otherwise seamless. Not fired in creative!)
+	// - LivingDestroyBlockEvent (useful for wizards, probably not intended for players)
+	// - BlockEvent.BreakEvent (the most obvious one but also the last to be fired. Shows the entire animation before
+	// cancelling, looks super ugly)
+	// As long as we trigger the last three, it should be fine! Also note that PlayerInteractEvent.LeftClickBlock is fired
+	// every tick during breaking (only once in creative).
+
+	// For Bukkit plugins, it's exceedingly difficult! We have to make sure we call the VANILLA methods that will then
+	// trigger Bukkit's hooks for plugins to respond to. These are likely to also trigger the relevant Forge events, but
+	// to be safe we should trigger everything we possibly can that won't have too many side-effects.
+	// Building Gadgets' implementation is a useful resource which I'm pretty sure works with WorldGuard:
+	// https://github.com/Direwolf20-MC/BuildingGadgets/blob/1.12.x/src/main/java/com/direwolf20/buildinggadgets/common/items/gadgets/GadgetBuilding.java
+	// See also: https://worldguard.enginehub.org/en/latest/regions/scope/#mod-and-plugin-support
+
+	/**
+	 * Tests whether the given entity may place the given block at the given location. Does not actually place the block
+	 * (this gives callers more flexibility in how they use it, for example it allows different block placement methods
+	 * in {@link World} to be used depending on the situation). This should only be called server-side.
+	 * <p></p>
+	 * <i>Be aware that this method triggers a variety of vanilla methods and Forge events, and depending on other
+	 * installed mods these may have side-effects. Use of this method just to query is therefore not advised - if it
+	 * returns true, callers should actually place the block to ensure behaviour is consistent for other mods.</i>
+	 * <p></p>
+	 * <i>Also note that this method does <b>not</b> do blockstate-specific checks (notice it doesn't even take the
+	 * block being placed as a parameter; this is in line with the block place events). It is up to the caller to
+	 * determine whether the position is suitable for placing whatever kind of block is to be placed.</i>
+	 * @param placer The entity doing the placing, or null if the block is not being placed by an entity
+	 * @param world The world in which the block is being placed
+	 * @param pos The position of the block being placed
+	 * @return True if the given entity is allowed to place the block, false otherwise.
+	 */
+	public static boolean canPlaceBlock(@Nullable Entity placer, World world, BlockPos pos){
+
+		if(world.isRemote){
+			Wizardry.logger.warn("BlockUtils#canPlaceBlock called from the client side! Blocks should be modified server-side only");
+			return true;
+		}
+
+		if(!EntityUtils.canDamageBlocks(placer, world)) return false; // General block damage prevention comes first
+
+		if(world.isOutsideBuildHeight(pos)) return false;
+		// This line *should* trigger bukkit plugin hooks
+		if(placer instanceof EntityPlayer && !world.isBlockModifiable((EntityPlayer)placer, pos)) return false;
+
+		BlockSnapshot snapshot = BlockSnapshot.getBlockSnapshot(world, pos);
+		// Despite there being a separate event for players, BOTH events seem to be fired for players during normal placement
+		if(ForgeEventFactory.onBlockPlace(placer, snapshot, EnumFacing.UP).isCanceled()) return false;
+
+		if(placer instanceof EntityPlayer && ForgeEventFactory.onPlayerBlockPlace(
+				(EntityPlayer)placer, snapshot, EnumFacing.UP, EnumHand.MAIN_HAND).isCanceled()){
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Tests whether the given entity may break the block at the given location. Does not actually break the block (this
+	 * gives callers more flexibility in how they use it, for example it allows different block break methods in
+	 * {@link World} to be used depending on whether particles, sound, drops, etc. are desired). This should only be
+	 * called server-side.
+	 * <p></p>
+	 * This method is a shorthand for {@link BlockUtils#checkBlockBreakXP(Entity, World, BlockPos)} {@code >= 0}.
+	 * <p></p>
+	 * <i>Be aware that this method triggers a variety of vanilla methods and Forge events, and depending on other
+	 * installed mods these may have side-effects. Use of this method just to query is therefore not advised - if it
+	 * returns true, callers should actually break the block to ensure behaviour is consistent for other mods.</i>
+	 * @param breaker The entity doing the breaking, or null if the block is not being broken by an entity
+	 * @param world The world in which the block is being broken
+	 * @param pos The position of the block being broken
+	 * @return True if the given entity is allowed to break the block, false otherwise.
+	 */
+	public static boolean canBreakBlock(@Nullable Entity breaker, World world, BlockPos pos){
+		return checkBlockBreakXP(breaker, world, pos) >= 0;
+	}
+
+	/**
+	 * Tests whether the given entity may break the block at the given location and returns the xp it should drop. Does
+	 * not actually break the block or drop the xp (this gives callers more flexibility in how they use it, for example
+	 * it allows different block break methods in {@link World} to be used depending on whether particles, sound, drops,
+	 * etc. are desired). This should only be called server-side.
+	 * <p></p>
+	 * <i>Be aware that this method triggers a variety of vanilla methods and Forge events, and depending on other
+	 * installed mods these may have side-effects. Use of this method just to query is therefore not advised - if it
+	 * returns true, callers should actually break the block to ensure behaviour is consistent for other mods.</i>
+	 * @param breaker The entity doing the breaking, or null if the block is not being broken by an entity
+	 * @param world The world in which the block is being broken
+	 * @param pos The position of the block being broken
+	 * @return The xp to be dropped if the given entity is allowed to break the block, -1 if the block cannot be broken.
+	 */
+	public static int checkBlockBreakXP(@Nullable Entity breaker, World world, BlockPos pos){
+
+		if(world.isRemote){
+			Wizardry.logger.warn("BlockUtils#checkBlockBreakXP called from the client side! Blocks should be modified server-side only");
+			return 0;
+		}
+
+		if(!EntityUtils.canDamageBlocks(breaker, world)) return -1; // General block damage prevention comes first
+
+		if(world.isOutsideBuildHeight(pos)) return -1;
+		// This line *should* trigger bukkit plugin hooks
+		if(breaker instanceof EntityPlayer && !world.isBlockModifiable((EntityPlayer)breaker, pos)) return -1;
+
+		// I think this is irrelevant in forge because it's only for vanilla entities, but bukkit might use it
+		IBlockState state = world.getBlockState(pos);
+		if(!state.getBlock().canEntityDestroy(state, world, pos, breaker)) return -1;
+		// Although the forge event only needs an EntityLivingBase, it seems it's not supposed to be for players
+		if(breaker instanceof EntityLiving && ForgeEventFactory.onEntityDestroyBlock((EntityLivingBase)breaker, pos, state)) return -1;
+		// Need to trigger PlayerEvent.BreakSpeed as some claim mods (e.g. LandManager) use it instead of BlockEvent.BreakEvent
+		if(breaker instanceof EntityPlayer && ForgeEventFactory.getBreakSpeed((EntityPlayer)breaker, state, 1, pos) < 0) return -1;
+
+		int xp = 0;
+
+		if(breaker instanceof EntityPlayerMP){
+			xp = ForgeHooks.onBlockBreakEvent(world, ((EntityPlayerMP)breaker).interactionManager.getGameType(), (EntityPlayerMP)breaker, pos);
+		}
+
+		return xp;
 	}
 
 	// Specific blocks

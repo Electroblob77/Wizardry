@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -46,13 +47,11 @@ public class Ignite extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(!EntityUtils.canDamageBlocks(caster, world)) return false;
-
 		pos = pos.offset(side);
 		
 		if(world.isAirBlock(pos)){
 			
-			if(!world.isRemote){
+			if(!world.isRemote && BlockUtils.canPlaceBlock(caster, world, pos)){
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 			}
 			

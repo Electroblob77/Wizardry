@@ -3,7 +3,7 @@ package electroblob.wizardry.entity.projectile;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -84,13 +84,12 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 
 			}else{
 
-				if(this.getThrower() == null || EntityUtils.canDamageBlocks(this.getThrower(), world)){
+				BlockPos pos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
 
-					BlockPos blockpos = rayTrace.getBlockPos().offset(rayTrace.sideHit);
-
-					if(this.world.isAirBlock(blockpos)){
-						this.world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
-					}
+				// Remember that canPlaceBlock should ALWAYS be the last thing that gets checked, or it risks other mods
+				// thinking the block was placed even when a later condition prevents it, which may have side-effects
+				if(this.world.isAirBlock(pos) && BlockUtils.canPlaceBlock(thrower, world, pos)){
+					this.world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 				}
 			}
 

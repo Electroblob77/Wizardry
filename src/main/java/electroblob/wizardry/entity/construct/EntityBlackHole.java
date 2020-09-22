@@ -109,7 +109,7 @@ public class EntityBlackHole extends EntityScaledConstruct {
 					if(rand.nextInt(Math.max(1, (int)this.getDistanceSq(pos) * 3)) == 0){
 
 						if(!BlockUtils.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
-								&& world.isBlockNormalCube(pos, false)){
+								&& world.isBlockNormalCube(pos, false) && BlockUtils.canBreakBlock(getCaster(), world, pos)){
 							// Checks that the block above is not solid, since this causes the falling block to vanish.
 //							&& !world.isBlockNormalCube(pos.up(), false)){
 

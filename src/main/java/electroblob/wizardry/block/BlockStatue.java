@@ -8,6 +8,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class BlockStatue extends Block implements ITileEntityProvider {
@@ -180,77 +182,77 @@ public class BlockStatue extends Block implements ITileEntityProvider {
 	
 	/**
 	 * Turns the given entity into a statue. The type of statue depends on the block instance this method was invoked on.
-	 * @param entity The entity to turn into a statue.
+	 * @param target The entity to turn into a statue.
+	 * @param caster The entity that caused it, or null if it was not caused by an entity
 	 * @param duration The time for which the entity should remain a statue. For petrified creatures, this is the minimum
 	 * time it can stay as a statue.
 	 * @return True if the entity was successfully turned into a statue, false if not (i.e. something was in the way).
 	 */
 	// Making this an instance method means it works equally well for both types of statue
-	public boolean convertToStatue(EntityLiving entity, int duration){
+	public boolean convertToStatue(EntityLiving target, @Nullable EntityLivingBase caster, int duration){
 		
-		if(entity.deathTime > 0) return false;
+		if(target.deathTime > 0) return false;
 
-		BlockPos pos = new BlockPos(entity);
-		World world = entity.world;
+		BlockPos pos = new BlockPos(target);
+		World world = target.world;
 
-		entity.hurtTime = 0; // Stops the entity looking red while frozen and the resulting z-fighting
-		entity.extinguish();
+		target.hurtTime = 0; // Stops the entity looking red while frozen and the resulting z-fighting
+		target.extinguish();
 
 		// Short mobs such as spiders and pigs
-		if((entity.height < 1.2 || entity.isChild()) && BlockUtils.canBlockBeReplaced(world, pos)){
+		if((target.height < 1.2 || target.isChild()) && BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canPlaceBlock(caster, world, pos)){
 			
 			world.setBlockState(pos, this.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityStatue){
-				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(entity, 1, 1);
+				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(target, 1, 1);
 				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
 			}
 			
-			entity.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
-			entity.setDead();
+			target.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
+			target.setDead();
 			return true;
 		}
 		// Normal sized mobs like zombies and skeletons
-		else if(entity.height < 2.5 && BlockUtils.canBlockBeReplaced(world, pos)
-				&& BlockUtils.canBlockBeReplaced(world, pos.up())){
+		else if(target.height < 2.5 && BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canBlockBeReplaced(world, pos.up())
+				&& BlockUtils.canPlaceBlock(caster, world, pos) && BlockUtils.canPlaceBlock(caster, world, pos.up())){
 			
 			world.setBlockState(pos, this.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityStatue){
-				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(entity, 1, 2);
+				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(target, 1, 2);
 				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
 			}
 
 			world.setBlockState(pos.up(), this.getDefaultState());
 			if(world.getTileEntity(pos.up()) instanceof TileEntityStatue){
-				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(entity, 2, 2);
+				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(target, 2, 2);
 			}
 
-			entity.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
-			entity.setDead();
+			target.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
+			target.setDead();
 			return true;
 		}
 		// Tall mobs like endermen
-		else if(BlockUtils.canBlockBeReplaced(world, pos)
-				&& BlockUtils.canBlockBeReplaced(world, pos.up())
-				&& BlockUtils.canBlockBeReplaced(world, pos.up(2))){
+		else if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canBlockBeReplaced(world, pos.up()) && BlockUtils.canBlockBeReplaced(world, pos.up(2))
+				&& BlockUtils.canPlaceBlock(caster, world, pos) && BlockUtils.canPlaceBlock(caster, world, pos.up()) && BlockUtils.canPlaceBlock(caster, world, pos.up(2))){
 			
 			world.setBlockState(pos, this.getDefaultState());
 			if(world.getTileEntity(pos) instanceof TileEntityStatue){
-				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(entity, 1, 3);
+				((TileEntityStatue)world.getTileEntity(pos)).setCreatureAndPart(target, 1, 3);
 				((TileEntityStatue)world.getTileEntity(pos)).setLifetime(duration);
 			}
 
 			world.setBlockState(pos.up(), this.getDefaultState());
 			if(world.getTileEntity(pos.up()) instanceof TileEntityStatue){
-				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(entity, 2, 3);
+				((TileEntityStatue)world.getTileEntity(pos.up())).setCreatureAndPart(target, 2, 3);
 			}
 
 			world.setBlockState(pos.up(2), this.getDefaultState());
 			if(world.getTileEntity(pos.up(2)) instanceof TileEntityStatue){
-				((TileEntityStatue)world.getTileEntity(pos.up(2))).setCreatureAndPart(entity, 3, 3);
+				((TileEntityStatue)world.getTileEntity(pos.up(2))).setCreatureAndPart(target, 3, 3);
 			}
 
-			entity.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
-			entity.setDead();
+			target.getEntityData().setBoolean(this.isIce ? FROZEN_NBT_KEY : PETRIFIED_NBT_KEY, true);
+			target.setDead();
 			return true;
 		}
 			

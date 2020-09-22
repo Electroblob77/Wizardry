@@ -51,8 +51,8 @@ public class EntityLargeMagicFireball extends EntityMagicFireball {
 	protected void onImpact(RayTraceResult rayTrace){
 
 		if(!world.isRemote){
-			boolean flag = this.getThrower() == null || EntityUtils.canDamageBlocks(this.getThrower(), world);
-			this.world.newExplosion(null, this.posX, this.posY, this.posZ, getExplosionPower() * blastMultiplier, flag, flag);
+			boolean terrainDamage = EntityUtils.canDamageBlocks(this.getThrower(), world);
+			this.world.newExplosion(null, this.posX, this.posY, this.posZ, getExplosionPower() * blastMultiplier, terrainDamage, terrainDamage);
 		}
 
 		super.onImpact(rayTrace);
