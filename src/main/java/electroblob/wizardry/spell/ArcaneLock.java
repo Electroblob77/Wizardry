@@ -14,7 +14,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -82,25 +84,7 @@ public class ArcaneLock extends SpellRay {
 		return false;
 	}
 
-	@SubscribeEvent
-	public static void onLeftClickBlockEvent(PlayerInteractEvent.LeftClickBlock event){
-
-		if(!canBypassLocks(event.getEntityPlayer())){
-
-			TileEntity tileentity = event.getWorld().getTileEntity(event.getPos());
-
-			// Prevents arcane-locked containers from being broken
-			// Need to check if it has the unique id first because if it is absent getUniqueId will return the nil UUID
-			if(tileentity != null && tileentity.getTileData().hasUniqueId(ArcaneLock.NBT_KEY)){
-				// Only the player that owns the lock may break the container
-				// If nobody owns it (i.e. it's part of a shrine), player will be null
-				// Why is getUniqueId marked @Nullable? It literally creates a UUID and returns it!
-				if(event.getEntityPlayer().getUniqueID() != tileentity.getTileData().getUniqueId(ArcaneLock.NBT_KEY)){
-					event.setCanceled(true);
-				}
-			}
-		}
-	}
+	// Event Handlers
 
 	@SubscribeEvent
 	public static void onRightClickBlockEvent(PlayerInteractEvent.RightClickBlock event){
@@ -125,8 +109,47 @@ public class ArcaneLock extends SpellRay {
 		}
 	}
 
-	private static boolean canBypassLocks(EntityPlayer player){
+	// This event is the ideal, because it's seamless. For normal mining it works great, but it won't work for things
+	// like the mine spell, mining lasers, destruction gadgets, etc. so we also need to intercept the general
+	// block break event below, just in case.
+	@SubscribeEvent
+	public static void onLeftClickBlockEvent(PlayerInteractEvent.LeftClickBlock event){
+		event.setCanceled(checkForLockedBlockBreak(event.getEntityPlayer(), event.getWorld(), event.getPos()));
+	}
 
+	@SubscribeEvent
+	public static void onBlockBreakEvent(BlockEvent.BreakEvent event){
+		event.setCanceled(checkForLockedBlockBreak(event.getPlayer(), event.getWorld(), event.getPos()));
+	}
+
+	// Yup, this spell even protects your chests from the enderdragon now!
+	@SubscribeEvent
+	public static void onLivingDestroyBlockEvent(LivingDestroyBlockEvent event){
+		event.setCanceled(checkForLockedBlockBreak(event.getEntityLiving(), event.getEntity().world, event.getPos()));
+	}
+
+	private static boolean checkForLockedBlockBreak(EntityLivingBase breaker, World world, BlockPos pos){
+
+		if(!(breaker instanceof EntityPlayer) || !canBypassLocks((EntityPlayer)breaker)){
+
+			TileEntity tileentity = world.getTileEntity(pos);
+
+			// Prevents arcane-locked containers from being broken
+			// Need to check if it has the unique id first because if it is absent getUniqueId will return the nil UUID
+			if(tileentity != null && tileentity.getTileData().hasUniqueId(ArcaneLock.NBT_KEY)){
+				// Only the player that owns the lock may break the container
+				// If nobody owns it (i.e. it's part of a shrine), player will be null
+				// Why is getUniqueId marked @Nullable? It literally creates a UUID and returns it!
+				if(breaker.getUniqueID() != tileentity.getTileData().getUniqueId(ArcaneLock.NBT_KEY)){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean canBypassLocks(EntityPlayer player){
 		if(!player.isCreative()) return false;
 		if(Wizardry.settings.creativeBypassesArcaneLock) return true;
 		MinecraftServer server = player.world.getMinecraftServer();
