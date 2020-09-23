@@ -93,7 +93,7 @@ public class EntityBlackHole extends EntityScaledConstruct {
 
 		if(!this.world.isRemote){
 
-			double radius = 6 * sizeMultiplier; // TODO: Support for spell properties
+			double radius = 2 * height * sizeMultiplier;
 
 			boolean suckInBlocks = getCaster() instanceof EntityPlayer && EntityUtils.canDamageBlocks(getCaster(), world)
 					&& ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_black_hole);
