@@ -565,9 +565,9 @@ public final class Settings {
 
 		property = config.get(GAMEPLAY_CATEGORY, "dispenserBlockDamage", true,
 				"Whether spells cast by dispensers can destroy blocks in the world. Wizardry makes every attempt to respect protection mods and plugins, but cannot guarantee it will work in all cases for every mod. If you need absolutely watertight anti-grief, disable this setting.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".player_block_damage");
+		property.setLanguageKey("config." + Wizardry.MODID + ".dispenser_block_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
-		playerBlockDamage = property.getBoolean();
+		dispenserBlockDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,
