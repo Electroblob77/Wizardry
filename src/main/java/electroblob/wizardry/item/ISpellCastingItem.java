@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
  * This interface is used for the following:<br>
  *     - General-purpose detection of continuous spell casting (see {@link EntityUtils#isCasting(EntityLivingBase, Spell)})<br>
  *     - Display of the arcane workbench tooltip (in conjunction with {@link IManaStoringItem})<br>
- *     - Spell HUD visibility<br>
+ *     - Supplying information to the spell HUD<br>
  *     - Spell switching controls (they won't do anything unless the player is holding an {@code ISpellCastingItem})<br>
  *     - Artefacts that trigger a player's wands/scrolls to cast spells
  * @author Electroblob
@@ -39,6 +39,28 @@ public interface ISpellCastingItem {
 	 */
 	@Nonnull
 	Spell getCurrentSpell(ItemStack stack);
+
+	/**
+	 * Returns the spell equipped in the next slot on the given itemstack. The given itemstack will be of this item.
+	 * @param stack The itemstack to query.
+	 * @return The next spell, or {@link electroblob.wizardry.registry.Spells#none Spells.none} if no spell is equipped
+	 * in the next slot. Returns the current spell by default (useful for items with only one spell).
+	 */
+	@Nonnull
+	default Spell getNextSpell(ItemStack stack){
+		return getCurrentSpell(stack);
+	}
+
+	/**
+	 * Returns the spell equipped in the previous slot on the given itemstack. The given itemstack will be of this item.
+	 * @param stack The itemstack to query.
+	 * @return The previous spell, or {@link electroblob.wizardry.registry.Spells#none Spells.none} if no spell is
+	 * equipped in the previous slot. Returns the current spell by default (useful for items with only one spell).
+	 */
+	@Nonnull
+	default Spell getPreviousSpell(ItemStack stack){
+		return getCurrentSpell(stack);
+	}
 
 	/**
 	 * Returns all the spells currently bound to the given itemstack. The given itemstack will be of this item.
@@ -83,6 +105,24 @@ public interface ISpellCastingItem {
 	 * @return True if the spell HUD should be shown, false if not.
 	 */
 	boolean showSpellHUD(EntityPlayer player, ItemStack stack);
+
+	/**
+	 * Returns the current cooldown to display on the spell HUD for the given itemstack.
+	 * @param stack The itemstack to query.
+	 * @return The current cooldown for the equipped spell.
+	 */
+	default int getCurrentCooldown(ItemStack stack){
+		return 0;
+	}
+
+	/**
+	 * Returns the max cooldown of the current spell to display on the spell HUD for the given itemstack.
+	 * @param stack The itemstack to query.
+	 * @return The max cooldown for the equipped spell.
+	 */
+	default int getCurrentMaxCooldown(ItemStack stack){
+		return 0;
+	}
 
 	/**
 	 * Returns whether this item's spells should be displayed in the arcane workbench tooltip. Only called client-side.

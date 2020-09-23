@@ -15,7 +15,6 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WandHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -156,7 +155,9 @@ public class GuiSpellDisplay {
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) return; // Don't show charge meter in the debug screen
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) return; // Don't show in third person
 
-		Spell spell = WandHelper.getCurrentSpell(wand);
+		if(!(wand.getItem() instanceof ISpellCastingItem)) throw new IllegalArgumentException("The given stack must contain an ISpellCastingItem!");
+
+		Spell spell = ((ISpellCastingItem)wand.getItem()).getCurrentSpell(wand);
 
 		int chargeup = spell.getChargeup();
 
@@ -198,6 +199,8 @@ public class GuiSpellDisplay {
 	private static void renderSpellHUD(EntityPlayer player, ItemStack wand, boolean mainHand, int width, int height, float partialTicks, boolean textLayer){
 
 		if(!Wizardry.settings.showSpellHUD) return;
+
+		if(!(wand.getItem() instanceof ISpellCastingItem)) throw new IllegalArgumentException("The given stack must contain an ISpellCastingItem!");
 
 		boolean flipX = Wizardry.settings.spellHUDPosition.flipX;
 		boolean flipY = Wizardry.settings.spellHUDPosition.flipY;
@@ -245,19 +248,18 @@ public class GuiSpellDisplay {
 			y = MathHelper.ceil(y/scale);
 		}
 
-		// TODO: Maybe convert this to use ISpellCastingItem
-		Spell spell = WandHelper.getCurrentSpell(wand);
-		int cooldown = WandHelper.getCurrentCooldown(wand);
-		int maxCooldown = WandHelper.getCurrentMaxCooldown(wand);
+		Spell spell = ((ISpellCastingItem)wand.getItem()).getCurrentSpell(wand);
+		int cooldown = ((ISpellCastingItem)wand.getItem()).getCurrentCooldown(wand);
+		int maxCooldown = ((ISpellCastingItem)wand.getItem()).getCurrentMaxCooldown(wand);
 
 		if(textLayer){
 
 			float animationProgress = Math.signum(switchTimer) * ((SPELL_SWITCH_TIME - Math.abs(switchTimer) +
 					partialTicks) / SPELL_SWITCH_TIME);
 
-			String prevSpellName = getFormattedSpellName(WandHelper.getPreviousSpell(wand), player, WandHelper.getPreviousCooldown(wand));
+			String prevSpellName = getFormattedSpellName(((ISpellCastingItem)wand.getItem()).getPreviousSpell(wand), player, 0);
 			String spellName = getFormattedSpellName(spell, player, cooldown);
-			String nextSpellName = getFormattedSpellName(WandHelper.getNextSpell(wand), player, WandHelper.getNextCooldown(wand));
+			String nextSpellName = getFormattedSpellName(((ISpellCastingItem)wand.getItem()).getNextSpell(wand), player, 0);
 
 			skin.drawText(x, y, flipX, flipY, prevSpellName, spellName, nextSpellName, animationProgress);
 

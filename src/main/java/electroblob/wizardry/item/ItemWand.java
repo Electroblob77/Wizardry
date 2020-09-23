@@ -108,6 +108,16 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	}
 
 	@Override
+	public Spell getNextSpell(ItemStack stack){
+		return WandHelper.getNextSpell(stack);
+	}
+
+	@Override
+	public Spell getPreviousSpell(ItemStack stack){
+		return WandHelper.getPreviousSpell(stack);
+	}
+
+	@Override
 	public Spell[] getSpells(ItemStack stack){
 		return WandHelper.getSpells(stack);
 	}
@@ -125,6 +135,16 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	@Override
 	public boolean selectSpell(ItemStack stack, int index){
 		return WandHelper.selectSpell(stack, index);
+	}
+
+	@Override
+	public int getCurrentCooldown(ItemStack stack){
+		return WandHelper.getCurrentCooldown(stack);
+	}
+
+	@Override
+	public int getCurrentMaxCooldown(ItemStack stack){
+		return WandHelper.getCurrentMaxCooldown(stack);
 	}
 
 	@Override
