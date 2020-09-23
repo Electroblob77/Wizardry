@@ -1,0 +1,33 @@
+{
+	"name": "Altar",
+	"description": "Imbuement altars are carved from a rare type of stone called blue malthrock, prized for both its beauty and its imperishability.",
+	"width": 128,
+	"height": 47,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 2
+	},
+	"text_inset": {
+		"x": 42,
+		"y": 20
+	},
+	"spell_cascade_offset": {
+		"x": 2,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 37,
+		"y": 0,
+		"length": 77,
+		"height": 7,
+		"mirror": {
+			"x": false,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

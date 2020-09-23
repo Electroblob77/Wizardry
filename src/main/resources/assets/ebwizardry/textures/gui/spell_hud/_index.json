@@ -78,5 +78,13 @@
 	"festive": {
 		"texture": "ebwizardry:gui/spell_hud/festive",
 		"metadata": "ebwizardry:gui/spell_hud/festive"
+	},
+	"library": {
+		"texture": "ebwizardry:gui/spell_hud/library",
+		"metadata": "ebwizardry:gui/spell_hud/library"
+	},
+	"altar": {
+		"texture": "ebwizardry:gui/spell_hud/altar",
+		"metadata": "ebwizardry:gui/spell_hud/altar"
 	}
 }
