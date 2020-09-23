@@ -675,7 +675,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			// progression or the player is in creative mode.
 			if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
 					|| WandHelper.getProgression(wand) >= tier.progression)
-					&& tier == this.tier.next()){
+					&& tier == this.tier.next() && this.tier != Tier.MASTER){
 
 				if(Wizardry.settings.legacyWandLevelling){
 					// Progression has little meaning with legacy upgrade mechanics so just reset it
