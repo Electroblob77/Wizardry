@@ -426,7 +426,7 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 			}
 		}
 
-		if(!availableSpells.contains(currentSpell)) currentSpell = Spells.none; // TODO: Do we want this?
+		if(!availableSpells.contains(currentSpell)) currentSpell = Spells.none;
 
 		updateMatchingSpells();
 		updateButtonVisiblity();

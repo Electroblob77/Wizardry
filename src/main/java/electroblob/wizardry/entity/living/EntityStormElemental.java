@@ -31,7 +31,6 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 	public EntityStormElemental(World world){
 		super(world);
 		// For some reason this can't be in initEntityAI
-		// TESTME: May need to be inside a !world.isRemote check.
 		this.tasks.addTask(0, this.spellAttackAI);
 	}
 

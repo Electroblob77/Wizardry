@@ -200,7 +200,6 @@ public abstract class WorldGenWizardryStructure implements IWorldGenerator {
 
 			// To properly minimise cascading worldgen lag, the method below returns the position where the corner needs
 			// to be such that the original structure's NW (-X, -Z) corner is at the origin.
-			// TODO: Actually this may not truly minimise cascading, hmmm
 			origin = template.getZeroPositionWithTransform(origin, settings.getMirror(), settings.getRotation());
 
 			spawnStructure(random, world, origin, template, settings, structureFile);

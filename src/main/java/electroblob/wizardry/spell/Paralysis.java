@@ -95,8 +95,6 @@ public class Paralysis extends SpellRay {
 	
 	// See WizardryClientEventHandler for prevention of players' movement under the effects of paralysis
 	
-	// TODO: (Animated?) screen overlay effect for paralysed players in first-person
-	
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 		// Disables entities' AI when under the effects of paralysis and re-enables it on the last update of the effect

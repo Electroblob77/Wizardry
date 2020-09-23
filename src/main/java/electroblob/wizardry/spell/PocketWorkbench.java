@@ -22,7 +22,6 @@ public class PocketWorkbench extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		// TODO: Investigate possible item duplication bug with this spell. So far I have been unable to recreate it.
 		if(!world.isRemote){
 			caster.openGui(Wizardry.instance, WizardryGuiHandler.PORTABLE_CRAFTING, world, (int)caster.posX,
 					(int)caster.posY, (int)caster.posZ);

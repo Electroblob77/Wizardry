@@ -164,7 +164,6 @@ public class ModelRendererExtended extends ModelRenderer {
 
 	@Override
 	public void postRender(float scale){
-		// TODO: It may just be easier to hardcode the item rotation part of the animation as well
 		// Exactly the same setup as above, just add item rotation/translation fields and setters
 //		float angle = 1;
 //		float radius = 10;

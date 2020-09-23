@@ -186,7 +186,7 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 		natural = nbt.getBoolean(NATURAL_NBT_KEY);
 
 		if(!this.checkLootAndRead(nbt)){
-			// TODO: Replace with ItemStackHelper#loadAllItems
+
 			NBTTagList tagList = nbt.getTagList("Inventory", NBT.TAG_COMPOUND);
 
 			for(int i = 0; i < tagList.tagCount(); i++){
@@ -210,8 +210,6 @@ public class TileEntityBookshelf extends TileEntityLockableLoot implements ITick
 		nbt.setBoolean(NATURAL_NBT_KEY, natural);
 
 		if(!this.checkLootAndWrite(nbt)){
-
-			// TODO: Replace with ItemStackHelper#saveAllItems
 
 			NBTTagList itemList = new NBTTagList();
 

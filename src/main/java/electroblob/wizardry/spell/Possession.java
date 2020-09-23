@@ -148,7 +148,7 @@ public class Possession extends SpellRay {
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 
 //		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
-		this.playSound(world, caster, ticksInUse, -1, modifiers, "possess"); // TODO: There must be a better way...
+		this.playSound(world, caster, ticksInUse, -1, modifiers, "possess");
 		return true;
 	}
 

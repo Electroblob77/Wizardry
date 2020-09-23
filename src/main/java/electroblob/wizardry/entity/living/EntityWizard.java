@@ -252,7 +252,6 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Apparently nothing goes here, and nothing's here in EntityVillager either...
 	}
 
-	// TESTME: Should this be getName instead?
 	@Override
 	public ITextComponent getDisplayName(){
 		

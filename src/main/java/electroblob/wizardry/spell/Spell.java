@@ -305,7 +305,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 					.map(s -> s.properties).toArray(SpellProperties[]::new)));
 		}else{
 			// On the client side, wipe the spell properties so the new ones can be set
-			// TESTME: Can we guarantee this happens before the packet arrives?
+			// Not sure if we can guarantee this happens before the packet arrives, but it hasn't caused any problems yet!
 			clearProperties();
 		}
 	}
