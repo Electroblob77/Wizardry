@@ -20,11 +20,15 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.BlockSnapshot;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -285,8 +289,16 @@ public final class BlockUtils {
 		if(!EntityUtils.canDamageBlocks(breaker, world)) return -1; // General block damage prevention comes first
 
 		if(world.isOutsideBuildHeight(pos)) return -1;
-		// This line *should* trigger bukkit plugin hooks
-		if(breaker instanceof EntityPlayer && !world.isBlockModifiable((EntityPlayer)breaker, pos)) return -1;
+
+		EntityPlayer fakeplayer = FakePlayerFactory.getMinecraft((WorldServer)world);
+
+		if(breaker instanceof EntityPlayer){
+			// This line *should* trigger bukkit plugin hooks
+			if(!world.isBlockModifiable((EntityPlayer)breaker, pos)) return -1;
+		}else if(breaker == null){
+			// Also need this for dispensers
+			if(!world.isBlockModifiable(fakeplayer, pos)) return -1;
+		}
 
 		// I think this is irrelevant in forge because it's only for vanilla entities, but bukkit might use it
 		IBlockState state = world.getBlockState(pos);
@@ -295,6 +307,12 @@ public final class BlockUtils {
 		if(breaker instanceof EntityLiving && ForgeEventFactory.onEntityDestroyBlock((EntityLivingBase)breaker, pos, state)) return -1;
 		// Need to trigger PlayerEvent.BreakSpeed as some claim mods (e.g. LandManager) use it instead of BlockEvent.BreakEvent
 		if(breaker instanceof EntityPlayer && ForgeEventFactory.getBreakSpeed((EntityPlayer)breaker, state, 1, pos) < 0) return -1;
+
+		if(breaker == null){ // Dispensers need to trigger something, so use a fake player as per BreakEvent's comment
+			if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, state, fakeplayer))){
+				return -1;
+			}
+		}
 
 		int xp = 0;
 
