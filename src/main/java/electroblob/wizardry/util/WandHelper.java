@@ -52,18 +52,6 @@ public final class WandHelper {
 
 	private static final HashMap<Item, String> upgradeMap = new HashMap<>();
 
-	static { // TODO: Move these to a proper initialisation method, at the moment we're relying on class load order!
-		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
-		upgradeMap.put(WizardryItems.storage_upgrade, "storage");
-		upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");
-		upgradeMap.put(WizardryItems.range_upgrade, "range");
-		upgradeMap.put(WizardryItems.duration_upgrade, "duration");
-		upgradeMap.put(WizardryItems.cooldown_upgrade, "cooldown");
-		upgradeMap.put(WizardryItems.blast_upgrade, "blast");
-		upgradeMap.put(WizardryItems.attunement_upgrade, "attunement");
-		upgradeMap.put(WizardryItems.melee_upgrade, "melee");
-	}
-
 	// =================================================== Spells ===================================================
 
 	/**
@@ -453,7 +441,7 @@ public final class WandHelper {
 
 	/**
 	 * Registers a special upgrade with wizardry. Not used in the base mod, but I've put it here to make it easy for
-	 * add-ons to add new wand upgrades.
+	 * add-ons to add new wand upgrades. This should be called during the init() phase of mod loading.
 	 * 
 	 * @param upgrade The wand upgrade item
 	 * @param identifier A unique string, used as a key for wand nbt tags
@@ -465,6 +453,19 @@ public final class WandHelper {
 		if(upgradeMap.containsValue(identifier))
 			throw new IllegalArgumentException("Duplicate wand upgrade identifier: " + identifier);
 		upgradeMap.put(upgrade, identifier);
+	}
+
+	/** Called from the init() method in wizardry's main mod class to populate the special wand upgrade map. */
+	public static void populateUpgradeMap(){
+		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
+		upgradeMap.put(WizardryItems.storage_upgrade, "storage");
+		upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");
+		upgradeMap.put(WizardryItems.range_upgrade, "range");
+		upgradeMap.put(WizardryItems.duration_upgrade, "duration");
+		upgradeMap.put(WizardryItems.cooldown_upgrade, "cooldown");
+		upgradeMap.put(WizardryItems.blast_upgrade, "blast");
+		upgradeMap.put(WizardryItems.attunement_upgrade, "attunement");
+		upgradeMap.put(WizardryItems.melee_upgrade, "melee");
 	}
 
 	// ================================================= Progression =================================================

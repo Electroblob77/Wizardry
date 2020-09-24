@@ -16,6 +16,7 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellProperties;
+import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.worldgen.*;
 import net.minecraft.item.Item;
 import net.minecraft.util.SoundCategory;
@@ -171,6 +172,7 @@ public class Wizardry {
 		WizardryItems.populateArmourMap();
 		WizardryItems.registerDispenseBehaviours();
 		WizardryItems.registerBannerPatterns();
+		WandHelper.populateUpgradeMap();
 		Spell.registry.forEach(Spell::init);
 		SpellProperties.init();
 
