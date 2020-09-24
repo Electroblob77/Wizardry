@@ -192,11 +192,6 @@ public final class Settings {
 	public boolean dispenserBlockDamage = true;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
-	/**
-	 * <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
-	 * velocity-based one.
-	 */
-	public boolean replaceVanillaFallDamage = true; // TODO: This should be synced
 	/** <b>[Server-only]</b> Whether to tweak the blindness effect to reduce follow distance when used on non-players. */
 	public boolean blindnessTweak = true;
 	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
@@ -308,6 +303,11 @@ public final class Settings {
 	public boolean passiveMobsAreAllies = false;
 	/** <b>[Synchronised]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
 	public boolean replaceVanillaFireballs = true;
+	/**
+	 * <b>[Synchronised]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
+	 * velocity-based one.
+	 */
+	public boolean replaceVanillaFallDamage = true;
 	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
 	/**
@@ -745,6 +745,7 @@ public final class Settings {
 				"Whether to replace Minecraft's distance-based fall damage calculation with an equivalent, velocity-based one. This is done such that mobs in freefall will take exactly the same damage as normal, so it will not break falling-based mob farms. Disable this if you experience falling-related weirdness! If this is disabled, some spells will use a more simplistic method of resetting the player's fall damage in certain cases.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fall_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
 		replaceVanillaFallDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
