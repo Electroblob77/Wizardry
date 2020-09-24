@@ -8,7 +8,6 @@ import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -61,11 +60,6 @@ public class EntityDecay extends EntityMagicConstruct {
 			.spawn(world);
 		}
 	}
-
-	// TESTME: What the heck are these two doing?! (Are they a throwback to when this was not a construct?)
-	@Override protected void readEntityFromNBT(NBTTagCompound nbttagcompound){}
-
-	@Override protected void writeEntityToNBT(NBTTagCompound nbttagcompound){}
 
 	@Override
 	public boolean isInRangeToRenderDist(double distance){
