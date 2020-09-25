@@ -19,6 +19,7 @@ public class Telekinesis extends SpellRay {
 
 	public Telekinesis(){
 		super("telekinesis", SpellActions.POINT, false);
+		this.aimAssist(0.4f); // Helps with aiming at items
 	}
 
 	@Override public boolean requiresPacket(){ return false; }
