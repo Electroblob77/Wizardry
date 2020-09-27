@@ -85,14 +85,22 @@ public class CustomCreativeSearchHandler {
 
 	@SubscribeEvent
 	public static void onDrawScreenPostEvent(GuiScreenEvent.DrawScreenEvent.Post event){
-		if(event.getGui() instanceof GuiContainerCreative && currentSearchField != null
-				&& DrawingUtils.isPointInRegion(currentSearchField.x, currentSearchField.y, currentSearchField.width, currentSearchField.height, event.getMouseX(), event.getMouseY())){
-			if(searchBarHoverTime == 0){
-				searchBarHoverTime++;
-			}else if(searchBarHoverTime == SEARCH_TOOLTIP_HOVER_TIME){
-				event.getGui().drawHoveringText(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.search_tooltip",
-						TOOLTIP_SYNTAX.getFormattingCode(), TOOLTIP_BODY.getFormattingCode()), event.getMouseX(), event.getMouseY());
+
+		if(event.getGui() instanceof GuiContainerCreative && currentSearchField != null){
+
+			GuiContainerCreative gui = (GuiContainerCreative)event.getGui();
+			CreativeTabs tab = CreativeTabs.CREATIVE_TAB_ARRAY[gui.getSelectedTabIndex()];
+
+			if(tab == WizardryTabs.SPELLS && DrawingUtils.isPointInRegion(currentSearchField.x, currentSearchField.y, currentSearchField.width, currentSearchField.height, event.getMouseX(), event.getMouseY())){
+
+				if(searchBarHoverTime == 0){
+					searchBarHoverTime++;
+				}else if(searchBarHoverTime == SEARCH_TOOLTIP_HOVER_TIME){
+					event.getGui().drawHoveringText(I18n.format("container." + Wizardry.MODID + ":arcane_workbench.search_tooltip",
+							TOOLTIP_SYNTAX.getFormattingCode(), TOOLTIP_BODY.getFormattingCode()), event.getMouseX(), event.getMouseY());
+				}
 			}
+
 		}else{
 			searchBarHoverTime = 0;
 		}
