@@ -44,17 +44,19 @@ public class EntityIceSpike extends EntityMagicConstruct {
 
 		double extensionSpeed = 0;
 
-		if(lifetime - this.ticksExisted < 15){
-			extensionSpeed = -0.01 * (this.ticksExisted - (lifetime - 15));
-		}else if(lifetime - this.ticksExisted < 25){
-			extensionSpeed = 0;
-		}else if(lifetime - this.ticksExisted < 28){
-			extensionSpeed = 0.25;
-		}
+		if(!world.isRemote){
+			if(lifetime - this.ticksExisted < 15){
+				extensionSpeed = -0.01 * (this.ticksExisted - (lifetime - 15));
+			}else if(lifetime - this.ticksExisted < 25){
+				extensionSpeed = 0;
+			}else if(lifetime - this.ticksExisted < 28){
+				extensionSpeed = 0.25;
+			}
 
-		if(facing != null){ // Will probably be null on the client side, but should never be on the server side
-			this.move(MoverType.SELF, this.facing.getXOffset() * extensionSpeed, this.facing.getYOffset() * extensionSpeed,
-					this.facing.getZOffset() * extensionSpeed);
+			if(facing != null){ // Will probably be null on the client side, but should never be on the server side
+				this.move(MoverType.SELF, this.facing.getXOffset() * extensionSpeed, this.facing.getYOffset() * extensionSpeed,
+						this.facing.getZOffset() * extensionSpeed);
+			}
 		}
 
 		if(lifetime - this.ticksExisted == 30) this.playSound(WizardrySounds.ENTITY_ICE_SPIKE_EXTEND, 1, 2.5f);
