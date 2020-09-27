@@ -476,9 +476,9 @@ public abstract class ParticleWizardry extends Particle {
 			List<Entity> nearbyEntities = EntityUtils.getEntitiesWithinRadius(searchRadius, this.posX,
 					this.posY, this.posZ, world, Entity.class);
 
-			nearbyEntities.removeIf(e -> !(e instanceof ICustomHitbox && ((ICustomHitbox)e).contains(new Vec3d(this.posX, this.posY, this.posZ))));
-
-			if(nearbyEntities.size() > 0) this.setExpired();
+			if(nearbyEntities.stream().anyMatch(e -> e instanceof ICustomHitbox
+					&& ((ICustomHitbox)e).calculateIntercept(new Vec3d(posX, posY, posZ),
+					new Vec3d(prevPosX, prevPosY, prevPosZ), 0) != null)) this.setExpired();
 
 		}
 
