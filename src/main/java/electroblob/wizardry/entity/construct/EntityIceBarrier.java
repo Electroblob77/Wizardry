@@ -4,7 +4,9 @@ import electroblob.wizardry.entity.ICustomHitbox;
 import electroblob.wizardry.registry.WizardrySounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
@@ -85,8 +87,16 @@ public class EntityIceBarrier extends EntityScaledConstruct implements ICustomHi
 			double perpendicularDist = getSignedPerpendicularDistance(entity.getPositionVector());
 
 			if(Math.abs(perpendicularDist) < entity.width/2 + THICKNESS/2){
+
 				double velocity = 0.25 * Math.signum(perpendicularDist);
 				entity.addVelocity(velocity * look.x, 0, velocity * look.z);
+
+				if(!world.isRemote){
+					// Player motion is handled on that player's client so needs packets
+					if(entity instanceof EntityPlayerMP){
+						((EntityPlayerMP)entity).connection.sendPacket(new SPacketEntityVelocity(entity));
+					}
+				}
 			}
 		}
 
