@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityEvokerFangs;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -42,8 +41,7 @@ public class Fangs extends Spell {
 
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		if(!spawnFangs(world, caster.getPositionVector(),
-				GeometryUtils.replaceComponent(caster.getLookVec(), Axis.Y, 0).normalize(), caster, modifiers)) return false;
+		if(!spawnFangs(world, caster.getPositionVector(), GeometryUtils.horizontalise(caster.getLookVec()), caster, modifiers)) return false;
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}

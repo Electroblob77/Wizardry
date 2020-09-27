@@ -23,8 +23,7 @@ public class Boulder extends SpellConstruct<EntityBoulder> {
 	protected void addConstructExtras(EntityBoulder construct, EnumFacing side, EntityLivingBase caster, SpellModifiers modifiers){
 		float speed = getProperty(SPEED).floatValue();
 		// Unlike tornado, boulder always has the same speed
-		Vec3d direction = caster == null ? new Vec3d(side.getDirectionVec())
-				: GeometryUtils.replaceComponent(caster.getLookVec(), Axis.Y, 0).normalize();
+		Vec3d direction = caster == null ? new Vec3d(side.getDirectionVec()) : GeometryUtils.horizontalise(caster.getLookVec());
 		construct.setHorizontalVelocity(direction.x * speed, direction.z * speed);
 		construct.rotationYaw = caster == null ? side.getHorizontalAngle() : caster.rotationYaw;
 		double yOffset = caster == null ? 0 : 1.6;

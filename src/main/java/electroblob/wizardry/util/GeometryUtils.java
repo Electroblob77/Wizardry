@@ -101,6 +101,13 @@ public final class GeometryUtils {
 	}
 
 	/**
+	 * Returns a normalised {@link Vec3d} with the same yaw angle as the given vector, but with a y component of zero.
+	 */
+	public static Vec3d horizontalise(Vec3d vec){
+		return replaceComponent(vec, Axis.Y, 0).normalize();
+	}
+
+	/**
 	 * Returns an array of {@code Vec3d} objects representing the vertices of the given bounding box.
 	 * @param box The bounding box whose vertices are to be returned.
 	 * @return The list of vertices, which will contain 8 elements. Using EnumFacing initials, the order is:

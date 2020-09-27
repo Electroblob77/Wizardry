@@ -66,6 +66,8 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_HAMMER_THROW = 			createSound("entity.hammer.throw");
 	public static final SoundEvent ENTITY_HAMMER_LAND = 			createSound("entity.hammer.land");
 	public static final SoundEvent ENTITY_HEAL_AURA_AMBIENT = 		createSound("entity.heal_aura.ambient");
+	public static final SoundEvent ENTITY_ICE_BARRIER_DEFLECT = 	createSound("entity.ice_barrier.deflect");
+	public static final SoundEvent ENTITY_ICE_BARRIER_EXTEND = 		createSound("entity.ice_barrier.extend");
 	public static final SoundEvent ENTITY_ICE_SPIKE_EXTEND = 		createSound("entity.ice_spike.extend");
 	public static final SoundEvent ENTITY_LIGHTNING_SIGIL_TRIGGER = createSound("entity.lightning_sigil.trigger");
 	public static final SoundEvent ENTITY_METEOR_FALLING = 			createSound("entity.meteor.falling");
