@@ -10,6 +10,7 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
@@ -32,6 +33,11 @@ public class FrostBarrier extends Spell {
 		super("frost_barrier", SpellActions.SUMMON, false);
 		this.npcSelector((e, o) -> true);
 		addProperties(DURATION);
+	}
+
+	@Override
+	public boolean canBeCastBy(TileEntityDispenser dispenser){
+		return true;
 	}
 
 	@Override
