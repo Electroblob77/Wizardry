@@ -49,13 +49,38 @@ public class RenderShield {
 				GlStateManager.rotate(-player.rotationYaw, 0, 1, 0);
 				GlStateManager.rotate(player.rotationPitch, 1, 0, 0);
 
-				GlStateManager.translate(0, 0, 0.8);
+				GlStateManager.translate(0, 0, 1);
+
+				GlStateManager.pushMatrix();
+
+				// Changes the scale at which the texture is applied to the model. See LayerCreeper for a similar example,
+				// but with translation instead of scaling.
+				// You can do all sorts of fun stuff with this, just by applying transformations in the 2D texture space.
+				GlStateManager.matrixMode(GL11.GL_TEXTURE); // Switch to the 2D texture space
+				GlStateManager.loadIdentity();
+
+				GlStateManager.translate(0.5, 0.5, 0);
+
+				float s = 1 - ((player.ticksExisted + event.getPartialTicks()) % 5) / 5 * 0.52f;
+				s = s*s;
+				GlStateManager.scale(s, s, 1);
+
+				GlStateManager.translate(-0.5, -0.5, 0);
+
+				GlStateManager.matrixMode(GL11.GL_MODELVIEW); // Switch back to the 3D model space
 
 				Tessellator tessellator = Tessellator.getInstance();
 
 				Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
 				render(tessellator);
+
+				// Undo the texture scaling
+				GlStateManager.matrixMode(GL11.GL_TEXTURE);
+				GlStateManager.loadIdentity();
+				GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+				GlStateManager.popMatrix();
 
 				GlStateManager.enableLighting();
 
@@ -96,13 +121,38 @@ public class RenderShield {
 			GlStateManager.rotate(-player.renderYawOffset, 0, 1, 0);
 			// GlStateManager.rotate(-player.rotationPitch, 1, 0, 0);
 
-			GlStateManager.translate(0, 0, 0.8);
+			GlStateManager.translate(0, 0, 1);
+
+			GlStateManager.pushMatrix();
+
+			// Changes the scale at which the texture is applied to the model. See LayerCreeper for a similar example,
+			// but with translation instead of scaling.
+			// You can do all sorts of fun stuff with this, just by applying transformations in the 2D texture space.
+			GlStateManager.matrixMode(GL11.GL_TEXTURE); // Switch to the 2D texture space
+			GlStateManager.loadIdentity();
+
+			GlStateManager.translate(0.5, 0.5, 0);
+
+			float s = 1 - ((player.ticksExisted + event.getPartialRenderTick()) % 5) / 5 * 0.52f;
+			s = s*s;
+			GlStateManager.scale(s, s, 1);
+
+			GlStateManager.translate(-0.5, -0.5, 0);
+
+			GlStateManager.matrixMode(GL11.GL_MODELVIEW); // Switch back to the 3D model space
 
 			Tessellator tessellator = Tessellator.getInstance();
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE);
 
 			render(tessellator);
+
+			// Undo the texture scaling
+			GlStateManager.matrixMode(GL11.GL_TEXTURE);
+			GlStateManager.loadIdentity();
+			GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+
+			GlStateManager.popMatrix();
 
 			GlStateManager.enableLighting();
 
