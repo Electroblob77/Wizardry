@@ -44,6 +44,7 @@ public class ItemManaFlask extends Item {
 		super();
 		this.size = size;
 		this.setCreativeTab(WizardryTabs.WIZARDRY);
+		this.setMaxStackSize(16);
 	}
 
 	@Override
