@@ -13,12 +13,12 @@
   "tier": "apprentice",
   "element": "healing",
   "type": "alteration",
-  "cost": 15,
+  "cost": 25,
   "chargeup": 0,
-  "cooldown": 30,
+  "cooldown": 60,
   "base_properties": {
-    "range": 10,
-    "effect_duration": 300,
+    "range": 8,
+    "effect_duration": 200,
     "effect_strength": 0
   }
 }
