@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Handles the setup and rendering events for custom player animations, as well as registering of animations. Addons
@@ -90,7 +91,8 @@ public class PlayerAnimator {
 
 				List<LayerRenderer<? extends EntityLivingBase>> layers = (List<LayerRenderer<? extends EntityLivingBase>>)layerRenderers.get(renderer);
 
-				playerLayers.put(renderer, layers);
+				// Save armour layers for lazy-loading later (ignore other layers so iteration is faster)
+				playerLayers.put(renderer, layers.stream().filter(l -> l instanceof LayerBipedArmor).collect(Collectors.toList()));
 
 				for(LayerRenderer<?> layer : layers){
 
@@ -127,11 +129,13 @@ public class PlayerAnimator {
 				for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
 
 					ItemStack armour = player.getItemStackFromSlot(slot);
+					// This method could behave dynamically depending on stuff like NBT so there's not really any way to
+					// optimise it further, we *have* to retrieve the model every time (shouldn't be too bad though)
 					ModelBiped model = ForgeHooksClient.getArmorModel(player, armour, slot, ((LayerBipedArmor)layer).getModelFromSlot(slot));
 
 					List<ModelBiped> models = playerLayerModels.get(renderer);
 
-					if(!models.contains(model)){
+					if(!models.contains(model)){ // Ignore already-wrapped models
 						models.add(model);
 						ModelRendererExtended.wrap(model);
 					}
@@ -143,9 +147,9 @@ public class PlayerAnimator {
 
 		for(Animation animation : animations){
 
-			boolean autoRotateSecondLayer = animation.autoRotateSecondLayer(player, firstPerson);
-
 			if(animation.shouldDisplay(player, firstPerson)){
+
+				boolean autoRotateSecondLayer = animation.autoRotateSecondLayer(player, firstPerson);
 
 				flag = true;
 
