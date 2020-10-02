@@ -3,7 +3,9 @@ package electroblob.wizardry.client.renderer.overlay;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.WizardryClientEventHandler;
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.client.Minecraft;
@@ -15,6 +17,8 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
+import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -28,6 +32,10 @@ public class RenderSixthSense {
 
 	private static final ResourceLocation MARKER_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_marker.png");
 	private static final ResourceLocation SCREEN_OVERLAY_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_overlay.png");
+
+	private static final int PASSIVE_MOB_MARKER_COLOUR = 0xc6ff00;
+	private static final int HOSTILE_MOB_MARKER_COLOUR = 0x004a97;
+	private static final int PLAYER_MARKER_COLOUR = 0xffffff;
 
 	@SubscribeEvent
 	public static void onRenderGameOverlayEvent(RenderGameOverlayEvent.Post event){
@@ -80,7 +88,21 @@ public class RenderSixthSense {
 			GlStateManager.rotate(180 - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
-			GlStateManager.color(1, 1, 1, 1);
+			// Makes the colour add to the colour of the texture pixels, rather than the default multiplying
+			GlStateManager.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_ADD);
+
+			int colour = PASSIVE_MOB_MARKER_COLOUR;
+
+			if(ItemArtefact.isArtefactActive(mc.player, WizardryItems.charm_sixth_sense)){
+				if(event.getEntity() instanceof IMob) colour = HOSTILE_MOB_MARKER_COLOUR;
+				else if(event.getEntity() instanceof EntityPlayer) colour = PLAYER_MARKER_COLOUR;
+			}
+
+			int r = colour >> 16 & 255;
+			int g = colour >> 8 & 255;
+			int b = colour & 255;
+
+			GlStateManager.color(r/255f, g/255f, b/255f, 1);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 
@@ -97,6 +119,8 @@ public class RenderSixthSense {
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 			GlStateManager.enableDepth();
+			// Reverses the colour addition change from before
+			GlStateManager.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
 			GlStateManager.popMatrix();
 		}
