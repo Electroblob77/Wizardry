@@ -44,8 +44,9 @@ import java.util.Random;
 
 // Strictly speaking, this isn't a builder class in the traditional sense, because rather than returning the built
 // object at the end, it sends it to be processed instead and returns nothing. Additionally, unlike most builders
-// it's a singleton, because it's likely to be called very frequently and there's no point making a new instance
-// every time and clogging the heap with objects. It's also lazy, see the comment about builder variables below.
+// it's a singleton, because it's likely to be called very frequently and since this only happens from a single (client)
+// thread, there's no point making a new instance every time and clogging the heap with objects. It's also lazy, see
+// the comment about builder variables below.
 public final class ParticleBuilder {
 
 	/** The static instance of the particle builder. */

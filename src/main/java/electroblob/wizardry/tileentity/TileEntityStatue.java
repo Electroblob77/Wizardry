@@ -46,7 +46,9 @@ public class TileEntityStatue extends TileEntity implements ITickable {
 	/**
 	 * The position within the petrified creature this particular tileentity holds. 1 is at the bottom.
 	 */
-	public int position = 1; // TODO: Remove this, there is no need for more than 1 TE per statue
+	// TODO: Remove this, there is no need for more than 1 TE per statue - actually, there is in the case of petrified
+	// 		 creatures, which should show the block breaking animation on all parts... except this is also broken!
+	public int position = 1;
 
 	public void setCreatureAndPart(EntityLiving entity, int position, int parts){
 		this.creature = entity;

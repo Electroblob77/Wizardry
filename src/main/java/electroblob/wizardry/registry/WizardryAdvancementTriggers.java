@@ -26,6 +26,7 @@ public final class WizardryAdvancementTriggers {
 	public static final CustomAdvancementTrigger spell_failure = new CustomAdvancementTrigger("trigger_spell_failure");
 	public static final CustomAdvancementTrigger wand_levelup = new CustomAdvancementTrigger("trigger_wand_levelup");
 	public static final CustomAdvancementTrigger restore_imbuement_altar = new CustomAdvancementTrigger("restore_imbuement_altar");
+	// TODO: Make a proper imbuement altar trigger like the arcane workbench one
 	public static final CustomAdvancementTrigger create_elemental_armour = new CustomAdvancementTrigger("create_elemental_armour");
 
 	public static final StructureTrigger visit_structure = new StructureTrigger(new ResourceLocation(Wizardry.MODID, "visit_structure"));
