@@ -220,6 +220,7 @@ public final class WizardryItems {
 	public static final Item ring_fire_melee = placeholder();
 	public static final Item ring_fire_biome = placeholder();
 	public static final Item ring_disintegration = placeholder();
+	public static final Item ring_meteor = placeholder();
 	public static final Item ring_ice_melee = placeholder();
 	public static final Item ring_ice_biome = placeholder();
 	public static final Item ring_arcane_frost = placeholder();
@@ -588,6 +589,7 @@ public final class WizardryItems {
 		registerItem(registry, "ring_fire_melee", 			new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.RING));
 		registerItem(registry, "ring_fire_biome", 			new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.RING));
 		registerItem(registry, "ring_disintegration", 		new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.RING));
+		registerItem(registry, "ring_meteor", 				new ItemArtefact(EnumRarity.EPIC, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_ice_melee", 				new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.RING));
 		registerItem(registry, "ring_ice_biome", 				new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.RING));
 		registerItem(registry, "ring_arcane_frost", 			new ItemArtefact(EnumRarity.EPIC, 		ItemArtefact.Type.RING));
