@@ -49,8 +49,8 @@ public class EntityIceBarrier extends EntityScaledConstruct implements ICustomHi
 
 		// Bit of a cheat but it's easier than trying to sync FrostBarrier#addConstructExtras
 		if(world.isRemote && firstUpdate){
+			setSizeMultiplier(sizeMultiplier); // Do this first or it'll overwrite the bounding box
 			setRotation(rotationYaw, rotationPitch);
-			setSizeMultiplier(sizeMultiplier);
 		}
 
 		this.prevPosX = posX;
@@ -78,20 +78,22 @@ public class EntityIceBarrier extends EntityScaledConstruct implements ICustomHi
 
 		Vec3d look = this.getLookVec();
 
-		for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(2))){
+		if(!world.isRemote){
 
-			if(entity instanceof EntityMagicConstruct) continue;
+			for(Entity entity : world.getEntitiesWithinAABBExcludingEntity(this, getEntityBoundingBox().grow(2))){
 
-			if(!entity.getEntityBoundingBox().intersects(this.getEntityBoundingBox())) continue;
+				if(entity instanceof EntityMagicConstruct) continue;
 
-			double perpendicularDist = getSignedPerpendicularDistance(entity.getPositionVector());
+				if(!entity.getEntityBoundingBox().intersects(this.getEntityBoundingBox())) continue;
 
-			if(Math.abs(perpendicularDist) < entity.width/2 + THICKNESS/2){
+				// For some reason the player position seems to be off by 1 block in x and z, no idea how so for now
+				// I've just fudged it by adding 1 to x and z
+				double perpendicularDist = getSignedPerpendicularDistance(entity.getPositionVector().add(1, 0, 1));
 
-				double velocity = 0.25 * Math.signum(perpendicularDist);
-				entity.addVelocity(velocity * look.x, 0, velocity * look.z);
+				if(Math.abs(perpendicularDist) < entity.width/2 + THICKNESS/2){
 
-				if(!world.isRemote){
+					double velocity = 0.25 * Math.signum(perpendicularDist);
+					entity.addVelocity(velocity * look.x, 0, velocity * look.z);
 					// Player motion is handled on that player's client so needs packets
 					if(entity instanceof EntityPlayerMP){
 						((EntityPlayerMP)entity).connection.sendPacket(new SPacketEntityVelocity(entity));
@@ -159,9 +161,7 @@ public class EntityIceBarrier extends EntityScaledConstruct implements ICustomHi
 	private double getSignedPerpendicularDistance(Vec3d point){
 		Vec3d look = this.getLookVec();
 		Vec3d delta = new Vec3d(point.x - this.posX, 0, point.z - this.posZ);
-		double dist = delta.length();
-		float angle = (float)(delta.dotProduct(look) / dist);
-		return dist * MathHelper.sin(angle);
+		return delta.dotProduct(look);
 	}
 
 }

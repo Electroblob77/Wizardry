@@ -25,15 +25,10 @@ public class RenderIceBarrier extends Render<EntityIceBarrier> {
 		GlStateManager.translate(x, y + entity.height/2, z);
 		GlStateManager.rotate(180, 0F, 0F, 1F);
 		GlStateManager.rotate(yaw, 0, 1, 0);
-		//GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 0, 0, 1);
 		GlStateManager.translate(0, -entity.height/2 - 0.3, 0);
 
-		// Pass in -1 for the lifetime as the boulder crumbles when the time expires
-//		float s = DrawingUtils.smoothScaleFactor(-1, entity.ticksExisted, partialTicks, 10, 10);
 		float s = entity.getSizeMultiplier();
 		GlStateManager.scale(s, s, s);
-
-//		GlStateManager.translate(0, 0.875, 0); // No idea why it starts 7/8 of a block too low, but it does
 
 		this.bindTexture(TEXTURE);
 

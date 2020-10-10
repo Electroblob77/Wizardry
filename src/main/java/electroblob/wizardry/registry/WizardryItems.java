@@ -253,6 +253,7 @@ public final class WizardryItems {
 	public static final Item amulet_fire_cloaking = placeholder();
 	public static final Item amulet_ice_immunity = placeholder();
 	public static final Item amulet_ice_protection = placeholder();
+	public static final Item amulet_frost_warding = placeholder();
 	public static final Item amulet_potential = placeholder();
 	public static final Item amulet_channeling = placeholder();
 	public static final Item amulet_lich = placeholder();
@@ -622,6 +623,7 @@ public final class WizardryItems {
 		registerItem(registry, "amulet_fire_cloaking", 		new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_ice_immunity", 		new ItemArtefact(EnumRarity.EPIC, 		ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_ice_protection", 		new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.AMULET));
+		registerItem(registry, "amulet_frost_warding", 		new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_potential", 			new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_channeling", 			new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.AMULET));
 		registerItem(registry, "amulet_lich", 				new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.AMULET));

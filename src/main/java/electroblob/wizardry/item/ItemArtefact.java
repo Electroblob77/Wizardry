@@ -5,6 +5,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.construct.EntityFireRing;
+import electroblob.wizardry.entity.construct.EntityIceBarrier;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.entity.projectile.EntityDart;
 import electroblob.wizardry.entity.projectile.EntityForceOrb;
@@ -363,6 +364,19 @@ public class ItemArtefact extends Item {
 							}
 						}
 					});
+
+				}else if(artefact == WizardryItems.amulet_frost_warding){
+
+					if(!world.isRemote && player.ticksExisted % 40 == 0){
+
+						List<EntityIceBarrier> barriers = world.getEntitiesWithinAABB(EntityIceBarrier.class, player.getEntityBoundingBox().grow(1.5));
+
+						// Check whether any barriers near the player are facing away from them, meaning the player is behind them
+						if(!barriers.isEmpty() && barriers.stream().anyMatch(b -> b.getLookVec().dotProduct(b.getPositionVector().subtract(player.getPositionVector())) > 0)){
+							player.addPotionEffect(new PotionEffect(WizardryPotions.ward, 50, 1));
+						}
+
+					}
 
 				}else if(artefact == WizardryItems.charm_feeding){
 					// Every 5 seconds, feed the player if they are hungry enough
