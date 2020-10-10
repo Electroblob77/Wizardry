@@ -169,6 +169,7 @@
 	"spell.dragon_fireball": 			{"category": "spells", "sounds": ["mob/ghast/fireball4"]},
 	"spell.earthquake": 				{"category": "spells", "sounds": ["ebwizardry:rumble"]},
 	"spell.empowering_presence": 		{"category": "spells", "sounds": ["ebwizardry:buff"]},
+	"spell.enrage": 					{"category": "spells", "sounds": ["mob/wither/idle1", "mob/wither/idle2", "mob/wither/idle3", "mob/wither/idle4"]},
 	"spell.entrapment": 				{"category": "spells", "sounds": ["mob/evocation_illager/prepare_attack1", "mob/evocation_illager/prepare_attack2"]},
 	"spell.evade": 						{"category": "spells", "sounds": ["random/bow"]},
 	"spell.fangs": 						{"category": "spells", "sounds": ["mob/evocation_illager/prepare_attack1", "mob/evocation_illager/prepare_attack2"]},

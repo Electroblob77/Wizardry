@@ -1,0 +1,22 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "apprentice",
+  "element": "necromancy",
+  "type": "alteration",
+  "cost": 20,
+  "chargeup": 0,
+  "cooldown": 100,
+  "base_properties": {
+    "effect_radius": 8
+  }
+}

@@ -243,6 +243,7 @@ public final class Spells {
 	public static final Spell frost_barrier = placeholder();
 
 	public static final Spell blinding_flash = placeholder();
+	public static final Spell enrage = placeholder();
 	public static final Spell mark_sacrifice = placeholder();
 
 	public static final Spell stormcloud = placeholder();
@@ -458,6 +459,7 @@ public final class Spells {
 		registry.register(new FrostBarrier());
 
 		registry.register(new BlindingFlash());
+		registry.register(new Enrage());
 		registry.register(new MarkSacrifice());
 
 		registry.register(new Stormcloud());
