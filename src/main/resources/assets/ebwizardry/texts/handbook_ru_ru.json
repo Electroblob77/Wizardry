@@ -1,6 +1,6 @@
 {
 	"bookmark_start_section": "introduction",
-	
+
 	"colours": {
 		"text": "#000000",
 		"caption": "#666666",
@@ -8,7 +8,7 @@
 		"highlight": "#dd4c1d",
 		"new_section": "#ee88f7"
 	},
-	
+
 	"images": {
 		"workbench": {
 			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
@@ -226,26 +226,26 @@
 			"locations": [ "ebwizardry:spark_bomb" ]
 		}
 	},
-	
+
 	"sections": {
-		
+
 		"inside_cover": {
 			"centre": {
 				"x": true,
 				"y": true
 			},
 			"text": [
-			
+
 				"Учебник волшебника",
-				
+
 				"от Electroblob"
 			]
 		},
-		
+
 		"introduction": {
 			"title": "Введение",
 			"text": [
-			
+
 				"Приветствую Вас, волшебник! Эта книга объясняет множество путей мистики и как их использовать. Эта не обычная книга, хотя - его страницы материализуются перед Вами, когда Вы узнаете больше о Магическом мире.",
 
 				"Используйте кнопки Стрелок, чтобы переключаться между страницами, и кнопки с двойными стрелками, чтобы быстро перевернуться между разделами. Используйте кнопку Меню, чтобы вернуться на основную страницу содержимого.",
@@ -275,15 +275,15 @@
 
 				"#recipe magic_wand",
 
-				"- @arcane_workbench arcane workbench@, создаётся как показано:",
+				"- @arcane_workbench мистический верстак@, создаётся как показано:",
 
 				"#recipe arcane_workbench",
 
-				"- @spells spell@ book. Их можно найти в сундуках, выпавшие как добыча, купленные у Волшебников, или Вы можете сделать Заклинание новичка, магический снаряд, как показано:",
+				"- @spells книга@ заклинаний. Их можно найти в сундуках, выпавшие как добыча, купленные у Волшебников, или Вы можете сделать Заклинание новичка, магический снаряд, как показано:",
 
 				"#recipe magic_missile_spell_book",
 
-				"Вам также нужно куча других Магических кристаллов, чтобы снабдить свой Жезл @mana@."
+				"Вам также нужно куча других Магических кристаллов, чтобы снабдить свой Жезл @mana маной@."
 			]
 		},
 
@@ -295,7 +295,7 @@
 			],
 			"text": [
 
-				"Мана - мистическая энергия, которая даёт Волшебникам их силы. Сама по себе она не физическое вещество; скорее всего, она всегда присутствует в ауре, которая проникает во всё в мире. В частности, она проявляется в кристаллах, встречающихся в природе, которых можно найти вложенными в камнях под землёй. @wands Wands@ могут хранить в себе Ману, и эта мана поступается в @spells@ которые Вы можете бросить. Некоторые заклинания требуют определённое кол-во маны, в зависимости от того, насколько они сильны и как долго они продерживаются.",
+				"Мана - мистическая энергия, которая даёт Волшебникам их силы. Сама по себе она не физическое вещество; скорее всего, она всегда присутствует в ауре, которая проникает во всё в мире. В частности, она проявляется в кристаллах, встречающихся в природе, которых можно найти вложенными в камнях под землёй. @wands Жезлы@ могут хранить в себе Ману, и эта мана поступается в @spells заклинания@ которые Вы можете бросить. Некоторые заклинания требуют определённое кол-во маны, в зависимости от того, насколько они сильны и как долго они продерживаются.",
 
 				"#image crystal_ore",
 
@@ -313,17 +313,17 @@
 			],
 			"text": [
 
-				"Жезл - орудие выбора Волшебника. С ним, Вы можете наложить любое @spells spell@ при условии, что Жезл может содержать его силу (смотрите @tiers Tiers@). Жезлы бывают во многих разновидностей, но Вы почти наверняка начнёте с простым Магическим жезлом.",
+				"Жезл - орудие выбора Волшебника. С ним, Вы можете наложить любое @spells заклинание@ при условии, что Жезл может содержать его силу (смотрите @tiers Уровни@). Жезлы бывают во многих разновидностей, но Вы почти наверняка начнёте с простым Магическим жезлом.",
 
 				"#image magic_wand",
 
-				"Большинство жезлов начинают свою жизнь как простой механизм какого-то магического кристалла, прикрепленный к деревянному жезлу с золотым самородком, приложенный на другом конце. Кристалл, конечно, источник силы Жезла, т.к он обеспечивает фокусировку, необходимая для направления @spells@. Однако, остальная часть жезла тоже очень важна, поскольку он обеспечивает не только средства с помощью которого держится Жезл, но также путь, через которого @mana@ может быть направлена и ориентирована.",
+				"Большинство жезлов начинают свою жизнь как простой механизм какого-то магического кристалла, прикрепленный к деревянному жезлу с золотым самородком, приложенный на другом конце. Кристалл, конечно, источник силы Жезла, т.к он обеспечивает фокусировку, необходимая для направления @spells заклинаний@. Однако, остальная часть жезла тоже очень важна, поскольку он обеспечивает не только средства с помощью которого держится Жезл, но также путь, через которого @mana мана@ может быть направлена и ориентирована.",
 
-				"As more spells are cast with a wand, it grows more effective at channeling @spells@, and can therefore cast spells of greater power. This effect can be discerned from subtle changes that occur in the shape and appearance of the wand itself: as a wand grows more powerful, its crystal will become more vibrant,  its colour may change depending on its @elements element@, and after a while, the wood from which it is made will start to grow and twist into more complex shapes.",
+				"Чем больше заклинаний брошено с помощью Жезла, тем больше он становится эффективным в направлении @spells заклинаний@, и следовательно, может бросить заклинания большей силы. Этот эффект может быть различим по едва различимым изменениям, которые возникают в форме и внешнем виде самого Жезла: по скольку Жезл становится более мощным, его кристалл становится более активным, его цвет может изменяться в зависимости от его @elements элемента@, и спустя некоторое время, дерево из которого он сделан, начнёт расти и меняться в более сложные формы.",
 
-				"When holding a wand, a small heads-up display will show in the corner of the screen. This indicates the spell that is currently selected along with a pictorial representation of it, and, if the spell has been cast, a cooldown bar indicating the time until that spell can be cast again. It also shows the names of the next and previous spells bound to the wand. To switch between spells, use the #next_spell_key and #previous_spell_key keys (these can be changed in options -> controls). You can also switch spells by scrolling the mouse wheel while sneaking.",
+				"Когда жезл удерживается, слева в углу экрана будет показан небольшой дисплей с предупреждением. Это показывает заклинание, которое в данный момент выбрано параллельно с её графическим изображением, и, если Заклинание было брошено, панель отката укажет время до того, когда заклинание снова можно бросить. Он также показывает название след. и пред. заклинаний связанные с Жезлом. Чтобы переключаться между Заклинаниями, используйте клавишы #next_spell_key и #previous_spell_key (их можно поменять в настройки -> управление). Также Вы можете переключать заклинания за счёт прокручивания колёсика мыши при крадении.",
 
-				"When viewing an inventory, hovering over a wand will display how much @mana@ is stored in it, along with its currently selected @spells spell@ and any specific abilities it may have. More in-depth information about a wand can be viewed by placing it in an @arcane_workbench arcane workbench@."
+				"При просмотре инвентаря, наведя курсор на Жезл отобразит, сколько хранится в нём @mana маны@, вместе с его текущим выбранным @spells заклинанием@ и любыми особенными способностями, которыми он может обладать. Больше углублённой информации о Жезле можно посмотреть, положив его в @arcane_workbench мистический верстак@."
 			]
 		},
 
@@ -335,15 +335,15 @@
 			],
 			"text": [
 
-				"A @wands wand@ is useless without spells to cast with it. Spells are recorded in two forms: in books, which are permanent, and in scrolls, which are temporary.",
+				"@wands жезл@ бесполезен без заклинаний, которые бросаются с его помощью. Заклинания записываются в двух формах: в Книгах, которые являются постоянными, и в Свитках, которые являются временными.",
 
-				"Spell books are of little use on their own; instead they are used to bind the spell they contain to @wands@. Spell books can be found throughout the world and it will not take long for you to come across one. When you do find one, you can mouse over the spell book to see basic information about the spell at a glance. You can also right-click whilst holding a spell book to read more about it.",
+				"Книги с заклинаниями сами по себе малополезные; вместо этого они используются, чтобы привязать Заклинание, которые они сдерживаются в @wands жезле@. Книгу заклинаний можно найти во всём мире и Вам не потребуется на это много времени. Если Вы нашли одну, то Вы можете навести мышкой на книгу с заклинанием, чтобы сразу посмотреть основную информацию о Заклинании. Вы также можете нажать Пкм, пока держите Книгу с заклинанием, чтобы прочитать больше о ней.",
 
-				"Scrolls, on the other hand, serve a different purpose: right-clicking whilst holding one will cast the spell that is bound to it, destroying the scroll in the process. Like spell books, scrolls can be found throughout the world, but you can also make them yourself (see @enchanting_scrolls Enchanting Scrolls@).",
+				"Свитки, с одной стороны, служат разными целям: Нажатие пкм во время удержания Свитка, наложит заклинание которое привяжется к Жезлу, после чего свиток уничтожится в процессе. Наподобие книге заклинаний, Свитки можно найти во всём мире, но Вы также можете их сами сделать (смотрите @enchanting_scrolls Зачарование свитков@).",
 
-				"Scrolls are quite useful when you need to use a spell once or twice on a particular quest but don't want it to take up a slot on your @wands wand@. It should be noted, however, that they are an inefficient method of casting spells compared to using a wand.",
+				"Свитки весьма полезны, если Вам нужно использовать Заклинание один раз или дважды по конкретному заданию, чтобы не занимать место в слоте на своём @wands Жезле@. Следует подчеркнуть, они являются неэффективным методом бросания заклинаний по сравнению с использованием Жезла.",
 
-				"To the untrained eye, the magical runes with which spells are written are unreadable. In order to identify a spell, you could, of course, cast it and see what happens - though doing so may cause unwanted side-effects, and many spells need certain conditions in order to work. Futhermore, there is always a chance of misreading an unknown spell when casting, with potentially dangerous consequences depending on how powerful the spell is. A safer and more reliable option is to use a scroll of identification, which can be found in chests or purchased from a wizard. Right-clicking whilst holding one will identify the first unknown spell book or scroll on your hotbar, consuming the scroll of identification in the process."
+				"Для неопытного глаза, магические руны с помощью которых написаны Заклинания, нечитаемы. С целью определения Заклинания, Вы можете, конечно, бросить заклинание и посмотреть, что произойдёт - хотя это может вызвать нежеланные побочные последствия, и большинство Заклинаний нуждаются в определённых условиях для того, чтобы работать. Более того, всегда есть вероятность недооценить неизвестное заклинание когда бросаете, с потенциально опасными последствиями в зависимости от того, насколько мощное заклинание. Более безопасный и более надёжный вариант использовать Свиток идентификации, который можно найти в сундуках или купить у Волшебника. Пкм, пока держите, Свиток идентифицирует первую неизвестную Книгу заклинаний или Свитки в Вашей горячей панели, потребив Свиток идентификации в процессе."
 			]
 		},
 
@@ -361,11 +361,11 @@
 			],
 			"text": [
 
-				"The arcane workbench is a block similar in appearance to the enchantment table where you can charge, upgrade, and bind @spells@ to your @wands wand@. It may be crafted as follows:",
+				"Мистический верстак это блок похожий по внешнему виду на Стол зачарования, где Вы можете зарядить, улучшить и привязать @spells заклинания@ на Ваш @wands жезл@. Он может быть создан след. образом:",
 
 				"#recipe arcane_workbench",
 
-				"The following pages explain the various actions that may be performed in the arcane workbench.",
+				"Следующие страницы объясняют разные действия, которые могут быть выполнены в Мистическом верстаке.",
 
 				"#image workbench"
 			],
@@ -378,7 +378,7 @@
 					],
 					"text": [
 
-						"To bind a @spells spell@ to your @wands wand@, simply place your wand in the central slot of the workbench, then place the spell book in one of the surrounding slots and press apply. You will notice that the spell book is left untouched during this process - this is because the act of spell binding does not 'take' the spell from the spell book; rather, it attunes the wand to the spell. As such, you may change the spells bound to your wand as much as you wish by simply repeating the spell binding process. You can bind up to five spells to a wand at one time, though this number may be increased with attunement upgrades."
+						"Чтобы привязать @spells заклинание@ к Вашему @wands жезлу@, просто поместите свой жезл в центральный слот верстака, затем поместите Книгу заклинаний в одно из окружающих слотов и нажмите Применить. Вы можете заметить, что Книга заклинаний остаётся нетронутой во время этого процесса - это потому, что акт привязки заклинания не 'берёт' заклинание из Книги заклинаний; Скорее, она поднастраивает Жезл к Заклинанию. По существу, Вы можете изменить Заклинания привязанные к Вашему жезлу, столько, сколько пожелаете, просто повторив процесс привязывания Заклинания. Вы можете привязать до 5 заклинаний к Вашему жезлу за 1 раз, хотя это число может быть увеличено с настраивающими улучшениями."
 					]
 				},
 				"charging_wands": {
@@ -389,7 +389,7 @@
 					],
 					"text": [
 
-						"To charge your @wands wand@, place the wand in the central slot of the arcane workbench and place some magic crystals in the bottom-left slot, and then press apply. Each crystal is worth #mana_per_crystal @mana@, and the wand will only take what it needs, so you can keep a supply of crystals in the workbench for when you need them. However, bear in mind that the wand can only take a whole number of crystals, so if the wand needs, for example, 30 more mana, #example_charging_loss mana will be lost when charging it."
+						"Чтобы зарядить свой @wands жезл@, поместите Жезл в центральный слот Мистического верстака и поместите несколько магических кристаллов в нижний левый слот, и затем нажмите Применить. Каждый кристалл это стоимость #mana_per_crystal @mana маны@, и Жезл возьмёт столько, сколько ему необходимо, поэтому, Вы можете сохранить запасы кристаллов в Верстаке, когда они Вам понадобятся. Однако, имейте ввиду, что Жезл может взять только целое кол-во кристаллов, так что, если Жезл требует, например, 30 и более маны, #example_charging_loss мана будет потеряна при зарядки."
 					]
 				},
 				"upgrading_wands": {
@@ -400,9 +400,9 @@
 					],
 					"text": [
 
-						"To upgrade your @wands wand@, you will need a tome of arcana of the appropriate @tiers tier@ or a special wand upgrade. Both of these can be found as loot or purchased from a wizard. To upgrade your wand, place it in the central slot and the upgrade in the top-right slot, then press apply.",
+						"Чтобы улучшить свой @wands жезл@, Вам нужен Том арканы соответствующего @tiers уровня@ или специальное улучшение Жезла. Оба из них, можно найти в качестве награбленного или купить у Волшебника. Чтобы улучшить свой Жезл, поместите его в центральный слот и улучшите в правом верхнем слот, затем нажмите Применить.",
 
-						"Special wand upgrades improve a particular aspect of a wand. Each type of upgrade can stack up to three times, and the total number of upgrades that a wand can take depends on its tier. Upgrades cannot be removed."
+						"Специальные улучшения Жезла, повышают конкретный аспект Жезла. Каждый вид улучшения можно складывать до 3 раз, и общее кол-во улучшений, которые Жезл может брать, зависит от его уровня. Улучшения нельзя убрать."
 					]
 				},
 				"enchanting_scrolls": {
@@ -413,11 +413,11 @@
 					],
 					"text": [
 
-						"The arcane workbench can also be used to enchant @spells spell@ scrolls. To do so, you will require a blank scroll, crafted from a piece of paper and some string, a spell book for your chosen spell, and enough magic crystals to provide @mana@ to cast it.",
+						"Мистический верстак также можно использовать для зачарования @spells заклинаний@ и свитков. Чтобы так сделать, Вам понадобится Пустой свиток, созданный из кусочка бумаги и несколько ниток, Книга заклинаний для выбранного для Вас заклинания, и достаточно магических кристаллов, чтобы предоставить @mana маны@, для наложения.",
 
 						"#recipe blank_scroll",
 
-						"Place the crystals in the bottom-left slot, the blank scroll in the central slot, and the spell book in the single slot above it, then press confirm to enchant the scroll."
+						"Поместите кристаллы в нижний левый слот, Пустой свиток в центральный слот, и Книгу заклинаний в отдельный слот над ним, затем нажмите Подтвердить, чтобы зачаровать Свиток."
 					]
 				}
 			}
@@ -435,7 +435,7 @@
 
 				"#image wizard_armour",
 
-				"You can obtain wizard armor by crafting it from magical silk:",
+				"Вы можете получить броню Волшебника путём её создания из Магического шёлка:",
 
 				"#recipe magic_silk",
 				"#recipe wizard_hat",
@@ -676,13 +676,13 @@
 						"ebwizardry:enchant_scroll"
 					],
 					"text": [
-					
+
 						"Recent experimentation has revealed that it is possible to automate @spells spell@ casting, to a degree, using nothing more than a simple dispenser. Nobody is quite sure why, but it would appear that the strange properties of redstone even extend to triggering the activation of spell scrolls. Placing a few into a dispenser and powering it ought to do the trick..."
 					]
 				}
 			}
 		},
-		
+
 		"crafting_recipes": {
 			"title": "Рецепты созданий",
 			"include_in_contents": "main_contents",
@@ -714,19 +714,19 @@
 				"#recipe spark_bomb"
 			]
 		},
-		
+
 		"credits": {
 			"title": "Титры",
 			"include_in_contents": "main_contents",
 			"text": [
-				
-				"Electroblob's Wizardry \nVersion #version \nFor Minecraft #mcversion",
+
+				"Electroblob's Wizardry \nВерсия #version \nFor Minecraft #mcversion",
 
 				"Разработано, закодировано и затекстурировано: Electroblob",
 
 				"Спасибо Minecraft Forge и MCP, без которого этот мод был бы невозможным.",
 
-				"Спасибо также сообществу Minecraft modding, которые всегда имеют решение с моими проблемами в моддинге!",
+				"Спасибо также сообществу Minecraft modding, который всегда имеет решение с моими проблемами в моддинге!",
 
 				"В дополнении, Я хотел бы поблагодарить следующие лица за их вклад в мод:",
 
@@ -736,15 +736,15 @@
 
 				"Переводчики:",
 
-				"- Spanish: MadWrist, Alsentar \n- Mexican Spanish: MadWrist \n- Russian: VilagVil, kellixon, bigenergy, DrHesperus \n- French: Hahdrim \n- Brazilian Portuguese: lorrampi \n- Chinese: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Korean: shejery, rewi_wire \n- Polish: Trozuu \n-German: BirdyDragon \n-Taiwanese: chesterccj305",
+				"- Испанский: MadWrist, Alsentar \n- Мексиканский испанский: MadWrist \n- Русский: VilagVil, kellixon, bigenergy, DrHesperus \n- Французский: Hahdrim \n- Бразильский португальский: lorrampi \n- Китайский: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Корейский: shejery, rewi_wire \n- Польский: Trozuu \n- Немецкий: BirdyDragon \n-Taiwanese: chesterccj305",
 
 				"Звуковой эффект Луча молнии от OhhWowProductions",
 
-				"Для большей информации, проверьте нашу @https://github.com/Electroblob77/Wizardry/wiki wiki@.",
+				"Для большей информации, проверьте нашу @https://github.com/Electroblob77/Wizardry/wiki wiki википедию@.",
 
-				"Не хватает Wizardry? Присоединяйтесь в @https://discord.gg/MTmMzMv Discord server@ для последних новостей, обсуждений и дополнений!"
+				"Не хватает Wizardry? Присоединяйтесь в @https://discord.gg/MTmMzMv Discord server Discord-сервер@ для последних новостей, обсуждений и дополнений!"
 			]
 		}
-		
+
 	}
 }
