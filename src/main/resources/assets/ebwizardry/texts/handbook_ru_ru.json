@@ -431,7 +431,7 @@
 			],
 			"text": [
 
-				"As a wizard, you will need something to protect you from the creatures you fight. No ordinary armor will do though. To make the most of your spells, you will need wizard armor: hat, robes, leggings and boots. Unlike ordinary armor, these will not break. Instead, they use arcane energy to shield the wearer. This of course means that they must be charged with magic crystals, just like wands. Fortunately, these garments do not consume much @mana@. Charge them as you would a wand in the @arcane_workbench arcane workbench@ or with a @mana_flasks mana flask@, but be careful - if they run out of mana, you will find yourself defenseless.",
+				"Как волшебник, Вам нужно что-то, чтобы защитить Вас от существ, с которыми Вы сражаетесь. Хотя, не совсем обычная броня сойдёт. Чтобы в максимальной степени воспользоваться своими Заклинаниями, Вам будет нужна Броня волшебника: шляпа, роба, поножи и ботинки. В отличие от обычной брони, эти не ломаются. Вместо этого, они используют мистическую энергию для защиты носителя. Это конечно означает, что их можно зарядить с помощью Магических кристаллов, просто как Жезлы. К сожалению, эти фрагменты не потребляют много @mana маны@. Зарядите их, как Жезл в @arcane_workbench мистическом верстаке@ или с помощью @mana_flasks фляжки с маной@, но будьте осторожны - если у них закончится мана, Вы окажетесь беззащитным.",
 
 				"#image wizard_armour",
 
@@ -443,11 +443,11 @@
 				"#recipe wizard_leggings",
 				"#recipe wizard_boots",
 
-				"One may enchant wizard armour using a normal enchantment table, and due to the inherent properties of magical silk, it tends to be quite effective at holding enchantments. Of particular utility to a wizard are the Magic, Frost and Shock Protection enchantments, which may prove useful defending against other wielders of magic.",
+				"Можно зачаровать Броню волшебника используя обычный Стол зачарования, а из-за неотъемлемых свойств магического шёлка, он имеет склонность  довольно эффективно сдерживать зачарования. Особенно полезны для Волшебников зачарования - Магическая, Морозная и Шоковая защита, которые могут оказаться полезными для защиты против других обладателей магии.",
 
-				"Those wizards who devote themselves to the practise of one element sometimes wear special garments which grant bonuses for that element. Full sets of such garments are very sought after among wizards and are not easy to find.",
+				"Те волшебники, кто посвящают себя практике одного элемента, иногда носят специальную одежду, которая даёт бонусы для этого элемента. Полный набор такой одежды очень востребованный среди Волшебников и не так просто найти.",
 
-				"Legend speaks of an arcane seal used by the most powerful wizards to greatly improve their armor."
+				"Легенда говорит о Мистической печати, используемой самыми могущественными волшебниками, чтобы значительно улучшить свои брони."
 			]
 		},
 
@@ -465,9 +465,9 @@
 			],
 			"text": [
 
-				"One cannot master the arcane just by staying at home - there is a world full of magic out there to explore! Ancient ruins, relics and mysterious beings good and bad await discovery - if you know where to look. The greatest wizards are also the most curious, and gain much of their knowledge and power through exploration of the environment around them, and experimenting with what they find.",
+				"Невозможно овладеть мистикой просто сидя дома - есть целый мир, который полон магии и которую нужно исследовать. Древние руины, реликвии и таинственные особи хорошие, и плохие ждут своего открытия - если знаете, где искать. Величайшие волшебники также самые любопытные, и получают большую часть своих знаний и силы, путём исследования окружающей среды вокруг них и экспериментируя с тем, что они находят.",
 
-				"Whilst much of a wizard's time is inevitably spent alone, the sharing of knowledge is also vital to learning the arcane arts. Seek out fellow practicioners of magic, and learn as much as you can from them: communication is arguably the greatest power of all."
+				"Пока большую часть времени Волшебник неминуемо проводит в одиночестве, обмен знаниями также жизненно важен для изучения мистических искусств. Ищите коллег-специалистов магии, и узнайте от них как можно больше, насколько Вы сможете: общение - пожалуй величайшая сила из всех."
 			],
 			"sections": {
 				"crystal_flowers": {
@@ -478,7 +478,7 @@
 					],
 					"text": [
 
-						"During your travels, you will probably come across curious glowing flowers growing in the wild from time to time. These distinctive blooms are known as crystal flowers, and they are strangely effective at concentrating @mana@ - to this day, nobody is quite sure why. We do know, however, that they can be harvested and crafted to extract the mana as crystals, making them a rather useful above-ground source of mana. The amount of mana obtainable this way is limited, though, by the small size of the flowers and due to them only growing in small patches.",
+						"Во время Ваших путешествий, Вы вероятно столкнётесь с любопытными светящиеся цветами растущие в дикой природе время от времени. Эти отличительные цветы известные как Кристальные цветы, и они необычно эффективны в концентрации @mana маны@ - по сей день, никто не знает почему. Однако, мы точно знаем, что их можно собрать и создать, для извлечения маны в виде кристаллов, что делает их довольно полезным надземным источником маны. Количество маны, получаемое таким способом, ограничено, хотя, за счёт маленького размера цветов и благодаря их, они растут только в небольших местах.",
 
 						"#image crystal_flower",
 						"#recipe crystal_flower_to_crystals"
@@ -492,13 +492,13 @@
 					],
 					"text": [
 
-						"Fear not - you are not the only practicioner of magic in this world. On your travels, you may well encounter a tall tower or two with a distinctive pointed roof. This is the residence of a fellow wizard. A life of solitude can make wizards a little grumpy at times, but they are usually friendly folk who are willing to share their knowledge with you - albeit for a price. Expect to pay precious metals and gems, and in return you will recieve many a great arcane wonder.",
+						"Не бойтесь - Вы не единственный специалист магии в этом мире. В Ваших путешествиях, Вы вполне можете встретить Высокую башню или 2 с отличительной указанной крышей. Это место проживания товарища Волшебника. Жизнь в уединении иногда может сделать Волшебников немного раздражительными, но они обычно дружелюбные люди, которые готовы поделиться с Вами своими знаниями - правда за определённую цену. Ожидайте, что заплатите ценные металлы и драгоценные камни, а взамен Вы получите много большого мистического чуда.",
 
-						"If, however, it is a @tiers master@ spell you seek, you will need to speak to a specialist.",
+						"Если, однако, это заклинание @tiers уровня мастер@, которое Вы ищете, то Вам нужно обратиться к специалисту.",
 
 						"#image wizard_tower",
 
-						"Unfortunately, there are a few wizards out there who do not welcome visitors. These wizards are typically outcasts, and are hostile to anyone crossing their path. Approach these individuals with caution, and be prepared to defend yourself against powerful magic. Defeat them however, and their knowledge is yours for the taking.",
+						"К несчастью, тут есть несколько Волшебников, которые не приветствуют посетителей. Эти волшебники чаще всего изгои, и враждебны любому, кто пересечёт их путь. Подходите к этим личностям с осторожностью, и будьте готовы защитить себя от могущественной магии. Впрочем, одолейте их, и их знания ждут Вас.",
 
 						"It should also be noted that no wizard will take kindly to being attacked or stolen from - and they will readily take the law into their own hands."
 					]
@@ -726,7 +726,7 @@
 
 				"Спасибо Minecraft Forge и MCP, без которого этот мод был бы невозможным.",
 
-				"Спасибо также сообществу Minecraft modding, который всегда имеет решение с моими проблемами в моддинге!",
+				"Спасибо также сообществу Minecraft modding, которые всегда имеют решение с моими проблемами в моддинге!",
 
 				"В дополнении, Я хотел бы поблагодарить следующие лица за их вклад в мод:",
 
@@ -736,13 +736,13 @@
 
 				"Переводчики:",
 
-				"- Испанский: MadWrist, Alsentar \n- Мексиканский испанский: MadWrist \n- Русский: VilagVil, kellixon, bigenergy, DrHesperus \n- Французский: Hahdrim \n- Бразильский португальский: lorrampi \n- Китайский: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Корейский: shejery, rewi_wire \n- Польский: Trozuu \n- Немецкий: BirdyDragon \n-Taiwanese: chesterccj305",
+				"- Spanish: MadWrist, Alsentar \n- Mexican Spanish: MadWrist \n- Russian: VilagVil, kellixon, bigenergy, DrHesperus \n- French: Hahdrim \n- Brazilian Portuguese: lorrampi \n- Chinese: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Korean: shejery, rewi_wire \n- Polish: Trozuu \n-German: BirdyDragon \n-Taiwanese: chesterccj305",
 
 				"Звуковой эффект Луча молнии от OhhWowProductions",
 
-				"Для большей информации, проверьте нашу @https://github.com/Electroblob77/Wizardry/wiki wiki википедию@.",
+				"Для большей информации, проверьте нашу @https://github.com/Electroblob77/Wizardry/wiki wiki@.",
 
-				"Не хватает Wizardry? Присоединяйтесь в @https://discord.gg/MTmMzMv Discord server Discord-сервер@ для последних новостей, обсуждений и дополнений!"
+				"Не хватает Wizardry? Присоединяйтесь в @https://discord.gg/MTmMzMv Discord server@ для последних новостей, обсуждений и дополнений!"
 			]
 		}
 
