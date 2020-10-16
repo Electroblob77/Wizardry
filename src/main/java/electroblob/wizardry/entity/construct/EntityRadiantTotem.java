@@ -91,8 +91,8 @@ public class EntityRadiantTotem extends EntityScaledConstruct {
 				targetsRemaining--;
 
 				if(world.isRemote){
-					ParticleBuilder.create(Type.BEAM).pos(this.getPositionVector()).target(ally)
-							.clr(1, 0.6f + 0.3f * world.rand.nextFloat(), 0.2f).spawn(world);
+					ParticleBuilder.create(Type.BEAM).pos(this.getPositionVector().add(0, height/2, 0))
+							.target(ally).clr(1, 0.6f + 0.3f * world.rand.nextFloat(), 0.2f).spawn(world);
 				}
 			}
 		}
