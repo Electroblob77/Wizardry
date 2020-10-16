@@ -229,6 +229,7 @@ public final class WizardryItems {
 	public static final Item ring_storm = placeholder();
 	public static final Item ring_seeking = placeholder();
 	public static final Item ring_hammer = placeholder();
+	public static final Item ring_stormcloud = placeholder();
 	public static final Item ring_soulbinding = placeholder();
 	public static final Item ring_leeching = placeholder();
 	public static final Item ring_necromancy_melee = placeholder();
@@ -599,6 +600,7 @@ public final class WizardryItems {
 		registerItem(registry, "ring_storm", 					new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_seeking", 				new ItemArtefact(EnumRarity.EPIC, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_hammer", 				new ItemArtefact(EnumRarity.EPIC, 		ItemArtefact.Type.RING));
+		registerItem(registry, "ring_stormcloud", 			new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_soulbinding", 			new ItemArtefact(EnumRarity.EPIC, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_leeching", 				new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_necromancy_melee", 		new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.RING));
