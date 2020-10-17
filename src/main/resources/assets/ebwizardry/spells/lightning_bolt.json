@@ -17,7 +17,7 @@
   "chargeup": 10,
   "cooldown": 80,
   "base_properties": {
-    "range": 80,
+    "range": 40,
     "damage": 5
   }
 }
