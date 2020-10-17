@@ -107,6 +107,8 @@ public final class ParticleBuilder {
 		public static final ResourceLocation DUST = new ResourceLocation(Wizardry.MODID,"dust");
 		/** Rapid flash, like fireworks.<p></p><b>Defaults:</b><br>Lifetime: 6 ticks<br>Colour: white */
 		public static final ResourceLocation FLASH = new ResourceLocation(Wizardry.MODID,"flash");
+		/** Particle that looks like the guardian's beam attack.<p></p><b>Defaults:</b><br>Lifetime: 1 tick */
+		public static final ResourceLocation GUARDIAN_BEAM = new ResourceLocation(Wizardry.MODID,"guardian_beam");
 		/** Small shard of ice.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Gravity: true */
 		public static final ResourceLocation ICE = new ResourceLocation(Wizardry.MODID,"ice");
 		/** Single leaf.<p></p><b>Defaults:</b><br>Lifetime: 10-15 ticks<br>Velocity: (0, -0.03, 0)
