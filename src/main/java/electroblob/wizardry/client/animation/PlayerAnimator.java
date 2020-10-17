@@ -143,15 +143,11 @@ public class PlayerAnimator {
 			}
 		}
 
-		boolean flag = false;
-
 		for(Animation animation : animations){
 
 			if(animation.shouldDisplay(player, firstPerson)){
 
 				boolean autoRotateSecondLayer = animation.autoRotateSecondLayer(player, firstPerson);
-
-				flag = true;
 
 				for(ModelBiped model : playerLayerModels.get(renderer)){
 
@@ -159,17 +155,6 @@ public class PlayerAnimator {
 
 					if(autoRotateSecondLayer && model instanceof ModelPlayer){
 						alignSecondLayer((ModelPlayer)model);
-					}
-				}
-			}
-		}
-
-		if(!flag){
-			for(ModelBiped model : playerLayerModels.get(renderer)){
-				for(ModelRenderer box : model.boxList){ // For ModelPlayer, this will include the second layer
-					// Some models have extra boxes, they (probably) don't need wrapping but we need this check!
-					if(box instanceof ModelRendererExtended){
-						((ModelRendererExtended)box).resetRotation();
 					}
 				}
 			}
@@ -216,9 +201,20 @@ public class PlayerAnimator {
 		updateModels(event.getEntityPlayer(), event.getRenderer(), event.getPartialRenderTick(), false);
 	}
 
-//	@SubscribeEvent
-//	public static void onRenderPlayerPostEvent(RenderPlayerEvent.Post event){
-		// TODO: Would we ever need to unwrap the models?
-//	}
+	@SubscribeEvent
+	public static void onRenderPlayerPostEvent(RenderPlayerEvent.Post event){
+
+		if(!Wizardry.settings.spellcastingAnimations) return;
+
+		for(ModelBiped model : playerLayerModels.get(event.getRenderer())){
+			for(ModelRenderer box : model.boxList){ // For ModelPlayer, this will include the second layer
+				// Some models have extra boxes, they (probably) don't need wrapping but we need this check!
+				if(box instanceof ModelRendererExtended){
+					((ModelRendererExtended)box).resetRotation();
+				}
+			}
+		}
+
+	}
 
 }
