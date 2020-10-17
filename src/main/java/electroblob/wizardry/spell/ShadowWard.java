@@ -2,8 +2,11 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.util.*;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.IElementalDamage;
+import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;

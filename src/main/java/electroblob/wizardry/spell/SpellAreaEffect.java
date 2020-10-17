@@ -4,7 +4,6 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.AllyDesignationSystem;
 import electroblob.wizardry.util.EntityUtils;
-import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;

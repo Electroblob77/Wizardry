@@ -6,7 +6,6 @@ import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.math.Vec3d;
 
 public class Boulder extends SpellConstruct<EntityBoulder> {
