@@ -141,6 +141,7 @@
 	"spell.boulder": 					{"category": "spells", "sounds": ["mob/evocation_illager/prepare_attack1", "mob/evocation_illager/prepare_attack2"]},
 	"spell.bubble.shoot": 				{"category": "spells", "sounds": ["ebwizardry:ice"]},
 	"spell.bubble.splash": 				{"category": "spells", "sounds": ["liquid/swim1", "liquid/swim2", "liquid/swim3", "liquid/swim4"], "volume": 2},
+	"spell.celestial_smite": 			{"category": "spells", "sounds": ["mob/illusion_illager/prepare_blind"]},
 	"spell.chain_lightning": 			{"category": "spells", "sounds": ["ebwizardry:arc1", "ebwizardry:arc2", "ebwizardry:arc3"]},
 	"spell.charge":  					{"category": "spells", "sounds": ["ebwizardry:shockwave"]},
 	"spell.clairvoyance": 				{"category": "spells", "sounds": ["ebwizardry:conjure"]},
