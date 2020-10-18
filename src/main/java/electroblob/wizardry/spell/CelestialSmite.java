@@ -21,6 +21,7 @@ public class CelestialSmite extends SpellRay {
 	public CelestialSmite(){
 		super("celestial_smite", SpellActions.POINT, false);
 		addProperties(EFFECT_RADIUS, DAMAGE, BURN_DURATION);
+		this.ignoreLivingEntities(true);
 	}
 
 	@Override
