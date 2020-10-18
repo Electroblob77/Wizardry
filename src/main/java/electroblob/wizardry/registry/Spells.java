@@ -468,6 +468,7 @@ public final class Spells {
 		registry.register(new WitheringTotem());
 		registry.register(new Fangs());
 		registry.register(new GuardianBeam());
+		registry.register(new SpellBuff("mirage", 0.64f, 0.47f, 0.9f, () -> WizardryPotions.mirage));
 		registry.register(new RadiantTotem());
 
 		registry.register(new Firestorm());

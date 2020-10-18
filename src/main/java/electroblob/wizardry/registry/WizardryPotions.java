@@ -56,6 +56,7 @@ public final class WizardryPotions {
 	public static final Potion containment = placeholder();
 	public static final Potion frost_step = placeholder();
 	public static final Potion mark_of_sacrifice = placeholder();
+	public static final Potion mirage = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given potion, then registers it with the given registry. Use
@@ -193,6 +194,12 @@ public final class WizardryPotions {
 
 		registerPotion(registry, "mark_of_sacrifice", new PotionMagicEffect(true, 0xe90e48,
 				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mark_of_sacrifice.png")));
+
+		registerPotion(registry, "mirage", new PotionMagicEffectParticles(false, 0, // No particles or we'll see the player's actual position!
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mirage.png")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){} // We only want the syncing
+		}.setBeneficial());
 
 	}
 

@@ -210,6 +210,12 @@ public final class WizardryEventHandler {
 				}
 			}
 
+			// Mirage
+			if(event.getTarget().isPotionActive(WizardryPotions.mirage)){
+				// Can't find players under mirage at all! (Pretty sure this excludes revenge-targeting)
+				((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+			}
+
 			// Blindness tweak
 			// I'm not going as far as potion core's implementation, this is just so it does *something* to mobs
 			if(event.getEntityLiving().isPotionActive(MobEffects.BLINDNESS) && !Loader.isModLoaded("potioncore")

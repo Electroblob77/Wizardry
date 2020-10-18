@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "sorcery",
+  "type": "alteration",
+  "cost": 40,
+  "chargeup": 10,
+  "cooldown": 200,
+  "base_properties": {
+    "mirage_duration": 400,
+    "mirage_strength": 0
+  }
+}
