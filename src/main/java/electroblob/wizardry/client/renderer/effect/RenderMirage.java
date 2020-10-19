@@ -5,6 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionAddedEvent;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionExpiryEvent;
+import net.minecraftforge.event.entity.living.PotionEvent.PotionRemoveEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,6 +42,29 @@ public class RenderMirage {
 		if(event.getEntity().isPotionActive(WizardryPotions.mirage)){
 			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 			GlStateManager.popMatrix();
+		}
+	}
+
+	// Using the invisible flag is a slight compromise but is very unlikely to conflict with anything
+
+	@SubscribeEvent
+	public static void onPotionAddedEvent(PotionAddedEvent event){
+		if(event.getPotionEffect().getPotion() == WizardryPotions.mirage){
+			event.getEntity().setInvisible(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPotionRemoveEvent(PotionRemoveEvent event){
+		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == WizardryPotions.mirage){
+			event.getEntity().setInvisible(false);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPotionExpiryEvent(PotionExpiryEvent event){
+		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() == WizardryPotions.mirage){
+			event.getEntity().setInvisible(false);
 		}
 	}
 
