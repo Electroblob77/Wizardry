@@ -82,6 +82,16 @@
 				]
 			}
 		},
+		"ring_meteor": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_meteor"
+					}
+				]
+			}
+		},
 		"ring_ice_melee": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -162,6 +172,16 @@
 				]
 			}
 		},
+		"ring_stormcloud": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_stormcloud"
+					}
+				]
+			}
+		},
 		"ring_soulbinding": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -238,6 +258,16 @@
 				"items": [
 					{
 						"item": "ebwizardry:ring_full_moon"
+					}
+				]
+			}
+		},
+		"ring_evoker": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_evoker"
 					}
 				]
 			}
@@ -378,6 +408,16 @@
 				"items": [
 					{
 						"item": "ebwizardry:amulet_ice_protection"
+					}
+				]
+			}
+		},
+		"amulet_frost_warding": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_frost_warding"
 					}
 				]
 			}
@@ -592,6 +632,26 @@
 				]
 			}
 		},
+		"charm_undead_helmets": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_undead_helmets"
+					}
+				]
+			}
+		},
+		"charm_hunger_casting": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_hunger_casting"
+					}
+				]
+			}
+		},
 		"charm_flight": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -628,6 +688,16 @@
 				"items": [
 					{
 						"item": "ebwizardry:charm_silk_touch"
+					}
+				]
+			}
+		},
+		"charm_sixth_sense": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_sixth_sense"
 					}
 				]
 			}
@@ -702,6 +772,7 @@
 			"ring_fire_melee",
 			"ring_fire_biome",
 			"ring_disintegration",
+			"ring_meteor",
 			"ring_ice_melee",
 			"ring_ice_biome",
 			"ring_arcane_frost",
@@ -710,6 +781,7 @@
 			"ring_storm",
 			"ring_seeking",
 			"ring_hammer",
+			"ring_stormcloud",
 			"ring_soulbinding",
 			"ring_leeching",
 			"ring_necromancy_melee",
@@ -718,6 +790,7 @@
 			"ring_earth_melee",
 			"ring_earth_biome",
 			"ring_full_moon",
+			"ring_evoker",
 			"ring_extraction",
 			"ring_mana_return",
 			"ring_blockwrangler",
@@ -732,6 +805,7 @@
 			"amulet_fire_cloaking",
 			"amulet_ice_immunity",
 			"amulet_ice_protection",
+			"amulet_frost_warding",
 			"amulet_potential",
 			"amulet_channeling",
 			"amulet_lich",
@@ -753,10 +827,13 @@
 			"charm_storm",
 			"charm_minion_health",
 			"charm_minion_variants",
+			"charm_undead_helmets",
+			"charm_hunger_casting",
 			"charm_flight",
 			"charm_growth",
 			"charm_abseiling",
 			"charm_silk_touch",
+			"charm_sixth_sense",
 			"charm_stop_time",
 			"charm_light",
 			"charm_transportation",
