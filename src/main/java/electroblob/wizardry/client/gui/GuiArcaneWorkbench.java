@@ -718,7 +718,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			float progressFraction = 1;
 
 			if(tier != Tier.MASTER){
-				progressFraction = (float)WandHelper.getProgression(stack) / Tier.values()[tier.level + 1].progression;
+				progressFraction = (float)WandHelper.getProgression(stack) / Tier.values()[tier.level + 1].getProgression();
 			}
 
 			DrawingUtils.drawTexturedRect(x, y, MAIN_GUI_WIDTH, ySize + PROGRESSION_BAR_HEIGHT, PROGRESSION_BAR_WIDTH, PROGRESSION_BAR_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
@@ -736,7 +736,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			if(tier != Tier.MASTER){
 				Tier nextTier = Tier.values()[tier.level + 1];
 				String s = TextFormatting.DARK_GRAY.toString() + nextTier.getDisplayName();
-				if(WandHelper.getProgression(stack) >= nextTier.progression) s = nextTier.getDisplayNameWithFormatting();
+				if(WandHelper.getProgression(stack) >= nextTier.getProgression()) s = nextTier.getDisplayNameWithFormatting();
 				fontRenderer.drawStringWithShadow(s, x + TOOLTIP_WIDTH - TOOLTIP_BORDER * 2 - fontRenderer.getStringWidth(s), y, 0);
 			}
 		}

@@ -10,10 +10,10 @@ import java.util.Random;
 
 public enum Tier {
 
-	NOVICE(700, 3, 12, 0, new Style().setColor(TextFormatting.WHITE), "novice"),
-	APPRENTICE(1000, 5, 5, 1500, new Style().setColor(TextFormatting.AQUA), "apprentice"),
-	ADVANCED(1500, 7, 2, 3500, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
-	MASTER(2500, 9, 1, 6000, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
+	NOVICE(700, 3, 12, new Style().setColor(TextFormatting.WHITE), "novice"),
+	APPRENTICE(1000, 5, 5, new Style().setColor(TextFormatting.AQUA), "apprentice"),
+	ADVANCED(1500, 7, 2, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
+	MASTER(2500, 9, 1, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
 
 	/** Maximum mana a wand of this tier can store. */
 	public final int maxCharge;
@@ -23,20 +23,17 @@ public enum Tier {
 	public final int upgradeLimit;
 	/** The weight given to this tier in the standard weighting. */
 	public final int weight;
-	/** The progression required for a wand to be upgraded to this tier. */
-	public final int progression;
 	/** The colour of text associated with this tier. */
 	// Changed to a Style object for consistency.
 	private final Style colour;
 
 	private final String unlocalisedName;
 
-	Tier(int maxCharge, int upgradeLimit, int weight, int progression, Style colour, String name){
+	Tier(int maxCharge, int upgradeLimit, int weight, Style colour, String name){
 		this.maxCharge = maxCharge;
 		this.level = ordinal();
 		this.upgradeLimit = upgradeLimit;
 		this.weight = weight;
-		this.progression = progression;
 		this.colour = colour;
 		this.unlocalisedName = name;
 	}
@@ -96,6 +93,11 @@ public enum Tier {
 		return colour.getFormattingCode();
 	}
 
+	/** The progression required for a wand to be upgraded to this tier. */
+	public int getProgression(){
+		return Wizardry.settings.progressionRequirements[this.ordinal() - 1];
+	}
+
 	/**
 	 * Returns a random tier based on the standard weighting. Currently, the standard weighting is: Basic (Novice) 60%,
 	 * Apprentice 25%, Advanced 10%, Master 5%. If an array of tiers is given, it picks a tier from the array, with the
@@ -121,4 +123,5 @@ public enum Tier {
 		// This will never happen, but it might as well be a sensible result.
 		return tiers[tiers.length - 1];
 	}
+
 }

@@ -204,7 +204,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	@Override
 	public boolean hasEffect(ItemStack stack){
 		return !Wizardry.settings.legacyWandLevelling && this.tier.level < Tier.MASTER.level
-				&& WandHelper.getProgression(stack) >= tier.next().progression;
+				&& WandHelper.getProgression(stack) >= tier.next().getProgression();
 	}
 
 	@Override
@@ -350,7 +350,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					this.getMana(stack), this.getManaCapacity(stack)));
 
 			text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.progression", new Style().setColor(TextFormatting.GRAY),
-					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? tier.next().progression : 0));
+					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? tier.next().getProgression() : 0));
 		}
 	}
 
@@ -514,7 +514,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				if(!Wizardry.settings.legacyWandLevelling){ // Don't display the message if legacy wand levelling is enabled
 					// If the wand just gained enough progression to be upgraded...
 					Tier nextTier = tier.next();
-					int excess = WandHelper.getProgression(stack) - nextTier.progression;
+					int excess = WandHelper.getProgression(stack) - nextTier.getProgression();
 					if(excess >= 0 && excess < progression){
 						// ...display a message above the player's hotbar
 						caster.playSound(WizardrySounds.ITEM_WAND_LEVELUP, 1.25f, 1);
@@ -694,7 +694,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			// Checks the wand upgrade is for the tier above the wand's tier, and that either the wand has enough
 			// progression or the player is in creative mode.
 			if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
-					|| WandHelper.getProgression(wand) >= tier.progression)
+					|| WandHelper.getProgression(wand) >= tier.getProgression())
 					&& tier == this.tier.next() && this.tier != Tier.MASTER){
 
 				if(Wizardry.settings.legacyWandLevelling){
@@ -704,7 +704,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					WandHelper.setProgression(wand, 0);
 				}else{
 					// Carry excess progression over to the new stack
-					WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.progression);
+					WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.getProgression());
 				}
 
 				if(player != null) WizardData.get(player).setTierReached(tier);

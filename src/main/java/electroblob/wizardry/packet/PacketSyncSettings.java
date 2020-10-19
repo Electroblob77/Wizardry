@@ -2,6 +2,7 @@ package electroblob.wizardry.packet;
 
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.packet.PacketSyncSettings.Message;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +41,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		Wizardry.settings.replaceVanillaFireballs = message.settings.replaceVanillaFireballs;
 		Wizardry.settings.replaceVanillaFallDamage = message.settings.replaceVanillaFallDamage;
 		Wizardry.settings.forfeitChance = message.settings.forfeitChance;
+		Wizardry.settings.progressionRequirements = message.settings.progressionRequirements;
 		Wizardry.settings.bookshelfSearchRadius = message.settings.bookshelfSearchRadius;
 		Wizardry.settings.bookshelfBlocks = message.settings.bookshelfBlocks;
 		Wizardry.settings.bookItems = message.settings.bookItems;
@@ -71,6 +73,8 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.replaceVanillaFireballs = buf.readBoolean();
 			settings.replaceVanillaFallDamage = buf.readBoolean();
 			settings.forfeitChance = buf.readFloat();
+			settings.progressionRequirements = new int[Tier.values().length - 1];
+			for(int i = 0; i < settings.progressionRequirements.length; i++) settings.progressionRequirements[i] = buf.readInt();
 			settings.bookshelfSearchRadius = buf.readInt();
 			settings.bookshelfBlocks = readMetaItems(buf);
 			settings.bookItems = readMetaItems(buf);
@@ -85,6 +89,7 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeBoolean(settings.replaceVanillaFireballs);
 			buf.writeBoolean(settings.replaceVanillaFallDamage);
 			buf.writeFloat((float)settings.forfeitChance); // Configs don't have floats but this can only be 0-1 anyway
+			for(int i = 0; i < settings.progressionRequirements.length; i++) buf.writeInt(settings.progressionRequirements[i]);
 			buf.writeInt(settings.bookshelfSearchRadius);
 			writeMetaItems(buf, settings.bookshelfBlocks);
 			writeMetaItems(buf, settings.bookItems);

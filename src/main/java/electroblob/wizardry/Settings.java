@@ -310,6 +310,8 @@ public final class Settings {
 	public boolean replaceVanillaFallDamage = true;
 	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
+	/** <b>[Synchronised]</b> Progression requirements for upgrading a wand to each tier. */
+	public int[] progressionRequirements = {1500, 3500, 6000};
 	/**
 	 * <b>[Synchronised]</b> The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be
 	 * able to link to it.
@@ -677,6 +679,13 @@ public final class Settings {
 		Wizardry.proxy.setToNumberSliderEntry(property);
 		property.setRequiresWorldRestart(true);
 		forfeitChance = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "progressionRequirements", new int[]{1500, 3500, 6000},
+				"The amount of progression required to upgrade a wand to each tier (apprentice, advanced and master respectively).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".progression_requirements");
+		property.setRequiresWorldRestart(true);
+		progressionRequirements = property.getIntList();
 		propOrder.add(property.getName());
 
 		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
