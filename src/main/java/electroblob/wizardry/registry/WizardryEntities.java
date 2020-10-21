@@ -112,6 +112,7 @@ public class WizardryEntities {
 		registry.register(createEntry(EntityForceArrow.class, 		"force_arrow", 		TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityDart.class, 			"dart", 				TrackingType.PROJECTILE).build());
 		registry.register(createEntry(EntityIceLance.class, 		"ice_lance", 			TrackingType.PROJECTILE).build());
+		registry.register(createEntry(EntityFlamecatcherArrow.class, "flamecatcher_arrow", TrackingType.PROJECTILE).build());
 
 		// Directionless projectiles
 		registry.register(createEntry(EntityFirebomb.class, 		"firebomb", 			TrackingType.PROJECTILE).build());

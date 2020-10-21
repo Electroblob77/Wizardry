@@ -4,6 +4,7 @@ import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.SpellEmitterData;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.ItemFlamecatcher;
 import electroblob.wizardry.item.ItemSpectralBow;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.potion.PotionSlowTime;
@@ -164,7 +165,9 @@ public final class WizardryClientEventHandler {
 	public static void onFOVUpdateEvent(FOVUpdateEvent event){
 
 		// Bow zoom. Taken directly from AbstractClientPlayer so it works exactly like vanilla.
-		if(event.getEntity().isHandActive() && event.getEntity().getActiveItemStack().getItem() instanceof ItemSpectralBow){
+		if(event.getEntity().isHandActive() &&
+				(event.getEntity().getActiveItemStack().getItem() instanceof ItemSpectralBow
+			  || event.getEntity().getActiveItemStack().getItem() instanceof ItemFlamecatcher)){
 
 			int maxUseTicks = event.getEntity().getItemInUseMaxCount();
 

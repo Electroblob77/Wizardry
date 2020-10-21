@@ -43,6 +43,8 @@ public final class WizardrySounds {
 	public static final SoundEvent ITEM_PURIFYING_ELIXIR_DRINK = 	createSound("item.purifying_elixir.drink");
 	public static final SoundEvent ITEM_MANA_FLASK_USE = 			createSound("item.mana_flask.use");
 	public static final SoundEvent ITEM_MANA_FLASK_RECHARGE = 		createSound("item.mana_flask.recharge");
+	public static final SoundEvent ITEM_FLAMECATCHER_SHOOT = 		createSound("item.flamecatcher.shoot");
+	public static final SoundEvent ITEM_FLAMECATCHER_FLAME = 		createSound("item.flamecatcher.flame");
 
 	public static final SoundEvent ENTITY_BLACK_HOLE_AMBIENT = 		createSound("entity.black_hole.ambient");
 	public static final SoundEvent ENTITY_BLACK_HOLE_VANISH = 		createSound("entity.black_hole.vanish");
@@ -124,6 +126,7 @@ public final class WizardrySounds {
 	public static final SoundEvent ENTITY_FIREBOMB_THROW = 			createSound("entity.firebomb.throw");
 	public static final SoundEvent ENTITY_FIREBOMB_SMASH = 			createSound("entity.firebomb.smash");
 	public static final SoundEvent ENTITY_FIREBOMB_FIRE = 			createSound("entity.firebomb.fire");
+	public static final SoundEvent ENTITY_FLAMECATCHER_ARROW_HIT = 	createSound("entity.flamecatcher_arrow.hit");
 	public static final SoundEvent ENTITY_FORCE_ARROW_HIT = 		createSound("entity.force_arrow.hit");
 	public static final SoundEvent ENTITY_FORCE_ORB_HIT = 			createSound("entity.force_orb.hit");
 	public static final SoundEvent ENTITY_FORCE_ORB_HIT_BLOCK = 	createSound("entity.force_orb.hit_block");

@@ -253,6 +253,7 @@ public final class Spells {
 	public static final Spell radiant_totem = placeholder();
 
 	public static final Spell firestorm = placeholder();
+	public static final Spell flamecatcher = placeholder();
 	public static final Spell zombie_apocalypse = placeholder();
 	public static final Spell boulder = placeholder();
 	public static final Spell celestial_smite = placeholder();
@@ -472,6 +473,7 @@ public final class Spells {
 		registry.register(new RadiantTotem());
 
 		registry.register(new Firestorm());
+		registry.register(new Flamecatcher());
 		registry.register(new ZombieApocalypse());
 		registry.register(new Boulder());
 		registry.register(new CelestialSmite());

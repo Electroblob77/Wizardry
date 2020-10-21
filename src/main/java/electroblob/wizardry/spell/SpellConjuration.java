@@ -83,17 +83,29 @@ public class SpellConjuration extends Spell {
 
 		ItemStack stack = new ItemStack(item);
 
+		if(InventoryUtils.doesPlayerHaveItem(caster, item)) return false;
+
 		IConjuredItem.setDurationMultiplier(stack, modifiers.get(WizardryItems.duration_upgrade));
 		IConjuredItem.setDamageMultiplier(stack, modifiers.get(SpellModifiers.POTENCY));
-		
-		if(InventoryUtils.doesPlayerHaveItem(caster, item)) return false;
-		
+
+		addItemExtras(caster, stack, modifiers);
+
 		if(caster.getHeldItemMainhand().isEmpty()){
 			caster.setHeldItem(EnumHand.MAIN_HAND, stack);
-			return true;
 		}else{
-			return caster.inventory.addItemStackToInventory(stack);
+			if(!caster.inventory.addItemStackToInventory(stack)) return false;
 		}
+
+		return true;
 	}
+
+	/**
+	 * Called directly <i>before</i> the conjured item is added to the inventory to perform additional behaviour (such
+	 * as NBT modification). Does nothing by default.
+	 * @param caster The player that cast this spell
+	 * @param stack The item stack being conjured
+	 * @param modifiers The modifiers this spell was cast with
+	 */
+	protected void addItemExtras(EntityPlayer caster, ItemStack stack, SpellModifiers modifiers){}
 
 }

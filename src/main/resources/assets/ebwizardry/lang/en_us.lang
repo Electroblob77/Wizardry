@@ -260,6 +260,7 @@ item.ebwizardry\:spectral_leggings.name=Spectral Leggings
 item.ebwizardry\:spectral_boots.name=Spectral Boots
 
 item.ebwizardry\:lightning_hammer.name=Lightning Hammer
+item.ebwizardry\:flamecatcher.name=Flamecatcher
 
 item.ebwizardry\:generic.disabled=This item has been disabled in the config
 
@@ -621,6 +622,7 @@ entity.ebwizardry\:ice_lance.name=Magic
 entity.ebwizardry\:smoke_bomb.name=Magic
 entity.ebwizardry\:ice_spike.name=Magic
 entity.ebwizardry\:combustion_rune.name=Magic
+entity.ebwizardry\:flamecatcher_arrow.name=Magic
 
 entity.ebwizardry\:black_hole.name=Black Hole
 entity.ebwizardry\:shield.name=Shield
@@ -825,6 +827,7 @@ spell.ebwizardry\:fire_sigil=Fire Sigil
 spell.ebwizardry\:fireskin=Fireskin
 spell.ebwizardry\:firestorm=Firestorm
 spell.ebwizardry\:fire_breath=Fire Breath
+spell.ebwizardry\:flamecatcher=Flamecatcher
 spell.ebwizardry\:flame_ray=Flame Ray
 spell.ebwizardry\:flaming_axe=Flaming Axe
 spell.ebwizardry\:flaming_weapon=Flaming Weapon
@@ -1013,6 +1016,7 @@ spell.ebwizardry\:fire_sigil.desc=Places a magical fire trap on the ground which
 spell.ebwizardry\:fireskin.desc=Cloaks the caster in flames for 30 seconds, causing anything that attacks them to catch fire.
 spell.ebwizardry\:firestorm.desc="Purge the land and purge the soil!\nTrees shall burn and lakes shall boil!\nTorch the wood and scorch the stone!\nAll bow before the infernal throne!"
 spell.ebwizardry\:fire_breath.desc="I am the dragon."
+spell.ebwizardry\:flamecatcher.desc=It is said that in times of need, Flamecatcher offers her power to worthy pyromancers, only to vanish back into the night once her deed is done.
 spell.ebwizardry\:flame_ray.desc=Creates a stream of flames in the direction you are pointing which sets on fire and continually damages targets.
 spell.ebwizardry\:flaming_axe.desc=Creates a flaming axe which sets enemies on fire when hit. Lasts for 30 seconds.
 spell.ebwizardry\:flaming_weapon.desc=Temporarily imbues the first weapon on the caster's hotbar with the power of flame, causing it to set fire to its victims. The magic wears off after 45 seconds.

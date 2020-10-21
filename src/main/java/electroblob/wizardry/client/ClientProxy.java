@@ -766,6 +766,8 @@ public class ClientProxy extends CommonProxy {
 				new ResourceLocation(Wizardry.MODID, "textures/entity/dart.png"), false, 8.0, 2.0, 16, 5, true));
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceLance.class, manager -> new RenderMagicArrow(manager,
 				new ResourceLocation(Wizardry.MODID, "textures/entity/ice_lance.png"), false, 16.0, 3.0, 22, 5, true));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFlamecatcherArrow.class, manager -> new RenderMagicArrow(manager,
+				new ResourceLocation(Wizardry.MODID, "textures/entity/flamecatcher_arrow.png"), false, 8, 2.0, 16, 5, true));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityForceArrow.class, RenderForceArrow::new);
 

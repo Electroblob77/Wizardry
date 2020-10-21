@@ -1,0 +1,6 @@
+{
+    "parent": "item/bow",
+    "textures": {
+        "layer0": "ebwizardry:items/flamecatcher_conjuring_3"
+    }
+}

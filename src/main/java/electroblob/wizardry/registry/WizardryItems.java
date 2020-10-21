@@ -212,6 +212,7 @@ public final class WizardryItems {
 	public static final Item spectral_boots = placeholder();
 
 	public static final Item lightning_hammer = placeholder();
+	public static final Item flamecatcher = placeholder();
 
 	public static final Item ring_condensing = placeholder();
 	public static final Item ring_siphoning = placeholder();
@@ -583,6 +584,7 @@ public final class WizardryItems {
 		registerItem(registry, "spectral_boots", 				new ItemSpectralArmour(ArmorMaterial.IRON, 1, EntityEquipmentSlot.FEET));
 
 		registerItem(registry, "lightning_hammer", 			new ItemLightningHammer());
+		registerItem(registry, "flamecatcher", 				new ItemFlamecatcher());
 
 		registerItem(registry, "ring_condensing", 			new ItemArtefact(EnumRarity.RARE, 		ItemArtefact.Type.RING));
 		registerItem(registry, "ring_siphoning", 				new ItemArtefact(EnumRarity.UNCOMMON, 	ItemArtefact.Type.RING));
