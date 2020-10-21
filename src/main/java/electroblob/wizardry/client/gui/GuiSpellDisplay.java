@@ -154,6 +154,7 @@ public class GuiSpellDisplay {
 		if(!Wizardry.settings.showChargeMeter) return;
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) return; // Don't show charge meter in the debug screen
 		if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) return; // Don't show in third person
+		if(wand != player.getActiveItemStack()) return; // Don't show when using the other held item
 
 		if(!(wand.getItem() instanceof ISpellCastingItem)) throw new IllegalArgumentException("The given stack must contain an ISpellCastingItem!");
 
