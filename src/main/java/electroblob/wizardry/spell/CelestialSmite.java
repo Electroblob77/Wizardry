@@ -40,7 +40,7 @@ public class CelestialSmite extends SpellRay {
 		float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
 
 		for(EntityLivingBase target : targets){
-			target.attackEntityFrom(source, damage);
+			EntityUtils.attackEntityWithoutKnockback(target, source, damage);
 			target.setFire(getProperty(BURN_DURATION).intValue());
 		}
 
