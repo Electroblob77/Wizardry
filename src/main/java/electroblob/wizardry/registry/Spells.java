@@ -241,7 +241,6 @@ public final class Spells {
 	// Wizardry 4.3 spells
 
 	public static final Spell frost_barrier = placeholder();
-
 	public static final Spell blinding_flash = placeholder();
 	public static final Spell enrage = placeholder();
 	public static final Spell mark_sacrifice = placeholder();
