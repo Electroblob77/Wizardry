@@ -17,7 +17,7 @@
   "chargeup": 20,
   "cooldown": 150,
   "base_properties": {
-    "item_lifetime": 600,
+    "item_lifetime": 900,
     "range": 40,
     "shot_count": 5,
     "damage": 16,

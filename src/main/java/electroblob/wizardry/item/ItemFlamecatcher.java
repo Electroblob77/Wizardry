@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 public class ItemFlamecatcher extends ItemBow implements IConjuredItem {
 
-	private static final float DRAW_TIME = 10;
+	public static final float DRAW_TIME = 10;
 
 	public ItemFlamecatcher(){
 		super();
@@ -188,8 +188,8 @@ public class ItemFlamecatcher extends ItemBow implements IConjuredItem {
 			if(charge < 0) return;
 
 			if(stack.getTagCompound() != null){
-				int shotsLeft = stack.getTagCompound().getInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY);
-				stack.getTagCompound().setInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY, shotsLeft - 1);
+				int shotsLeft = stack.getTagCompound().getInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY) - 1;
+				stack.getTagCompound().setInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY, shotsLeft);
 				if(shotsLeft == 0 && !world.isRemote){
 					stack.setItemDamage(getMaxDamage(stack) - getAnimationFrames());
 				}

@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.ResourceLocation;
@@ -165,21 +166,24 @@ public final class WizardryClientEventHandler {
 	public static void onFOVUpdateEvent(FOVUpdateEvent event){
 
 		// Bow zoom. Taken directly from AbstractClientPlayer so it works exactly like vanilla.
-		if(event.getEntity().isHandActive() &&
-				(event.getEntity().getActiveItemStack().getItem() instanceof ItemSpectralBow
-			  || event.getEntity().getActiveItemStack().getItem() instanceof ItemFlamecatcher)){
+		if(event.getEntity().isHandActive()){
 
-			int maxUseTicks = event.getEntity().getItemInUseMaxCount();
+			Item item = event.getEntity().getActiveItemStack().getItem();
 
-			float maxUseSeconds = (float)maxUseTicks / 20.0F;
+			if(item instanceof ItemSpectralBow || item instanceof ItemFlamecatcher){
 
-			if(maxUseSeconds > 1.0F){
-				maxUseSeconds = 1.0F;
-			}else{
-				maxUseSeconds = maxUseSeconds * maxUseSeconds;
+				int maxUseTicks = event.getEntity().getItemInUseMaxCount();
+
+				float maxUseSeconds = (float)maxUseTicks / (item instanceof ItemFlamecatcher ? ItemFlamecatcher.DRAW_TIME : 20);
+
+				if(maxUseSeconds > 1.0F){
+					maxUseSeconds = 1.0F;
+				}else{
+					maxUseSeconds = maxUseSeconds * maxUseSeconds;
+				}
+
+				event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
 			}
-
-			event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
 		}
 	}
 
