@@ -1,5 +1,6 @@
 package electroblob.wizardry.item;
 
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.spell.SpellConjuration;
 import net.minecraft.entity.EntityLivingBase;
@@ -100,6 +101,12 @@ public interface IConjuredItem {
 	 * set by {@link IConjuredItem#addAnimationPropertyOverrides()}. */
 	default int getAnimationFrames(){
 		return 8;
+	}
+
+	/** Returns a blue colour to use for the durability bar for the given stack, so all items that use it as a timer
+	 * have the same colours. */
+	static int getTimerBarColour(ItemStack stack){
+		return DrawingUtils.mix(0x8bffe0, 0x2ed1e4, (float)stack.getItem().getDurabilityForDisplay(stack));
 	}
 
 	@SubscribeEvent

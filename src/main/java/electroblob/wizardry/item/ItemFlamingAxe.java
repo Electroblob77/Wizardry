@@ -61,6 +61,11 @@ public class ItemFlamingAxe extends ItemAxe implements IConjuredItem {
 	}
 
 	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return IConjuredItem.getTimerBarColour(stack);
+	}
+
+	@Override
 	// This method allows the code for the item's timer to be greatly simplified by damaging it directly from
 	// onUpdate() and removing the workaround that involved WizardData and all sorts of crazy stuff.
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged){

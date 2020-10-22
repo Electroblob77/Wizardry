@@ -1,6 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.projectile.EntityFlamecatcherArrow;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
@@ -67,6 +68,11 @@ public class ItemFlamecatcher extends ItemBow implements IConjuredItem {
 	@Override
 	public int getMaxDamage(ItemStack stack){
 		return this.getMaxDamageFromNBT(stack, Spells.flamecatcher);
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return IConjuredItem.getTimerBarColour(stack);
 	}
 
 	@Override

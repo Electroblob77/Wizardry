@@ -68,6 +68,11 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 		return super.getMaxDamage(stack);
 	}
 
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return IConjuredItem.getTimerBarColour(stack);
+	}
+
 	private float getDamageMultiplier(ItemStack stack){
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(DAMAGE_MULTIPLIER_NBT_KEY)){
 			return stack.getTagCompound().getFloat(DAMAGE_MULTIPLIER_NBT_KEY);
