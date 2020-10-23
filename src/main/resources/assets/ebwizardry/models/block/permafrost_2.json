@@ -1,0 +1,7 @@
+{
+    "parent": "ebwizardry:block/permafrost_0",
+    "textures": {
+        "particle": "blocks/frosted_ice_2",
+        "texture": "blocks/frosted_ice_2"
+    }
+}
