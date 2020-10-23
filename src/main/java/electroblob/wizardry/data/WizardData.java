@@ -75,6 +75,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** The maximum number of recent spells to track. */
 	public static final int MAX_RECENT_SPELLS = ItemWand.BASE_SPELL_SLOTS;
 
+	private static final int IMBUEMENT_UPDATE_INTERVAL = 20;
+
 	/** The player this WizardData instance belongs to. */
 	private final EntityPlayer player;
 
@@ -360,7 +362,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 						// If the imbuement is still active:
 						if(duration > 0){
 							// Decrements the timer
-							this.imbuementDurations.put((Imbuement)enchantment, duration - 1);
+							this.imbuementDurations.put((Imbuement)enchantment, duration - IMBUEMENT_UPDATE_INTERVAL);
 							// Adds this imbuement to the set of imbuements that need to be kept
 							activeImbuements.add((Imbuement)enchantment);
 						}else{
@@ -490,7 +492,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		// This new system removes a lot of repetitive event handler code and inflexible data which had duplicate
 		// functions, just for different enchantments.
-		updateImbuedItems();
+		if(player.ticksExisted % IMBUEMENT_UPDATE_INTERVAL == 0) updateImbuedItems();
 		updateContinuousSpellCasting();
 
 		this.spellData.forEach((k, v) -> this.spellData.put(k, k.update(player, v)));
