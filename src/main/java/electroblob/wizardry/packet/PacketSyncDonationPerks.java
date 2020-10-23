@@ -44,12 +44,15 @@ public class PacketSyncDonationPerks implements IMessageHandler<PacketSyncDonati
 		public void fromBytes(ByteBuf buf){
 			// The order is important
 			this.elements = new ArrayList<>();
-			while(buf.isReadable()) elements.add(Element.values()[buf.readShort()]);
+			while(buf.isReadable()){
+				int i = buf.readShort();
+				elements.add(i == -1 ? null : Element.values()[buf.readShort()]);
+			}
 		}
 
 		@Override
 		public void toBytes(ByteBuf buf){
-			for(Element element : elements) buf.writeShort(element.ordinal());
+			for(Element element : elements) buf.writeShort(element == null ? -1 : element.ordinal());
 		}
 	}
 }
