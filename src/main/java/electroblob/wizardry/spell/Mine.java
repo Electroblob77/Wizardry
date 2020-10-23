@@ -78,7 +78,7 @@ public class Mine extends SpellRay {
 
 				boolean flag = false;
 
-				int blastUpgradeCount = (int)((modifiers.get(WizardryItems.blast_upgrade) - 1) / Constants.RANGE_INCREASE_PER_LEVEL + 0.5f);
+				int blastUpgradeCount = (int)((modifiers.get(WizardryItems.blast_upgrade) - 1) / Constants.BLAST_RADIUS_INCREASE_PER_LEVEL + 0.5f);
 				// Results in the following patterns:
 				// 0 blast upgrades: single block
 				// 1 blast upgrade: 3x3 without corners or edges
