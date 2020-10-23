@@ -2,6 +2,7 @@ package electroblob.wizardry.item;
 
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,9 +19,9 @@ import javax.annotation.Nonnull;
  * this interface if appropriate.</i>
  * <p></p>
  * This interface is used for the following:<br>
- *     - General-purpose detection of continuous spell casting (see {@link electroblob.wizardry.util.WizardryUtilities#isCasting(EntityLivingBase, Spell)})<br>
+ *     - General-purpose detection of continuous spell casting (see {@link EntityUtils#isCasting(EntityLivingBase, Spell)})<br>
  *     - Display of the arcane workbench tooltip (in conjunction with {@link IManaStoringItem})<br>
- *     - Spell HUD visibility<br>
+ *     - Supplying information to the spell HUD<br>
  *     - Spell switching controls (they won't do anything unless the player is holding an {@code ISpellCastingItem})<br>
  *     - Artefacts that trigger a player's wands/scrolls to cast spells
  * @author Electroblob
@@ -38,6 +39,28 @@ public interface ISpellCastingItem {
 	 */
 	@Nonnull
 	Spell getCurrentSpell(ItemStack stack);
+
+	/**
+	 * Returns the spell equipped in the next slot on the given itemstack. The given itemstack will be of this item.
+	 * @param stack The itemstack to query.
+	 * @return The next spell, or {@link electroblob.wizardry.registry.Spells#none Spells.none} if no spell is equipped
+	 * in the next slot. Returns the current spell by default (useful for items with only one spell).
+	 */
+	@Nonnull
+	default Spell getNextSpell(ItemStack stack){
+		return getCurrentSpell(stack);
+	}
+
+	/**
+	 * Returns the spell equipped in the previous slot on the given itemstack. The given itemstack will be of this item.
+	 * @param stack The itemstack to query.
+	 * @return The previous spell, or {@link electroblob.wizardry.registry.Spells#none Spells.none} if no spell is
+	 * equipped in the previous slot. Returns the current spell by default (useful for items with only one spell).
+	 */
+	@Nonnull
+	default Spell getPreviousSpell(ItemStack stack){
+		return getCurrentSpell(stack);
+	}
 
 	/**
 	 * Returns all the spells currently bound to the given itemstack. The given itemstack will be of this item.
@@ -66,12 +89,40 @@ public interface ISpellCastingItem {
 	}
 
 	/**
+	 * Selects the spell at the given index bound to the given itemstack. The given itemstack will be of this item.
+	 * @param stack The itemstack to query.
+	 * @param index The index to set.
+	 * @return True if the operation succeeded, false if not.
+	 */
+	default boolean selectSpell(ItemStack stack, int index){
+		return false;
+	}
+
+	/**
 	 * Returns whether the spell HUD should be shown when a player is holding this item. Only called client-side.
 	 * @param player The player holding the item.
 	 * @param stack The itemstack to query.
 	 * @return True if the spell HUD should be shown, false if not.
 	 */
 	boolean showSpellHUD(EntityPlayer player, ItemStack stack);
+
+	/**
+	 * Returns the current cooldown to display on the spell HUD for the given itemstack.
+	 * @param stack The itemstack to query.
+	 * @return The current cooldown for the equipped spell.
+	 */
+	default int getCurrentCooldown(ItemStack stack){
+		return 0;
+	}
+
+	/**
+	 * Returns the max cooldown of the current spell to display on the spell HUD for the given itemstack.
+	 * @param stack The itemstack to query.
+	 * @return The max cooldown for the equipped spell.
+	 */
+	default int getCurrentMaxCooldown(ItemStack stack){
+		return 0;
+	}
 
 	/**
 	 * Returns whether this item's spells should be displayed in the arcane workbench tooltip. Only called client-side.
@@ -107,7 +158,8 @@ public interface ISpellCastingItem {
 	/**
 	 * Casts the given spell using the given item stack. <b>This method does not perform any checks</b>; these are done
 	 * in {@link ISpellCastingItem#canCast(ItemStack, Spell, EntityPlayer, EnumHand, int, SpellModifiers)}. This method
-	 * also performs any post-casting logic, such as mana costs and cooldowns.
+	 * also performs any post-casting logic, such as mana costs and cooldowns. This method does not handle charge-up
+	 * times.
 	 * <p></p>
 	 * <i>N.B. Continuous spell casting from outside of the items requires a bit of extra legwork, see
 	 * {@link WizardData} for an example.</i>

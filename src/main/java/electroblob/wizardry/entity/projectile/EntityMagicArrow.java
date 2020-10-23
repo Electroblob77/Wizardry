@@ -4,10 +4,10 @@ import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.RayTracer;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -93,7 +93,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		
 		this.setCaster(caster);
 		
-		this.setLocationAndAngles(caster.posX, caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET,
+		this.setLocationAndAngles(caster.posX, caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET,
 				caster.posZ, caster.rotationYaw, caster.rotationPitch);
 		
 		this.posX -= (double)(MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * 0.16F);
@@ -120,10 +120,10 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		
 		this.setCaster(caster);
 
-		this.posY = caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
+		this.posY = caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
 		double dx = target.posX - caster.posX;
-		double dy = this.doGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - this.posY
-				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - this.posY;
+		double dy = this.doGravity() ? target.posY + (double)(target.height / 3.0f) - this.posY
+				: target.posY + (double)(target.height / 2.0f) - this.posY;
 		double dz = target.posZ - caster.posZ;
 		double horizontalDistance = (double)MathHelper.sqrt(dx * dx + dz * dz);
 
@@ -237,7 +237,7 @@ public abstract class EntityMagicArrow extends Entity implements IProjectile, IE
 		}
 
 		if(this.getCaster() == null && this.casterUUID != null){
-			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
+			Entity entity = EntityUtils.getEntityByUUID(world, casterUUID);
 			if(entity instanceof EntityLivingBase){
 				this.caster = new WeakReference<>((EntityLivingBase)entity);
 			}

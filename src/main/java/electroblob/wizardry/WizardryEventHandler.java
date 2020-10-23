@@ -26,6 +26,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -83,6 +84,7 @@ public final class WizardryEventHandler {
 			Wizardry.settings.sync((EntityPlayerMP)event.player);
 			syncAdvancements((EntityPlayerMP)event.player, false);
 		}
+
 		Spell.syncProperties(event.player);
 	}
 
@@ -173,7 +175,7 @@ public final class WizardryEventHandler {
 							&& Wizardry.settings.discoveryMode){
 						// Sound and text only happen server-side, in survival, with discovery mode on, and only when
 						// the spell wasn't cast using commands.
-						WizardryUtilities.playSoundAtPlayer(player, WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
+						EntityUtils.playSoundAtPlayer(player, WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
 						player.sendMessage(new TextComponentTranslation("spell.discover",
 								event.getSpell().getNameForTranslationFormatted()));
 					}
@@ -192,16 +194,33 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onLivingSetAttackTargetEvent(LivingSetAttackTargetEvent event){
 
-		if(event.getTarget() != null && event.getEntityLiving() instanceof EntityLiving
-				&& event.getTarget().isPotionActive(WizardryPotions.muffle)){
+		if(event.getEntityLiving() instanceof EntityLiving && event.getTarget() != null){
 
-			Vec3d vec = event.getTarget().getPositionEyes(1).subtract(event.getEntity().getPositionEyes(1));
-			// Find the angle between the direction the mob is looking and the direction the player is in
-			// Angle between a and b = acos((a.b) / (|a|*|b|))
-			double angle = Math.acos(vec.dotProduct(event.getEntity().getLookVec()) / vec.length());
-			System.out.println(angle);
-			// If the player is not within the 144-degree arc in front of the mob, it won't detect them
-			if(angle > 0.4 * Math.PI){
+			// Muffle
+			if(event.getTarget().isPotionActive(WizardryPotions.muffle)){
+
+				Vec3d vec = event.getTarget().getPositionEyes(1).subtract(event.getEntity().getPositionEyes(1));
+				// Find the angle between the direction the mob is looking and the direction the player is in
+				// Angle between a and b = acos((a.b) / (|a|*|b|))
+				double angle = Math.acos(vec.dotProduct(event.getEntity().getLookVec()) / vec.length());
+				System.out.println(angle);
+				// If the player is not within the 144-degree arc in front of the mob, it won't detect them
+				if(angle > 0.4 * Math.PI){
+					((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+				}
+			}
+
+			// Mirage
+			if(event.getTarget().isPotionActive(WizardryPotions.mirage)){
+				// Can't find players under mirage at all! (Pretty sure this excludes revenge-targeting)
+				((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
+			}
+
+			// Blindness tweak
+			// I'm not going as far as potion core's implementation, this is just so it does *something* to mobs
+			if(event.getEntityLiving().isPotionActive(MobEffects.BLINDNESS) && !Loader.isModLoaded("potioncore")
+					&& Wizardry.settings.blindnessTweak && event.getTarget().getDistanceSq(event.getEntity()) > 3.5 * 3.5){
+				// Can't detect anything more than 3.5 blocks away (roughly the player's view distance when blinded)
 				((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
 			}
 		}
@@ -269,7 +288,7 @@ public final class WizardryEventHandler {
 								.target(attacker).spawn(world);
 
 						ParticleBuilder.spawnShockParticles(world, attacker.posX,
-								attacker.getEntityBoundingBox().minY + attacker.height / 2, attacker.posZ);
+								attacker.posY + attacker.height / 2, attacker.posZ);
 					}
 
 					DamageSafetyChecker.attackEntitySafely(attacker, MagicDamage.causeDirectMagicDamage(event.getEntityLiving(),
@@ -283,6 +302,13 @@ public final class WizardryEventHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOW) // Again, we don't want these effects if the event is cancelled
 	public static void onLivingHurtEvent(LivingHurtEvent event){
+
+		// Ward
+		PotionEffect effect = event.getEntityLiving().getActivePotionEffect(WizardryPotions.ward);
+
+		if(effect != null && event.getSource().isMagicDamage()){
+			event.setAmount(event.getAmount() * Math.max(0, 1 - 0.4f * effect.getAmplifier())); // Resistance is 20%
+		}
 
 		// Flaming and freezing swords
 		if(event.getSource().getTrueSource() instanceof EntityLivingBase){
@@ -331,14 +357,6 @@ public final class WizardryEventHandler {
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 
-		// Experimental animation feature
-//		if(event.getEntityLiving().isHandActive() && event.getEntityLiving().getActiveItemStack().getItemUseAction() == WizardryUtilities.POINT){
-//			event.getEntityLiving().isSwingInProgress = true;
-//			event.getEntityLiving().swingProgress = 1f;
-//			event.getEntityLiving().prevSwingProgress = 1;
-//			event.getEntityLiving().swingingHand = event.getEntityLiving().getActiveHand();
-//		}
-
 		if(event.getEntityLiving().world.isRemote){
 
 			// Client-side continuous spell casting for NPCs
@@ -358,10 +376,10 @@ public final class WizardryEventHandler {
 								// TODO: This implementation of modifiers relies on them being accessible client-side.
 								// 		 Right now that doesn't matter because NPCs don't use modifiers, but they might in future
 								((EntityLiving)event.getEntity()).getAttackTarget(), modifiers);
+
+						((ISpellCaster)event.getEntity()).setSpellCounter(count + 1);
 					}
 				}
-
-				((ISpellCaster)event.getEntity()).setSpellCounter(count + 1);
 			}
 		}
 	}
@@ -389,7 +407,7 @@ public final class WizardryEventHandler {
 				}
 			}
 
-			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
+			for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(player)){
 
 				if(stack.getItem() instanceof IManaStoringItem && !((IManaStoringItem)stack.getItem()).isManaFull(stack)
 						&& WandHelper.getUpgradeLevel(stack, WizardryItems.siphon_upgrade) > 0){

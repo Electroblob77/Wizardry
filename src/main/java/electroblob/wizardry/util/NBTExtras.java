@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 /**
  * Contains a number of useful static methods for interacting with NBT data, particularly involving collections.
- * This was split off from {@link WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
+ * This was split off from {@code WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
  *
  * @author Electroblob
  * @since Wizardry 4.2
@@ -250,27 +250,4 @@ public final class NBTExtras {
 		return false;
 	}
 
-	/**
-	 * Returns an NBTTagCompound which contains only the given UUID, stored using
-	 * {@link NBTTagCompound#setUniqueId(String, UUID)}. Allows for neater storage to NBTTagLists.
-	 * @deprecated Use {@link net.minecraft.nbt.NBTUtil#createUUIDTag(UUID)}. Note that this will break backwards
-	 * compatibility because it uses "M" and "L" instead of "uuidMost" and "uuidLeast".
-	 */
-	@Deprecated
-	public static NBTTagCompound UUIDtoTagCompound(UUID id){
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setUniqueId("uuid", id);
-		return tag;
-	}
-
-	/**
-	 * Wrapper for {@link NBTTagCompound#getUniqueId(String)} which converts an NBTTagCompound directly to a UUID.
-	 * Intended to be used as the inverse of {@link NBTExtras#UUIDtoTagCompound(UUID)}.
-	 * @deprecated Use {@link net.minecraft.nbt.NBTUtil#getUUIDFromTag(NBTTagCompound)}. Note that this will break
-	 * backwards compatibility because it uses "M" and "L" instead of "uuidMost" and "uuidLeast".
-	 */
-	@Deprecated
-	public static UUID tagCompoundToUUID(NBTTagCompound tag){
-		return tag.getUniqueId("uuid");
-	}
 }

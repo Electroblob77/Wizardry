@@ -14,8 +14,8 @@
   "element": "fire",
   "type": "attack",
   "cost": 15,
-  "chargeup": 0,
-  "cooldown": 0,
+  "chargeup": 15,
+  "cooldown": 70,
   "base_properties": {
     "range": 10,
     "damage": 6,

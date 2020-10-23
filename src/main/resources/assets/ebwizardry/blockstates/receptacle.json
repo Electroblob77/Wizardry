@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "facing=up": { "model": "ebwizardry:receptacle" },
+        "facing=east": { "model": "ebwizardry:wall_receptacle", "y": 270 },
+        "facing=south": { "model": "ebwizardry:wall_receptacle" },
+        "facing=west": { "model": "ebwizardry:wall_receptacle", "y": 90 },
+        "facing=north": { "model": "ebwizardry:wall_receptacle", "y": 180 }
+    }
+}

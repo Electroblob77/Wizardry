@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.event.SpellCastEvent;
@@ -11,8 +12,8 @@ import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryRecipes;
 import electroblob.wizardry.registry.WizardryTabs;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentMending;
 import net.minecraft.entity.Entity;
@@ -24,11 +25,11 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -37,6 +38,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -84,23 +86,23 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	}
 
 	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return DrawingUtils.mix(0xff8bfe, 0x8e2ee4, (float)getDurabilityForDisplay(stack));
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
 
 		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary"))
-			tooltip.add("\u00A7d" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.legendary"));
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.legendary",
+					new Style().setColor(TextFormatting.LIGHT_PURPLE)));
 
 		if(element != null){
-			tooltip.add("\u00A78" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.buff",
-					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100) + "%", element.getDisplayName()));
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.buff",
+					new Style().setColor(TextFormatting.DARK_GRAY),
+					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100), element.getDisplayName()));
 		}
-
-		//		tooltip.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_armour.mana",
-//				(this.getMaxDamage(stack) - this.getDamage(stack)), this.getMaxDamage(stack)));
-
-//		ChargeStatus status = ChargeStatus.getChargeStatus(stack);
-//
-//		tooltip.add(status.getFormattingCode() + status.getDisplayName());
 	}
 
 	@Override
@@ -111,62 +113,12 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	@Override
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.model.ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
-			EntityEquipmentSlot armourSlot, net.minecraft.client.model.ModelBiped _default){
+			EntityEquipmentSlot armourSlot, net.minecraft.client.model.ModelBiped original){
 
 		// Legs use modelBiped
 		if(armourSlot == EntityEquipmentSlot.LEGS && !entityLiving.isInvisible()) return null;
 
-		net.minecraft.client.model.ModelBiped model = Wizardry.proxy.getWizardArmourModel();
-
-		if(model != null){
-
-			model.bipedHead.showModel = armourSlot == EntityEquipmentSlot.HEAD;
-			model.bipedHeadwear.showModel = false;
-			model.bipedBody.showModel = armourSlot == EntityEquipmentSlot.CHEST;
-			model.bipedRightArm.showModel = armourSlot == EntityEquipmentSlot.CHEST;
-			model.bipedLeftArm.showModel = armourSlot == EntityEquipmentSlot.CHEST;
-			model.bipedRightLeg.showModel = armourSlot == EntityEquipmentSlot.FEET;
-			model.bipedLeftLeg.showModel = armourSlot == EntityEquipmentSlot.FEET;
-
-			model.isSneak = entityLiving.isSneaking();
-			model.isRiding = entityLiving.isRiding();
-			model.isChild = entityLiving.isChild();
-
-			boolean leftHanded = entityLiving.getPrimaryHand() == EnumHandSide.LEFT;
-
-			ItemStack itemstackR = leftHanded ? entityLiving.getHeldItemOffhand() : entityLiving.getHeldItemMainhand();
-			ItemStack itemstackL = leftHanded ? entityLiving.getHeldItemMainhand() : entityLiving.getHeldItemOffhand();
-
-			if(!itemstackR.isEmpty()){
-				model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
-
-				if(entityLiving.getItemInUseCount() > 0){
-					EnumAction enumaction = itemstackR.getItemUseAction();
-
-					if(enumaction == EnumAction.BLOCK){
-						model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BLOCK;
-					}else if(enumaction == EnumAction.BOW){
-						model.rightArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BOW_AND_ARROW;
-					}
-				}
-			}
-
-			if(!itemstackL.isEmpty()){
-				model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.ITEM;
-
-				if(entityLiving.getItemInUseCount() > 0){
-					EnumAction enumaction1 = itemstackL.getItemUseAction();
-
-					if(enumaction1 == EnumAction.BLOCK){
-						model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BLOCK;
-					}else if(enumaction1 == EnumAction.BOW){
-						model.leftArmPose = net.minecraft.client.model.ModelBiped.ArmPose.BOW_AND_ARROW;
-					}
-				}
-			}
-		}
-
-		return model;
+		return Wizardry.proxy.getWizardArmourModel();
 	}
 
 	@Override
@@ -242,24 +194,34 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	}
 
 	@Override
+	public ItemStack applyUpgrade(@Nullable EntityPlayer player, ItemStack stack, ItemStack upgrade){
+
+		// Applies legendary upgrade
+		if(upgrade.getItem() == WizardryItems.armour_upgrade){
+
+			if(!stack.hasTagCompound()){
+				stack.setTagCompound(new NBTTagCompound());
+			}
+
+			if(!stack.getTagCompound().hasKey("legendary")){
+				stack.getTagCompound().setBoolean("legendary", true);
+				upgrade.shrink(1);
+				if(player != null) WizardryAdvancementTriggers.legendary.triggerFor(player);
+			}
+		}
+
+		return stack;
+	}
+
+	@Override
 	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
 		
 		boolean changed = false;
-		
-		// Applies legendary upgrade
-		if(upgrade.getStack().getItem() == WizardryItems.armour_upgrade){
-			
-			if(!centre.getStack().hasTagCompound()){
-				centre.getStack().setTagCompound(new NBTTagCompound());
-			}
-			
-			if(!centre.getStack().getTagCompound().hasKey("legendary")){
-				
-				centre.getStack().getTagCompound().setBoolean("legendary", true);
-				upgrade.decrStackSize(1);
-				WizardryAdvancementTriggers.legendary.triggerFor(player);
-				changed = true;
-			}
+
+		if(upgrade.getHasStack()){
+			ItemStack original = centre.getStack().copy();
+			centre.putStack(this.applyUpgrade(player, centre.getStack(), upgrade.getStack()));
+			changed = ItemStack.areItemStacksEqual(centre.getStack(), original);
 		}
 		
 		// Charges armour by appropriate amount
@@ -267,7 +229,11 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 			int chargeDepleted = this.getManaCapacity(centre.getStack()) - this.getMana(centre.getStack());
 
-			if(crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL < chargeDepleted){
+			int manaPerItem = Constants.MANA_PER_CRYSTAL;
+			if(crystals.getStack().getItem() == WizardryItems.crystal_shard) manaPerItem = Constants.MANA_PER_SHARD;
+			if(crystals.getStack().getItem() == WizardryItems.grand_crystal) manaPerItem = Constants.GRAND_CRYSTAL_MANA;
+
+			if(crystals.getStack().getCount() * manaPerItem < chargeDepleted){
 				// If there aren't enough crystals to fully charge the armour
 				this.rechargeMana(centre.getStack(), crystals.getStack().getCount() * Constants.MANA_PER_CRYSTAL);
 				crystals.decrStackSize(crystals.getStack().getCount());
@@ -309,13 +275,13 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		if(event.getCaster() == null) return;
 		int armourPieces = getMatchingArmourCount(event.getCaster(), event.getSpell().getElement());
 		float multiplier = 1f - armourPieces * Constants.COST_REDUCTION_PER_ARMOUR;
-		if(armourPieces == WizardryUtilities.ARMOUR_SLOTS.length) multiplier -= Constants.FULL_ARMOUR_SET_BONUS;
+		if(armourPieces == InventoryUtils.ARMOUR_SLOTS.length) multiplier -= Constants.FULL_ARMOUR_SET_BONUS;
 		event.getModifiers().set(SpellModifiers.COST, event.getModifiers().get(SpellModifiers.COST) * multiplier, false);
 	}
 
 	/** Counts the number of armour pieces the given entity is wearing that match the given element. */
 	public static int getMatchingArmourCount(EntityLivingBase entity, Element element){
-		return (int)Arrays.stream(WizardryUtilities.ARMOUR_SLOTS)
+		return (int)Arrays.stream(InventoryUtils.ARMOUR_SLOTS)
 				.map(s -> entity.getItemStackFromSlot(s).getItem())
 				.filter(i -> i instanceof ItemWizardArmour && ((ItemWizardArmour)i).element == element)
 				.count();

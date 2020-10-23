@@ -1,36 +1,44 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class Mine extends SpellRay {
 
+	private static final Method getSilkTouchDrop;
+
+	static {
+		getSilkTouchDrop = ObfuscationReflectionHelper.findMethod(Block.class, "func_180643_i", ItemStack.class, IBlockState.class);
+	}
+
 	public Mine(){
-		super("mine", false, EnumAction.NONE);
+		super("mine", SpellActions.POINT, false);
 		this.ignoreLivingEntities(true);
 		this.particleSpacing(0.5);
 	}
@@ -54,14 +62,9 @@ public class Mine extends SpellRay {
 
 		if(!world.isRemote){
 
-			if(WizardryUtilities.isBlockUnbreakable(world, pos)) return false;
-			// The mine spell ignores the block damage setting for players, since that's the entire point of the spell
-			// Instead, it triggers block break events at the appropriate points, which protection mods should be able to
-			// pick up and allow/disallow accordingly
-			// For the time being, dispensers respect the mobGriefing gamerule
-			if(!(caster instanceof EntityPlayer) && !WizardryUtilities.canDamageBlocks(caster, world)) return false;
-			// Can't mine arcane-locked blocks
-			if(world.getTileEntity(pos) != null && world.getTileEntity(pos).getTileData().hasUniqueId(ArcaneLock.NBT_KEY)) return false;
+			if(BlockUtils.isBlockUnbreakable(world, pos)) return false;
+			// Reworked to respect the rules, but since we might break multiple blocks this is left as an optimisation
+			if(!EntityUtils.canDamageBlocks(caster, world)) return false;
 
 			IBlockState state = world.getBlockState(pos);
 			// The maximum harvest level as determined by the potency multiplier. The + 0.5f is so that
@@ -75,7 +78,7 @@ public class Mine extends SpellRay {
 
 				boolean flag = false;
 
-				int blastUpgradeCount = (int)((modifiers.get(WizardryItems.blast_upgrade) - 1) / Constants.RANGE_INCREASE_PER_LEVEL + 0.5f);
+				int blastUpgradeCount = (int)((modifiers.get(WizardryItems.blast_upgrade) - 1) / Constants.BLAST_RADIUS_INCREASE_PER_LEVEL + 0.5f);
 				// Results in the following patterns:
 				// 0 blast upgrades: single block
 				// 1 blast upgrade: 3x3 without corners or edges
@@ -83,11 +86,11 @@ public class Mine extends SpellRay {
 				// 3 blast upgrades: 5x5 without corners or edges
 				float radius = 0.5f + 0.73f * blastUpgradeCount;
 
-				List<BlockPos> sphere = WizardryUtilities.getBlockSphere(pos, radius);
+				List<BlockPos> sphere = BlockUtils.getBlockSphere(pos, radius);
 
 				for(BlockPos pos1 : sphere){
 
-					if(WizardryUtilities.isBlockUnbreakable(world, pos1)) continue;
+					if(BlockUtils.isBlockUnbreakable(world, pos1)) continue;
 
 					IBlockState state1 = world.getBlockState(pos1);
 
@@ -98,23 +101,22 @@ public class Mine extends SpellRay {
 							boolean silkTouch = state1.getBlock().canSilkHarvest(world, pos1, state1, (EntityPlayer)caster)
 									&& ItemArtefact.isArtefactActive((EntityPlayer)caster, WizardryItems.charm_silk_touch);
 
-							// Some protection mods seem to use this event instead so let's trigger it to check
-							if(ForgeEventFactory.getBreakSpeed((EntityPlayer)caster, state1, 1, pos1) <= 0) continue;
+							int xp = BlockUtils.checkBlockBreakXP(caster, world, pos);
 
-							int xp = ForgeHooks.onBlockBreakEvent(world,
-									((EntityPlayerMP)caster).interactionManager.getGameType(), (EntityPlayerMP)caster, pos1);
-
-							if(xp == -1) continue; // Event was cancelled
+							if(xp < 0) continue; // Not allowed to break the block
 
 							if(silkTouch){
 								flag = world.destroyBlock(pos1, false);
-								if(flag) Block.spawnAsEntity(world, pos1, getSilkTouchDrop(state1));
+								if(flag){
+									ItemStack stack = getSilkTouchDrop(state1);
+									if(stack != null) Block.spawnAsEntity(world, pos1, stack);
+								}
 							}else{
 								flag = world.destroyBlock(pos1, true);
 								if(flag) state1.getBlock().dropXpOnBlockBreak(world, pos1, xp);
 							}
 
-						}else{
+						}else if(BlockUtils.canBreakBlock(caster, world, pos)){
 							// NPCs can dig the block under the target's feet
 							flag = world.destroyBlock(pos1, true) || flag;
 						}
@@ -141,17 +143,15 @@ public class Mine extends SpellRay {
 				.shaded(false).spawn(world);
 	}
 
-	// Copied from Block, where (for some reason) it's protected
 	private static ItemStack getSilkTouchDrop(IBlockState state){
 
-		Item item = Item.getItemFromBlock(state.getBlock());
-		int i = 0;
-
-		if(item.getHasSubtypes()){
-			i = state.getBlock().getMetaFromState(state);
+		try {
+			return (ItemStack)getSilkTouchDrop.invoke(state.getBlock(), state);
+		}catch(IllegalAccessException | InvocationTargetException e){
+			Wizardry.logger.error("Error while reflectively retrieving silk touch drop", e);
 		}
 
-		return new ItemStack(item, 1, i);
+		return null;
 	}
 
 }

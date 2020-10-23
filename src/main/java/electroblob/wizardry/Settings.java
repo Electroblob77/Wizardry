@@ -1,5 +1,7 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.packet.PacketSyncSettings;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.spell.Spell;
@@ -9,9 +11,9 @@ import electroblob.wizardry.util.MagicDamage.DamageType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -24,6 +26,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Singleton class which deals with everything related to wizardry's config file. To access individual settings, use
@@ -53,14 +56,19 @@ import java.util.regex.Pattern;
  */
 // For the time being, I'm sticking with the old config system because @Config doesn't support custom config entry classes
 // @Config(modid = Wizardry.MODID)
-@SuppressWarnings("deprecation") // Used server I18n deliberately; we want to write the comments in the actual config file in english.
 public final class Settings {
 
 	// Category names
 	/** The unlocalised name of the gameplay config category. */
 	public static final String GAMEPLAY_CATEGORY = "gameplay";
+	/** The unlocalised name of the difficulty config category. */
+	public static final String DIFFICULTY_CATEGORY = "difficulty";
+	/** The unlocalised name of the tweaks config category. */
+	public static final String TWEAKS_CATEGORY = "tweaks";
 	/** The unlocalised name of the spells config category. */
 	public static final String SPELLS_CATEGORY = "spells";
+	/** The unlocalised name of the artefacts config category. */
+	public static final String ARTEFACTS_CATEGORY = "artefacts";
 	/** The unlocalised name of the resistances config category. */
 	public static final String RESISTANCES_CATEGORY = "resistances";
 	/** The unlocalised name of the client config category. */
@@ -97,37 +105,51 @@ public final class Settings {
 	public int towerRarity = 700;
 	/** <b>[Server-only]</b> List of structure file locations for wizard towers without loot chests. */
 	public ResourceLocation[] towerFiles = {new ResourceLocation(Wizardry.MODID, "wizard_tower_0"),
-											new ResourceLocation(Wizardry.MODID, "wizard_tower_1"),
-											new ResourceLocation(Wizardry.MODID, "wizard_tower_2"),
-											new ResourceLocation(Wizardry.MODID, "wizard_tower_3")};
+			new ResourceLocation(Wizardry.MODID, "wizard_tower_1"),
+			new ResourceLocation(Wizardry.MODID, "wizard_tower_2"),
+			new ResourceLocation(Wizardry.MODID, "wizard_tower_3")};
 	/** <b>[Server-only]</b> List of structure file locations for wizard towers with loot chests. */
 	public ResourceLocation[] towerWithChestFiles = {new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_0"),
-													new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_1"),
-													new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_2"),
-													new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_3")};
+			new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_1"),
+			new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_2"),
+			new ResourceLocation(Wizardry.MODID, "wizard_tower_chest_3")};
 	/** <b>[Server-only]</b> List of dimension ids in which to generate obelisks. */
 	public int[] obeliskDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of obelisks, used by the world generator. Larger numbers are rarer. */
 	public int obeliskRarity = 600;
 	/** <b>[Server-only]</b> List of structure file locations for obelisks. */
 	public ResourceLocation[] obeliskFiles = {new ResourceLocation(Wizardry.MODID, "obelisk_0"),
-												new ResourceLocation(Wizardry.MODID, "obelisk_1"),
-												new ResourceLocation(Wizardry.MODID, "obelisk_2"),
-												new ResourceLocation(Wizardry.MODID, "obelisk_3"),
-												new ResourceLocation(Wizardry.MODID, "obelisk_4")};
+			new ResourceLocation(Wizardry.MODID, "obelisk_1"),
+			new ResourceLocation(Wizardry.MODID, "obelisk_2"),
+			new ResourceLocation(Wizardry.MODID, "obelisk_3"),
+			new ResourceLocation(Wizardry.MODID, "obelisk_4")};
 	/** <b>[Server-only]</b> List of dimension ids in which to generate shrines. */
 	public int[] shrineDimensions = {0, -1};
 	/** <b>[Server-only]</b> The rarity of shrines, used by the world generator. Larger numbers are rarer. */
 	public int shrineRarity = 1100;
 	/** <b>[Server-only]</b> List of structure file locations for shrines. */
 	public ResourceLocation[] shrineFiles = {new ResourceLocation(Wizardry.MODID, "shrine_0"),
-											new ResourceLocation(Wizardry.MODID, "shrine_1"),
-											new ResourceLocation(Wizardry.MODID, "shrine_2"),
-											new ResourceLocation(Wizardry.MODID, "shrine_3"),
-											new ResourceLocation(Wizardry.MODID, "shrine_4"),
-											new ResourceLocation(Wizardry.MODID, "shrine_5"),
-											new ResourceLocation(Wizardry.MODID, "shrine_6"),
-											new ResourceLocation(Wizardry.MODID, "shrine_7")};
+			new ResourceLocation(Wizardry.MODID, "shrine_1"),
+			new ResourceLocation(Wizardry.MODID, "shrine_2"),
+			new ResourceLocation(Wizardry.MODID, "shrine_3"),
+			new ResourceLocation(Wizardry.MODID, "shrine_4"),
+			new ResourceLocation(Wizardry.MODID, "shrine_5"),
+			new ResourceLocation(Wizardry.MODID, "shrine_6"),
+			new ResourceLocation(Wizardry.MODID, "shrine_7")};
+	/** <b>[Server-only]</b> List of dimension ids in which to generate library ruins. */
+	public int[] libraryDimensions = {0};
+	/** <b>[Server-only]</b> The rarity of library ruins, used by the world generator. Larger numbers are rarer. */
+	public int libraryRarity = 900;
+	/** <b>[Server-only]</b> List of structure file locations for surface library ruins. */
+	public ResourceLocation[] libraryFiles = {new ResourceLocation(Wizardry.MODID, "library_ruins_0"),
+			new ResourceLocation(Wizardry.MODID, "library_ruins_1"),
+			new ResourceLocation(Wizardry.MODID, "library_ruins_2"),
+			new ResourceLocation(Wizardry.MODID, "library_ruins_3")};
+	/** <b>[Server-only]</b> List of structure file locations for underground library ruins. */
+	public ResourceLocation[] undergroundLibraryFiles = {new ResourceLocation(Wizardry.MODID, "underground_library_ruins_0"),
+			new ResourceLocation(Wizardry.MODID, "underground_library_ruins_1"),
+			new ResourceLocation(Wizardry.MODID, "underground_library_ruins_2"),
+			new ResourceLocation(Wizardry.MODID, "underground_library_ruins_3")};
 	/** <b>[Server-only]</b> List of solid blocks (usually trees) which are ignored by the structure generators. */
 	public Pair<ResourceLocation, Short>[] treeBlocks = parseItemMetaStrings(DEFAULT_TREE_BLOCKS);
 	/** <b>[Server-only]</b> The chance for wizard towers to generate with an evil wizard and chest inside. */
@@ -147,8 +169,8 @@ public final class Settings {
 	public ResourceLocation[] mobLootTableWhitelist = {};
 	/** <b>[Server-only]</b> Blacklist for loot tables to inject additional mob drops into. */
 	public ResourceLocation[] mobLootTableBlacklist = toResourceLocations("entities/vex", "entities/ender_dragon",
-														"entities/wither", "entities/silverfish", "entities/endermite",
-														Wizardry.MODID + "entities/evil_wizard");
+			"entities/wither", "entities/silverfish", "entities/endermite",
+			Wizardry.MODID + "entities/evil_wizard");
 	/**
 	 * <b>[Server-only]</b> Whether or not players can teleport through unbreakable blocks (e.g. bedrock) using the
 	 * phase step spell.
@@ -166,11 +188,12 @@ public final class Settings {
 	public boolean playersMoveEachOther = true;
 	/** <b>[Server-only]</b> Whether spells cast by players can destroy blocks in the world. */
 	public boolean playerBlockDamage = true;
+	/** <b>[Server-only]</b> Whether spells cast by dispensers can destroy blocks in the world. */
+	public boolean dispenserBlockDamage = true;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
-	/** <b>[Server-only]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
-	 * velocity-based one. */
-	public boolean replaceVanillaFallDamage = true;
+	/** <b>[Server-only]</b> Whether to tweak the blindness effect to reduce follow distance when used on non-players. */
+	public boolean blindnessTweak = true;
 	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
 	public boolean bonemealGrowsCrystalFlowers = true;
 	/**
@@ -237,18 +260,24 @@ public final class Settings {
 	public String[] damageSourceBlacklist = {};
 	/** <b>[Server-only]</b> Whether to print compatibility warnings to the console. */
 	public boolean compatibilityWarnings = true;
+	// TODO: Should these really be server-only?
 	/** <b>[Server-only]</b> Whether Baubles integration features are enabled. */
 	public boolean baublesIntegration = true;
-//	/** <b>[Server-only]</b> Whether JEI integration features are enabled. */
-//	public boolean jeiIntegration = true;
+	/** <b>[Server-only]</b> Whether JEI integration features are enabled. */
+	public boolean jeiIntegration = true;
 	/** <b>[Server-only]</b> Whether Antique Atlas integration features are enabled. */
 	public boolean antiqueAtlasIntegration = true;
+	// These are server-only because that's where markers are stored
 	/** <b>[Server-only]</b> Whether global markers for wizard towers are added to antique atlases. */
 	public boolean autoTowerMarkers = true;
 	/** <b>[Server-only]</b> Whether global markers for obelisks are added to antique atlases. */
 	public boolean autoObeliskMarkers = true;
 	/** <b>[Server-only]</b> Whether global markers for shrines are added to antique atlases. */
 	public boolean autoShrineMarkers = true;
+	/** <b>[Server-only]</b> Whether global markers for library ruins are added to antique atlases. */
+	public boolean autoLibraryMarkers = true;
+	/** <b>[Server-only]</b> Whether global markers for underground library ruins are added to antique atlases. */
+	public boolean autoUndergroundLibraryMarkers = false;
 
 	// Synchronised settings. These settings affect both client-side AND server-side code. Changing these locally
 	// only has an effect if the local game is the host, i.e. a dedicated server, a LAN host or a singleplayer world.
@@ -270,10 +299,46 @@ public final class Settings {
 	 * effect.
 	 */
 	public boolean slowTimeAffectsPlayers = true;
+	/** <b>[Synchronised]</b> Whether passive mobs should count as allies, i.e. they should not be damaged indirectly by spells */
+	public boolean passiveMobsAreAllies = false;
 	/** <b>[Synchronised]</b> Whether to replace Minecraft's own fireballs with wizardry fireballs. */
 	public boolean replaceVanillaFireballs = true;
+	/**
+	 * <b>[Synchronised]</b> Whether to replace Minecraft's distance-based fall damage calculation with an equivalent,
+	 * velocity-based one.
+	 */
+	public boolean replaceVanillaFallDamage = true;
 	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
+	/** <b>[Synchronised]</b> Progression requirements for upgrading a wand to each tier. */
+	public int[] progressionRequirements = {1500, 3500, 6000};
+	/**
+	 * <b>[Synchronised]</b> The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be
+	 * able to link to it.
+	 */
+	public int bookshelfSearchRadius = 4;
+	/**
+	 * <b>[Synchronised]</b> List of registry names of blocks that count as bookshelves for the arcane workbench and
+	 * lectern.
+	 */
+	public Pair<ResourceLocation, Short>[] bookshelfBlocks = parseItemMetaStrings(
+			Wizardry.MODID + ":oak_bookshelf",
+			Wizardry.MODID + ":spruce_bookshelf",
+			Wizardry.MODID + ":birch_bookshelf",
+			Wizardry.MODID + ":jungle_bookshelf",
+			Wizardry.MODID + ":acacia_bookshelf",
+			Wizardry.MODID + ":dark_oak_bookshelf"
+	);
+	/** <b>[Synchronised]</b> List of registry names of items that can be placed in a bookshelf. */
+	public Pair<ResourceLocation, Short>[] bookItems = parseItemMetaStrings();
+
+	/**
+	 * <b>[Synchronised*]</b> The element to render for donation perks, or null if it should not be rendered.
+	 * <p></p>
+	 * * Unlike the other options, <b>this is synchronised client -> server</b>, then the data for all players is sent
+	 * back to every client when they join the game, or whenever it changes.
+	 */
+	public Element donationPerkElement = Element.MAGIC;
 
 	// Client-only settings. These settings only affect client-side code and hence are not synced. Each client obeys
 	// its own values for these, and changing them on a dedicated server will have no effect.
@@ -304,6 +369,12 @@ public final class Settings {
 	public boolean screenShake = true;
 	/** <b>[Client-only]</b> Whether to use the screen blink effect for teleportation spells. */
 	public boolean blinkEffect = true;
+	/** <b>[Client-only]</b> Whether to use spellcasting animations for players. */
+	public boolean spellcastingAnimations = true;
+	/** <b>[Client-only]</b> Whether to show the spell HUD when holding a wand. */
+	public boolean showSpellHUD = true;
+	/** <b>[Client-only]</b> Whether to show the charge meter when charging up a spell. */
+	public boolean showChargeMeter = true;
 	/** <b>[Client-only]</b> The position of the spell HUD. */
 	public GuiPosition spellHUDPosition = GuiPosition.BOTTOM_LEFT;
 
@@ -326,7 +397,7 @@ public final class Settings {
 		/** Constant array storing the names of each of the constants, in the order they are declared. */
 		public static final String[] names;
 
-		static {
+		static{
 			names = new String[values().length];
 			for(GuiPosition position : values()){
 				names[position.ordinal()] = position.name;
@@ -380,8 +451,10 @@ public final class Settings {
 
 		Wizardry.logger.info("Setting up main config");
 
-		setupGeneralConfig();
+		setupGameplayConfig();
+		setupDifficultyConfig();
 		setupWorldgenConfig();
+		setupTweaksConfig();
 		if(event.getSide() == Side.CLIENT) setupClientConfig(); // Server has no spell HUD skins so this would crash it
 		setupCommandsConfig();
 		setupCompatibilityConfig();
@@ -397,11 +470,12 @@ public final class Settings {
 	void initConfigExtras(){
 
 		Wizardry.logger.info("Setting up spells config for " + Spell.getTotalSpellCount() + " spells");
-
 		setupSpellsConfig();
 
-		Wizardry.logger.info("Setting up resistances config");
+		Wizardry.logger.info("Setting up artefacts config");
+		setupArtefactsConfig();
 
+		Wizardry.logger.info("Setting up resistances config");
 		setupResistancesConfig();
 
 		config.save();
@@ -412,12 +486,15 @@ public final class Settings {
 
 		Wizardry.logger.info("Saving in-game config changes");
 
-		setupGeneralConfig();
+		setupGameplayConfig();
+		setupDifficultyConfig();
 		setupWorldgenConfig();
+		setupTweaksConfig();
 		setupClientConfig();
 		setupCommandsConfig();
 		setupCompatibilityConfig();
 		setupSpellsConfig();
+		setupArtefactsConfig();
 		setupResistancesConfig();
 
 		config.save();
@@ -443,16 +520,36 @@ public final class Settings {
 
 		for(Spell spell : Spell.getAllSpells()){
 			property = config.get(SPELLS_CATEGORY, spell.getRegistryName().toString(), true,
-					I18n.translateToLocal("spell." + spell.getUnlocalisedName() + ".desc"));
+					"Set to false to disable this spell");
 			// Uses the same config key as the spell name, because - well, that's what it's called!
 			property.setLanguageKey("spell." + spell.getUnlocalisedName());
 			Wizardry.proxy.setToNamedBooleanEntry(property);
-			spell.setEnabled(property.getBoolean());
+			spell.setEnabled(property.getBoolean(true));
 		}
 
 	}
 
-	private void setupGeneralConfig(){
+	private void setupArtefactsConfig(){
+
+		config.addCustomCategoryComment(ARTEFACTS_CATEGORY,
+				"Set an item to false to disable it. Disabled items will still appear in-game but will have no effect when worn. It is also advisable to remove disabled items from wizardry's (and addons') loot tables. Disable an item if it is causing problems, conflicts with another mod or creates an unintended exploit.");
+
+		Property property;
+
+		for(Item item : Item.REGISTRY){
+			if(item instanceof ItemArtefact){
+				property = config.get(ARTEFACTS_CATEGORY, item.getRegistryName().toString(), true,
+						"Set to false to disable this item");
+				// Uses the same config key as the item name, because - well, that's what it's called!
+				property.setLanguageKey(item.getTranslationKey() + ".name");
+				Wizardry.proxy.setToNamedBooleanEntry(property);
+				((ItemArtefact)item).setEnabled(property.getBoolean());
+			}
+		}
+
+	}
+
+	private void setupGameplayConfig(){
 
 		// This trick is borrowed from forge; it sorts the config options into the order you want them.
 		List<String> propOrder = new ArrayList<>();
@@ -461,32 +558,18 @@ public final class Settings {
 
 		config.addCustomCategoryComment(GAMEPLAY_CATEGORY, "Global settings that affect game mechanics. In multiplayer, the server/LAN host settings will apply. Please note that changing some of these settings may make the mod very difficult to play.");
 
-		property = config.get(GAMEPLAY_CATEGORY, "discoveryMode", true,
-				"For those who like a sense of mystery! When set to true, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is false.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".discovery_mode");
+		property = config.get(GAMEPLAY_CATEGORY, "playerBlockDamage", true,
+				"Whether spells cast by players can destroy blocks in the world. Wizardry makes every attempt to respect protection mods and plugins, but cannot guarantee it will work in all cases for every mod. If you need absolutely watertight anti-grief, disable this setting. (N.B. This setting only affects players. To prevent mobs from destroying blocks with magic, use the mobGriefing gamerule.)");
+		property.setLanguageKey("config." + Wizardry.MODID + ".player_block_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
-		property.setRequiresWorldRestart(true);
-		discoveryMode = property.getBoolean();
+		playerBlockDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "legacyWandLevelling", false,
-				"Controls whether wands are required to gain progression before they can be upgraded to the next tier. Enable this option to revert to the pre-4.2 system, which only requires tomes of arcana. Wands will still gain progression even when this is enabled, so if you go back to the new system you won't lose any progress.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".legacy_wand_levelling");
+		property = config.get(GAMEPLAY_CATEGORY, "dispenserBlockDamage", true,
+				"Whether spells cast by dispensers can destroy blocks in the world. Wizardry makes every attempt to respect protection mods and plugins, but cannot guarantee it will work in all cases for every mod. If you need absolutely watertight anti-grief, disable this setting.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".dispenser_block_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
-		legacyWandLevelling = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "friendlyFire", FriendlyFire.ALL.name, "Controls which creatures may be damaged by your magic when allied to you. Your spells will not target your allies or creatures summoned/owned by them regardless of this setting, but this setting prevents all magic damage to allies.", FriendlyFire.names);
-		property.setLanguageKey("config." + Wizardry.MODID + ".friendly_fire");
-		friendlyFire = FriendlyFire.fromName(property.getString());
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "minionRevengeTargeting", true,
-				"Whether summoned creatures can revenge attack their owner if their owner attacks them.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".minion_revenge_targeting");
-		Wizardry.proxy.setToNamedBooleanEntry(property);
-		property.setRequiresWorldRestart(false);
-		minionRevengeTargeting = property.getBoolean();
+		dispenserBlockDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,
@@ -494,13 +577,6 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".players_move_each_other");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		playersMoveEachOther = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "playerBlockDamage", true,
-				"Whether spells cast by players can destroy blocks in the world. Set to false to prevent griefing. To prevent non-players from destroying blocks with magic, use the mobGriefing gamerule.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".player_block_damage");
-		Wizardry.proxy.setToNamedBooleanEntry(property);
-		playerBlockDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "telekineticDisarmament", true,
@@ -524,32 +600,20 @@ public final class Settings {
 		worldTimeManipulation = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "replaceVanillaFireballs", true,
-				"Whether to replace Minecraft's own fireballs with wizardry fireballs. If this is disabled, only wizardry spells will use the custom fireballs.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fireballs");
+		property = config.get(GAMEPLAY_CATEGORY, "slowTimeAffectsPlayers", true,
+				"Whether players are slowed when another nearby player uses the slow time spell. If this is false, mobs and projectiles will still be affected but players will move at normal speed.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".slow_time_affects_players");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
-		replaceVanillaFireballs = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "replaceVanillaFallDamage", true,
-				"Whether to replace Minecraft's distance-based fall damage calculation with an equivalent, velocity-based one. This is done such that mobs in freefall will take exactly the same damage as normal, so it will not break falling-based mob farms. Disable this if you experience falling-related weirdness! If this is disabled, some spells will use a more simplistic method of resetting the player's fall damage in certain cases.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fall_damage");
-		Wizardry.proxy.setToNamedBooleanEntry(property);
-		replaceVanillaFallDamage = property.getBoolean();
+		property.setRequiresWorldRestart(true);
+		slowTimeAffectsPlayers = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "creativeBypassesArcaneLock", true,
 				"Whether any player in creative mode can bypass arcane-locked blocks. If this is false, players must also be op in order to do so.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".creative_bypasses_arcane_lock");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
 		creativeBypassesArcaneLock = property.getBoolean();
-		propOrder.add(property.getName());
-
-		property = config.get(GAMEPLAY_CATEGORY, "slowTimeAffectsPlayers", true,
-				"Whether players are slowed when another nearby player uses the slow time spell. If this is false, mobs and projectiles will still be affected but players will move at normal speed.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".slow_time_affects_players");
-		Wizardry.proxy.setToNamedBooleanEntry(property);
-		slowTimeAffectsPlayers = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "bonemealGrowsCrystalFlowers", true,
@@ -559,33 +623,87 @@ public final class Settings {
 		bonemealGrowsCrystalFlowers = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_whitelist");
-		property.setRequiresMcRestart(true);
-		mobLootTableWhitelist = getResourceLocationList(property);
+		config.setCategoryPropertyOrder(GAMEPLAY_CATEGORY, propOrder);
+
+	}
+
+	private void setupDifficultyConfig(){
+
+		List<String> propOrder = new ArrayList<>();
+
+		Property property;
+
+		config.addCustomCategoryComment(DIFFICULTY_CATEGORY, "Settings that affect the mod's difficulty. In multiplayer, the server/LAN host settings will apply.");
+
+		property = config.get(DIFFICULTY_CATEGORY, "discoveryMode", true,
+				"For those who like a sense of mystery! When set to true, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is false.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".discovery_mode");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
+		discoveryMode = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "mobLootTableBlacklist", new String[]{"entities/vex", "entities/ender_dragon", "entities/wither", Wizardry.MODID + ":entities/evil_wizard"}, "Blacklist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually exclude them.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_blacklist");
-		property.setRequiresMcRestart(true);
-		mobLootTableBlacklist = getResourceLocationList(property);
+		property = config.get(DIFFICULTY_CATEGORY, "legacyWandLevelling", false,
+				"Controls whether wands are required to gain progression before they can be upgraded to the next tier. Enable this option to revert to the pre-4.2 system, which only requires tomes of arcana. Wands will still gain progression even when this is enabled, so if you go back to the new system you won't lose any progress.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".legacy_wand_levelling");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		legacyWandLevelling = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "mobSpawnDimensions", new int[]{0},
-				"List of dimension ids in which wizardry's hostile mobs can spawn.");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_dimensions");
-		property.setRequiresMcRestart(true);
-		mobSpawnDimensions = property.getIntList();
+		property = config.get(DIFFICULTY_CATEGORY, "friendlyFire", FriendlyFire.ALL.name,
+				"Controls which creatures may be damaged by your magic when allied to you. Your spells will not target your allies or creatures summoned/owned by them regardless of this setting, but this setting prevents all magic damage to allies.", FriendlyFire.names);
+		property.setLanguageKey("config." + Wizardry.MODID + ".friendly_fire");
+		friendlyFire = FriendlyFire.fromName(property.getString());
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "mobSpawnBiomeBlacklist", new String[]{"mushroom_island", "mushroom_island_shore"},
-				"List of names of biomes in which wizardry's hostile mobs cannot spawn. Biome names are not case-sensitive. For mod biomes, prefix with the mod ID (e.g. biomesoplenty:mystic_grove).");
-		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_biome_blacklist");
-		property.setRequiresMcRestart(true);
-		mobSpawnBiomeBlacklist = getResourceLocationList(property);
+		property = config.get(DIFFICULTY_CATEGORY, "passiveMobsAreAllies", false,
+				"Whether passive mobs should count as allies, i.e. they should not be damaged indirectly by spells.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".passive_mobs_are_allies");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
+		passiveMobsAreAllies = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "evilWizardSpawnRate", 3,
+		property = config.get(DIFFICULTY_CATEGORY, "minionRevengeTargeting", true,
+				"Whether summoned creatures can revenge attack their owner if their owner attacks them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".minion_revenge_targeting");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(false);
+		minionRevengeTargeting = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "forfeitChance", 0.2,
+				"The chance to 'misread' an undiscovered spell and trigger a forfeit instead. Setting this to 0 effectively disables the forfeit mechanic. Has no effect if discovery mode is disabled.",
+				0, 1);
+		property.setLanguageKey("config." + Wizardry.MODID + ".forfeit_chance");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresWorldRestart(true);
+		forfeitChance = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "progressionRequirements", new int[]{1500, 3500, 6000},
+				"The amount of progression required to upgrade a wand to each tier (apprentice, advanced and master respectively).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".progression_requirements");
+		property.setRequiresWorldRestart(true);
+		progressionRequirements = property.getIntList();
+		propOrder.add(property.getName());
+
+		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
+		// scaling factor means that 0.5 is as big a change as 2.0, so whilst a slider is fine for increasing the
+		// damage, it doesn't give fine enough control for values less than 1.
+		property = config.get(DIFFICULTY_CATEGORY, "playerDamageScaling", 1.0,
+				"Global damage scaling factor for the damage dealt by players casting spells, relative to 1.", 0, 255);
+		property.setLanguageKey("config." + Wizardry.MODID + ".player_damage_scaling");
+		playerDamageScale = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "npcDamageScaling", 1.0,
+				"Global damage scaling factor for the damage dealt by NPCs casting spells, relative to 1.", 0, 255);
+		property.setLanguageKey("config." + Wizardry.MODID + ".npc_damage_scaling");
+		npcDamageScale = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "evilWizardSpawnRate", 3,
 				"Spawn rate for naturally-spawned evil wizards; higher numbers mean more evil wizards will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable evil wizard spawning entirely.",
 				0, 100);
 		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizard_spawn_rate");
@@ -594,7 +712,7 @@ public final class Settings {
 		evilWizardSpawnRate = property.getInt();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "iceWraithSpawnRate", 3,
+		property = config.get(DIFFICULTY_CATEGORY, "iceWraithSpawnRate", 3,
 				"Spawn rate for naturally-spawned ice wraiths; higher numbers mean more ice wraiths will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable ice wraith spawning entirely.",
 				0, 100);
 		property.setLanguageKey("config." + Wizardry.MODID + ".ice_wraith_spawn_rate");
@@ -603,7 +721,7 @@ public final class Settings {
 		iceWraithSpawnRate = property.getInt();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "lightningWraithSpawnRate", 1,
+		property = config.get(DIFFICULTY_CATEGORY, "lightningWraithSpawnRate", 1,
 				"Spawn rate for naturally-spawned lightning wraiths; higher numbers mean more lightning wraiths will spawn. 5 is equivalent to witches, 100 is equivalent to zombies, skeletons and creepers. Set to 0 to disable lightning wraith spawning entirely.",
 				0, 100);
 		property.setLanguageKey("config." + Wizardry.MODID + ".lightning_wraith_spawn_rate");
@@ -612,79 +730,132 @@ public final class Settings {
 		lightningWraithSpawnRate = property.getInt();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "forfeitChance", 0.2,
-				"The chance to 'misread' an undiscovered spell and trigger a forfeit instead. Setting this to 0 effectively disables the forfeit mechanic. Has no effect if discovery mode is disabled.",
-				0, 1);
-		property.setLanguageKey("config." + Wizardry.MODID + ".forfeit_chance");
-		Wizardry.proxy.setToNumberSliderEntry(property);
-		forfeitChance = property.getDouble();
+		config.setCategoryPropertyOrder(DIFFICULTY_CATEGORY, propOrder);
+
+	}
+
+	private void setupTweaksConfig(){
+
+		List<String> propOrder = new ArrayList<>();
+
+		Property property;
+
+		config.addCustomCategoryComment(TWEAKS_CATEGORY, "Assorted settings for tweaking the mod's behaviour. In multiplayer, the server/LAN host settings will apply.");
+
+		property = config.get(TWEAKS_CATEGORY, "replaceVanillaFireballs", true,
+				"Whether to replace Minecraft's own fireballs with wizardry fireballs. If this is disabled, only wizardry spells will use the custom fireballs.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fireballs");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
+		replaceVanillaFireballs = property.getBoolean();
 		propOrder.add(property.getName());
 
-		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
-		// scaling factor means that 0.5 is as big a change as 2.0, so whilst a slider is fine for increasing the
-		// damage, it doesn't give fine enough control for values less than 1.
-		property = config.get(GAMEPLAY_CATEGORY, "playerDamageScaling", 1.0,
-				"Global damage scaling factor for the damage dealt by players casting spells, relative to 1.", 0, 255);
-		property.setLanguageKey("config." + Wizardry.MODID + ".player_damage_scaling");
-		playerDamageScale = property.getDouble();
+		property = config.get(TWEAKS_CATEGORY, "replaceVanillaFallDamage", true,
+				"Whether to replace Minecraft's distance-based fall damage calculation with an equivalent, velocity-based one. This is done such that mobs in freefall will take exactly the same damage as normal, so it will not break falling-based mob farms. Disable this if you experience falling-related weirdness! If this is disabled, some spells will use a more simplistic method of resetting the player's fall damage in certain cases.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".replace_vanilla_fall_damage");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.setRequiresWorldRestart(true);
+		replaceVanillaFallDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "npcDamageScaling", 1.0,
-				"Global damage scaling factor for the damage dealt by NPCs casting spells, relative to 1.", 0, 255);
-		property.setLanguageKey("config." + Wizardry.MODID + ".npc_damage_scaling");
-		npcDamageScale = property.getDouble();
+		property = config.get(TWEAKS_CATEGORY, "blindnessTweak", true,
+				"Whether to tweak the blindness effect to reduce follow distance when used on non-players. This automatically disables itself in favour of Potion Core's implementation if installed.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".blindness_tweak");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		blindnessTweak = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "summonedCreatureTargetsWhitelist", new String[0],
+		property = config.get(TWEAKS_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_whitelist");
+		property.setRequiresMcRestart(true);
+		mobLootTableWhitelist = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobLootTableBlacklist", new String[]{"entities/vex", "entities/ender_dragon", "entities/wither", Wizardry.MODID + ":entities/evil_wizard"}, "Blacklist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually exclude them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_loot_table_blacklist");
+		property.setRequiresMcRestart(true);
+		mobLootTableBlacklist = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobSpawnDimensions", new int[]{0},
+				"List of dimension ids in which wizardry's hostile mobs can spawn.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_dimensions");
+		property.setRequiresMcRestart(true);
+		mobSpawnDimensions = property.getIntList();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "mobSpawnBiomeBlacklist", new String[]{"mushroom_island", "mushroom_island_shore"},
+				"List of names of biomes in which wizardry's hostile mobs cannot spawn. Biome names are not case-sensitive. For mod biomes, prefix with the mod ID (e.g. biomesoplenty:mystic_grove).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".mob_spawn_biome_blacklist");
+		property.setRequiresMcRestart(true);
+		mobSpawnBiomeBlacklist = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "summonedCreatureTargetsWhitelist", new String[0],
 				"List of names of entities which summoned creatures and wizards are allowed to attack, in addition to the defaults. Add mod creatures to this list if you want summoned creatures to attack them and they aren't already doing so. SoundLoopSpellEntity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_whitelist");
 		property.setRequiresWorldRestart(true);
 		summonedCreatureTargetsWhitelist = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "summonedCreatureTargetsBlacklist", new String[]{"creeper"},
+		property = config.get(TWEAKS_CATEGORY, "summonedCreatureTargetsBlacklist", new String[]{"creeper"},
 				"List of names of entities which summoned creatures and wizards are specifically not allowed to attack, overriding the defaults and the whitelist. Add creatures to this list if allowing them to be attacked causes problems or is too destructive (removing creepers from this list is done at your own risk!). SoundLoopSpellEntity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".summoned_creature_targets_blacklist");
 		property.setRequiresWorldRestart(true);
 		summonedCreatureTargetsBlacklist = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "mindControlTargetsBlacklist", new String[]{},
+		property = config.get(TWEAKS_CATEGORY, "mindControlTargetsBlacklist", new String[]{},
 				"List of names of entities which cannot be mind controlled, in addition to the defaults. Add creatures to this list if allowing them to be mind-controlled causes problems or could be exploited. SoundLoopSpellEntity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".mind_control_targets_blacklist");
-		property.setRequiresWorldRestart(true);
 		mindControlTargetsBlacklist = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "pocketFurnaceItemBlacklist", new String[]{"cobblestone", "netherrack"},
+		property = config.get(TWEAKS_CATEGORY, "pocketFurnaceItemBlacklist", new String[]{"cobblestone", "netherrack"},
 				"List of registry names of blocks or items which cannot be smelted by the pocket furnace spell, in addition to armour, tools and weapons. Block/item names are not case sensitive. For mod items, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".pocket_furnace_item_blacklist");
-		property.setRequiresWorldRestart(true);
 		pocketFurnaceItemBlacklist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "divinationOreWhitelist", new String[0], "List of registry names of ore blocks which can be detected by the divination spell. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
+		property = config.get(TWEAKS_CATEGORY, "divinationOreWhitelist", new String[0], "List of registry names of ore blocks which can be detected by the divination spell. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":crystal_ore).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".divination_ore_whitelist");
-		property.setRequiresWorldRestart(true);
 		divinationOreWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "swordItemWhitelist", new String[0], "List of registry names of items which should count as swords for imbuement spells. Most swords should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:broadsword).");
+		property = config.get(TWEAKS_CATEGORY, "swordItemWhitelist", new String[0], "List of registry names of items which should count as swords for imbuement spells. Most swords should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:broadsword).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".sword_item_whitelist");
-		property.setRequiresWorldRestart(true);
 		swordItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "bowItemWhitelist", new String[0], "List of registry names of items which should count as bows for imbuement spells. Most bows should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:shortbow).");
+		property = config.get(TWEAKS_CATEGORY, "bowItemWhitelist", new String[0], "List of registry names of items which should count as bows for imbuement spells. Most bows should work automatically, but those that don't can be added manually here. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. tconstruct:shortbow).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".bow_item_whitelist");
-		property.setRequiresWorldRestart(true);
 		bowItemWhitelist = parseItemMetaStrings(property.getStringList());
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
+		property = config.get(TWEAKS_CATEGORY, "bookshelfBlocks", new String[]{Wizardry.MODID + ":oak_bookshelf", Wizardry.MODID + ":spruce_bookshelf", Wizardry.MODID + ":birch_bookshelf", Wizardry.MODID + ":jungle_bookshelf",  Wizardry.MODID + ":acacia_bookshelf",  Wizardry.MODID + ":dark_oak_bookshelf"}, "List of registry names of blocks that count as bookshelves for the arcane workbench and lectern. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. " + Wizardry.MODID + ":oak_bookshelf).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_blocks");
+		property.setRequiresWorldRestart(true);
+		bookshelfBlocks = parseItemMetaStrings(property.getStringList());
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "bookItems", new String[0], "List of registry names of items which can be placed in a bookshelf, in addition to the defaults. Item names are not case sensitive. For mod items, prefix with the mod ID (e.g. thaumcraft:thaumonomicon).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".book_items");
+		property.setRequiresWorldRestart(true);
+		bookItems = parseItemMetaStrings(property.getStringList());
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "bookshelfSearchRadius", 4,
+				"The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be able to link to it.",
+				1, 10);
+		property.setLanguageKey("config." + Wizardry.MODID + ".bookshelf_search_radius");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		property.setRequiresWorldRestart(true);
+		bookshelfSearchRadius = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
 				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
-		property.setRequiresWorldRestart(true);
 		propOrder.add(property.getName());
 		currencyItems = new HashMap<>();
 		for(String string : property.getStringList()){
@@ -694,14 +865,14 @@ public final class Settings {
 				Wizardry.logger.warn("Invalid entry in currency items: {}", string);
 				continue; // Ignore invalid entries, the pattern above should ensure this never happens
 			}
-			try {
+			try{
 				currencyItems.put(parseItemMetaString(args[0]), Integer.parseInt(args[1]));
 			}catch(NumberFormatException e){
 				Wizardry.logger.warn("Invalid integer in currency items: {}", args[1]);
 			}
 		}
 
-		config.setCategoryPropertyOrder(GAMEPLAY_CATEGORY, propOrder);
+		config.setCategoryPropertyOrder(TWEAKS_CATEGORY, propOrder);
 
 	}
 
@@ -797,7 +968,34 @@ public final class Settings {
 		shrineFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(GAMEPLAY_CATEGORY, "treeBlocks", DEFAULT_TREE_BLOCKS, "List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).");
+		property = config.get(WORLDGEN_CATEGORY, "libraryDimensions", new int[]{0}, "List of dimension ids in which library ruins will generate. Remove all dimensions to disable library ruins completely.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".library_dimensions");
+		property.setRequiresWorldRestart(true);
+		libraryDimensions = property.getIntList();
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "libraryRarity", 900, "Rarity of library ruins. 1 in this many chunks will contain a library ruin, meaning higher numbers are rarer.", 20, 5000);
+		property.setLanguageKey("config." + Wizardry.MODID + ".library_rarity");
+		property.setRequiresWorldRestart(true);
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		libraryRarity = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "libraryFiles", new String[]{Wizardry.MODID + ":library_ruins_0", Wizardry.MODID + ":library_ruins_1", Wizardry.MODID + ":library_ruins_2", Wizardry.MODID + ":library_ruins_3"},
+				"List of structure file locations for surface library ruins. One of these files will be randomly selected each time a surface library ruin is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable library ruins, use the library dimensions setting.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".library_files");
+		property.setRequiresWorldRestart(true);
+		libraryFiles = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "undergroundLibraryFiles", new String[]{Wizardry.MODID + ":underground_library_ruins_0", Wizardry.MODID + ":underground_library_ruins_1", Wizardry.MODID + ":underground_library_ruins_2", Wizardry.MODID + ":underground_library_ruins_3"},
+				"List of structure file locations for underground library ruins. One of these files will be randomly selected each time an underground library ruin is generated. File locations are of the format [mod id]:[filename], which refers to the file assets/[mod id]/structures/[filename].nbt. Duplicate entries are permitted, allowing for simple weighting without duplicating the structure files themselves. This list should not be empty; to disable library ruins, use the library dimensions setting.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".underground_library_files");
+		property.setRequiresWorldRestart(true);
+		undergroundLibraryFiles = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "treeBlocks", DEFAULT_TREE_BLOCKS, "List of registry names of blocks which can be overwritten by wizardry's structure generators, affecting both fast and fancy structure generation. Most tree blocks and other foliage should work automatically, but those that don't can be added manually here. Block names are not case sensitive. For mod blocks, prefix with the mod ID (e.g. dynamictrees:oakbranch).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".tree_blocks");
 		property.setRequiresWorldRestart(true);
 		treeBlocks = parseItemMetaStrings(property.getStringList());
@@ -847,6 +1045,20 @@ public final class Settings {
 		reverseScrollDirection = property.getBoolean();
 		propOrder.add(property.getName());
 
+		property = config.get(CLIENT_CATEGORY, "showSpellHUD", true, "Whether to show the spell HUD in the corner of the screen when holding a wand.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".show_spell_hud");
+		property.setRequiresWorldRestart(false);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		showSpellHUD = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "showChargeMeter", true, "Whether to show the spell charge-up meter around the crosshairs when charging up a spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".show_charge_meter");
+		property.setRequiresWorldRestart(false);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		showChargeMeter = property.getBoolean();
+		propOrder.add(property.getName());
+
 		property = config.get(CLIENT_CATEGORY, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name, "The position of the spell HUD.", GuiPosition.names);
 		property.setLanguageKey("config." + Wizardry.MODID + ".spell_hud_position");
 		spellHUDPosition = GuiPosition.fromName(property.getString());
@@ -892,6 +1104,20 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".blink_effect");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		blinkEffect = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "spellcastingAnimations", true, "Whether to use custom animations for players casting spells. Disable this option if it conflicts with other mods that add player animations.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".spellcasting_animations");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		spellcastingAnimations = property.getBoolean();
+		propOrder.add(property.getName());
+
+		List<String> elementNames = Arrays.stream(Element.values()).map(Element::getName).collect(Collectors.toList());
+		elementNames.add("");
+		property = config.get(CLIENT_CATEGORY, "donationPerkElement", Element.MAGIC.getName(), "The element of the flying companion orb rendered on donor and contributor players, leave empty to disable the effect. If you're one of them, this setting will change how all players see you (if not, it won't do anything).", elementNames.toArray(new String[0]));
+		property.setLanguageKey("config." + Wizardry.MODID + ".donation_perk_element");
+		donationPerkElement = Element.fromName(property.getString(), null); // Fallback to null for no element
 		propOrder.add(property.getName());
 
 		config.setCategoryPropertyOrder(CLIENT_CATEGORY, propOrder);
@@ -1050,13 +1276,13 @@ public final class Settings {
 		baublesIntegration = property.getBoolean();
 		propOrder.add(property.getName());
 
-//		property = config.get(COMPATIBILITY_CATEGORY, "jeiIntegration", true,
-//				"If JEI (Just Enough Items) is installed, controls whether JEI integration features are enabled. If this is disabled, wizardry will always behave as if JEI is not installed.");
-//		property.setLanguageKey("config." + Wizardry.MODID + ".jei_integration");
-//		property.setRequiresMcRestart(true);
-//		Wizardry.proxy.setToNamedBooleanEntry(property);
-//		jeiIntegration = property.getBoolean();
-//		propOrder.add(property.getName());
+		property = config.get(COMPATIBILITY_CATEGORY, "jeiIntegration", true,
+				"If JEI (Just Enough Items) is installed, controls whether JEI integration features are enabled. If this is disabled, wizardry will always behave as if JEI is not installed.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".jei_integration");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		jeiIntegration = property.getBoolean();
+		propOrder.add(property.getName());
 
 		property = config.get(COMPATIBILITY_CATEGORY, "antiqueAtlasIntegration", true,
 				"If Antique Atlas is installed, controls whether Antique Atlas integration features are enabled. If this is disabled, wizardry will always behave as if Antique Atlas is not installed.");
@@ -1090,6 +1316,22 @@ public final class Settings {
 		autoShrineMarkers = property.getBoolean();
 		propOrder.add(property.getName());
 
+		property = config.get(COMPATIBILITY_CATEGORY, "autoPlaceLibraryMarkers", true,
+				"Controls whether wizardry automatically places antique atlas markers at the locations of library ruins.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".auto_place_library_markers");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		autoLibraryMarkers = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(COMPATIBILITY_CATEGORY, "autoPlaceUndergroundLibraryMarkers", false,
+				"Controls whether wizardry automatically places antique atlas markers at the locations of underground library ruins.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".auto_place_underground_library_markers");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		autoUndergroundLibraryMarkers = property.getBoolean();
+		propOrder.add(property.getName());
+
 		config.setCategoryPropertyOrder(COMPATIBILITY_CATEGORY, propOrder);
 
 	}
@@ -1104,7 +1346,7 @@ public final class Settings {
 		return Arrays.stream(strings).map(s -> new ResourceLocation(s.toLowerCase(Locale.ROOT).trim())).toArray(ResourceLocation[]::new);
 	}
 
-	/** Applies {@link Settings#parseItemMetaString(String)} to each input string and returns and array of the resulting
+	/** Applies {@link Settings#parseItemMetaString(String)} to each input string and returns an array of the resulting
 	 * {@link Pair}s. */
 	@SuppressWarnings("unchecked") // Shut up java
 	public static Pair<ResourceLocation, Short>[] parseItemMetaStrings(String... strings){
@@ -1132,14 +1374,34 @@ public final class Settings {
 		return Pair.of(new ResourceLocation(item), meta);
 	}
 
+	/**
+	 * Checks a metadata-sensitive list option (see {@link Settings#parseItemMetaStrings(String...)} for the given block.
+	 * @param array The config option to check
+	 * @param block The block state to search for
+	 * @return True if the given array contains an entry that matches the given block, false if not.
+	 */
 	public static boolean containsMetaBlock(Pair<ResourceLocation, Short>[] array, IBlockState block){
 		return containsMetaThing(array, block.getBlock().getRegistryName(), (short)block.getBlock().getMetaFromState(block));
 	}
 
+	/**
+	 * Checks a metadata-sensitive list option (see {@link Settings#parseItemMetaStrings(String...)} for the given item.
+	 * @param array The config option to check
+	 * @param stack An item stack with the item and metadata to search for
+	 * @return True if the given array contains an entry that matches the given stack, false if not.
+	 */
 	public static boolean containsMetaItem(Pair<ResourceLocation, Short>[] array, ItemStack stack){
 		return containsMetaThing(array, stack.getItem().getRegistryName(), (short)stack.getMetadata());
 	}
 
+	/**
+	 * Checks a metadata-sensitive list option (see {@link Settings#parseItemMetaStrings(String...)} for the given
+	 * id/metadata pair.
+	 * @param array The config option to check
+	 * @param id The id to search for
+	 * @param metadata The metadata value to search for
+	 * @return True if the given array contains the given id/metadata pair, or the given id paired with the wildcard value.
+	 */
 	public static boolean containsMetaThing(Pair<ResourceLocation, Short>[] array, ResourceLocation id, short metadata){
 		return Arrays.asList(array).contains(Pair.of(id, metadata)) || Arrays.asList(array).contains(Pair.of(id, (short)OreDictionary.WILDCARD_VALUE));
 	}

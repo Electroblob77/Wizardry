@@ -11,16 +11,16 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
-			"caption": "法術工作台",
+			"location": "ebwizardry:textures/gui/arcane_workbench.png",
+			"caption": "�k�N�u�@�x",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/ore_picture.png",
-			"caption": "水晶礦",
+			"location": "ebwizardry:textures/gui/crystal_ore.png",
+			"caption": "�����q",
 			"u": 0,
 			"v": 0,
 			"width": 64,
@@ -28,7 +28,7 @@
 		},
 		"magic_crystal": {
 			"location": "ebwizardry:textures/items/crystal_magic.png",
-			"caption": "魔法水晶",
+			"caption": "�]�k����",
 			"u": 6,
 			"v": 6,
 			"width": 36,
@@ -39,7 +39,7 @@
 		},
 		"magic_wand": {
 			"location": "ebwizardry:textures/items/wand_novice.png",
-			"caption": "法杖",
+			"caption": "�k��",
 			"u": 0,
 			"v": 0,
 			"width": 64,
@@ -47,48 +47,48 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/flower_picture.png",
-			"caption": "水晶花",
+			"location": "ebwizardry:textures/gui/crystal_flower.png",
+			"caption": "������",
 			"u": 0,
 			"v": 0,
 			"width": 48,
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/tower_picture.png",
-			"caption": "法師塔",
+			"location": "ebwizardry:textures/gui/wizard_tower.png",
+			"caption": "�k�v��",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/armour_picture.png",
-			"caption": "法師服",
+			"location": "ebwizardry:textures/gui/wizard_armour.png",
+			"caption": "�k�v�A",
 			"u": 0,
 			"v": 0,
 			"width": 90,
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/obelisk_picture.png",
-			"caption": "方尖碑",
+			"location": "ebwizardry:textures/gui/obelisk.png",
+			"caption": "��y�O",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/shrine_picture.png",
-			"caption": "神殿",
+			"location": "ebwizardry:textures/gui/shrine.png",
+			"caption": "����",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 67
 		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/tiers_picture.png",
-			"caption": "四種等級的法杖",
+			"location": "ebwizardry:textures/gui/tiers.png",
+			"caption": "�|�ص��Ū��k��",
 			"u": 0,
 			"v": 0,
 			"width": 96,
@@ -96,8 +96,8 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/elements_picture.png",
-			"caption": "七種法術元素",
+			"location": "ebwizardry:textures/gui/elements.png",
+			"caption": "�C�تk�N����",
 			"u": 0,
 			"v": 0,
 			"width": 106,
@@ -236,26 +236,26 @@
 			},
 			"text": [
 			
-				"法師手冊",
+				"�k�v��U",
 				
-				"作者: Electroblob\n\n翻譯: Grant"
+				"�@��: Electroblob"
 			]
 		},
 		
 		"introduction": {
-			"title": "前言",
+			"title": "�e��",
 			"text": [
 			
-				"你好啊，法師！\n\n本書介紹許多法術相關事物及使用方式。 這不是一本普通的書，其內容會隨著你在魔法世界的探索而逐漸呈現。",
+				"�A�n�ڡA�k�v�I\n\n���Ѥ��г\�h�k�N�����ƪ��ΨϥΤ覡�C �o���O�@�����q���ѡA�䤺�e�|�H�ۧA�b�]�k�@�ɪ������ӳv���e�{�C",
 
-				"使用箭頭按鈕來翻頁，按下雙箭頭按鈕則可快速的切換章節，而中間的選單按鈕則是翻回主目錄頁面。",
+				"�ϥνb�Y���s��½���A���U���b�Y���s�h�i�ֳt���������`�A�Ӥ����������s�h�O½�^�D�ؿ������C",
 
-				"點擊任何紫色連結文字直接跳至相關頁面。對書籤點擊滑鼠右鍵可將書籤移到目前這頁，對書籤點擊滑鼠左鍵則可翻回書籤那頁。"
+				"�I�����󵵦�s����r�������ܬ��������C������I���ƹ��k��i�N���Ҳ���ثe�o���A������I���ƹ�����h�i½�^���Ҩ����C"
 			]
 		},
 
 		"main_contents": {
-			"title": "目錄",
+			"title": "�ؿ�",
 			"contents": {
 				"id": "main_contents",
 				"hyperlinks": true,
@@ -265,90 +265,90 @@
 		},
 
 		"setting_up": {
-			"title": "準備",
+			"title": "�ǳ�",
 			"include_in_contents": "main_contents",
 			"text": [
 
-				"要開始使用法術，你需要準備:",
+				"�n�}�l�ϥΪk�N�A�A�ݭn�ǳ�:",
 
-				"》法杖， 請依圖示合成:",
+				"�n�k���A �Ш̹ϥܦX��:",
 
 				"#recipe magic_wand",
 
-				"\n\n》@arcane_workbench 法術工作台@， 合成方式如圖:",
+				"\n\n�n@arcane_workbench �k�N�u�@�x@�A �X���覡�p��:",
 
 				"#recipe arcane_workbench",
 
-				"》@spells 法術書@\n這個可以在箱子裡找到，或從怪物身上掉落，或向法師購買。\n\n\n\n不然你也可以自己合成一個\n初學者法術【魔法彈】，\n如圖所示:",
+				"�n@spells �k�N��@\n�o�ӥi�H�b�c�l�̧��A�αq�Ǫ����W�����A�ΦV�k�v�ʶR�C\n\n\n\n���M�A�]�i�H�ۤv�X���@��\n��Ǫ̪k�N�i�]�k�u�j�A\n�p�ϩҥ�:",
 
 				"#recipe magic_missile_spell_book",
 
-				"你還需要準備一大堆魔法水晶\n來為法杖供應@mana 法力@。"
+				"�A�ٻݭn�ǳƤ@�j���]�k����\n�Ӭ��k������@mana �k�O@�C"
 			]
 		},
 
 		"mana": {
-			"title": "法力",
+			"title": "�k�O",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:crystal"
 			],
 			"text": [
 
-				"法力是賦予法師力量的魔法能量，其本身並非實體的物質，反而是可滲入於萬物之中的永恆能量。特別的是，法力蘊藏在於地下岩石中所找到的天然水晶內。\n@wands 法杖@可儲存法力，並在施法時\n將法力引導到@spells 法術@上。\n不同的法術會依其力量強度及持續時間消耗不同的法力值。",
+				"�k�O�O�ᤩ�k�v�O�q���]�k��q�A�䥻���ëD���骺����A�ϦӬO�i���J��U���������ë��q�C�S�O���O�A�k�Oĭ�æb��a�U���ۤ��ҧ�쪺�ѵM�������C\n@wands �k��@�i�x�s�k�O�A�æb�I�k��\n�N�k�O�޾ɨ�@spells �k�N@�W�C\n���P���k�N�|�̨�O�q�j�פΫ���ɶ����Ӥ��P���k�O�ȡC",
 
 				"#image crystal_ore",
 
 				"#image magic_crystal",
 
-				"人們普遍認為法力無法被創造或消滅，每當施展法術時，其引導的法力就會散失到周圍環境中。事實上這就是大量的法力散布於世界各處的原因。總之無論要如何使用法力，必須從地底下的天然千年水晶中，或本書未涵蓋的高級人工方式將其收集。還有各種方法使法術更有效的使用法力，以及回收在施法過程中逸散的部分法力。"
+				"�H�̴��M�{���k�O�L�k�Q�гy�ή����A�C��I�i�k�N�ɡA��޾ɪ��k�O�N�|������P�����Ҥ��C�ƹ�W�o�N�O�j�q���k�O������@�ɦU�B����]�C�`���L�׭n�p��ϥΪk�O�A�����q�a���U���ѵM�d�~�������A�Υ��ѥ��[�\�����ŤH�u�覡�N�䦬���C�٦��U�ؤ�k�Ϫk�N�󦳮Ī��ϥΪk�O�A�H�Φ^���b�I�k�L�{���h���������k�O�C"
 			]
 		},
 
 		"wands": {
-			"title": "法杖",
+			"title": "�k��",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:arcane_initiate"
 			],
 			"text": [
 
-				"法杖是法師首選的器具。\n你能用它來施展任何法杖能力\n所及的@spells 法術@(請參閱@tiers 等級@章節)\n。\n法杖的種類很多，不過當然都得從基礎法杖開始。",
+				"�k���O�k�v���諸����C\n�A��Υ��ӬI�i����k����O\n�ҤΪ�@spells �k�N@(�аѾ\@tiers ����@���`)\n�C\n�k���������ܦh�A���L��M���o�q��¦�k���}�l�C",
 
 				"#image magic_wand",
 
-				"大多數的法杖都誕生於一個簡單的製作方式。\n準備一顆某種類型的魔法水晶，\n將水晶裝在木棒的一端，\n再於另一端黏上一顆金粒。\n水晶自然是法杖力量的源頭，\n因為它提供了引導@spells 法術@所需的\n焦點。而其餘的部分也很重要，不只是因為提供了握住法杖的地方，更是指引@mana 法力@前進的路徑\n。",
+				"�j�h�ƪ��k�����ϥͩ�@��²�檺�s�@�覡�C\n�ǳƤ@���Y���������]�k�����A\n�N�����˦b��Ϊ��@�ݡA\n�A��t�@���H�W�@�����ɡC\n�����۵M�O�k���O�q�����Y�A\n�]�������ѤF�޾�@spells �k�N@�һݪ�\n�J�I�C�Ө�l�������]�ܭ��n�A���u�O�]�����ѤF����k�����a��A��O����@mana �k�O@�e�i�����|\n�C",
 
-				"隨著法杖施展了愈多法術，\n其變得愈能駕馭@spells 法術@，\n因此也能施展更強大的法術。\n這樣的成長可以從法杖外觀上的細微變化中發現，隨著法杖愈來愈強，水晶會變得更加明亮，\n顏色也可能會根據其@elements 元素@而\n產生變化。過了一段時間之後，法杖本身的木材也會開始扭曲生長成各種複雜的形狀。",
+				"�H�۪k���I�i�F�U�h�k�N�A\n���ܱo�U��r��@spells �k�N@�A\n�]���]��I�i��j�j���k�N�C\n�o�˪������i�H�q�k���~�[�W���ӷL�ܤƤ��o�{�A�H�۪k���U�ӷU�j�A�����|�ܱo��[���G�A\n�C��]�i��|�ھڨ�@elements ����@��\n�����ܤơC�L�F�@�q�ɶ�����A�k������������]�|�}�l�ᦱ�ͪ����U�ؽ������Ϊ��C",
 
-				"當你拿著法杖時，畫面的角落會顯示出目前法杖所選的法術及其圖示，而在施放法術之後，還會顯示冷卻條來表示直到下次施展所需等待的時間，它還會顯示法杖中的前一個和下一個法術名稱。按下《#next_spell_key 鍵》及《#previous_spell_key 鍵》可切換法術(這些都可在【選項】->【按鍵設定】中變更)，你也可以在潛行時使用滑鼠滾輪來切換法術。",
+				"��A���۪k���ɡA�e���������|��ܥX�ثe�k���ҿ諸�k�N�Ψ�ϥܡA�Ӧb�I��k�N����A�ٷ|��ܧN�o���Ӫ�ܪ���U���I�i�һݵ��ݪ��ɶ��A���ٷ|��ܪk�������e�@�өM�U�@�Ӫk�N�W�١C���U�m#next_spell_key ��n�Ρm#previous_spell_key ��n�i�����k�N(�o�ǳ��i�b�i�ﶵ�j->�i����]�w�j���ܧ�)�A�A�]�i�H�b���ɨϥηƹ��u���Ӥ����k�N�C",
 
-				"當你將游標停留在物品欄的法杖上時，會顯示法杖中儲存的\n@mana 法力@，伴隨目前所選的@spells 法術@及其\n特殊能力。\n將法杖放入@arcane_workbench 法術工作台@則可\n看見更詳細的資訊。"
+				"��A�N��а��d�b���~�檺�k���W�ɡA�|��ܪk�����x�s��\n@mana �k�O@�A���H�ثe�ҿ諸@spells �k�N@�Ψ�\n�S���O�C\n�N�k����J@arcane_workbench �k�N�u�@�x@�h�i\n�ݨ���ԲӪ���T�C"
 			]
 		},
 
 		"spells": {
-			"title": "法術",
+			"title": "�k�N",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:handbook/spells"
 			],
 			"text": [
 
-				"沒有法術的@wands 法杖@沒有作用。\n法術的記錄形式有兩種:\n一種是永久性的書本，\n一種是暫時性的卷軸。",
+				"�S���k�N��@wands �k��@�S���@�ΡC\n�k�N���O���Φ������:\n�@�جO�ä[�ʪ��ѥ��A\n�@�جO�Ȯɩʪ����b�C",
 
-				"法術書本身無法使用，而是用於將書中記載的法術存入@wands 法杖@。\n在世界各地都能發現法術書，應該用不了多少時間你就能找到一本。當你找到後，可將游標停留在書上，看一下這本法術書的基本資訊，也可以拿著書點擊滑鼠右鍵以閱讀更詳細的資料。",
+				"�k�N�ѥ����L�k�ϥΡA�ӬO�Ω�N�Ѥ��O�����k�N�s�J@wands �k��@�C\n�b�@�ɦU�a����o�{�k�N�ѡA���ӥΤ��F�h�֮ɶ��A�N����@���C��A����A�i�N��а��d�b�ѤW�A�ݤ@�U�o���k�N�Ѫ��򥻸�T�A�]�i�H���ۮ��I���ƹ��k��H�\Ū��ԲӪ���ơC",
 
-				"相對而言卷軸則有不同的用途: 拿著卷軸點擊滑鼠右鍵便會施展上面的法術並用掉卷軸。跟法術書一樣，卷軸在世界各地都能找到，但你也可以自己@enchanting_scrolls 製作@。",
+				"�۹�Ө����b�h�����P���γ~: ���ۨ��b�I���ƹ��k��K�|�I�i�W�����k�N�åα����b�C��k�N�Ѥ@�ˡA���b�b�@�ɦU�a������A���A�]�i�H�ۤv@enchanting_scrolls �s�@@�C",
 
-				"在你準備進行某個任務時，有些法術可能只會用到一兩次，\n所以你不想讓那些法術占用\n你的@wands 法杖@空間，此時卷軸就非常\n有用。不過得注意，比起法杖，卷軸還是效率較差的施法方式。",
+				"�b�A�ǳƶi��Y�ӥ��ȮɡA���Ǫk�N�i��u�|�Ψ�@�⦸�A\n�ҥH�A���Q�����Ǫk�N�e��\n�A��@wands �k��@�Ŷ��A���ɨ��b�N�D�`\n���ΡC���L�o�`�N�A��_�k���A���b�٬O�Ĳv���t���I�k�覡�C",
 
-				"未經訓練的眼睛無法閱讀法術中的魔法符文。然而若要鑑定一個法術，你當然可以冒著發生意外的風險來施展看看結果，但即便如此許多法術是要在特定的條件下才會發生作用。不過即便如此，還是有可能在施法時誤用了未鑑定的法術，其潛在的危險性取決於這個法術有多強大。因此更安全可靠的選擇是使用鑑定卷軸，可以在箱子裡找到或是向法師購買。拿著鑑定卷軸點擊滑鼠右鍵便會用掉卷軸並鑑定你快捷欄中第一個未知的法術書或卷軸。"
+				"���g�V�m�������L�k�\Ū�k�N�����]�k�Ť�C�M�ӭY�nŲ�w�@�Ӫk�N�A�A��M�i�H�_�۵o�ͷN�~�����I�ӬI�i�ݬݵ��G�A���Y�K�p���\�h�k�N�O�n�b�S�w������U�~�|�o�ͧ@�ΡC���L�Y�K�p���A�٬O���i��b�I�k�ɻ~�ΤF��Ų�w���k�N�A���b���M�I�ʨ��M��o�Ӫk�N���h�j�j�C�]����w���i�a����ܬO�ϥ�Ų�w���b�A�i�H�b�c�l�̧��άO�V�k�v�ʶR�C����Ų�w���b�I���ƹ��k��K�|�α����b��Ų�w�A�ֱ��椤�Ĥ@�ӥ������k�N�ѩΨ��b�C"
 			]
 		},
 
 		"arcane_workbench": {
-			"title": "法術工作台",
+			"title": "�k�N�u�@�x",
 			"include_in_contents": "main_contents",
 			"contents": {
 				"id": "arcane_workbench_subsections",
@@ -361,81 +361,81 @@
 			],
 			"text": [
 
-				"法術工作台看起來有點像附魔台， 用來升級你的@wands 法杖@、\n為其補充法力和存入@spells 法術@。\n\n其合成方式如下:",
+				"�k�N�u�@�x�ݰ_�Ӧ��I�����]�x�A �ΨӤɯŧA��@wands �k��@�B\n����ɥR�k�O�M�s�J@spells �k�N@�C\n\n��X���覡�p�U:",
 
 				"#recipe arcane_workbench",
 
-				"接下來的頁面將說明法術工作台的各種功用。",
+				"���U�Ӫ������N�����k�N�u�@�x���U�إ\�ΡC",
 
 				"#image workbench"
 			],
 			"sections": {
 				"binding_spells": {
-					"title": "抄寫法術",
+					"title": "�ۼg�k�N",
 					"include_in_contents": "arcane_workbench_subsections",
 					"triggers": [
 						"ebwizardry:handbook/arcane_workbench"
 					],
 					"text": [
 
-						"要將@spells 法術@存入你的@wands 法杖@，只要將\n法杖放入工作台中央的槽中，然後將法術書放入周圍其中一個槽並按下按鈕。此時你會注意到，在這個過程中，法術書並沒有受到任何影響，這是因為存入法術的動作，並不是將法術從法術書中取走，只是將法術抄寫至法杖中而已。因此你可以重複這個動作，盡量將想要的法術存入你的法杖。你一次最多只能存入五種法術到法杖中，不過可用協調升級來增加法術存量。"
+						"�n�N@spells �k�N@�s�J�A��@wands �k��@�A�u�n�N\n�k����J�u�@�x�������Ѥ��A�M��N�k�N�ѩ�J�P��䤤�@�ӼѨë��U���s�C���ɧA�|�`�N��A�b�o�ӹL�{���A�k�N�ѨèS���������v�T�A�o�O�]���s�J�k�N���ʧ@�A�ä��O�N�k�N�q�k�N�Ѥ������A�u�O�N�k�N�ۼg�ܪk�����Ӥw�C�]���A�i�H���Ƴo�Ӱʧ@�A�ɶq�N�Q�n���k�N�s�J�A���k���C�A�@���̦h�u��s�J���تk�N��k�����A���L�i�Ψ�դɯŨӼW�[�k�N�s�q�C"
 					]
 				},
 				"charging_wands": {
-					"title": "法杖補充法力",
+					"title": "�k���ɥR�k�O",
 					"include_in_contents": "arcane_workbench_subsections",
 					"triggers": [
 						"ebwizardry:handbook/arcane_workbench"
 					],
 					"text": [
 
-						"要幫@wands 法杖@補充法力，先將法杖\n放入法術工作台中央的槽，並在左下方那個槽放入魔法水晶，然後按下按鈕。\n每個水晶相當於#mana_per_crystal點的@mana 法力@，\n而法杖只會在需要時用掉水晶，因此你可以將水晶留在工作台內，以便需要時供應。但是請記得，法杖只能取用整數單位的水晶，舉例來說，如果法杖只需要30點法力，那補充法力時會有#example_charging_loss點法力浪費掉。"
+						"�n��@wands �k��@�ɥR�k�O�A���N�k��\n��J�k�N�u�@�x�������ѡA�æb���U�診�Ӽѩ�J�]�k�����A�M����U���s�C\n�C�Ӥ����۷��#mana_per_crystal�I��@mana �k�O@�A\n�Ӫk���u�|�b�ݭn�ɥα������A�]���A�i�H�N�����d�b�u�@�x���A�H�K�ݭn�ɨ����C���O�аO�o�A�k���u����ξ�Ƴ�쪺�����A�|�Ҩӻ��A�p�G�k���u�ݭn30�I�k�O�A���ɥR�k�O�ɷ|��#example_charging_loss�I�k�O���O���C"
 					]
 				},
 				"upgrading_wands": {
-					"title": "升級法杖",
+					"title": "�ɯŪk��",
 					"include_in_contents": "arcane_workbench_subsections",
 					"triggers": [
 						"ebwizardry:handbook/tome_of_arcana"
 					],
 					"text": [
 
-						"你需要對應@tiers 等級@的法術寶典來\n升級你的@wands 法杖@或進行特殊的法\n杖升級。這兩種東西都可從怪物的掉落物或向法師購買獲得。要升級法杖，先將法杖放入法術工作台中央的槽，並在右上方的槽放入升級物後按下按鈕。",
+						"�A�ݭn����@tiers ����@���k�N�_���\n�ɯŧA��@wands �k��@�ζi��S���k\n���ɯšC�o��تF�賣�i�q�Ǫ����������ΦV�k�v�ʶR��o�C�n�ɯŪk���A���N�k����J�k�N�u�@�x�������ѡA�æb�k�W�誺�ѩ�J�ɯŪ�����U���s�C",
 
-						"特殊的法杖升級可加強法杖某方面的能力，每種升級最高只能疊加三次，而法杖的總升級數取決於法杖的等級。升級後就無法移除。"
+						"�S���k���ɯťi�[�j�k���Y�譱����O�A�C�ؤɯų̰��u���|�[�T���A�Ӫk�����`�ɯżƨ��M��k�������šC�ɯū�N�L�k�����C"
 					]
 				},
 				"enchanting_scrolls": {
-					"title": "製作卷軸",
+					"title": "�s�@���b",
 					"include_in_contents": "arcane_workbench_subsections",
 					"triggers": [
 						"ebwizardry:handbook/scrolls"
 					],
 					"text": [
 
-						"法術工作台也能用來將@spells 法術@\n存入卷軸。要製作卷軸，你需要先用一張紙及一些線來合成空白卷軸，然後選一本想要作成卷軸的法術書，最後準備足夠的魔法水晶以提供施展這個法術的@mana 法力@。",
+						"�k�N�u�@�x�]��ΨӱN@spells �k�N@\n�s�J���b�C�n�s�@���b�A�A�ݭn���Τ@�i�ȤΤ@�ǽu�ӦX���ťը��b�A�M���@���Q�n�@�����b���k�N�ѡA�̫�ǳƨ������]�k�����H���ѬI�i�o�Ӫk�N��@mana �k�O@�C",
 
 						"#recipe blank_scroll",
 
-						"先將水晶放入左下方的槽，再將空白卷軸放入中央的槽，然後將法術書放入上方單獨的槽，最後按下按鈕以製成法術卷軸。"
+						"���N������J���U�誺�ѡA�A�N�ťը��b��J�������ѡA�M��N�k�N�ѩ�J�W���W���ѡA�̫���U���s�H�s���k�N���b�C"
 					]
 				}
 			}
 		},
 
 		"wizard_armour": {
-			"title": "法師服",
+			"title": "�k�v�A",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:arcane_initiate"
 			],
 			"text": [
 
-				"身為一位法師，在與生物搏鬥時需要一些東西來保護自己。雖然也能使用一般的護甲，但是為了充分發揮你的法術，你還是需要一套法師服，包括帽子、長袍、褲子和鞋子。\n與一般護甲不同的是，法師服不會破損，其使用魔法能量來保護穿著的人。因此跟法杖一樣，需要魔法水晶來補充能量。不過幸好這些服裝不會消耗太多\n@mana 法力@。\n法師服補充能量的方式也跟法杖一樣，可以用@arcane_workbench 法術工作台@或\n@mana_flasks 法力瓶@來補充，但是必須當心，\n如果法師服的法力耗盡了，你會發現自己毫無防禦力。",
+				"�����@��k�v�A�b�P�ͪ��i���ɻݭn�@�ǪF��ӫO�@�ۤv�C���M�]��ϥΤ@�몺�@�ҡA���O���F�R���o���A���k�N�A�A�٬O�ݭn�@�M�k�v�A�A�]�A�U�l�B���T�B�Ǥl�M�c�l�C\n�P�@���@�Ҥ��P���O�A�k�v�A���|�}�l�A��ϥ��]�k��q�ӫO�@��۪��H�C�]����k���@�ˡA�ݭn�]�k�����ӸɥR��q�C���L���n�o�ǪA�ˤ��|���ӤӦh\n@mana �k�O@�C\n�k�v�A�ɥR��q���覡�]��k���@�ˡA�i�H��@arcane_workbench �k�N�u�@�x@��\n@mana_flasks �k�O�~@�ӸɥR�A���O������ߡA\n�p�G�k�v�A���k�O�ӺɤF�A�A�|�o�{�ۤv�@�L���m�O�C",
 
 				"#image wizard_armour",
 
-				"你可以用魔法絲綢來製成法師服:",
+				"�A�i�H���]�k�����ӻs���k�v�A:",
 
 				"#recipe magic_silk",
 				"#recipe wizard_hat",
@@ -443,16 +443,16 @@
 				"#recipe wizard_leggings",
 				"#recipe wizard_boots",
 
-				"使用一般的附魔台就能為法師服附魔，而且由於魔法絲綢本身的特性，附魔後的效果特別好。對一個法師而言，最有用的是魔法、冰凍及衝擊三種防護附魔，有助於對抗敵人的魔法攻擊。",
+				"�ϥΤ@�몺���]�x�N�ର�k�v�A���]�A�ӥB�ѩ��]�k�����������S�ʡA���]�᪺�ĪG�S�O�n�C��@�Ӫk�v�Ө��A�̦��Ϊ��O�]�k�B�B��ν����T�ب��@���]�A���U���ܼĤH���]�k�����C",
 
-				"有些專注於特定元素的法師會穿著能加強該元素力量的特殊服裝，這種整套的服裝法師們都相當喜歡，但也不容易找到。",
+				"���ǱM�`��S�w�������k�v�|��ۯ�[�j�Ӥ����O�q���S��A�ˡA�o�ؾ�M���A�˪k�v�̳��۷���w�A���]���e�����C",
 
-				"傳說中最強的法師曾經用一種法術印記來大大強化他們的服裝。"
+				"�ǻ����̱j���k�v���g�Τ@�تk�N�L�O�Ӥj�j�j�ƥL�̪��A�ˡC"
 			]
 		},
 
 		"magical_world": {
-			"title": "魔法世界",
+			"title": "�]�k�@��",
 			"include_in_contents": "main_contents",
 			"contents": {
 				"id": "magical_world_subsections",
@@ -465,161 +465,161 @@
 			],
 			"text": [
 
-				"只是待在家裡是無法成為法術大師的，到外頭探索充滿魔法的世界吧！\n若你勇於挑戰，古代遺址、遺物以及不管好的或壞的神秘生物，都等著你發現。\n最偉大的法師同時也最具好奇心，他們會不斷的探索周遭環境，並嘗試所發現的東西，來獲得豐富的知識及強大的力量。",
+				"�u�O�ݦb�a�̬O�L�k�����k�N�j�v���A��~�Y�����R���]�k���@�ɧa�I\n�Y�A�i��D�ԡA�j�N��}�B�򪫥H�Τ��ަn�����a�������ͪ��A�����ۧA�o�{�C\n�̰��j���k�v�P�ɤ]�̨�n�_�ߡA�L�̷|���_�������P�D���ҡA�ù��թҵo�{���F��A����o�״I�����Ѥαj�j���O�q�C",
 
-				"雖然法師不免大多的時間都是孤身一人，但知識的分享也是學習魔法藝術重要的一環。找尋其他法師，盡可能從他們身上學習更多知識，溝通才是一切最大的力量。"
+				"���M�k�v���K�j�h���ɶ����O�t���@�H�A�����Ѫ����ɤ]�O�ǲ��]�k���N���n���@���C��M��L�k�v�A�ɥi��q�L�̨��W�ǲߧ�h���ѡA���q�~�O�@���̤j���O�q�C"
 			],
 			"sections": {
 				"crystal_flowers": {
-					"title": "水晶花",
+					"title": "������",
 					"include_in_contents": "magical_world_subsections",
 					"triggers": [
 						"ebwizardry:handbook/crystal_flowers"
 					],
 					"text": [
 
-						"在你的旅途當中，可能在野外會不時遇到奇怪的發光花朵，這些獨特的花稱為水晶花，它們具有聚集@mana 法力@的神奇能力，至今還不\n知道原因。不過我們卻知道這些水晶花，可經由採集製作以提取法力成為水晶，這使它們成為地面上相當有用的法力來源。然而由於這種花並不大，而且生長的土地都很小塊，因此這種方式所能獲得的法力其實很有限。",
+						"�b�A���ȳ~���A�i��b���~�|���ɹJ��_�Ǫ��o���ᦷ�A�o�ǿW�S����٬�������A���̨㦳�E��@mana �k�O@�����_��O�A�ܤ��٤�\n���D��]�C���L�ڭ̫o���D�o�Ǥ�����A�i�g�ѱĶ��s�@�H�����k�O���������A�o�ϥ��̦����a���W�۷��Ϊ��k�O�ӷ��C�M�ӥѩ�o�ت�ä��j�A�ӥB�ͪ����g�a���ܤp���A�]���o�ؤ覡�ү���o���k�O���ܦ����C",
 
 						"#image crystal_flower",
 						"#recipe crystal_flower_to_crystals"
 					]
 				},
 				"wizard_towers": {
-					"title": "法師塔",
+					"title": "�k�v��",
 					"include_in_contents": "magical_world_subsections",
 					"triggers": [
 						"ebwizardry:wizard_tower"
 					],
 					"text": [
 
-						"害怕嗎？你並不是這個世界上唯一會使用魔法的人。\n在你的旅途中，你可能會遇到具有獨特尖頂或雙尖頂的高塔，這些是法師同伴居住的地方。\n隱居的生活使法師們有時候會有點古怪，但是他們通常還是友善的，而且只要你願意付出代價，還是會樂意與你分享他們的知識。\n在支付了貴重金屬及寶石後，你會收到許多驚奇的法術作為回報。",
+						"�`�ȶܡH�A�ä��O�o�ӥ@�ɤW�ߤ@�|�ϥ��]�k���H�C\n�b�A���ȳ~���A�A�i��|�J��㦳�W�S�y�������y��������A�o�ǬO�k�v�P��~���a��C\n���~���ͬ��Ϫk�v�̦��ɭԷ|���I�j�ǡA���O�L�̳q�`�٬O�͵����A�ӥB�u�n�A�@�N�I�X�N���A�٬O�|�ַN�P�A���ɥL�̪����ѡC\n�b��I�F�Q�����ݤ��_�۫�A�A�|����\�h��_���k�N�@���^���C",
 
-						"如果你想尋找的是@tiers 大師級@法術，\n那你得跟專門的人交談。",
+						"�p�G�A�Q�M�䪺�O@tiers �j�v��@�k�N�A\n���A�o��M�����H��͡C",
 
 						"#image wizard_tower",
 
-						"不幸的是，有少數法師並不歡迎訪客。這些法師通常已被驅逐，所以對於任何闖入地盤的人都充滿敵意。\n接近這些傢伙要特別小心，並做好抵擋強大魔法的準備。只要擊敗他們，他們的知識就會成為你的了。",
+						"�������O�A���ּƪk�v�ä��w��X�ȡC�o�Ǫk�v�q�`�w�Q�X�v�A�ҥH���������J�a�L���H���R���ķN�C\n����o�ǳå�n�S�O�p�ߡA�ð��n��ױj�j�]�k���ǳơC�u�n���ѥL�̡A�L�̪����ѴN�|�����A���F�C",
 
-						"有一點必須知道，沒有法師會接受對他們攻擊或盜取他們東西的人，他們肯定不會善罷甘休。"
+						"���@�I�������D�A�S���k�v�|������L�̧����εs���L�̪F�誺�H�A�L�̪֩w���|���}�̥�C"
 					]
 				},
 				"obelisks": {
-					"title": "方尖碑",
+					"title": "��y�O",
 					"include_in_contents": "magical_world_subsections",
 					"triggers": [
 						"ebwizardry:handbook/obelisks"
 					],
 					"text": [
 
-						"古老魔法的遺跡散落在世界各處，其中最著名的是刻有許多符號及符文的石頭結構。這些廢墟看起來像是某種古代文明的遺跡，無論建造它們的是誰或是什麼，顯然具有相當豐富的魔法知識，且用來在這些地方設置持續至今的防衛魔法。",
+						"�j���]�k����񴲸��b�@�ɦU�B�A�䤤�̵ۦW���O�観�\�h�Ÿ��βŤ媺���Y���c�C�o�Ǽo�V�ݰ_�ӹ��O�Y�إj�N��������A�L�׫سy���̪��O�֩άO����A��M�㦳�۷��״I���]�k���ѡA�B�ΨӦb�o�Ǧa��]�m����ܤ��������]�k�C",
 
-						"這些結構大致上分成兩種類型，第一種是較常見的方尖碑:\n以雕刻符文石堆成高高尖頂的結構，底部開著一塊空間，存放著過去所遺留的次等魔法物品。",
+						"�o�ǵ��c�j�P�W������������A�Ĥ@�جO���`������y�O:\n�H�J��Ť�۰令�����y�������c�A�����}�ۤ@���Ŷ��A�s��۹L�h�ҿ�d�������]�k���~�C",
 
 						"#image obelisk",
 
-						"這些結構通常受到魔法保護，一旦有人靠近就會召喚出充滿敵意的@creatures 魔法生物@來攻擊人類。\n對抗這些生物並摧毀其魔法源頭，那些遺物就是你的了。"
+						"�o�ǵ��c�q�`�����]�k�O�@�A�@�����H�a��N�|�l��X�R���ķN��@creatures �]�k�ͪ�@�ӧ����H���C\n��ܳo�ǥͪ��úR�����]�k���Y�A���ǿ򪫴N�O�A���F�C"
 					]
 				},
 				"shrines": {
-					"title": "神殿",
+					"title": "����",
 					"include_in_contents": "magical_world_subsections",
 					"triggers": [
 						"ebwizardry:visit_shrine"
 					],
 					"text": [
 
-						"第二種較為罕見的結構稱之為神殿，由一個中央基座及圍繞在四周的符文石柱所組成。基座上方擺著一個裝有古代@artefacts 神器@的\n寶箱，並通常施加了防護魔法鎖，以防他人竊取。整個結構還受到封鎖力場保護，使擅闖者無法逃離。",
+						"�ĤG�ظ����u�������c�٤��������A�Ѥ@�Ӥ�����y�γ�¶�b�|�P���Ť�۬W�Ҳզ��C��y�W���\�ۤ@�Ӹ˦��j�N@artefacts ����@��\n�_�c�A�óq�`�I�[�F���@�]�k��A�H���L�H�Ѩ��C��ӵ��c�٨������O���O�@�A�Ͼ����̵L�k�k���C",
 
 						"#image shrine",
 
-						"由於這些神殿的重要意義及巨大的神秘力量，更別說裡面的寶物，對於志氣高昂的法師特別有吸引力。\n\n但是務必謹慎，有許多關於法師被關在封鎖區內，可能因為幽閉恐懼症導致慢慢發瘋的報導。且愈來愈多人認為，這就是神殿防護魔法的一個部分，而被關在其中的法師，其實是被控制用來守護神殿。這對於膽敢前往冒險的人來說，無疑是令人不寒而慄的結局..."
+						"�ѩ�o�ǯ��������n�N�q�Υ��j�������O�q�A��O���̭����_���A���Ӯ𰪩����k�v�S�O���l�ޤO�C\n\n���O�ȥ��ԷV�A���\�h����k�v�Q���b����Ϥ��A�i��]���ճ����߯g�ɭP�C�C�o�ƪ����ɡC�B�U�ӷU�h�H�{���A�o�N�O�������@�]�k���@�ӳ����A�ӳQ���b�䤤���k�v�A���O�Q����ΨӦu�@�����C�o����x���e���_�I���H�ӻ��A�L�ìO�O�H���H�ӷX������..."
 					]
 				},
 				"creatures": {
-					"title": "魔法生物",
+					"title": "�]�k�ͪ�",
 					"include_in_contents": "magical_world_subsections",
 					"triggers": [
 						"ebwizardry:handbook/magical_creatures"
 					],
 					"text": [
 
-						"除了法師，還有許多其它生物也會使用魔法。其中有許多是源自於魔法，且大部分都能用特定的@spells 法術@召喚。會看到這些生物，\n大多是在守護@obelisks 方尖碑@，但也可能\n遇到了強大的召喚法師。只有非常少數的神秘生物才會偶爾在野外發現。"
+						"���F�k�v�A�٦��\�h�䥦�ͪ��]�|�ϥ��]�k�C�䤤���\�h�O���۩��]�k�A�B�j��������ίS�w��@spells �k�N@�l��C�|�ݨ�o�ǥͪ��A\n�j�h�O�b�u�@@obelisks ��y�O@�A���]�i��\n�J��F�j�j���l��k�v�C�u���D�`�ּƪ������ͪ��~�|�����b���~�o�{�C"
 					]
 				},
 				"artefacts": {
-					"title": "神器",
+					"title": "����",
 					"include_in_contents": "magical_world_subsections",
 					"triggers": [
 						"ebwizardry:artefact"
 					],
 					"text": [
 
-						"在探索@shrines 神殿@時，你可能會好運的\n發現某種古代魔法神器，一種能夠賦予配戴者獨特而強大能力的物品。\n目前所知的類型有三種:\n為法術附加額外能力及效果的戒指，增強防禦力的項鍊，以及各種應用魔法的寶器。\n這些神器只是放入背包是沒有用的，要擺在身上的正確位置才會發生作用。"
+						"�b����@shrines ����@�ɡA�A�i��|�n�B��\n�o�{�Y�إj�N�]�k�����A�@�د���ᤩ�t���̿W�S�ӱj�j��O�����~�C\n�ثe�Ҫ����������T��:\n���k�N���[�B�~��O�ήĪG���٫��A�W�j���m�O������A�H�ΦU�������]�k���_���C\n�o�ǯ����u�O��J�I�]�O�S���Ϊ��A�n�\�b���W�����T��m�~�|�o�ͧ@�ΡC"
 					]
 				}
 			}
 		},
 
 		"tiers": {
-			"title": "等級",
+			"title": "����",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:handbook/tome_of_arcana"
 			],
 			"text":[
 
-				"@wands 法杖@和@spells 法術@都分成四個等級: #colour_novice基礎#colour_reset、#colour_apprentice學徒#colour_reset、#colour_advanced進階#colour_reset以及#colour_master大師#colour_reset。每個等級都比前一級還強。",
+				"@wands �k��@�M@spells �k�N@�������|�ӵ���: #colour_novice��¦#colour_reset�B#colour_apprentice�Ǯ{#colour_reset�B#colour_advanced�i��#colour_reset�H��#colour_master�j�v#colour_reset�C�C�ӵ��ų���e�@���ٱj�C",
 
 				"#image tiers",
 
-				"只有#colour_novice基礎#colour_reset法杖能以合成的方式製作，其最多可儲存#novice_max_charge點法力，且只能施展基礎法術。基礎法術通常不會消耗太多法力，任何人都足以施展。但這並不表示它們相較於高等法術就毫無用處。即便你已經能施展大師級法術，某些基礎法術由於消耗法力低而仍然實用。",
+				"�u��#colour_novice��¦#colour_reset�k����H�X�����覡�s�@�A��̦h�i�x�s#novice_max_charge�I�k�O�A�B�u��I�i��¦�k�N�C��¦�k�N�q�`���|���ӤӦh�k�O�A����H�����H�I�i�C���o�ä���ܥ��̬۸��󰪵��k�N�N�@�L�γB�C�Y�K�A�w�g��I�i�j�v�Ūk�N�A�Y�ǰ�¦�k�N�ѩ���Ӫk�O�C�Ӥ��M��ΡC",
 
-				"#colour_apprentice學徒#colour_reset法杖是基礎法杖的下個等級，其最多可儲存#apprentice_max_charge點法力，並可施展基礎及學徒法術。學徒法術比基礎法術更強一些，但通常也消耗更多法力。",
+				"#colour_apprentice�Ǯ{#colour_reset�k���O��¦�k�����U�ӵ��šA��̦h�i�x�s#apprentice_max_charge�I�k�O�A�åi�I�i��¦�ξǮ{�k�N�C�Ǯ{�k�N���¦�k�N��j�@�ǡA���q�`�]���ӧ�h�k�O�C",
 
-				"#colour_advanced進階#colour_reset法杖非常稀有也更加強大，可施展大師級以外的所有法術，並可儲存#advanced_max_charge點法力。進階法術能夠重創敵人，並擁有超人般的能力，例如隱身術。",
+				"#colour_advanced�i��#colour_reset�k���D�`�}���]��[�j�j�A�i�I�i�j�v�ťH�~���Ҧ��k�N�A�åi�x�s#advanced_max_charge�I�k�O�C�i���k�N������мĤH�A�þ֦��W�H�몺��O�A�Ҧp�����N�C",
 
-				"#colour_master大師#colour_reset法杖是現存最強大的法杖，其最多可儲存#master_max_charge點法力，並可施展所有法術。大師級法術書相當罕見，且法術的威力能徹底毀滅的不僅是敵人，甚至包括整個世界。務必謹慎使用！",
+				"#colour_master�j�v#colour_reset�k���O�{�s�̱j�j���k���A��̦h�i�x�s#master_max_charge�I�k�O�A�åi�I�i�Ҧ��k�N�C�j�v�Ūk�N�Ѭ۷�u���A�B�k�N���¤O��������������ȬO�ĤH�A�Ʀܥ]�A��ӥ@�ɡC�ȥ��ԷV�ϥΡI",
 
-				"要提升至更高等級，首先法杖必須變得夠強大到足以引導該等級的法術。法杖會隨著施展法術而獲得成長，法術類型、法術力量、元素效果以及其它外部因素都可能會影響法杖的成長速度。",
+				"�n���ɦܧ󰪵��šA�����k�������ܱo���j�j�쨬�H�޾ɸӵ��Ū��k�N�C�k���|�H�۬I�i�k�N����o�����A�k�N�����B�k�N�O�q�B�����ĪG�H�Ψ䥦�~���]�����i��|�v�T�k���������t�סC",
 
-				"當法杖足夠強大，法術寶典為最終將法杖提升至下個等級的關鍵物品(請參閱@upgrading_wands 升級法杖@)，\n一旦完成升級，法杖將再次朝下個等級開始成長。"
+				"��k�������j�j�A�k�N�_�嬰�̲ױN�k�����ɦܤU�ӵ��Ū����䪫�~(�аѾ\@upgrading_wands �ɯŪk��@)�A\n�@�������ɯšA�k���N�A���¤U�ӵ��Ŷ}�l�����C"
 			]
 		},
 
 		"elements": {
-			"title": "元素",
+			"title": "����",
 			"include_in_contents": "main_contents",
 			"triggers": [
 				"ebwizardry:handbook/elements"
 			],
 			"text": [
 
-				"@spells 法術@各屬於不同的元素，代表\n法術的本質，且搭配使用對應的@wands 法杖@還會加強效果。",
+				"@spells �k�N@�U�ݩ󤣦P�������A�N��\n�k�N������A�B�f�t�ϥι�����@wands �k��@�ٷ|�[�j�ĪG�C",
 
 				"#image elements",
 
-				"#colour_fire火#colour_reset \n火元素涉及燃燒、岩漿以及爆炸，大概是最具破壞性的元素。一個強大的烈焰法師可使敵人面臨煉獄般的火海，並可能在過程中毀掉這個世界。\n大部分的火系法術會讓目標著火，使他們持續受到傷害，但是對地獄的生物則沒什麼效果。",
+				"#colour_fire��#colour_reset \n�������A�οU�N�B���ߥH���z���A�j���O�̨�}�a�ʪ������C�@�ӱj�j���P�K�k�v�i�ϼĤH���{�Һ��몺�����A�åi��b�L�{�������o�ӥ@�ɡC\n�j���������t�k�N�|���ؼеۤ��A�ϥL�̫������ˮ`�A���O��a�����ͪ��h�S����ĪG�C",
 
-				"#colour_ice冰#colour_reset \n冰元素來自於所有冰冷的物質。冰系法術通常會讓敵人減速，甚至使他們完全凍結，對於火系生物特別有效。\n冰凍魔法在戰鬥之外也很有用，例如使水面結冰以過河。",
+				"#colour_ice�B#colour_reset \n�B�����Ӧ۩�Ҧ��B�N������C�B�t�k�N�q�`�|���ĤH��t�A�ƦܨϥL�̧����ᵲ�A�����t�ͪ��S�O���ġC\n�B���]�k�b�԰����~�]�ܦ��ΡA�Ҧp�Ϥ������B�H�L�e�C",
 
-				"\n#colour_lightning電#colour_reset \n這個元素涉及雷電、風暴以及天氣。決不可小看一個強大雷電法師的力量，有些甚至能隨意召喚閃電。\n雷電法術經常能一次傷害多個敵人，還會自動搜尋目標，對任何生物都能造成有效的攻擊...但是得當心苦力怕。",
+				"\n#colour_lightning�q#colour_reset \n�o�Ӥ����A�ιp�q�B���ɥH�ΤѮ�C�M���i�p�ݤ@�ӱj�j�p�q�k�v���O�q�A���ǬƦܯ��H�N�l��{�q�C\n�p�q�k�N�g�`��@���ˮ`�h�ӼĤH�A�ٷ|�۰ʷj�M�ؼСA�����ͪ�����y�����Ī�����...���O�o��߭W�O�ȡC",
 
-				"#colour_necromancy死靈#colour_reset \n死靈是黑暗、渾沌以及不死生物的元素。神秘的死靈法師往往被視為邪惡，儘管通常不是這樣的。\n死靈法術常召喚@creatures 生物@來為他\n戰鬥，或進而扭曲敵人的意志。",
+				"#colour_necromancy���F#colour_reset \n���F�O�·t�B���P�H�Τ����ͪ��������C���������F�k�v�����Q�������c�A���޳q�`���O�o�˪��C\n���F�k�N�`�l��@creatures �ͪ�@�Ӭ��L\n�԰��A�ζi�ӧᦱ�ĤH���N�ӡC",
 
-				"#colour_earth大地#colour_reset \n大地元素來自於動植物、風等自然界的的力量。大地魔法千變萬化，從毒害敵人到控制天氣，有各式各樣的形式。\n大地法術是綜合攻擊、防禦以及實用的法術。",
+				"#colour_earth�j�a#colour_reset \n�j�a�����Ӧ۩�ʴӪ��B�����۵M�ɪ����O�q�C�j�a�]�k�d�ܸU�ơA�q�r�`�ĤH�챱��Ѯ�A���U���U�˪��Φ��C\n�j�a�k�N�O��X�����B���m�H�ι�Ϊ��k�N�C",
 
-				"#colour_sorcery秘術#colour_reset \n秘術是力量與變化的元素。\n秘術法師能操縱光線、重力，甚至現實世界本身來符合他們的需求。\n且不提其它用途，秘術法術可用來提供施法者魔法力量，或是任意移動物體。",
+				"#colour_sorcery���N#colour_reset \n���N�O�O�q�P�ܤƪ������C\n���N�k�v����a���u�B���O�A�Ʀܲ{��@�ɥ����ӲŦX�L�̪��ݨD�C\n�B�����䥦�γ~�A���N�k�N�i�ΨӴ��ѬI�k���]�k�O�q�A�άO���N���ʪ���C",
 
-				"#colour_healing治療#colour_reset \n治療元素包括防禦和再生。\n治療法師會盡可能的保護自己及他們的同伴，因此可能會是非常難以對付的對手。\n治療法術在戰鬥中是不可或缺的，即便其通常不會用來進行攻擊，但是一些治療法術的淨化光芒會對不死生物造成相當大的傷害。",
+				"#colour_healing�v��#colour_reset \n�v�������]�A���m�M�A�͡C\n�v���k�v�|�ɥi�઺�O�@�ۤv�ΥL�̪��P��A�]���i��|�O�D�`���H��I�����C\n�v���k�N�b�԰����O���i�ίʪ��A�Y�K��q�`���|�ΨӶi������A���O�@�Ǫv���k�N���b�ƥ��~�|�藍���ͪ��y���۷�j���ˮ`�C",
 
-				"不同元素之間的分界並不總是那麼明確，有些法術除了所屬元素的性質外，也會具有其它元素的特性。",
+				"���P�������������ɨä��`�O������T�A���Ǫk�N���F���ݤ������ʽ�~�A�]�|�㦳�䥦�������S�ʡC",
 
-				"幸運的話，或許你能發現一種元素水晶，這是種在生長過程中吸收了元素的魔法水晶，不過實際上發生的方式及所需的條件仍然是個謎。但我們知道這種水晶能用來製作元素法杖，用來施展對應的法術，可比平常發揮更大的效果。"
+				"���B���ܡA�γ\�A��o�{�@�ؤ��������A�o�O�ئb�ͪ��L�{���l���F�������]�k�����A���L��ڤW�o�ͪ��覡�Ωһݪ����󤴵M�O�����C���ڭ̪��D�o�ؤ�����Ψӻs�@�����k���A�ΨӬI�i�������k�N�A�i�񥭱`�o����j���ĪG�C"
 			]
 		},
 
 		"miscellaneous": {
-			"title": "其它",
+			"title": "�䥦",
 			"include_in_contents": "main_contents",
 			"contents": {
 				"id": "miscellaneous_subsections",
@@ -632,36 +632,36 @@
 			],
 			"sections": {
 				"mana_flasks": {
-					"title": "法力瓶",
+					"title": "�k�O�~",
 					"include_in_contents": "miscellaneous_subsections",
 					"triggers": [
 						"ebwizardry:handbook/mana_flasks"
 					],
 					"text": [
 
-						"亞肯多魔法用品公司 - 為您所需的魔法物品！",
+						"�Ȫ֦h�]�k�Ϋ~���q - ���z�һݪ��]�k���~�I",
 
-						"需要在旅行中為你的@wands 法杖@補充\n法力嗎？\n沒問題！ 現在@mana 法力@可以裝瓶。\n只要用一個玻璃瓶及八個魔法水晶合成出法力瓶，就可以隨身攜帶。要用的時候，只要將你的法杖與法力瓶合成，就能將法力存入法杖。(註)",
+						"�ݭn�b�Ȧ椤���A��@wands �k��@�ɥR\n�k�O�ܡH\n�S���D�I �{�b@mana �k�O@�i�H�˲~�C\n�u�n�Τ@�Ӭ����~�ΤK���]�k�����X���X�k�O�~�A�N�i�H�H����a�C�n�Ϊ��ɭԡA�u�n�N�A���k���P�k�O�~�X���A�N��N�k�O�s�J�k���C(��)",
 
 						"#recipe medium_mana_flask",
 
-						"好消息！ 即日起推出全新的小瓶裝及大瓶裝法力，可依您的需求選擇！",
+						"�n�����I �Y��_���X���s���p�~�ˤΤj�~�˪k�O�A�i�̱z���ݨD��ܡI",
 
 						"#recipe small_mana_flask",
 						"#recipe large_mana_flask",
 
-						"(註)過程中瓶子會用掉，且裝瓶時也會耗損一些法力。"
+						"(��)�L�{���~�l�|�α��A�B�˲~�ɤ]�|�ӷl�@�Ǫk�O�C"
 					]
 				},
 				"throwable_items": {
-					"title": "投擲物",
+					"title": "���Y��",
 					"include_in_contents": "miscellaneous_subsections",
 					"triggers": [
 						"ebwizardry:handbook/throwables"
 					],
 					"text": [
 
-						"各種@spells 法術@的實體物，像是\n火焰彈、毒液彈、煙霧彈，還有電擊彈都能直接合成:",
+						"�U��@spells �k�N@�����骫�A���O\n���K�u�B�r�G�u�B�����u�A�٦��q���u���ઽ���X��:",
 
 						"#recipe firebomb",
 						"#recipe poison_bomb",
@@ -670,21 +670,21 @@
 					]
 				},
 				"automated_casting": {
-					"title": "自動施法",
+					"title": "�۰ʬI�k",
 					"include_in_contents": "miscellaneous_subsections",
 					"triggers": [
 						"ebwizardry:enchant_scroll"
 					],
 					"text": [
 					
-						"近期的實驗顯示，在某種程度上只需要簡單的發射器就能自動施展@spells 法術@。沒有人知道原因，\n但看起來似乎是紅石的神奇特性竟然能觸發法術卷軸。只要將一些卷軸放入發射器，然後提供能量，就完成了這個機關..."
+						"�����������ܡA�b�Y�ص{�פW�u�ݭn²�檺�o�g���N��۰ʬI�i@spells �k�N@�C�S���H���D��]�A\n���ݰ_�Ӧ��G�O���۪����_�S�ʳ��M��Ĳ�o�k�N���b�C�u�n�N�@�Ǩ��b��J�o�g���A�M�ᴣ�ѯ�q�A�N�����F�o�Ӿ���..."
 					]
 				}
 			}
 		},
 		
 		"crafting_recipes": {
-			"title": "合成表",
+			"title": "�X����",
 			"include_in_contents": "main_contents",
 			"text": [
 
@@ -716,33 +716,33 @@
 		},
 		
 		"credits": {
-			"title": "製作群",
+			"title": "�s�@�s",
 			"include_in_contents": "main_contents",
 			"text": [
 				
-				"法術模組\n版本 #version\n支援 Minecraft #mcversion",
+				"�k�N�Ҳ�\n���� #version\n�䴩 Minecraft #mcversion",
 
-				"設計、程式及材質: Electroblob",
+				"�]�p�B�{���Χ���: Electroblob",
 
-				"感謝 Minecraft Forge 及 MCP，\n沒有它們就沒有這個模組。",
+				"�P�� Minecraft Forge �� MCP�A\n�S�����̴N�S���o�ӼҲաC",
 
-				"也感謝Minecraft的模組討論區，\n總能回答我的模組問題！",
+				"�]�P��Minecraft���ҲհQ�װϡA\n�`��^���ڪ��Ҳհ��D�I",
 
-				"\n另外，我要感謝以下各位對本模組的貢獻:",
+				"\n�t�~�A�ڭn�P�¥H�U�U��糧�Ҳժ��^�m:",
 
-				"程式碼:",
+				"�{���X:",
 
-				"》Corail31 \n》12foo \n》Shadows-of-Fire \n》HellFirePvP \n》Tora-B \n》Avatair \n》Aeronica \n》UltraHex \n》Azim-Palmer \n》raoulvdberge \n》rafasoares",
+				"�nCorail31 \n�n12foo \n�nShadows-of-Fire \n�nHellFirePvP \n�nTora-B \n�nAvatair \n�nAeronica \n�nUltraHex \n�nAzim-Palmer \n�nraoulvdberge \n�nrafasoares",
 
-				"\n\n翻譯:",
+				"½Ķ:",
 
-				"》繁體中文: Grant\n》(墨西哥)西班牙文: MadWrist \n》俄文: VilagVil, kellixon\n》法文: Hahdrim\n》巴西葡萄牙文: lorrampi\n》簡體中文: ZHENGLOC, dragon-evol\n》韓文: shejery, rewi_wire\n》波蘭文: Trozuu",
+				"�n�c�餤��: meow_meow_ying\n�n��Z����: MadWrist, Alsentar\n�n�������Z����: MadWrist\n�n�X��: VilagVil, kellixon, bigenergy\n�n�k��: Hahdrim\n�n�ڦ踲�����: lorrampi\n�n²�餤��: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer\n�n����: shejery, rewi_wire\n�n�i����: Trozuu\n�n�w��: BirdyDragon",
 
-				"雷電音效: OhhWowProductions",
+				"�p�q����: OhhWowProductions",
 
-				"更多資訊請前往 @https://github.com/Electroblob77/Wizardry/wiki wiki@",
+				"��h��T�Ыe�� @https://github.com/Electroblob77/Wizardry/wiki wiki@",
 
-				"覺得法術模組還有不足之處? 請加入 @https://discord.gg/MTmMzMv Discord 伺服器@以獲得\n最新消息、討論及額外事務！"
+				"ı�o�k�N�Ҳ��٦��������B? �Х[�J @https://discord.gg/MTmMzMv Discord ���A��@�H��o\n�̷s�����B�Q�פ��B�~�ưȡI"
 			]
 		}
 		

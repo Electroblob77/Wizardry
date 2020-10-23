@@ -1,14 +1,14 @@
 package electroblob.wizardry.client.renderer;
 
 /** Instances of this class can calculate their distance from the camera viewpoint and sort themselves accordingly. */
-class RayHelper implements Comparable<RayHelper> {
+public class RayHelper implements Comparable<RayHelper> {
 
 	int ordinal;
-	double x1, y1, z1;
-	double x2, y2, z2;
+	public double x1, y1, z1;
+	public double x2, y2, z2;
 	double offsetX, offsetY, offsetZ;
 
-	RayHelper(int ordinal, double x1, double y1, double z1, double x2, double y2, double z2, double offsetX,
+	public RayHelper(int ordinal, double x1, double y1, double z1, double x2, double y2, double z2, double offsetX,
 			double offsetY, double offsetZ){
 		this.ordinal = ordinal;
 		this.x1 = x1;
@@ -37,13 +37,7 @@ class RayHelper implements Comparable<RayHelper> {
 
 	@Override
 	public int compareTo(RayHelper ray){
-		if(this.getDistanceFromViewpoint() > ray.getDistanceFromViewpoint()){
-			return -1;
-		}else if(this.getDistanceFromViewpoint() < ray.getDistanceFromViewpoint()){
-			return 1;
-		}else{
-			return 0;
-		}
+		return Double.compare(ray.getDistanceFromViewpoint(), this.getDistanceFromViewpoint());
 	}
 
 }

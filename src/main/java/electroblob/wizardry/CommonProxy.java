@@ -1,5 +1,7 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.block.BlockBookshelf;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.ItemSpectralBow;
 import electroblob.wizardry.packet.*;
 import electroblob.wizardry.registry.WizardryItems;
@@ -19,6 +21,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Property;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -40,6 +43,8 @@ public class CommonProxy {
 	public void registerRenderers(){}
 
 	public void initialiseLayers(){}
+
+	public void initialiseAnimations(){}
 
 	public void registerKeyBindings(){}
 
@@ -74,7 +79,7 @@ public class CommonProxy {
 	// SECTION Items
 	// ===============================================================================================================
 
-	public boolean shouldDisplayDiscovered(Spell spell, ItemStack stack){
+	public boolean shouldDisplayDiscovered(Spell spell, @Nullable ItemStack stack){
 		return false;
 	}
 
@@ -98,6 +103,29 @@ public class CommonProxy {
 
 	public double getConjuredBowDurability(ItemStack stack){
 		return ((ItemSpectralBow)WizardryItems.spectral_bow).getDefaultDurabilityForDisplay(stack);
+	}
+
+	/**
+	 * Translates the given key with no specified style. Client-side only; on the server this simply returns
+	 * the given translation key. Useful whenever translation from common classes is required, e.g. item tooltips.
+	 * @param key The unlocalised name to be translated.
+	 * @param args The format arguments to pass into the translation, if any.
+	 * @return The resulting translated text.
+	 */
+	public String translate(String key, Object... args){
+		return translate(key, new Style(), args);
+	}
+
+	/**
+	 * Translates the given key and formats it with the given style. Client-side only; on the server this simply returns
+	 * the given translation key. Useful whenever translation from common classes is required, e.g. item tooltips.
+	 * @param key The unlocalised name to be translated.
+	 * @param style The {@link Style} to use for the displayed text.
+	 * @param args The format arguments to pass into the translation, if any.
+	 * @return The resulting translated text.
+	 */
+	public String translate(String key, Style style, Object... args){
+		return key;
 	}
 
 	/** Like {@link CommonProxy#addMultiLineDescription(List, String, Style, Object...)}, but style defaults to light grey. */
@@ -168,6 +196,12 @@ public class CommonProxy {
 	 * @param repeat Whether to repeat the sound for as long as the entity is alive (or until stopped manually)
 	 */
 	public void playMovingSound(Entity entity, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean repeat){}
+
+	/**
+	 * Plays the spell charge-up sound at the given entity.
+	 * @param entity The source of the sound
+	 */
+	public void playChargeupSound(EntityLivingBase entity){}
 
 	/**
 	 * Plays a continuous spell sound which moves with the given entity.
@@ -256,15 +290,44 @@ public class CommonProxy {
 	public void loadShader(EntityPlayer player, ResourceLocation shader){}
 	
 	/**
-	 * Gets the client side world using Minecraft.getMinecraft().world. <b>Only to be called client side!</b> Returns
-	 * null on the server side.
+	 * Gets the client-side world using {@code Minecraft.getMinecraft().world}. <b>Only to be called client side!</b>
+	 * Returns null on the server side.
 	 */
 	public World getTheWorld(){
 		return null;
+	}
+
+	/**
+	 * Gets the client-side player using Minecraft.getMinecraft().player. <b>Only to be called client side!</b> Returns
+	 * null on the server side.
+	 */
+	public EntityPlayer getThePlayer(){
+		return null;
+	}
+
+	/**
+	 * Returns true if the game is being viewed from the perspective of the given entity and is set to first-person
+	 * view. Always returns false on the server side.
+	 */
+	public boolean isFirstPerson(Entity entity){
+		return false;
 	}
 
 	/** Returns an unmodifiable set of the string keys for all of the loaded spell HUD skins. */
 	public Set<String> getSpellHUDSkins(){
 		return null;
 	}
+
+	/** Notifies nearby players of a bookshelf change, causing any lectern or arcane workbench GUI (client-side) or
+	 * container (both sides) to refresh its linked bookshelves (does not send packets). */
+	public void notifyBookshelfChange(World world, BlockPos pos){
+		for(EntityPlayer player : world.playerEntities){
+			if(player.getDistanceSq(pos) < BlockBookshelf.PLAYER_NOTIFY_RANGE * BlockBookshelf.PLAYER_NOTIFY_RANGE){
+				if(player.openContainer instanceof ContainerArcaneWorkbench){
+					((ContainerArcaneWorkbench)player.openContainer).refreshBookshelfSlots();
+				}
+			}
+		}
+	}
+
 }

@@ -28,7 +28,7 @@ import java.util.List;
  * <br>
  * <i>N.B. This doesn't cover item models, and all of the code/model solutions to this that I have tried haven't worked.
  * However, I noticed that the shade tag seems to work perfectly for items, so instead I've simply duplicated the block
- * models into the item  models folder and add {@code "shade":false} where appropriate. (If it works, it works, right?)</i>
+ * models into the item models folder and add {@code "shade":false} where appropriate. (If it works, it works, right?)</i>
  *
  * @author Electroblob
  * @author raoulvdberge

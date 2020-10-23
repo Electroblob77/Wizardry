@@ -14,7 +14,7 @@
   "element": "ice",
   "type": "construct",
   "cost": 40,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 100,
   "base_properties": {
     "duration": 600,

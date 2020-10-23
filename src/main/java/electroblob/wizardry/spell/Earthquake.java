@@ -2,14 +2,15 @@
 
  import electroblob.wizardry.Wizardry;
  import electroblob.wizardry.entity.construct.EntityEarthquake;
+ import electroblob.wizardry.item.SpellActions;
  import electroblob.wizardry.registry.WizardryItems;
+ import electroblob.wizardry.util.BlockUtils;
+ import electroblob.wizardry.util.EntityUtils;
  import electroblob.wizardry.util.SpellModifiers;
- import electroblob.wizardry.util.WizardryUtilities;
  import net.minecraft.block.Block;
  import net.minecraft.block.state.IBlockState;
  import net.minecraft.entity.EntityLivingBase;
  import net.minecraft.entity.player.EntityPlayer;
- import net.minecraft.item.EnumAction;
  import net.minecraft.util.EnumFacing;
  import net.minecraft.util.EnumParticleTypes;
  import net.minecraft.world.World;
@@ -19,7 +20,7 @@
 	public static final String SPREAD_SPEED = "spread_speed";
 
 	public Earthquake(){
-		super("earthquake", EnumAction.NONE, EntityEarthquake::new, true);
+		super("earthquake", SpellActions.POINT_DOWN, EntityEarthquake::new, true);
 		this.soundValues(2, 1, 0);
 		this.overlap(true);
 		this.floor(true);
@@ -51,12 +52,12 @@
 				particleX = x - 1.0d + 2 * world.rand.nextDouble();
 				particleZ = z - 1.0d + 2 * world.rand.nextDouble();
 
-				IBlockState block = WizardryUtilities.getBlockEntityIsStandingOn(caster);
+				IBlockState block = BlockUtils.getBlockEntityIsStandingOn(caster);
 				world.spawnParticle(EnumParticleTypes.BLOCK_DUST, particleX, y,
 						particleZ, particleX - x, 0, particleZ - z, Block.getStateId(block));
 			}
 
-			WizardryUtilities.getEntitiesWithinRadius(15, x, y, z, world, EntityPlayer.class)
+			EntityUtils.getEntitiesWithinRadius(15, x, y, z, world, EntityPlayer.class)
 					.forEach(p -> Wizardry.proxy.shakeScreen(p, 12));
 
 		}

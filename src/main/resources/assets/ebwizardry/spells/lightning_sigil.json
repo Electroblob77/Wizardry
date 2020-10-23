@@ -18,8 +18,9 @@
   "cooldown": 20,
   "base_properties": {
     "range": 10,
+    "effect_radius": 1,
     "direct_damage": 6,
-    "effect_radius": 5,
+    "secondary_range": 1,
     "secondary_max_targets": 3,
     "splash_damage": 4
   }

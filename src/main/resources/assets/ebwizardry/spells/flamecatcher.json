@@ -1,0 +1,26 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "master",
+  "element": "fire",
+  "type": "utility",
+  "cost": 100,
+  "chargeup": 20,
+  "cooldown": 150,
+  "base_properties": {
+    "item_lifetime": 900,
+    "range": 40,
+    "shot_count": 5,
+    "damage": 16,
+    "burn_duration": 15
+  }
+}

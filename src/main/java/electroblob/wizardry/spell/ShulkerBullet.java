@@ -1,16 +1,16 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityShulkerBullet;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -26,7 +26,7 @@ import java.util.List;
 public class ShulkerBullet extends Spell {
 
 	public ShulkerBullet(){
-		super("shulker_bullet", EnumAction.NONE, false);
+		super("shulker_bullet", SpellActions.POINT_DOWN, false);
 		this.soundValues(2, 1, 0.3f);
 		addProperties(RANGE);
 	}
@@ -62,7 +62,7 @@ public class ShulkerBullet extends Spell {
 
 			double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
 
-			List<EntityLivingBase> possibleTargets = WizardryUtilities.getEntitiesWithinRadius(range, x, y, z, world);
+			List<EntityLivingBase> possibleTargets = EntityUtils.getLivingWithinRadius(range, x, y, z, world);
 
 			possibleTargets.remove(caster);
 			possibleTargets.removeIf(t -> t instanceof EntityArmorStand);
@@ -78,7 +78,7 @@ public class ShulkerBullet extends Spell {
 			if(caster != null){
 				world.spawnEntity(new EntityShulkerBullet(world, caster, target, direction.getAxis()));
 			}else{
-				// Can't use the normal constructor because doesn't accept null for the owner
+				// Can't use the normal constructor because it doesn't accept null for the owner
 				EntityShulkerBullet bullet = new EntityShulkerBullet(world);
 				bullet.setLocationAndAngles(x, y, z, bullet.rotationYaw, bullet.rotationPitch);
 
@@ -93,6 +93,8 @@ public class ShulkerBullet extends Spell {
 				targetTag.setInteger("Z", pos.getZ());
 				NBTExtras.storeTagSafely(nbt, "Target", targetTag);
 				bullet.readFromNBT(nbt); // LOL I just modified private fields without reflection
+
+				bullet.getEntityData().setFloat(SpellThrowable.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
 
 				world.spawnEntity(bullet);
 			}

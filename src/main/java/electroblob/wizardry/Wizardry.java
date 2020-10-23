@@ -1,5 +1,6 @@
 package electroblob.wizardry;
 
+import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
 import electroblob.wizardry.command.CommandSetAlly;
@@ -8,11 +9,14 @@ import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
+import electroblob.wizardry.inventory.ContainerBookshelf;
+import electroblob.wizardry.misc.DonationPerksHandler;
 import electroblob.wizardry.misc.Forfeit;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellProperties;
+import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.worldgen.*;
 import net.minecraft.item.Item;
 import net.minecraft.util.SoundCategory;
@@ -46,7 +50,8 @@ import java.util.Calendar;
  */
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, acceptedMinecraftVersions = "[1.12.2]",
-		guiFactory = "electroblob.wizardry.WizardryGuiFactory", dependencies = "required-after:forge@[14.23.5.2814,);after:antiqueatlas@[4.6,)")
+		guiFactory = "electroblob.wizardry.WizardryGuiFactory",
+		dependencies = "required-after:forge@[14.23.5.2847,);after:jei@[4.15.0,);after:baubles@[1.5.2,);after:antiqueatlas@[4.6,)")
 
 public class Wizardry {
 
@@ -64,7 +69,7 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "4.2.11";
+	public static final String VERSION = "4.3";
 
 	// IDEA: Triggering of inbuilt Forge events in relevant places?
 	// IDEA: Abstract the vanilla particles behind the particle builder
@@ -122,6 +127,7 @@ public class Wizardry {
 		WizardryLoot.register();
 		WizardryAdvancementTriggers.register();
 		Forfeit.register();
+		BlockBookshelf.registerStandardBookModelTextures();
 
 		// Client-side stuff (via proxies)
 		proxy.registerRenderers();
@@ -150,6 +156,8 @@ public class Wizardry {
 		GameRegistry.registerWorldGenerator(new WorldGenWizardTower(), 20);
 		GameRegistry.registerWorldGenerator(new WorldGenObelisk(), 20);
 		GameRegistry.registerWorldGenerator(new WorldGenShrine(), 20);
+		GameRegistry.registerWorldGenerator(new WorldGenLibraryRuins(), 20);
+		GameRegistry.registerWorldGenerator(new WorldGenUndergroundLibraryRuins(), 20);
 
 		// This is for the config change and missing mappings events
 		MinecraftForge.EVENT_BUS.register(instance); // Since there's already an instance we might as well use it
@@ -158,9 +166,13 @@ public class Wizardry {
 		WizardryPacketHandler.initPackets();
 
 		// Post-registry extras
+		BlockBookshelf.compileBookModelTextures();
+		ContainerBookshelf.initDefaultBookItems();
 		WizardryItems.populateWandMap();
 		WizardryItems.populateArmourMap();
 		WizardryItems.registerDispenseBehaviours();
+		WizardryItems.registerBannerPatterns();
+		WandHelper.populateUpgradeMap();
 		Spell.registry.forEach(Spell::init);
 		SpellProperties.init();
 
@@ -173,6 +185,7 @@ public class Wizardry {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event){
 		proxy.initialiseLayers();
+		proxy.initialiseAnimations();
 	}
 
 	@EventHandler
@@ -187,7 +200,12 @@ public class Wizardry {
 	public void onConfigChanged(net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent event){
 		if(event.getModID().equals(Wizardry.MODID)){
 			settings.saveConfigChanges();
-			// All of the synchronised settings require a world restart anyway so this doesn't need syncing.
+			// All of the synchronised settings require a world restart anyway so don't need syncing, except for the
+			// donor perks which have special behaviour (since we have to update everyone when a donor logs in anyway,
+			// we might as well reuse the packet and let them change the setting mid-game)
+			if(event.isWorldRunning() && DonationPerksHandler.isDonor(proxy.getThePlayer())){
+				DonationPerksHandler.sendToServer(proxy.getThePlayer());
+			}
 		}
 	}
 

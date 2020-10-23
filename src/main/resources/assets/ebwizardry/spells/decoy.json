@@ -14,7 +14,7 @@
   "element": "sorcery",
   "type": "utility",
   "cost": 40,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 200,
   "base_properties": {
     "decoy_lifetime": 600,

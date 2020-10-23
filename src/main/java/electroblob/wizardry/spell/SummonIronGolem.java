@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class SummonIronGolem extends Spell {
 
 	public SummonIronGolem(){
-		super("summon_iron_golem", EnumAction.BOW, false);
+		super("summon_iron_golem", SpellActions.SUMMON, false);
 		addProperties(SpellMinion.SUMMON_RADIUS);
 		soundValues(1, 1.1f, 0.2f);
 	}
@@ -22,7 +22,7 @@ public class SummonIronGolem extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		BlockPos pos = WizardryUtilities.findNearbyFloorSpace(caster, getProperty(SpellMinion.SUMMON_RADIUS).intValue(),
+		BlockPos pos = BlockUtils.findNearbyFloorSpace(caster, getProperty(SpellMinion.SUMMON_RADIUS).intValue(),
 				getProperty(SpellMinion.SUMMON_RADIUS).intValue());
 
 		if(pos == null) return false;

@@ -14,7 +14,7 @@ import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WandHelper;
+import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -45,7 +45,8 @@ import java.nio.charset.StandardCharsets;
 public class GuiSpellDisplay {
 
 	private static final ResourceLocation INDEX = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_hud/_index.json");
-	
+	private static final ResourceLocation CHARGE_METER = new ResourceLocation(Wizardry.MODID, "textures/gui/spell_charge_meter.png");
+
 	/** A map which stores all loaded HUD skin objects. This gets wiped on resource pack reload and repopulated with
 	 * mappings as specified by {@code _index.json} (these stack between resource packs). The keys in the map correspond
 	 * to the keys in {@code _index.json}, and are sorted in that order, with skins belonging to resource packs sorted
@@ -54,6 +55,12 @@ public class GuiSpellDisplay {
 	private static final Map<String, Skin> skins = new LinkedHashMap<>(14); // 14 is the number of skins packaged with the mod
 	
 	private static final Gson gson = new Gson();
+	private static final Random random = new Random();
+
+	/** Width of the charge meter. */
+	private static final int CHARGE_METER_WIDTH = 25;
+	/** Height of the charge meter. */
+	private static final int CHARGE_METER_HEIGHT = 9;
 
 	/** Width and height of the spell icon (very unlikely to change!) */
 	private static final int SPELL_ICON_SIZE = 32;
@@ -99,12 +106,9 @@ public class GuiSpellDisplay {
 	@SubscribeEvent
 	public static void draw(RenderGameOverlayEvent.Post event){
 
-		if(event.getType() != RenderGameOverlayEvent.ElementType.TEXT
-				&& event.getType() != RenderGameOverlayEvent.ElementType.HOTBAR) return;
-		
-		Minecraft mc = Minecraft.getMinecraft();
+		if(!Wizardry.settings.showSpellHUD && !Wizardry.settings.showChargeMeter) return; // Optimisation
 
-		EntityPlayer player = mc.player;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 
 		if(player.isSpectator()) return; // Spectators shouldn't have the spell HUD!
 
@@ -117,11 +121,88 @@ public class GuiSpellDisplay {
 			wand = player.getHeldItemOffhand();
 			mainHand = false;
 			// If the player isn't holding a spellcasting item that shows the HUD, then nothing else needs to be done.
-			if(!(wand.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)wand.getItem()).showSpellHUD(player, wand))) return;
+			if(!(wand.getItem() instanceof ISpellCastingItem && ((ISpellCastingItem)wand.getItem()).showSpellHUD(player, wand)))
+				return;
 		}
 
 		int width = event.getResolution().getScaledWidth();
 		int height = event.getResolution().getScaledHeight();
+
+		switch(event.getType()){
+			case CROSSHAIRS:
+				renderChargeMeter(player, wand, width, height, event.getPartialTicks());
+				break;
+			case HOTBAR:
+				renderSpellHUD(player, wand, mainHand, width, height, event.getPartialTicks(), false);
+				break;
+			case TEXT:
+				renderSpellHUD(player, wand, mainHand, width, height, event.getPartialTicks(), true);
+				break;
+		}
+
+	}
+
+	/**
+	 * Renders the spell charge meter around the crosshairs.
+	 * @param player A reference to the client player
+	 * @param wand The wand the HUD is for
+	 * @param width The width of the screen
+	 * @param height The height of the screen
+	 * @param partialTicks The current partial tick time
+	 */
+	private static void renderChargeMeter(EntityPlayer player, ItemStack wand, int width, int height, float partialTicks){
+
+		if(!Wizardry.settings.showChargeMeter) return;
+		if(Minecraft.getMinecraft().gameSettings.showDebugInfo) return; // Don't show charge meter in the debug screen
+		if(Minecraft.getMinecraft().gameSettings.thirdPersonView != 0) return; // Don't show in third person
+		if(wand != player.getActiveItemStack()) return; // Don't show when using the other held item
+
+		if(!(wand.getItem() instanceof ISpellCastingItem)) throw new IllegalArgumentException("The given stack must contain an ISpellCastingItem!");
+
+		Spell spell = ((ISpellCastingItem)wand.getItem()).getCurrentSpell(wand);
+
+		int chargeup = spell.getChargeup();
+
+		if(WizardData.get(player) != null){
+			// Pretty sure this is accessible client-side since it's only assigned from common code
+			chargeup = (int)(chargeup * WizardData.get(player).itemCastingModifiers.get(SpellModifiers.CHARGEUP));
+		}
+
+		if(chargeup <= 0) return;
+
+		// WHY WHY WHY are these methods named so misleadingly?! Sort yourselves out MCP!
+		// (getItemInUseCount returns the max count MINUS the use count, and getItemInUseMaxCount returns the use count)
+		if(player.getItemInUseMaxCount() == 0) return; // Not charging
+		float charge = (player.getItemInUseMaxCount() + partialTicks) / chargeup;
+		if(charge > 1) return; // Done charging
+
+		Minecraft.getMinecraft().renderEngine.bindTexture(CHARGE_METER);
+
+		int x1 = width/2 - CHARGE_METER_WIDTH/2;
+		int y = height/2 - CHARGE_METER_HEIGHT/2;
+		int w = (int)(CHARGE_METER_WIDTH/2 * charge);
+		int u = CHARGE_METER_WIDTH - w;
+
+		DrawingUtils.drawTexturedRect(x1, y, 0, 0, w, CHARGE_METER_HEIGHT, 32, 32);
+		DrawingUtils.drawTexturedRect(x1 + u, y, u, 0, w, CHARGE_METER_HEIGHT, 32, 32);
+
+	}
+
+	/**
+	 * Renders the main spell HUD in the corner of the screen.
+	 * @param player A reference to the client player
+	 * @param wand The wand the HUD is for
+	 * @param mainHand True if the wand is in the player's main hand, false if it is in their offhand
+	 * @param width The width of the screen
+	 * @param height The height of the screen
+	 * @param partialTicks The current partial tick time
+	 * @param textLayer True to render the text layer, false to render the background (hotbar layer)
+	 */
+	private static void renderSpellHUD(EntityPlayer player, ItemStack wand, boolean mainHand, int width, int height, float partialTicks, boolean textLayer){
+
+		if(!Wizardry.settings.showSpellHUD) return;
+
+		if(!(wand.getItem() instanceof ISpellCastingItem)) throw new IllegalArgumentException("The given stack must contain an ISpellCastingItem!");
 
 		boolean flipX = Wizardry.settings.spellHUDPosition.flipX;
 		boolean flipY = Wizardry.settings.spellHUDPosition.flipY;
@@ -130,16 +211,16 @@ public class GuiSpellDisplay {
 			// ............. | This bit is true if the wand is on the left, false if it is on the right
 			flipX = flipX == ((mainHand ? player.getPrimaryHand() : player.getPrimaryHand().opposite()) == EnumHandSide.LEFT);
 		}
-		
+
 		Skin skin = skins.get(Wizardry.settings.spellHUDSkin);
-		
+
 		if(skin == null){
-			
+
 			Wizardry.logger.info("The spell HUD skin '" + Wizardry.settings.spellHUDSkin + "' specified in the config"
 					+ " did not match any of the loaded skins; using the default skin as a fallback.");
-			
+
 			skin = skins.get(Settings.DEFAULT_HUD_SKIN_KEY);
-			
+
 			if(skin == null){
 				Wizardry.logger.warn("The default spell HUD skin is missing! A resource pack must have overridden it"
 						+ " with an invalid JSON file (default.json), please try again without any resource packs.");
@@ -148,7 +229,7 @@ public class GuiSpellDisplay {
 		}
 
 		GlStateManager.pushMatrix();
-		
+
 		// 'Origin' of the spell hud (bottom left corner of the actual texture, always in the corner of the screen)
 		int x = flipX ? width : 0;
 		int y = flipY ? 0: height;
@@ -169,45 +250,45 @@ public class GuiSpellDisplay {
 			y = MathHelper.ceil(y/scale);
 		}
 
-		Spell spell = WandHelper.getCurrentSpell(wand);
-		int cooldown = WandHelper.getCurrentCooldown(wand);
-		int maxCooldown = WandHelper.getCurrentMaxCooldown(wand);
+		Spell spell = ((ISpellCastingItem)wand.getItem()).getCurrentSpell(wand);
+		int cooldown = ((ISpellCastingItem)wand.getItem()).getCurrentCooldown(wand);
+		int maxCooldown = ((ISpellCastingItem)wand.getItem()).getCurrentMaxCooldown(wand);
 
-		if(event.getType() == RenderGameOverlayEvent.ElementType.TEXT){
-			
+		if(textLayer){
+
 			float animationProgress = Math.signum(switchTimer) * ((SPELL_SWITCH_TIME - Math.abs(switchTimer) +
-					event.getPartialTicks()) / SPELL_SWITCH_TIME);
-			
-			String prevSpellName = getFormattedSpellName(WandHelper.getPreviousSpell(wand), player, WandHelper.getPreviousCooldown(wand));
+					partialTicks) / SPELL_SWITCH_TIME);
+
+			String prevSpellName = getFormattedSpellName(((ISpellCastingItem)wand.getItem()).getPreviousSpell(wand), player, 0);
 			String spellName = getFormattedSpellName(spell, player, cooldown);
-			String nextSpellName = getFormattedSpellName(WandHelper.getNextSpell(wand), player, WandHelper.getNextCooldown(wand));
+			String nextSpellName = getFormattedSpellName(((ISpellCastingItem)wand.getItem()).getNextSpell(wand), player, 0);
 
 			skin.drawText(x, y, flipX, flipY, prevSpellName, spellName, nextSpellName, animationProgress);
 
-		}else if(event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR){
+		}else{
 
 			boolean discovered = true;
 
 			if(!player.isCreative() && WizardData.get(player) != null){
 				discovered = WizardData.get(player).hasSpellBeenDiscovered(spell);
 			}
-			
+
 			ResourceLocation icon = discovered ? spell.getIcon() : Spells.none.getIcon();
 
 			float progress = 1;
 			// Doesn't really matter what progress is when in creative, but we might as well avoid the calculation.
-			if(!player.isCreative() && !spell.isContinuous){
+			if(!player.isCreative()){
 				// Subtracted partial tick time to make it smoother
-				progress = maxCooldown == 0 ? 1 : (maxCooldown - (float)cooldown + event.getPartialTicks()) / maxCooldown;
+				progress = maxCooldown == 0 ? 1 : (maxCooldown - (float)cooldown + partialTicks) / maxCooldown;
 			}
-			
-			skin.drawBackground(x, y, flipX, flipY, icon, progress, player.isCreative());
-			
+
+			skin.drawBackground(x, y, flipX, flipY, icon, progress, player.isCreative(), player.isPotionActive(WizardryPotions.arcane_jammer));
+
 		}
 
 		GlStateManager.popMatrix();
 	}
-	
+
 	/**
 	 * Gets the name of the given spell, with formatting added according to its cooldown and whether the given player
 	 * has discovered it.
@@ -224,9 +305,11 @@ public class GuiSpellDisplay {
 			discovered = WizardData.get(player).hasSpellBeenDiscovered(spell);
 		}
 		
-		// Makes spells greyed out if they are in cooldown or if the player has the arcane jammer effect
-		String format = cooldown > 0 || player.isPotionActive(WizardryPotions.arcane_jammer) ? "\u00A78" : spell.getElement().getFormattingCode();
+		// Makes spells greyed out if they are in cooldown
+		String format = cooldown > 0 ? "\u00A78" : spell.getElement().getFormattingCode();
 		if(!discovered) format = "\u00A79";
+		// Obfuscates the spell name if the player has the arcane jammer effect
+		if(player.isPotionActive(WizardryPotions.arcane_jammer)) format = format + "\u00A7k";
 		
 		String name = discovered ? spell.getDisplayName() : SpellGlyphData.getGlyphName(spell, player.world);
 		name = format + name;
@@ -458,8 +541,9 @@ public class GuiSpellDisplay {
 		 * @param icon A {@code ResourceLocation} corresponding to the icon of the selected spell.
 		 * @param cooldownBarProgress The fraction of the cooldown bar to draw; must be between 0 and 1 (inclusive).
 		 * @param creativeMode True to draw the creative mode HUD, false for the survival mode version.
+		 * @param jammed True to show the 'glitch' effect (user for arcane jammer), false to draw normally.
 		 */
-		public void drawBackground(int x, int y, boolean flipX, boolean flipY, ResourceLocation icon, float cooldownBarProgress, boolean creativeMode){
+		public void drawBackground(int x, int y, boolean flipX, boolean flipY, ResourceLocation icon, float cooldownBarProgress, boolean creativeMode, boolean jammed){
 			
 			// Moves the origin if the HUD does not mirror; neatens the rest of the code.
 			if(flipX && !mirrorX) x -= width;
@@ -476,8 +560,13 @@ public class GuiSpellDisplay {
 			int x1 = flipX && mirrorX ? x - spellIconInsetX - SPELL_ICON_SIZE : x + spellIconInsetX;
 			// y is upside-down so this is the other way round
 			int y1 = flipY && mirrorY ? y + spellIconInsetY : y - spellIconInsetY - SPELL_ICON_SIZE;
-			
-			DrawingUtils.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
+
+			if(jammed){
+				random.setSeed(Minecraft.getMinecraft().world.getTotalWorldTime() / 2);
+				DrawingUtils.drawGlitchRect(random, x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, false, false);
+			}else{
+				DrawingUtils.drawTexturedRect(x1, y1, 0, 0, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE, SPELL_ICON_SIZE);
+			}
 
 			// Background of spell hud
 			mc.renderEngine.bindTexture(texture);
@@ -486,7 +575,11 @@ public class GuiSpellDisplay {
 			y1 = flipY && mirrorY ? y : y - height;
 			// The 128 here is a uv value, not a dimension, and hence is left as a hardcoded number.
 			// TODO: Since the HUD is wider than it is tall, perhaps the creative mode texture should be in the bottom half instead of the right half?
-			DrawingUtils.drawTexturedFlippedRect(x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			if(jammed){
+				DrawingUtils.drawGlitchRect(random, x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			}else{
+				DrawingUtils.drawTexturedFlippedRect(x1, y1, creativeMode ? 128 : 0, 0, width, height, 256, 256, flipX && mirrorX, flipY && mirrorY);
+			}
 
 			// Cooldown bar
 			if(!creativeMode && cooldownBarProgress > 0 && (showCooldownWhenFull || cooldownBarProgress < 1)){
@@ -498,8 +591,12 @@ public class GuiSpellDisplay {
 				
 				int u = cooldownBarX; // This doesn't change, even when cooldownBarMirrorX is true, because it should
 				int v = height;		  // always start with the left-hand in the actual texture file
-				
-				DrawingUtils.drawTexturedFlippedRect(x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+
+				if(jammed){
+					DrawingUtils.drawGlitchRect(random, x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+				}else{
+					DrawingUtils.drawTexturedFlippedRect(x1, y1, u, v, l, cooldownBarHeight, 256, 256, flipX && cooldownBarMirrorX, flipY && cooldownBarMirrorY);
+				}
 			}
 
 			GlStateManager.popMatrix();

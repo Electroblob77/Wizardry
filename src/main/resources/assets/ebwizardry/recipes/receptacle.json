@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "gpg",
+        " g "
+    ],
+    "key": {
+        "g": {
+            "type": "forge:ore_dict",
+            "ore": "ingotGold"
+        },
+        "p": {
+            "item": "minecraft:flower_pot"
+        }
+    },
+    "result": {
+        "item": "ebwizardry:receptacle"
+    }
+}

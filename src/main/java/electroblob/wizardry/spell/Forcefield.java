@@ -1,16 +1,16 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.construct.EntityForcefield;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 
 public class Forcefield extends SpellConstruct<EntityForcefield> {
 
 	public Forcefield(){
-		super("forcefield", EnumAction.BOW, EntityForcefield::new, false);
+		super("forcefield", SpellActions.THRUST, EntityForcefield::new, false);
 		addProperties(Spell.EFFECT_RADIUS);
 	}
 

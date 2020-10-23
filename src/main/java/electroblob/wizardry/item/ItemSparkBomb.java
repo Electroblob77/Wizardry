@@ -29,6 +29,8 @@ public class ItemSparkBomb extends Item {
 
 		player.playSound(WizardrySounds.ENTITY_SPARK_BOMB_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
+		player.getCooldownTracker().setCooldown(this, 20);
+
 		if(!world.isRemote){
 			EntitySparkBomb sparkBomb = new EntitySparkBomb(world);
 			sparkBomb.aim(player, 1);

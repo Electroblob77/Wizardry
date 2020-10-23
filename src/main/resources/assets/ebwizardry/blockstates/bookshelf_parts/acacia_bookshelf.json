@@ -1,0 +1,14 @@
+{
+	"forge_marker": 1,
+	"defaults": {
+		"model": "ebwizardry:acacia_bookshelf"
+	},
+    "variants": {
+		"facing": {
+			"north": {},
+			"east":  { "y": 90 },
+			"south": { "y": 180 },
+			"west":  { "y": 270 }
+		}
+    }
+}

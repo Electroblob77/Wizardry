@@ -33,6 +33,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.village.MerchantRecipe;
@@ -251,7 +252,6 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Apparently nothing goes here, and nothing's here in EntityVillager either...
 	}
 
-	// TESTME: Should this be getName instead?
 	@Override
 	public ITextComponent getDisplayName(){
 		
@@ -468,7 +468,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 						if(!world.isRemote && !this.getCustomer().isCreative() && Wizardry.settings.discoveryMode){
 							// Sound and text only happen server-side, in survival, with discovery mode on
-							WizardryUtilities.playSoundAtPlayer(this.getCustomer(), WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
+							EntityUtils.playSoundAtPlayer(this.getCustomer(), WizardrySounds.MISC_DISCOVER_SPELL, 1.25f, 1);
 							this.getCustomer().sendMessage(new TextComponentTranslation("spell.discover",
 									spell.getNameForTranslationFormatted()));
 						}
@@ -608,7 +608,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// ((tier.ordinal() + 1) * 16 + rand.nextInt(6)) gives a 'value' for the item being bought
 		// This is then divided by the value of the currency item to give a price
 		// The absolute maximum stack size that can result from this calculation (with value = 1) is 64.
-		return new ItemStack(item, (8 + tier.ordinal() * 16 + rand.nextInt(9)) / value, meta);
+		return new ItemStack(item, MathHelper.clamp((8 + tier.ordinal() * 16 + rand.nextInt(9)) / value, 1, 64), meta);
 	}
 
 	private ItemStack getRandomItemOfTier(Tier tier){
@@ -672,7 +672,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			}else if(randomiser < 8){
 				return new ItemStack(WizardryItems.arcane_tome, 1, 1);
 			}else if(randomiser < 10){
-				EntityEquipmentSlot slot = WizardryUtilities.ARMOUR_SLOTS[rand.nextInt(WizardryUtilities.ARMOUR_SLOTS.length)];
+				EntityEquipmentSlot slot = InventoryUtils.ARMOUR_SLOTS[rand.nextInt(InventoryUtils.ARMOUR_SLOTS.length)];
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
 					// This means it is more likely for armour sold to be of the same element as the wizard if the
 					// wizard has an element.
@@ -754,7 +754,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		Element element = this.getElement();
 
 		// Adds armour.
-		for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
+		for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
 			this.setItemStackToSlot(slot, new ItemStack(WizardryItems.getArmour(element, slot)));
 		}
 
@@ -887,7 +887,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// Makes wizards angry if a player breaks a block in their tower
 		if(!(event.getPlayer() instanceof FakePlayer)){
 
-			List<EntityWizard> wizards = WizardryUtilities.getEntitiesWithinRadius(64, event.getPos().getX(),
+			List<EntityWizard> wizards = EntityUtils.getEntitiesWithinRadius(64, event.getPos().getX(),
 					event.getPos().getY(), event.getPos().getZ(), event.getWorld(), EntityWizard.class);
 
 			if(!wizards.isEmpty()){

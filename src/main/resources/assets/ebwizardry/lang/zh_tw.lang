@@ -44,8 +44,7 @@ item.ebwizardry\:spell_book.name=法術書
 item.ebwizardry\:spell_book.apply_to_wizard=將%1$s的法術 %2$s換成%3$s
 
 item.ebwizardry\:arcane_tome.name=法術寶典
-item.ebwizardry\:arcane_tome.desc1=升級%1$s法杖
-item.ebwizardry\:arcane_tome.desc2=成為%1$s法杖
+item.ebwizardry\:arcane_tome.desc=將成長夠的%1$s法杖升級成%2$s法杖
 
 item.ebwizardry\:wizard_handbook.name=法師手冊
 item.ebwizardry\:wizard_handbook.desc=作者: %1$s
@@ -499,6 +498,13 @@ advancement.ebwizardry\:enchant_scroll.desc=製作一個空白卷軸，並在法
 
 handbook.toast.title=已解鎖新的手冊章節！
 
+gui.ebwizardry\:spell_book.tier=等級: %s
+gui.ebwizardry\:spell_book.element=元素: %s
+gui.ebwizardry\:spell_book.element_undiscovered=元素: 未知
+gui.ebwizardry\:spell_book.mana_cost=法力消耗: %s
+gui.ebwizardry\:spell_book.mana_cost_continuous=法力消耗: %s/秒
+gui.ebwizardry\:spell_book.mana_cost_undiscovered=法力消耗: 未知
+
 container.ebwizardry\:arcane_workbench=法術工作台
 container.ebwizardry\:arcane_workbench.apply=存入
 container.ebwizardry\:arcane_workbench.mana=法力\:
@@ -837,7 +843,7 @@ spell.ebwizardry\:poison_bomb.desc=朝你所指的方向發射一顆毒液炸彈
 spell.ebwizardry\:possession.desc=『變成敵人！』
 spell.ebwizardry\:ray_of_purification.desc=射出一道刺眼的陽光，傷害目標並使其暫時失明。不死生物會受到兩倍的傷害且著火。
 spell.ebwizardry\:remove_curse.desc=驅除施法者身上所有的詛咒。
-spell.ebwizardry\:replenish_hunger.desc=為施法者補充6點(3支雞腿)的飽食度。
+spell.ebwizardry\:replenish_hunger.desc=為施法者補充3點的飽食度。
 spell.ebwizardry\:resurrection.desc=身邊有個治療大師，就算死了...也沒關係。
 spell.ebwizardry\:reversal.desc=隨機移除一種負面的藥水效果，將其加諸在目標身上，持續原本剩餘的效果時間。潛能可增加逆轉的效果數量。
 spell.ebwizardry\:ring_of_fire.desc=在施法者四周製造一個火焰圈，傷害所有靠近的敵人並使它們著火。
@@ -1117,6 +1123,8 @@ config.ebwizardry.creative_bypasses_arcane_lock.true=任何在創造模式的人
 config.ebwizardry.creative_bypasses_arcane_lock.false=只有在創造模式的管理者
 config.ebwizardry.slow_time_affects_players=緩時術影響玩家
 config.ebwizardry.slow_time_affects_players.tooltip=玩家是否會受到附近其他玩家施展的緩時術影響。如果這個選項關閉的話，只會影響生物及投擲物，而玩家能以正常的速度移動。
+config.ebwizardry.bonemeal_grows_crystal_flowers=骨粉種植水晶花
+config.ebwizardry.bonemeal_grows_crystal_flowers.tooltip=在草地上使用骨粉是否有機會長出水晶花。
 config.ebwizardry.mob_loot_table_whitelist=怪物戰利品檔白名單
 config.ebwizardry.mob_loot_table_whitelist.tooltip=白名單中列的是用來匯入以增加怪物掉落的戰利品檔(格式請參考  loot_tables/entities/mob_additions.json) 。 法術模組會盡量判斷哪些戰利品檔是屬於敵對生物的，但並不保證一定正確或合適。請加入戰利品檔的位置(非實體ID)到這個清單以手動將它們包含進來。
 config.ebwizardry.mob_loot_table_blacklist=怪物戰利品檔黑名單
@@ -1226,6 +1234,10 @@ config.ebwizardry.use_shaders=使用自訂著色器
 config.ebwizardry.use_shaders.tooltip=是否對某些法術使用自訂的著色器。這些使用一般的著色系統(像是模組旁觀著色器)，在大部分的情況下應該不會對效能產生太大影響，但可能會與其它的著色器發生衝突。
 config.ebwizardry.use_shaders.true=是 - 我要這些很讚的著色器！
 config.ebwizardry.use_shaders.false=不 - 我在龜速的電腦上執行！
+config.ebwizardry.screen_shake=畫面震動
+config.ebwizardry.screen_shake.tooltip=是否對某些法術使用畫面震動效果。
+config.ebwizardry.blink_effect=閃爍效果
+config.ebwizardry.blink_effect.tooltip=是否對傳送法術使用畫面閃爍效果。
 
 config.ebwizardry.category.commands=指令設定
 config.ebwizardry.category.commands.tooltip=法術模組的指令設定
@@ -1283,8 +1295,13 @@ config.ebwizardry.auto_place_shrine_markers.tooltip=設定法術模組是否在�
 
 integration.jei.category.ebwizardry\:arcane_workbench=法術工作台
 
-integration.antiqueatlas.marker.ebwizardry\:wizard_tower=法師塔
-integration.antiqueatlas.marker.ebwizardry\:obelisk=方尖碑
-integration.antiqueatlas.marker.ebwizardry\:shrine=神殿
+integration.antiqueatlas.marker.ebwizardry.wizard_tower=法師塔
+integration.antiqueatlas.marker.ebwizardry.obelisk=方尖碑
+integration.antiqueatlas.marker.ebwizardry.shrine=神殿
+
+spell.ebwizardry\:magic_missile_festive=魔法槲寄生
+spell.ebwizardry\:summon_snow_golem_festive=召喚冰霜雪人
+spell.ebwizardry\:invigorating_presence_festive=力量的贈禮
+spell.ebwizardry\:empowering_presence_festive=魔力的贈禮
 
 wizard.debug=%1$s, %2$s, %3$s

@@ -117,7 +117,7 @@ public class EntityAIAttackSpell<T extends EntityLiving & ISpellCaster> extends 
 
 		// Only executed server side.
 
-		double distanceSq = this.attacker.getDistanceSq(this.target.posX, this.target.getEntityBoundingBox().minY,
+		double distanceSq = this.attacker.getDistanceSq(this.target.posX, this.target.posY,
 				this.target.posZ);
 		boolean targetIsVisible = this.attacker.getEntitySenses().canSee(this.target);
 
@@ -153,8 +153,8 @@ public class EntityAIAttackSpell<T extends EntityLiving & ISpellCaster> extends 
 
 				// ...reset the continuous spell timer and start the cooldown.
 				this.continuousSpellTimer = 0;
+				this.cooldown = attacker.getContinuousSpell().getCooldown() + this.baseCooldown;
 				setContinuousSpellAndNotify(Spells.none, new SpellModifiers());
-				this.cooldown = this.baseCooldown;
 				return;
 
 			}else if(this.continuousSpellDuration - this.continuousSpellTimer == 1){

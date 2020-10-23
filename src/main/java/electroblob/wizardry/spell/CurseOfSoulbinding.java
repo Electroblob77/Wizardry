@@ -4,6 +4,7 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.*;
@@ -12,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.potion.PotionEffect;
@@ -42,7 +42,7 @@ public class CurseOfSoulbinding extends SpellRay {
 			Persistence.DIMENSION_CHANGE);
 
 	public CurseOfSoulbinding(){
-		super("curse_of_soulbinding", false, EnumAction.NONE);
+		super("curse_of_soulbinding", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		WizardData.registerStoredVariables(TARGETS_KEY);
 	}
@@ -54,7 +54,7 @@ public class CurseOfSoulbinding extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target) && caster instanceof EntityPlayer){
+		if(EntityUtils.isLiving(target) && caster instanceof EntityPlayer){
 			WizardData data = WizardData.get((EntityPlayer)caster);
 			if(data != null){
 				// Return false if soulbinding failed (e.g. if the target is already soulbound)
@@ -101,7 +101,7 @@ public class CurseOfSoulbinding extends SpellRay {
 
 				for(Iterator<UUID> iterator = getSoulboundCreatures(data).iterator(); iterator.hasNext();){
 
-					Entity entity = WizardryUtilities.getEntityByUUID(player.world, iterator.next());
+					Entity entity = EntityUtils.getEntityByUUID(player.world, iterator.next());
 
 					if(entity == null) iterator.remove();
 

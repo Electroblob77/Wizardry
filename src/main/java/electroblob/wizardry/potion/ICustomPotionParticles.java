@@ -53,7 +53,7 @@ public interface ICustomPotionParticles extends ISyncedPotion {
 
 					double x = event.getEntityLiving().posX
 							+ (event.getEntityLiving().world.rand.nextDouble() - 0.5) * event.getEntityLiving().width;
-					double y = event.getEntityLiving().getEntityBoundingBox().minY
+					double y = event.getEntityLiving().posY
 							+ event.getEntityLiving().world.rand.nextDouble() * event.getEntityLiving().height;
 					double z = event.getEntityLiving().posZ
 							+ (event.getEntityLiving().world.rand.nextDouble() - 0.5) * event.getEntityLiving().width;

@@ -2,11 +2,18 @@ package electroblob.wizardry.packet;
 
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.packet.PacketSyncSettings.Message;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <b>[Server -> Client]</b> This packet is sent to synchronise the config settings with clients on player login.
@@ -32,7 +39,13 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 		Wizardry.settings.creativeBypassesArcaneLock = message.settings.creativeBypassesArcaneLock;
 		Wizardry.settings.slowTimeAffectsPlayers = message.settings.slowTimeAffectsPlayers;
 		Wizardry.settings.replaceVanillaFireballs = message.settings.replaceVanillaFireballs;
+		Wizardry.settings.replaceVanillaFallDamage = message.settings.replaceVanillaFallDamage;
 		Wizardry.settings.forfeitChance = message.settings.forfeitChance;
+		Wizardry.settings.progressionRequirements = message.settings.progressionRequirements;
+		Wizardry.settings.bookshelfSearchRadius = message.settings.bookshelfSearchRadius;
+		Wizardry.settings.bookshelfBlocks = message.settings.bookshelfBlocks;
+		Wizardry.settings.bookItems = message.settings.bookItems;
+		Wizardry.settings.passiveMobsAreAllies = message.settings.passiveMobsAreAllies;
 	}
 
 	public static class Message implements IMessage {
@@ -58,7 +71,14 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			settings.creativeBypassesArcaneLock = buf.readBoolean();
 			settings.slowTimeAffectsPlayers = buf.readBoolean();
 			settings.replaceVanillaFireballs = buf.readBoolean();
+			settings.replaceVanillaFallDamage = buf.readBoolean();
 			settings.forfeitChance = buf.readFloat();
+			settings.progressionRequirements = new int[Tier.values().length - 1];
+			for(int i = 0; i < settings.progressionRequirements.length; i++) settings.progressionRequirements[i] = buf.readInt();
+			settings.bookshelfSearchRadius = buf.readInt();
+			settings.bookshelfBlocks = readMetaItems(buf);
+			settings.bookItems = readMetaItems(buf);
+			settings.passiveMobsAreAllies = buf.readBoolean();
 		}
 
 		@Override
@@ -67,7 +87,32 @@ public class PacketSyncSettings implements IMessageHandler<Message, IMessage> {
 			buf.writeBoolean(settings.creativeBypassesArcaneLock);
 			buf.writeBoolean(settings.slowTimeAffectsPlayers);
 			buf.writeBoolean(settings.replaceVanillaFireballs);
+			buf.writeBoolean(settings.replaceVanillaFallDamage);
 			buf.writeFloat((float)settings.forfeitChance); // Configs don't have floats but this can only be 0-1 anyway
+			for(int i = 0; i < settings.progressionRequirements.length; i++) buf.writeInt(settings.progressionRequirements[i]);
+			buf.writeInt(settings.bookshelfSearchRadius);
+			writeMetaItems(buf, settings.bookshelfBlocks);
+			writeMetaItems(buf, settings.bookItems);
+			buf.writeBoolean(settings.passiveMobsAreAllies);
 		}
+
+		@SuppressWarnings("unchecked")
+		private static Pair<ResourceLocation, Short>[] readMetaItems(ByteBuf buf){
+			int length = buf.readInt();
+			List<Pair<ResourceLocation, Short>> entries = new ArrayList<>();
+			for(int i=0; i<length; i++){
+				entries.add(Pair.of(new ResourceLocation(ByteBufUtils.readUTF8String(buf)), buf.readShort()));
+			}
+			return entries.toArray(new Pair[0]);
+		}
+
+		private static void writeMetaItems(ByteBuf buf, Pair<ResourceLocation, Short>[] items){
+			buf.writeInt(items.length);
+			for(Pair<ResourceLocation, Short> entry : items){
+				ByteBufUtils.writeUTF8String(buf, entry.getLeft().toString());
+				buf.writeShort(entry.getRight());
+			}
+		}
+
 	}
 }

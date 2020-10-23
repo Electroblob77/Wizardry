@@ -1,19 +1,16 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -34,14 +31,14 @@ public class Paralysis extends SpellRay {
 	private static final String CRITICAL_HEALTH = "critical_health";
 
 	public Paralysis(){
-		super("paralysis", false, EnumAction.NONE);
+		super("paralysis", SpellActions.POINT, false);
 		addProperties(DAMAGE, EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 		
 			if(world.isRemote){
 				// Rather neatly, the entity can be set here and if it's null nothing will happen.
@@ -74,7 +71,7 @@ public class Paralysis extends SpellRay {
 		if(world.isRemote){
 			
 			if(world.getBlockState(pos).getMaterial().isSolid()){
-				Vec3d vec = hit.add(new Vec3d(side.getDirectionVec()).scale(WizardryUtilities.ANTI_Z_FIGHTING_OFFSET));
+				Vec3d vec = hit.add(new Vec3d(side.getDirectionVec()).scale(GeometryUtils.ANTI_Z_FIGHTING_OFFSET));
 				ParticleBuilder.create(Type.SCORCH).pos(vec).face(side).clr(0.4f, 0.8f, 1).spawn(world);
 			}
 		}
@@ -97,8 +94,6 @@ public class Paralysis extends SpellRay {
 	}
 	
 	// See WizardryClientEventHandler for prevention of players' movement under the effects of paralysis
-	
-	// TODO: (Animated?) screen overlay effect for paralysed players in first-person
 	
 	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){

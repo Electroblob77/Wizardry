@@ -1,17 +1,14 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -22,11 +19,12 @@ import net.minecraft.world.World;
 public class FireBreath extends SpellRay {
 
 	public FireBreath(){
-		super("fire_breath", true, EnumAction.NONE);
+		super("fire_breath", SpellActions.POINT, true);
 		this.particleVelocity(1);
 		this.particleJitter(0.3);
 		this.particleSpacing(0.25);
 		addProperties(DAMAGE, BURN_DURATION);
+		this.soundValues(3f, 1, 0);
 	}
 
 	@Override
@@ -57,7 +55,7 @@ public class FireBreath extends SpellRay {
 			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
 			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
 				target.setFire((int)(getProperty(BURN_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
-				WizardryUtilities.attackEntityWithoutKnockback(target,
+				EntityUtils.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.FIRE),
 						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			}
@@ -69,12 +67,12 @@ public class FireBreath extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(!WizardryUtilities.canDamageBlocks(caster, world)) return false;
+		if(!EntityUtils.canDamageBlocks(caster, world)) return false;
 
 		pos = pos.offset(side);
 
 		if(world.isAirBlock(pos)){
-			if(!world.isRemote) world.setBlockState(pos, Blocks.FIRE.getDefaultState());
+			if(!world.isRemote && BlockUtils.canPlaceBlock(caster, world, pos)) world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 			return true;
 		}
 		

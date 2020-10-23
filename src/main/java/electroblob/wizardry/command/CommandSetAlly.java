@@ -2,7 +2,7 @@ package electroblob.wizardry.command;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -78,7 +78,7 @@ public class CommandSetAlly extends CommandBase {
 				// Don't want to catch the exception here either, because there can be no other second argument.
 
 				if(allyOf != sender && sender instanceof EntityPlayer
-						&& !WizardryUtilities.isPlayerOp((EntityPlayer)sender, server)){
+						&& !EntityUtils.isPlayerOp((EntityPlayer)sender, server)){
 					// Displays a chat message if a non-op tries to modify another player's allies.
 					if(server.sendCommandFeedback()){
 						TextComponentTranslation TextComponentTranslation2 = new TextComponentTranslation(

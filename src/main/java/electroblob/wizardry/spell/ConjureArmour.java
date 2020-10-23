@@ -3,9 +3,9 @@ package electroblob.wizardry.spell;
 import com.google.common.collect.ImmutableMap;
 import electroblob.wizardry.item.IConjuredItem;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
@@ -33,10 +33,10 @@ public class ConjureArmour extends SpellConjuration {
 		boolean flag = false;
 
 		// Used this rather than getArmorInventoryList because I need to access the slot itself
-		for(EntityEquipmentSlot slot : WizardryUtilities.ARMOUR_SLOTS){
+		for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
 			
 			if(caster.getItemStackFromSlot(slot).isEmpty() &&
-					!WizardryUtilities.doesPlayerHaveItem(caster, SPECTRAL_ARMOUR_MAP.get(slot))){
+					!InventoryUtils.doesPlayerHaveItem(caster, SPECTRAL_ARMOUR_MAP.get(slot))){
 				
 				armour = new ItemStack(SPECTRAL_ARMOUR_MAP.get(slot));
 				IConjuredItem.setDurationMultiplier(armour, modifiers.get(WizardryItems.duration_upgrade));

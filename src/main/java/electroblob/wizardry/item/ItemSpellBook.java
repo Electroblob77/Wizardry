@@ -5,6 +5,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.data.SpellGlyphData;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -57,9 +60,16 @@ public class ItemSpellBook extends Item {
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
 
+	// This is accessed during loading (before we even get to the main menu) for search tree population
+	// Obviously the world is always null at that point, because no world objects exist! However, outside of a world
+	// there are no guarantees as to spell metadata order so we just have to give up (and we can't account for discovery)
+	// TODO: Search trees seem to get reloaded when the mappings change so in theory this should work ok, why doesn't it?
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack itemstack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
+
+		if(world == null) world = Wizardry.proxy.getTheWorld(); // But... I need the world!
+
 		// Tooltip is left blank for wizards buying generic spell books.
 		if(world != null && itemstack.getItemDamage() != OreDictionary.WILDCARD_VALUE){
 
@@ -72,6 +82,14 @@ public class ItemSpellBook extends Item {
 					: "#\u00A79" + SpellGlyphData.getGlyphName(spell, world));
 
 			tooltip.add(spell.getTier().getDisplayNameWithFormatting());
+
+			EntityPlayer player = Wizardry.proxy.getThePlayer();
+
+			// If the spell should *appear* discovered but isn't *actually* discovered, show a 'new spell' message
+			// A bit annoying to check this again but it's the easiest way
+			if(Wizardry.settings.discoveryMode && !player.isCreative() && discovered && WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
+				tooltip.add(Wizardry.proxy.translate("item." + this.getRegistryName() + ".new", new Style().setColor(TextFormatting.LIGHT_PURPLE)));
+			}
 
 			// Advanced tooltips display more information, mainly for searching purposes in creative
 			if(discovered && advanced.isAdvanced()){ // No cheating!

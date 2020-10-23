@@ -1,15 +1,15 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockThorns;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.tileentity.TileEntityPlayerSaveTimed;
+import electroblob.wizardry.tileentity.TileEntityThorns;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
@@ -25,7 +25,7 @@ import java.util.List;
 public class ForestOfThorns extends Spell {
 
 	public ForestOfThorns(){
-		super("forest_of_thorns", EnumAction.BOW, false);
+		super("forest_of_thorns", SpellActions.SUMMON, false);
 		addProperties(EFFECT_RADIUS, DURATION, DAMAGE);
 	}
 
@@ -70,7 +70,7 @@ public class ForestOfThorns extends Spell {
 
 					if(distance > radius || distance < radius - 1.5) continue;
 
-					Integer y = WizardryUtilities.getNearestSurface(world, origin.add(x, 0, z), EnumFacing.UP, (int)radius, true, WizardryUtilities.SurfaceCriteria.BUILDABLE);
+					Integer y = BlockUtils.getNearestSurface(world, origin.add(x, 0, z), EnumFacing.UP, (int)radius, true, BlockUtils.SurfaceCriteria.BUILDABLE);
 					if(y != null) ring.add(new BlockPos(origin.getX() + x, y, origin.getZ() + z));
 				}
 			}
@@ -80,16 +80,21 @@ public class ForestOfThorns extends Spell {
 			// Because we're always using EnumFacing.UP in the code above, we can be sure that pos is the block above the floor
 			for(BlockPos pos : ring){
 
-				((BlockThorns)WizardryBlocks.thorns).placeAt(world, pos, 3);
+				if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canBlockBeReplaced(world, pos.up())){
 
-				for(int i=0; i<2; i++){
+					((BlockThorns)WizardryBlocks.thorns).placeAt(world, pos, 3);
 
-					TileEntity tileentity = world.getTileEntity(pos.up(i));
+					TileEntity tileentity = world.getTileEntity(pos);
 
-					if(tileentity instanceof TileEntityPlayerSaveTimed){
-						((TileEntityPlayerSaveTimed)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
+					if(tileentity instanceof TileEntityThorns){
+
+						((TileEntityThorns)tileentity).setLifetime((int)(getProperty(DURATION).floatValue()
 								* modifiers.get(WizardryItems.duration_upgrade)));
-						if(caster != null) ((TileEntityPlayerSaveTimed)tileentity).setCaster(caster);
+
+						if(caster != null) ((TileEntityThorns)tileentity).setCaster(caster);
+						((TileEntityThorns)tileentity).damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
+
+						((TileEntityThorns)tileentity).sync();
 					}
 				}
 			}

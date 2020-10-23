@@ -7,10 +7,10 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -65,7 +65,7 @@ public class EntityForceArrow extends EntityMagicArrow {
 
 			if(!player.capabilities.isCreativeMode && ItemArtefact.isArtefactActive(player, WizardryItems.ring_mana_return)){
 
-				for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
+				for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(player)){
 					if(stack.getItem() instanceof ISpellCastingItem && stack.getItem() instanceof IManaStoringItem
 							&& Arrays.asList(((ISpellCastingItem)stack.getItem()).getSpells(stack)).contains(Spells.force_arrow)){
 						((IManaStoringItem)stack.getItem()).rechargeMana(stack, mana);

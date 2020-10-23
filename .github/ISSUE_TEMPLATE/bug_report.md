@@ -10,7 +10,7 @@ assignees: ''
 Please read the [guide for contributing](https://github.com/Electroblob77/Wizardry/blob/1.12.2/CONTRIBUTING.md) before posting.
 
 Minecraft version: 1.12.2 [change as necessary]  
-Wizardry version: 4.2.11 [change as necessary]
+Wizardry version: 4.3 [change as necessary]
 Environment: Singleplayer/LAN game/Server [delete as necessary]
 
 Issue details: [describe what you were doing when the issue occurred, what went wrong, what you expected to happen, etc.]

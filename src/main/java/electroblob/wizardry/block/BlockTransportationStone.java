@@ -8,9 +8,9 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Transportation;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.Location;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -162,7 +162,7 @@ public class BlockTransportationStone extends Block {
 						for(int z = -1; z <= 1; z++){
 							if(x == 0 && z == 0) continue;
 							ParticleBuilder.create(ParticleBuilder.Type.PATH)
-									.pos(WizardryUtilities.getCentre(centre).add(x, -0.3125, z)).clr(0x86ff65)
+									.pos(GeometryUtils.getCentre(centre).add(x, -0.3125, z)).clr(0x86ff65)
 									.time(200).scale(2).spawn(world);
 						}
 					}
@@ -174,10 +174,11 @@ public class BlockTransportationStone extends Block {
 		return false;
 	}
 
-	/** Returns whether the specified location is surrounded by a complete cicle of 8 transportation stones. */
+	/** Returns whether the specified location is surrounded by a complete circle of 8 transportation stones. */
 	public static boolean testForCircle(World world, BlockPos pos){
 
-		if(world.getBlockState(pos).getMaterial().blocksMovement()) return false;
+		if(world.getBlockState(pos).getMaterial().blocksMovement() || world.getBlockState(pos.up()).getMaterial()
+				.blocksMovement()) return false;
 
 		for(int x = -1; x <= 1; x++){
 			for(int z = -1; z <= 1; z++){

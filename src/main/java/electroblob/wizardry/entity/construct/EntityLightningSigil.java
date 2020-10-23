@@ -3,11 +3,11 @@ package electroblob.wizardry.entity.construct;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -15,14 +15,19 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityLightningSigil extends EntityMagicConstruct {
+public class EntityLightningSigil extends EntityScaledConstruct {
 
+	public static final String SECONDARY_RANGE = "secondary_range";
 	public static final String SECONDARY_MAX_TARGETS = "secondary_max_targets";
 
 	public EntityLightningSigil(World world){
 		super(world);
-		this.height = 0.2f;
-		this.width = 2.0f;
+		setSize(Spells.frost_sigil.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 0.2f);
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	@Override
@@ -34,7 +39,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 			this.setDead();
 		}
 
-		List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, this.posX, this.posY,
 				this.posZ, this.world);
 
 		for(EntityLivingBase target : targets){
@@ -58,9 +63,9 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 					this.playSound(WizardrySounds.ENTITY_LIGHTNING_SIGIL_TRIGGER, 1.0f, 1.0f);
 
 					// Secondary chaining effect
-					double seekerRange = Spells.lightning_sigil.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+					double seekerRange = Spells.lightning_sigil.getProperty(SECONDARY_RANGE).doubleValue();
 
-					List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(seekerRange,
+					List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(seekerRange,
 							target.posX, target.posY + target.height / 2, target.posZ, world);
 
 					for(int j = 0; j < Math.min(secondaryTargets.size(),
@@ -76,7 +81,7 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 								.pos(0, target.height/2, 0).target(secondaryTarget).spawn(world);
 								
 								ParticleBuilder.spawnShockParticles(world, secondaryTarget.posX,
-										secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2,
+										secondaryTarget.posY + secondaryTarget.height / 2,
 										secondaryTarget.posZ);
 							}
 
@@ -96,8 +101,8 @@ public class EntityLightningSigil extends EntityMagicConstruct {
 		}
 
 		if(this.world.isRemote && this.rand.nextInt(15) == 0){
-			double radius = 0.5 + rand.nextDouble() * 0.3;
-			float angle = rand.nextFloat() * (float)Math.PI * 2;;
+			double radius = (0.5 + rand.nextDouble() * 0.3) * width/2;
+			float angle = rand.nextFloat() * (float)Math.PI * 2;
 			ParticleBuilder.create(Type.SPARK)
 			.pos(this.posX + radius * MathHelper.cos(angle), this.posY + 0.1, this.posZ + radius * MathHelper.sin(angle))
 			.spawn(world);

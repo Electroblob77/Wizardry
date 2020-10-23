@@ -14,7 +14,7 @@
   "element": "fire",
   "type": "defence",
   "cost": 20,
-  "chargeup": 0,
+  "chargeup": 15,
   "cooldown": 80,
   "base_properties": {
     "fire_resistance_duration": 600,

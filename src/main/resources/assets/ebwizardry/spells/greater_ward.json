@@ -14,7 +14,7 @@
   "element": "healing",
   "type": "buff",
   "cost": 20,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 65,
   "base_properties": {
     "ward_duration": 600,

@@ -15,7 +15,7 @@ public class GreaterHeal extends SpellBuff {
 	protected boolean applyEffects(EntityLivingBase caster, SpellModifiers modifiers){
 		
 		if(caster.getHealth() < caster.getMaxHealth() && caster.getHealth() > 0){
-			caster.heal(getProperty(HEALTH).floatValue() * modifiers.get(SpellModifiers.POTENCY));
+			Heal.heal(caster, getProperty(HEALTH).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			return true;
 		}
 		

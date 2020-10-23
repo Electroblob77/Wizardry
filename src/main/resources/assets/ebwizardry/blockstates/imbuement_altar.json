@@ -1,0 +1,7 @@
+{
+	"forge_marker": 1,
+    "variants": {
+        "active=false": { "model": "ebwizardry:imbuement_altar_inactive" },
+        "active=true": { "model": "ebwizardry:imbuement_altar" }
+    }
+}

@@ -7,11 +7,12 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.spell.Tornado;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -29,17 +30,21 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityTornado extends EntityMagicConstruct {
+public class EntityTornado extends EntityScaledConstruct {
 
 	private double velX, velZ;
 
 	public EntityTornado(World world){
 		super(world);
-		this.height = 8.0f;
-		this.width = 5.0f;
+		setSize(Spells.tornado.getProperty(Spell.EFFECT_RADIUS).floatValue(), 8);
 		this.isImmuneToFire = false;
 	}
-	
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
+	}
+
 	public void setHorizontalVelocity(double velX, double velZ){
 		this.velX = velX;
 		this.velZ = velZ;
@@ -50,7 +55,7 @@ public class EntityTornado extends EntityMagicConstruct {
 
 		super.onUpdate();
 
-		double radius = Spells.tornado.getProperty(Spell.EFFECT_RADIUS).doubleValue();
+		double radius = width/2;
 
 		if(this.ticksExisted % 120 == 1 && world.isRemote){
 			// Repeat is false so that the sound fades out when the tornado does rather than stopping suddenly
@@ -60,7 +65,7 @@ public class EntityTornado extends EntityMagicConstruct {
 		this.move(MoverType.SELF, velX, motionY, velZ);
 
 		BlockPos pos = new BlockPos(this);
-		Integer y = WizardryUtilities.getNearestSurface(world, pos.up(3), EnumFacing.UP, 5, true, WizardryUtilities.SurfaceCriteria.NOT_AIR_TO_AIR);
+		Integer y = BlockUtils.getNearestSurface(world, pos.up(3), EnumFacing.UP, 5, true, BlockUtils.SurfaceCriteria.NOT_AIR_TO_AIR);
 
 		if(y != null){
 
@@ -74,7 +79,7 @@ public class EntityTornado extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(radius, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, this.posX, this.posY,
 					this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
@@ -125,7 +130,7 @@ public class EntityTornado extends EntityMagicConstruct {
 
 				BlockPos pos1 = new BlockPos(blockX, this.posY + 3, blockZ);
 
-				Integer blockY = WizardryUtilities.getNearestSurface(world, pos1, EnumFacing.UP, 5, true, WizardryUtilities.SurfaceCriteria.NOT_AIR_TO_AIR);
+				Integer blockY = BlockUtils.getNearestSurface(world, pos1, EnumFacing.UP, 5, true, BlockUtils.SurfaceCriteria.NOT_AIR_TO_AIR);
 
 				if(blockY != null){
 

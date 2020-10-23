@@ -7,8 +7,8 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.spell.SlowTime;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IProjectile;
@@ -34,7 +34,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 	public static final String NBT_KEY = "time_slowed";
 
 	public PotionSlowTime(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_slow_time.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/slow_time.png"));
 		this.setPotionName("potion." + Wizardry.MODID + ":slow_time");
 	}
 
@@ -43,7 +43,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 	}
 
 	public static void unblockNearbyEntities(EntityLivingBase host){
-		List<Entity> targetsBeyondRange = WizardryUtilities.getEntitiesWithinRadius(getEffectRadius() + 3, host.posX, host.posY, host.posZ, host.world, Entity.class);
+		List<Entity> targetsBeyondRange = EntityUtils.getEntitiesWithinRadius(getEffectRadius() + 3, host.posX, host.posY, host.posZ, host.world, Entity.class);
 		targetsBeyondRange.forEach(e -> e.updateBlocked = false);
 	}
 
@@ -56,7 +56,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 		int interval = strength * 4 + 6;
 
 		// Mark all entities within range
-		List<Entity> targetsInRange = WizardryUtilities.getEntitiesWithinRadius(getEffectRadius(), host.posX, host.posY, host.posZ, host.world, Entity.class);
+		List<Entity> targetsInRange = EntityUtils.getEntitiesWithinRadius(getEffectRadius(), host.posX, host.posY, host.posZ, host.world, Entity.class);
 		targetsInRange.remove(host);
 		// Other entities with the slow time effect are unaffected
 		targetsInRange.removeIf(t -> t instanceof EntityLivingBase && ((EntityLivingBase)t).isPotionActive(WizardryPotions.slow_time));
@@ -130,7 +130,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 		}
 
 		// Un-mark all entities that have just left range
-		List<Entity> targetsBeyondRange = WizardryUtilities.getEntitiesWithinRadius(getEffectRadius() + 3, host.posX, host.posY, host.posZ, host.world, Entity.class);
+		List<Entity> targetsBeyondRange = EntityUtils.getEntitiesWithinRadius(getEffectRadius() + 3, host.posX, host.posY, host.posZ, host.world, Entity.class);
 		targetsBeyondRange.removeAll(targetsInRange);
 		targetsBeyondRange.forEach(e -> e.updateBlocked = false);
 
@@ -150,7 +150,7 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 		for(Entity entity : loadedEntityList){
 			if(entity.getEntityData().getBoolean(NBT_KEY)){
 				// Currently only players can cast slow time, but you could apply the effect to NPCs with commands
-				List<EntityLivingBase> nearby = WizardryUtilities.getEntitiesWithinRadius(getEffectRadius(), entity.posX, entity.posY, entity.posZ, entity.world, EntityLivingBase.class);
+				List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(getEffectRadius(), entity.posX, entity.posY, entity.posZ, entity.world);
 				if(nearby.stream().noneMatch(e -> e.isPotionActive(WizardryPotions.slow_time))){
 					entity.getEntityData().removeTag(NBT_KEY);
 					entity.updateBlocked = false;

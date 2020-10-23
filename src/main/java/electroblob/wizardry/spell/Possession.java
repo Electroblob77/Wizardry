@@ -11,16 +11,18 @@ import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.*;
 import electroblob.wizardry.entity.projectile.*;
 import electroblob.wizardry.integration.DamageSafetyChecker;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.PacketPossession;
 import electroblob.wizardry.packet.WizardryPacketHandler;
+import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
@@ -38,7 +40,6 @@ import net.minecraft.init.Enchantments;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
@@ -68,9 +69,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -80,8 +79,8 @@ public class Possession extends SpellRay {
 	/** A {@code ResourceLocation} representing the shader file used when possessing an entity. */
 	public static final ResourceLocation SHADER = new ResourceLocation(Wizardry.MODID, "shaders/post/possession.json");
 
-	/** The NBT tag name for storing the possessing entity's UUID in the target's tag compound. */
-	public static final String NBT_KEY = "possessor";
+	/** The NBT tag name for storing the possessed flag in the target's tag compound, used only for rendering. */
+	public static final String NBT_KEY = "possessed";
 	/** The NBT tag name for storing the possessor's previous inventory in their tag compound. */
 	public static final String INVENTORY_NBT_KEY = "prevInventory";
 
@@ -96,6 +95,7 @@ public class Possession extends SpellRay {
 
 	private static final Multimap<Class<? extends EntityLiving>, BiConsumer<?, EntityPlayer>> abilities = HashMultimap.create();
 	private static final Map<Class<? extends EntityLiving>, Function<World, ? extends IProjectile>> projectiles = new HashMap<>();
+	private static final Set<Class<? extends EntityLiving>> blacklist = new HashSet<>();
 
 	private static final Map<IAttribute, UUID> INHERITED_ATTRIBUTES;
 
@@ -118,10 +118,11 @@ public class Possession extends SpellRay {
 		addProjectile(EntityStormElemental.class, EntityLightningDisc::new);
 		addProjectile(EntityWitch.class, EntityPotion::new);
 
+		blacklist.add(EntityDecoy.class);
 	}
 
 	public Possession(){
-		super("possession", false, EnumAction.NONE);
+		super("possession", SpellActions.POINT, false);
 		addProperties(EFFECT_DURATION, CRITICAL_HEALTH);
 	}
 
@@ -142,12 +143,12 @@ public class Possession extends SpellRay {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		Vec3d look = caster.getLookVec();
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
+		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
 
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 
-		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
-		this.playSound(world, caster, ticksInUse, -1, modifiers, "possess"); // TODO: There must be a better way...
+//		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
+		this.playSound(world, caster, ticksInUse, -1, modifiers, "possess");
 		return true;
 	}
 
@@ -155,7 +156,8 @@ public class Possession extends SpellRay {
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse,
 								  SpellModifiers modifiers){
 
-		if(target instanceof EntityLiving && caster instanceof EntityPlayer && !isPossessing((EntityPlayer)caster)){
+		if(target instanceof EntityLiving && !blacklist.contains(target.getClass()) && caster instanceof EntityPlayer
+				&& !isPossessing((EntityPlayer)caster)){
 
 			EntityPlayer player = (EntityPlayer)caster;
 
@@ -216,6 +218,7 @@ public class Possession extends SpellRay {
 			target.setDead();
 			target.setNoAI(true);
 			target.setAttackTarget(null);
+			target.getEntityData().setBoolean(NBT_KEY, true);
 
 			// Attributes
 
@@ -248,7 +251,7 @@ public class Possession extends SpellRay {
 
 					possessor.getAttributeMap().getAttributeInstance(attribute).applyModifier(new AttributeModifier(
 							INHERITED_ATTRIBUTES.get(attribute), "possessionModifier", targetValue / currentValue,
-							WizardryUtilities.Operations.MULTIPLY_FLAT));
+							EntityUtils.Operations.MULTIPLY_FLAT));
 				}
 			}
 
@@ -261,7 +264,7 @@ public class Possession extends SpellRay {
 
 				// Targeting
 
-				for(EntityLiving creature : WizardryUtilities.getEntitiesWithinRadius(16, possessor.posX,
+				for(EntityLiving creature : EntityUtils.getEntitiesWithinRadius(16, possessor.posX,
 						possessor.posY, possessor.posZ, possessor.world, EntityLiving.class)){
 					// Mobs are dumb, if a player possesses something they're like "Huh?! Where'd you go?"
 					// Of course, this won't last long if the player attacks them, since they'll revenge-target them
@@ -323,10 +326,12 @@ public class Possession extends SpellRay {
 
 			victim.isDead = false;
 			victim.setNoAI(false);
+			victim.getEntityData().removeTag(NBT_KEY);
 			victim.setPosition(player.posX, player.posY, player.posZ);
 			if(!player.world.isRemote) player.world.spawnEntity(victim);
 
 			for(PotionEffect effect : player.getActivePotionEffects()){
+				if(effect.getPotion() instanceof PotionSlowTime) continue; // Don't transfer slow time
 				victim.addPotionEffect(effect);
 			}
 		}
@@ -417,7 +422,7 @@ public class Possession extends SpellRay {
 
 	/** Adds the given {@link BiConsumer} to the list of abilities. An <i>ability</i> is an entity-specific action or
 	 * effect that happens when a certain type of entity is possessed. For example, spiders can climb walls, endermen
-	 * can pick up blocks, creepers explode, etc. Other mods may use this method to */
+	 * can pick up blocks, creepers explode, etc. Other mods may use this method to add their own possession abilities. */
 	public static <T extends EntityLiving> void addAbility(Class<T> entityType, BiConsumer<T, EntityPlayer> ability){
 		abilities.put(entityType, ability);
 	}
@@ -606,7 +611,7 @@ public class Possession extends SpellRay {
 						IProjectile projectile = factory.apply(possessor.world);
 						Vec3d look = possessor.getLookVec();
 						((Entity)projectile).setPosition(possessor.posX + look.x, possessor.posY + possessor.getEyeHeight() + look.y, possessor.posZ + look.z);
-						projectile.shoot(look.x, look.y, look.z, 1.6f, WizardryUtilities.getDefaultAimingError(possessor.world.getDifficulty()));
+						projectile.shoot(look.x, look.y, look.z, 1.6f, EntityUtils.getDefaultAimingError(possessor.world.getDifficulty()));
 
 						if(projectile instanceof EntityMagicProjectile) ((EntityMagicProjectile)projectile).setCaster(possessor);
 						else if(projectile instanceof EntityMagicArrow) ((EntityMagicArrow)projectile).setCaster(possessor);

@@ -1,10 +1,9 @@
 package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.constants.Tier;
+import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
-import electroblob.wizardry.spell.Spell;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
@@ -17,9 +16,6 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.function.Predicate;
 
 /**
  * Class responsible for registering wizardry's loot functions and loot tables. Also handles loot injection and the
@@ -32,6 +28,11 @@ import java.util.function.Predicate;
 public final class WizardryLoot {
 
 	//public static final String FROM_SPAWNER_NBT_FLAG = "fromSpawner";
+
+	public static final ResourceLocation[] RUINED_SPELL_BOOK_LOOT_TABLES = Arrays.stream(Element.values())
+			.filter(e -> e != Element.MAGIC)
+			.map(e -> new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book_" + e.getName()))
+			.toArray(ResourceLocation[]::new);
 
 	private WizardryLoot(){} // No instances!
 
@@ -72,40 +73,10 @@ public final class WizardryLoot {
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "subsets/epic_artefacts"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/evil_wizard"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "entities/mob_additions"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/junk_additions"));
+		LootTableList.register(new ResourceLocation(Wizardry.MODID, "gameplay/fishing/treasure_additions"));
+		for(ResourceLocation location : RUINED_SPELL_BOOK_LOOT_TABLES) LootTableList.register(location);
 
-	}
-
-	/**
-	 * Helper method which gets a spell id according to the standard weighting. The tier is a weighted random value; the
-	 * actual spell within that tier is completely random. Will not return the id of a spell which has been disabled in
-	 * the config. This is for simple stuff like chests and drops; more complex generators like wizard trades don't use
-	 * this method.
-	 * <p></p>
-	 * For reference, the standard weighting is as follows: Novice: 60%, Apprentice: 25%, Advanced: 10%, Master: 5%
-	 *
-	 * @param random An instance of {@link Random} to use for RNG
-	 * @param filter A {@link Predicate} specifying any requirements the chosen spell must fulfil
-	 * @return A random spell id number, or -1 if no spell exists that satisfies the given filter
-	 * @deprecated Everything uses loot tables now, I may remove this as some point
-	 */
-	@Deprecated
-	public static int getStandardWeightedRandomSpellId(Random random, Predicate<Spell> filter){
-
-		Tier tier = Tier.getWeightedRandomTier(random);
-
-		List<Spell> spells = Spell.getSpells(new Spell.TierElementFilter(tier, null));
-		spells.removeIf(filter.negate());
-
-		// Ensures the tier chosen actually has spells in it, and if not uses NOVICE instead.
-		if(spells.isEmpty()){
-			spells = Spell.getSpells(new Spell.TierElementFilter(Tier.NOVICE, null));
-			spells.removeIf(filter.negate());
-		}
-
-		if(spells.isEmpty()) return -1;
-
-		// Finds a random spell in the list and returns its id.
-		return spells.get(random.nextInt(spells.size())).metadata();
 	}
 
 	@SubscribeEvent
@@ -137,6 +108,15 @@ public final class WizardryLoot {
 			if(EnumCreatureType.MONSTER.getCreatureClass().isAssignableFrom(entityClass)){
 				event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
 			}
+		}
+		// Fishing loot
+		// This works slightly differently in that it modifies the existing pools rather than adding new ones
+		// This is because you are supposed to only catch one item at a time!
+		if(event.getName().toString().matches("minecraft:gameplay/fishing/junk")){
+			// The first (and in this case, only) vanilla loot pool is named "main"
+			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/junk_additions", 4));
+		}else if(event.getName().toString().matches("minecraft:gameplay/fishing/treasure")){
+			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/treasure_additions", 1));
 		}
 	}
 

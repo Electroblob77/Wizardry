@@ -6,11 +6,11 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.LightningHammer;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -68,6 +68,11 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 		return super.getMaxDamage(stack);
 	}
 
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return IConjuredItem.getTimerBarColour(stack);
+	}
+
 	private float getDamageMultiplier(ItemStack stack){
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey(DAMAGE_MULTIPLIER_NBT_KEY)){
 			return stack.getTagCompound().getFloat(DAMAGE_MULTIPLIER_NBT_KEY);
@@ -83,9 +88,9 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 		if(slot == EntityEquipmentSlot.MAINHAND){
 			float attackDamage = Spells.lightning_hammer.arePropertiesInitialised() ?
 					Spells.lightning_hammer.getProperty(Spell.DIRECT_DAMAGE).floatValue() : 10; // Fallback for search tree init, value doesn't really matter
-			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, WizardryUtilities.Operations.ADD));
-			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", ATTACK_SPEED, WizardryUtilities.Operations.ADD));
-			multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(MOVEMENT_SPEED_MODIFIER, "Weapon modifier", MOVEMENT_SPEED_REDUCTION, WizardryUtilities.Operations.MULTIPLY_FLAT));
+			multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", attackDamage, EntityUtils.Operations.ADD));
+			multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", ATTACK_SPEED, EntityUtils.Operations.ADD));
+			multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getName(), new AttributeModifier(MOVEMENT_SPEED_MODIFIER, "Weapon modifier", MOVEMENT_SPEED_REDUCTION, EntityUtils.Operations.MULTIPLY_FLAT));
 		}
 
 		return multimap;
@@ -135,7 +140,7 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 			world.spawnEntity(hammer);
 		}
 
-		WizardryUtilities.playSoundAtPlayer(player, WizardrySounds.ENTITY_HAMMER_THROW, 1.0F, 0.8f);
+		EntityUtils.playSoundAtPlayer(player, WizardrySounds.ENTITY_HAMMER_THROW, 1.0F, 0.8f);
 
 		//player.swingArm(hand);
 
@@ -195,7 +200,7 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 
 			if(attackStrength == 1){ // Only chains when the attack meter is full
 
-				List<EntityLivingBase> nearby = WizardryUtilities.getEntitiesWithinRadius(CHAINING_RANGE, hit.posX, hit.posY, hit.posZ, hit.world);
+				List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(CHAINING_RANGE, hit.posX, hit.posY, hit.posZ, hit.world);
 
 				nearby.remove(hit);
 				nearby.remove(wielder);
@@ -210,7 +215,7 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 					if(hit.world.isRemote){
 						ParticleBuilder.create(Type.LIGHTNING).pos(hit.getPositionVector().add(0, hit.height / 2, 0))
 								.target(target).spawn(hit.world);
-						ParticleBuilder.spawnShockParticles(hit.world, target.posX, target.getEntityBoundingBox().minY + target.height / 2, target.posZ);
+						ParticleBuilder.spawnShockParticles(hit.world, target.posX, target.posY + target.height / 2, target.posZ);
 					}
 
 					//target.playSound(WizardrySounds.SPELL_SPARK, 1, 1.5f + 0.4f * world.rand.nextFloat());

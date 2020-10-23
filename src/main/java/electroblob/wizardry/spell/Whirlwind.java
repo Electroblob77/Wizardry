@@ -2,13 +2,13 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -22,7 +22,7 @@ public class Whirlwind extends SpellRay {
 	public static final String REPULSION_VELOCITY = "repulsion_velocity";
 
 	public Whirlwind(){
-		super("whirlwind", false, EnumAction.NONE);
+		super("whirlwind", SpellActions.POINT, false);
 		this.soundValues(0.8f, 0.7f, 0.2f);
 		addProperties(REPULSION_VELOCITY);
 	}
@@ -41,7 +41,7 @@ public class Whirlwind extends SpellRay {
 		// Left as EntityLivingBase because why not be able to move armour stands around?
 		if(target instanceof EntityLivingBase){
 			
-			Vec3d vec = target.getPositionVector().add(0, target.getEyeHeight(), 0).subtract(origin).normalize();
+			Vec3d vec = target.getPositionEyes(1).subtract(origin).normalize();
 
 			if(!world.isRemote){
 

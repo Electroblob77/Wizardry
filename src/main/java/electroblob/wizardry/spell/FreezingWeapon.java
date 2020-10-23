@@ -2,15 +2,15 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ public class FreezingWeapon extends Spell {
 	public static final String FREEZING_ARROW_NBT_KEY = "frostLevel";
 
 	public FreezingWeapon(){
-		super("freezing_weapon", EnumAction.BOW, false);
+		super("freezing_weapon", SpellActions.IMBUE, false);
 		addProperties(EFFECT_DURATION);
 	}
 
@@ -35,7 +35,7 @@ public class FreezingWeapon extends Spell {
 		if(WizardData.get(caster) != null
 				&& WizardData.get(caster).getImbuementDuration(WizardryEnchantments.freezing_weapon) <= 0){
 
-			for(ItemStack stack : WizardryUtilities.getPrioritisedHotbarAndOffhand(caster)){
+			for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(caster)){
 
 				if((ImbueWeapon.isSword(stack) || ImbueWeapon.isBow(stack))
 						&& !EnchantmentHelper.getEnchantments(stack).containsKey(WizardryEnchantments.freezing_weapon)){
@@ -52,7 +52,7 @@ public class FreezingWeapon extends Spell {
 					if(world.isRemote){
 						for(int i=0; i<10; i++){
 							double x = caster.posX + world.rand.nextDouble() * 2 - 1;
-							double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+							double y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 							double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
 							ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(0.9f, 0.7f, 1).spawn(world);
 						}

@@ -1,9 +1,9 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.entity.construct.EntityTornado;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.Vec3d;
 
@@ -13,7 +13,7 @@ public class Tornado extends SpellConstruct<EntityTornado> {
 	public static final String UPWARD_ACCELERATION = "upward_acceleration";
 
 	public Tornado(){
-		super("tornado", EnumAction.NONE, EntityTornado::new, false);
+		super("tornado", SpellActions.POINT, EntityTornado::new, false);
 		addProperties(EFFECT_RADIUS, SPEED, DAMAGE, UPWARD_ACCELERATION);
 	}
 

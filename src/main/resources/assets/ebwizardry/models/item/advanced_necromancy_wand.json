@@ -2,5 +2,13 @@
     "parent": "item/handheld",
     "textures": {
         "layer0": "ebwizardry:items/wand_advanced_necromancy"
-    }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "this_gets_ignored": 1
+            },
+            "model": "ebwizardry:item/override_generators/wand"
+        }
+    ]
 }

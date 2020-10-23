@@ -2,9 +2,9 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -66,11 +66,11 @@ public abstract class SpellRay extends Spell {
 	/** The aim assist to use when raytracing. Defaults to 0. */
 	protected float aimAssist = 0;
 
-	public SpellRay(String name, boolean isContinuous, EnumAction action){
-		this(Wizardry.MODID, name, isContinuous, action);
+	public SpellRay(String name, EnumAction action, boolean isContinuous){
+		this(Wizardry.MODID, name, action, isContinuous);
 	}
 
-	public SpellRay(String modID, String name, boolean isContinuous, EnumAction action){
+	public SpellRay(String modID, String name, EnumAction action, boolean isContinuous){
 		super(modID, name, action, isContinuous);
 		this.addProperties(RANGE);
 		this.npcSelector((e, o) -> true);
@@ -160,8 +160,11 @@ public abstract class SpellRay extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 		
 		Vec3d look = caster.getLookVec();
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
-		
+		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
+		if(!this.isContinuous && world.isRemote && !Wizardry.proxy.isFirstPerson(caster)){
+			origin = origin.add(look.scale(1.2));
+		}
+
 		if(!shootSpell(world, origin, look, caster, ticksInUse, modifiers)) return false;
 		
 		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
@@ -172,45 +175,29 @@ public abstract class SpellRay extends Spell {
 	@Override
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
 		// IDEA: Add in an aiming error and trigger onMiss accordingly
-		Vec3d origin = new Vec3d(caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
-		Vec3d direction = null;
-		
-		boolean flag = false;
-		
-		if(target != null){
+		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
+		Vec3d targetPos = null;
 
-			if((!ignoreLivingEntities || !WizardryUtilities.isLiving(target))
-					&& onEntityHit(world, target, null, caster, origin, ticksInUse, modifiers)){
-				
-				direction = new Vec3d(target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ)
-						.subtract(origin);
-				flag = true;
-				
-			}else{ // Will run if the spell does not do anything special on entity hit.
-				
-				int x = MathHelper.floor(target.posX);
-				int y = (int)target.getEntityBoundingBox().minY - 1; // -1 because we need the block under the target
-				int z = MathHelper.floor(target.posZ);
-				BlockPos pos = new BlockPos(x, y, z);
-				
-				// This works as if the NPC had actually aimed at the floor beneath the target, so it needs to check
-				// that the block is not air and (optionally) not a liquid.
-				if(!world.isAirBlock(pos) && (!world.getBlockState(pos).getMaterial().isLiquid() || hitLiquids)
-						&& onBlockHit(world, pos, EnumFacing.UP, null, caster, origin, ticksInUse, modifiers)){
-					
-					direction = new Vec3d(x + 0.5, y + 1, z + 0.5).subtract(origin);
-					flag = true;
-				}
+		if(!ignoreLivingEntities || !EntityUtils.isLiving(target)){
+			targetPos = new Vec3d(target.posX, target.posY + target.height / 2, target.posZ);
+
+		}else{
+
+			int x = MathHelper.floor(target.posX);
+			int y = (int)target.posY - 1; // -1 because we need the block under the target
+			int z = MathHelper.floor(target.posZ);
+			BlockPos pos = new BlockPos(x, y, z);
+
+			// This works as if the NPC had actually aimed at the floor beneath the target, so it needs to check that
+			// the block is not air and (optionally) not a liquid.
+			if(!world.isAirBlock(pos) && (!world.getBlockState(pos).getMaterial().isLiquid() || hitLiquids)){
+				targetPos = new Vec3d(x + 0.5, y + 1, z + 0.5);
 			}
 		}
-		
-		// Wizards don't miss... yet
-		if(!flag) return false;
-		
-		// Particle spawning
-		if(world.isRemote){
-			spawnParticleRay(world, origin, direction.normalize(), caster, direction.length());
-		}
+
+		if(targetPos == null) return false; // If there was nothing to aim at (e.g. snare when the target is in the air)
+
+		if(!shootSpell(world, origin, targetPos.subtract(origin).normalize(), caster, ticksInUse, modifiers)) return false;
 
 		if(casterSwingsArm(world, caster, hand, ticksInUse, modifiers)) caster.swingArm(hand);
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
@@ -251,7 +238,7 @@ public abstract class SpellRay extends Spell {
 
 	/**
 	 * Hook allowing subclasses to determine whether the caster swings their arm when casting the spell. By default,
-	 * returns false for continuous spells and true for all others.
+	 * returns true for non-continuous spells without an action.
 	 *
 	 * @param world A reference to the world object. This is for convenience, you can also use caster.world.
 	 * @param caster The EntityLivingBase that cast the spell.
@@ -263,18 +250,18 @@ public abstract class SpellRay extends Spell {
 	 * @return True if the caster should swing their arm when casting this spell, false if not.
 	 */
 	protected boolean casterSwingsArm(World world, EntityLivingBase caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
-		return !this.isContinuous;
+		return !this.isContinuous && this.action == EnumAction.NONE;
 	}
-	
-	/** Player and dispenser casting are almost identical so this takes care of the shared stuff. This is mainly for internal use. */
-	protected boolean shootSpell(World world, Vec3d origin, Vec3d direction, @Nullable EntityPlayer caster, int ticksInUse, SpellModifiers modifiers){
+
+	/** Takes care of the shared stuff for the three casting methods. This is mainly for internal use. */
+	protected boolean shootSpell(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, int ticksInUse, SpellModifiers modifiers){
 		
 		double range = getRange(world, origin, direction, caster, ticksInUse, modifiers);
 		Vec3d endpoint = origin.add(direction.scale(range));
 			
 		// Change the filter depending on whether living entities are ignored or not
 		RayTraceResult rayTrace = RayTracer.rayTrace(world, origin, endpoint, aimAssist, hitLiquids,
-				ignoreUncollidables, false, Entity.class, ignoreLivingEntities ? WizardryUtilities::isLiving
+				ignoreUncollidables, false, Entity.class, ignoreLivingEntities ? EntityUtils::isLiving
 				: RayTracer.ignoreEntityFilter(caster));
 		
 		boolean flag = false;
@@ -283,6 +270,7 @@ public abstract class SpellRay extends Spell {
 			// Doesn't matter which way round these are, they're mutually exclusive
 			if(rayTrace.typeOfHit == RayTraceResult.Type.ENTITY){
 				// Do whatever the spell does when it hits an entity
+				// FIXME: Some spells (e.g. lightning web) seem to not render when aimed at item frames
 				flag = onEntityHit(world, rayTrace.entityHit, rayTrace.hitVec, caster, origin, ticksInUse, modifiers);
 				// If the spell succeeded, clip the particles to the correct distance so they don't go through the entity
 				if(flag) range = origin.distanceTo(rayTrace.hitVec);
@@ -378,7 +366,7 @@ public abstract class SpellRay extends Spell {
 	 * @param distance The length of the line of particles, already set to the appropriate distance based on the spell's
 	 */
 	// The caster argument is only really useful for spawning targeted particles continuously
-	protected void spawnParticleRay(World world, Vec3d origin, Vec3d direction, EntityLivingBase caster, double distance){
+	protected void spawnParticleRay(World world, Vec3d origin, Vec3d direction, @Nullable EntityLivingBase caster, double distance){
 		
 		Vec3d velocity = direction.scale(particleVelocity);
 		

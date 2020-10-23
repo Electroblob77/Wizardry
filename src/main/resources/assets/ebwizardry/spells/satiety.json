@@ -14,7 +14,7 @@
   "element": "healing",
   "type": "buff",
   "cost": 40,
-  "chargeup": 0,
+  "chargeup": 15,
   "cooldown": 50,
   "base_properties": {
     "hunger_points": 16,

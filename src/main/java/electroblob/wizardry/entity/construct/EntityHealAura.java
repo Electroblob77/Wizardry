@@ -3,11 +3,11 @@ package electroblob.wizardry.entity.construct;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -15,14 +15,11 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityHealAura extends EntityMagicConstruct {
-
-	// TODO: Implement blast modifiers
+public class EntityHealAura extends EntityScaledConstruct {
 
 	public EntityHealAura(World world){
 		super(world);
-		this.height = 1.0f;
-		this.width = 5.0f;
+		setSize(Spells.healing_aura.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 1);
 	}
 
 	@Override
@@ -36,7 +33,7 @@ public class EntityHealAura extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(2.5, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 
@@ -69,8 +66,8 @@ public class EntityHealAura extends EntityMagicConstruct {
 		}else{
 			for(int i=1; i<3; i++){
 				float brightness = 0.5f + (rand.nextFloat() * 0.5f);
-				double radius = rand.nextDouble() * 2.0;
-				float angle = rand.nextFloat() * (float)Math.PI * 2;;
+				double radius = rand.nextDouble() * (width/2);
+				float angle = rand.nextFloat() * (float)Math.PI * 2;
 				ParticleBuilder.create(Type.SPARKLE)
 				.pos(this.posX + radius * MathHelper.cos(angle), this.posY, this.posZ + radius * MathHelper.sin(angle))
 				.vel(0, 0.05, 0)

@@ -14,7 +14,7 @@
   "element": "healing",
   "type": "defence",
   "cost": 15,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 40,
   "base_properties": {
     "health": 8

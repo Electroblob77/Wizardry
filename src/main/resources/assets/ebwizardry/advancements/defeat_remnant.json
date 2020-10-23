@@ -1,0 +1,105 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:defeat_remnant"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:defeat_remnant.desc"
+        },
+        "icon": {
+			"item": "ebwizardry:spectral_dust",
+			"data": 6
+        }
+    },
+    "parent": "ebwizardry:arcane_initiate",
+    "criteria": {
+		"fire": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 1
+					}
+				]
+			}
+		},
+		"ice": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 2
+					}
+				]
+			}
+		},
+		"lightning": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 3
+					}
+				]
+			}
+		},
+		"necromancy": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 4
+					}
+				]
+			}
+		},
+		"earth": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 5
+					}
+				]
+			}
+		},
+		"sorcery": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 6
+					}
+				]
+			}
+		},
+		"healing": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:spectral_dust",
+						"data": 7
+					}
+				]
+			}
+		}
+	},
+	"requirements": [
+		[
+			"fire",
+			"ice",
+			"lightning",
+			"necromancy",
+			"earth",
+			"sorcery",
+			"healing"
+		]
+	]
+}

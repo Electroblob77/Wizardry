@@ -12,7 +12,7 @@
   },
   "tier": "apprentice",
   "element": "necromancy",
-  "type": "attack",
+  "type": "alteration",
   "cost": 20,
   "chargeup": 0,
   "cooldown": 100,

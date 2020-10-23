@@ -1,16 +1,16 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryEnderChest;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class VanishingBox extends Spell {
 
 	public VanishingBox(){
-		super("vanishing_box", EnumAction.BOW, false);
+		super("vanishing_box", SpellActions.POINT_UP, false);
 	}
 
 	@Override public boolean requiresPacket(){ return false; }

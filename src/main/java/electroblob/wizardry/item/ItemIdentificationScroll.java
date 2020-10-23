@@ -6,7 +6,7 @@ import electroblob.wizardry.event.DiscoverSpellEvent;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
@@ -56,7 +56,7 @@ public class ItemIdentificationScroll extends Item {
 
 			WizardData data = WizardData.get(player);
 
-			for(ItemStack stack1 : WizardryUtilities.getPrioritisedHotbarAndOffhand(player)){
+			for(ItemStack stack1 : InventoryUtils.getPrioritisedHotbarAndOffhand(player)){
 
 				if(!stack1.isEmpty()){
 					Spell spell = Spell.byMetadata(stack1.getItemDamage());

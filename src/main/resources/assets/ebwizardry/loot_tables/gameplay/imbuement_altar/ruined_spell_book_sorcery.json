@@ -1,0 +1,42 @@
+{
+    "pools": [
+        {
+			"name": "spell_book",
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "item",
+                    "name": "ebwizardry:spell_book",
+                    "entryName": "matching_book",
+                    "weight": 3,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "elements": [
+                                "sorcery"
+                            ],
+                            "undiscovered_bias": 0.3
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:spell_book",
+                    "entryName": "random_book",
+                    "weight": 2,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "tiers": [
+                                "novice",
+                                "apprentice",
+                                "advanced"
+                            ],
+                            "undiscovered_bias": 0.3
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -25,6 +25,11 @@ public class ItemSpectralArmour extends ItemArmor implements IConjuredItem {
 		return this.getMaxDamageFromNBT(stack, Spells.conjure_armour);
 	}
 
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return IConjuredItem.getTimerBarColour(stack);
+	}
+
 	// Overridden to stop the enchantment trick making the name turn blue.
 	@Override
 	public EnumRarity getRarity(ItemStack stack){

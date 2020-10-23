@@ -14,7 +14,7 @@
   "element": "lightning",
   "type": "alteration",
   "cost": 20,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 60,
   "base_properties": {
     "range": 10,

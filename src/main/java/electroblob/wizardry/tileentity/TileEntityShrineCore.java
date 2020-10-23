@@ -11,10 +11,8 @@ import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.ArcaneLock;
-import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,7 +52,7 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 
 	private void initContainmentField(BlockPos pos){
 		float r = PotionContainment.getContainmentDistance(0);
-		this.containmentField = new AxisAlignedBB(-r, -r, -r, r, r, r).offset(WizardryUtilities.getCentre(pos));
+		this.containmentField = new AxisAlignedBB(-r, -r, -r, r, r, r).offset(GeometryUtils.getCentre(pos));
 	}
 
 	public void linkContainer(TileEntity container){
@@ -94,7 +92,7 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 					float angle = world.rand.nextFloat() * 2 * (float)Math.PI;
 					double x1 = this.pos.getX() + 0.5 + 5 * MathHelper.sin(angle);
 					double z1 = this.pos.getZ() + 0.5 + 5 * MathHelper.cos(angle);
-					Integer y1 = WizardryUtilities.getNearestFloor(world, new BlockPos(x1, this.pos.getY(), z1), 8);
+					Integer y1 = BlockUtils.getNearestFloor(world, new BlockPos(x1, this.pos.getY(), z1), 8);
 					if(y1 == null){
 						// Fallback to the position of the shrine core if it failed to find a position (unlikely)
 						x1 = this.pos.getX() + 1; // Offset it so the wizard isn't inside the block
@@ -128,7 +126,7 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 	private boolean areWizardsDead(){
 
 		for(UUID uuid : linkedWizards){
-			Entity entity = WizardryUtilities.getEntityByUUID(world, uuid);
+			Entity entity = EntityUtils.getEntityByUUID(world, uuid);
 			if(entity instanceof EntityEvilWizard && entity.isEntityAlive()) return false;
 		}
 

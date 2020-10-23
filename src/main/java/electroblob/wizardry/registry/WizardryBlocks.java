@@ -41,21 +41,44 @@ public final class WizardryBlocks {
 
 	public static final Block arcane_workbench = placeholder();
 	public static final Block crystal_ore = placeholder();
+	public static final Block crystal_flower = placeholder();
+	public static final Block transportation_stone = placeholder();
+	public static final Block crystal_block = placeholder();
+
 	public static final Block petrified_stone = placeholder();
 	public static final Block ice_statue = placeholder();
 	public static final Block magic_light = placeholder();
-	public static final Block crystal_flower = placeholder();
 	public static final Block snare = placeholder();
-	public static final Block transportation_stone = placeholder();
 	public static final Block spectral_block = placeholder();
-	public static final Block crystal_block = placeholder();
 	public static final Block meteor = placeholder();
 	public static final Block vanishing_cobweb = placeholder();
-	public static final Block runestone = placeholder();
-	public static final Block runestone_pedestal = placeholder();
 	public static final Block thorns = placeholder();
 	public static final Block obsidian_crust = placeholder();
 	public static final Block dry_frosted_ice = placeholder();
+	public static final Block crystal_flower_pot = placeholder();
+	public static final Block permafrost = placeholder();
+
+	public static final Block runestone = placeholder();
+	public static final Block runestone_pedestal = placeholder();
+
+	public static final Block gilded_wood = placeholder();
+
+	public static final Block oak_bookshelf = placeholder();
+	public static final Block spruce_bookshelf = placeholder();
+	public static final Block birch_bookshelf = placeholder();
+	public static final Block jungle_bookshelf = placeholder();
+	public static final Block acacia_bookshelf = placeholder();
+	public static final Block dark_oak_bookshelf = placeholder();
+
+	public static final Block oak_lectern = placeholder();
+	public static final Block spruce_lectern = placeholder();
+	public static final Block birch_lectern = placeholder();
+	public static final Block jungle_lectern = placeholder();
+	public static final Block acacia_lectern = placeholder();
+	public static final Block dark_oak_lectern = placeholder();
+
+	public static final Block receptacle = placeholder();
+	public static final Block imbuement_altar = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given block, then registers it with the given registry. Use
@@ -76,25 +99,51 @@ public final class WizardryBlocks {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event){
 
+		BlockBookshelf.initBookProperties();
+
 		IForgeRegistry<Block> registry = event.getRegistry();
 
+		// TODO: Put everything in block classes wherever possible
 		registerBlock(registry, "arcane_workbench", 		new BlockArcaneWorkbench().setHardness(1.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "crystal_ore", 			new BlockCrystalOre(Material.ROCK).setHardness(3.0F).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "petrified_stone", 		new BlockStatue(Material.ROCK).setHardness(1.5F).setResistance(10.0F));
-		registerBlock(registry, "ice_statue", 				new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3));
-		registerBlock(registry, "magic_light", 			new BlockMagicLight(Material.CIRCUITS));
-		registerBlock(registry, "crystal_flower", 			new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "snare", 					new BlockSnare(Material.PLANTS).setHardness(0.0F));
+		registerBlock(registry, "crystal_flower", 		new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "transportation_stone", 	new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "spectral_block", 			new BlockSpectral(Material.GLASS).setLightOpacity(1).setBlockUnbreakable().setResistance(6000000.0F));
 		registerBlock(registry, "crystal_block", 			new BlockCrystal(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "meteor", 					new Block(Material.ROCK).setLightLevel(1));
+
+		registerBlock(registry, "petrified_stone", 		new BlockStatue(Material.ROCK).setHardness(1.5F).setResistance(10.0F));
+		registerBlock(registry, "ice_statue", 			new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3));
+		registerBlock(registry, "magic_light", 			new BlockMagicLight(Material.CIRCUITS));
+		registerBlock(registry, "snare", 					new BlockSnare(Material.PLANTS).setHardness(0.0F));
+		registerBlock(registry, "spectral_block", 		new BlockSpectral(Material.GLASS).setLightOpacity(1).setBlockUnbreakable().setResistance(6000000.0F));
+		registerBlock(registry, "meteor", 				new Block(Material.ROCK).setLightLevel(1));
 		registerBlock(registry, "vanishing_cobweb", 		new BlockVanishingCobweb(Material.WEB).setLightOpacity(1).setHardness(4.0F));
-		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
-		registerBlock(registry, "runestone_pedestal", 		new BlockPedestal(Material.ROCK));
-		registerBlock(registry, "thorns", 					new BlockThorns());
-		registerBlock(registry, "obsidian_crust", 			new BlockObsidianCrust());
+		registerBlock(registry, "thorns", 				new BlockThorns());
+		registerBlock(registry, "obsidian_crust", 		new BlockObsidianCrust());
 		registerBlock(registry, "dry_frosted_ice", 		new BlockDryFrostedIce());
+		registerBlock(registry, "crystal_flower_pot", 	new BlockCrystalFlowerPot());
+		registerBlock(registry, "permafrost", 			new BlockPermafrost());
+
+		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
+		registerBlock(registry, "runestone_pedestal", 	new BlockPedestal(Material.ROCK));
+
+		registerBlock(registry, "gilded_wood", 			new BlockGildedWood());
+
+		registerBlock(registry, "oak_bookshelf", 			new BlockBookshelf());
+		registerBlock(registry, "spruce_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "birch_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "jungle_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "acacia_bookshelf", 		new BlockBookshelf());
+		registerBlock(registry, "dark_oak_bookshelf", 	new BlockBookshelf());
+
+		registerBlock(registry, "oak_lectern", 			new BlockLectern());
+		registerBlock(registry, "birch_lectern", 			new BlockLectern());
+		registerBlock(registry, "spruce_lectern", 		new BlockLectern());
+		registerBlock(registry, "jungle_lectern", 		new BlockLectern());
+		registerBlock(registry, "acacia_lectern", 		new BlockLectern());
+		registerBlock(registry, "dark_oak_lectern", 		new BlockLectern());
+
+		registerBlock(registry, "receptacle", 			new BlockReceptacle());
+		registerBlock(registry, "imbuement_altar", 		new BlockImbuementAltar());
 
 	}
 
@@ -106,7 +155,11 @@ public final class WizardryBlocks {
 		GameRegistry.registerTileEntity(TileEntityMagicLight.class, 		new ResourceLocation(Wizardry.MODID, "magic_light"));
 		GameRegistry.registerTileEntity(TileEntityTimer.class, 				new ResourceLocation(Wizardry.MODID, "timer"));
 		GameRegistry.registerTileEntity(TileEntityPlayerSave.class, 		new ResourceLocation(Wizardry.MODID, "player_save"));
-		GameRegistry.registerTileEntity(TileEntityPlayerSaveTimed.class, 	new ResourceLocation(Wizardry.MODID, "player_save_timed"));
+		GameRegistry.registerTileEntity(TileEntityThorns.class, 			new ResourceLocation(Wizardry.MODID, "player_save_timed"));
 		GameRegistry.registerTileEntity(TileEntityShrineCore.class, 		new ResourceLocation(Wizardry.MODID, "shrine_core"));
+		GameRegistry.registerTileEntity(TileEntityBookshelf.class, 			new ResourceLocation(Wizardry.MODID, "bookshelf"));
+		GameRegistry.registerTileEntity(TileEntityLectern.class, 			new ResourceLocation(Wizardry.MODID, "lectern"));
+		GameRegistry.registerTileEntity(TileEntityReceptacle.class, 		new ResourceLocation(Wizardry.MODID, "receptacle"));
+		GameRegistry.registerTileEntity(TileEntityImbuementAltar.class, 	new ResourceLocation(Wizardry.MODID, "imbuement_altar"));
 	}
 }

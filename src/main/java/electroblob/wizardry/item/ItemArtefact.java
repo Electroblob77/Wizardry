@@ -5,11 +5,13 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.construct.EntityFireRing;
+import electroblob.wizardry.entity.construct.EntityIceBarrier;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.entity.projectile.EntityDart;
 import electroblob.wizardry.entity.projectile.EntityForceOrb;
 import electroblob.wizardry.entity.projectile.EntityIceShard;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
 import electroblob.wizardry.registry.*;
@@ -30,6 +32,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
@@ -104,11 +108,19 @@ public class ItemArtefact extends Item {
 	private final EnumRarity rarity;
 	private final Type type;
 
+	/** False if this artefact has been disabled in the config, true otherwise. */
+	private boolean enabled = true;
+
 	public ItemArtefact(EnumRarity rarity, Type type){
 		setMaxStackSize(1);
 		setCreativeTab(WizardryTabs.GEAR);
 		this.rarity = rarity;
 		this.type = type;
+	}
+
+	/** Sets whether this artefact is enabled or not. */
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
 	}
 
 	@Override
@@ -127,8 +139,9 @@ public class ItemArtefact extends Item {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, net.minecraft.client.util.ITooltipFlag flagIn){
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
 		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + this.getRegistryName() + ".desc");
+		if(!enabled) tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":generic.disabled", new Style().setColor(TextFormatting.RED)));
 	}
 
 	@Nullable
@@ -161,12 +174,14 @@ public class ItemArtefact extends Item {
 
 		if(!(artefact instanceof ItemArtefact)) throw new IllegalArgumentException("Not an artefact!");
 
+		if(!((ItemArtefact)artefact).enabled) return false; // Disabled in the config
+
 		if(WizardryBaublesIntegration.enabled()){
 			return WizardryBaublesIntegration.isBaubleEquipped(player, artefact);
 		}else{
 			// To find out if the given artefact is one of the first n on the player's hotbar (where n is the maximum
 			// number of that kind of artefact that can be active at once):
-			return WizardryUtilities.getPrioritisedHotbarAndOffhand(player).stream() // Retrieve the stacks in question
+			return InventoryUtils.getPrioritisedHotbarAndOffhand(player).stream() // Retrieve the stacks in question
 					// Filter out all except artefacts of the same type as the given one (preserving order)
 					.filter(s -> s.getItem() instanceof ItemArtefact && ((ItemArtefact)s.getItem()).type == ((ItemArtefact)artefact).type)
 					.limit(((ItemArtefact)artefact).type.maxAtOnce)    // Ignore all but the first n
@@ -192,16 +207,18 @@ public class ItemArtefact extends Item {
 		if(types.length == 0) types = Type.values();
 
 		if(WizardryBaublesIntegration.enabled()){
-			return WizardryBaublesIntegration.getEquippedArtefacts(player, types);
+			List<ItemArtefact> artefacts = WizardryBaublesIntegration.getEquippedArtefacts(player, types);
+			artefacts.removeIf(i -> !i.enabled); // Remove artefacts that are disabled in the config
+			return artefacts;
 		}else{
 
 			List<ItemArtefact> artefacts = new ArrayList<>();
 
 			for(Type type : types){
-				artefacts.addAll(WizardryUtilities.getPrioritisedHotbarAndOffhand(player).stream()
+				artefacts.addAll(InventoryUtils.getPrioritisedHotbarAndOffhand(player).stream()
 						.filter(s -> s.getItem() instanceof ItemArtefact)
 						.map(s -> (ItemArtefact)s.getItem())
-						.filter(i -> type == i.type)
+						.filter(i -> type == i.type && i.enabled)
 						.limit(type.maxAtOnce)
 						.collect(Collectors.toList()));
 			}
@@ -222,7 +239,7 @@ public class ItemArtefact extends Item {
 	 */
 	public static boolean findMatchingWandAndExecute(EntityPlayer player, Spell spell, Consumer<? super ItemStack> action){
 
-		List<ItemStack> hotbar = WizardryUtilities.getPrioritisedHotbarAndOffhand(player);
+		List<ItemStack> hotbar = InventoryUtils.getPrioritisedHotbarAndOffhand(player);
 
 		Optional<ItemStack> stack = hotbar.stream().filter(s -> s.getItem() instanceof ISpellCastingItem
 				&& Arrays.asList(((ISpellCastingItem)s.getItem()).getSpells(s)).contains(spell)).findFirst();
@@ -266,7 +283,7 @@ public class ItemArtefact extends Item {
 				if(artefact == WizardryItems.ring_condensing){
 
 					if(player.ticksExisted % 150 == 0){
-						for(ItemStack stack : WizardryUtilities.getHotbar(player)){
+						for(ItemStack stack : InventoryUtils.getHotbar(player)){
 							// Needs to be both of these interfaces because this ring only recharges wands
 							// (or more accurately, chargeable spellcasting items)
 							if(stack.getItem() instanceof ISpellCastingItem && stack.getItem() instanceof IManaStoringItem)
@@ -327,7 +344,7 @@ public class ItemArtefact extends Item {
 
 					findMatchingWandAndExecute(player, Spells.shield, wand -> {
 
-						List<Entity> projectiles = WizardryUtilities.getEntitiesWithinRadius(5, player.posX, player.posY, player.posZ, world, Entity.class);
+						List<Entity> projectiles = EntityUtils.getEntitiesWithinRadius(5, player.posX, player.posY, player.posZ, world, Entity.class);
 						projectiles.removeIf(e -> !(e instanceof IProjectile));
 						Vec3d look = player.getLookVec();
 						Vec3d playerPos = player.getPositionVector().add(0, player.height/2, 0);
@@ -348,10 +365,28 @@ public class ItemArtefact extends Item {
 						}
 					});
 
+				}else if(artefact == WizardryItems.amulet_frost_warding){
+
+					if(!world.isRemote && player.ticksExisted % 40 == 0){
+
+						List<EntityIceBarrier> barriers = world.getEntitiesWithinAABB(EntityIceBarrier.class, player.getEntityBoundingBox().grow(1.5));
+
+						// Check whether any barriers near the player are facing away from them, meaning the player is behind them
+						if(!barriers.isEmpty() && barriers.stream().anyMatch(b -> b.getLookVec().dotProduct(b.getPositionVector().subtract(player.getPositionVector())) > 0)){
+							player.addPotionEffect(new PotionEffect(WizardryPotions.ward, 50, 1));
+						}
+
+					}
+
 				}else if(artefact == WizardryItems.charm_feeding){
-					// Every 5 seconds, feed the player if they are near starving
-					if(player.ticksExisted % 100 == 0 && player.getFoodStats().getFoodLevel() < 2){
-						findMatchingWandAndCast(player, Spells.replenish_hunger);
+					// Every 5 seconds, feed the player if they are hungry enough
+					if(player.ticksExisted % 100 == 0){
+						if(player.getFoodStats().getFoodLevel() < 20 - Spells.satiety.getProperty(Satiety.HUNGER_POINTS).intValue()){
+							if(findMatchingWandAndCast(player, Spells.satiety)) continue;
+						}
+						if(player.getFoodStats().getFoodLevel() < 20 - Spells.replenish_hunger.getProperty(ReplenishHunger.HUNGER_POINTS).intValue()){
+							findMatchingWandAndCast(player, Spells.replenish_hunger);
+						}
 					}
 				}
 			}
@@ -436,20 +471,43 @@ public class ItemArtefact extends Item {
 				}else if(artefact == WizardryItems.charm_flight){
 
 					if(event.getSpell() == Spells.flight || event.getSpell() == Spells.glide){
-						// FIXME: Does not appear to be working, for some reason
 						modifiers.set(SpellModifiers.POTENCY, 1.5f * potency, true);
 					}
 
 				}else if(artefact == WizardryItems.charm_experience_tome){
 
 					modifiers.set(SpellModifiers.PROGRESSION, modifiers.get(SpellModifiers.PROGRESSION) * 1.5f, false);
+
+				}else if(artefact == WizardryItems.charm_hunger_casting){
+
+					if(!player.capabilities.isCreativeMode && event.getSource() == Source.WAND && !event.getSpell().isContinuous){ // TODO: Continuous spells?
+
+						ItemStack wand = player.getHeldItemMainhand();
+
+						if(!(wand.getItem() instanceof ISpellCastingItem && wand.getItem() instanceof IManaStoringItem)){
+							wand = player.getHeldItemOffhand();
+							if(!(wand.getItem() instanceof ISpellCastingItem && wand.getItem() instanceof IManaStoringItem)) return;
+						}
+
+						if(((IManaStoringItem)wand.getItem()).getMana(wand) < event.getSpell().getCost() * modifiers.get(SpellModifiers.COST)){
+
+							int hunger = event.getSpell().getCost() / 5;
+
+							if(player.getFoodStats().getFoodLevel() >= hunger){
+								player.getFoodStats().addStats(-hunger, 0);
+								modifiers.set(SpellModifiers.COST, 0, false);
+							}
+						}
+
+					}
+
 				}
 			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onSpellCastPostEvent(SpellCastEvent.Pre event){
+	public static void onSpellCastPostEvent(SpellCastEvent.Post event){
 
 		if(event.getCaster() instanceof EntityPlayer){
 
@@ -461,7 +519,7 @@ public class ItemArtefact extends Item {
 					// Spell properties allow all three of the above spells to be dealt with the same way - neat!
 					float healthGained = event.getSpell().getProperty(Spell.HEALTH).floatValue() * event.getModifiers().get(SpellModifiers.POTENCY);
 
-					List<EntityLivingBase> nearby = WizardryUtilities.getEntitiesWithinRadius(4, player.posX, player.posY, player.posZ, event.getWorld());
+					List<EntityLivingBase> nearby = EntityUtils.getLivingWithinRadius(4, player.posX, player.posY, player.posZ, event.getWorld());
 
 					for(EntityLivingBase entity : nearby){
 						if(AllyDesignationSystem.isAllied(player, entity) && entity.getHealth() > 0 && entity.getHealth() < entity.getMaxHealth()){
@@ -486,13 +544,13 @@ public class ItemArtefact extends Item {
 
 			if(entityNBT.hasUniqueId(MindControl.NBT_KEY)){
 
-				Entity caster = WizardryUtilities.getEntityByUUID(entity.world, entityNBT.getUniqueId(MindControl.NBT_KEY));
+				Entity caster = EntityUtils.getEntityByUUID(entity.world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
 				if(caster instanceof EntityPlayer){
 
 					if(isArtefactActive((EntityPlayer)caster, WizardryItems.ring_mind_control)){
 
-						WizardryUtilities.getEntitiesWithinRadius(3, entity.posX, entity.posY, entity.posZ, entity.world, EntityLiving.class).stream()
+						EntityUtils.getEntitiesWithinRadius(3, entity.posX, entity.posY, entity.posZ, entity.world, EntityLiving.class).stream()
 								.filter(e -> e.world.rand.nextInt(10) == 0)
 								.filter(MindControl::canControl)
 								.filter(e -> AllyDesignationSystem.isValidTarget(caster, e))
@@ -554,7 +612,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_potential){
 
-					if(player.world.rand.nextFloat() < 0.2f && WizardryUtilities.isMeleeDamage(event.getSource())
+					if(player.world.rand.nextFloat() < 0.2f && EntityUtils.isMeleeDamage(event.getSource())
 						&& event.getSource().getTrueSource() instanceof EntityLivingBase){
 
 						EntityLivingBase target = (EntityLivingBase)event.getSource().getTrueSource();
@@ -565,7 +623,7 @@ public class ItemArtefact extends Item {
 									.pos(0, event.getEntity().height/2, 0).target(target).spawn(player.world);
 
 							ParticleBuilder.spawnShockParticles(player.world, target.posX,
-									target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+									target.posY + target.height/2, target.posZ);
 						}
 
 						DamageSafetyChecker.attackEntitySafely(target, MagicDamage.causeDirectMagicDamage(player,
@@ -578,7 +636,7 @@ public class ItemArtefact extends Item {
 
 					if(!event.getSource().isUnblockable() && player.world.rand.nextFloat() < 0.15f){
 
-						List<EntityLiving> nearbyMobs = WizardryUtilities.getEntitiesWithinRadius(5, player.posX, player.posY, player.posZ, player.world, EntityLiving.class);
+						List<EntityLiving> nearbyMobs = EntityUtils.getEntitiesWithinRadius(5, player.posX, player.posY, player.posZ, player.world, EntityLiving.class);
 						nearbyMobs.removeIf(e -> !(e instanceof ISummonedCreature && ((ISummonedCreature)e).getCaster() == player));
 
 						if(!nearbyMobs.isEmpty()){
@@ -592,7 +650,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_banishing){
 
-					if(player.world.rand.nextFloat() < 0.2f && WizardryUtilities.isMeleeDamage(event.getSource())
+					if(player.world.rand.nextFloat() < 0.2f && EntityUtils.isMeleeDamage(event.getSource())
 							&& event.getSource().getTrueSource() instanceof EntityLivingBase){
 
 						EntityLivingBase target = (EntityLivingBase)event.getSource().getTrueSource();
@@ -620,25 +678,25 @@ public class ItemArtefact extends Item {
 				if(artefact == WizardryItems.ring_fire_melee){
 					// Used ItemWand intentionally because we need the element
 					// Other mods can always make their own events if they want their own spellcasting items to do this
-					if(WizardryUtilities.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.FIRE){
 						event.getEntity().setFire(5);
 					}
 
 				}else if(artefact == WizardryItems.ring_ice_melee){
 
-					if(WizardryUtilities.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.ICE){
 						event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, 200, 0));
 					}
 
 				}else if(artefact == WizardryItems.ring_lightning_melee){
 
-					if(WizardryUtilities.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.LIGHTNING){
 
-						WizardryUtilities.getEntitiesWithinRadius(3, player.posX, player.posY, player.posZ, world).stream()
-								.filter(WizardryUtilities::isLiving)
+						EntityUtils.getLivingWithinRadius(3, player.posX, player.posY, player.posZ, world).stream()
+								.filter(EntityUtils::isLiving)
 								.filter(e -> e != player)
 								.min(Comparator.comparingDouble(player::getDistanceSq))
 								.ifPresent(target -> {
@@ -649,7 +707,7 @@ public class ItemArtefact extends Item {
 												.pos(0, event.getEntity().height/2, 0).target(target).spawn(world);
 
 										ParticleBuilder.spawnShockParticles(world, target.posX,
-												target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+												target.posY + target.height/2, target.posZ);
 									}
 
 									DamageSafetyChecker.attackEntitySafely(target, MagicDamage.causeDirectMagicDamage(player,
@@ -660,14 +718,14 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.ring_necromancy_melee){
 
-					if(WizardryUtilities.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.NECROMANCY){
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 0));
 					}
 
 				}else if(artefact == WizardryItems.ring_earth_melee){
 
-					if(WizardryUtilities.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.EARTH){
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
 					}
@@ -677,7 +735,7 @@ public class ItemArtefact extends Item {
 					if(!player.world.isRemote && player.world.rand.nextFloat() < 0.15f
 							&& event.getEntityLiving().getHealth() < 12f // Otherwise it's a bit overpowered!
 							&& event.getEntityLiving().isPotionActive(WizardryPotions.frost)
-							&& WizardryUtilities.isMeleeDamage(event.getSource())){
+							&& EntityUtils.isMeleeDamage(event.getSource())){
 
 						event.setAmount(12f);
 
@@ -703,7 +761,7 @@ public class ItemArtefact extends Item {
 					if((event.getSource() instanceof IElementalDamage
 							&& (((IElementalDamage)event.getSource()).getType() == MagicDamage.DamageType.WITHER))
 						// or it's direct, non-melee damage and the player is holding a wand with a necromancy spell selected
-						|| (event.getSource().getImmediateSource() == player && !WizardryUtilities.isMeleeDamage(event.getSource())
+						|| (event.getSource().getImmediateSource() == player && !EntityUtils.isMeleeDamage(event.getSource())
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
 							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.NECROMANCY))){
 
@@ -716,7 +774,7 @@ public class ItemArtefact extends Item {
 					if(player.world.rand.nextFloat() < 0.3f && ((event.getSource() instanceof IElementalDamage
 							&& (((IElementalDamage)event.getSource()).getType() == MagicDamage.DamageType.WITHER))
 							// ...or it's direct, non-melee damage and the player is holding a wand with a necromancy spell selected
-							|| (event.getSource().getImmediateSource() == player && !WizardryUtilities.isMeleeDamage(event.getSource())
+							|| (event.getSource().getImmediateSource() == player && !EntityUtils.isMeleeDamage(event.getSource())
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
 							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.NECROMANCY
 							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s) != Spells.life_drain)))){
@@ -734,7 +792,7 @@ public class ItemArtefact extends Item {
 							// ...or it was from a dart...
 							|| event.getSource().getImmediateSource() instanceof EntityDart
 							// ...or it's direct, non-melee damage and the player is holding a wand with an earth spell selected
-							|| (event.getSource().getImmediateSource() == player && !WizardryUtilities.isMeleeDamage(event.getSource())
+							|| (event.getSource().getImmediateSource() == player && !EntityUtils.isMeleeDamage(event.getSource())
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
 							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.EARTH))){
 
@@ -749,11 +807,11 @@ public class ItemArtefact extends Item {
 							// ...or it was from a force orb...
 							|| event.getSource().getImmediateSource() instanceof EntityForceOrb
 							// ...or it's direct, non-melee damage and the player is holding a wand with a sorcery spell selected
-							|| (event.getSource().getImmediateSource() == player && !WizardryUtilities.isMeleeDamage(event.getSource())
+							|| (event.getSource().getImmediateSource() == player && !EntityUtils.isMeleeDamage(event.getSource())
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
 							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.SORCERY))){
 
-						WizardryUtilities.getPrioritisedHotbarAndOffhand(player).stream()
+						InventoryUtils.getPrioritisedHotbarAndOffhand(player).stream()
 								.filter(s -> s.getItem() instanceof ISpellCastingItem && s.getItem() instanceof IManaStoringItem
 										&& !((IManaStoringItem)s.getItem()).isManaFull(s))
 								.findFirst()
@@ -826,7 +884,7 @@ public class ItemArtefact extends Item {
 					.findFirst().orElse(null);
 
 			if(item == null) return; // The player didn't have a wand with resurrection on it
-			if(!WizardryUtilities.getHotbar(event.getEntityPlayer()).contains(ItemStack.EMPTY)) return; // No space on hotbar
+			if(!InventoryUtils.getHotbar(event.getEntityPlayer()).contains(ItemStack.EMPTY)) return; // No space on hotbar
 
 			event.getDrops().remove(item);
 			// At this point the player probably has nothing in their hand, but if not just find a free space somewhere

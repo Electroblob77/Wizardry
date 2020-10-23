@@ -34,9 +34,7 @@ public class ItemArmourUpgrade extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, net.minecraft.client.util.ITooltipFlag flagIn) {
-		tooltip.add(net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":armour_upgrade.desc1", "\u00A77"));
-		tooltip.add(
-				net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":armour_upgrade.desc2", "\u00A77", "\u00A7d"));
+		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + this.getRegistryName() + ".desc", "\u00A7d");
 	}
 
 }

@@ -1,5 +1,6 @@
 package electroblob.wizardry.constants;
 
+import electroblob.wizardry.Wizardry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,6 +38,6 @@ public enum SpellType {
 
 	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("spelltype." + unlocalisedName);
+		return Wizardry.proxy.translate("spelltype." + unlocalisedName);
 	}
 }

@@ -2,6 +2,7 @@ package electroblob.wizardry.data;
 
 import com.google.common.collect.EvictingQueue;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.SpellCastEvent;
@@ -74,6 +75,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** The maximum number of recent spells to track. */
 	public static final int MAX_RECENT_SPELLS = ItemWand.BASE_SPELL_SLOTS;
 
+	private static final int IMBUEMENT_UPDATE_INTERVAL = 20;
+
 	/** The player this WizardData instance belongs to. */
 	private final EntityPlayer player;
 
@@ -108,6 +111,9 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** Set of this player's discovered spells. <b>Do not write to this list directly</b>, use
 	 * {@link WizardData#discoverSpell(Spell)} instead. */
 	public Set<Spell> spellsDiscovered;
+
+	/** The highest {@link Tier} this player has upgraded a wand to, used to apply progression modifiers. */
+	private Tier maxTierReached = Tier.NOVICE;
 
 	private Set<UUID> allies;
 	/** List of usernames of this player's allies. May not be accurate 100% of the time. This is here so that a player
@@ -188,7 +194,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	/** Registers the given {@link IStoredVariable} objects as keys that will be stored to NBT for each {@code WizardData}
 	 * instance. */
-	public static void registerStoredVariables(IStoredVariable... variables){
+	public static void registerStoredVariables(IStoredVariable<?>... variables){
 		storedVariables.addAll(Arrays.asList(variables));
 	}
 
@@ -207,7 +213,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 *           other words, if an {@code Integer} is stored under a {@code IVariable<Number>}, a {@code Number} will
 	 *           be returned when the value is retrieved.
 	 */
-	// This use of type parameters guarantees that spellData may only be stored (and therefore may only be accessed)
+	// This use of type parameters guarantees that data may only be stored (and therefore may only be accessed)
 	// using a compatible key. For instance, the following code will not compile:
 	// Number i = 1;
 	// setVariable(StoredVariable.ofInt("key", Persistence.ALWAYS), i);
@@ -257,6 +263,24 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		return spellsDiscovered.add(spell);
 	}
 
+	/**
+	 * Sets the tier this player has reached to the given tier, if they have not yet reached it.
+	 * @param tier The tier the player has reached
+	 */
+	public void setTierReached(Tier tier){
+		if(!hasReachedTier(tier)) this.maxTierReached = tier;
+	}
+
+	/**
+	 * Returns true if this player has previously upgraded a wand to the given tier.
+	 * @param tier The tier to check for
+	 * @return True if this player has already upgraded a wand to the given tier, false if not. This does not include
+	 * wands that were purchased at the given tier, unless they have since been upgraded.
+	 */
+	public boolean hasReachedTier(Tier tier){
+		return tier.level >= maxTierReached.level;
+	}
+
 	// Recent spell tracking
 
 	/**
@@ -285,14 +309,13 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * @throws IllegalArgumentException if the given {@link Enchantment} is not an {@link Imbuement}.
 	 */
 	public void setImbuementDuration(Enchantment enchantment, int duration){
-		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if
-		// non-imbuements
-		// were ignored) or cause a ClassCastException later (if non-imbuements were allowed to be added).
+		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if non-
+		// -imbuements were ignored) or cause a ClassCastException later (if non-imbuements were allowed to be added)
 		if(enchantment instanceof Imbuement){
 			this.imbuementDurations.put((Imbuement)enchantment, duration);
 		}else{
 			throw new IllegalArgumentException(
-					"Attempted to set an imbuement duration for something that isn't an Imbuement! (This exception has been thrown now to prevent a ClassCastException from occurring later.)");
+					"Attempted to set an imbuement duration for something that isn't an Imbuement!");
 		}
 	}
 
@@ -315,6 +338,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 */
 	private void updateImbuedItems(){
 
+		// FIXME: Iterating through the entire inventory each tick is an AWFUL way of doing this, and is super-slow!
+		//        Change the imbuement durations map to be ItemStack -> Integer and just decrement them, adding entries
+		//		  whenever an item with an imbuement enters the inventory and removing them when the time expires.
+
 		Set<Imbuement> activeImbuements = new HashSet<Imbuement>();
 
 		// For each item in the player's inventory
@@ -335,12 +362,12 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 						// If the imbuement is still active:
 						if(duration > 0){
 							// Decrements the timer
-							this.imbuementDurations.put((Imbuement)enchantment, duration - 1);
+							this.imbuementDurations.put((Imbuement)enchantment, duration - IMBUEMENT_UPDATE_INTERVAL);
 							// Adds this imbuement to the set of imbuements that need to be kept
 							activeImbuements.add((Imbuement)enchantment);
 						}else{
 							// Otherwise, removes the enchantment from the item
-							iterator.remove();
+							iterator.remove(); // FIXME: Apparently this can cause a CME
 						}
 					}
 				}
@@ -463,9 +490,9 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		prevMotionY = player.motionY;
 
-		// This new system removes a lot of repetitive event handler code and inflexible spellData which had duplicate
+		// This new system removes a lot of repetitive event handler code and inflexible data which had duplicate
 		// functions, just for different enchantments.
-		updateImbuedItems();
+		if(player.ticksExisted % IMBUEMENT_UPDATE_INTERVAL == 0) updateImbuedItems();
 		updateContinuousSpellCasting();
 
 		this.spellData.forEach((k, v) -> this.spellData.put(k, k.update(player, v)));
@@ -474,10 +501,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	/**
 	 * Called from the event handler each time the associated player entity is cloned, i.e. on respawn or when
-	 * travelling to a different dimension. Used to copy over any spellData that should persist over player death. This
-	 * is the inverse of the old onPlayerDeath method, which reset the spellData that shouldn't persist.
+	 * travelling to a different dimension. Used to copy over any data that should persist over player death. This
+	 * is the inverse of the old onPlayerDeath method, which reset the data that shouldn't persist.
 	 * 
-	 * @param data The old WizardData whose spellData are to be copied over.
+	 * @param data The old WizardData whose data is to be copied over.
 	 * @param respawn True if the player died and is respawning, false if they are just travelling between dimensions.
 	 */
 	public void copyFrom(WizardData data, boolean respawn){
@@ -486,6 +513,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		this.allyNames = data.allyNames;
 		this.selectedMinion = data.selectedMinion;
 		this.spellsDiscovered = data.spellsDiscovered;
+		this.maxTierReached = data.maxTierReached;
 		this.recentSpells = data.recentSpells;
 
 		for(IVariable variable : data.spellData.keySet()){
@@ -531,6 +559,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		}
 		properties.setIntArray("discoveredSpells", spells);
 
+		properties.setInteger("maxTierReached", maxTierReached.ordinal());
+
 		NBTExtras.storeTagSafely(properties, "recentSpells", NBTExtras.listToNBT(recentSpells, s -> new NBTTagInt(s.metadata())));
 
 		storedVariables.forEach(k -> k.write(properties, this.spellData.get(k)));
@@ -553,6 +583,8 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 			for(int id : nbt.getIntArray("discoveredSpells")){
 				spellsDiscovered.add(Spell.byMetadata(id));
 			}
+
+			this.maxTierReached = Tier.values()[nbt.getInteger("maxTierReached")];
 
 			// Probably won't be null but we may as well just reinitialise it instead of clearing it
 			this.recentSpells = EvictingQueue.create(MAX_RECENT_SPELLS);

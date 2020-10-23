@@ -1,0 +1,10 @@
+{
+    "parent": "ebwizardry:block/lectern",
+	"textures": {
+		"particle": "ebwizardry:blocks/acacia_lectern_top",
+		"base": "ebwizardry:blocks/acacia_lectern_base",
+		"side": "ebwizardry:blocks/acacia_lectern_side",
+		"top": "ebwizardry:blocks/acacia_lectern_top",
+		"underside": "ebwizardry:blocks/acacia_lectern_underside"
+	}
+}

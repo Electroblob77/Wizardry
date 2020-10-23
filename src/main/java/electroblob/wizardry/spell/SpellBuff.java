@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
@@ -8,7 +9,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -63,7 +64,7 @@ public class SpellBuff extends Spell {
 
 	@SafeVarargs
 	public SpellBuff(String modID, String name, float r, float g, float b, Supplier<Potion>... effects){
-		super(modID, name, EnumAction.BOW, false);
+		super(modID, name, SpellActions.POINT_UP, false);
 		this.effects = effects;
 		this.r = r;
 		this.g = g;
@@ -83,6 +84,11 @@ public class SpellBuff extends Spell {
 			addProperties(getStrengthKey(potion));
 			if(!potion.isInstant()) addProperties(getDurationKey(potion));
 		}
+	}
+
+	/** Returns an unmodifiable view of the set of {@link Potion} objects that this spell applies to its caster. */
+	public Set<Potion> getPotionSet(){
+		return Collections.unmodifiableSet(potionSet);
 	}
 
 	// Potion-specific equivalent to defining the identifiers as constants
@@ -195,7 +201,7 @@ public class SpellBuff extends Spell {
 		
 		for(int i = 0; i < particleCount; i++){
 			double x = caster.posX + world.rand.nextDouble() * 2 - 1;
-			double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(r, g, b).spawn(world);
 		}

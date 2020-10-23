@@ -1,0 +1,33 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"books": "ebwizardry:blocks/books"
+	},
+	"elements": [
+		{
+			"name": "book4",
+			"from": [3, 9, 2],
+			"to": [5, 14, 6],
+			"faces": {
+				"north": {"uv": [0, 5, 2, 10], "texture": "#books"},
+				"east": {"uv": [6, 5, 2, 10], "texture": "#books"},
+				"south": {"uv": [6, 5, 8, 10], "texture": "#books"},
+				"west": {"uv": [2, 5, 6, 10], "texture": "#books"},
+				"up": {"uv": [8, 5, 10, 9], "texture": "#books"}
+			}
+		},
+		{
+			"name": "book4",
+			"from": [11, 9, 10],
+			"to": [13, 14, 14],
+			"faces": {
+				"north": {"uv": [6, 5, 8, 10], "texture": "#books"},
+				"east": {"uv": [2, 5, 6, 10], "texture": "#books"},
+				"south": {"uv": [0, 5, 2, 10], "texture": "#books"},
+				"west": {"uv": [6, 5, 2, 10], "texture": "#books"},
+				"up": {"uv": [8, 5, 10, 9], "rotation": 180, "texture": "#books"}
+			}
+		}
+	]
+}

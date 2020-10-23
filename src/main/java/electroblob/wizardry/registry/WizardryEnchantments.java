@@ -4,7 +4,7 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.enchantment.EnchantmentMagicProtection;
 import electroblob.wizardry.enchantment.EnchantmentMagicSword;
 import electroblob.wizardry.enchantment.EnchantmentTimed;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -56,9 +56,9 @@ public final class WizardryEnchantments {
 		event.getRegistry().register(new EnchantmentTimed().setRegistryName(Wizardry.MODID, "flaming_weapon"));
 		event.getRegistry().register(new EnchantmentTimed().setRegistryName(Wizardry.MODID, "freezing_weapon"));
 
-		event.getRegistry().register(new EnchantmentMagicProtection(Enchantment.Rarity.UNCOMMON, EnchantmentMagicProtection.Type.MAGIC, WizardryUtilities.ARMOUR_SLOTS).setRegistryName(Wizardry.MODID, "magic_protection"));
-		event.getRegistry().register(new EnchantmentMagicProtection(Enchantment.Rarity.RARE, EnchantmentMagicProtection.Type.FROST, WizardryUtilities.ARMOUR_SLOTS).setRegistryName(Wizardry.MODID, "frost_protection"));
-		event.getRegistry().register(new EnchantmentMagicProtection(Enchantment.Rarity.RARE, EnchantmentMagicProtection.Type.SHOCK, WizardryUtilities.ARMOUR_SLOTS).setRegistryName(Wizardry.MODID, "shock_protection"));
+		event.getRegistry().register(new EnchantmentMagicProtection(Enchantment.Rarity.UNCOMMON, EnchantmentMagicProtection.Type.MAGIC, InventoryUtils.ARMOUR_SLOTS).setRegistryName(Wizardry.MODID, "magic_protection"));
+		event.getRegistry().register(new EnchantmentMagicProtection(Enchantment.Rarity.RARE, EnchantmentMagicProtection.Type.FROST, InventoryUtils.ARMOUR_SLOTS).setRegistryName(Wizardry.MODID, "frost_protection"));
+		event.getRegistry().register(new EnchantmentMagicProtection(Enchantment.Rarity.RARE, EnchantmentMagicProtection.Type.SHOCK, InventoryUtils.ARMOUR_SLOTS).setRegistryName(Wizardry.MODID, "shock_protection"));
 	}
 
 }

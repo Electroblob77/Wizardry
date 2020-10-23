@@ -1,0 +1,10 @@
+{
+    "parent": "ebwizardry:block/lectern",
+	"textures": {
+		"particle": "ebwizardry:blocks/oak_lectern_top",
+		"base": "ebwizardry:blocks/oak_lectern_base",
+		"side": "ebwizardry:blocks/oak_lectern_side",
+		"top": "ebwizardry:blocks/oak_lectern_top",
+		"underside": "ebwizardry:blocks/oak_lectern_underside"
+	}
+}

@@ -1,6 +1,8 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -8,9 +10,14 @@ import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -23,6 +30,8 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 public class EntityZombieMinion extends EntityZombie implements ISummonedCreature {
+
+	private static final DataParameter<Boolean> SPAWN_PARTICLES = EntityDataManager.createKey(EntityZombieMinion.class, DataSerializers.BOOLEAN);
 
 	// Field implementations
 	private int lifetime = -1;
@@ -38,6 +47,12 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	public EntityZombieMinion(World world){
 		super(world);
 		this.experienceValue = 0;
+	}
+
+	@Override
+	protected void entityInit(){
+		super.entityInit();
+		this.dataManager.register(SPAWN_PARTICLES, true);
 	}
 
 	// EntityZombie overrides (EntityZombie is a complex class so there are lots of these)
@@ -72,7 +87,11 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 
 	@Override
 	public void onSpawn(){
-		this.spawnParticleEffect();
+		if(this.dataManager.get(SPAWN_PARTICLES)) this.spawnParticleEffect();
+		if(shouldBurnInDay() && getCaster() instanceof EntityPlayer
+				&& ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_undead_helmets)){
+			setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
+		}
 	}
 
 	@Override
@@ -83,8 +102,8 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	private void spawnParticleEffect(){
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
-				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + this.rand.nextFloat(),
-						this.posY + 1 + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0, 0, 0);
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + this.rand.nextFloat() - 0.5f,
+						this.posY + this.rand.nextFloat() * 2, this.posZ + this.rand.nextFloat() - 0.5f, 0, 0, 0);
 			}
 		}
 	}
@@ -92,6 +111,15 @@ public class EntityZombieMinion extends EntityZombie implements ISummonedCreatur
 	@Override
 	public boolean hasParticleEffect(){
 		return true;
+	}
+
+	@Override
+	public boolean hasAnimation(){
+		return this.dataManager.get(SPAWN_PARTICLES) || this.ticksExisted > 20;
+	}
+
+	public void hideParticles(){
+		this.dataManager.set(SPAWN_PARTICLES, false);
 	}
 
 	@Override

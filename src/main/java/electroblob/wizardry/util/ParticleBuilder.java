@@ -44,8 +44,9 @@ import java.util.Random;
 
 // Strictly speaking, this isn't a builder class in the traditional sense, because rather than returning the built
 // object at the end, it sends it to be processed instead and returns nothing. Additionally, unlike most builders
-// it's a singleton, because it's likely to be called very frequently and there's no point making a new instance
-// every time and clogging the heap with objects. It's also lazy, see the comment about builder variables below.
+// it's a singleton, because it's likely to be called very frequently and since this only happens from a single (client)
+// thread, there's no point making a new instance every time and clogging the heap with objects. It's also lazy, see
+// the comment about builder variables below.
 public final class ParticleBuilder {
 
 	/** The static instance of the particle builder. */
@@ -93,15 +94,21 @@ public final class ParticleBuilder {
 	public static class Type {
 		/** 3D-rendered light-beam particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: white */
 		public static final ResourceLocation BEAM = new ResourceLocation(Wizardry.MODID,"beam");
+		/** Square block face highlight particle.<p></p><b>Defaults:</b><br>Lifetime: 160 ticks<br>Colour: white */
+		public static final ResourceLocation BLOCK_HIGHLIGHT = new ResourceLocation(Wizardry.MODID,"block_highlight");
 		/** Helical animated 'buffing' particle.<p></p><b>Defaults:</b><br>Lifetime: 15 ticks
 		 * <br>Velocity: (0, 0.27, 0)<br>Colour: white */
 		public static final ResourceLocation BUFF = new ResourceLocation(Wizardry.MODID,"buff");
+		/** Large, thick cloud.<p></p><b>Defaults:</b><br>Lifetime: 48-60 ticks<br> Colour: dark grey */
+		public static final ResourceLocation CLOUD = new ResourceLocation(Wizardry.MODID,"cloud");
 		/** Spiral particle, like potions.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Colour: white */
 		public static final ResourceLocation DARK_MAGIC = new ResourceLocation(Wizardry.MODID,"dark_magic");
 		/** Single pixel particle.<p></p><b>Defaults:</b><br>Lifetime: 16-80 ticks<br>Colour: white */
 		public static final ResourceLocation DUST = new ResourceLocation(Wizardry.MODID,"dust");
 		/** Rapid flash, like fireworks.<p></p><b>Defaults:</b><br>Lifetime: 6 ticks<br>Colour: white */
 		public static final ResourceLocation FLASH = new ResourceLocation(Wizardry.MODID,"flash");
+		/** Particle that looks like the guardian's beam attack.<p></p><b>Defaults:</b><br>Lifetime: 1 tick */
+		public static final ResourceLocation GUARDIAN_BEAM = new ResourceLocation(Wizardry.MODID,"guardian_beam");
 		/** Small shard of ice.<p></p><b>Defaults:</b><br>Lifetime: 8-40 ticks<br>Gravity: true */
 		public static final ResourceLocation ICE = new ResourceLocation(Wizardry.MODID,"ice");
 		/** Single leaf.<p></p><b>Defaults:</b><br>Lifetime: 10-15 ticks<br>Velocity: (0, -0.03, 0)
@@ -128,8 +135,6 @@ public final class ParticleBuilder {
 		public static final ResourceLocation SPARKLE = new ResourceLocation(Wizardry.MODID,"sparkle");
 		/** 3D-rendered expanding sphere.<p></p><b>Defaults:</b><<br>Lifetime: 6 ticks<br>Colour: white */
 		public static final ResourceLocation SPHERE = new ResourceLocation(Wizardry.MODID,"sphere");
-		/** Wrapped animated 'summoning' particle.<p></p><b>Defaults:</b><<br>Lifetime: 15 ticks */
-		public static final ResourceLocation SUMMON = new ResourceLocation(Wizardry.MODID,"summon");
 		/** 3D-rendered vine particle.<p></p><b>Defaults:</b><br>Lifetime: 1 tick<br> Colour: green */
 		public static final ResourceLocation VINE = new ResourceLocation(Wizardry.MODID,"vine");
 	}
@@ -227,7 +232,7 @@ public final class ParticleBuilder {
 	 * Sets the velocity of the particle being built. This is a vector-based alternative to {@link ParticleBuilder#vel(
 	 * double, double, double)}, allowing for even more concise code when a vector is available.
 	 * <p></p>
-	 * <b>Affects:</b> All particle types except
+	 * <b>Affects:</b> All particle types
 	 * @param vel A vector representing the velocity of the particle to be built.
 	 * @return The particle builder instance, allowing other methods to be chained onto this one
 	 * @throws IllegalStateException if the particle builder is not yet building.
@@ -324,7 +329,7 @@ public final class ParticleBuilder {
 	 * @throws IllegalStateException if the particle builder is not yet building.
 	 */
 	public ParticleBuilder fade(int r, int g, int b){
-		return this.clr(r/255f, g/255f, b/255f); // Yes, 255 is correct and not 256, or else we can't have pure white
+		return this.fade(r/255f, g/255f, b/255f); // Yes, 255 is correct and not 256, or else we can't have pure white
 	}
 
 	/**
@@ -341,7 +346,7 @@ public final class ParticleBuilder {
 		int r = (hex & 0xFF0000) >> 16;
 		int g = (hex & 0xFF00) >> 8;
 		int b = (hex & 0xFF);
-		return this.clr(r, g, b);
+		return this.fade(r, g, b);
 	}
 	
 	/**
@@ -603,9 +608,9 @@ public final class ParticleBuilder {
 	public void spawn(World world){
 		
 		if(!building) throw new IllegalStateException("Not building yet!");
-		
-		if(y < 0 && entity == null) Wizardry.logger.warn("Spawning particle below y = 0 - are you sure the position/entity "
-				+ "has been set correctly?");
+
+		if(x == 0 && y == 0 && z == 0 && entity == null) Wizardry.logger.warn("Spawning particle at (0, 0, 0) - are you"
+				+ " sure the position/entity has been set correctly?");
 		
 		if(!world.isRemote){
 			Wizardry.logger.warn("ParticleBuilder.spawn(...) called on the server side! ParticleBuilder has prevented a "
@@ -766,7 +771,7 @@ public final class ParticleBuilder {
 
 		for(int i = 0; i < 10; i++){
 			double x = entity.posX + world.rand.nextDouble() * 2 - 1;
-			double y = entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double y = entity.posY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = entity.posZ + world.rand.nextDouble() * 2 - 1;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(1, 1, 0.3f).spawn(world);
 		}

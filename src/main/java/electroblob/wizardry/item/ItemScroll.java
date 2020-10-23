@@ -1,6 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.packet.PacketCastSpell;
@@ -11,6 +12,7 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.*;
@@ -22,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemScroll extends Item implements ISpellCastingItem {
+public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchItem {
 	
 	/** The maximum number of ticks a continuous spell scroll can be cast for (by holding the use item button). */
 	public static final int CASTING_TIME = 120;
@@ -120,6 +122,8 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 			if(spell.isContinuous){
 				if(!player.isHandActive()){
 					player.setActiveHand(hand);
+					// Store the modifiers for use each tick (there aren't any by default but there could be, as above)
+					if(WizardData.get(player) != null) WizardData.get(player).itemCastingModifiers = modifiers;
 					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}else{
@@ -189,6 +193,9 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 
 				// Scrolls are consumed upon successful use in survival mode
 				if(!spell.isContinuous && !caster.isCreative()) stack.shrink(1);
+
+				// Now uses the vanilla cooldown mechanic to prevent spamming of spells
+				if(!spell.isContinuous) caster.getCooldownTracker().setCooldown(this, spell.getCooldown());
 			}
 
 			return true;
@@ -199,27 +206,59 @@ public class ItemScroll extends Item implements ISpellCastingItem {
 	
 	@Override
 	public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase user, int timeLeft){
-		// Consumes a continuous spell scroll when a player in survival mode stops using it.
-		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
-				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
-			stack.shrink(1);
-		}
+		// Casting has stopped before the full time has elapsed
+		finishCasting(stack, user, timeLeft);
 	}
-	
+
 	@Override
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase user){
-		// Consumes a continuous spell scroll when the casting elapses whilst in use by a player in survival mode.
-		if(Spell.byMetadata(stack.getItemDamage()).isContinuous
-				&& (!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative())){
-			stack.shrink(1);
-		}
-		
+		// Full casting time has elapsed
+		finishCasting(stack, user, 0);
 		return stack;
+	}
+
+	private void finishCasting(ItemStack stack, EntityLivingBase user, int timeLeft){
+
+		if(Spell.byMetadata(stack.getItemDamage()).isContinuous){
+			// Consume scrolls in survival mode
+			if(!(user instanceof EntityPlayer) || !((EntityPlayer)user).isCreative()) stack.shrink(1);
+
+			Spell spell = Spell.byMetadata(stack.getItemDamage());
+			SpellModifiers modifiers = new SpellModifiers();
+			int castingTick = stack.getMaxItemUseDuration() - timeLeft;
+
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Finish(Source.SCROLL, spell, user, modifiers, castingTick));
+			spell.finishCasting(user.world, user, Double.NaN, Double.NaN, Double.NaN, null, castingTick, modifiers);
+
+			if(user instanceof EntityPlayer){
+				((EntityPlayer)user).getCooldownTracker().setCooldown(this, spell.getCooldown());
+			}
+		}
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public net.minecraft.client.gui.FontRenderer getFontRenderer(ItemStack stack){
 		return Wizardry.proxy.getFontRenderer(stack);
+	}
+
+	@Override
+	public int getSpellSlotCount(ItemStack stack){
+		return 1; // Stop spell books immediately leaving the workbench when a scroll is enchanted
+	}
+
+	@Override
+	public boolean canPlace(ItemStack stack){
+		return false; // Prevent players putting scrolls back in the workbench
+	}
+
+	@Override
+	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		return false;
+	}
+
+	@Override
+	public boolean showTooltip(ItemStack stack){
+		return false;
 	}
 }

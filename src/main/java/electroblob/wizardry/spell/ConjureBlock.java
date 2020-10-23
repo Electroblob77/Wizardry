@@ -1,15 +1,15 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.tileentity.TileEntityTimer;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -20,7 +20,7 @@ public class ConjureBlock extends SpellRay {
 	private static final String BLOCK_LIFETIME = "block_lifetime";
 
 	public ConjureBlock(){
-		super("conjure_block", false, EnumAction.NONE);
+		super("conjure_block", SpellActions.POINT, false);
 		this.ignoreLivingEntities(true);
 		addProperties(BLOCK_LIFETIME);
 	}
@@ -53,7 +53,7 @@ public class ConjureBlock extends SpellRay {
 			.clr(0.75f, 1, 0.85f).spawn(world);
 		}
 		
-		if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+		if(BlockUtils.canBlockBeReplaced(world, pos)){
 
 			if(!world.isRemote){
 				

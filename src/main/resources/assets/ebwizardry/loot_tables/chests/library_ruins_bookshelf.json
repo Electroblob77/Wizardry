@@ -1,0 +1,68 @@
+{
+    "pools": [
+        {
+			"name": "wizardry",
+            "conditions": [
+                {
+                    "condition": "random_chance",
+                    "chance": 0.6
+                }
+            ],
+            "rolls": {
+                "min": 0,
+                "max": 2
+            },
+            "entries": [
+				{
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/arcane_tomes",
+                    "weight": 2
+                },
+				{
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/wand_upgrades",
+                    "weight": 1
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:spell_book",
+                    "weight": 15,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "undiscovered_bias": 0.3
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:ruined_spell_book",
+                    "weight": 5
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:scroll",
+                    "weight": 4,
+                    "functions": [
+                        {
+                            "function": "ebwizardry:random_spell",
+                            "undiscovered_bias": 0.3
+                        },
+                        {
+                            "function": "set_count",
+                            "count": {
+                                "min": 1,
+                                "max": 5
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:identification_scroll",
+                    "weight": 2
+                }
+            ]
+        }
+    ]
+}

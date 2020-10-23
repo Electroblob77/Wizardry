@@ -2,6 +2,7 @@ package electroblob.wizardry.item;
 
 import com.google.common.collect.Multimap;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.constants.Tier;
@@ -27,14 +28,13 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -44,6 +44,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -75,6 +76,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	private static final float ELEMENTAL_PROGRESSION_MODIFIER = 1.2f;
 	/** The increase in progression for casting an undiscovered spell (can only happen once per spell for each player). */
 	private static final float DISCOVERY_PROGRESSION_MODIFIER = 5f;
+	/** The increase in progression for tiers that the player has already reached. */
+	private static final float SECOND_TIME_PROGRESSION_MODIFIER = 1.5f;
 	/** The fraction of progression lost when all recently-cast spells are the same as the one being cast. */
 	private static final float MAX_PROGRESSION_REDUCTION = 0.75f;
 
@@ -89,11 +92,29 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		this.element = element;
 		setMaxDamage(this.tier.maxCharge);
 		WizardryRecipes.addToManaFlaskCharging(this);
+		// TODO: Hook to allow addon devs to have this override apply to their own animations
+		addPropertyOverride(new ResourceLocation("pointing"),
+				(s, w, e) -> e != null && e.getActiveItemStack() == s
+						&& (s.getItemUseAction() == SpellActions.POINT
+						|| s.getItemUseAction() == SpellActions.POINT_UP
+						|| s.getItemUseAction() == SpellActions.POINT_DOWN
+						|| s.getItemUseAction() == SpellActions.GRAPPLE
+						|| s.getItemUseAction() == SpellActions.SUMMON) ? 1 : 0);
 	}
 	
 	@Override
 	public Spell getCurrentSpell(ItemStack stack){
 		return WandHelper.getCurrentSpell(stack);
+	}
+
+	@Override
+	public Spell getNextSpell(ItemStack stack){
+		return WandHelper.getNextSpell(stack);
+	}
+
+	@Override
+	public Spell getPreviousSpell(ItemStack stack){
+		return WandHelper.getPreviousSpell(stack);
 	}
 
 	@Override
@@ -109,6 +130,21 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	@Override
 	public void selectPreviousSpell(ItemStack stack){
 		WandHelper.selectPreviousSpell(stack);
+	}
+
+	@Override
+	public boolean selectSpell(ItemStack stack, int index){
+		return WandHelper.selectSpell(stack, index);
+	}
+
+	@Override
+	public int getCurrentCooldown(ItemStack stack){
+		return WandHelper.getCurrentCooldown(stack);
+	}
+
+	@Override
+	public int getCurrentMaxCooldown(ItemStack stack){
+		return WandHelper.getCurrentMaxCooldown(stack);
 	}
 
 	@Override
@@ -168,7 +204,12 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	@Override
 	public boolean hasEffect(ItemStack stack){
 		return !Wizardry.settings.legacyWandLevelling && this.tier.level < Tier.MASTER.level
-				&& WandHelper.getProgression(stack) >= Tier.values()[tier.ordinal() + 1].progression;
+				&& WandHelper.getProgression(stack) >= tier.next().getProgression();
+	}
+
+	@Override
+	public int getRGBDurabilityForDisplay(ItemStack stack){
+		return DrawingUtils.mix(0xff8bfe, 0x8e2ee4, (float)getDurabilityForDisplay(stack));
 	}
 
 	// Max damage is modifiable with upgrades.
@@ -288,9 +329,9 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		EntityPlayer player = net.minecraft.client.Minecraft.getMinecraft().player;
 		if (player == null) { return; }
 		// +0.5f is necessary due to the error in the way floats are calculated.
-		if(element != null) text.add("\u00A78" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.buff",
-				(int)((tier.level + 1) * Constants.POTENCY_INCREASE_PER_TIER * 100 + 0.5f) + "%",
-				element.getDisplayName()));
+		if(element != null) text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.buff",
+				new Style().setColor(TextFormatting.DARK_GRAY),
+				(int)((tier.level + 1) * Constants.POTENCY_INCREASE_PER_TIER * 100 + 0.5f), element.getDisplayName()));
 
 		Spell spell = WandHelper.getCurrentSpell(stack);
 
@@ -300,22 +341,16 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			discovered = false;
 		}
 
-		text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.spell",
-				discovered ? "\u00A77" + spell.getDisplayNameWithFormatting()
-				: "#\u00A79" + SpellGlyphData.getGlyphName(spell, player.world)));
+		text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.spell", new Style().setColor(TextFormatting.GRAY),
+				discovered ? spell.getDisplayNameWithFormatting() : "#" + TextFormatting.BLUE + SpellGlyphData.getGlyphName(spell, player.world)));
 
 		if(advanced.isAdvanced()){
 			// Advanced tooltips for debugging
-			text.add("\u00A79" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.mana",
+			text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.mana", new Style().setColor(TextFormatting.BLUE),
 					this.getMana(stack), this.getManaCapacity(stack)));
 
-			text.add("\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wand.progression",
-					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? Tier.values()[tier.ordinal() + 1].progression : 0));
-
-//		}else{
-//
-//			ChargeStatus status = ChargeStatus.getChargeStatus(stack);
-//			text.add(status.getFormattingCode() + status.getDisplayName());
+			text.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wand.progression", new Style().setColor(TextFormatting.GRAY),
+					WandHelper.getProgression(stack), this.tier.level < Tier.MASTER.level ? tier.next().getProgression() : 0));
 		}
 	}
 
@@ -340,18 +375,22 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		SpellModifiers modifiers = this.calculateModifiers(stack, player, spell);
 
 		if(canCast(stack, spell, player, hand, 0, modifiers)){
-			// Now we can cast continuous spells with scrolls!
-			if(spell.isContinuous){
+			// Need to account for the modifier since it could be zero even if the original charge-up wasn't
+			int chargeup = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
+
+			if(spell.isContinuous || chargeup > 0){
+				// Spells that need the mouse to be held (continuous, charge-up or both)
 				if(!player.isHandActive()){
 					player.setActiveHand(hand);
-					// Store the modifiers for use each tick
+					// Store the modifiers for use later
 					if(WizardData.get(player) != null) WizardData.get(player).itemCastingModifiers = modifiers;
-					// Return the player's held item so spells can change it if they wish (e.g. possession)
-					return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+					if(chargeup > 0 && world.isRemote) Wizardry.proxy.playChargeupSound(player);
+					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}else{
+				// All other (instant) spells
 				if(cast(stack, spell, player, hand, 0, modifiers)){
-					return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));
+					return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 				}
 			}
 		}
@@ -359,7 +398,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		return new ActionResult<>(EnumActionResult.FAIL, stack);
 	}
 
-	// For continuous spells. The count argument actually decrements by 1 each tick.
+	// For continuous spells and spells with a charge-up time. The count argument actually decrements by 1 each tick.
+	// N.B. The first time this gets called is the tick AFTER onItemRightClick is called, not the same tick
 	@Override
 	public void onUsingTick(ItemStack stack, EntityLivingBase user, int count){
 
@@ -377,15 +417,30 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				modifiers = this.calculateModifiers(stack, (EntityPlayer)user, spell); // Fallback to the old way, should never be used
 			}
 
-			int castingTick = stack.getMaxItemUseDuration() - count;
+			int useTick = stack.getMaxItemUseDuration() - count;
+			int chargeup = (int)(spell.getChargeup() * modifiers.get(SpellModifiers.CHARGEUP));
 
-			// Continuous spells (these must check if they can be cast each tick since the mana changes)
-			// Don't call canCast when castingTick == 0 because we already did it in onItemRightClick
-			if(spell.isContinuous && (castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers))){
-				cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
+			if(spell.isContinuous){
+				// Continuous spell charge-up is simple, just don't do anything until it's charged
+				if(useTick >= chargeup){
+					// castingTick needs to be relative to when the spell actually started
+					int castingTick = useTick - chargeup;
+					// Continuous spells (these must check if they can be cast each tick since the mana changes)
+					// Don't call canCast when castingTick == 0 because we already did it in onItemRightClick - even
+					// with charge-up times, because we don't want to trigger events twice
+					if(castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
+						cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
+					}else{
+						// Stops the casting if it was interrupted, either by events or because the wand ran out of mana
+						player.stopActiveHand();
+					}
+				}
 			}else{
-				// Stops the casting if it was interrupted, either by events or because the wand ran out of mana
-				player.stopActiveHand();
+				// Non-continuous spells need to check they actually have a charge-up since ALL spells call setActiveHand
+				if(chargeup > 0 && useTick == chargeup){
+					// Once the spell is charged, it's exactly the same as in onItemRightClick
+					cast(stack, spell, player, player.getActiveHand(), 0, modifiers);
+				}
 			}
 		}
 	}
@@ -433,8 +488,6 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 					WizardryPacketHandler.net.sendToDimension(msg, world.provider.getDimension());
 				}
 
-				caster.setActiveHand(hand);
-
 				// Mana cost
 				int cost = (int)(spell.getCost() * modifiers.get(SpellModifiers.COST) + 0.1f); // Weird floaty rounding
 				// As of wizardry 4.2 mana cost is only divided over two intervals each second
@@ -443,6 +496,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				if(cost > 0) this.consumeMana(stack, cost, caster);
 
 			}
+
+			caster.setActiveHand(hand);
 
 			// Cooldown
 			if(!spell.isContinuous && !caster.isCreative()){ // Spells only have a cooldown in survival
@@ -458,11 +513,12 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 				if(!Wizardry.settings.legacyWandLevelling){ // Don't display the message if legacy wand levelling is enabled
 					// If the wand just gained enough progression to be upgraded...
-					Tier nextTier = Tier.values()[tier.ordinal() + 1];
-					int excess = WandHelper.getProgression(stack) - nextTier.progression;
+					Tier nextTier = tier.next();
+					int excess = WandHelper.getProgression(stack) - nextTier.getProgression();
 					if(excess >= 0 && excess < progression){
 						// ...display a message above the player's hotbar
 						caster.playSound(WizardrySounds.ITEM_WAND_LEVELUP, 1.25f, 1);
+						WizardryAdvancementTriggers.wand_levelup.triggerFor(caster);
 						if(!world.isRemote)
 							caster.sendMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":wand.levelup",
 									this.getItemStackDisplayName(stack), nextTier.getNameForTranslationFormatted()));
@@ -575,9 +631,17 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			progressionModifier *= ELEMENTAL_PROGRESSION_MODIFIER;
 		}
 
-		if(WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
-			// Casting an undiscovered spell now grants 5x progression
-			progressionModifier *= DISCOVERY_PROGRESSION_MODIFIER;
+		if(WizardData.get(player) != null){
+
+			if(!WizardData.get(player).hasSpellBeenDiscovered(spell)){
+				// Casting an undiscovered spell now grants 5x progression
+				progressionModifier *= DISCOVERY_PROGRESSION_MODIFIER;
+			}
+
+			if(!WizardData.get(player).hasReachedTier(this.tier.next())){
+				// 1.5x progression for tiers that have already been reached
+				progressionModifier *= SECOND_TIME_PROGRESSION_MODIFIER;
+			}
 		}
 
 		modifiers.set(SpellModifiers.PROGRESSION, progressionModifier, false);
@@ -589,7 +653,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 		RayTraceResult rayTrace = RayTracer.standardEntityRayTrace(world, player, 16, false);
 
-		if(rayTrace != null && WizardryUtilities.isLiving(rayTrace.entityHit)){
+		if(rayTrace != null && EntityUtils.isLiving(rayTrace.entityHit)){
 
 			EntityLivingBase entity = (EntityLivingBase)rayTrace.entityHit;
 
@@ -619,95 +683,115 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	}
 
 	@Override
-	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
-		
-		boolean changed = false;
-		
+	public ItemStack applyUpgrade(@Nullable EntityPlayer player, ItemStack wand, ItemStack upgrade){
+
 		// Upgrades wand if necessary. Damage is copied, preserving remaining durability,
 		// and also the entire NBT tag compound.
-		if(upgrade.getStack().getItem() == WizardryItems.arcane_tome){
+		if(upgrade.getItem() == WizardryItems.arcane_tome){
 
-			Tier tier = Tier.values()[upgrade.getStack().getItemDamage()];
+			Tier tier = Tier.values()[upgrade.getItemDamage()];
 
 			// Checks the wand upgrade is for the tier above the wand's tier, and that either the wand has enough
 			// progression or the player is in creative mode.
-			// It is guaranteed that: this == centre.getStack().getItem()
-			if((player.isCreative() || Wizardry.settings.legacyWandLevelling
-					|| WandHelper.getProgression(centre.getStack()) >= tier.progression)
-					&& tier.ordinal() - 1 == this.tier.ordinal()){
+			if((player == null || player.isCreative() || Wizardry.settings.legacyWandLevelling
+					|| WandHelper.getProgression(wand) >= tier.getProgression())
+					&& tier == this.tier.next() && this.tier != Tier.MASTER){
 
-				// We're not carrying over excess progression for now, but if we do want to, this is how
-//				if(!Wizardry.settings.legacyWandLevelling){
-//					// Easy way to carry excess progression over to the new stack
-//					WandHelper.setProgression(centre.getStack(), WandHelper.getProgression(centre.getStack()) - tier.progression);
-//				}
+				if(Wizardry.settings.legacyWandLevelling){
+					// Progression has little meaning with legacy upgrade mechanics so just reset it
+					// In theory, you can get 'free' progression when upgrading since progression can't be negative,
+					// so the flipside of that is you lose any excess
+					WandHelper.setProgression(wand, 0);
+				}else{
+					// Carry excess progression over to the new stack
+					WandHelper.setProgression(wand, WandHelper.getProgression(wand) - tier.getProgression());
+				}
 
-				WandHelper.setProgression(centre.getStack(), 0);
+				if(player != null) WizardData.get(player).setTierReached(tier);
 
 				ItemStack newWand = new ItemStack(WizardryItems.getWand(tier, this.element));
-				newWand.setTagCompound(centre.getStack().getTagCompound());
+				newWand.setTagCompound(wand.getTagCompound());
 				// This needs to be done after copying the tag compound so the mana capacity for the new wand
 				// takes storage upgrades into account
 				// Note the usage of the new wand item and not 'this' to ensure the correct capacity is used
-				((IManaStoringItem)newWand.getItem()).setMana(newWand, this.getMana(centre.getStack()));
+				((IManaStoringItem)newWand.getItem()).setMana(newWand, this.getMana(wand));
 
-				centre.putStack(newWand);
-				upgrade.decrStackSize(1);
-				
-				changed = true;
+				upgrade.shrink(1);
+
+				return newWand;
 			}
 
-		}else if(WandHelper.isWandUpgrade(upgrade.getStack().getItem())){
+		}else if(WandHelper.isWandUpgrade(upgrade.getItem())){
 
 			// Special upgrades
-			Item specialUpgrade = upgrade.getStack().getItem();
+			Item specialUpgrade = upgrade.getItem();
 
-			if(WandHelper.getTotalUpgrades(centre.getStack()) < this.tier.upgradeLimit
-					&& WandHelper.getUpgradeLevel(centre.getStack(), specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
+			int maxUpgrades = this.tier.upgradeLimit;
+			if(this.element == Element.MAGIC) maxUpgrades += Constants.NON_ELEMENTAL_UPGRADE_BONUS;
+
+			if(WandHelper.getTotalUpgrades(wand) < maxUpgrades
+					&& WandHelper.getUpgradeLevel(wand, specialUpgrade) < Constants.UPGRADE_STACK_LIMIT){
 
 				// Used to preserve existing mana when upgrading storage rather than creating free mana.
-				int prevMana = this.getMana(centre.getStack());
+				int prevMana = this.getMana(wand);
 
-				WandHelper.applyUpgrade(centre.getStack(), specialUpgrade);
+				WandHelper.applyUpgrade(wand, specialUpgrade);
 
 				// Special behaviours for specific upgrades
 				if(specialUpgrade == WizardryItems.storage_upgrade){
 
-					this.setMana(centre.getStack(), prevMana);
-					
+					this.setMana(wand, prevMana);
+
 				}else if(specialUpgrade == WizardryItems.attunement_upgrade){
 
-					int newSlotCount = BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(centre.getStack(),
+					int newSlotCount = BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(wand,
 							WizardryItems.attunement_upgrade);
-					
-					Spell[] spells = WandHelper.getSpells(centre.getStack());
+
+					Spell[] spells = WandHelper.getSpells(wand);
 					Spell[] newSpells = new Spell[newSlotCount];
 
 					for(int i = 0; i < newSpells.length; i++){
 						newSpells[i] = i < spells.length && spells[i] != null ? spells[i] : Spells.none;
 					}
 
-					WandHelper.setSpells(centre.getStack(), newSpells);
+					WandHelper.setSpells(wand, newSpells);
 
-					int[] cooldowns = WandHelper.getCooldowns(centre.getStack());
+					int[] cooldowns = WandHelper.getCooldowns(wand);
 					int[] newCooldowns = new int[newSlotCount];
 
 					if(cooldowns.length > 0){
 						System.arraycopy(cooldowns, 0, newCooldowns, 0, cooldowns.length);
 					}
 
-					WandHelper.setCooldowns(centre.getStack(), newCooldowns);
+					WandHelper.setCooldowns(wand, newCooldowns);
 				}
 
-				upgrade.decrStackSize(1);
-				WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
+				upgrade.shrink(1);
 
-				if(WandHelper.getTotalUpgrades(centre.getStack()) == Tier.MASTER.upgradeLimit){
-					WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
+				if(player != null){
+
+					WizardryAdvancementTriggers.special_upgrade.triggerFor(player);
+
+					if(WandHelper.getTotalUpgrades(wand) == Tier.MASTER.upgradeLimit){
+						WizardryAdvancementTriggers.max_out_wand.triggerFor(player);
+					}
 				}
-				
-				changed = true;
+
 			}
+		}
+
+		return wand;
+	}
+
+	@Override
+	public boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		
+		boolean changed = false; // Used for advancements
+
+		if(upgrade.getHasStack()){
+			ItemStack original = centre.getStack().copy();
+			centre.putStack(this.applyUpgrade(player, centre.getStack(), upgrade.getStack()));
+			changed = ItemStack.areItemStacksEqual(centre.getStack(), original);
 		}
 
 		// Reads NBT spell metadata array to variable, edits this, then writes it back to NBT.
@@ -783,7 +867,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 				if(player.world.isRemote){
 
-					Vec3d origin = new Vec3d(player.posX, player.getEntityBoundingBox().minY + player.getEyeHeight(), player.posZ);
+					Vec3d origin = player.getPositionEyes(1);
 					Vec3d hit = origin.add(player.getLookVec().scale(player.getDistance(event.getTarget())));
 					// Generate two perpendicular vectors in the plane perpendicular to the look vec
 					Vec3d vec1 = player.getLookVec().rotatePitch(90);

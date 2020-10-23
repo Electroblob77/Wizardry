@@ -1,17 +1,18 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +24,7 @@ public class WallOfFrost extends SpellRay {
 	private static final int MINIMUM_PLACEMENT_RANGE = 2;
 	
 	public WallOfFrost(){
-		super("wall_of_frost", true, EnumAction.NONE);
+		super("wall_of_frost", SpellActions.POINT, true);
 		this.particleVelocity(1);
 		this.particleSpacing(0.5);
 		addProperties(DURATION);
@@ -51,7 +52,7 @@ public class WallOfFrost extends SpellRay {
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-					(int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+					caster, (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 				
 				target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}
@@ -63,11 +64,11 @@ public class WallOfFrost extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(!world.isRemote && WizardryUtilities.canDamageBlocks(caster, world)){
+		if(!world.isRemote && EntityUtils.canDamageBlocks(caster, world)){
 
 			// Stops the ice being placed floating above snow and grass. Directions other than up included for
 			// completeness.
-			if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+			if(BlockUtils.canBlockBeReplaced(world, pos)){
 				// Moves the blockpos back into the block
 				pos = pos.offset(side.getOpposite());
 			}
@@ -79,7 +80,7 @@ public class WallOfFrost extends SpellRay {
 				
 				int duration = (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 
-				if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+				if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canPlaceBlock(caster, world, pos)){
 					world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
 					world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 				}
@@ -88,7 +89,7 @@ public class WallOfFrost extends SpellRay {
 				if(side == EnumFacing.UP){
 					pos = pos.offset(side);
 
-					if(WizardryUtilities.canBlockBeReplaced(world, pos)){
+					if(BlockUtils.canBlockBeReplaced(world, pos) && BlockUtils.canPlaceBlock(caster, world, pos)){
 						world.setBlockState(pos, WizardryBlocks.dry_frosted_ice.getDefaultState());
 						world.scheduleUpdate(pos.toImmutable(), WizardryBlocks.dry_frosted_ice, duration);
 					}

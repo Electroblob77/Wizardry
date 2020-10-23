@@ -9,9 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Random;
+
 /**
- * Utility class containing some useful static methods for drawing GUIs. Previously these were spread across the main
- * {@code WizardryUtilities} class and various individual GUI classes.
+ * Utility class containing some useful static methods for drawing GUIs, as well as general rendering.
  * 
  * @author Electroblob
  * @since Wizardry 4.2
@@ -125,6 +126,29 @@ public final class DrawingUtils {
 	}
 
 	/**
+	 * Draws a 'glitch' rectangle, with some rows of pixels shifted randomly to give a broken effect.
+	 *
+	 * @param random A random number generator to use
+	 * @param x The x position of the rectangle
+	 * @param y The y position of the rectangle
+	 * @param u The x position of the top left corner of the section of the image wanted
+	 * @param v The y position of the top left corner of the section of the image wanted
+	 * @param width The width of the section
+	 * @param height The height of the section
+	 * @param textureWidth The width of the actual image.
+	 * @param textureHeight The height of the actual image.
+	 * @param flipX Whether to flip the texture in the x direction.
+	 * @param flipY Whether to flip the texture in the y direction.
+	 */
+	public static void drawGlitchRect(Random random, int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, boolean flipX, boolean flipY){
+		for(int i=0; i<height; i++){
+			if(flipY) i = height - i - 1;
+			int offset = random.nextInt(4) == 0 ? random.nextInt(6) - 3 : 0;
+			drawTexturedFlippedRect(x + offset, y + i, u, v + i, width, 1, textureWidth, textureHeight, flipX, flipY);
+		}
+	}
+
+	/**
 	 * Mixes the two given opaque colours in the proportion specified.
 	 * @param colour1 The first colour to mix, as a 6-digit hexadecimal.
 	 * @param colour2 The second colour to mix, as a 6-digit hexadecimal.
@@ -156,7 +180,7 @@ public final class DrawingUtils {
 	 * @return The resulting integer colour code, which will be an 8-digit hexadecimal.
 	 */
 	public static int makeTranslucent(int colour, float opacity){
-		return colour + ((int)(0xff * opacity * 0x01000000));
+		return colour + ((int)(opacity * 0xff) << 24);
 	}
 
 	/**
@@ -242,6 +266,39 @@ public final class DrawingUtils {
 		GlStateManager.enableLighting();
 		GlStateManager.enableDepth();
 		RenderHelper.enableStandardItemLighting();
+	}
+
+	/**
+	 * Calculates a factor between 0 and 1 that results in a smooth, aesthetically-pleasing animation when used to scale
+	 * things. Mainly for rendering, but can be used anywhere since it's just a mathematical formula.
+	 * @param lifetime The lifetime of the thing being animated, in ticks (if this is negative, disappearing is ignored)
+	 * @param ticksExisted The current age of the thing being animated, in ticks
+	 * @param partialTicks The current partial tick time
+	 * @param startLength The length of the appearing animation, in ticks
+	 * @param endLength The length of the disappearing animation, in ticks
+	 * @return A fraction between 0 and 1, with the value at the very start and end being 0 and the constant middle
+	 * section having a value of 1.
+	 */
+	public static float smoothScaleFactor(int lifetime, int ticksExisted, float partialTicks, int startLength, int endLength){
+		float age = ticksExisted + partialTicks;
+		float s = MathHelper.clamp(age < startLength || lifetime < 0 ? age/startLength : (lifetime - age) / endLength, 0, 1);
+		s = (float)Math.pow(s, 0.4); // Smooths the animation
+		return s;
+	}
+
+	/**
+	 * Tests if the point with the given coordinates lies within the rectangle specified. The check is identical to
+	 * {@link GuiContainer#isPointInRegion(int, int, int, int, int, int)}, but without the adjustment relative to the GUI.
+	 * @param left The minimum x coordinate of the rectangle
+	 * @param top The minimum y coordinate of the rectangle
+	 * @param width The width of the rectangle
+	 * @param height The height of the rectangle
+	 * @param x The x coordinate of the point to test
+	 * @param y The y coordinate of the point to test
+	 * @return True if the given point is in the rectangle, false otherwise
+	 */
+	public static boolean isPointInRegion(int left, int top, int width, int height, int x, int y){
+		return x >= left - 1 && x < left + width + 1 && y >= top - 1 && y < top + height + 1;
 	}
 
 }

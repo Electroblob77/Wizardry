@@ -29,6 +29,8 @@ public class ItemFirebomb extends Item {
 
 		player.playSound(WizardrySounds.ENTITY_FIREBOMB_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
+		player.getCooldownTracker().setCooldown(this, 20);
+
 		if(!world.isRemote){
 			EntityFirebomb firebomb = new EntityFirebomb(world);
 			firebomb.aim(player, 1);

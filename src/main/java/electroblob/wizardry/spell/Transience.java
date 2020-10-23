@@ -1,13 +1,13 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
@@ -26,7 +26,7 @@ public class Transience extends Spell {
 	public static final ResourceLocation SHADER = new ResourceLocation(Wizardry.MODID, "shaders/post/transience.json");
 
 	public Transience(){
-		super("transience", EnumAction.BOW, false);
+		super("transience", SpellActions.POINT_UP, false);
 		addProperties(EFFECT_DURATION);
 	}
 

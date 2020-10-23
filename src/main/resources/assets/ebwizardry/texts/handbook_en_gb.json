@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench.png",
 			"caption": "The Arcane Workbench",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/ore_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_ore.png",
 			"caption": "Crystal Ore",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/flower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_flower.png",
 			"caption": "A Crystal Flower",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/tower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_tower.png",
 			"caption": "A Wizard's Tower",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/armour_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_armour.png",
 			"caption": "A Set Of Wizard Armour",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
 			"caption": "An Obelisk",
 			"u": 0,
 			"v": 0,
@@ -79,15 +79,31 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine.png",
 			"caption": "An Earth Shrine",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 67
 		},
+		"library_ruins": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins.png",
+			"caption": "Library Ruins",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 57
+		},
+		"remnant": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/remnant.png",
+			"caption": "A Fire Remnant",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 73
+		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers.png",
 			"caption": "The 4 Tiers Of Wand",
 			"u": 0,
 			"v": 0,
@@ -96,7 +112,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/elements_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements.png",
 			"caption": "The 7 Arcane Elements",
 			"u": 0,
 			"v": 0,
@@ -224,6 +240,39 @@
 		},
 		"spark_bomb": {
 			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+		"gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
 		}
 	},
 	
@@ -341,7 +390,7 @@
 
 				"Scrolls, on the other hand, serve a different purpose: right-clicking whilst holding one will cast the spell that is bound to it, destroying the scroll in the process. Like spell books, scrolls can be found throughout the world, but you can also make them yourself (see @enchanting_scrolls Enchanting Scrolls@).",
 
-				"Scrolls are quite useful when you need to use a spell once or twice on a particular quest but don't want it to take up a slot on your @wands wand@. It should be noted, however, that they are an inefficient method of casting spells compared to using a wand.",
+				"Scrolls are quite useful when you need to use a spell once or twice on a particular quest but don't want it to take up a slot on your @wands wand@. They also have the advantage of being able to instantly cast spells that would normally require a charge-up period. It should be noted, however, that they are an inefficient method of casting spells compared to using a wand.",
 
 				"To the untrained eye, the magical runes with which spells are written are unreadable. In order to identify a spell, you could, of course, cast it and see what happens - though doing so may cause unwanted side-effects, and many spells need certain conditions in order to work. Futhermore, there is always a chance of misreading an unknown spell when casting, with potentially dangerous consequences depending on how powerful the spell is. A safer and more reliable option is to use a scroll of identification, which can be found in chests or purchased from a wizard. Right-clicking whilst holding one will identify the first unknown spell book or scroll on your hotbar, consuming the scroll of identification in the process."
 			]
@@ -535,6 +584,33 @@
 						"Due to their great arcane power and significance, not to mention the riches within, these structures are particularly attractive to any aspiring wizard - but be cautious. There are numerous reports of wizards becoming trapped within containment fields and slowly being driven insane, perhaps by claustrophobia. A growing number, however, believe such occurences to be a deliberate part of the shrine's protective magic, and that the wizards trapped within are in fact being controlled to protect the structure. A chilling prospect, surely, for anyone who dares to venture near..."
 					]
 				},
+				"library_ruins": {
+					"title": "Library Ruins",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:find_library_ruins"
+					],
+					"text": [
+
+						"Wizards tend to accumulate rather a lot of spell books during their lifetime, and it is therefore usual for a wizard to build a library to store their collection. Some particularly secretive wizards have even been known to store their arcane knowledge underground, away from prying eyes. However, a library requires upkeep, and if its owner dies without an apprentice to inherit the books, the structure will quickly fall into disrepair. Thousands of years of magic use have seen more and more libraries left abandoned in this way, and you may perhaps stumble across one when exploring. They are often worth searching for any spell books or other items that might have survived the ravages of time.",
+
+						"#image library_ruins",
+
+						"Libraries are not just used for storing books, though. Wizards of the past harnessed the power of the imbuement altar, used to perform elemental imbuement rituals on magical materials. The positioning of the altar is a precise and difficult art as it must be aligned according to particular celestial movements and local mana fluctuations. The practice of building them has become much rarer in recent history, mainly because once built, a solid rock altar lasts for centuries, so there is little need for new ones. Instead, most wizards find and repair an existing altar for when they need to perform imbuement rituals - and library ruins are the perfect place to look.",
+
+						"You, too, may at some point find it useful to construct your own library, which will of course require some bookshelves:",
+
+						"#recipe bookshelves",
+
+						"#recipe gilded_wood",
+
+						"These bookshelves are not mere furniture, however. Infusing the most potent magic crystals into your bookshelves allows effortless transfer of knowledge between them and a nearby @arcane_workbench arcane workbench@ - very handy as one's collection expands. Equally useful is a lectern:",
+
+						"#recipe lecterns",
+
+						"The tome that floats above a lectern gathers the knowledge from nearby spell books, allowing each to be perused at leisure without remembering its precise location."
+					]
+				},
 				"creatures": {
 					"title": "Magical Creatures",
 					"include_in_contents": "magical_world_subsections",
@@ -543,7 +619,17 @@
 					],
 					"text": [
 						
-						"Besides wizards, a multitude of other creatures also use magic. Many of these creatures are arcane in origin, and most can be summoned using certain magical @spells spells@. One may encounter these creatures guarding an @obelisks obelisk@, or perhaps a powerful summoner. Lesser arcane beings are even found occasionally in the wilderness."
+						"Besides wizards, a multitude of other creatures also use magic. Many of these creatures are arcane in origin, and most can be summoned using certain magical @spells spells@. One may encounter these creatures guarding an @obelisks obelisk@, or perhaps a powerful summoner. Lesser arcane beings are even found occasionally in the wilderness.",
+
+						"A notable example is the remnant, a spirit-like being that forms naturally from the traces left behind by powerful magic and typically takes on one of the seven arcane @elements@. On their own, they are little more than a nuisance, but a swarm can quickly overwhelm the unprepared adventurer, and their innate resistance to magic makes it advisable to carry a bow or other ranged weapon.",
+
+						"#image remnant",
+
+						"Once slain, their spectral dust can be collected, which, besides emitting a colourful glow, has a variety of useful properties. A receptacle, crafted as shown, provides a convenient means of containing it.",
+
+						"#recipe receptacle",
+
+						"Receptacles may be placed atop a surface or affixed to a wall and right-clicked with spectral dust to fill them, acting as a soft light source. Right-clicking a filled receptacle empties it and retreives the dust."
 					]
 				},
 				"artefacts": {
@@ -711,7 +797,11 @@
 				"#recipe firebomb",
 				"#recipe poison_bomb",
 				"#recipe smoke_bomb",
-				"#recipe spark_bomb"
+				"#recipe spark_bomb",
+				"#recipe gilded_wood",
+				"#recipe bookshelves",
+				"#recipe lecterns",
+				"#recipe receptacle"
 			]
 		},
 		
@@ -736,13 +826,15 @@
 
 				"Translations:",
 
-				"- Spanish: MadWrist, Alsentar \n- Mexican Spanish: MadWrist \n- Russian: VilagVil, kellixon, bigenergy \n- French: Hahdrim \n- Brazilian Portuguese: lorrampi \n- Chinese: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Korean: shejery, rewi_wire \n- Polish: Trozuu \n-German: BirdyDragon \n-Taiwanese: chesterccj305",
+				"- Spanish: MadWrist, Alsentar \n- Mexican Spanish: MadWrist \n- Russian: VilagVil, kellixon, bigenergy \n- French: Hahdrim \n- Brazilian Portuguese: lorrampi \n- Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Korean: shejery, rewi_wire \n- Polish: Trozuu \n- German: BirdyDragon \n- Chinese (Traditional): chesterccj305 \n- Hungarian: Bombadil",
 
-				"Lightning ray sound effect from OhhWowProductions",
+				"Sound Effects:",
+
+				"- OhhWowProductions\n- fredzed\n- deleted_user_3277771\n- DiscoveryME\n- OGSoundFX\n- leosalom\n- juskiddink",
 
 				"For more information, check out the @https://github.com/Electroblob77/Wizardry/wiki wiki@.",
 
-				"Can't get enough wizardry? Join the @https://discord.gg/MTmMzMv Discord server@ for the latest news, discussions and extras!"
+				"Can't get enough wizardry? Join the @https://discord.gg/hs8yJP2 Discord server@ for the latest news, discussions and extras!"
 			]
 		}
 		

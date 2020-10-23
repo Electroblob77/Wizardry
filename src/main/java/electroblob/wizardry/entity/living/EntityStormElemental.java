@@ -5,7 +5,6 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -32,7 +31,6 @@ public class EntityStormElemental extends EntitySummonedCreature implements ISpe
 	public EntityStormElemental(World world){
 		super(world);
 		// For some reason this can't be in initEntityAI
-		// TESTME: May need to be inside a !world.isRemote check.
 		this.tasks.addTask(0, this.spellAttackAI);
 	}
 

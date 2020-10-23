@@ -30,7 +30,7 @@ public class Leap extends Spell {
 			if(world.isRemote){
 				for(int i = 0; i < 10; i++){
 					double x = caster.posX + world.rand.nextFloat() - 0.5F;
-					double y = caster.getEntityBoundingBox().minY;
+					double y = caster.posY;
 					double z = caster.posZ + world.rand.nextFloat() - 0.5F;
 					world.spawnParticle(EnumParticleTypes.CLOUD, x, y, z, 0, 0, 0);
 				}

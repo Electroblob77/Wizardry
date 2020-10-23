@@ -25,6 +25,11 @@
                     "weight": 1
                 },
 				{
+					"type": "item",
+					"name": "ebwizardry:ring_soulbinding",
+					"weight": 1
+				},
+				{
                     "type": "item",
                     "name": "ebwizardry:ring_mana_return",
                     "weight": 1
@@ -55,10 +60,20 @@
                     "weight": 1
                 },
 				{
+					"type": "item",
+					"name": "ebwizardry:amulet_absorption",
+					"weight": 1
+				},
+				{
                     "type": "item",
                     "name": "ebwizardry:charm_experience_tome",
                     "weight": 1
                 },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_lava_walking",
+					"weight": 1
+				},
 				{
                     "type": "item",
                     "name": "ebwizardry:charm_silk_touch",
@@ -68,7 +83,12 @@
                     "type": "item",
                     "name": "ebwizardry:charm_stop_time",
                     "weight": 1
-                }
+                },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_black_hole",
+					"weight": 1
+				}
 			]
 		}
 	]

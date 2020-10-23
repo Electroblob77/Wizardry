@@ -3,17 +3,17 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockCrystalOre;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.RelativeFacing;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockRedstoneOre;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -33,7 +32,7 @@ public class Divination extends Spell {
 	private static final float NUDGE_SPEED = 0.2f;
 
 	public Divination(){
-		super("divination", EnumAction.NONE, false);
+		super("divination", SpellActions.THRUST, false);
 		addProperties(RANGE);
 	}
 
@@ -65,7 +64,7 @@ public class Divination extends Spell {
 
 		double range = getProperty(RANGE).floatValue() * modifiers.get(WizardryItems.range_upgrade);
 
-		List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(), range);
+		List<BlockPos> sphere = BlockUtils.getBlockSphere(caster.getPosition(), range);
 
 		sphere.removeIf(b -> {
 			Block block = world.getBlockState(b).getBlock();
@@ -88,7 +87,7 @@ public class Divination extends Spell {
 			BlockPos target = sphere.get(sphere.size() - 1);
 
 			direction = EnumFacing.getFacingFromVector((float)(target.getX() + 0.5 - caster.posX),
-					(float)(target.getY() + 0.5 - (caster.getEntityBoundingBox().minY + caster.getEyeHeight())),
+					(float)(target.getY() + 0.5 - (caster.posY + caster.getEyeHeight())),
 					(float)(target.getZ() + 0.5 - caster.posZ));
 
 			strength = Strength.forWeight(calculateWeight(world, caster, target, range, modifiers));

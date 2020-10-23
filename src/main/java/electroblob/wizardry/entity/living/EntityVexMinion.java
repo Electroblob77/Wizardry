@@ -92,6 +92,11 @@ public class EntityVexMinion extends EntityVex implements ISummonedCreature {
 	}
 
 	@Override
+	public int getAnimationColour(float animationProgress){
+		return 0xef829c;
+	}
+
+	@Override
 	public boolean hasParticleEffect(){
 		return true;
 	}

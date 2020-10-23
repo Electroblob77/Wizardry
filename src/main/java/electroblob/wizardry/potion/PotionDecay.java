@@ -19,7 +19,7 @@ import java.util.List;
 public class PotionDecay extends PotionMagicEffect {
 
 	public PotionDecay(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_decay.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/decay.png"));
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
 		this.setPotionName("potion." + Wizardry.MODID + ":decay");
 		this.registerPotionAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED,
@@ -46,9 +46,10 @@ public class PotionDecay extends PotionMagicEffect {
 		// amplifier of the potion effect, and is too slow for this purpose.
 		
 		EntityLivingBase target = event.getEntityLiving();
-		
-		if(!target.world.isRemote && target.isPotionActive(WizardryPotions.decay) && target.onGround
-				&& target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0){
+
+		// Do the timing check first, it'll cut out 95% of calls to all subsequent conditions
+		if(target.ticksExisted % Constants.DECAY_SPREAD_INTERVAL == 0 && !target.world.isRemote
+				&& target.isPotionActive(WizardryPotions.decay) && target.onGround){
 
 			List<Entity> entities = target.world.getEntitiesWithinAABBExcludingEntity(target,
 					target.getEntityBoundingBox());

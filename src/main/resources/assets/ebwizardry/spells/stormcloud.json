@@ -1,0 +1,25 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "lightning",
+  "type": "construct",
+  "cost": 60,
+  "chargeup": 10,
+  "cooldown": 150,
+  "base_properties": {
+    "duration": 600,
+    "range": 10,
+    "damage": 8,
+    "effect_radius": 3
+  }
+}
