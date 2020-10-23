@@ -6,11 +6,13 @@ import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.NBTExtras;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,6 +22,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class PotionContainment extends PotionMagicEffect {
 
 	public static final String ENTITY_TAG = "containmentPos";
+
+	private static final double RUBBERBAND_THRESHOLD = 0.24;
 
 	public PotionContainment(boolean isBadEffect, int liquidColour){
 		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/containment.png"));
@@ -54,7 +58,7 @@ public class PotionContainment extends PotionMagicEffect {
 		if(target.getEntityBoundingBox().minX < origin.x - maxDistance) x = origin.x - maxDistance + target.width/2;
 
 		if(target.getEntityBoundingBox().maxY > origin.y + maxDistance) y = origin.y + maxDistance - target.height;
-		if(target.posY < origin.y - maxDistance) y = origin.y - maxDistance;
+		if(target.getEntityBoundingBox().minY < origin.y - maxDistance) y = origin.y - maxDistance;
 
 		if(target.getEntityBoundingBox().maxZ > origin.z + maxDistance) z = origin.z + maxDistance - target.width/2;
 		if(target.getEntityBoundingBox().minZ < origin.z - maxDistance) z = origin.z - maxDistance + target.width/2;
@@ -93,6 +97,13 @@ public class PotionContainment extends PotionMagicEffect {
 //					}
 //				}
 //			}
+
+			// Rubberbanding prevention (the 0.25 limit is from NetHandlerPlayServer, just search "moved wrongly"
+			if(target instanceof EntityPlayer){
+				x = MathHelper.clamp(x, target.posX - RUBBERBAND_THRESHOLD, target.posX + RUBBERBAND_THRESHOLD);
+				y = MathHelper.clamp(y, target.posY - RUBBERBAND_THRESHOLD, target.posY + RUBBERBAND_THRESHOLD);
+				z = MathHelper.clamp(z, target.posZ - RUBBERBAND_THRESHOLD, target.posZ + RUBBERBAND_THRESHOLD);
+			}
 
 			EntityUtils.undoGravity(target);
 			target.addVelocity(0.35 * Math.signum(x - target.posX), 0.35 * Math.signum(y - target.posY), 0.35 * Math.signum(z - target.posZ));
