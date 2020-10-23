@@ -11,15 +11,12 @@ import electroblob.wizardry.item.*;
 import electroblob.wizardry.misc.BehaviourSpellDispense;
 import electroblob.wizardry.registry.WizardryTabs.CreativeTabListed;
 import electroblob.wizardry.registry.WizardryTabs.CreativeTabSorted;
-import electroblob.wizardry.tileentity.TileEntityReceptacle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.dispenser.BehaviorProjectileDispense;
-import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
 import net.minecraft.entity.IProjectile;
-import net.minecraft.init.Bootstrap;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.item.EnumRarity;
@@ -29,10 +26,6 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.BannerPattern;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
@@ -715,38 +708,38 @@ public final class WizardryItems {
 
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(scroll, new BehaviourSpellDispense());
 
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(spectral_dust, new Bootstrap.BehaviorDispenseOptional(){
-
-			// TODO: Needs packets of some kind, may be able to get away with using the tile entity sync packet
-
-			@Override
-			protected ItemStack dispenseStack(IBlockSource source, ItemStack stack){
-
-				World world = source.getWorld();
-				EnumFacing direction = source.getBlockState().getValue(BlockDispenser.FACING);
-				BlockPos pos = source.getBlockPos().offset(direction);
-				TileEntity tileEntity = world.getTileEntity(pos);
-
-				if(tileEntity instanceof TileEntityReceptacle && ((TileEntityReceptacle)tileEntity).getElement() == null){
-					((TileEntityReceptacle)tileEntity).setElement(Element.values()[stack.getMetadata()]);
-					stack.shrink(1);
-					world.checkLight(pos);
-					// TESTME: Do we need this?
-					world.notifyBlockUpdate(pos, source.getBlockState(), source.getBlockState(), 3);
-					return stack;
-				}
-
-				return super.dispenseStack(source, stack);
-			}
-
-			@Override
-			protected void playDispenseSound(IBlockSource source){
-				EnumFacing direction = source.getBlockState().getValue(BlockDispenser.FACING);
-				BlockPos pos = source.getBlockPos().offset(direction);
-				source.getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), WizardrySounds.BLOCK_RECEPTACLE_IGNITE,
-						SoundCategory.BLOCKS, 0.7f, 0.7f, false);
-			}
-		});
+//		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(spectral_dust, new Bootstrap.BehaviorDispenseOptional(){
+//
+//			// TODO: Needs packets of some kind, may be able to get away with using the tile entity sync packet
+//
+//			@Override
+//			protected ItemStack dispenseStack(IBlockSource source, ItemStack stack){
+//
+//				World world = source.getWorld();
+//				EnumFacing direction = source.getBlockState().getValue(BlockDispenser.FACING);
+//				BlockPos pos = source.getBlockPos().offset(direction);
+//				TileEntity tileEntity = world.getTileEntity(pos);
+//
+//				if(tileEntity instanceof TileEntityReceptacle && ((TileEntityReceptacle)tileEntity).getElement() == null){
+//					((TileEntityReceptacle)tileEntity).setElement(Element.values()[stack.getMetadata()]);
+//					stack.shrink(1);
+//					world.checkLight(pos);
+//					// TESTME: Do we need this?
+//					world.notifyBlockUpdate(pos, source.getBlockState(), source.getBlockState(), 3);
+//					return stack;
+//				}
+//
+//				return super.dispenseStack(source, stack);
+//			}
+//
+//			@Override
+//			protected void playDispenseSound(IBlockSource source){
+//				EnumFacing direction = source.getBlockState().getValue(BlockDispenser.FACING);
+//				BlockPos pos = source.getBlockPos().offset(direction);
+//				source.getWorld().playSound(pos.getX(), pos.getY(), pos.getZ(), WizardrySounds.BLOCK_RECEPTACLE_IGNITE,
+//						SoundCategory.BLOCKS, 0.7f, 0.7f, false);
+//			}
+//		});
 
 	}
 
