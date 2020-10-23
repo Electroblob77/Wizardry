@@ -47,12 +47,13 @@ public class PacketRequestDonationPerks implements IMessageHandler<PacketRequest
 		@Override
 		public void fromBytes(ByteBuf buf){
 			// The order is important
-			element = Element.values()[buf.readShort()];
+			int i = buf.readShort();
+			element = i == -1 ? null : Element.values()[i];
 		}
 
 		@Override
 		public void toBytes(ByteBuf buf){
-			buf.writeShort(element.ordinal());
+			buf.writeShort(element == null ? -1 : element.ordinal());
 		}
 	}
 }
