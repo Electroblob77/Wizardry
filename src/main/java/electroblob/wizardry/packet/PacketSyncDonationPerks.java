@@ -46,7 +46,7 @@ public class PacketSyncDonationPerks implements IMessageHandler<PacketSyncDonati
 			this.elements = new ArrayList<>();
 			while(buf.isReadable()){
 				int i = buf.readShort();
-				elements.add(i == -1 ? null : Element.values()[buf.readShort()]);
+				elements.add(i == -1 ? null : Element.values()[i]);
 			}
 		}
 
