@@ -93,11 +93,27 @@
                 }
             }
         },
+        "boulder": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "boulder"
+                }
+            }
+        },
         "bubble": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
                 "spell": {
                     "spell": "bubble"
+                }
+            }
+        },
+        "celestial_smite": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "celestial_smite"
                 }
             }
         },
@@ -325,11 +341,27 @@
                 }
             }
         },
+        "enrage": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "enrage"
+                }
+            }
+        },
         "evade": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
                 "spell": {
                     "spell": "evade"
+                }
+            }
+        },
+        "fangs": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "fangs"
                 }
             }
         },
@@ -394,6 +426,14 @@
             "conditions": {
                 "spell": {
                     "spell": "fire_breath"
+                }
+            }
+        },
+        "flamecatcher": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "flamecatcher"
                 }
             }
         },
@@ -509,6 +549,14 @@
                 }
             }
         },
+        "frost_barrier": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "frost_barrier"
+                }
+            }
+        },
         "frost_ray": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
@@ -594,6 +642,14 @@
             "conditions": {
                 "spell": {
                     "spell": "growth_aura"
+                }
+            }
+        },
+        "guardian_beam": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "guardian_beam"
                 }
             }
         },
@@ -861,6 +917,14 @@
                 }
             }
         },
+        "mark_sacrifice": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "mark_sacrifice"
+                }
+            }
+        },
         "metamorphosis": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
@@ -901,6 +965,14 @@
                 }
             }
         },
+        "mirage": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "mirage"
+                }
+            }
+        },
         "muffle": {
             "trigger": "ebwizardry:cast_spell",
             "conditions": {
@@ -922,6 +994,14 @@
             "conditions": {
                 "spell": {
                     "spell": "paralysis"
+                }
+            }
+        },
+        "permafrost": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "permafrost"
                 }
             }
         },
@@ -986,6 +1066,14 @@
             "conditions": {
                 "spell": {
                     "spell": "possession"
+                }
+            }
+        },
+        "radiant_totem": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "radiant_totem"
                 }
             }
         },
@@ -1410,6 +1498,14 @@
             "conditions": {
                 "spell": {
                     "spell": "wither_skull"
+                }
+            }
+        },
+        "withering_totem": {
+            "trigger": "ebwizardry:cast_spell",
+            "conditions": {
+                "spell": {
+                    "spell": "withering_totem"
                 }
             }
         },
