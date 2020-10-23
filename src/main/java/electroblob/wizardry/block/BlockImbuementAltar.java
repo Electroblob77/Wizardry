@@ -4,7 +4,6 @@ import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryTabs;
-import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
 import electroblob.wizardry.tileentity.TileEntityImbuementAltar;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -166,8 +165,8 @@ public class BlockImbuementAltar extends Block implements ITileEntityProvider {
 
         TileEntity tileentity = world.getTileEntity(pos);
 
-        if(tileentity instanceof TileEntityArcaneWorkbench){
-            InventoryHelper.dropInventoryItems(world, pos, (TileEntityArcaneWorkbench)tileentity);
+        if(tileentity instanceof TileEntityImbuementAltar){
+            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), ((TileEntityImbuementAltar)tileentity).getStack());
         }
 
         super.breakBlock(world, pos, block);
