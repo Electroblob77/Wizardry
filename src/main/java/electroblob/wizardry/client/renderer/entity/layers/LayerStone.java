@@ -36,9 +36,6 @@ public class LayerStone extends LayerTiledOverlay<EntityLivingBase> {
 		return breakingTexture == null ? TEXTURE : breakingTexture;
 	}
 
-	// FIXME: Does not work with zombie pigmen, I have no idea why.
-	// I believe the issue is with the TESR actually, since LayerFrost works fine
-
 	@Override
 	public void doRenderLayer(EntityLivingBase entity, float limbSwing, float limbSwingAmount, float partialTicks,
 			float ageInTicks, float netHeadYaw, float headPitch, float scale){
