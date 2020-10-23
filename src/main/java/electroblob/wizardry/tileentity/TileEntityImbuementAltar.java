@@ -4,14 +4,12 @@ import electroblob.wizardry.block.BlockReceptacle;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ItemWizardArmour;
-import electroblob.wizardry.registry.WizardryBlocks;
-import electroblob.wizardry.registry.WizardryItems;
-import electroblob.wizardry.registry.WizardryLoot;
-import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.registry.*;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -98,6 +96,9 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 					consumeReceptacleContents();
 					imbuementTimer = 0;
 					displayElement = null;
+					if(lastUser instanceof EntityPlayerMP){
+						WizardryAdvancementTriggers.imbuement_altar.trigger((EntityPlayerMP)lastUser, this.stack);
+					}
 				}
 
 				if(world.isRemote && world.rand.nextInt(2) == 0){

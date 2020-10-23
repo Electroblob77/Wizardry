@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/** Advancement trigger for things done in the arcane workbench. The majority of any
+/** Advancement trigger for things done in the arcane workbench or imbuement altar. The majority of any
  * ICriterionTrigger class is just boilerplate, and this is no exception. */
-public class ArcaneWorkbenchTrigger implements ICriterionTrigger<ArcaneWorkbenchTrigger.Instance> {
+public class WizardryContainerTrigger implements ICriterionTrigger<WizardryContainerTrigger.Instance> {
 
 	private final ResourceLocation id;
-	private final Map<PlayerAdvancements, ArcaneWorkbenchTrigger.Listeners> listeners = Maps.newHashMap();
+	private final Map<PlayerAdvancements, WizardryContainerTrigger.Listeners> listeners = Maps.newHashMap();
 
-	public ArcaneWorkbenchTrigger(ResourceLocation id){
+	public WizardryContainerTrigger(ResourceLocation id){
 		this.id = id;
 	}
 
@@ -32,21 +32,21 @@ public class ArcaneWorkbenchTrigger implements ICriterionTrigger<ArcaneWorkbench
 		return this.id;
 	}
 
-	public void addListener(PlayerAdvancements advancements, Listener<ArcaneWorkbenchTrigger.Instance> listener){
+	public void addListener(PlayerAdvancements advancements, Listener<WizardryContainerTrigger.Instance> listener){
 
-		ArcaneWorkbenchTrigger.Listeners listeners = this.listeners.get(advancements);
+		WizardryContainerTrigger.Listeners listeners = this.listeners.get(advancements);
 
 		if(listeners == null){
-			listeners = new ArcaneWorkbenchTrigger.Listeners(advancements);
+			listeners = new WizardryContainerTrigger.Listeners(advancements);
 			this.listeners.put(advancements, listeners);
 		}
 
 		listeners.add(listener);
 	}
 
-	public void removeListener(PlayerAdvancements advancements, Listener<ArcaneWorkbenchTrigger.Instance> listener){
+	public void removeListener(PlayerAdvancements advancements, Listener<WizardryContainerTrigger.Instance> listener){
 
-		ArcaneWorkbenchTrigger.Listeners listeners = this.listeners.get(advancements);
+		WizardryContainerTrigger.Listeners listeners = this.listeners.get(advancements);
 
 		if(listeners != null){
 			listeners.remove(listener);
@@ -61,13 +61,13 @@ public class ArcaneWorkbenchTrigger implements ICriterionTrigger<ArcaneWorkbench
 		this.listeners.remove(advancements);
 	}
 
-	public ArcaneWorkbenchTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context){
-		return new ArcaneWorkbenchTrigger.Instance(this.id, ItemPredicate.deserialize(json.get("item")));
+	public WizardryContainerTrigger.Instance deserializeInstance(JsonObject json, JsonDeserializationContext context){
+		return new WizardryContainerTrigger.Instance(this.id, ItemPredicate.deserialize(json.get("item")));
 	}
 
 	public void trigger(EntityPlayerMP player, ItemStack stack){
 
-		ArcaneWorkbenchTrigger.Listeners listeners = this.listeners.get(player.getAdvancements());
+		WizardryContainerTrigger.Listeners listeners = this.listeners.get(player.getAdvancements());
 
 		if(listeners != null){
 			listeners.trigger(stack);
@@ -91,7 +91,7 @@ public class ArcaneWorkbenchTrigger implements ICriterionTrigger<ArcaneWorkbench
 	static class Listeners {
 
 		private final PlayerAdvancements playerAdvancements;
-		private final Set<Listener<ArcaneWorkbenchTrigger.Instance>> listeners = Sets.newHashSet();
+		private final Set<Listener<WizardryContainerTrigger.Instance>> listeners = Sets.newHashSet();
 
 		public Listeners(PlayerAdvancements advancements){
 			this.playerAdvancements = advancements;
@@ -101,19 +101,19 @@ public class ArcaneWorkbenchTrigger implements ICriterionTrigger<ArcaneWorkbench
 			return this.listeners.isEmpty();
 		}
 
-		public void add(Listener<ArcaneWorkbenchTrigger.Instance> listener){
+		public void add(Listener<WizardryContainerTrigger.Instance> listener){
 			this.listeners.add(listener);
 		}
 
-		public void remove(Listener<ArcaneWorkbenchTrigger.Instance> listener){
+		public void remove(Listener<WizardryContainerTrigger.Instance> listener){
 			this.listeners.remove(listener);
 		}
 
 		public void trigger(ItemStack stack){
 
-			List<Listener<ArcaneWorkbenchTrigger.Instance>> list = null;
+			List<Listener<WizardryContainerTrigger.Instance>> list = null;
 
-			for(Listener<ArcaneWorkbenchTrigger.Instance> listener : this.listeners){
+			for(Listener<WizardryContainerTrigger.Instance> listener : this.listeners){
 
 				if(listener.getCriterionInstance().test(stack)){
 
@@ -126,7 +126,7 @@ public class ArcaneWorkbenchTrigger implements ICriterionTrigger<ArcaneWorkbench
 			}
 
 			if(list != null){
-				for(Listener<ArcaneWorkbenchTrigger.Instance> listener : list){
+				for(Listener<WizardryContainerTrigger.Instance> listener : list){
 					listener.grantCriterion(this.playerAdvancements);
 				}
 			}

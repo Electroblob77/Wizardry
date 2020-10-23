@@ -26,13 +26,12 @@ public final class WizardryAdvancementTriggers {
 	public static final CustomAdvancementTrigger spell_failure = new CustomAdvancementTrigger("trigger_spell_failure");
 	public static final CustomAdvancementTrigger wand_levelup = new CustomAdvancementTrigger("trigger_wand_levelup");
 	public static final CustomAdvancementTrigger restore_imbuement_altar = new CustomAdvancementTrigger("restore_imbuement_altar");
-	// TODO: Make a proper imbuement altar trigger like the arcane workbench one
-	public static final CustomAdvancementTrigger create_elemental_armour = new CustomAdvancementTrigger("create_elemental_armour");
 
 	public static final StructureTrigger visit_structure = new StructureTrigger(new ResourceLocation(Wizardry.MODID, "visit_structure"));
-	public static final ArcaneWorkbenchTrigger arcane_workbench = new ArcaneWorkbenchTrigger(new ResourceLocation(Wizardry.MODID, "arcane_workbench"));
+	public static final WizardryContainerTrigger arcane_workbench = new WizardryContainerTrigger(new ResourceLocation(Wizardry.MODID, "arcane_workbench"));
 	public static final SpellCastTrigger cast_spell = new SpellCastTrigger(new ResourceLocation(Wizardry.MODID, "cast_spell"));
 	public static final SpellDiscoveryTrigger discover_spell = new SpellDiscoveryTrigger(new ResourceLocation(Wizardry.MODID, "discover_spell"));
+	public static final WizardryContainerTrigger imbuement_altar = new WizardryContainerTrigger(new ResourceLocation(Wizardry.MODID, "imbuement_altar"));
 
 	public static void register(){
 
@@ -45,11 +44,11 @@ public final class WizardryAdvancementTriggers {
 		CriteriaTriggers.register(spell_failure);
 		CriteriaTriggers.register(wand_levelup);
 		CriteriaTriggers.register(restore_imbuement_altar);
-		CriteriaTriggers.register(create_elemental_armour);
 
 		CriteriaTriggers.register(visit_structure);
 		CriteriaTriggers.register(arcane_workbench);
 		CriteriaTriggers.register(cast_spell);
 		CriteriaTriggers.register(discover_spell);
+		CriteriaTriggers.register(imbuement_altar);
 	}
 }

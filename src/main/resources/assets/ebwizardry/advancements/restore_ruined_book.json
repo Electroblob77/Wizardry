@@ -13,7 +13,12 @@
     "parent": "ebwizardry:restore_imbuement_altar",
     "criteria": {
         "criteria_0": {
-            "trigger": "ebwizardry:restore_ruined_book"
+            "trigger": "ebwizardry:imbuement_altar",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:spell_book"
+                }
+            }
         }
     }
 }
