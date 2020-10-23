@@ -95,8 +95,7 @@ public class BlockImbuementAltar extends Block implements ITileEntityProvider {
 
 	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face){
-		// TODO: Change this back to how it should be and give receptacles a special case for attaching to the altar
-		return face == EnumFacing.UP ? BlockFaceShape.UNDEFINED : BlockFaceShape.SOLID;
+		return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override

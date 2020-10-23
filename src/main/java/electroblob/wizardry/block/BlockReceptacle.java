@@ -7,9 +7,11 @@ import electroblob.wizardry.registry.*;
 import electroblob.wizardry.tileentity.TileEntityReceptacle;
 import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,28 +34,28 @@ import java.util.Random;
 
 public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 
-	protected static final AxisAlignedBB STANDING_AABB = 	new AxisAlignedBB(4/16d, 0/16d, 4/16d, 12/16d,  8/16d, 12/16d);
-	protected static final AxisAlignedBB NORTH_WALL_AABB = 	new AxisAlignedBB(4/16d, 2/16d, 7/16d, 12/16d, 10/16d, 16/16d);
-	protected static final AxisAlignedBB SOUTH_WALL_AABB = 	new AxisAlignedBB(4/16d, 2/16d, 0/16d, 12/16d, 10/16d,  9/16d);
-	protected static final AxisAlignedBB WEST_WALL_AABB = 	new AxisAlignedBB(7/16d, 2/16d, 4/16d, 16/16d, 10/16d, 12/16d);
-	protected static final AxisAlignedBB EAST_WALL_AABB = 	new AxisAlignedBB(0/16d, 2/16d, 4/16d,  9/16d, 10/16d, 12/16d);
+	protected static final AxisAlignedBB STANDING_AABB = new AxisAlignedBB(4 / 16d, 0 / 16d, 4 / 16d, 12 / 16d, 8 / 16d, 12 / 16d);
+	protected static final AxisAlignedBB NORTH_WALL_AABB = new AxisAlignedBB(4 / 16d, 2 / 16d, 7 / 16d, 12 / 16d, 10 / 16d, 16 / 16d);
+	protected static final AxisAlignedBB SOUTH_WALL_AABB = new AxisAlignedBB(4 / 16d, 2 / 16d, 0 / 16d, 12 / 16d, 10 / 16d, 9 / 16d);
+	protected static final AxisAlignedBB WEST_WALL_AABB = new AxisAlignedBB(7 / 16d, 2 / 16d, 4 / 16d, 16 / 16d, 10 / 16d, 12 / 16d);
+	protected static final AxisAlignedBB EAST_WALL_AABB = new AxisAlignedBB(0 / 16d, 2 / 16d, 4 / 16d, 9 / 16d, 10 / 16d, 12 / 16d);
 
-	private static final double WALL_PARTICLE_OFFSET = 3/16d;
+	private static final double WALL_PARTICLE_OFFSET = 3 / 16d;
 
 	public static final Map<Element, int[]> PARTICLE_COLOURS;
 
-	static {
+	static{
 
 		Map<Element, int[]> map = Maps.newEnumMap(Element.class);
 
-		map.put(Element.MAGIC, 		new int[]{0xe4c7cd, 0xfeffbe, 0x9d2cf3});
-		map.put(Element.FIRE, 		new int[]{0xff9600, 0xfffe67, 0xd02700});
-		map.put(Element.ICE, 		new int[]{0xa3e8f4, 0xe9f9fc, 0x138397});
-		map.put(Element.LIGHTNING, 	new int[]{0x409ee1, 0xf5f0ff, 0x225474});
+		map.put(Element.MAGIC, new int[]{0xe4c7cd, 0xfeffbe, 0x9d2cf3});
+		map.put(Element.FIRE, new int[]{0xff9600, 0xfffe67, 0xd02700});
+		map.put(Element.ICE, new int[]{0xa3e8f4, 0xe9f9fc, 0x138397});
+		map.put(Element.LIGHTNING, new int[]{0x409ee1, 0xf5f0ff, 0x225474});
 		map.put(Element.NECROMANCY, new int[]{0xa811ce, 0xf575f5, 0x382366});
-		map.put(Element.EARTH, 		new int[]{0xa8f408, 0xc8ffb2, 0x795c28});
-		map.put(Element.SORCERY, 	new int[]{0x56e8e3, 0xe8fcfc, 0x16a64d});
-		map.put(Element.HEALING, 	new int[]{0xfff69e, 0xfffff6, 0xa18200});
+		map.put(Element.EARTH, new int[]{0xa8f408, 0xc8ffb2, 0x795c28});
+		map.put(Element.SORCERY, new int[]{0x56e8e3, 0xe8fcfc, 0x16a64d});
+		map.put(Element.HEALING, new int[]{0xfff69e, 0xfffff6, 0xa18200});
 
 		PARTICLE_COLOURS = Maps.immutableEnumMap(map);
 	}
@@ -69,11 +71,16 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos){
 		switch(state.getValue(FACING)){
-			case EAST: return EAST_WALL_AABB;
-			case WEST: return WEST_WALL_AABB;
-			case SOUTH: return SOUTH_WALL_AABB;
-			case NORTH: return NORTH_WALL_AABB;
-			default: return STANDING_AABB;
+			case EAST:
+				return EAST_WALL_AABB;
+			case WEST:
+				return WEST_WALL_AABB;
+			case SOUTH:
+				return SOUTH_WALL_AABB;
+			case NORTH:
+				return NORTH_WALL_AABB;
+			default:
+				return STANDING_AABB;
 		}
 	}
 
@@ -105,6 +112,63 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 			Element element = ((TileEntityReceptacle)tileEntity).getElement();
 			if(element != null) drops.add(new ItemStack(WizardryItems.spectral_dust, 1, element.ordinal()));
 		}
+	}
+
+	@Override
+	public boolean canPlaceBlockOnSide(World world, BlockPos pos, EnumFacing side){
+
+		if(side != EnumFacing.UP && side != EnumFacing.DOWN
+				&& world.getBlockState(pos.offset(side.getOpposite())).getBlock() instanceof BlockImbuementAltar){
+			return true;
+		}
+		return super.canPlaceBlockOnSide(world, pos, side);
+	}
+
+	@Override
+	protected boolean checkForDrop(World world, BlockPos pos, IBlockState state){
+		if(state.getBlock() == this && this.canPlaceAt(world, pos, state.getValue(FACING))){
+			return true;
+		}
+		return super.checkForDrop(world, pos, state);
+	}
+
+	@Override
+	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
+
+		if(this.canPlaceAt(world, pos, facing)){
+			return this.getDefaultState().withProperty(FACING, facing);
+		}else{
+
+			for(EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL){
+				if(this.canPlaceAt(world, pos, enumfacing)){
+					return this.getDefaultState().withProperty(FACING, enumfacing);
+				}
+			}
+
+			return this.getDefaultState();
+		}
+	}
+
+	// Why is everything in BlockTorch private, for goodness sake...
+	private boolean canPlaceAt(World world, BlockPos pos, EnumFacing facing){
+
+		BlockPos blockpos = pos.offset(facing.getOpposite());
+		IBlockState state = world.getBlockState(blockpos);
+		Block block = state.getBlock();
+		BlockFaceShape blockfaceshape = state.getBlockFaceShape(world, blockpos, facing);
+
+		if(facing.equals(EnumFacing.UP) && this.canPlaceOn(world, blockpos)){
+			return true;
+		}else if(facing != EnumFacing.UP && facing != EnumFacing.DOWN){
+			return !isExceptBlockForAttachWithPiston(block) && (blockfaceshape == BlockFaceShape.SOLID || block instanceof BlockImbuementAltar);
+		}else{
+			return false;
+		}
+	}
+
+	private boolean canPlaceOn(World world, BlockPos pos){
+		IBlockState state = world.getBlockState(pos);
+		return state.getBlock().canPlaceTorchOnTop(state, world, pos);
 	}
 
 	// See BlockFlowerPot for these two (this class is essentially based on a flower pot)
