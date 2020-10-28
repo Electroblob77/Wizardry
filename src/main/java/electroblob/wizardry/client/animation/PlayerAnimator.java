@@ -133,39 +133,51 @@ public class PlayerAnimator {
 
 	private static void updateModels(EntityPlayer player, Render<?> renderer, float partialTicks, boolean firstPerson){
 
-		// Biped armour is special because of Forge's armour item render hook
-		// This needs to be lazy-loaded because we need access to an actual item
-		for(LayerRenderer<? extends EntityLivingBase> layer : playerLayers.get(renderer)){
-			if(layer instanceof LayerBipedArmor){
-				for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
+		// TODO: This will stop the crashing but it might break animations for any mod that replaces the player renderer
+		//       There may be a way to make it compatible but we'll have to look into that at a later date
+		List<ModelBiped> models = playerLayerModels.get(renderer);
 
-					ItemStack armour = player.getItemStackFromSlot(slot);
-					// This method could behave dynamically depending on stuff like NBT so there's not really any way to
-					// optimise it further, we *have* to retrieve the model every time (shouldn't be too bad though)
-					ModelBiped model = ForgeHooksClient.getArmorModel(player, armour, slot, ((LayerBipedArmor)layer).getModelFromSlot(slot));
+		// If no models were registered for the given renderer, don't do anything
+		if(models != null){
 
-					List<ModelBiped> models = playerLayerModels.get(renderer);
+			List<LayerRenderer<? extends EntityLivingBase>> layers = playerLayers.get(renderer);
 
-					if(!models.contains(model)){ // Ignore already-wrapped models
-						models.add(model);
-						ModelRendererExtended.wrap(model);
+			// If no layers were registered for the given renderer there's no point trying to lazy-load anything!
+			if(layers != null){
+
+				// Biped armour is special because of Forge's armour item render hook
+				// This needs to be lazy-loaded because we need access to an actual item
+				for(LayerRenderer<? extends EntityLivingBase> layer : layers){
+					if(layer instanceof LayerBipedArmor){
+						for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
+
+							ItemStack armour = player.getItemStackFromSlot(slot);
+							// This method could behave dynamically depending on stuff like NBT so there's not really any way to
+							// optimise it further, we *have* to retrieve the model every time (shouldn't be too bad though)
+							ModelBiped model = ForgeHooksClient.getArmorModel(player, armour, slot, ((LayerBipedArmor)layer).getModelFromSlot(slot));
+
+							if(!models.contains(model)){ // Ignore already-wrapped models
+								models.add(model);
+								ModelRendererExtended.wrap(model);
+							}
+						}
 					}
 				}
 			}
-		}
 
-		for(Animation animation : animations){
+			for(Animation animation : animations){
 
-			if(animation.shouldDisplay(player, firstPerson)){
+				if(animation.shouldDisplay(player, firstPerson)){
 
-				boolean autoRotateSecondLayer = animation.autoRotateSecondLayer(player, firstPerson);
+					boolean autoRotateSecondLayer = animation.autoRotateSecondLayer(player, firstPerson);
 
-				for(ModelBiped model : playerLayerModels.get(renderer)){
+					for(ModelBiped model : models){
 
-					animation.setRotationAngles(player, model, partialTicks, firstPerson);
+						animation.setRotationAngles(player, model, partialTicks, firstPerson);
 
-					if(autoRotateSecondLayer && model instanceof ModelPlayer){
-						alignSecondLayer((ModelPlayer)model);
+						if(autoRotateSecondLayer && model instanceof ModelPlayer){
+							alignSecondLayer((ModelPlayer)model);
+						}
 					}
 				}
 			}
