@@ -34,7 +34,7 @@ In addition, I'd like to thank the following individuals for their contributions
 - French: Hahdrim
 - Brazilian Portuguese: lorrampi
 - Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
-- Korean: shejery, rewi_wire
+- Korean: shejery, rewi_wire, 방통
 - Polish: Trozuu
 - German: BirdyDragon
 - Chinese (Traditional): chesterccj305
