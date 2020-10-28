@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/arcane_workbench.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench.png",
 			"caption": "Az Arkán Munkaasztal",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/crystal_ore.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_ore.png",
 			"caption": "Kristályérc",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/crystal_flower.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_flower.png",
 			"caption": "Egy Kristályvirág",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/wizard_tower.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_tower.png",
 			"caption": "Egy Varázslótorony",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/wizard_armour.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_armour.png",
 			"caption": "Egy Szett Varázslóruha",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/obelisk.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
 			"caption": "Egy Obeliszk",
 			"u": 0,
 			"v": 0,
@@ -79,15 +79,31 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/shrine.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine.png",
 			"caption": "Egy Föld Szentély",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 67
 		},
+		"library_ruins": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins.png",
+			"caption": "Könyvtár Romok",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 57
+		},
+		"remnant": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/remnant.png",
+			"caption": "Egy Tűz Maradvány",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 73
+		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/tiers.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers.png",
 			"caption": "A Pálcák 4 Szintje",
 			"u": 0,
 			"v": 0,
@@ -96,7 +112,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/elements.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements.png",
 			"caption": "A 7 Arkán Elem",
 			"u": 0,
 			"v": 0,
@@ -224,6 +240,39 @@
 		},
 		"spark_bomb": {
 			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+		"gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
 		}
 	},
 	
@@ -279,7 +328,7 @@
 
 				"#recipe arcane_workbench",
 
-				"- Egy @spells varázsigés@ könyvre. Ezeket ládákban lehet találni, vagy mobok dobhatják, esetleg varázslóktól is vehetők, de a kezdők varázslatát, a mágikus lövedéket, a következőképp is megszerezheted:",
+				"- Egy @spells varázsigés@ könyvre. Ezeket ládákban lehet találni, vagy mobok dobhatják, esetleg varázslóktól is vehetők, de a kezdők varázslatát, a mágikus lövedéket, a következőképp is megszerezheted",
 
 				"#recipe magic_missile_spell_book",
 
@@ -323,7 +372,7 @@
 
 				"Mikor egy pálcát tartasz, egy kis kijelző jelenik meg a képernyő egyik sarkában. Ez mutatja meg az éppen kiválasztott varázslatot egy képikon segítségével, és, ha egy varázslatot végrehajtottak, az újra használhatóságig eltelő időt. Megmutatja továbbá az előző és a következő varázsigék neveit is, melyekre váltáshoz használd a #next_spell_key és a #previous_spell_key gombokat (ezek megváltoztathatók a Beállítások -> Irányítás menüpont alatt). Guggolás közben az egérgörgő segítségével is válthatsz varázslatot.",
 
-				"Mikor az eszköztáradat nézed, a pálcára mutatva meglesheted, mennyi @mana@ van benne, a pillanatnyilag kiválasztott @spells varázslattal@ és egyéb különleges képességeivel együtt. Még mélyebb információt egy pálcáról annak  egy @arcane_workbench arkán munkaasztalba@ helyezésével lehet szerezni."
+				"WMikor az eszköztáradat nézed, a pálcára mutatva meglesheted, mennyi @mana@ van benne, a pillanatnyilag kiválasztott @spells varázslattal@ és egyéb különleges képességeivel együtt. Még mélyebb információt egy pálcáról annak  egy @arcane_workbench arkán munkaasztalba@ helyezésével lehet szerezni."
 			]
 		},
 
@@ -365,7 +414,7 @@
 
 				"#recipe arcane_workbench",
 
-				"A következő oldal a különböző lehetőségeket részletezi, melyeket az arkán munkaasztalban lehet megcsinálni.",
+				"A következő oldal a különböző lehetőségeket részletezi, melyeket az arkán munkaasztalban lehet megtenni.",
 
 				"#image workbench"
 			],
@@ -382,14 +431,14 @@
 					]
 				},
 				"charging_wands": {
-					"title": "Pálcák töltése",
+					"title": "Pálcák Töltése",
 					"include_in_contents": "arcane_workbench_subsections",
 					"triggers": [
 						"ebwizardry:handbook/arcane_workbench"
 					],
 					"text": [
 
-						"Hogy feltöltsd @wands pálcád@, helyezd azt a középső négyzetbe, majd tégy pár varázskristályt a bal alsó négyzetbe, s nyomd meg az alkalmazás gombot. Minden egyes kristály #mana_per_crystal @mana manát@ tölt bele, s a pálca csupán annyit vesz fel, amennyire szüksége van, tehát állandóan tarthatsz némi kristályutánpótlást a munkaasztalban, várva mikor lesz szükséged rájuk. De tartsd észben, hogy a pálca csupán egész számú kristályt vehet fel, s így ha a pálcának, példának okáért, még 30 mana kell, #example_charging_loss mana el fog veszni, miközben megtöltöd."
+						"THogy feltöltsd @wands pálcád@, helyezd azt a középső négyzetbe, majd tégy pár varázskristályt a bal alsó négyzetbe, s nyomd meg az alkalmazás gombot. Minden egyes kristály #mana_per_crystal @mana manát@ tölt bele, s a pálca csupán annyit vesz fel, amennyire szüksége van, tehát állandóan tarthatsz némi kristályutánpótlást a munkaasztalban, várva mikor lesz szükséged rájuk. De tartsd észben, hogy a pálca csupán egész számú kristályt vehet fel, s így ha a pálcának, példának okáért, még 30 mana kell, #example_charging_loss mana el fog veszni, miközben megtöltöd."
 					]
 				},
 				"upgrading_wands": {
@@ -406,7 +455,7 @@
 					]
 				},
 				"enchanting_scrolls": {
-					"title": "Tekercsek Bűvölése",
+					"title": "EnTekercsek Bűvölése",
 					"include_in_contents": "arcane_workbench_subsections",
 					"triggers": [
 						"ebwizardry:handbook/scrolls"
@@ -443,9 +492,9 @@
 				"#recipe wizard_leggings",
 				"#recipe wizard_boots",
 
-				"Közönséges varázslóasztal segítségével meg lehet bájolni ezen ruhadarabokat, s a mágikus selyem veleszületett tulajdonságainak köszönhetően igen effektív általánosságban a bűbájok megtartásában. Különösen hasznosak a varázslók számára a Varázs-, Fagy- és Sokkvédelmet nyújtó bűbájok, melyek hasznosnak bizonyulhatnak más mágiahasználók ellen.",
+				"Közönséges varázslóasztal segítségével meg lehet bájolni ezen ruhadarabokat, s a mágikus selyem veleszületett tulajdonságainak köszönhetően igen effektívek általánosságban a bűbájok megtartásában. Különösen hasznosak a varázslók számára a Varázs-, Fagy- és Sokkvédelmet nyújtó bűbájok, melyek hasznosnak bizonyulhatnak más mágiahasználók ellen.",
 
-				"Azok a varázslók, melyek egyetlen specifikus elem gyakorlásának szentelik magukat, gyakran speciális öltözéket viselnek, melyek bónuszokat nyújtanak adott elemhez. Teljes szettjei az ilyen öltözeteknek igen keresettek, és nem könnyű rájuk lelni.",
+				"TAzok a varázslók, melyek egyetlen specifikus elem gyakorlásának szentelik magukat, gyakran speciális öltözéket viselnek, melyek bónuszokat nyújtanak adott elemhez. Teljes szettjei az ilyen öltözeteknek igen keresettek, és nem könnyű rájuk lelni.",
 
 				"Legendák mesélnek egy arkán pecsétről, melyet a leghatalmasabb varázslók használnak öltözetük nagymértékű megerősítésére."
 			]
@@ -498,7 +547,7 @@
 
 						"#image wizard_tower",
 
-						"Sajnálatos módon néhány varázsló nem látja szívesen a látogatókat. Ezek a varázslók általában számkivetettek, és ellenségesek mindenki ellen, ki keresztezi útjukat. Igen nagy elővigyázatossággal közelítsd meg ezeket a személyeket, s légy felkészülve életed megvédésére erős mágia ellen. Ám győzd le őket, s tudásukat megszerezheted magadnak.",
+						"Sajnálatos módon néhány varázsló nem látja szívesen a látogatókat. Ezek a varázslók általában számkivetettek, és ellenségesek mindenkivel szemben, ki keresztezi útjukat. Igen nagy elővigyázatossággal közelítsd meg ezeket a személyeket, s légy felkészülve életed megvédésére erős mágia ellen. Ám győzd le őket, s tudásukat megszerezheted magadnak.",
 
 						"Azt is meg kell jegyeznünk, hogy egy varázsló sem veszi örömmel, ha megtámadják vagy kirabolják őket - s készen állnak kezelésbe venni a dolgokat."
 					]
@@ -511,7 +560,7 @@
 					],
 					"text": [
 
-						"Ősi mágia nyomai vannak szétszóródva a világban, melyek közül az egyik legfeltűnőbbek azon faragott kőépítmények, melyek szimbólumok és rúnák tömkelegével vannak tele. Ezek a romok minden, mi megmaradt valamiféle ősi civilizációból. Akárki, vagy akármi építette őket, tisztán láthatóan jelentős tudással bírtak a mágia területén, és védelmező bűbájokat tettek ezen helyekre, melyek mind a mai napig fennmaradtak.",
+						"VŐsi mágia nyomai vannak szétszóródva a világban, melyek közül az egyik legfeltűnőbbek azon faragott kőépítmények, melyek szimbólumok és rúnák tömkelegével vannak tele. Ezek a romok minden, mi megmaradt valamiféle ősi civilizációból. Akárki, vagy akármi építette őket, tisztán láthatóan jelentős tudással bírtak a mágia területén, és védelmező bűbájokat tettek ezen helyekre, melyek mind a mai napig fennmaradtak.",
 
 						"Ezek a struktúrák tágan véve két alapvető típusba sorolhatóak. Az első, és gyakoribb, az obeliszkek: magas faragott kövek, melyek tüskeként merednek az ég felé, s rúnakövekből állnak. Talapzatában az elfeledett régmúlt kisebb arkán relikviái nyugszanak.",
 
@@ -535,6 +584,33 @@
 						"Nagy arkán erejük és jelentőségük miatt, a bennük rejlő kincsekről nem is beszélve, ezek az építmények különösen vonzóak minden feltörekvő varázsló számára - de légy óvatos. Számos hír jár varázslókról, kiket rabul ejtett a bezáró mező, s az őrületbe menekültek, talán klausztrofóbia okán. Egyre többen vélik azonban úgy, hogy a rabul ejtés szándékos része a szentélyt védelmező mágiának, s a foglyul ejtett varázslókat irányítva védelmezi magát. Hátborzongató ötlet, az bizonyos, mindazoknak, kik közel merészkednek..."
 					]
 				},
+				"library_ruins": {
+					"title": "Könyvtár Romok",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:find_library_ruins"
+					],
+					"text": [
+
+						"A varázslók hajlamosak kifejezetten sok varázskönyvet felhalmozni életük során, s ennélfogva nem különösebben szokatlan egy varázslótól, hogy könyvtárat építsenek gyűjteményük tárolására. Néhány különösen titkolózó varázslóról ismert, hogy arkán tudásanyagukat mélyen a föld alatt őrizték a kíváncsi tekintetek elől. Ugyanakkor, egy könyvtárat rendben kell tartani, és ha a tulajdonosa elhalálozott, gyorsan leromlik az állapota. A több ezer éven át tartó varázshasználat során egyre több és több ilyen elhagyatott könyvtárat szült, s kis szerencsével magad is rábukkanhatsz egyre felfedezőútjaid során. Gyakran megéri őket átnézni, hátha találsz pár megmaradt varázskönyvet, vagy egyéb tárgyat, melyek túlélték az idők hullámait.",
+
+						"#image library_ruins",
+
+						"A könyvtárak nem csupán könyvek tárolására valók. A régmúlt idők varázslói oltárok erejét használták, hogy elemi rituálékat vigyenek végbe mágikus anyagokon. Az oltár pontos elhelyezése egy precíz és nehéz művészet, mivel bizonyos égitestek mozgásának és helyi manafluktuációknak megfelelően kell pozícionálni. Építésük gyakorlata napjainkra egyre ritkább, mivel ha egyszer felállítottak egyet, egy tömör sziklaoltár évszázadokig áll. Emiatt a legtöbb varázsló inkább keres és megjavít egy létező oltárt, ha rituálék végrehajtására vágyik - és a könyvtárromok a tökéletes helyek ilyenek keresésére.",
+
+						"Te magad is tán egyszer majd hasznosnak találod, hogy felépítsd a saját könyvtárad, melyhez természetesen szükség lesz könyvespolcokra:",
+
+						"#recipe bookshelves",
+
+						"#recipe gilded_wood",
+
+						"Ezek a könyvespolcok nem holmi egyszerű bútorok ugyanakkor. A legerősebb varázskristályokkal egyesítve őket képessé válnak a tudás egyszerű és gyors továbbítására maguk és egy közeli @arcane_workbench arkán munkaasztal@ között - rendkívül hasznos, ahogy gyűjteményed terjeszkedik. Szintennyire hasznosak az olvasóállványok:",
+
+						"#recipe lecterns",
+
+						"A kódex mely az olvasóállványon lebeg összegyűjti a tudást a környező varázskönyvekből, mely segítségével azok egyszerűen hozzáférhetőek, pontos helyük megjegyzése nélkül."
+					]
+				},
 				"creatures": {
 					"title": "Mágikus Lények",
 					"include_in_contents": "magical_world_subsections",
@@ -543,7 +619,17 @@
 					],
 					"text": [
 
-						"A varázslókon kívül rengeteg más lény is használ mágiát. A legtöbb ilyen lény arkán eredetű, és megidézhetők bizonyos @spells varázslatok@ segítségével. Ezen lényekkel összefuthat a vándor esetleg az általuk őrzött @obelisks obeliszkek@ környékén, vagy egy hatalmas idéző által. A kisebb arkán lények időnként akár a vadonban is fellelhetők."
+						"A varázslókon kívül rengeteg más lény is használ mágiát. A legtöbb ilyen lény arkán eredetű, és megidézhetők bizonyos @spells varázslatok@ segítségével. Ezen lényekkel összefuthat a vándor esetleg az általuk őrzött @obelisks obeliszkek@ környékén, vagy egy hatalmas idéző által. A kisebb arkán lények időnként akár a vadonban is fellelhetők.",
+
+						"Egy figyelemreméltó példa a maradvány, egy szellemszerű lény mely természetesen formálódik nagyerejű mágia nyomaiból, és tipikusan felvesz egyet a hét arkán @elements elemből@. Önmagukban nem sokkal többek kisebb kellemetlenségnél, ám egy nagyobb rajuk gyorsan ellepheti a felkészületlen kalandort, és veleszületett varázslatokkal szembeni ellenállóképességük miatt erősen ajánlott egy íj vagy egyéb lőfegyver készen tartása.",
+
+						"#image remnant",
+
+						"Ha legyőzték, spektrális hamvai összegyűjthetőek, melyek azon túl, hogy színesen ragyognak, számos hasznos tulajdonsággal bírnak. Egy receptákulum (recept lentebb), kényelmes módot nyújt tárolására.",
+
+						"#recipe receptacle",
+
+						"A receptákulumok bármely felszínre vagy falra hozzáerősíthetők, s egyszerű jobb-kattintás segítségével meg lehet tölteni őket az adott spektrális hamvakkal, mely módon mint egy gyenge fényforrás funkcionál. Újabb jobb-kattintás segítségévela megtöltött receptákulumot ki lehet üríteni, a hamvakat visszanyerve."
 					]
 				},
 				"artefacts": {
@@ -594,11 +680,11 @@
 			],
 			"text": [
 
-				"A @spells varázslatok@ különböző elemekhez tartoznak, melyek meghatározzák a varázslat természetét, és előnyökhöz juttatnak, ha bizonyos @wands pálcákkal@ használják őket együtt.",
+				"@A @spells varázslatok@ különböző elemekhez tartoznak, melyek meghatározzák a varázslat természetét, és előnyökhöz juttatnak, ha bizonyos @wands pálcákkal@ használják őket együtt.",
 
 				"#image elements",
 
-				"#colour_fireTűz#colour_reset \nTán a legpusztítóbb elem, a tűz szakterülete az égés, láva, és robbanások. Egy erős pyromágus képes a poklot rászabadítani ellenfeleire, és valószínűleg lángokba állítja a világot eközben. A legtöbb tűzalapú támadás felgyújtja a célpontot, folyamatos sebzést okozva. Ugyanakkor légy figyelemmel arra, hogy a tűzvarázslatoknak nincs hatása az alvilági lényeken.",
+				"#colour_fireTűz#colour_reset \nTán a legpusztítóbb elem, a tűz szakterülete az égés, láva, és robbanások. Egy erős pyromágus képes a poklot rászabadítani ellenfeleire, és valószínűleg lángokba állítani a világot eközben. A legtöbb tűzalapú támadás felgyújtja a célpontot, folyamatos sebzést okozva. Ugyanakkor légy figyelemmel arra, hogy a tűzvarázslatoknak nincs hatása az alvilági lényeken.",
 
 				"#colour_iceJég#colour_reset \nA jég eleme mindabból áll, mi hideg. A fagyvarázslatok gyakran lelassítják az ellenfelet, vagy teljesen megfagyasztják, és különösen hatékonyak a lángok lényei ellen. A fagymágia legalább ilyen hasznosnak bizonyulhat harcon kívül is, mint például egy folyó befagyasztásánál az átkeléshez.",
 
@@ -606,7 +692,7 @@
 
 				"#colour_necromancyNekromágia#colour_reset \nA nekromágia a sötétség eleme, a káoszé és élőhalálé. A nekromágusok rejtélyesek, és gyakran gonosznak tartottak, még ha gyakran nem is ez az eset. A nekromágiai varázslatok gyakran használtak arra, hogy @creatures lényeket@ idézzen meg, melyek helyetted harcolnak, vagy akár ellenfeled akaratának megtörésére.",
 
-				"#colour_earthFöld#colour_reset \nA föld eleme a természetes világon fókuszál: állatok, növények, a szél, és társaik. A földmágia változatos és sokféle formát ölthet fel, ellenfelek megmérgezésétől az időjárás haragjának elszabadításáig, s ezáltal támadás, védekezés és hasznosságok keverékét nyújtja.",
+				"#colour_earthFöld#colour_reset \nA föld eleme a természetes világra fókuszál: állatok, növények, a szél, és társaik. A földmágia változatos és sokféle formát ölthet fel, ellenfelek megmérgezésétől az időjárás haragjának elszabadításáig, s ezáltal támadás, védekezés és mindennapi kis segítségek keverékét nyújtja.",
 
 				"#colour_sorceryMisztika#colour_reset \nA misztika az erő és változás eleme. A misztikus mágusok a fényt, gravitációt vagy akár a valóságot magát manipulálják saját szükségleteiknek megfelelően. Így a misztikus varázslatok használhatók például mágikus erők adására használójuknak, vagy objektumok mozgatására akaratukkal.",
 
@@ -632,7 +718,7 @@
 			],
 			"sections": {
 				"mana_flasks": {
-					"title": "Manapalackok",
+					"title": "Mana Flasks",
 					"include_in_contents": "miscellaneous_subsections",
 					"triggers": [
 						"ebwizardry:handbook/mana_flasks"
@@ -650,7 +736,7 @@
 						"#recipe small_mana_flask",
 						"#recipe large_mana_flask",
 
-						"* Ez az eljárás el fogja törni a palackot. Palackozás közben elvész némi mana."
+						"* Ez az eljárás el fogja törni a palackot. Palackozás közben elvészhet némi mana."
 					]
 				},
 				"throwable_items": {
@@ -670,7 +756,7 @@
 					]
 				},
 				"automated_casting": {
-					"title": "Automatizált Varázslás",
+					"title": "Automated Casting",
 					"include_in_contents": "miscellaneous_subsections",
 					"triggers": [
 						"ebwizardry:enchant_scroll"
@@ -711,7 +797,11 @@
 				"#recipe firebomb",
 				"#recipe poison_bomb",
 				"#recipe smoke_bomb",
-				"#recipe spark_bomb"
+				"#recipe spark_bomb",
+				"#recipe gilded_wood",
+				"#recipe bookshelves",
+				"#recipe lecterns",
+				"#recipe receptacle"
 			]
 		},
 		
@@ -724,9 +814,9 @@
 
 				"Design, kódolás és textúrázás: Electroblob",
 
-				"Köszönet a Minecraft Forge-nak és MCP-nek, melyek nélkül ez a mod nem lett volna lehetséges.",
+				"Köszönet a Minecraft Forge-nak és MCP-nek, melyek nélkül ez a mod nem lett volna lehetséges..",
 
-				"Szintén köszönet a Minecraft modding közösségnek, mely mindig válaszol moddolási gondjaimra!",
+				"Szintén köszönet a Minecraft modding közösségnek, mely mindig válaszol modolási gondjaimra!",
 
 				"Továbbá szeretnék köszönetet mondani a következő egyéneknek a modhoz való hozzájárulásukért:",
 
@@ -736,11 +826,13 @@
 
 				"Fordítások:",
 
-				"- Spanyol: MadWrist, Alsentar \n- Mexikói Spanyol: MadWrist \n- Orosz: VilagVil, kellixon, bigenergy \n- Francia: Hahdrim \n- Braziliai Portugál: lorrampi \n- Kínai: ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Koreai: shejery, rewi_wire \n- Lengyel: Trozuu \n-Német: BirdyDragon \n-Taiwán: chesterccj305 \n-Magyar: Bombadil",
+				"- Spanish: MadWrist, Alsentar \n- Mexican Spanish: MadWrist \n- Russian: VilagVil, kellixon, bigenergy \n- French: Hahdrim \n- Brazilian Portuguese: lorrampi \n- Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Korean: shejery, rewi_wire \n- Polish: Trozuu \n- German: BirdyDragon \n- Chinese (Traditional): chesterccj305 \n- Hungarian: Bombadil",
 
-				"Villámsugár hangeffekt OhhWowProductions által",
+				"Hangeffektek:",
 
-				"Még több információért keresd fel a @https://github.com/Electroblob77/Wizardry/wiki wikit@.",
+				"- OhhWowProductions\n- fredzed\n- deleted_user_3277771\n- DiscoveryME\n- OGSoundFX\n- leosalom\n- juskiddink",
+
+				"Még több információért keresd fel a @https://github.com/Electroblob77/Wizardry/wiki wikit@",
 
 				"Sosem elég a varázslásból? Csatlakozz a @https://discord.gg/hs8yJP2 Discord szerverhez@ a legfrissebb hírekért, beszélgetésekért és extrákért! (Angol nyelvű.)"
 			]
