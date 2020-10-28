@@ -178,20 +178,23 @@ public abstract class SpellRay extends Spell {
 		Vec3d origin = new Vec3d(caster.posX, caster.posY + caster.getEyeHeight() - Y_OFFSET, caster.posZ);
 		Vec3d targetPos = null;
 
-		if(!ignoreLivingEntities || !EntityUtils.isLiving(target)){
-			targetPos = new Vec3d(target.posX, target.posY + target.height / 2, target.posZ);
+		if(target != null){
 
-		}else{
+			if(!ignoreLivingEntities || !EntityUtils.isLiving(target)){
+				targetPos = new Vec3d(target.posX, target.posY + target.height / 2, target.posZ);
 
-			int x = MathHelper.floor(target.posX);
-			int y = (int)target.posY - 1; // -1 because we need the block under the target
-			int z = MathHelper.floor(target.posZ);
-			BlockPos pos = new BlockPos(x, y, z);
+			}else{
 
-			// This works as if the NPC had actually aimed at the floor beneath the target, so it needs to check that
-			// the block is not air and (optionally) not a liquid.
-			if(!world.isAirBlock(pos) && (!world.getBlockState(pos).getMaterial().isLiquid() || hitLiquids)){
-				targetPos = new Vec3d(x + 0.5, y + 1, z + 0.5);
+				int x = MathHelper.floor(target.posX);
+				int y = (int)target.posY - 1; // -1 because we need the block under the target
+				int z = MathHelper.floor(target.posZ);
+				BlockPos pos = new BlockPos(x, y, z);
+
+				// This works as if the NPC had actually aimed at the floor beneath the target, so it needs to check that
+				// the block is not air and (optionally) not a liquid.
+				if(!world.isAirBlock(pos) && (!world.getBlockState(pos).getMaterial().isLiquid() || hitLiquids)){
+					targetPos = new Vec3d(x + 0.5, y + 1, z + 0.5);
+				}
 			}
 		}
 
