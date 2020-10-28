@@ -25,6 +25,7 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderSpecificHandEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -58,6 +59,9 @@ public class PlayerAnimator {
 	/** Reflected into {@link RenderLivingBase}{@code #layerRenderers}. */
 	private static final Field layerRenderers;
 
+	/** True if wizardry's player animations have been overridden with another mod (currently only MoBends) */
+	private static boolean overridden;
+
 	static {
 		layerRenderers = ObfuscationReflectionHelper.findField(RenderLivingBase.class, "field_177097_h");
 	}
@@ -75,11 +79,18 @@ public class PlayerAnimator {
 		}
 	}
 
+	/** Returns true if spellcasting animations are enabled, false otherwise. */
+	public static boolean areAnimationsEnabled(){
+		return Wizardry.settings.spellcastingAnimations && !overridden;
+	}
+
 	// TODO: Figure out if calling this from postInit ensures we catch all the layers, and lazy-load it if not
 	@SuppressWarnings("unchecked")
 	public static void init(){
 
-		if(!Wizardry.settings.spellcastingAnimations) return;
+		if(Loader.isModLoaded("mobends")) overridden = true;
+
+		if(!areAnimationsEnabled()) return;
 
 		for(RenderPlayer renderer : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()){
 
@@ -174,7 +185,7 @@ public class PlayerAnimator {
 	@SubscribeEvent
 	public static void onRenderHandEvent(RenderSpecificHandEvent event){
 
-		if(!Wizardry.settings.spellcastingAnimations) return;
+		if(!areAnimationsEnabled()) return;
 
 		AbstractClientPlayer player = Minecraft.getMinecraft().player;
 
@@ -193,7 +204,7 @@ public class PlayerAnimator {
 	@SubscribeEvent
 	public static void onRenderPlayerPreEvent(RenderPlayerEvent.Pre event){
 
-		if(!Wizardry.settings.spellcastingAnimations) return;
+		if(!areAnimationsEnabled()) return;
 
 //		boolean firstPerson = event.getEntityPlayer() == Minecraft.getMinecraft().player
 //				&& Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
@@ -204,7 +215,7 @@ public class PlayerAnimator {
 	@SubscribeEvent
 	public static void onRenderPlayerPostEvent(RenderPlayerEvent.Post event){
 
-		if(!Wizardry.settings.spellcastingAnimations) return;
+		if(!areAnimationsEnabled()) return;
 
 		for(ModelBiped model : playerLayerModels.get(event.getRenderer())){
 			for(ModelRenderer box : model.boxList){ // For ModelPlayer, this will include the second layer
