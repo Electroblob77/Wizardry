@@ -86,6 +86,22 @@
 			"width": 110,
 			"height": 67
 		},
+                "library_ruins": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins.png",
+			"caption": "Ruinas de Biblioteca",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 57
+		},
+		"remnant": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/remnant.png",
+			"caption": "Remanente de Fuego",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 73
+		},
 		"tiers": {
 			"location": "ebwizardry:textures/gui/tiers.png",
 			"caption": "Los 4 niveles en las Varitas",
@@ -224,6 +240,39 @@
 		},
 		"spark_bomb": {
 			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+                "gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
 		}
 	},
 	
@@ -535,6 +584,33 @@
 						"Debido al gran poder e importancia arcana, sin mencionar las riquezas que contiene, estas estructuras son particularmente atractivas para cualquier mago aspirante. Pero ten cuidado, ha habido reportes de magos quedando atrapados en en el campo de contencion y lentamente perdiendo la cordura a medida que pasa el tiempo. Algunos otros, creen que aquellas ocurrencias es un deliberado esfuerzo de la magia protectora del santuario, y que aquellos magos atrapados son controlados para proteger la estructura. Una perspectiva escalofriante sin duda para todo aquel que se atreva a aventurarse cerca...."
 					]
 				},
+                                "library_ruins": {
+					"title": "Bibliotecas en ruinas",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:find_library_ruins"
+					],
+					"text": [
+
+						"Los magos suelen acumular una gran cantidad de hechizos durante sus vidas, por lo que es normal que un mago construya una biblioteca privada para organizar su coleccion. Se ha sabido de algunos magos particularmente desconfiados que guardaron su conocimiento arcano bajo tierra, lejos de ojos curiosos. Por desgracia, una biblioteca requiere mantenimiento, y si su due\u00f1o muere sin dejar un aprendiz para heredar sus libros, La estructura con el tiempo se desmoronara, se llenara de polvo y caera en el olvido. Miles de a\u00f1os desde que la magia fue descubierta ha dejado a mas y mas bibliotecas abandonadas,  y tu talvez te tropiezes con una en tus exploraciones. Siempre es buena idea buscar algun libro o pergamino que halla sobrevivido al paso del tiempo.",
+
+						"#image library_ruins",
+
+						"La bibliotecas no son solo para guardar libros. Los magos de anta\u00f1o utilizaban el poder del altar de infusion, usado para realizar rituales de infusion elemental en materiales magicos. La posicion del altar es precisa y con una ingeniera compleja detras, ya que debe de estar alineada con un movimiento celestial particular y fluctiaciones locales de mana. La disciplina de construir altares de infusion se ha vuelto mucho mas rara recientemente, ya que una vez construido, un altar de roca solida perdura por siglos, por lo que no hay mucha necesidad de hacer otros. Por lo tanto, la mayoria de magos buscan y reparan un altar existente para cuando necesiten realizar rituales de infusion - y bibliotecas en ruinas son lugares perfectos para buscar.",
+
+						"Tu tambien, talvez encuentres util construir tu propia biblioteca en algun punto, lo cual claro esta, requerira de estanterias magicas:",
+
+						"#recipe bookshelves",
+
+						"#recipe gilded_wood",
+
+						"Estas estanterias magicas no son solo muebles mundanos. Al utilizar los cristales magicos mas potentes al momento de su creacion, el conocimiento arcano en libros de hechizo puede ser transferido sin esfuerzo a travez del aire entre estanterias cercanas y @arcane_workbench mesas arcanas@ - bastante util mientras tu coleccion se expande cada vez mas. Igual de util es un atril:",
+
+						"#recipe lecterns",
+
+						"El tomo que flota sobre el atril reune el conocimiento de libro de hechizos cercanos, permitiendo ser revisados y estudiados sin necesidad de recordar su localizacion exacta."
+					]
+				},
 				"creatures": {
 					"title": "Criaturas Magicas",
 					"include_in_contents": "magical_world_subsections",
@@ -543,7 +619,17 @@
 					],
 					"text": [
 
-						"Ademas de magos, una gran cantidad de criaturas utilizan magia. Muchas de estas criaturas son de origen arcano, y la mayoria pueden ser invocadas desde el Caos Elemental usando @spells hechizos@. Es posible encontrarse con estas criaturas protegiendo un obelisco o a un poderoso mago invocador. Seres arcanos menores pueden ser encontrados casualmente en la naturaleza."
+						"Ademas de magos, una gran cantidad de criaturas utilizan magia. Muchas de estas criaturas son de origen arcano, y la mayoria pueden ser invocadas desde el Caos Elemental usando @spells hechizos@. Es posible encontrarse con estas criaturas protegiendo un obelisco o a un poderoso mago invocador. Seres arcanos menores pueden ser encontrados casualmente en la naturaleza.",
+
+                                                "Un buen ejemplo son los remanentes, seres como espiritus que se manifiestan naturalmente de los rastros de lo que alguna vez fue magia muy poderosa, y tipicamente estan hechos a base de uno de los siete @elements elementos arcanos@. individualmente, son solo una molestia, pero un enjambre puede acabar rapidamente con un aventurero no preparado, y su innata resistencia a la magia hace que sea sabio llevar un arco u otra arma a distancia.",
+
+						"#image remnant",
+
+						"Al morir, su polvo espectral puede ser recolectado,el cual ademas de emitir un colorido brillo, tiene una variedad de propiedades utiles. Un receptaculo, hecho como se muestra en la figura, provee un medio conveniente en el cual contenerlo.",
+
+						"#recipe receptacle",
+
+						"Los receptaculos pueden ser puestos en una superficie o en una pared y darles click derecho con polvo espectral para llenarlos, actuando como una suave fuente de luz. Haz click derecho en un receptaculo lleno para obtener el polvo espectral en el."
 					]
 				},
 				"artefacts": {
@@ -711,7 +797,11 @@
 				"#recipe firebomb",
 				"#recipe poison_bomb",
 				"#recipe smoke_bomb",
-				"#recipe spark_bomb"
+				"#recipe spark_bomb",
+                                "#recipe gilded_wood",
+				"#recipe bookshelves",
+				"#recipe lecterns",
+				"#recipe receptacle"
 			]
 		},
 		
@@ -732,13 +822,15 @@
 
 				"Codigo:",
 
-				"- Corail31 \n- 12foo \n- Shadows-of-Fire \n- HellFirePvP \n- Tora-B \n- Avatair \n- Aeronica",
+				"- Corail31 \n- 12foo \n- Shadows-of-Fire \n- HellFirePvP \n- Tora-B \n- Avatair \n- Aeronica \n- UltraHex \n- Azim-Palmer \n- raoulvdberge \n- rafasoares",
 
 				"Traducciones:",
 
-				"- Espa\u00f1ol de Espa\u00f1a y Mexico: MadWrist, Alsentar \n- Ruso: VilagVil, kellixon \n- Frances: Hahdrim \n- Portuges Brasile\u00f1o: lorrampi \n- Chino: ZHENGLOC, dragon-evol \n- Koreano: shejery, rewi_wire \n- Polaco: Trozuu",
+				"- Espa\u00f1ol de espa\u00f1a: Alsentar \n- Espa\u00f1ol de mexico: MadWrist \n- Ruso: VilagVil, kellixon, bigenergy \n- Frances: Hahdrim \n- Portugues brasile\u00f1o: lorrampi \n- Chino (Simplificado): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer \n- Koreano: shejery, rewi_wire \n- Polaco: Trozuu \n- Aleman: BirdyDragon \n- Chino (Tradicional): chesterccj305 \n- Hungaro: Bombadil",
 
-				"Efecto de sonido para los relampagos por OhhWowProductions",
+				"Efectos de sonido:",
+
+                                "- OhhWowProductions\n- fredzed\n- deleted_user_3277771\n- DiscoveryME\n- OGSoundFX\n- leosalom\n- juskiddink",
 
 				"Para mas informacion, revisa nuestra @https://github.com/Electroblob77/Wizardry/wiki wiki@.",
 
