@@ -173,6 +173,8 @@ public class PlayerAnimator {
 
 					for(ModelBiped model : models){
 
+						if(!ModelRendererExtended.isWrapped(model)) continue; // Should never happen but somehow it does
+
 						animation.setRotationAngles(player, model, partialTicks, firstPerson);
 
 						if(autoRotateSecondLayer && model instanceof ModelPlayer){

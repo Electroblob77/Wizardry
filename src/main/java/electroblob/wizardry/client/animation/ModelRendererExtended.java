@@ -93,6 +93,33 @@ public class ModelRendererExtended extends ModelRenderer {
 		}
 	}
 
+	/**
+	 * Returns whether the given {@link ModelBiped} is fully wrapped, i.e. all its parts are instances of
+	 * {@code ModelRendererExtended}. If the given model is a {@link ModelPlayer}, this also checks the extra boxes for
+	 * player skin overlays.
+	 */
+	public static boolean isWrapped(ModelBiped model){
+
+		boolean flag = true;
+
+		if(model instanceof ModelPlayer){
+			flag = flag && ((ModelPlayer)model).bipedBodyWear instanceof ModelRendererExtended;
+			flag = flag && ((ModelPlayer)model).bipedRightArmwear instanceof ModelRendererExtended;
+			flag = flag && ((ModelPlayer)model).bipedLeftArmwear instanceof ModelRendererExtended;
+			flag = flag && ((ModelPlayer)model).bipedRightLegwear instanceof ModelRendererExtended;
+			flag = flag && ((ModelPlayer)model).bipedLeftLegwear instanceof ModelRendererExtended;
+		}
+
+		return flag
+				&& model.bipedHead instanceof ModelRendererExtended
+				&& model.bipedBody instanceof ModelRendererExtended
+				&& model.bipedRightArm instanceof ModelRendererExtended
+				&& model.bipedLeftArm instanceof ModelRendererExtended
+				&& model.bipedRightLeg instanceof ModelRendererExtended
+				&& model.bipedLeftLeg instanceof ModelRendererExtended
+				&& model.bipedHeadwear instanceof ModelRendererExtended;
+	}
+
 	/** Resets the rotation of this model part to the angle set by the parent model. */
 	public void resetRotation(){
 		this.actualRotationX = Float.NaN;
