@@ -42,6 +42,8 @@ public class ModelRendererExtended extends ModelRenderer {
 		this.rotationPointX = delegate.rotationPointX;
 		this.rotationPointY = delegate.rotationPointY;
 		this.rotationPointZ = delegate.rotationPointZ;
+		this.cubeList = delegate.cubeList;
+		this.childModels = delegate.childModels;
 		this.resetRotation();
 	}
 
