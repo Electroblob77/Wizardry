@@ -35,7 +35,7 @@ In addition, I'd like to thank the following individuals for their contributions
 - Brazilian Portuguese: lorrampi
 - Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
 - Korean: shejery, rewi_wire, 방통
-- Polish: Trozuu
+- Polish: Trozuu, Olej
 - German: BirdyDragon
 - Chinese (Traditional): chesterccj305
 - Hungarian: Bombadil
