@@ -133,6 +133,13 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 	}
 
 	@Override
+	protected boolean onNeighborChangeInternal(World world, BlockPos pos, IBlockState state){
+		// This is so stupid, BlockTorch DUPLICATES the code that checks for valid placement in the super method instead
+		// of checking the existing methods...
+		return !this.checkForDrop(world, pos, state); // Literally all we need. None of the rubbish in super.
+	}
+
+	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer){
 
 		if(this.canPlaceAt(world, pos, facing)){
