@@ -6,7 +6,7 @@ tile.ebwizardry\:ice_statue.name=Ледяная статуя
 tile.ebwizardry\:crystal_flower.name=Кристальный цветок
 tile.ebwizardry\:snare.name=Ловушка
 tile.ebwizardry\:transportation_stone.name=Камень перемещения
-tile.ebwizardry\:transportation_stone.confirm=Сейчас, Вы вернётесь сюда после использования заклинания %1$s
+tile.ebwizardry\:transportation_stone.confirm=Вы теперь сюда вернётесь после использования заклинания %1$s
 tile.ebwizardry\:transportation_stone.remember=Запомнил местоположение %s, %s, %s в измерении %s
 tile.ebwizardry\:transportation_stone.forget=Забыл местоположение %s, %s, %s в измерении %s
 tile.ebwizardry\:transportation_stone.invalid=Первое, что Вы должны сделать, это круг с 8-ю камнями перемещения!
@@ -114,7 +114,7 @@ item.ebwizardry\:apprentice_ice_wand.name=Жезл ученика ледяног
 item.ebwizardry\:apprentice_lightning_wand.name=Жезл ученика грозового мага
 item.ebwizardry\:apprentice_necromancy_wand.name=Жезл ученика некроманта
 item.ebwizardry\:apprentice_earth_wand.name=Жезл ученика мага
-item.ebwizardry\:apprentice_sorcery_wand.name=Жезл ученика колдуна
+item.ebwizardry\:apprentice_sorcery_wand.name=Жезл ученика чародея
 item.ebwizardry\:apprentice_healing_wand.name=Жезл ученика целителя
 пироманта
 item.ebwizardry\:advanced_fire_wand.name=Жезл пироманта
@@ -122,7 +122,7 @@ item.ebwizardry\:advanced_ice_wand.name=Жезл ледяного мага
 item.ebwizardry\:advanced_lightning_wand.name=Жезл грозового мага
 item.ebwizardry\:advanced_necromancy_wand.name=Жезл некроманта
 item.ebwizardry\:advanced_earth_wand.name=Жезл земляного мага
-item.ebwizardry\:advanced_sorcery_wand.name=Жезл колдуна
+item.ebwizardry\:advanced_sorcery_wand.name=Жезл чародея
 item.ebwizardry\:advanced_healing_wand.name=Жезл целителя
 
 item.ebwizardry\:master_fire_wand.name=Жезл мастера пироманта
@@ -130,7 +130,7 @@ item.ebwizardry\:master_ice_wand.name=Жезл мастера ледяного �
 item.ebwizardry\:master_lightning_wand.name=Жезл мастера грозового мага
 item.ebwizardry\:master_necromancy_wand.name=Жезл мастера некроманта
 item.ebwizardry\:master_earth_wand.name=Жезл мастера земляного мага
-item.ebwizardry\:master_sorcery_wand.name=Жезл мастера колдуна
+item.ebwizardry\:master_sorcery_wand.name=Жезл мастера чародея
 item.ebwizardry\:master_healing_wand.name=Жезл мастера целителя
 
 item.ebwizardry\:spectral_sword.name=Спектральный меч
@@ -242,10 +242,10 @@ item.ebwizardry\:wizard_robe_earth.name=Роба земляного мага
 item.ebwizardry\:wizard_leggings_earth.name=Поножи земляного мага
 item.ebwizardry\:wizard_boots_earth.name=Ботинки земляного мага
 
-item.ebwizardry\:wizard_hat_sorcery.name=Шляпа колдуна
-item.ebwizardry\:wizard_robe_sorcery.name=Роба колдуна
-item.ebwizardry\:wizard_leggings_sorcery.name=Поножи колдуна
-item.ebwizardry\:wizard_boots_sorcery.name=Ботинки колдуна
+item.ebwizardry\:wizard_hat_sorcery.name=Шляпа чародея
+item.ebwizardry\:wizard_robe_sorcery.name=Роба чародея
+item.ebwizardry\:wizard_leggings_sorcery.name=Поножи чародея
+item.ebwizardry\:wizard_boots_sorcery.name=Ботинки чародея
 
 item.ebwizardry\:wizard_hat_healing.name=Шляпа целителя
 item.ebwizardry\:wizard_robe_healing.name=Роба целителя
@@ -723,7 +723,7 @@ gui.ebwizardry\:spell_book.tier=Уровень: %s
 gui.ebwizardry\:spell_book.element=Элемент: %s
 gui.ebwizardry\:spell_book.element_undiscovered=Элемент: ?
 gui.ebwizardry\:spell_book.mana_cost=Стоимость маны: %s
-gui.ebwizardry\:spell_book.mana_cost_continuous=Стоимость маны: %s/сек
+gui.ebwizardry\:spell_book.mana_cost_continuous=Стоимость маны: %s/в сек
 gui.ebwizardry\:spell_book.mana_cost_undiscovered=Стоимость маны: ?
 
 gui.ebwizardry\:lectern.title=Поиск свитка
@@ -740,8 +740,8 @@ container.ebwizardry\:arcane_workbench.search_tooltip=%1$sПоиск по под
 
 container.ebwizardry\:bookshelf=Книжная полка
 
-tier.novice=Начинающий
-tier.apprentice=Ученик
+tier.novice=Новичок
+tier.apprentice=Подмастерье
 tier.advanced=Продвинутый
 tier.master=Мастер
 
@@ -751,16 +751,16 @@ element.ice=Ледяной
 element.lightning=Молний
 element.necromancy=Некромантиной
 element.earth=Земляной
-element.sorcery=Колдовской
+element.sorcery=Волшебной
 element.healing=Лечебной
 
-element.magic.wizard=Волшебник
+element.magic.wizard=Чародей
 element.fire.wizard=Пиромант
 element.ice.wizard=Ледяной маг
 element.lightning.wizard=Грозовой маг
 element.necromancy.wizard=Некромант
 element.earth.wizard=Земляной маг
-element.sorcery.wizard=Колдун
+element.sorcery.wizard=Волшебник
 element.healing.wizard=Целитель
 
 spelltype.attack=Атака
@@ -888,7 +888,7 @@ spell.ebwizardry\:lightning_pulse=Молниеносный пульс
 spell.ebwizardry\:lightning_ray=Молниеносный луч
 spell.ebwizardry\:lightning_sigil=Молниеносный сигил
 spell.ebwizardry\:lightning_web=Молниеносная паутина
-spell.ebwizardry\:magic_missile=Магическая ракета
+spell.ebwizardry\:magic_missile=Магический метательный снаряд
 spell.ebwizardry\:mark_sacrifice=Знак жертвоприношения
 spell.ebwizardry\:metamorphosis=Метаморфоз
 spell.ebwizardry\:meteor=Метеор
@@ -1617,10 +1617,10 @@ config.ebwizardry.auto_place_obelisk_markers=Автоматическое раз
 config.ebwizardry.auto_place_obelisk_markers.tooltip=Управляет автоматическим размещением меток в Antique atlas в местах Обелисков.
 config.ebwizardry.auto_place_shrine_markers=Автоматическое размещение меток Святилище
 config.ebwizardry.auto_place_shrine_markers.tooltip=Управляет автоматическим размещением меток в Antique atlas в местах Святилищ.
-config.ebwizardry.auto_place_library_markers=Автоматическое размещение меток Библиотеке
+config.ebwizardry.auto_place_library_markers=Автоматическое размещение меток Руин библиотек
 config.ebwizardry.auto_place_library_markers.tooltip=Управляет автоматическим размещением меток в Antique atlas в местах Заброшенных библиотек.
 config.ebwizardry.auto_place_underground_library_markers=Автоматическое размещение меток Подземной библиотеки.
-config.ebwizardry.auto_place_underground_library_markers.tooltip=Управляет автоматическим размещением меток в Antique atlas в местах Подземных библиотек.
+config.ebwizardry.auto_place_underground_library_markers.tooltip=Управляет автоматическим размещением меток в Antique atlas в местах Подземных руин библиотек.
 
 integration.jei.category.ebwizardry\:arcane_workbench=Мистический верстак
 integration.jei.category.ebwizardry\:imbuement_altar=Алтарь наполнения
@@ -1628,7 +1628,7 @@ integration.jei.category.ebwizardry\:imbuement_altar=Алтарь наполне
 integration.antiqueatlas.marker.ebwizardry.wizard_tower=Башня волшебника
 integration.antiqueatlas.marker.ebwizardry.obelisk=Обелиск
 integration.antiqueatlas.marker.ebwizardry.shrine=Святилища
-integration.antiqueatlas.marker.ebwizardry.library_ruins=Заброшенная библиотека
+integration.antiqueatlas.marker.ebwizardry.library_ruins=Руины библиотеки
 
 spell.ebwizardry\:magic_missile_festive=Магическая омела
 spell.ebwizardry\:summon_snow_golem_festive=Призывает замороженного Снеговика
