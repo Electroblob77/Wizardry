@@ -727,7 +727,7 @@ gui.ebwizardry\:spell_book.mana_cost=魔力消耗: %s
 gui.ebwizardry\:spell_book.mana_cost_continuous=魔力消耗: %s/s
 gui.ebwizardry\:spell_book.mana_cost_undiscovered=魔力消耗: ？
 
-gui.ebwizardry\:lectern.title=Spell Lookup
+gui.ebwizardry\:lectern.title=法术查阅
 
 container.ebwizardry\:arcane_workbench=奥术工作台
 container.ebwizardry\:arcane_workbench.mana=魔力：%s/%s
