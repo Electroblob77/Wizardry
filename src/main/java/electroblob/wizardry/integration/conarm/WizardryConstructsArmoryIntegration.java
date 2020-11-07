@@ -33,7 +33,9 @@ public class WizardryConstructsArmoryIntegration {
 
     public static void damageArmor(ItemStack itemStack, DamageSource source, int amount, EntityPlayer player){
         if(enabled()){
-            ArmorHelper.damageArmor(itemStack, source, amount, player);
+            if(ArmorHelper.isUnbrokenTinkersArmor(itemStack)){
+                ArmorHelper.damageArmor(itemStack, source, amount, player);
+            }
         }
     }
 
