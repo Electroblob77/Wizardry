@@ -8,6 +8,7 @@ import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
+import electroblob.wizardry.integration.conarm.WizardryConstructsArmoryIntegration;
 import electroblob.wizardry.misc.Forfeit;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.*;
@@ -132,7 +133,7 @@ public class Wizardry {
 
 		WizardryBaublesIntegration.init();
 		WizardryAntiqueAtlasIntegration.init();
-
+		WizardryConstructsArmoryIntegration.init();
 	}
 
 	@EventHandler

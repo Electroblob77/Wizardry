@@ -239,6 +239,8 @@ public final class Settings {
 	public boolean compatibilityWarnings = true;
 	/** <b>[Server-only]</b> Whether Baubles integration features are enabled. */
 	public boolean baublesIntegration = true;
+	/** <b>[Server-only]</b> Whether ConstructsArmory integration features are enabled. */
+	public boolean constructsArmoryIntegration = true;
 //	/** <b>[Server-only]</b> Whether JEI integration features are enabled. */
 //	public boolean jeiIntegration = true;
 	/** <b>[Server-only]</b> Whether Antique Atlas integration features are enabled. */
@@ -1057,6 +1059,14 @@ public final class Settings {
 //		Wizardry.proxy.setToNamedBooleanEntry(property);
 //		jeiIntegration = property.getBoolean();
 //		propOrder.add(property.getName());
+
+		property = config.get(COMPATIBILITY_CATEGORY, "constructsArmoryIntegration", true,
+				"If Construct's Armory is installed, controls whether Construct's Armory integration features are enabled. If this is disabled, wizardry will always behave as if Construct's Armory is not installed and may have unintended effects towards Tinkers Armor.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".constructs_armory_integration");
+		property.setRequiresMcRestart(true);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		constructsArmoryIntegration = property.getBoolean();
+		propOrder.add(property.getName());
 
 		property = config.get(COMPATIBILITY_CATEGORY, "antiqueAtlasIntegration", true,
 				"If Antique Atlas is installed, controls whether Antique Atlas integration features are enabled. If this is disabled, wizardry will always behave as if Antique Atlas is not installed.");

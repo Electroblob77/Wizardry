@@ -1,9 +1,14 @@
 package electroblob.wizardry.potion;
 
+import c4.conarm.common.armor.utils.ArmorHelper;
+import c4.conarm.lib.tinkering.TinkersArmor;
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.integration.conarm.WizardryConstructsArmoryIntegration;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
@@ -36,8 +41,11 @@ public class CurseUndeath extends Curse {
 				ItemStack itemstack = entitylivingbase.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
 				if(!itemstack.isEmpty()){
-					if(itemstack.isItemStackDamageable()){
 
+					if(WizardryConstructsArmoryIntegration.isTinkersArmor(itemstack) && entitylivingbase instanceof EntityPlayer){
+						EntityPlayer player = (EntityPlayer) entitylivingbase;
+						WizardryConstructsArmoryIntegration.damageArmor(itemstack, DamageSource.MAGIC, entitylivingbase.world.rand.nextInt(2), player);
+					} else if(itemstack.isItemStackDamageable()){
 						itemstack.setItemDamage(itemstack.getItemDamage() + entitylivingbase.world.rand.nextInt(2));
 
 						if(itemstack.getItemDamage() >= itemstack.getMaxDamage()){
