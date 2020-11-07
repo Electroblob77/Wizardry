@@ -29,6 +29,8 @@ public class ItemPoisonBomb extends Item {
 
 		player.playSound(WizardrySounds.ENTITY_POISON_BOMB_THROW, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
+		player.getCooldownTracker().setCooldown(this, 20);
+
 		if(!world.isRemote){
 			EntityPoisonBomb poisonbomb = new EntityPoisonBomb(world);
 			poisonbomb.aim(player, 1);

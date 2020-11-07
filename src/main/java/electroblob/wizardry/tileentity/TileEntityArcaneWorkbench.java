@@ -1,6 +1,7 @@
 package electroblob.wizardry.tileentity;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.IWorkbenchItem;
 import electroblob.wizardry.item.ItemCrystal;
@@ -36,8 +37,13 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 	/** Controls the rotating rune and floating wand animations. */
 	public float timer = 0;
 
+	private boolean doNotSync;
+
 	public TileEntityArcaneWorkbench(){
 		inventory = NonNullList.withSize(ContainerArcaneWorkbench.UPGRADE_SLOT + 1, ItemStack.EMPTY);
+		// Prevent sync() happening when loading from NBT the first time or weirdness ensues when loading a world
+		// Normally I'd pass this as a flag to setInventorySlotContents but we can't change the method signature
+		this.doNotSync = true;
 	}
 
 	@Override
@@ -47,11 +53,13 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	/** Called to manually sync the tile entity with clients. */
 	public void sync(){
-		this.world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+		if(!doNotSync) this.world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 	}
 
 	@Override
 	public void update(){
+
+		this.doNotSync = false;
 
 		ItemStack stack = this.getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
 
@@ -112,8 +120,12 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack){
-		
-		inventory.set(slot, stack);
+
+		ItemStack previous = inventory.set(slot, stack);
+
+		// Only the central slot affects the in-world rendering, so only sync if that changes
+		// This must be done in the tile entity because containers only exist for player interaction, not hoppers etc.
+		if(slot == ContainerArcaneWorkbench.CENTRE_SLOT && previous.isEmpty() != stack.isEmpty()) this.sync();
 		
 		if(!stack.isEmpty() && stack.getCount() > getInventoryStackLimit()){
 			stack.setCount(getInventoryStackLimit());
@@ -156,7 +168,17 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		if(itemstack == ItemStack.EMPTY) return true;
 
 		if(slotNumber >= 0 && slotNumber < ContainerArcaneWorkbench.CRYSTAL_SLOT){
-			return itemstack.getItem() instanceof ItemSpellBook;
+
+			if(!(itemstack.getItem() instanceof ItemSpellBook)) return false;
+
+			ItemStack centreStack = getStackInSlot(ContainerArcaneWorkbench.CENTRE_SLOT);
+
+			if(centreStack.getItem() instanceof IWorkbenchItem){
+				int spellSlots = ((IWorkbenchItem)centreStack.getItem()).getSpellSlotCount(centreStack);
+				return slotNumber < spellSlots;
+			}
+
+			return false;
 
 		}else if(slotNumber == ContainerArcaneWorkbench.CRYSTAL_SLOT){
 			return itemstack.getItem() instanceof ItemCrystal;
@@ -198,12 +220,10 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		NBTTagList itemList = new NBTTagList();
 		for(int i = 0; i < getSizeInventory(); i++){
 			ItemStack stack = getStackInSlot(i);
-			if(!stack.isEmpty()){
-				NBTTagCompound tag = new NBTTagCompound();
-				tag.setByte("Slot", (byte)i);
-				stack.writeToNBT(tag);
-				itemList.appendTag(tag);
-			}
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setByte("Slot", (byte)i);
+			stack.writeToNBT(tag);
+			itemList.appendTag(tag);
 		}
 
 		NBTExtras.storeTagSafely(tagCompound, "Inventory", itemList);
@@ -217,7 +237,7 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket(){
-		return new SPacketUpdateTileEntity(pos, getBlockMetadata(), this.getUpdateTag());
+		return new SPacketUpdateTileEntity(pos, 0, this.getUpdateTag());
 	}
 
 	@Override

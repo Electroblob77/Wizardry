@@ -2,9 +2,13 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISpellCaster;
+import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.IElementalDamage;
+import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,9 +16,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntityDispenser;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.function.BiFunction;
 
@@ -39,7 +47,13 @@ import java.util.function.BiFunction;
  * @since Wizardry 4.2.8
  */
 // TODO: Use events to make these projectiles seek targets when the caster is wearing a ring of attraction (is this possible?)
+@EventBusSubscriber
 public class SpellThrowable<T extends EntityThrowable> extends Spell {
+
+	/** NBT key for storing a damage modifier in an external entity (i.e. from vanilla or another mod). Entities with a
+	 * float value stored under this key will have their damage dealt multiplied by that value. This is not just for
+	 * projectiles; it will work for any entity that uses a damage source with itself as the immediate source. */
+	public static final String DAMAGE_MODIFIER_NBT_KEY = Wizardry.MODID + "DamageModifier";
 
 	private static final float LAUNCH_Y_OFFSET = 0.1f;
 
@@ -75,6 +89,7 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 			float velocity = calculateVelocity(modifiers, caster.getEyeHeight() - LAUNCH_Y_OFFSET);
 			T projectile = projectileFactory.apply(world, caster);
 			projectile.shoot(caster, caster.rotationPitch, caster.rotationYaw, 0.0f, velocity, 1.0f);
+			projectile.getEntityData().setFloat(DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
 			addProjectileExtras(projectile, caster, modifiers);
 			world.spawnEntity(projectile);
 		}
@@ -93,7 +108,7 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 				float velocity = calculateVelocity(modifiers, caster.getEyeHeight() - LAUNCH_Y_OFFSET);
 				T projectile = projectileFactory.apply(world, caster);
 				int aimingError = caster instanceof ISpellCaster ? ((ISpellCaster)caster).getAimingError(world.getDifficulty())
-						: WizardryUtilities.getDefaultAimingError(world.getDifficulty());
+						: EntityUtils.getDefaultAimingError(world.getDifficulty());
 				aim(projectile, caster, target, velocity, aimingError);
 				addProjectileExtras(projectile, caster, modifiers);
 				world.spawnEntity(projectile);
@@ -112,10 +127,10 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 
 		throwable.ignoreEntity = caster;
 
-		throwable.posY = caster.getEntityBoundingBox().minY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
+		throwable.posY = caster.posY + (double)caster.getEyeHeight() - LAUNCH_Y_OFFSET;
 		double dx = target.posX - caster.posX;
-		double dy = !throwable.hasNoGravity() ? target.getEntityBoundingBox().minY + (double)(target.height / 3.0f) - throwable.posY
-				: target.getEntityBoundingBox().minY + (double)(target.height / 2.0f) - throwable.posY;
+		double dy = !throwable.hasNoGravity() ? target.posY + (double)(target.height / 3.0f) - throwable.posY
+				: target.posY + (double)(target.height / 2.0f) - throwable.posY;
 		double dz = target.posZ - caster.posZ;
 		double horizontalDistance = MathHelper.sqrt(dx * dx + dz * dz);
 
@@ -138,5 +153,36 @@ public class SpellThrowable<T extends EntityThrowable> extends Spell {
 	 * projectile.
 	 */
 	protected void addProjectileExtras(T projectile, EntityLivingBase caster, SpellModifiers modifiers){}
+
+	@SubscribeEvent
+	public static void onLivingAttackEvent(LivingAttackEvent event){
+
+		// TODO: Annoyingly, wither skulls apply 'direct' damage from their shooter so they won't be recognised here
+		if(event.getSource().getImmediateSource() != null && !(event.getSource() instanceof IElementalDamage)){ // Prevent infinite looping
+
+			float damageModifier = event.getSource().getImmediateSource().getEntityData().getFloat(DAMAGE_MODIFIER_NBT_KEY);
+
+			// Really, we just want to increase the damage without modifying the source, but that would cause an
+			// infinite loop so we need some way of identifying it - the easiest way is to use MagicDamage, which fits
+			// quite nicely since we can only get here if the entity was from a spell anyway
+			if(damageModifier > 0){
+
+				Entity projectile = event.getSource().getImmediateSource();
+				Entity shooter = event.getSource().getTrueSource();
+
+				DamageSource newSource = shooter == projectile
+						? MagicDamage.causeDirectMagicDamage(projectile, DamageType.MAGIC)
+						: MagicDamage.causeIndirectMagicDamage(projectile, shooter, DamageType.MAGIC);
+
+				// Copy over any relevant 'attributes' the original DamageSource might have had.
+				if(event.getSource().isExplosion()) newSource.setExplosion();
+				if(event.getSource().isFireDamage()) newSource.setFireDamage();
+				if(event.getSource().isProjectile()) newSource.setProjectile();
+
+				DamageSafetyChecker.attackEntitySafely(event.getEntity(), newSource,
+						event.getAmount() * damageModifier, event.getSource(), true);
+			}
+		}
+	}
 
 }

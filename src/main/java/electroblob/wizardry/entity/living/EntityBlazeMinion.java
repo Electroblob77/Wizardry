@@ -1,6 +1,7 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -94,8 +95,8 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	protected void spawnParticleEffect(){
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
-				this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + this.rand.nextFloat(),
-						this.posY + 1 + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0, 0, 0);
+				this.world.spawnParticle(EnumParticleTypes.FLAME, this.posX + this.rand.nextFloat() - 0.5f,
+						this.posY + this.rand.nextFloat() * height, this.posZ + this.rand.nextFloat() - 0.5f, 0, 0, 0);
 			}
 		}
 	}
@@ -103,6 +104,11 @@ public class EntityBlazeMinion extends EntityBlaze implements ISummonedCreature 
 	@Override
 	public boolean hasParticleEffect(){
 		return false;
+	}
+
+	@Override
+	public int getAnimationColour(float animationProgress){
+		return DrawingUtils.mix(0xffdd4d, 0xff6600, animationProgress);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -118,7 +119,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 
 		if(this instanceof Entity){ // Bit of a cheat but it saves having yet another method just to get the world
 
-			Entity entity = WizardryUtilities.getEntityByUUID(((Entity)this).world, getOwnerId());
+			Entity entity = EntityUtils.getEntityByUUID(((Entity)this).world, getOwnerId());
 
 			if(entity != null && !(entity instanceof EntityLivingBase)){ // Should never happen
 				Wizardry.logger.warn("{} has a non-living owner!", this);
@@ -239,6 +240,16 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 	/** Whether this creature should spawn a subtle black swirl particle effect while alive. */
 	boolean hasParticleEffect();
 
+	/** Returns whether this creature has an animation when appearing and disappearing. */
+	default boolean hasAnimation(){
+		return true;
+	}
+
+	/** Returns the colour of this creature's appear/disappear animation. */
+	default int getAnimationColour(float animationProgress){
+		return 0x000000;
+	}
+
 	/**
 	 * Called from the event handler after the damage change is applied. Does nothing by default, but can be overridden
 	 * to do something when a successful attack is made. This was added because the event-based damage source system can
@@ -342,7 +353,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 
 	// Damage system
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST) // Needs to be first because we're replacing damage entirely
 	static void onLivingAttackEvent(LivingAttackEvent event){
 
 		// Rather than bother overriding entire attack methods in ISummonedCreature implementations, it's easier (and
@@ -385,7 +396,7 @@ public interface ISummonedCreature extends IEntityAdditionalSpawnData, IEntityOw
 				// no summoner.
 				if(DamageSafetyChecker.attackEntitySafely(event.getEntity(), newSource, event.getAmount(), event.getSource(), false)){
 					// Uses event.getSource().getTrueSource() as this means the target is knocked back from the minion
-					WizardryUtilities.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
+					EntityUtils.applyStandardKnockback(event.getSource().getTrueSource(), event.getEntityLiving());
 					((ISummonedCreature)event.getSource().getTrueSource()).onSuccessfulAttack(event.getEntityLiving());
 					// If the target revenge-targeted the summoner, make it revenge-target the minion instead
 					// (if it didn't revenge-target, do nothing)

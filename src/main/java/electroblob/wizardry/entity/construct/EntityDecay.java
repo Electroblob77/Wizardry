@@ -4,11 +4,10 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class EntityDecay extends EntityMagicConstruct {
 
-	public int textureIndex = 0;
+	public int textureIndex;
 
 	public EntityDecay(World world){
 		super(world);
@@ -36,7 +35,7 @@ public class EntityDecay extends EntityMagicConstruct {
 					0.6F + rand.nextFloat() * 0.15F);
 
 		if(!this.world.isRemote){
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(1.0d, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(1.0d, this.posX, this.posY,
 					this.posZ, this.world);
 			for(EntityLivingBase target : targets){
 				if(target != this.getCaster()){
@@ -61,12 +60,6 @@ public class EntityDecay extends EntityMagicConstruct {
 			.spawn(world);
 		}
 	}
-
-	@Override protected void entityInit(){}
-
-	@Override protected void readEntityFromNBT(NBTTagCompound nbttagcompound){}
-
-	@Override protected void writeEntityToNBT(NBTTagCompound nbttagcompound){}
 
 	@Override
 	public boolean isInRangeToRenderDist(double distance){

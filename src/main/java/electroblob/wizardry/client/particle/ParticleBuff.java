@@ -59,7 +59,7 @@ public class ParticleBuff extends ParticleWizardry {
 			float rotationYZ, float rotationXY, float rotationXZ){
 
 		// Copied from ParticleWizardry, needs to be here since we're not calling super
-		updateEntityLinking(partialTicks);
+		updateEntityLinking(viewer, partialTicks);
 		
 		GlStateManager.pushMatrix();
 		GlStateManager.pushAttrib();

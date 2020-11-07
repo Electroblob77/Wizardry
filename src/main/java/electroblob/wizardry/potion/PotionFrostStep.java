@@ -5,15 +5,14 @@ import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentFrostWalker;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -32,7 +31,7 @@ public class PotionFrostStep extends PotionMagicEffect implements ICustomPotionP
 	private static final Field prevBlockPos = ObfuscationReflectionHelper.findField(EntityLivingBase.class, "field_184620_bC");
 
 	public PotionFrostStep(boolean isBadEffect, int liquidColour){
-		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_frost_step.png"));
+		super(isBadEffect, liquidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/frost_step.png"));
 		this.setPotionName("potion." + Wizardry.MODID + ":frost_step");
 	}
 
@@ -103,7 +102,7 @@ public class PotionFrostStep extends PotionMagicEffect implements ICustomPotionP
 
 						IBlockState state2 = world.getBlockState(pos2);
 
-						if(state2.getMaterial() == Material.LAVA && (state2.getBlock() == Blocks.LAVA || state2.getBlock() == Blocks.FLOWING_LAVA) && state2.getValue(BlockLiquid.LEVEL) == 0 && world.mayPlace(WizardryBlocks.obsidian_crust, pos2, false, EnumFacing.DOWN, null)){
+						if(BlockUtils.isLavaSource(state2) && world.mayPlace(WizardryBlocks.obsidian_crust, pos2, false, EnumFacing.DOWN, null)){
 							world.setBlockState(pos2, WizardryBlocks.obsidian_crust.getDefaultState());
 							world.scheduleUpdate(pos2.toImmutable(), WizardryBlocks.obsidian_crust, MathHelper.getInt(living.getRNG(), 60, 120));
 						}

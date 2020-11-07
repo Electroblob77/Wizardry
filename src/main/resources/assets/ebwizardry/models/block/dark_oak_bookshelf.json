@@ -1,0 +1,9 @@
+{
+    "parent": "ebwizardry:block/bookshelf",
+    "textures": {
+        "particle": "ebwizardry:blocks/dark_oak_bookshelf_side",
+        "side": "ebwizardry:blocks/dark_oak_bookshelf_side",
+        "inside": "ebwizardry:blocks/dark_oak_bookshelf_inside",
+        "top": "ebwizardry:blocks/dark_oak_bookshelf_top"
+    }
+}

@@ -44,7 +44,7 @@ public class EntityDecoy extends EntitySummonedCreature {
 		if(world.isRemote){
 			for(int i = 0; i < 20; i++){
 				ParticleBuilder.create(Type.DUST)
-				.pos(this.posX + (this.rand.nextDouble() - 0.5) * this.width, this.getEntityBoundingBox().minY
+				.pos(this.posX + (this.rand.nextDouble() - 0.5) * this.width, this.posY
 						+ this.rand.nextDouble() * this.height, this.posZ + (this.rand.nextDouble() - 0.5) * this.width)
 				.time(40)
 				.clr(0.2f, 1.0f, 0.8f)
@@ -52,6 +52,11 @@ public class EntityDecoy extends EntitySummonedCreature {
 				.spawn(world);
 			}
 		}
+	}
+
+	@Override
+	public int getAnimationColour(float animationProgress){
+		return 0xffc600;
 	}
 
 	@Override

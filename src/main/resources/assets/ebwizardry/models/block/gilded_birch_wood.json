@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "ebwizardry:blocks/gilded_birch_wood"
+    }
+}

@@ -1,14 +1,14 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
@@ -19,11 +19,6 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class represents a blank spell used to fill empty slots on wands. It is unobtainable in-game, except via
- * commands, and does nothing when the player attempts to cast it. Its instance can be referenced directly using
- * {@link electroblob.wizardry.registry.Spells#none Spells.none}
- */
 public class SpeedTime extends Spell {
 
 	/** The base number of ticks to add to the world time for each tick the spell is cast. */
@@ -32,7 +27,7 @@ public class SpeedTime extends Spell {
 	public static final String EXTRA_TICKS = "extra_ticks";
 
 	public SpeedTime(){
-		super("speed_time", EnumAction.BOW, true);
+		super("speed_time", SpellActions.POINT_UP, true);
 		addProperties(EFFECT_RADIUS, TIME_INCREMENT, EXTRA_TICKS);
 	}
 
@@ -93,7 +88,7 @@ public class SpeedTime extends Spell {
 
 		if(!world.isRemote){
 
-			List<BlockPos> sphere = WizardryUtilities.getBlockSphere(caster.getPosition(), radius);
+			List<BlockPos> sphere = BlockUtils.getBlockSphere(caster.getPosition(), radius);
 
 			for(BlockPos pos : sphere){
 
@@ -113,7 +108,7 @@ public class SpeedTime extends Spell {
 
 				double particleSpread = 2;
 				double x = caster.posX + 2;
-				double y = caster.getEntityBoundingBox().minY + caster.height / 2;
+				double y = caster.posY + caster.height / 2;
 				double z = caster.posZ;
 
 				ParticleBuilder.create(ParticleBuilder.Type.SPARKLE, world.rand, x, y, z, particleSpread, false)

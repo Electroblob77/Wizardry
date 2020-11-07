@@ -1,17 +1,17 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class MindTrick extends SpellRay {
 
 	public MindTrick(){
-		super("mind_trick", false, EnumAction.NONE);
+		super("mind_trick", SpellActions.POINT, false);
 		this.soundValues(0.7f, 1, 0.4f);
 		addProperties(EFFECT_DURATION);
 	}
@@ -34,7 +34,7 @@ public class MindTrick extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 
 			if(!world.isRemote){
 
@@ -53,7 +53,7 @@ public class MindTrick extends SpellRay {
 			}else{
 				for(int i=0; i<10; i++){
 					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, target.posX,
-							target.getEntityBoundingBox().minY + target.getEyeHeight(), target.posZ, 0.25, false)
+							target.posY + target.getEyeHeight(), target.posZ, 0.25, false)
 					.clr(0.8f, 0.2f, 1.0f).spawn(world);
 				}
 			}

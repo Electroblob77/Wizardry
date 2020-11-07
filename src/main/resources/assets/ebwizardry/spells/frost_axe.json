@@ -14,7 +14,7 @@
   "element": "ice",
   "type": "utility",
   "cost": 45,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 50,
   "base_properties": {
     "item_lifetime": 1200,

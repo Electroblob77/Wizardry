@@ -17,15 +17,4 @@ public class ParticleDust extends ParticleWizardry {
 		this.setRBGColorF(1, 1, 1);
 	}
 
-	@Override
-	public void onUpdate(){
-		this.prevPosX = this.posX;
-		this.prevPosY = this.posY;
-		this.prevPosZ = this.posZ;
-		this.move(this.motionX, this.motionY, this.motionZ);
-
-		if(this.particleMaxAge-- <= 0){
-			this.setExpired();
-		}
-	}
 }

@@ -2,8 +2,8 @@ package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.world.EnumDifficulty;
 
 import javax.annotation.Nonnull;
@@ -91,6 +91,6 @@ public interface ISpellCaster {
 	 * skeletons, which are: Easy - 10, Normal - 6, Hard - 2, Peaceful - 10 (rarely used).
 	 */
 	default int getAimingError(EnumDifficulty difficulty) {
-		return WizardryUtilities.getDefaultAimingError(difficulty);
+		return EntityUtils.getDefaultAimingError(difficulty);
 	}
 }

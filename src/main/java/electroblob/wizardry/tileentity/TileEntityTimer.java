@@ -40,6 +40,10 @@ public class TileEntityTimer extends TileEntity implements ITickable {
 		this.maxTimer = lifetime;
 	}
 
+	public int getLifetime(){
+		return maxTimer;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound){
 		super.readFromNBT(tagCompound);

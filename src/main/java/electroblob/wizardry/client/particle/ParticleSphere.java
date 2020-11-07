@@ -41,7 +41,7 @@ public class ParticleSphere extends ParticleWizardry {
 							   float rotationXY, float rotationXZ){
 
 		// Copied from ParticleWizardry, needs to be here since we're not calling super
-		updateEntityLinking(partialTicks);
+		updateEntityLinking(viewer, partialTicks);
 
 		float x = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks);
 		float y = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks);

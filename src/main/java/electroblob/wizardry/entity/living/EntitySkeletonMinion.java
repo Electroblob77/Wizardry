@@ -1,7 +1,9 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.util.WizardryUtilities.Operations;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
@@ -73,7 +75,7 @@ public class EntitySkeletonMinion extends AbstractSkeleton implements ISummonedC
 	public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, @Nullable IEntityLivingData livingdata){
 		// Can't call super, so the code from the next level up (EntityLiving) had to be copied as well.
 		this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE)
-				.applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, Operations.MULTIPLY_FLAT));
+				.applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, EntityUtils.Operations.MULTIPLY_FLAT));
 
 		if(this.rand.nextFloat() < 0.05F){
 			this.setLeftHanded(true);
@@ -117,6 +119,9 @@ public class EntitySkeletonMinion extends AbstractSkeleton implements ISummonedC
 	@Override
 	public void onSpawn(){
 		this.spawnParticleEffect();
+		if(getCaster() instanceof EntityPlayer && ItemArtefact.isArtefactActive((EntityPlayer)getCaster(), WizardryItems.charm_undead_helmets)){
+			setItemStackToSlot(EntityEquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
+		}
 	}
 
 	@Override
@@ -127,8 +132,8 @@ public class EntitySkeletonMinion extends AbstractSkeleton implements ISummonedC
 	private void spawnParticleEffect(){
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
-				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + this.rand.nextFloat(),
-						this.posY + 1 + this.rand.nextFloat(), this.posZ + this.rand.nextFloat(), 0, 0, 0);
+				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE, this.posX + this.rand.nextFloat() - 0.5f,
+						this.posY + this.rand.nextFloat() * height, this.posZ + this.rand.nextFloat() - 0.5f, 0, 0, 0);
 			}
 		}
 	}

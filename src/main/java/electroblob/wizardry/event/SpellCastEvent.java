@@ -134,9 +134,9 @@ public abstract class SpellCastEvent extends Event {
 	/**
 	 * SpellCastEvent.Pre is fired just before a spell is cast. Use this event to change the spell modifiers and
 	 * generally alter the behaviour of the spell, or stop it from being cast entirely. For example, wizardry uses this
-	 * event to cancel spells cast by entities that have the arcane jammer effect. Note that for wands, this is called
-	 * <i>before</i> mana, tier and cooldowns are checked. Also note that this event is only fired once for continuous
-	 * spells, when they start casting.<br>
+	 * event to cancel spells cast by entities that have the arcane jammer effect. For wands, this is called
+	 * <i>before</i> mana, tier and cooldowns are checked, and before charge-up. Also note that this event is only fired
+	 * once for continuous spells, when they start casting.<br>
 	 * <br>
 	 * This event is {@link Cancelable}. If this event is canceled, the spell is not cast, mana is not consumed, and the
 	 * right-click action that caused it (if any) returns a result of FAIL, meaning that the right-click is passed to

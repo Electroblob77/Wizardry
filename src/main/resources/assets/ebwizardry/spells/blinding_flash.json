@@ -1,0 +1,23 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "apprentice",
+  "element": "lightning",
+  "type": "alteration",
+  "cost": 20,
+  "chargeup": 0,
+  "cooldown": 60,
+  "base_properties": {
+    "effect_radius": 5,
+    "effect_duration": 300
+  }
+}

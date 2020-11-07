@@ -8,11 +8,11 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.LightningHammer;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -105,7 +105,7 @@ public class EntityHammer extends EntityMagicConstruct {
 
 			double seekerRange = Spells.lightning_hammer.getProperty(Spell.EFFECT_RADIUS).doubleValue();
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(seekerRange, this.posX,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(seekerRange, this.posX,
 					this.posY + 1, this.posZ, world);
 
 			int maxTargets = Spells.lightning_hammer.getProperty(LightningHammer.SECONDARY_MAX_TARGETS).intValue();
@@ -113,7 +113,7 @@ public class EntityHammer extends EntityMagicConstruct {
 
 			for(EntityLivingBase target : targets){
 
-				if(WizardryUtilities.isLiving(target) && this.isValidTarget(target)
+				if(EntityUtils.isLiving(target) && this.isValidTarget(target)
 						&& target.ticksExisted % Spells.lightning_hammer.getProperty(LightningHammer.ATTACK_INTERVAL).floatValue() == 0){
 
 					if(world.isRemote){
@@ -121,7 +121,7 @@ public class EntityHammer extends EntityMagicConstruct {
 						ParticleBuilder.create(Type.LIGHTNING).pos(posX, posY + height - 0.1, posZ) .target(target).spawn(world);
 
 						ParticleBuilder.spawnShockParticles(world, target.posX,
-								target.getEntityBoundingBox().minY + target.height, target.posZ);
+								target.posY + target.height, target.posZ);
 					}
 
 					target.playSound(WizardrySounds.ENTITY_HAMMER_ATTACK, 1.0F, rand.nextFloat() * 0.4F + 1.5F);
@@ -129,9 +129,9 @@ public class EntityHammer extends EntityMagicConstruct {
 					float damage = Spells.lightning_hammer.getProperty(Spell.SPLASH_DAMAGE).floatValue() * damageMultiplier;
 
 					if(this.getCaster() != null){
-						WizardryUtilities.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(
+						EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(
 								this, getCaster(), DamageType.SHOCK), damage);
-						WizardryUtilities.applyStandardKnockback(this, target);
+						EntityUtils.applyStandardKnockback(this, target);
 					}else{
 						target.attackEntityFrom(DamageSource.MAGIC, damage);
 					}
@@ -183,7 +183,7 @@ public class EntityHammer extends EntityMagicConstruct {
 			}
 
 			if(this.fallDistance > 10){
-				WizardryUtilities.getEntitiesWithinRadius(10, posX, posY, posZ, world, EntityPlayer.class)
+				EntityUtils.getEntitiesWithinRadius(10, posX, posY, posZ, world, EntityPlayer.class)
 						.forEach(p -> Wizardry.proxy.shakeScreen(p, 6));
 			}
 
@@ -241,23 +241,12 @@ public class EntityHammer extends EntityMagicConstruct {
 	public void writeSpawnData(ByteBuf data){
 		super.writeSpawnData(data);
 		data.writeBoolean(spin);
-		if(getCaster() != null) data.writeInt(getCaster().getEntityId());
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf data){
 		super.readSpawnData(data);
 		spin = data.readBoolean();
-
-		if(!data.isReadable()) return;
-
-		Entity entity = world.getEntityByID(data.readInt());
-
-		if(entity instanceof EntityLivingBase){
-			setCaster((EntityLivingBase)entity);
-		}else{
-			Wizardry.logger.warn("Lightning hammer caster with ID in spawn data not found");
-		}
 	}
 
 	@Override

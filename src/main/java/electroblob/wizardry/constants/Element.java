@@ -7,8 +7,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 public enum Element implements IStringSerializable {
 
@@ -37,7 +37,7 @@ public enum Element implements IStringSerializable {
 	Element(Style colour, String name, String modid){
 		this.colour = colour;
 		this.unlocalisedName = name;
-		this.icon = new ResourceLocation(modid, "textures/gui/element_icon_" + unlocalisedName + ".png");
+		this.icon = new ResourceLocation(modid, "textures/gui/container/element_icon_" + unlocalisedName + ".png");
 	}
 
 	/** Returns the element with the given name, or throws an {@link java.lang.IllegalArgumentException} if no such
@@ -51,10 +51,21 @@ public enum Element implements IStringSerializable {
 		throw new IllegalArgumentException("No such element with unlocalised name: " + name);
 	}
 
+	/** Same as {@link Element#fromName(String)}, but returns the given fallback instead of throwing an exception if no
+	 * element matches the given string. */
+	@Nullable
+	public static Element fromName(String name, @Nullable Element fallback){
+
+		for(Element element : values()){
+			if(element.unlocalisedName.equals(name)) return element;
+		}
+
+		return fallback;
+	}
+
 	/** Returns the translated display name of this element, without formatting. */
-	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format("element." + getName());
+		return Wizardry.proxy.translate("element." + getName());
 	}
 
 	/** Returns the {@link Style} object representing the colour of this element. */

@@ -4,13 +4,13 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.entity.projectile.EntityMagicArrow;
 import electroblob.wizardry.entity.projectile.EntityMagicProjectile;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -56,7 +56,7 @@ public class SpellArrow<T extends EntityMagicArrow> extends Spell {
 	}
 
 	public SpellArrow(String modID, String name, Function<World, T> arrowFactory){
-		super(modID, name, EnumAction.NONE, false);
+		super(modID, name, SpellActions.POINT, false);
 		this.arrowFactory = arrowFactory;
 		this.addProperties(RANGE);
 		this.npcSelector((e, o) -> true);
@@ -101,8 +101,6 @@ public class SpellArrow<T extends EntityMagicArrow> extends Spell {
 			// Spawns the projectile in the world
 			world.spawnEntity(projectile);
 		}
-
-		caster.swingArm(hand);
 		
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 
@@ -119,7 +117,7 @@ public class SpellArrow<T extends EntityMagicArrow> extends Spell {
 				T projectile = arrowFactory.apply(world);
 				// Sets the necessary parameters
 				int aimingError = caster instanceof ISpellCaster ? ((ISpellCaster)caster).getAimingError(world.getDifficulty())
-						: WizardryUtilities.getDefaultAimingError(world.getDifficulty());
+						: EntityUtils.getDefaultAimingError(world.getDifficulty());
 				projectile.aim(caster, target, calculateVelocity(projectile, modifiers, caster.getEyeHeight()
 						- (float)EntityMagicProjectile.LAUNCH_Y_OFFSET), aimingError);
 				projectile.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);

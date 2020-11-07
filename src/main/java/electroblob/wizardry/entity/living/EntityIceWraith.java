@@ -1,6 +1,7 @@
 package electroblob.wizardry.entity.living;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -50,15 +51,18 @@ public class EntityIceWraith extends EntityBlazeMinion {
 		if(this.world.isRemote){
 			for(int i = 0; i < 15; i++){
 				float brightness = 0.5f + (rand.nextFloat() / 2);
-				ParticleBuilder.create(Type.SPARKLE)
-				.pos(this.posX - 0.5d + rand.nextDouble(), this.posY + this.height / 2 - 0.5d + rand.nextDouble(),
-						this.posZ - 0.5d + rand.nextDouble())
+				ParticleBuilder.create(Type.SPARKLE, this)
 				.vel(0, 0.05f, 0)
 				.time(20 + rand.nextInt(10))
 				.clr(brightness, brightness + 0.1f, 1.0f)
 				.spawn(world);
 			}
 		}
+	}
+
+	@Override
+	public int getAnimationColour(float animationProgress){
+		return DrawingUtils.mix(0xffffff, 0x73e1ff, animationProgress);
 	}
 
 	@Override

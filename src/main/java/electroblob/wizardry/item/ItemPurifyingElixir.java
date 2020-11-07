@@ -59,7 +59,7 @@ public class ItemPurifyingElixir extends Item {
 
 			for(int i = 0; i < 20; i++){
 				double x = entity.posX + world.rand.nextDouble() * 2 - 1;
-				double y = entity.getEntityBoundingBox().minY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
+				double y = entity.posY + entity.getEyeHeight() - 0.5 + world.rand.nextDouble();
 				double z = entity.posZ + world.rand.nextDouble() * 2 - 1;
 				ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.14, 0).clr(0x0f001b)
 						.time(20 + world.rand.nextInt(12)).spawn(world);

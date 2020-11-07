@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
@@ -8,7 +9,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -32,7 +32,7 @@ public class Thunderstorm extends Spell {
 	private static final float CENTRE_RADIUS_FRACTION = 0.5f;
 
 	public Thunderstorm(){
-		super("thunderstorm", EnumAction.BOW, false);
+		super("thunderstorm", SpellActions.POINT_UP, false);
 		this.soundValues(1, 1.7f, 0.2f);
 		addProperties(EFFECT_RADIUS, LIGHTNING_BOLTS, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE,
 				TERTIARY_RANGE, SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);
@@ -63,21 +63,19 @@ public class Thunderstorm extends Spell {
 
 				double x = caster.posX + radius * MathHelper.cos(angle);
 				double z = caster.posZ + radius * MathHelper.sin(angle);
-				Integer y = WizardryUtilities.getNearestFloor(world, new BlockPos(x, caster.posY, z), (int)maxRadius);
+				Integer y = BlockUtils.getNearestFloor(world, new BlockPos(x, caster.posY, z), (int)maxRadius);
 
 				if(y != null){
 
 					if(!world.isRemote){
-						EntityLightningBolt entitylightning = new EntityLightningBolt(world, x, y, z, false);
-						world.addWeatherEffect(entitylightning);
+						EntityLightningBolt lightning = new EntityLightningBolt(world, x, y, z, false);
+						lightning.getEntityData().setUniqueId(LightningBolt.SUMMONER_NBT_KEY, caster.getUniqueID());
+						lightning.getEntityData().setFloat(LightningBolt.DAMAGE_MODIFIER_NBT_KEY, modifiers.get(SpellModifiers.POTENCY));
+						world.addWeatherEffect(lightning);
 					}
 
-					// Code for eventhandler recognition; for achievements and such like. Left in for future use.
-					// NBTTagCompound entityNBT = entitylightning.getEntityData();
-					// entityNBT.setInteger("summoningPlayer", entityplayer.entityId);
-
 					// Secondary chaining effect
-					List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+					List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
 							getProperty(SECONDARY_RANGE).doubleValue(), x, y + 1, z, world);
 
 					for(int j = 0; j < Math.min(secondaryTargets.size(), getProperty(SECONDARY_MAX_TARGETS).intValue()); j++){
@@ -91,7 +89,7 @@ public class Thunderstorm extends Spell {
 								ParticleBuilder.create(Type.LIGHTNING).pos(x, y, z).target(secondaryTarget).spawn(world);
 
 								ParticleBuilder.spawnShockParticles(world, secondaryTarget.posX,
-										secondaryTarget.getEntityBoundingBox().minY + secondaryTarget.height / 2,
+										secondaryTarget.posY + secondaryTarget.height / 2,
 										secondaryTarget.posZ);
 							}
 
@@ -102,7 +100,7 @@ public class Thunderstorm extends Spell {
 
 							// Tertiary chaining effect
 
-							List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+							List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
 									getProperty(TERTIARY_RANGE).doubleValue(), secondaryTarget.posX,
 									secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 
@@ -117,7 +115,7 @@ public class Thunderstorm extends Spell {
 										ParticleBuilder.create(Type.LIGHTNING).entity(secondaryTarget)
 												.pos(0, secondaryTarget.height / 2, 0).target(tertiaryTarget).spawn(world);
 										ParticleBuilder.spawnShockParticles(world, tertiaryTarget.posX,
-												tertiaryTarget.getEntityBoundingBox().minY + tertiaryTarget.height / 2,
+												tertiaryTarget.posY + tertiaryTarget.height / 2,
 												tertiaryTarget.posZ);
 									}
 

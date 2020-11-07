@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class IceStatue extends SpellRay {
 
 	public IceStatue(){
-		super("ice_statue", false, EnumAction.NONE);
+		super("ice_statue", SpellActions.POINT, false);
 		this.soundValues(1, 1.4f, 0.4f);
 		addProperties(EFFECT_DURATION);
 	}
@@ -35,7 +35,7 @@ public class IceStatue extends SpellRay {
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.ice_statue).convertToStatue((EntityLiving)target,
-					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+					caster, (int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 
 				//target.playSound(WizardrySounds.SPELL_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}

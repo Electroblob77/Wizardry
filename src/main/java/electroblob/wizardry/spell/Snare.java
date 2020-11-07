@@ -1,14 +1,14 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.tileentity.TileEntityPlayerSave;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class Snare extends SpellRay {
 
 	public Snare(){
-		super("snare", false, EnumAction.NONE);
+		super("snare", SpellActions.POINT, false);
 		this.soundValues(1, 1.4f, 0.4f);
 		this.ignoreLivingEntities(true);
 		addProperties(DAMAGE, EFFECT_DURATION, EFFECT_STRENGTH);
@@ -31,14 +31,12 @@ public class Snare extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(side == EnumFacing.UP && world.isSideSolid(pos, EnumFacing.UP)
-				&& WizardryUtilities.canBlockBeReplaced(world, pos.up())){
-
+		if(side == EnumFacing.UP && world.isSideSolid(pos, EnumFacing.UP) && BlockUtils.canBlockBeReplaced(world, pos.up())){
 			if(!world.isRemote){
 				world.setBlockState(pos.up(), WizardryBlocks.snare.getDefaultState());
 				((TileEntityPlayerSave)world.getTileEntity(pos.up())).setCaster(caster);
+				((TileEntityPlayerSave)world.getTileEntity(pos.up())).sync();
 			}
-
 			return true;
 		}
 		

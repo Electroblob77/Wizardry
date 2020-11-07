@@ -39,9 +39,9 @@ public class EntityEmber extends EntityMagicProjectile {
 	@Override
 	protected void onImpact(RayTraceResult result){
 
-		if(result.entityHit != null){
-			result.entityHit.setFire(Spells.disintegration.getProperty(Spell.BURN_DURATION).intValue());
-		}
+//		if(result.entityHit != null){
+//			result.entityHit.setFire(Spells.disintegration.getProperty(Spell.BURN_DURATION).intValue());
+//		}
 
 		if(result.typeOfHit == RayTraceResult.Type.BLOCK){
 			this.inGround = true;
@@ -60,7 +60,7 @@ public class EntityEmber extends EntityMagicProjectile {
 
 		super.applyEntityCollision(entity);
 
-		if(entity instanceof EntityLivingBase){
+		if(entity instanceof EntityLivingBase && ((EntityLivingBase)entity).getHealth() > 0){
 			entity.setFire(Spells.disintegration.getProperty(Spell.BURN_DURATION).intValue());
 		}
 	}
@@ -77,6 +77,7 @@ public class EntityEmber extends EntityMagicProjectile {
 		}
 
 		world.getEntitiesInAABBexcluding(thrower, this.getEntityBoundingBox(), e -> e instanceof EntityLivingBase)
+				.stream().filter(e -> !(e instanceof EntityLivingBase) || ((EntityLivingBase)e).getHealth() > 0)
 				.forEach(e -> e.setFire(Spells.disintegration.getProperty(Spell.BURN_DURATION).intValue()));
 
 		// Copied from ParticleLava

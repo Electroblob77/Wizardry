@@ -13,6 +13,7 @@ public class Hailstorm extends SpellConstructRanged<EntityHailstorm> {
 	public Hailstorm(){
 		super("hailstorm", EntityHailstorm::new, false);
 		this.floor(true);
+		addProperties(EFFECT_RADIUS);
 	}
 
 	@Override

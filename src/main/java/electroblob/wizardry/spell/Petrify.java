@@ -1,6 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.block.BlockStatue;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -9,7 +10,6 @@ import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -21,7 +21,7 @@ public class Petrify extends SpellRay {
 	public static final String MINIMUM_EFFECT_DURATION = "minimum_effect_duration";
 
 	public Petrify(){
-		super("petrify", false, EnumAction.NONE);
+		super("petrify", SpellActions.POINT, false);
 		this.soundValues(1, 1.1f, 0.2f);
 		addProperties(MINIMUM_EFFECT_DURATION);
 	}
@@ -32,7 +32,7 @@ public class Petrify extends SpellRay {
 		if(target instanceof EntityLiving && !world.isRemote){
 			// Unchecked cast is fine because the block is a static final field
 			if(((BlockStatue)WizardryBlocks.petrified_stone).convertToStatue((EntityLiving)target,
-					(int)(getProperty(MINIMUM_EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
+					caster, (int)(getProperty(MINIMUM_EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 			}
 		}
 		

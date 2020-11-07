@@ -2,9 +2,10 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
+import electroblob.wizardry.entity.construct.EntityScaledConstruct;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -122,7 +123,7 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 		Integer floor = (int)y;
 
 		if(requiresFloor){
-			floor = WizardryUtilities.getNearestFloor(world, new BlockPos(x, y, z), 1);
+			floor = BlockUtils.getNearestFloor(world, new BlockPos(x, y, z), 1);
 			direction = EnumFacing.UP;
 		}
 
@@ -160,6 +161,7 @@ public class SpellConstruct<T extends EntityMagicConstruct> extends Spell {
 			construct.setCaster(caster);
 			construct.lifetime = permanent ? -1 : (int)(getProperty(DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 			construct.damageMultiplier = modifiers.get(SpellModifiers.POTENCY);
+			if(construct instanceof EntityScaledConstruct) ((EntityScaledConstruct)construct).setSizeMultiplier(modifiers.get(WizardryItems.blast_upgrade));
 			addConstructExtras(construct, side, caster, modifiers);
 			// Prevents overlapping of multiple constructs of the same type. Since we have an instance here this is
 			// very simple. The trade-off is that we have to create the entity before the spell fails, but unless

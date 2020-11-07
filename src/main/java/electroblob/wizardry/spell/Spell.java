@@ -34,8 +34,6 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -117,6 +115,22 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public static final String SPLASH_EFFECT_DURATION = "splash_effect_duration";
 	public static final String SPLASH_EFFECT_STRENGTH = "splash_effect_strength";
 
+	public static final String TIER_MATCH_PREFIX = "tier";
+	public static final String ELEMENT_MATCH_PREFIX = "element";
+	public static final String TYPE_MATCH_PREFIX = "type";
+	public static final String DISCOVERED_MATCH_PREFIX = "discovered";
+	public static final String MODID_MATCH_PREFIX = "modid";
+
+	public static final String TIER_MATCH_ALIAS = "t";
+	public static final String ELEMENT_MATCH_ALIAS = "e";
+	public static final String TYPE_MATCH_ALIAS = "p";
+	public static final String DISCOVERED_MATCH_ALIAS = "d";
+	public static final String MODID_MATCH_ALIAS = "m";
+
+	public static final String MATCH_CONDITION_SEPARATOR = ";";
+	public static final String MATCH_KEY_VALUE_SEPARATOR = "=";
+	public static final String MATCH_VALUE_SEPARATOR = ",";
+
 	/** Forge registry-based replacement for the internal spells list. */
 	public static IForgeRegistry<Spell> registry;
 
@@ -176,8 +190,9 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 *        unlocalised name will be a resource location with the format [modid]:[name].
 	 * @param action The vanilla usage action to be displayed when casting this spell.
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
+	 *                     use item button.
 	 */
-	public Spell(String name, EnumAction action, boolean isContinuous){
+	Spell(String name, EnumAction action, boolean isContinuous){
 		this(Wizardry.MODID, name, action, isContinuous);
 	}
 
@@ -190,6 +205,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 *        file. The spell's unlocalised name will be a resource location with the format [modid]:[name].
 	 * @param action The vanilla usage action to be displayed when casting this spell (see {@link}EnumAction)
 	 * @param isContinuous Whether this spell is continuous, meaning you cast it for a length of time by holding the
+	 *                     use item button.
 	 */
 	public Spell(String modID, String name, EnumAction action, boolean isContinuous){
 		this.setRegistryName(modID, name);
@@ -200,7 +216,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		this.sounds = createSounds();
 		this.id = nextSpellId++;
 		this.items(WizardryItems.spell_book, WizardryItems.scroll);
-		this.npcSelector((e, o) -> canBeCastByNPCs()); // Fallback to old behaviour until we remove it entirely
+		this.npcSelector((e, o) -> false);
 	}
 
 	// ========================================= Initialisation methods ===========================================
@@ -289,7 +305,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 					.map(s -> s.properties).toArray(SpellProperties[]::new)));
 		}else{
 			// On the client side, wipe the spell properties so the new ones can be set
-			// TESTME: Can we guarantee this happens before the packet arrives?
+			// Not sure if we can guarantee this happens before the packet arrives, but it hasn't caused any problems yet!
 			clearProperties();
 		}
 	}
@@ -478,34 +494,12 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/**
-	 * Whether NPCs such as wizards can cast this spell. If you have overridden
-	 * {@link Spell#cast(World, EntityLiving, EnumHand, int, EntityLivingBase, SpellModifiers)}, you should override
-	 * this to return true.
-	 * @deprecated Use the entity-sensitive version {@link Spell#canBeCastBy(EntityLiving, boolean)}.
-	 */
-	@Deprecated
-	public boolean canBeCastByNPCs(){
-		return false;
-	}
-
-	/**
 	 * Whether the given dispenser can cast this spell. If you have overridden
 	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
 	 * to return true (either always or under certain circumstances).
 	 * @param dispenser The dispenser to query.
 	 */
 	public boolean canBeCastBy(TileEntityDispenser dispenser){
-		return canBeCastByDispensers();
-	}
-
-	/**
-	 * Whether dispensers can cast this spell. If you have overridden
-	 * {@link Spell#cast(World, double, double, double, EnumFacing, int, int, SpellModifiers)}, you should override this
-	 * to return true.
-	 * @deprecated Use the tileentity-sensitive version {@link Spell#canBeCastBy(TileEntityDispenser)}.
-	 */
-	@Deprecated
-	public boolean canBeCastByDispensers(){
 		return false;
 	}
 
@@ -540,6 +534,9 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public final int metadata(){
 		return ((ForgeRegistry<Spell>)registry).getID(this);
 	}
+
+	// N.B. You don't *have* to use the network ID for networking, metadata is consistent within a world and will work
+	// fine, *however* when syncing a list/array of spells it is much more convenient to use network IDs.
 
 	/** Returns this spell's network ID number, similar to mod-specific entity IDs.<br>
 	 * <br>
@@ -593,22 +590,33 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/**
+	 * Returns whether a property has been defined for the given identifier.
+	 * @param identifier The JSON identifier to check for.
+	 * @return True if a property has been defined for the given identifier, false if not.
+	 */
+	public final boolean hasProperty(String identifier){
+		return properties.hasBaseValue(identifier);
+	}
+
+	/**
 	 * Returns the base value specified in JSON for the given identifier. This may be used from within the spell
 	 * class, or from elsewhere (entities, items, etc.) via the spell's instance.
 	 *
 	 * @param identifier The JSON identifier for the required property. This <b>must</b> have been defined using
-	 *                   {@link Spell#addProperties(String...)} or an exception will be thrown.
+	 *                   {@link Spell#addProperties(String...)} or an exception will be thrown. To check if an
+	 *                   identifier exists, use {@link Spell#hasProperty(String)}.
 	 * @return The base value of the property, as a {@code Number} object. Internally this is handled as a float, but
 	 * it is passed through as a {@code Number} to avoid casting. <i>Be careful with rounding when extracting integer
 	 * values! The JSON parser cannot guarantee that the property file has an integer value.</i>
-	 * @throws IllegalArgumentException if no property was defined with the given identifier. */
+	 * @throws IllegalArgumentException if no property was defined with the given identifier.
+	 */
 	public final Number getProperty(String identifier){
 		return properties.getBaseValue(identifier);
 	}
 
 	/**
-	 * Returns the unlocalised name of the spell, without any prefixes or suffixes, e.g. "flame_ray". <b>This should
-	 * only be used for translation purposes.</b>
+	 * Returns the unlocalised name of the spell, which is now its registry name as a string, e.g. "ebwizardry:flame_ray".
+	 * <b>This should only be used for translation purposes.</b>
 	 */
 	public final String getUnlocalisedName(){
 		return unlocalisedName;
@@ -636,9 +644,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * Returns the translated display name of the spell, without formatting (i.e. not coloured). <b>Client-side
 	 * only!</b> On the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslation()}).
 	 */
-	@SideOnly(Side.CLIENT)
 	public String getDisplayName(){
-		return net.minecraft.client.resources.I18n.format(getTranslationKey());
+		return Wizardry.proxy.translate(getTranslationKey());
 	}
 
 	/**
@@ -653,9 +660,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * Returns the translated display name of the spell, with formatting (i.e. coloured). <b>Client-side only!</b> On
 	 * the server side, use {@link TextComponentTranslation} (see {@link Spell#getNameForTranslationFormatted()}).
 	 */
-	@SideOnly(Side.CLIENT)
 	public String getDisplayNameWithFormatting(){
-		return this.getElement().getFormattingCode() + net.minecraft.client.resources.I18n.format(getTranslationKey());
+		return Wizardry.proxy.translate(getTranslationKey(), getElement().getColour());
 	}
 
 	/**
@@ -670,9 +676,92 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * Returns the translated description of the spell, without formatting. <b>Client-side only!</b> You should not need
 	 * to use this on the server side.
 	 */
-	@SideOnly(Side.CLIENT)
 	public String getDescription(){
-		return net.minecraft.client.resources.I18n.format(getDescriptionTranslationKey());
+		return Wizardry.proxy.translate(getDescriptionTranslationKey());
+	}
+
+	/**
+	 * Returns whether this spell matches the given string. <b>Client-side only!</b> Matches are determined as follows:
+	 * <p></p>
+	 * First, attempt to parse the string as one or more <i>conditions</i> separated by semicolons ({@code ;}). Each
+	 * condition has the syntax {@code key=value1,value2,value3,...}, where {@code key} is one of several predefined
+	 * strings (or aliases) pointing to a particular property of the spell, and each {@code value} is a string to match
+	 * to that property. Valid keys are:
+	 * <p></p>
+	 * - {@code tier} (alias {@code t}), specifies the tiers that the spell can match<br>
+	 * - {@code element} (alias {@code e}), specifies the elements that the spell can match<br>
+	 * - {@code type} (alias {@code p}), specifies the spell types that the spell can match<br>
+	 * - {@code modid} (alias {@code m}), specifies the mod IDs that the spell can be from<br>
+	 * - {@code discovered} (alias {@code d}), specifies the discovery status ({@code true} or {@code false}) that the
+	 * spell can match<br>
+	 * <p></p>
+	 * The spell must match all conditions to count as a match, but only needs to match one of the values for each
+	 * condition.
+	 * <p></p>
+	 * If, at any point, a condition is not of valid syntax (or if the string does not contain {@code ;} or {@code =}),
+	 * the input is instead treated as verbatim, and the spell matches if it has been discovered and its localised name
+	 * contains the given string.
+	 * <p></p>
+	 * <i>Keys are case-sensitive, but everything else is not.</i>
+	 * @param text The string to tested
+	 * @return True if this spell matches the given string, false otherwise.
+	 */
+	public boolean matches(@Nonnull String text){
+
+		if(text.isEmpty()) return true;
+
+		boolean discovered = Wizardry.proxy.shouldDisplayDiscovered(this, null);
+
+		String[] conditions = text.split(MATCH_CONDITION_SEPARATOR);
+
+		for(String condition : conditions){
+
+			String[] args = condition.split(MATCH_KEY_VALUE_SEPARATOR, 2);
+
+			// Invalid condition, treat the whole lot as a spell name instead
+			if(args.length < 2) return discovered && getDisplayName().toLowerCase(Locale.ROOT).contains(text);
+
+			String key = args[0];
+			String[] values = args[1].split(MATCH_VALUE_SEPARATOR);
+
+			String target;
+
+			switch(key){
+				case TIER_MATCH_PREFIX:
+				case TIER_MATCH_ALIAS:
+					// Tier IS known for undiscovered spells so we can match it
+					target = getTier().getDisplayName().toLowerCase(Locale.ROOT);
+					break;
+				case ELEMENT_MATCH_PREFIX:
+				case ELEMENT_MATCH_ALIAS:
+					if(!discovered) return false; // Element is unknown so doesn't match
+					target = getElement().getDisplayName().toLowerCase(Locale.ROOT);
+					break;
+				case TYPE_MATCH_PREFIX:
+				case TYPE_MATCH_ALIAS:
+					if(!discovered) return false; // Type is unknown so doesn't match
+					target = getType().getDisplayName().toLowerCase(Locale.ROOT);
+					break;
+				case MODID_MATCH_PREFIX:
+				case MODID_MATCH_ALIAS:
+					if(!discovered) return false; // Mod ID is unknown so doesn't match
+					target = getRegistryName().getNamespace().toLowerCase(Locale.ROOT);
+					break;
+				case DISCOVERED_MATCH_PREFIX:
+				case DISCOVERED_MATCH_ALIAS:
+					target = Boolean.toString(discovered);
+					break;
+				default:
+					// Invalid condition, treat the whole lot as a spell name instead
+					return discovered && getDisplayName().toLowerCase(Locale.ROOT).contains(text);
+			}
+
+			if(Arrays.stream(values).noneMatch(target::contains)) return false; // Didn't match
+
+		}
+
+		return true; // Matched all the conditions, yay!
+
 	}
 
 	// ============================================ Sound methods ==============================================
@@ -870,7 +959,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return spell == null ? Spells.none : spell;
 	}
 
-	/** Gets a spell instance from its network ID. Or the {@link None} spell if no such spell exists. */
+	/** Gets a spell instance from its network ID, or the {@link None} spell if no such spell exists. */
 	public static Spell byNetworkID(int id){
 		if(id < 0 || id >= registry.getValuesCollection().size()){
 			return Spells.none;
@@ -916,25 +1005,10 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return registry.getValuesCollection().stream().filter(filter.and(s -> s != Spells.none)).collect(Collectors.toList());
 	}
 
-	/** Returns all registered spells, except the {@link None} spell. */
+	/** Returns all registered spells, excluding the {@link None} spell. */
 	public static List<Spell> getAllSpells(){
 		return getSpells(s -> true);
 	}
-
-	/** Predicate which allows all spells.
-	 * @deprecated Use {@link Spell#getAllSpells()}. */
-	@Deprecated
-	public static Predicate<Spell> allSpells = s -> true;
-
-	/** Predicate which allows all non-continuous spells, even those that have been disabled.
-	 * @deprecated Nobody ever uses this now we have continuous scrolls, if you really need it just use a lambda.  */
-	@Deprecated
-	public static Predicate<Spell> nonContinuousSpells = s -> !s.isContinuous;
-
-	/** Predicate which allows all enabled spells for which {@link Spell#canBeCastBy(EntityLiving, boolean)} returns true.
-	 * @deprecated in favour of entity-sensitive version, use a lambda expression directly. */
-	@Deprecated
-	public static Predicate<Spell> npcSpells = s -> s.isEnabled(SpellProperties.Context.NPCS) && s.canBeCastByNPCs();
 
 	/**
 	 * Predicate which allows all enabled spells of the given tier and element (create an instance of this class each

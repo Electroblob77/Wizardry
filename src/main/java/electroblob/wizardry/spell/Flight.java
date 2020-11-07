@@ -1,11 +1,11 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -17,7 +17,7 @@ public class Flight extends Spell {
 	private static final double Y_NUDGE_ACCELERATION = 0.075;
 
 	public Flight(){
-		super("flight", EnumAction.NONE, true);
+		super("flight", SpellActions.POINT, true);
 		addProperties(SPEED, ACCELERATION);
 	}
 
@@ -46,11 +46,11 @@ public class Flight extends Spell {
 		
 		if(world.isRemote){
 			double x = caster.posX - 1 + world.rand.nextDouble() * 2;
-			double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = caster.posZ - 1 + world.rand.nextDouble() * 2;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(0.8f, 1, 0.5f).spawn(world);
 			x = caster.posX - 1 + world.rand.nextDouble() * 2;
-			y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			z = caster.posZ - 1 + world.rand.nextDouble() * 2;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(1f, 1f, 1f).spawn(world);
 		}

@@ -2,6 +2,9 @@ package electroblob.wizardry.tileentity;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+// TODO: Remove this class entirely, it can just be a TileEntityTimer (see RenderImbuementAltar for a better solution)
+// Either that or use a FastTESR
+@Deprecated
 public class TileEntityMagicLight extends TileEntityTimer {
 
 	public int[] randomiser;

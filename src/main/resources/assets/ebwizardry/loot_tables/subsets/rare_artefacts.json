@@ -11,11 +11,6 @@
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:ring_battlemage",
-                    "weight": 1
-                },
-				{
-                    "type": "item",
                     "name": "ebwizardry:ring_disintegration",
                     "weight": 1
                 },
@@ -27,11 +22,6 @@
 				{
                     "type": "item",
                     "name": "ebwizardry:ring_storm",
-                    "weight": 1
-                },
-				{
-                    "type": "item",
-                    "name": "ebwizardry:ring_soulbinding",
                     "weight": 1
                 },
 				{
@@ -54,6 +44,11 @@
                     "name": "ebwizardry:ring_full_moon",
                     "weight": 1
                 },
+				{
+					"type": "item",
+					"name": "ebwizardry:ring_evoker",
+					"weight": 1
+				},
 				{
                     "type": "item",
                     "name": "ebwizardry:ring_blockwrangler",
@@ -110,6 +105,11 @@
                     "weight": 1
                 },
 				{
+					"type": "item",
+					"name": "ebwizardry:charm_move_speed",
+					"weight": 1
+				},
+				{
                     "type": "item",
                     "name": "ebwizardry:charm_auto_smelt",
                     "weight": 1
@@ -121,7 +121,12 @@
                 },
 				{
 					"type": "item",
-					"name": "ebwizardry:charm_minion_variants",
+					"name": "ebwizardry:charm_undead_helmets",
+					"weight": 1
+				},
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_hunger_casting",
 					"weight": 1
 				},
 				{
@@ -138,7 +143,17 @@
                     "type": "item",
                     "name": "ebwizardry:charm_light",
                     "weight": 1
-                }
+                },
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_transportation",
+					"weight": 1
+				},
+				{
+					"type": "item",
+					"name": "ebwizardry:charm_mount_teleporting",
+					"weight": 1
+				}
 			]
 		}
 	]

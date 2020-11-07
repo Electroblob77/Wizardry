@@ -1,13 +1,11 @@
 package electroblob.wizardry.entity.projectile;
 
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -39,13 +37,12 @@ public class EntitySmokeBomb extends EntityBomb {
 			this.world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, this.posX, this.posY, this.posZ, 0, 0, 0);
 						
 			for(int i = 0; i < 60 * blastMultiplier; i++){
-				
-				this.world.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
-						this.posX + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posY + (this.rand.nextDouble() * 4 - 2) * blastMultiplier,
-						this.posZ + (this.rand.nextDouble() * 4 - 2) * blastMultiplier, 0, 0, 0);
-				
-				float brightness = rand.nextFloat() * 0.3f;
+
+				float brightness = rand.nextFloat() * 0.1f + 0.1f;
+				ParticleBuilder.create(Type.CLOUD, rand, posX, posY, posZ, 2*blastMultiplier, false)
+						.clr(brightness, brightness, brightness).time(80 + this.rand.nextInt(12)).shaded(true).spawn(world);
+
+				brightness = rand.nextFloat() * 0.3f;
 				ParticleBuilder.create(Type.DARK_MAGIC, rand, posX, posY, posZ, 2*blastMultiplier, false)
 				.clr(brightness, brightness, brightness).spawn(world);
 			}
@@ -58,21 +55,14 @@ public class EntitySmokeBomb extends EntityBomb {
 
 			double range = Spells.smoke_bomb.getProperty(Spell.BLAST_RADIUS).floatValue() * blastMultiplier;
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(range, this.posX, this.posY,
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(range, this.posX, this.posY,
 					this.posZ, this.world);
 
 			int duration = Spells.smoke_bomb.getProperty(Spell.EFFECT_DURATION).intValue();
 
 			for(EntityLivingBase target : targets){
 				if(target != this.getThrower()){
-					// Gives the target blindness, and mind trick if it's not a player (since this has the desired
-					// effect of preventing targeting)
 					target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
-
-					if(target instanceof EntityLiving){
-						((EntityLiving)target).setAttackTarget(null);
-						target.addPotionEffect(new PotionEffect(WizardryPotions.mind_trick, duration, 0));
-					}
 				}
 			}
 

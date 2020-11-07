@@ -55,6 +55,8 @@ public final class WizardryPotions {
 	public static final Potion curse_of_undeath = placeholder();
 	public static final Potion containment = placeholder();
 	public static final Potion frost_step = placeholder();
+	public static final Potion mark_of_sacrifice = placeholder();
+	public static final Potion mirage = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given potion, then registers it with the given registry. Use
@@ -83,7 +85,7 @@ public final class WizardryPotions {
 		registerPotion(registry, "frost", new PotionFrost(true, 0)); // Colour was 0x38ddec (was arbitrary anyway)
 		
 		registerPotion(registry, "transience", new PotionMagicEffectParticles(false, 0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_transience.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/transience.png")){
 			@Override
 			public void spawnCustomParticle(World world, double x, double y, double z){
 				ParticleBuilder.create(Type.DUST).pos(x, y, z).clr(0.8f, 0.8f, 1.0f).shaded(true).spawn(world);
@@ -91,7 +93,7 @@ public final class WizardryPotions {
 		}.setBeneficial()); // 0xffe89b
 		
 		registerPotion(registry, "fireskin", new PotionMagicEffectParticles(false, 0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_fireskin.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/fireskin.png")){
 			@Override
 			public void spawnCustomParticle(World world, double x, double y, double z){
 				world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0, 0, 0);
@@ -105,7 +107,7 @@ public final class WizardryPotions {
 		}.setBeneficial()); // 0xff2f02
 		
 		registerPotion(registry, "ice_shroud", new PotionMagicEffectParticles(false, 0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_ice_shroud.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/ice_shroud.png")){
 			@Override
 			public void spawnCustomParticle(World world, double x, double y, double z){
 				float brightness = 0.5f + (world.rand.nextFloat() / 2);
@@ -115,7 +117,7 @@ public final class WizardryPotions {
 		}.setBeneficial()); // 0x52f1ff
 		
 		registerPotion(registry, "static_aura", new PotionMagicEffectParticles(false, 0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_static_aura.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/static_aura.png")){
 			@Override
 			public void spawnCustomParticle(World world, double x, double y, double z){
 				ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
@@ -125,7 +127,7 @@ public final class WizardryPotions {
 		registerPotion(registry, "decay", new PotionDecay(true, 0x3c006c));
 
 		registerPotion(registry, "sixth_sense", new PotionMagicEffect(false, 0xc6ff01,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_sixth_sense.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/sixth_sense.png")){
 			@Override
 			public void performEffect(EntityLivingBase target, int strength){
 				// Reset the shader (a bit dirty but both the potion expiry hooks are only fired server-side, and
@@ -138,22 +140,25 @@ public final class WizardryPotions {
 		}.setBeneficial());
 
 		registerPotion(registry, "arcane_jammer", new PotionMagicEffect(true, 0xcf4aa2,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_arcane_jammer.png")));
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/arcane_jammer.png")));
 
 		registerPotion(registry, "mind_trick", new PotionMagicEffect(true, 0x601683,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_mind_trick.png")));
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mind_trick.png")));
 
-		registerPotion(registry, "mind_control", new PotionMagicEffect(true, 0x320b44,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_mind_control.png")));
+		registerPotion(registry, "mind_control", new PotionMagicEffectParticles(true, 0x320b44,
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mind_control.png")) {
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){} // We only want the syncing
+		});
 
 		registerPotion(registry, "font_of_mana", new PotionMagicEffect(false, 0xffe5bb,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_font_of_mana.png")).setBeneficial());
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/font_of_mana.png")).setBeneficial());
 
 		registerPotion(registry, "fear", new PotionMagicEffect(true, 0xbd0100,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_fear.png")));
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/fear.png")));
 		
 		registerPotion(registry, "curse_of_soulbinding", new Curse(true, 0x0f000f,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_curse_of_soulbinding.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/curse_of_soulbinding.png")){
 			@Override // We're not removing any attributes, but it's called when we want it to be so...
 			public void removeAttributesModifiersFromEntity(EntityLivingBase entity, net.minecraft.entity.ai.attributes.AbstractAttributeMap attributeMapIn, int amplifier){
 				// TODO: Hmmmm...
@@ -161,7 +166,7 @@ public final class WizardryPotions {
 		});
 		
 		registerPotion(registry, "paralysis", new PotionMagicEffectParticles(true, 0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_paralysis.png")){
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/paralysis.png")){
 			@Override
 			public void spawnCustomParticle(World world, double x, double y, double z){
 				ParticleBuilder.create(Type.SPARK).pos(x, y, z).spawn(world);
@@ -169,15 +174,15 @@ public final class WizardryPotions {
 		});
 		
 		registerPotion(registry, "muffle", new PotionMagicEffect(false, 0x4464d9,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_muffle.png")).setBeneficial());
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/muffle.png")).setBeneficial());
 
 		registerPotion(registry, "ward", new PotionMagicEffect(false, 0xc991d0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_ward.png")).setBeneficial());
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/ward.png")).setBeneficial());
 
 		registerPotion(registry, "slow_time", new PotionSlowTime(false, 0x5be3bb).setBeneficial());
 
 		registerPotion(registry, "empowerment", new PotionMagicEffect(false, 0x8367bd,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_empowerment.png")).setBeneficial());
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/empowerment.png")).setBeneficial());
 
 		registerPotion(registry, "curse_of_enfeeblement", new CurseEnfeeblement(true, 0x36000b));
 
@@ -186,6 +191,15 @@ public final class WizardryPotions {
 		registerPotion(registry, "containment", new PotionContainment(true, 0x7988cc));
 
 		registerPotion(registry, "frost_step", new PotionFrostStep(false, 0).setBeneficial());
+
+		registerPotion(registry, "mark_of_sacrifice", new PotionMagicEffect(true, 0xe90e48,
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mark_of_sacrifice.png")));
+
+		registerPotion(registry, "mirage", new PotionMagicEffectParticles(false, 0, // No particles or we'll see the player's actual position!
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/mirage.png")){
+			@Override
+			public void spawnCustomParticle(World world, double x, double y, double z){} // We only want the syncing
+		}.setBeneficial());
 
 	}
 

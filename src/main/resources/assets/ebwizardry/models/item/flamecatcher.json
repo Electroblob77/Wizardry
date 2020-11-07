@@ -1,0 +1,105 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "ebwizardry:items/flamecatcher_standby"
+    },
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ -80, 260, -40 ],
+            "translation": [ -1, -2, 2.5 ],
+            "scale": [ 0.9, 0.9, 0.9 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ -80, -280, 40 ],
+            "translation": [ -1, -2, 2.5 ],
+            "scale": [ 0.9, 0.9, 0.9 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, -90, 25 ],
+            "translation": [ 1.13, 3.2, 1.13],
+            "scale": [ 0.68, 0.68, 0.68 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 90, -25 ],
+            "translation": [ 1.13, 3.2, 1.13],
+            "scale": [ 0.68, 0.68, 0.68 ]
+        }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "pulling": 1
+            },
+            "model": "ebwizardry:item/flamecatcher_pulling_0"
+        },
+        {
+            "predicate": {
+                "pulling": 1,
+                "pull": 0.65
+            },
+            "model": "ebwizardry:item/flamecatcher_pulling_1"
+        },
+        {
+            "predicate": {
+                "pulling": 1,
+                "pull": 0.9
+            },
+            "model": "ebwizardry:item/flamecatcher_pulling_2"
+        },
+        {
+            "predicate": {
+                "conjuring": 1
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_0"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.125
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_1"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.25
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_2"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.375
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_3"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.5
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_4"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.625
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_5"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.75
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_6"
+        },
+        {
+            "predicate": {
+                "conjuring": 1,
+                "conjure": 0.875
+            },
+            "model": "ebwizardry:item/flamecatcher_conjuring_7"
+        }
+    ]
+}

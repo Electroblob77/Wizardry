@@ -1,0 +1,26 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "advanced",
+  "element": "ice",
+  "type": "alteration",
+  "cost": 10,
+  "chargeup": 10,
+  "cooldown": 40,
+  "base_properties": {
+    "range": 10,
+    "duration": 600,
+    "damage": 3,
+    "effect_duration": 100,
+    "effect_strength": 0
+  }
+}

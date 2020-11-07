@@ -28,6 +28,11 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:ruined_spell_book",
+                    "weight": 1
                 }
             ]
         }

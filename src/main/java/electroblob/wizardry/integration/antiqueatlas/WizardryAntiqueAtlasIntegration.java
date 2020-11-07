@@ -29,6 +29,7 @@ public class WizardryAntiqueAtlasIntegration {
 	private static final ResourceLocation TOWER_MARKER = new ResourceLocation(Wizardry.MODID, "wizard_tower");
 	private static final ResourceLocation SHRINE_MARKER = new ResourceLocation(Wizardry.MODID, "shrine");
 	private static final ResourceLocation OBELISK_MARKER = new ResourceLocation(Wizardry.MODID, "obelisk");
+	private static final ResourceLocation LIBRARY_MARKER = new ResourceLocation(Wizardry.MODID, "library_ruins");
 
 	private static boolean antiqueAtlasLoaded;
 
@@ -65,6 +66,14 @@ public class WizardryAntiqueAtlasIntegration {
 		}
 	}
 
+	/** Places a global library ruins marker in all antique atlases at the given coordinates in the given world if
+	 * {@link electroblob.wizardry.Settings#autoLibraryMarkers} is enabled. Server side only! */
+	public static void markLibrary(World world, int x, int z, boolean underground){
+		if(enabled() && (underground ? Wizardry.settings.autoUndergroundLibraryMarkers : Wizardry.settings.autoLibraryMarkers)){
+			AtlasAPI.getMarkerAPI().putGlobalMarker(world, false, LIBRARY_MARKER.toString(), "integration.antiqueatlas.marker." + LIBRARY_MARKER.toString().replace(':', '.'), x, z);
+		}
+	}
+
 	/** Registers the marker icons with Antique Atlas. Client side only! */
 	public static void registerMarkers(){
 
@@ -73,6 +82,7 @@ public class WizardryAntiqueAtlasIntegration {
 		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(TOWER_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/wizard_tower.png")));
 		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(SHRINE_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/shrine.png")));
 		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(OBELISK_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/obelisk.png")));
+		AtlasAPI.getMarkerAPI().registerMarker(new MarkerType(LIBRARY_MARKER, new ResourceLocation(Wizardry.MODID, "textures/integration/antiqueatlas/library_ruins.png")));
 	}
 
 	@SubscribeEvent

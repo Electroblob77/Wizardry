@@ -1,0 +1,34 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:find_library_ruins"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:find_library_ruins.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:spruce_bookshelf"
+        }
+    },
+    "parent": "ebwizardry:defeat_remnant",
+    "criteria": {
+        "surface": {
+            "trigger": "ebwizardry:visit_structure",
+            "conditions": {
+                "structure_type": "library_ruins"
+            }
+        },
+        "underground": {
+            "trigger": "ebwizardry:visit_structure",
+            "conditions": {
+                "structure_type": "underground_library_ruins"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "surface",
+            "underground"
+        ]
+    ]
+}

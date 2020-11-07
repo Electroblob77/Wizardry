@@ -6,6 +6,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 
+import java.util.ArrayList;
+
 public class CureEffects extends SpellBuff {
 
 	public CureEffects(){
@@ -22,7 +24,7 @@ public class CureEffects extends SpellBuff {
 
 			boolean flag = false;
 
-			for(PotionEffect effect : caster.getActivePotionEffects()){
+			for(PotionEffect effect : new ArrayList<>(caster.getActivePotionEffects())){ // Get outta here, CMEs
 				// The PotionEffect version (as opposed to Potion) does not call cleanup callbacks
 				if(effect.isCurativeItem(milk)){
 					caster.removePotionEffect(effect.getPotion());

@@ -247,7 +247,7 @@ public class CommandCastSpell extends CommandBase {
 
 					if(data != null){
 						if(data.isCasting()){
-							data.stopCastingContinuousSpell(); // TODO: Where should this go now?
+							data.stopCastingContinuousSpell(); // I think on balance this is quite a nice feature to leave in
 						}else{
 
 							data.startCastingContinuousSpell(spell, modifiers, duration);

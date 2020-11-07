@@ -52,18 +52,6 @@ public final class WandHelper {
 
 	private static final HashMap<Item, String> upgradeMap = new HashMap<>();
 
-	static {
-		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
-		upgradeMap.put(WizardryItems.storage_upgrade, "storage");
-		upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");
-		upgradeMap.put(WizardryItems.range_upgrade, "range");
-		upgradeMap.put(WizardryItems.duration_upgrade, "duration");
-		upgradeMap.put(WizardryItems.cooldown_upgrade, "cooldown");
-		upgradeMap.put(WizardryItems.blast_upgrade, "blast");
-		upgradeMap.put(WizardryItems.attunement_upgrade, "attunement");
-		upgradeMap.put(WizardryItems.melee_upgrade, "melee");
-	}
-
 	// =================================================== Spells ===================================================
 
 	/**
@@ -170,6 +158,26 @@ public final class WandHelper {
 			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, getPreviousSpellIndex(wand));
 		}
 	}
+
+	/**
+	 * Selects the spell at the given index in this wand's list of spells.
+	 * @param wand The stack to set the spell of
+	 * @param index The spell index to set the wand to
+	 * @return False if the index was out-of-bounds, true otherwise
+	 */
+	public static boolean selectSpell(ItemStack wand, int index){
+
+		if(index < 0 || index > getSpells(wand).length) return false; // Out-of-bounds
+
+		// 5 here because if the spell array doesn't exist, the wand can't possibly have attunement upgrades
+		if(getSpells(wand).length < 0) setSpells(wand, new Spell[ItemWand.BASE_SPELL_SLOTS]);
+
+		if(wand.getTagCompound() != null){
+			wand.getTagCompound().setInteger(SELECTED_SPELL_KEY, index);
+		}
+
+		return true;
+	}
 	
 	private static int getNextSpellIndex(ItemStack wand){
 
@@ -197,7 +205,7 @@ public final class WandHelper {
 		int spellIndex = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
 
 		if(spellIndex <= 0){
-			spellIndex = numberOfSpells - 1;
+			spellIndex = Math.max(0, numberOfSpells - 1);
 		}else{
 			spellIndex--;
 		}
@@ -350,7 +358,7 @@ public final class WandHelper {
 
 		int selectedSpell = wand.getTagCompound().getInteger(SELECTED_SPELL_KEY);
 
-		if(cooldowns.length <= selectedSpell) return 0;
+		if(selectedSpell < 0 || cooldowns.length <= selectedSpell) return 0;
 
 		return cooldowns[selectedSpell];
 	}
@@ -433,7 +441,7 @@ public final class WandHelper {
 
 	/**
 	 * Registers a special upgrade with wizardry. Not used in the base mod, but I've put it here to make it easy for
-	 * add-ons to add new wand upgrades.
+	 * add-ons to add new wand upgrades. This should be called during the init() phase of mod loading.
 	 * 
 	 * @param upgrade The wand upgrade item
 	 * @param identifier A unique string, used as a key for wand nbt tags
@@ -445,6 +453,19 @@ public final class WandHelper {
 		if(upgradeMap.containsValue(identifier))
 			throw new IllegalArgumentException("Duplicate wand upgrade identifier: " + identifier);
 		upgradeMap.put(upgrade, identifier);
+	}
+
+	/** Called from the init() method in wizardry's main mod class to populate the special wand upgrade map. */
+	public static void populateUpgradeMap(){
+		upgradeMap.put(WizardryItems.condenser_upgrade, "condenser");
+		upgradeMap.put(WizardryItems.storage_upgrade, "storage");
+		upgradeMap.put(WizardryItems.siphon_upgrade, "siphon");
+		upgradeMap.put(WizardryItems.range_upgrade, "range");
+		upgradeMap.put(WizardryItems.duration_upgrade, "duration");
+		upgradeMap.put(WizardryItems.cooldown_upgrade, "cooldown");
+		upgradeMap.put(WizardryItems.blast_upgrade, "blast");
+		upgradeMap.put(WizardryItems.attunement_upgrade, "attunement");
+		upgradeMap.put(WizardryItems.melee_upgrade, "melee");
 	}
 
 	// ================================================= Progression =================================================

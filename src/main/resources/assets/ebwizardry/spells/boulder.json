@@ -1,0 +1,25 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "master",
+  "element": "earth",
+  "type": "attack",
+  "cost": 125,
+  "chargeup": 25,
+  "cooldown": 350,
+  "base_properties": {
+    "duration": 200,
+    "speed": 0.33,
+    "damage": 10,
+    "knockback_strength": 1
+  }
+}

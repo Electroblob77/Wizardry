@@ -1,0 +1,24 @@
+{
+  "enabled": {
+    "book": true,
+    "scroll": true,
+    "wands": true,
+    "npcs": true,
+    "dispensers": true,
+    "commands": true,
+    "treasure": true,
+	"trades": true,
+    "looting": true
+  },
+  "tier": "master",
+  "element": "necromancy",
+  "type": "construct",
+  "cost": 150,
+  "chargeup": 25,
+  "cooldown": 300,
+  "base_properties": {
+    "duration": 500,
+    "minion_lifetime": 600,
+    "minion_spawn_interval": 20
+  }
+}

@@ -1,15 +1,21 @@
 package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.entity.projectile.EntityIceShard;
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.spell.Spell;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityHailstorm extends EntityMagicConstruct {
+public class EntityHailstorm extends EntityScaledConstruct {
 
 	public EntityHailstorm(World world){
 		super(world);
-		this.height = 3.0f;
-		this.width = 5.0f;
+		setSize(Spells.hailstorm.getProperty(Spell.EFFECT_RADIUS).floatValue() * 2, 5);
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	public void onUpdate(){
@@ -17,15 +23,21 @@ public class EntityHailstorm extends EntityMagicConstruct {
 		super.onUpdate();
 
 		if(!this.world.isRemote){
-			// System.out.println(this.rotationYaw);
+
+			double x = posX + (world.rand.nextDouble() - 0.5D) * (double)width;
+			double y = posY + world.rand.nextDouble() * (double)height;
+			double z = posZ + (world.rand.nextDouble() - 0.5D) * (double)width;
+
 			EntityIceShard iceshard = new EntityIceShard(world);
-			iceshard.setPosition(this.posX + rand.nextDouble() * 6 - 3, this.posY + rand.nextDouble() * 4 - 2,
-					this.posZ + rand.nextDouble() * 6 - 3);
+			iceshard.setPosition(x, y, z);
+
 			iceshard.motionX = MathHelper.cos((float)Math.toRadians(this.rotationYaw + 90));
 			iceshard.motionY = -0.6;
 			iceshard.motionZ = MathHelper.sin((float)Math.toRadians(this.rotationYaw + 90));
+
 			iceshard.setCaster(this.getCaster());
 			iceshard.damageMultiplier = this.damageMultiplier;
+
 			this.world.spawnEntity(iceshard);
 		}
 	}

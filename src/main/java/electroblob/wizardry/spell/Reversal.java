@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.EnumAction;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
@@ -24,7 +24,7 @@ public class Reversal extends SpellRay {
 	public static final String REVERSED_EFFECTS = "reversed_effects";
 
 	public Reversal(){
-		super("reversal", false, EnumAction.NONE);
+		super("reversal", SpellActions.POINT, false);
 		addProperties(REVERSED_EFFECTS);
 	}
 

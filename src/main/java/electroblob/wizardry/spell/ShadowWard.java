@@ -2,11 +2,11 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.integration.DamageSafetyChecker;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.IElementalDamage;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -53,7 +53,7 @@ public class ShadowWard extends Spell {
 			double dx = -1 + 2 * world.rand.nextFloat();
 			double dy = -1 + world.rand.nextFloat();
 			double dz = -1 + 2 * world.rand.nextFloat();
-			world.spawnParticle(EnumParticleTypes.PORTAL, caster.posX, caster.getEntityBoundingBox().minY + caster.getEyeHeight(), caster.posZ, dx, dy, dz);
+			world.spawnParticle(EnumParticleTypes.PORTAL, caster.posX, caster.posY + caster.getEyeHeight(), caster.posZ, dx, dy, dz);
 		}
 
 		if(ticksInUse % 50 == 0){
@@ -68,7 +68,7 @@ public class ShadowWard extends Spell {
 		
 		if(event.getSource() != null && event.getSource().getTrueSource() instanceof EntityLivingBase){
 
-			if(WizardryUtilities.isCasting(event.getEntityLiving(), Spells.shadow_ward) && !event.getSource().isUnblockable()
+			if(EntityUtils.isCasting(event.getEntityLiving(), Spells.shadow_ward) && !event.getSource().isUnblockable()
 					&& !(event.getSource() instanceof IElementalDamage && ((IElementalDamage)event.getSource()).isRetaliatory())){
 
 				event.setCanceled(true);

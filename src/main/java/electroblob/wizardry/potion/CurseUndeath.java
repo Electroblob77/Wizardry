@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 public class CurseUndeath extends Curse {
 
 	public CurseUndeath(boolean isBadEffect, int liquiidColour){
-		super(isBadEffect, liquiidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icon_curse_of_undeath.png"));
+		super(isBadEffect, liquiidColour, new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/curse_of_undeath.png"));
 		// This needs to be here because registerPotionAttributeModifier doesn't like it if the potion has no name yet.
 		this.setPotionName("potion." + Wizardry.MODID + ":curse_of_undeath");
 	}

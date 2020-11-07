@@ -5,7 +5,7 @@ import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Meteor;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -76,7 +76,7 @@ public class EntityMeteor extends EntityFallingBlock {
 				this.setDead();
 
 			}else{
-				WizardryUtilities.getEntitiesWithinRadius(15, posX, posY, posZ, world, EntityPlayer.class)
+				EntityUtils.getEntitiesWithinRadius(15, posX, posY, posZ, world, EntityPlayer.class)
 						.forEach(p -> Wizardry.proxy.shakeScreen(p, 10));
 			}
 		}

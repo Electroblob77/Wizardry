@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "www",
+        " c ",
+        "www"
+    ],
+    "key": {
+        "c": {
+            "item": "ebwizardry:grand_crystal"
+        },
+        "w": {
+            "item": "ebwizardry:gilded_wood",
+            "data": 5
+        }
+    },
+    "result": {
+        "item": "ebwizardry:dark_oak_bookshelf"
+    }
+}

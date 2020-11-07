@@ -5,11 +5,11 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
 import electroblob.wizardry.entity.living.EntityWizard;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.GeometryUtils;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockStainedHardenedClay;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ResourceLocation;
@@ -37,11 +37,11 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 	private static final String WIZARD_DATA_BLOCK_TAG = "wizard";
 	private static final String EVIL_WIZARD_DATA_BLOCK_TAG = "evil_wizard";
 
-	private final Map<BiomeDictionary.Type, IBlockState> SPECIAL_WALL_BLOCKS;
+	private final Map<BiomeDictionary.Type, IBlockState> specialWallBlocks;
 
 	public WorldGenWizardTower(){
 		// These are initialised here because it's a convenient point after the blocks are registered
-		SPECIAL_WALL_BLOCKS = ImmutableMap.of(
+		specialWallBlocks = ImmutableMap.of(
 				BiomeDictionary.Type.MESA, Blocks.RED_SANDSTONE.getDefaultState(),
 				BiomeDictionary.Type.MOUNTAIN, Blocks.STONEBRICK.getDefaultState(),
 				BiomeDictionary.Type.NETHER, Blocks.NETHER_BRICK.getDefaultState(),
@@ -78,11 +78,11 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 		final EnumDyeColor colour = EnumDyeColor.values()[random.nextInt(EnumDyeColor.values().length)];
 		final Biome biome = world.getBiome(origin);
 
-		final IBlockState wallMaterial = SPECIAL_WALL_BLOCKS.keySet().stream().filter(t -> BiomeDictionary.hasType(biome, t))
-				.findFirst().map(SPECIAL_WALL_BLOCKS::get).orElse(Blocks.COBBLESTONE.getDefaultState());
+		final IBlockState wallMaterial = specialWallBlocks.keySet().stream().filter(t -> BiomeDictionary.hasType(biome, t))
+				.findFirst().map(specialWallBlocks::get).orElse(Blocks.COBBLESTONE.getDefaultState());
 
 		final float mossiness = getBiomeMossiness(biome);
-		final BlockPlanks.EnumType woodType = getBiomeWoodVariant(biome);
+		final BlockPlanks.EnumType woodType = BlockUtils.getBiomeWoodVariant(biome);
 
 		final Set<BlockPos> blocksPlaced = new HashSet<>();
 
@@ -101,7 +101,7 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 				(w, p, i) -> {if(i.blockState.getBlock() != Blocks.AIR) blocksPlaced.add(p); return i;}
 		);
 
-		template.addBlocksToWorld(world, origin, processor, settings, 2);
+		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
 		WizardryAntiqueAtlasIntegration.markTower(world, origin.getX(), origin.getZ());
 
@@ -110,7 +110,7 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 
 		for(Map.Entry<BlockPos, String> entry : dataBlocks.entrySet()){
 
-			Vec3d vec = WizardryUtilities.getCentre(entry.getKey());
+			Vec3d vec = GeometryUtils.getCentre(entry.getKey());
 
 			if(entry.getValue().equals(WIZARD_DATA_BLOCK_TAG)){
 
@@ -148,18 +148,6 @@ public class WorldGenWizardTower extends WorldGenSurfaceStructure {
 		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.WASTELAND)) 	return 0;
 		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.NETHER)) 	return 0;
 		return 0.1f; // Everything else (plains, etc.) has a small amount of moss
-	}
-
-	private static BlockPlanks.EnumType getBiomeWoodVariant(Biome biome){
-		// Unfortunately, I can't check all the wood types with the biome dictionary
-		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.CONIFEROUS)) 	return BlockPlanks.EnumType.SPRUCE;
-		if(biome == Biomes.BIRCH_FOREST || biome == Biomes.BIRCH_FOREST_HILLS) 	return BlockPlanks.EnumType.BIRCH;
-		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.JUNGLE)) 		return BlockPlanks.EnumType.JUNGLE;
-		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.SAVANNA)) 		return BlockPlanks.EnumType.ACACIA;
-		// Not technically a tree type, but I think it fits quite well anyway
-		if(BiomeDictionary.hasType(biome, BiomeDictionary.Type.SPOOKY)) 		return BlockPlanks.EnumType.DARK_OAK;
-		// Everything else is oak
-		return BlockPlanks.EnumType.OAK;
 	}
 
 }

@@ -9,12 +9,14 @@
                     "name": "ebwizardry:magic_crystal",
                     "weight": 1,
                     "functions": [
-                        {
-                            "function": "set_count",
-                            "count": {
-                                "min": 3,
-                                "max": 5
-                            },
+						{
+							"function": "set_count",
+							"count": {
+								"min": 3,
+								"max": 5
+							}
+						},
+						{
 							"function": "looting_enchant",
                             "count": {
                                 "min": 0,

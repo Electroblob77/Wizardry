@@ -14,10 +14,11 @@
   "element": "fire",
   "type": "construct",
   "cost": 30,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 100,
   "base_properties": {
     "duration": 600,
+    "effect_radius": 2.5,
     "damage": 1,
     "burn_duration": 10
   }

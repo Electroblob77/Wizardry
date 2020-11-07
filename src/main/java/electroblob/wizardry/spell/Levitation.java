@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
@@ -17,7 +17,7 @@ public class Levitation extends Spell {
 	public static final String ACCELERATION = "acceleration";
 
 	public Levitation(){
-		super("levitation", EnumAction.BOW, true);
+		super("levitation", SpellActions.POINT_DOWN, true);
 		addProperties(SPEED, ACCELERATION);
 		soundValues(0.5f, 1, 0);
 	}
@@ -47,7 +47,7 @@ public class Levitation extends Spell {
 
 		if(world.isRemote){
 			double x = caster.posX - 0.25 + world.rand.nextDouble() * 0.5;
-			double y = caster.getEntityBoundingBox().minY;
+			double y = caster.getPositionEyes(1).y;
 			double z = caster.posZ - 0.25 + world.rand.nextDouble() * 0.5;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, -0.1, 0).time(15).clr(0.5f, 1, 0.7f).spawn(world);
 		}

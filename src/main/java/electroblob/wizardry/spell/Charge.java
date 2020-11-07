@@ -3,17 +3,17 @@ package electroblob.wizardry.spell;
 import electroblob.wizardry.data.IVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.Vec3d;
@@ -37,7 +37,7 @@ public class Charge extends Spell {
 	private static final double EXTRA_HIT_MARGIN = 1;
 
 	public Charge(){
-		super("charge", EnumAction.NONE, false);
+		super("charge", SpellActions.POINT, false);
 		addProperties(CHARGE_SPEED, DURATION, DAMAGE, KNOCKBACK_STRENGTH);
 		this.soundValues(0.6f, 1, 0);
 	}
@@ -94,7 +94,7 @@ public class Charge extends Spell {
 
 			if(collided.isEmpty()) chargeTime--;
 			else{
-				WizardryUtilities.playSoundAtPlayer(player, SoundEvents.ENTITY_GENERIC_HURT, 1, 1);
+				EntityUtils.playSoundAtPlayer(player, SoundEvents.ENTITY_GENERIC_HURT, 1, 1);
 				chargeTime = 0;
 			}
 		}

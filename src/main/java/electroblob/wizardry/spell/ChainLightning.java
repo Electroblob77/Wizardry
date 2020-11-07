@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -28,7 +28,7 @@ public class ChainLightning extends SpellRay {
 	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public ChainLightning(){
-		super("chain_lightning", false, EnumAction.NONE);
+		super("chain_lightning", SpellActions.POINT, false);
 		this.aimAssist(0.6f);
 		this.soundValues(1, 1.7f, 0.2f);
 		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,
@@ -40,17 +40,17 @@ public class ChainLightning extends SpellRay {
 
 		// Anything can be attacked with the initial arc, because the player has control over where it goes. If they
 		// hit a minion or an ally, it's their problem!
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 
 			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
 					* modifiers.get(SpellModifiers.POTENCY));
 
 			// Secondary chaining effect
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+			List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
 					getProperty(SECONDARY_RANGE).doubleValue(), target.posX, target.posY + target.height / 2, target.posZ, world);
 
 			secondaryTargets.remove(target);
-			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+			secondaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
 				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
@@ -62,13 +62,13 @@ public class ChainLightning extends SpellRay {
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+				List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
 						getProperty(TERTIARY_RANGE).doubleValue(), secondaryTarget.posX,
 						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 
 				tertiaryTargets.remove(target);
 				tertiaryTargets.removeAll(secondaryTargets);
-				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+				tertiaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
 					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
@@ -110,7 +110,7 @@ public class ChainLightning extends SpellRay {
 			ParticleBuilder.create(Type.LIGHTNING).entity(caster)
 			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
 			
-			ParticleBuilder.spawnShockParticles(world, target.posX, target.getEntityBoundingBox().minY + target.height/2, target.posZ);
+			ParticleBuilder.spawnShockParticles(world, target.posX, target.posY + target.height/2, target.posZ);
 		}
 
 		//target.playSound(WizardrySounds.SPELL_SPARK, 1, 1.5f + 0.4f * world.rand.nextFloat());

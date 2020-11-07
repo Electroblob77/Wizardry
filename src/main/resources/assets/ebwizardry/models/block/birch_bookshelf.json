@@ -1,0 +1,9 @@
+{
+    "parent": "ebwizardry:block/bookshelf",
+    "textures": {
+        "particle": "ebwizardry:blocks/birch_bookshelf_side",
+        "side": "ebwizardry:blocks/birch_bookshelf_side",
+        "inside": "ebwizardry:blocks/birch_bookshelf_inside",
+        "top": "ebwizardry:blocks/birch_bookshelf_top"
+    }
+}

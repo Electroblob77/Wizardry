@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.JavaUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -63,7 +63,7 @@ class Section {
 	}
 
 	Collection<GuiButton> getButtons(){
-		return WizardryUtilities.flatten(buttons);
+		return JavaUtils.flatten(buttons);
 	}
 
 	/**

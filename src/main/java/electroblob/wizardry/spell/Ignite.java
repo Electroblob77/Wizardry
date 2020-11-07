@@ -1,15 +1,15 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 public class Ignite extends SpellRay {
 	
 	public Ignite(){
-		super("ignite", false, EnumAction.NONE);
+		super("ignite", SpellActions.POINT, false);
 		this.soundValues(1, 1, 0.4f);
 		addProperties(BURN_DURATION);
 	}
@@ -46,13 +46,11 @@ public class Ignite extends SpellRay {
 	@Override
 	protected boolean onBlockHit(World world, BlockPos pos, EnumFacing side, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(!WizardryUtilities.canDamageBlocks(caster, world)) return false;
-
 		pos = pos.offset(side);
 		
 		if(world.isAirBlock(pos)){
 			
-			if(!world.isRemote){
+			if(!world.isRemote && BlockUtils.canPlaceBlock(caster, world, pos)){
 				world.setBlockState(pos, Blocks.FIRE.getDefaultState());
 			}
 			

@@ -3,8 +3,9 @@ package electroblob.wizardry.block;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.tileentity.TileEntityPlayerSaveTimed;
+import electroblob.wizardry.tileentity.TileEntityThorns;
 import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import net.minecraft.block.*;
 import net.minecraft.block.BlockDoublePlant.EnumBlockHalf;
@@ -22,8 +23,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -34,6 +37,7 @@ import java.util.Random;
 public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	public static final int GROWTH_STAGES = 8;
+	public static final int GROWTH_STAGE_DURATION = 2;
 
 	public static final PropertyInteger AGE = PropertyInteger.create("age", 0, GROWTH_STAGES-1);
 	public static final PropertyEnum<EnumBlockHalf> HALF = PropertyEnum.create("half", EnumBlockHalf.class);
@@ -52,22 +56,27 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta){
-		return this.getDefaultState().withProperty(HALF, EnumBlockHalf.values()[meta / GROWTH_STAGES]).withProperty(AGE, meta % GROWTH_STAGES);
+		return this.getDefaultState().withProperty(HALF, meta == 0 ? EnumBlockHalf.LOWER : EnumBlockHalf.UPPER);
 	}
 
 	@Override
 	public int getMetaFromState(IBlockState state){
-		return state.getValue(HALF).ordinal() * GROWTH_STAGES + state.getValue(AGE);
+		return state.getValue(HALF).ordinal();
 	}
 
-//	@Override
-//	public void updateTick(World world, BlockPos pos, IBlockState state, Random rand){
-//
-//		super.updateTick(world, pos, state, rand);
-//
-//		// Update the state, including on the client, but don't do a block update since it's only visual
-//		if(state.getValue(AGE) < GROWTH_STAGES-1) world.setBlockState(pos, state.withProperty(AGE, state.getValue(AGE) + 1), 2);
-//	}
+	@Override
+	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos){
+
+		if(state.getValue(HALF) == EnumBlockHalf.UPPER) pos = pos.down();
+		// Copied from BlockFlowerPot on authority of the Forge docs, which say it needs to be here
+		TileEntity tileentity = world instanceof ChunkCache ? ((ChunkCache)world).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : world.getTileEntity(pos);
+
+		if(tileentity instanceof TileEntityThorns){
+			return state.withProperty(AGE, ((TileEntityThorns)tileentity).getAge());
+		}else{
+			return state.withProperty(AGE, 7);
+		}
+	}
 
 	@Override
 	protected BlockStateContainer createBlockState(){
@@ -107,47 +116,36 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 		}
 	}
 
-//	@Override
-//	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos){
-//		// Copied from BlockFlowerPot on authority of the Forge docs, which says this check is necessary
-//		SoundLoopSpellDispenser tileentity = world instanceof ChunkCache ? ((ChunkCache)world).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : world.getTileEntity(pos);
-//
-//		if(tileentity instanceof TileEntityPlayerSaveTimed){
-//			state = state.withProperty(AGE, Math.min(7, ((TileEntityPlayerSaveTimed)tileentity).timer/2));
-//		}else{
-//			state = state.withProperty(AGE, 7);
-//		}
-//
-//		return state;
-//	}
-
 	@Override
 	public void onEntityCollision(World world, BlockPos pos, IBlockState state, Entity entity){
-		if(!world.isRemote){
-			if(applyThornDamage(world, pos, entity)){
-				entity.setInWeb();
-			}
+		if(applyThornDamage(world, pos, state, entity)){
+			entity.setInWeb(); // Needs to be called client-side for players (and besides, all of this is common code)
 		}
 	}
 
-	private static boolean applyThornDamage(World world, BlockPos pos, Entity target){
+	private static boolean applyThornDamage(World world, BlockPos pos, IBlockState state, Entity target){
 
 		DamageSource source = DamageSource.CACTUS;
+		float damage = Spells.forest_of_thorns.getProperty(Spell.DAMAGE).floatValue();
 
-		TileEntity tileentity = world.getTileEntity(pos);
+		TileEntity tileentity = world.getTileEntity(state.getValue(HALF) == EnumBlockHalf.UPPER ? pos.down() : pos);
 
-		if(tileentity instanceof TileEntityPlayerSaveTimed){
+		if(tileentity instanceof TileEntityThorns){
 
-			EntityLivingBase caster = ((TileEntityPlayerSaveTimed)tileentity).getCaster();
+			damage *= ((TileEntityThorns)tileentity).damageMultiplier;
 
-			if(caster != null && AllyDesignationSystem.isValidTarget(caster, target)){
+			EntityLivingBase caster = ((TileEntityThorns)tileentity).getCaster();
+
+			if(!AllyDesignationSystem.isValidTarget(caster, target)) return false; // Don't attack or slow allies of the caster
+
+			if(caster != null){
 				source = MagicDamage.causeDirectMagicDamage(caster, MagicDamage.DamageType.MAGIC);
-			}else{
-				return false; // Don't attack or slow allies of the caster
 			}
 		}
 
-		if(world.getTotalWorldTime() % 20 == 0) target.attackEntityFrom(source, Spells.forest_of_thorns.getProperty(Spell.DAMAGE).floatValue());
+		if(target.ticksExisted % 20 == 0){
+			EntityUtils.attackEntityWithoutKnockback(target, source, damage);
+		}
 
 		return true;
 	}
@@ -159,12 +157,12 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata){
-		return new TileEntityPlayerSaveTimed(600);
+		return new TileEntityThorns();
 	}
 
 	@Override
 	public boolean hasTileEntity(IBlockState state){
-		return true;
+		return state.getValue(HALF) == EnumBlockHalf.LOWER;
 	}
 
 	@Override public boolean isReplaceable(IBlockAccess world, BlockPos pos){ return false; }
@@ -174,9 +172,8 @@ public class BlockThorns extends BlockBush implements ITileEntityProvider {
 
 	@SubscribeEvent
 	public static void onLeftClickBlockEvent(PlayerInteractEvent.LeftClickBlock event){
-		if(!event.getWorld().isRemote && event.getWorld().getTotalWorldTime() % 20 == 0
-				&& event.getWorld().getBlockState(event.getPos()).getBlock() == WizardryBlocks.thorns){
-			applyThornDamage(event.getWorld(), event.getPos(), event.getEntity());
+		if(!event.getWorld().isRemote && event.getWorld().getBlockState(event.getPos()).getBlock() == WizardryBlocks.thorns){
+			applyThornDamage(event.getWorld(), event.getPos(), event.getWorld().getBlockState(event.getPos()), event.getEntity());
 		}
 	}
 

@@ -65,15 +65,15 @@ public class GuiSelectHUDSkin extends GuiSelectString {
 			float scale = Math.min((previewRight - previewLeft - 2*previewBorder)/(float)skin.getWidth(),
 									(previewBottom - previewTop - 2*previewBorder)/(float)skin.getHeight());
 			
-			float x = (previewLeft + previewRight)/2 - (skin.getWidth()*scale)/2;
-			float y = (previewBottom + previewTop)/2 + (skin.getHeight()*scale)/2;
+			float x = (previewLeft + previewRight)/2f - (skin.getWidth()*scale)/2;
+			float y = (previewBottom + previewTop)/2f + (skin.getHeight()*scale)/2;
 			
 			GlStateManager.pushMatrix();
 			
 			GlStateManager.scale(scale, scale, scale);
 			
 			skin.drawBackground((int)(x/scale), (int)(y/scale), false, false, 
-					Spells.magic_missile.getIcon(), 0.6f, false);
+					Spells.magic_missile.getIcon(), 0.6f, false, false);
 			
 			skin.drawText((int)(x/scale), (int)(y/scale), false, false, 
 					Spells.none.getDisplayNameWithFormatting(),

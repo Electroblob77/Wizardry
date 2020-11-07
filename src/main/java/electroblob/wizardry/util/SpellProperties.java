@@ -224,11 +224,23 @@ public final class SpellProperties {
 	}
 
 	/**
-	 * Returns the base value for this spell that corresponds to the given identifier.
+	 * Returns whether a base value was defined with the given identifier.
+	 * @param identifier The string identifier to check for.
+	 * @return True if a base value was defined with the given identifier, false otherwise.
+	 */
+	public boolean hasBaseValue(String identifier){
+		return baseValues.containsKey(identifier);
+	}
+
+	/**
+	 * Returns the base value for this spell that corresponds to the given identifier. To check whether an identifier
+	 * exists, use {@link SpellProperties#hasBaseValue(String)}.
 	 * @param identifier The string identifier to fetch the base value for.
 	 * @return The base value, as a {@code Number}.
 	 * @throws IllegalArgumentException if no base value was defined with the given identifier.
 	 */
+	// Better to throw an exception than make this nullable because the vast majority of uses are for retrieving
+	// specific spells' properties that are known to exist, and IntelliJ would scream at us for not checking
 	public Number getBaseValue(String identifier){
 		if(!baseValues.containsKey(identifier)){
 			throw new IllegalArgumentException("Base value with identifier '" + identifier + "' is not defined.");

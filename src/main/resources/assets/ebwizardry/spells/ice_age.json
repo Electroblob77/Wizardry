@@ -14,10 +14,12 @@
   "element": "ice",
   "type": "attack",
   "cost": 70,
-  "chargeup": 0,
+  "chargeup": 20,
   "cooldown": 250,
   "base_properties": {
     "effect_radius": 7,
-    "effect_duration": 1200
+    "freeze_duration": 1200,
+    "effect_duration": 400,
+    "effect_strength": 1
   }
 }

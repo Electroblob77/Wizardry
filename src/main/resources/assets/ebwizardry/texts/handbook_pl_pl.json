@@ -1,0 +1,818 @@
+{
+	"bookmark_start_section": "introduction",
+	
+	"colours": {
+		"text": "#000000",
+		"caption": "#666666",
+		"hyperlink": "#601ba0",
+		"highlight": "#dd4c1d",
+		"new_section": "#ee88f7"
+	},
+	
+	"images": {
+		"workbench": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench.png",
+			"caption": "Tajemniczy Stół",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 110
+		},
+		"crystal_ore": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_ore.png",
+			"caption": "Ruda Kryształowa",
+			"u": 0,
+			"v": 0,
+			"width": 64,
+			"height": 64
+		},
+		"magic_crystal": {
+			"location": "ebwizardry:textures/items/crystal_magic.png",
+			"caption": "Magiczny Kryształl",
+			"u": 6,
+			"v": 6,
+			"width": 36,
+			"height": 33,
+			"texture_width": 48,
+			"texture_height": 48,
+			"border": false
+		},
+		"magic_wand": {
+			"location": "ebwizardry:textures/items/wand_novice.png",
+			"caption": "Magiczna Różdżka",
+			"u": 0,
+			"v": 0,
+			"width": 64,
+			"height": 64,
+			"border": false
+		},
+		"crystal_flower": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_flower.png",
+			"caption": "Kryształowy Kwiat",
+			"u": 0,
+			"v": 0,
+			"width": 48,
+			"height": 48
+		},
+		"wizard_tower": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_tower.png",
+			"caption": "Wieża Czarodzieja",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 110
+		},
+		"wizard_armour": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_armour.png",
+			"caption": "Zestaw Zbroi Czarodzieja",
+			"u": 0,
+			"v": 0,
+			"width": 90,
+			"height": 90
+		},
+		"obelisk": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
+			"caption": "Obelisk",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 67
+		},
+		"shrine": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine.png",
+			"caption": "Ziemskie Sanktuarium",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 67
+		},
+		"library_ruins": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins.png",
+			"caption": "Ruiny Biblioteki",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 57
+		},
+		"remnant": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/remnant.png",
+			"caption": "Resztki Pożarów",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 73
+		},
+		"tiers": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers.png",
+			"caption": "Cztery Stopnie Różdżki",
+			"u": 0,
+			"v": 0,
+			"width": 96,
+			"height": 24,
+			"border": false
+		},
+		"elements": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements.png",
+			"caption": "Siedem Elementów",
+			"u": 0,
+			"v": 0,
+			"width": 106,
+			"height": 20,
+			"border": false
+		}
+	},
+
+	"recipes": {
+		"arcane_workbench": {
+			"locations": [ "ebwizardry:arcane_workbench" ]
+		},
+		"magic_wand": {
+			"locations": [ "ebwizardry:magic_wand" ]
+		},
+		"novice_wands": {
+			"locations": [
+				"ebwizardry:magic_wand",
+				"ebwizardry:wand_fire",
+				"ebwizardry:wand_ice",
+				"ebwizardry:wand_lightning",
+				"ebwizardry:wand_necromancy",
+				"ebwizardry:wand_earth",
+				"ebwizardry:wand_sorcery",
+				"ebwizardry:wand_healing"
+			]
+		},
+		"magic_missile_spell_book": {
+			"locations": [ "ebwizardry:magic_missile_spell_book" ]
+		},
+		"wizard_handbook": {
+			"locations": [ "ebwizardry:wizard_handbook" ]
+		},
+		"crystal_flower_to_crystals": {
+			"locations": [ "ebwizardry:crystal_flower_to_crystals" ]
+		},
+		"crystal_blocks": {
+			"locations": [
+				"ebwizardry:crystal_block",
+				"ebwizardry:crystal_block_fire",
+				"ebwizardry:crystal_block_ice",
+				"ebwizardry:crystal_block_lightning",
+				"ebwizardry:crystal_block_necromancy",
+				"ebwizardry:crystal_block_earth",
+				"ebwizardry:crystal_block_sorcery",
+				"ebwizardry:crystal_block_healing"
+			]
+		},
+		"crystal_blocks_to_crystals": {
+			"locations": [
+				"ebwizardry:crystal_block_to_crystals",
+				"ebwizardry:crystal_block_to_crystals_fire",
+				"ebwizardry:crystal_block_to_crystals_ice",
+				"ebwizardry:crystal_block_to_crystals_lightning",
+				"ebwizardry:crystal_block_to_crystals_necromancy",
+				"ebwizardry:crystal_block_to_crystals_earth",
+				"ebwizardry:crystal_block_to_crystals_sorcery",
+				"ebwizardry:crystal_block_to_crystals_healing"
+			]
+		},
+		"crystal_shard": {
+			"locations": [ "ebwizardry:crystal_shard" ]
+		},
+		"small_mana_flask": {
+			"locations": [ "ebwizardry:small_mana_flask" ]
+		},
+		"medium_mana_flask": {
+			"locations": [ "ebwizardry:medium_mana_flask" ]
+		},
+		"large_mana_flask": {
+			"locations": [ "ebwizardry:large_mana_flask" ]
+		},
+		"runestone": {
+			"locations": [
+				"ebwizardry:runestone_fire",
+				"ebwizardry:runestone_ice",
+				"ebwizardry:runestone_lightning",
+				"ebwizardry:runestone_necromancy",
+				"ebwizardry:runestone_earth",
+				"ebwizardry:runestone_sorcery",
+				"ebwizardry:runestone_healing"
+			]
+		},
+		"runestone_pedestal": {
+			"locations": [
+				"ebwizardry:runestone_pedestal_fire",
+				"ebwizardry:runestone_pedestal_ice",
+				"ebwizardry:runestone_pedestal_lightning",
+				"ebwizardry:runestone_pedestal_necromancy",
+				"ebwizardry:runestone_pedestal_earth",
+				"ebwizardry:runestone_pedestal_sorcery",
+				"ebwizardry:runestone_pedestal_healing"
+			]
+		},
+		"transportation_stone": {
+			"locations": [ "ebwizardry:transportation_stone" ]
+		},
+		"magic_silk": {
+			"locations": [ "ebwizardry:magic_silk" ]
+		},
+		"wizard_hat": {
+			"locations": [ "ebwizardry:wizard_hat" ]
+		},
+		"wizard_robe": {
+			"locations": [ "ebwizardry:wizard_robe" ]
+		},
+		"wizard_leggings": {
+			"locations": [ "ebwizardry:wizard_leggings" ]
+		},
+		"wizard_boots": {
+			"locations": [ "ebwizardry:wizard_boots" ]
+		},
+		"blank_scroll": {
+			"locations": [ "ebwizardry:blank_scroll" ]
+		},
+		"firebomb": {
+			"locations": [ "ebwizardry:firebomb" ]
+		},
+		"poison_bomb": {
+			"locations": [ "ebwizardry:poison_bomb" ]
+		},
+		"smoke_bomb": {
+			"locations": [ "ebwizardry:smoke_bomb" ]
+		},
+		"spark_bomb": {
+			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+		"gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
+		}
+	},
+	
+	"sections": {
+		
+		"inside_cover": {
+			"centre": {
+				"x": true,
+				"y": true
+			},
+			"text": [
+			
+				"Książka Czarodzieja",
+				
+				"Od Electrobloba"
+			]
+		},
+		
+		"introduction": {
+			"title": "Wstęp",
+			"text": [
+			
+				"Witaj, czarodzieju! Ta książka objaśnia wiele sposobów, w jaki sposób można używać czarów. Nie jest to jednak zwykła książka - jej strony zmaterializują się przed tobą, gdy odkryjesz więcej o magicznym świecie",
+
+				"Przyciski strzałek służą do przechodzenia między stronami, a przyciski podwójnych strzałek do szybkiego przechodzenia między sekcjami. Użyj środkowego przycisku menu, aby powrócić do głównej strony zawartości.",
+
+				"Kliknij na dowolny fioletowy tekst odnośnika, aby przejść bezpośrednio do odpowiedniej strony. Kliknij prawym przyciskiem myszy na zakładkę, aby przenieść ją do bieżącej strony, a następnie kliknij lewym przyciskiem myszy, aby powrócić do strony z zakładką."
+			]
+		},
+
+		"main_contents": {
+			"title": "Zawartość",
+			"contents": {
+				"id": "main_contents",
+				"hyperlinks": true,
+				"page_numbers": true,
+				"separator": "."
+			}
+		},
+
+		"setting_up": {
+			"title": "Ustawienia",
+			"include_in_contents": "main_contents",
+			"text": [
+
+				"Aby zacząć od czarodziejstwa, będziesz musiał:",
+
+				"- Magicznej różdżki, wykonanej jak pokazano:",
+
+				"#recipe magic_wand",
+
+				"- @arcane_workbench Tajemniczy Stół@, wykonany tak:",
+
+				"#recipe arcane_workbench",
+
+				"- @spells Księgi Zaklęć@. Można je znaleźć w skrzyniach, upuszczone jako łupy, zakupione od czarodziejów, lub można zrobić zaklęcie dla początkujących, magiczny pocisk, jak pokazano:",
+
+				"#recipe magic_missile_spell_book",
+
+				"Będziesz również potrzebował więcej magicznych kryształów, aby zaopatrzyć swoją różdżkę w @mana mane@."
+			]
+		},
+
+		"mana": {
+			"title": "Mana",
+			"include_in_contents": "main_contents",
+			"triggers": [
+				"ebwizardry:crystal"
+			],
+			"text": [
+
+				"Mana to tajemnicza energia, która daje czarodziejom ich moce. To nie jest fizyczna substancja sama w sobie; to raczej wszechobecna aura, która przenika wszystko na świecie. W szczególności przejawia się ona w naturalnie występujących kryształach, które można znaleźć w podziemnych skałach.W @wands różdżkach@ można przechowywać manę, a ta mana jest kierowana do @spells czarów@, które rzucasz. Różne zaklęcia wymagają różnych ilości many, w zależności od tego, jak potężne są i jak długo trwają.",
+				"#image crystal_ore",
+
+				"#image magic_crystal",
+
+				"Powszechnie przyjmuje się, że mana nie może być tworzona ani niszczona, a kiedy zaklęcie jest rzucane, to mana, którą ono kieruje, jest po prostu rozpraszana w otoczeniu. Rzeczywiście, tak właśnie istnieje ogromna większość many - rozprzestrzenia się ona cienko po całym świecie. Aby jednak była ona użyteczna, musi być skoncentrowana, albo naturalnie przez tysiące lat, jak to ma miejsce w przypadku kryształów pod ziemią, albo sztucznie - zaawansowany temat nie ujęty w tej książce. Istnieją również różne sposoby na uczynienie zaklęć bardziej wydajnymi i odzyskanie części many rozproszonej podczas rzucania zaklęć."
+			]
+		},
+
+		"wands": {
+			"title": "Różdżki",
+			"include_in_contents": "main_contents",
+			"triggers": [
+				"ebwizardry:arcane_initiate"
+			],
+			"text": [
+
+				"Różdżka jest narzędziem z wyboru dla czarodzieja. Za jej pomocą można rzucać dowolne @spells zaklęcie@, o ile różdżka może zawierać swoją moc (zobacz @tiers Poziom@). Różdżki występują w wielu różnych odmianach, ale prawie na pewno zaczniesz od podstawowej magicznej różdżki",
+				"#image magic_wand",
+
+				"Większość różdżek zaczyna swoje życie od prostej aranżacji magicznego kryształu przymocowanego do drewnianego kija, ze złotą bryłką przymocowaną na drugim końcu. Kryształ ten jest oczywiście źródłem mocy różdżki, ponieważ zapewnia moc niezbędną do skierowania @spells czaru@. Reszta różdżki jest jednak również ważna, ponieważ zapewnia nie tylko środek, za pomocą którego można ją trzymać, ale również ścieżkę, przez którą można skierować @mana mane@.",
+
+				"Ponieważ więcej czarów jest rzucanych różdżką, staje się ona bardziej efektywna przy  @spells księdze zaklęć@, a zatem może rzucać zaklęcia o większej mocy. Efekt ten można rozpoznać po subtelnych zmianach, jakie zachodzą w kształcie i wyglądzie samej różdżki: w miarę jak różdżka będzie rosła w siłę, jej kryształ stanie się bardziej żywy, jej kolor może się zmieniać w zależności od @elements elementu@, a po chwili drewno, z którego jest wykonana, zacznie rosnąć i skręcać się w bardziej złożone kształty.",
+
+				"Trzymając różdżkę, w rogu ekranu pojawi się mały wyświetlacz . Wskazuje to aktualnie wybrane zaklęcie wraz z jego obrazowym przedstawieniem, a jeżeli zaklęcie zostało rzucone, pasek odnowienia wskazuję czas, za ile można ponownie rzucić to zaklęcie. Pokazuje on również nazwy kolejnych i poprzednich zaklęć związanych z różdżką. Aby przełączać się pomiędzy zaklęciami, użyj klawiszy #next_spell_key oraz #previous_spell_key (można je zmienić w opcjach -> kontrolek). Możesz również przełączać się pomiędzy zaklęciami poprzez przewijanie kółka myszy podczas skradania się.",
+				
+				"Podczas przeglądania ekwipunku, najechanie na różdżkę wyświetli, ile @mana many@ jest w niej zapisane, wraz z jego aktualnie wybranym @spells zaklęciem@ i wszelkimi specyficznymi umiejętnościami, które może posiadać. Bardziej szczegółowe informacje na temat różdżki można zobaczyć, umieszczając ją w @arcane_workbench tajemniczym stole@."
+			]
+		},
+
+		"spells": {
+			"title": "Księga Zaklęć",
+			"include_in_contents": "main_contents",
+			"triggers": [
+				"ebwizardry:handbook/spells"
+			],
+			"text": [
+
+				"@wands Różdżka@ jest bezużyteczna bez czarów do rzucania. Zaklęcia są zapisywane w dwóch formach: w książkach, które są trwałe, i w zwojach, które są tymczasowe.",
+
+				"Książki o zaklęciach są mało przydatne same w sobie; zamiast tego są one używane do oprawiania zawartego w nich zaklęcia w @wands różdżkę@. Książki o zaklęciach można znaleźć na całym świecie i nie trzeba długo czekać, aby się z nimi spotkać. Kiedy ją znajdziesz, możesz najechać myszką na księgę zaklęć, aby na pierwszy rzut oka zobaczyć podstawowe informacje o zaklęciu. Możesz również kliknąć prawym przyciskiem myszy, trzymając w ręku księgę zaklęć, aby przeczytać więcej na ten temat.",
+
+				"Zwoje z kolei służą innemu celowi: kliknięcie prawym przyciskiem myszy, trzymając w ręku, rzuci zaklęcie, które jest z nim związane, niszcząc w ten sposób zwój. Podobnie jak książki o zaklęciach, zwoje można znaleźć na całym świecie, ale można je również wykonać samemu (zobacz @enchanting_scrolls Zaklinanie Zwojów@).",
+
+				"Zwoje są dość przydatne, gdy musisz użyć zaklęcia raz lub dwa razy w konkretnym zadaniu, ale nie chcesz, aby zajęło ono miejsce w twojej @wands różdżce@. Mają one również tę zaletę, że mogą od razu rzucać zaklęcia, które normalnie wymagałyby czasu ładowania. Należy jednak zauważyć, że są one nieefektywną metodą rzucania czarów w porównaniu do używania różdżki",
+
+				"Dla niewyćwiczonego oka, magiczne runy, którymi napisane są zaklęcia, są nieczytelne. Aby zidentyfikować zaklęcie, możesz oczywiście rzucić je i zobaczyć co się stanie - choć może to spowodować niepożądane skutki uboczne, a wiele zaklęć potrzebuje pewnych warunków, aby zadziałało. Co więcej, podczas rzucania zaklęcia zawsze istnieje możliwość jego błędnego rozprzestrzenienia, co może mieć potencjalnie niebezpieczne konsekwencje w zależności od jego mocy. Bezpieczniejszą i bardziej niezawodną opcją jest użycie zwoju identyfikacji, który można znaleźć w skrzyniach lub zakupić u kreatora. Klikając prawym przyciskiem myszy i przytrzymując go, zidentyfikujesz pierwszą nieznaną księgę zaklęć lub zwój na pasku informacyjnym, zużywając w ten sposób zwój identyfikacji."
+			]
+		},
+
+		"arcane_workbench": {
+			"title": "Tajemniczy Stół",
+			"include_in_contents": "main_contents",
+			"contents": {
+				"id": "arcane_workbench_subsections",
+				"hyperlinks": true,
+				"page_numbers": true,
+				"separator": "."
+			},
+			"triggers": [
+				"ebwizardry:handbook/arcane_workbench"
+			],
+			"text": [
+
+				"Tajemniczy Stół jest blokiem o wyglądzie podobnym do stołu do zaklinania, gdzie można ładować, ulepszać i wiązać @spells czar@ do swojej @wands różdżki@. Można ją wykonać w następujący sposób:",
+
+				"#recipe arcane_workbench",
+
+				"Na kolejnych stronach wyjaśniono różne czynności, które mogą być wykonywane na Tajemniczym Stole.",
+
+				"#image workbench"
+			],
+			"sections": {
+				"binding_spells": {
+					"title": "Oprawianie Księgi Zaklęć",
+					"include_in_contents": "arcane_workbench_subsections",
+					"triggers": [
+						"ebwizardry:handbook/arcane_workbench"
+					],
+					"text": [
+
+						"Aby oprawić  @spells czar@ do swojej @wands różdżki@, po prostu umieść swoją różdżkę w centralnym miesjcu stołu warsztatowego, a następnie umieść księgę zaklęć w jednym z otaczających miejsc i naciśnij przycisk Dodaj. Zauważysz, że księga zaklęć jest podczas tego procesu pozostawiona nietknięta - jest to spowodowane tym, że akt oprawy zaklęcia nie zabiera zaklęcia z księgi zaklęć, a raczej przyciąga różdżkę do zaklęcia. W ten sposób można zmienić zaklęcie związane z różdżką tak bardzo, jak chcesz, po prostu powtarzając proces oprawiania zaklęcia. Możesz oprawić do pięciu zaklęć na różdżkę jednocześnie, choć liczba ta może być zwiększona w przypadku ulepszeń strojenia."
+					]
+				},
+				"charging_wands": {
+					"title": "Ładowanie Różdżki",
+					"include_in_contents": "arcane_workbench_subsections",
+					"triggers": [
+						"ebwizardry:handbook/arcane_workbench"
+					],
+					"text": [
+
+						"Aby naładować swoją  @wands różdżkę@, umieść różdżkę w centralnym otworze tajemniczego stołu warsztatowego i umieść kilka magicznych kryształów w dolnym lewym otworze, a następnie naciśnij przycisk Dodaj. Każdy kryształ jest wart #mana_per_crystal @mana mane@, a różdżka weźmie tylko to, czego potrzebuje, więc możesz mieć zapas kryształów w stole warsztatowym na czas, gdy ich potrzebujesz. Pamiętaj jednak, że różdżka może zabrać tylko całą liczbę kryształów, więc jeśli różdżka potrzebuje np. jeszcze 30 mana, #example_charging_loss mana zostanie utracona przy jej ładowaniu."
+					]
+				},
+				"upgrading_wands": {
+					"title": "Ulepszanie Różdżki",
+					"include_in_contents": "arcane_workbench_subsections",
+					"triggers": [
+						"ebwizardry:handbook/tome_of_arcana"
+					],
+					"text": [
+
+						"Aby ulepszyć swoją różdżkę @wands różdżkę@, będziesz potrzebował Tajemniczej Książki odpowiedniego @tiers poziomu@ lub specjalną różdżkę. Obie można znaleźć jako łupy lub kupić od czarodzieja. Aby ulepszyć różdżkę, umieść ją w centralnym slocie, a następnie w prawym górnym slocie, a następnie naciśnij przycisk Dodaj.",
+
+						"Specjalne ulepszenia różdżki poprawiają konkretny aspekt różdżki. Każdy rodzaj ulepszenia może być ułożony na stosie do trzech razy, a całkowita liczba ulepszeń, jakie może wziąć różdżka, zależy od jej poziomu. Ulepszenia nie mogą być usuwane."
+					]
+				},
+				"enchanting_scrolls": {
+					"title": "Zaklinanie Zwojów",
+					"include_in_contents": "arcane_workbench_subsections",
+					"triggers": [
+						"ebwizardry:handbook/scrolls"
+					],
+					"text": [
+
+						"Tajemniczy Stół może być również używany do czarowania zwojów. Aby to zrobić, będziesz potrzebował pustego zwoju, wykonanego z kartki papieru i jakiegoś sznurka, księgi zaklęć dla wybranego zaklęcia oraz wystarczająco dużo magicznych kryształów, aby zapewnić @mana mane@ do rzucenia go.",
+
+						"#recipe blank_scroll",
+
+						"Umieść kryształy w dolnym lewym gnieździe, pusty zwój w gnieździe centralnym, a księgę zaklęć w pojedynczym gnieździe nad nim, a następnie naciśnij przycisk potwierdzenia, aby zaklnąć zwój."
+					]
+				}
+			}
+		},
+
+		"wizard_armour": {
+			"title": "Zbroja Czarodzieja",
+			"include_in_contents": "main_contents",
+			"triggers": [
+				"ebwizardry:arcane_initiate"
+			],
+			"text": [
+
+				"Jako czarodziej, będziesz potrzebował czegoś, co ochroni cię przed istotami, z którymi walczysz. Żadna zwykła zbroja tego nie zrobi. Aby maksymalnie wykorzystać swoje zaklęcia, będziesz potrzebował zbroi czarodziejskiej: kapelusza, szat, spodni i butów. W przeciwieństwie do zwykłej zbroi, nie złamią się one. Zamiast tego, używają tajemniczej energii, aby osłonić użytkownika. Oznacza to oczywiście, że muszą być one naładowane magicznymi kryształami, tak samo jak różdżki. Na szczęście, te ubrania nie zużywają dużo @mana many@. Naładuj je jak różdżkę w @arcane_workbench tajemniczym stole@ lub z @mana_flasks mikstury many@, ale uważaj - jeśli skończy im się mana, staniesz się bezbronny.",
+
+				"#image wizard_armour",
+
+				"Zbroję czarodziejską można uzyskać, wykonując ją z magicznego jedwabiu.:",
+
+				"#recipe magic_silk",
+				"#recipe wizard_hat",
+				"#recipe wizard_robe",
+				"#recipe wizard_leggings",
+				"#recipe wizard_boots",
+
+				"Można zaczarować zbroję czarodziejską za pomocą zwykłego stołu zaklęć, a ze względu na nieodłączne właściwości magicznego jedwabiu, ma ona tendencję do dość skutecznego utrzymywania zaklęć. Szczególnie przydatne dla czarodzieja są magia, mróz i zaklęcia chroniące przed wstrząsami, które mogą okazać się przydatne w obronie przed innymi władcami magii",
+
+				"Ci czarodzieje, którzy poświęcają się praktyce jednego żywiołu, noszą czasem specjalne szaty, które dają bonusy za ten żywioł. Pełne zestawy takich szat są bardzo poszukiwane wśród czarodziejów i niełatwo je znaleźć",
+
+				"Legenda mówi o tajemniczej pieczęci używanej przez najpotężniejszych czarodziejów do znacznego ulepszenia swojej zbroi."
+			]
+		},
+
+		"magical_world": {
+			"title": "Magia w Świecie",
+			"include_in_contents": "main_contents",
+			"contents": {
+				"id": "magical_world_subsections",
+				"hyperlinks": true,
+				"page_numbers": true,
+				"separator": "."
+			},
+			"triggers": [
+				"ebwizardry:handbook/on_subsection_unlock"
+			],
+			"text": [
+
+				"Nie można opanować tajników tylko pozostając w domu - tam jest świat pełen magii do odkrycia! Starożytne ruiny, relikwie i tajemnicze istoty dobre i złe czekają na odkrycie - jeśli wiesz, gdzie szukać. Najwięksi czarodzieje są również najbardziej ciekawi, a swoją wiedzę i moc zdobywają poprzez badanie otaczającego ich środowiska i eksperymentowanie z tym, co znajdą.",
+
+				"Podczas gdy większość czasu czarodzieja nieuchronnie spędza samotnie, dzielenie się wiedzą jest również niezbędne do nauki tajnych sztuk. Poszukujcie innych praktykujących magię i uczcie się od nich jak najwięcej: komunikacja jest prawdopodobnie największą siłą ze wszystkich."
+			],
+			"sections": {
+				"crystal_flowers": {
+					"title": "Krzyształowe Kwiaty",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:handbook/crystal_flowers"
+					],
+					"text": [
+
+						"Podczas waszych podróży pewnie natkniecie się na dziwne, jarzące się kwiaty rosnące na wolności od czasu do czasu. Te charakterystyczne kwiaty znane są jako kwiaty kryształowe i są dziwnie skuteczne w koncentrowaniu @mana many@ - do dziś nikt nie jest do końca pewien, dlaczego. Wiemy jednak, że można je zbierać i wytwarzać z nich manę w postaci kryształków, co czyni je dość użytecznym nadziemnym źródłem many. Ilość uzyskiwanej w ten sposób many jest jednak ograniczona przez niewielkie rozmiary kwiatów, a dzięki temu, że rosną one tylko w niewielkich ilościach.",
+
+						"#image crystal_flower",
+						"#recipe crystal_flower_to_crystals"
+					]
+				},
+				"wizard_towers": {
+					"title": "Wieża Czarodziejów",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:wizard_tower"
+					],
+					"text": [
+
+						"Nie bój się - nie jesteś jedynym praktykującym magię w tym świecie. Podczas waszych podróży możecie spotkać wysoką wieżę lub dwie z charakterystycznym spiczastym dachem. Jest to rezydencja kolegi czarodzieja. Życie w samotności może czasami sprawiać, że czarodzieje będą trochę zrzędliwi, ale zazwyczaj są to przyjacielscy ludzie, którzy chętnie dzielą się z tobą swoją wiedzą - choć za pewną cenę. Spodziewajcie się zapłacić za metale szlachetne i klejnoty, a w zamian otrzymacie wiele wspaniałych, tajemniczych cudów.",
+
+						"Jeśli jednak jest to @tiers mistrzowskie@ zaklęcie, którego szukasz, będziesz musiał porozmawiać ze specjalistą.",
+
+						"#image wizard_tower",
+
+						"Niestety, jest tam kilku czarodziejów, którzy nie witają gości. Są to zazwyczaj wyrzutki, które są wrogie każdemu, kto przekroczy ich drogę. Podejdźcie do tych jednostek z rozwagą i bądźcie gotowi do obrony przed potężną magią. Pokonajcie ich jednak, a ich wiedza będzie wasza.",
+
+						"Należy również zauważyć, że żaden czarodziej nie weźmie uprzejmie na siebie bycia zaatakowanym lub okradzionym - i chętnie weźmie prawo w swoje ręce."
+					]
+				},
+				"obelisks": {
+					"title": "Obeliski",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:handbook/obelisks"
+					],
+					"text": [
+
+						"Ślady starożytnej magii rozsiane są po całym świecie, z których najbardziej godne uwagi są rzeźbione kamienne struktury, które noszą wiele symboli i runy. Te ruiny to wszystko, co pozostało z tego, co wydaje się być jakąś starożytną cywilizacją. Ktokolwiek, lub cokolwiek, zbudował je, najwyraźniej posiadał znaczną wiedzę o magii i używał jej do umieszczania ochronnych zaklęć nad takimi miejscami, które przetrwały do dziś.",
+
+						"Te rzeczy mieszczą się zasadniczo w dwóch typach. Pierwszym z nich, i bardziej powszechnym, są obeliski: wysokie kolce rzeźbionego kamienia, znane jako kamień runiczny, z otwartą strukturą na dole, zawierającą drobne tajemnicze relikty z zapomnianej przeszłości.",
+
+						"#image obelisk",
+
+						"Struktury te są zazwyczaj chronione przez zaklęcie, które przywołuje wrogie @creatures magiczne stworzenia@ w przypadku, gdy jakiś człowiek zbłądzi zbyt blisko. Powstrzymajcie te stworzenia i zniszczcie ich źródła, a relikwie będą wasze."
+					]
+				},
+				"shrines": {
+					"title": "Kapliczki",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:visit_shrine"
+					],
+					"text": [
+
+						"Drugi, i rzadszy, rodzaj konstrukcji znany jest jako kaplica. Konstrukcje te składają się z koła filarów z kamienia runicznego otaczających centralny cokół, na którym znajduje się skrzynia wypełniona starożytnymi @artefacts artefaktami@ Skrzynia ta jest zazwyczaj chroniona przez tajemniczy urok zamka, uniemożliwiający otwarcie jej przez kogokolwiek z wyjątkiem właściciela. Cała konstrukcja jest również chroniona przez pole izolacyjne, które zapobiega wszystkiemu, co zabłądzi ucieczkę.",
+
+						"#image shrine",
+
+						"Ze względu na ich ogromną siłę i znaczenie, nie wspominając już o bogactwie wewnątrz, struktury te są szczególnie atrakcyjne dla każdego aspirującego czarodzieja - ale bądźcie ostrożni. Istnieją liczne doniesienia o czarodziejach uwięzionych w polach izolacyjnych i powoli doprowadzanych do szaleństwa, być może przez klaustrofobię. Coraz więcej osób uważa jednak, że takie przypadki stanowią celowy element ochronnej magii sanktuarium, a czarodzieje uwięzione w jego wnętrzu są w rzeczywistości kontrolowane w celu ochrony struktury. Chłodna perspektywa, z pewnością dla każdego, kto odważy się zaryzykować..."
+					]
+				},
+				"library_ruins": {
+					"title": "Ruiny Biblioteki",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:find_library_ruins"
+					],
+					"text": [
+
+						"Czarodzieje mają tendencję do gromadzenia dość dużej ilości książek o zaklęciach w ciągu swojego życia, dlatego też zwykle czarodziej buduje bibliotekę, w której przechowuje swoje zbiory. Niektórzy szczególnie tajemniczy czarodzieje są nawet znani z tego, że przechowują swoją tajemniczą wiedzę pod ziemią, z dala od wścibskich oczu. Jednak biblioteka wymaga utrzymania, a jeśli jej właściciel umrze bez ucznia, który odziedziczy książki, struktura szybko popadnie w ruinę. Tysiące lat używania magii sprawiło, że coraz więcej bibliotek zostało w ten sposób opuszczonych, a być może natkniesz się na jedną z nich podczas zwiedzania. Często warto szukać jakichkolwiek książek o zaklęciach lub innych przedmiotów, które mogły przetrwać spustoszenie czasu.",
+
+						"#image library_ruins",
+
+						"Jednak biblioteki nie służą tylko do przechowywania książek. Czarodzieje przeszłości wykorzystywali moc ołtarza nasycenia, który służył do wykonywania elementarnych rytuałów nasycenia na magicznych materiałach. Umieszczenie ołtarza jest sztuką precyzyjną i trudną, ponieważ musi być on ustawiony zgodnie z poszczególnymi ruchami niebieskimi i lokalnymi wahaniami many. Praktyka ich budowania stała się znacznie rzadsza w najnowszej historii, głównie dlatego, że raz zbudowany, solidny, skalisty ołtarz trwa wieki, więc nie ma większego zapotrzebowania na nowe. Zamiast tego większość czarodziejów odnajduje i naprawia istniejący ołtarz na czas rytuałów nasycenia - a ruiny biblioteczne są idealnym miejscem do szukania.",
+
+						"Ty też możesz w pewnym momencie uznać za użyteczne zbudowanie własnej biblioteki, co oczywiście będzie wymagało pewnych półek z książkami.:",
+
+						"#recipe bookshelves",
+
+						"#recipe gilded_wood",
+
+						"Te regały z książkami nie są jednak zwykłymi meblami. Wzbogacenie regału o najsilniejsze magiczne kryształy pozwala na bezproblemowe przenoszenie wiedzy między nimi a pobliskim @arcane_workbench tajemniczym stołem@ - bardzo przydatne w miarę powiększania się kolekcji. Równie przydatny jest pulpit:",
+
+						"#recipe lecterns",
+
+						"Kopuła, która unosi się nad katedrą, gromadzi wiedzę z pobliskich ksiąg zaklęć, pozwalając każdemu z nich korzystać w czasie wolnym, nie pamiętając o swoim dokładnym położeniu."
+					]
+				},
+				"creatures": {
+					"title": "Magiczne Istoty",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:handbook/magical_creatures"
+					],
+					"text": [
+
+						"Oprócz czarodziejów, wiele innych stworzeń używa również magii. Wiele z tych stworzeń ma tajemnicze pochodzenie, a większość z nich można przywołać za pomocą pewnych magicznych @spells zaklęć@. Ktoś może spotkać te istoty strzegące @obelisks obelisku@, lub być może potężnego przywoływacza. Mniej tajemnicze istoty znajdują się nawet okazjonalnie na pustyni.",
+
+						"Godnym uwagi przykładem jest pozostałość, duchowa istota, która tworzy się naturalnie ze śladów pozostawionych przez potężną magię i zazwyczaj przyjmuje jeden z siedmiu tajemniczych @elements elementów@. Same w sobie są one niewiele więcej niż tylko uciążliwością, ale rój może szybko przytłoczyć nieprzygotowanego poszukiwacza przygód, a ich wrodzona odporność na magię sprawia, że wskazane jest noszenie łuku lub innej broni dystansowej.",
+
+						"#image remnant",
+
+						"Po zabiciu można zebrać ich widmowy pył, który oprócz tego, że emituje kolorową poświatę, ma wiele użytecznych właściwości. Pojemnik, wykonany jak pokazano na rysunku, zapewnia wygodny sposób na jego przechowywanie.",
+
+						"#recipe receptacle",
+
+						"Pojemniki mogą być umieszczone na powierzchni lub przymocowane do ściany i kliknięte prawym przyciskiem myszy z widmowym pyłem, aby je wypełnić, działając jak miękkie źródło światła. Kliknięcie prawym przyciskiem myszy napełnionego pojemnika opróżnia go i zatrzymuje pył."
+					]
+				},
+				"artefacts": {
+					"title": "Artefakty",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:artefact"
+					],
+					"text": [
+
+						"Odkrywając @shrines kapliczki@, możesz mieć szczęście odkryć jakiś starożytny magiczny artefakt - obiekt zdolny do nadania jego użytkownikowi unikalnych i potężnych ulepszeń Znane są trzy rodzaje: pierścienie, które dają bonusy i efekty do zaklęć, amulety, które poprawiają zdolności obronne oraz czary, które dają efekty użytkowe. Te artefakty zdają się działać tylko wtedy, gdy są odpowiednio noszone; po prostu posiadanie ich na sobie jest niewystarczające."
+					]
+				}
+			}
+		},
+
+		"tiers": {
+			"title": "Poziomy",
+			"include_in_contents": "main_contents",
+			"triggers": [
+				"ebwizardry:handbook/tome_of_arcana"
+			],
+			"text":[
+
+				"@wands Różdżka@ i @spells Księga Zaklęć@ ma cztery poziomy: #colour_noviceNowicjusz#colour_reset, #colour_apprenticeAdept#colour_reset, #colour_advancedZaawansowany #colour_reset i #colour_masterMistrz#colour_reset. Każdy jest lepszy od poprzedniego.",
+
+				"#image tiers",
+
+				"#colour_novicePoczątkującę #colour_resetróżdżki to te, które można wykonać. Trzymają się do #novice_max_charge mana, i mogą rzucać tylko początkujące zaklęcia. Zaklęcia dla początkujących są na tyle proste, że mogą być rzucane przez każdego i zazwyczaj nie kosztują dużo many. Nie musi to jednak oznaczać, że są bezużyteczne na wyższych poziomach; ich niski koszt sprawia, że niektóre nowe zaklęcia są przydatne nawet wtedy, gdy masz dostęp do czarów mistrzowskich.",
+
+				"#colour_apprenticeAmatorskie #colour_resetróżdżki są kolejnym poziomem od różdżki nowicjusza. Trzymają się do #apprentice_max_charge mana i mogą rzucać zaklęcia nowicjuszom i praktykantom. Zaklęcia dla praktykantów robią nieco większe wrażenie niż zaklęcia dla początkujących, ale zazwyczaj kosztują więcej.",
+
+				"#colour_advancedZaawansowane #colour_resetróżdżki są dosyć rzadkie i są znacznie potężniejsze. Mogą rzucać wszystkie zaklęcia z wyjątkiem czarów mistrzowskich i posiadać #advanced_max_charge mana. Zaawansowane zaklęcia mogą dać nadludzkie moce, takie jak niewidzialność i siać spustoszenie u przeciwników.",
+
+				"#colour_masterMistrzowskie #colour_resetróżdżki są najpotężniejszymi różdżkami jakie istnieją. Trzymają się do #master_max_charge mana, i mogą rzucić każde zaklęcie. Mistrzowskie księgi zaklęć są bardzo rzadkie i mogą powodować całkowite zniszczenie nie tylko wrogów, ale nawet samego świata. Używaj ich z rozwagą.",
+
+				"Aby awansować na wyższy poziom, różdżka musi najpierw stać się na tyle potężna, aby zaklęcia tego poziomu mogły być przekazywane. Różdżki zyskują moc, gdy czary są rzucane razem z nimi. Różnorodność zaklęć, moc zaklęć, efekty elementarne i inne czynniki zewnętrzne mogą mieć wpływ na szybkość rozwoju różdżki.",
+
+				"Gdy różdżka jest wystarczająco mocna, Tajemna Księga dostarcza końcowego katalizatora potrzebnego do podniesienia różdżki do następnego poziomu (patrz @upgrading_wands Ulepszanie Różdżki@), a gdy to nastąpi, proces ulepszania może być użyty do następnego poziomu"
+			]
+		},
+
+		"elements": {
+			"title": "Elementy",
+			"include_in_contents": "main_contents",
+			"triggers": [
+				"ebwizardry:handbook/elements"
+			],
+			"text": [
+
+				"@spells Czary@ należą do różnych elementów, które decydują o charakterze zaklęcia, a także przyznają atuty, gdy są stosowane z pewnymi @wands różdżkami@.",
+
+				"#image elements",
+
+				"#colour_fireOgień#colour_reset \nByć może najbardziej destrukcyjny element, ogień dotyczy palenia, lawy i wybuchów. Potężny piromanta rozpęta piekło na swoich wrogów i prawdopodobnie doprowadzi do zniszczenia świata. Większość zaklęć ataku ogniowego podpalają cel, powodując stałe obrażenia w czasie. Należy jednak uważać, aby zaklęcia ognia nie miały wpływu na wrogów z Netheru.",
+
+				"#colour_iceLód#colour_reset \nElement lodu jest zrobiony z wszystkiego, co zimne. Zaklęcia lodu często spowalniają wrogów lub całkowicie ich zamrażają i są szczególnie skuteczne na istoty ogniste. Magia mrozu może okazać się równie przydatna poza walką, np. zamrażanie wody w celu przekroczenia rzeki.",
+
+				"#colour_lightningBłyskawice#colour_reset \nTen element dotyczy piorunów, burz i pogody. Potężny mag burzowy to siła, z którą należy się liczyć, a niektórzy posiadają zdolność do wywoływania piorunów do woli. Piorunowe zaklęcia często zadają obrażenia wielu wrogom jednocześnie i zazwyczaj szukają celu, co czyni je skutecznym atakiem przeciwko każdemu tłumowi... ale uważaj na creepery...",
+
+				"#colour_necromancyNekromancja#colour_reset \nNekromancja jest elementem ciemności, chaosu i nieumarłych. Nekromanci są tajemniczy i często uważani za złych, choć zazwyczaj tak nie jest. Zaklęcia nekromancji są powszechnie używane do przywoływania @creatures istot@ do walki za Ciebie lub nawet naginania woli Twoich wrogów.",
+
+				"#colour_earthZiemia#colour_reset \nElement ziemi koncentruje się na świecie przyrody: zwierzętach, roślinach, wietrze i tym podobnych. Magia ziemi jest zróżnicowana i przybiera różne formy, od zatrucia wrogów do wyzwolenia furii pogody. Zaklęcia ziemskie są mieszanką ataku, obrony i użyteczności.",
+
+				"#colour_sorceryCzarnoksięstwo#colour_reset \nCzarnoksięstwo jest elementem siły i zmiany. Czarnoksiężnicy manipulują światłem, grawitacją, a nawet samą rzeczywistością, aby dopasować się do ich potrzeb. Zaklęcia czarnoksiężników mogą być używane m.in. po to, aby nadać swoim czarodziejom magiczne moce lub przenieść przedmioty do ich woli.",
+
+				"#colour_healingLeczenie#colour_reset \nElement uzdrawiania dotyczy obrony i regeneracji. Uzdrowiciele starają się jak najbardziej chronić siebie i swoich sojuszników i jako tacy mogą być bardzo trudnymi przeciwnikami. Chociaż z reguły nie jest to atak, to jednak oczyszczające światło niektórych zaklęć uzdrawiających wyrządza nieumarłym znaczne szkody. Zaklęcia lecznicze są nieodzowne, podczas walki.",
+
+				"Granice pomiędzy poszczególnymi elementami nie zawsze są wyraźne, a niektóre zaklęcia mają inne cechy niż własne.",
+
+				"Przy odrobinie szczęścia, może zdarzyć się to na krysztale żywiołu. Kryształy żywiołów to magiczne kryształy, które w miarę wzrostu posiadają właściwości pochłaniania żywiołów - choć dokładne warunki i mechanizm, w jaki to się dzieje, pozostają tajemnicą. Wiemy jednak, że takie kryształy mogą być użyte do stworzenia różdżki żywiołu, która pozwala na rzucanie zaklęć właściwego żywiołu z większą siłą niż zwykle."
+			]
+		},
+
+		"miscellaneous": {
+			"title": "Różne",
+			"include_in_contents": "main_contents",
+			"contents": {
+				"id": "miscellaneous_subsections",
+				"hyperlinks": true,
+				"page_numbers": true,
+				"separator": "."
+			},
+			"triggers": [
+				"ebwizardry:on_subsection_unlock"
+			],
+			"sections": {
+				"mana_flasks": {
+					"title": "Mikstury Many",
+					"include_in_contents": "miscellaneous_subsections",
+					"triggers": [
+						"ebwizardry:handbook/mana_flasks"
+					],
+					"text": [
+
+						"Magiczne przedmioty na każdą okazję.!",
+
+						"Musisz naładować swoje @wands różdżki@ do pełna? Nie ma problemu! @mana Mana@ może być teraz butelkowana. Wystarczy zrobić butelkę Many ze szklaną butelką i ośmioma magicznymi kryształami i zabrać ją ze sobą. Kiedy musisz jej użyć, po prostu użyj swojej różdżki, a przywróci ona część ładunku. *",
+
+						"#recipe medium_mana_flask",
+
+						"Przedstawiamy zupełnie nowe, małe i duże kolby z maną - teraz możesz wybrać rozmiar kolby z maną, odpowiadający Twoim potrzebom.!",
+
+						"#recipe small_mana_flask",
+						"#recipe large_mana_flask",
+
+						"* Ten proces zniszczy butelkę. Trochę many traci się podczas butelkowania."
+					]
+				},
+				"throwable_items": {
+					"title": "Rzucane Przedmioty",
+					"include_in_contents": "miscellaneous_subsections",
+					"triggers": [
+						"ebwizardry:handbook/throwables"
+					],
+					"text": [
+
+						"Różne @spells czary@ wyczarowują fizyczne przedmioty, z których niektóre można również wykonać bezpośrednio. Bomby ogniowe, bomby zatrute, bomby iskrowe i bomby dymne, wszystkie mogą być wykonane.:",
+
+						"#recipe firebomb",
+						"#recipe poison_bomb",
+						"#recipe smoke_bomb",
+						"#recipe spark_bomb"
+					]
+				},
+				"automated_casting": {
+					"title": "Automatyczne Czarowanie",
+					"include_in_contents": "miscellaneous_subsections",
+					"triggers": [
+						"ebwizardry:enchant_scroll"
+					],
+					"text": [
+					
+						"Ostatnie eksperymenty ujawniły, że możliwe jest zautomatyzowanie rzucania czarów. Nikt nie jest całkiem pewien dlaczego, ale wydaje się, że dziwne właściwości redstone'a rozciągają się nawet na uruchamianie zwojów zaklęć. Umieszczenie kilku z nich w dozowniku i zasilenie go powinno wykonać tę operację..."
+					]
+				}
+			}
+		},
+		
+		"crafting_recipes": {
+			"title": "Tworzenie Receptur",
+			"include_in_contents": "main_contents",
+			"text": [
+
+				"#recipe arcane_workbench",
+				"#recipe novice_wands",
+				"#recipe magic_missile_spell_book",
+				"#recipe wizard_handbook",
+				"#recipe crystal_flower_to_crystals",
+				"#recipe crystal_blocks",
+				"#recipe crystal_blocks_to_crystals",
+				"#recipe crystal_shard",
+				"#recipe small_mana_flask",
+				"#recipe medium_mana_flask",
+				"#recipe large_mana_flask",
+				"#recipe runestone",
+				"#recipe runestone_pedestal",
+				"#recipe transportation_stone",
+				"#recipe magic_silk",
+				"#recipe wizard_hat",
+				"#recipe wizard_robe",
+				"#recipe wizard_leggings",
+				"#recipe wizard_boots",
+				"#recipe blank_scroll",
+				"#recipe firebomb",
+				"#recipe poison_bomb",
+				"#recipe smoke_bomb",
+				"#recipe spark_bomb",
+				"#recipe gilded_wood",
+				"#recipe bookshelves",
+				"#recipe lecterns",
+				"#recipe receptacle"
+			]
+		},
+		
+		"credits": {
+			"title": "Podziękowania",
+			"include_in_contents": "main_contents",
+			"text": [
+				
+				"Electroblob's Wizardry \nWersja #version \nDla Minecraft #mcversion"
+
+				
+			]
+		}
+		
+	}
+}

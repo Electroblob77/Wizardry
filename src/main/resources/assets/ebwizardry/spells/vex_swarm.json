@@ -14,7 +14,7 @@
   "element": "sorcery",
   "type": "minion",
   "cost": 50,
-  "chargeup": 0,
+  "chargeup": 10,
   "cooldown": 200,
   "base_properties": {
     "minion_lifetime": 600,

@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 /**
  * Contains a number of static methods that perform raytracing and related functions. This was split off from
- * {@link WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
+ * {@code WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to navigate.
  *
  * @author Electroblob
  * @since Wizardry 4.2
@@ -32,7 +32,10 @@ public final class RayTracer {
 	 * position and proceed in the direction the entity is looking.
 	 * @param range The distance over which the ray trace will be performed.
 	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
-	 * not there.
+	 * not there. {@code ignoreUncollidables} must be set to false for this setting to have an effect.
+	 * @param ignoreUncollidables Whether blocks with no collisions should be ignored
+	 * @param returnLastUncollidable If blocks with no collisions are ignored, whether to return the last one (useful if,
+	 *                               for example, you want to replace snow layers or tall grass)
 	 * @return A {@link RayTraceResult} representing the object that was hit, which may be either a block or nothing.
 	 * Returns {@code null} only if the origin and endpoint are within the same block.
 	 */
@@ -40,7 +43,7 @@ public final class RayTracer {
 	public static RayTraceResult standardBlockRayTrace(World world, EntityLivingBase entity, double range, boolean hitLiquids,
 													   boolean ignoreUncollidables, boolean returnLastUncollidable){
 		// This method does not apply an offset like ray spells do, since it is not desirable in most other use cases.
-		Vec3d origin = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
+		Vec3d origin = entity.getPositionEyes(1);
 		Vec3d endpoint = origin.add(entity.getLookVec().scale(range));
 		return world.rayTraceBlocks(origin, endpoint, hitLiquids, ignoreUncollidables, returnLastUncollidable);
 	}
@@ -66,29 +69,31 @@ public final class RayTracer {
 	 * position and proceed in the direction the entity is looking. This entity will be ignored when ray tracing.
 	 * @param range The distance over which the ray trace will be performed.
 	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
-	 * not there.
+	 * not there. {@code ignoreUncollidables} must be set to false for this setting to have an effect.
 	 * @return A {@link RayTraceResult} representing the object that was hit, which may be an entity, a block or
 	 * nothing. Returns {@code null} only if the origin and endpoint are within the same block and no entity was hit.
 	 */
 	@Nullable
 	public static RayTraceResult standardEntityRayTrace(World world, Entity entity, double range, boolean hitLiquids){
 		// This method does not apply an offset like ray spells do, since it is not desirable in most other use cases.
-		Vec3d origin = new Vec3d(entity.posX, entity.getEntityBoundingBox().minY + entity.getEyeHeight(), entity.posZ);
+		Vec3d origin = entity.getPositionEyes(1);
 		Vec3d endpoint = origin.add(entity.getLookVec().scale(range));
 		return rayTrace(world, origin, endpoint, 0, hitLiquids, false, false, Entity.class, ignoreEntityFilter(entity));
 	}
 
 	/**
 	 * Helper method for use with {@link RayTracer#rayTrace(World, Vec3d, Vec3d, float, boolean, boolean, boolean, Class, Predicate)}
-	 * which returns a {@link Predicate} that returns true for the given entity, plus any entities that have zero health
-	 * or less (i.e. are in the process of dying). This is a commonly used filter in spells.
+	 * which returns a {@link Predicate} that returns true for the given entity, plus any entities that are in the
+	 * process of dying. This is a commonly used filter in spells.
 	 *
 	 * @param entity The entity that the returned predicate should return true for.
 	 * @return A {@link Predicate} that returns true for the given entity and any entities that are in the process of
 	 * dying, false for all other entities.
 	 */
 	public static Predicate<Entity> ignoreEntityFilter(Entity entity){
-		return e -> e == entity || (e instanceof EntityLivingBase && ((EntityLivingBase)e).getHealth() <= 0);
+		// Use deathTime > 0 so we still hit stuff that has *just* died, otherwise SpellRay#onEntityHit doesn't get
+		// called on the client side when the entity is killed
+		return e -> e == entity || (e instanceof EntityLivingBase && ((EntityLivingBase)e).deathTime > 0);
 	}
 
 	/**
@@ -105,7 +110,8 @@ public final class RayTracer {
 	 * @param endpoint A vector representing the coordinates of the finish point of the ray trace.
 	 * @param aimAssist In addition to direct hits, the ray trace will also hit entities that are up to this distance
 	 * from its path. For a normal ray trace, this should be 0. Values greater than 0 will give an 'aim assist' effect.
-	 * @param hitLiquids Whether liquids should be ignored when ray tracing blocks
+	 * @param hitLiquids True to return hits on the surfaces of liquids, false to ignore liquid blocks as if they were
+	 * not there. {@code ignoreUncollidables} must be set to false for this setting to have an effect.
 	 * @param ignoreUncollidables Whether blocks with no collisions should be ignored
 	 * @param returnLastUncollidable If blocks with no collisions are ignored, whether to return the last one (useful if,
 	 *                               for example, you want to replace snow layers or tall grass)
@@ -158,7 +164,7 @@ public final class RayTracer {
 			// ring of fire, but doing so will stop forcefields blocking particles
 			//if(!entity.canBeCollidedWith()) continue;
 
-			float fuzziness = WizardryUtilities.isLiving(entity) ? aimAssist : 0; // Only living entities have aim assist
+			float fuzziness = EntityUtils.isLiving(entity) ? aimAssist : 0; // Only living entities have aim assist
 
 			if(entity instanceof ICustomHitbox){ // Custom hitboxes
 				intercept = ((ICustomHitbox)entity).calculateIntercept(origin, endpoint, fuzziness);

@@ -14,10 +14,10 @@
   "element": "sorcery",
   "type": "attack",
   "cost": 65,
-  "chargeup": 0,
+  "chargeup": 20,
   "cooldown": 150,
   "base_properties": {
-    "blast_radius": 5,
+    "effect_radius": 5,
     "damage": 8,
     "max_repulsion_velocity": 3
   }

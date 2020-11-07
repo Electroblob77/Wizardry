@@ -1,12 +1,12 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.util.*;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +29,7 @@ public class LightningWeb extends SpellRay {
 	public static final String TERTIARY_MAX_TARGETS = "tertiary_max_targets"; // This is per secondary target
 
 	public LightningWeb(){
-		super("lightning_web", true, EnumAction.NONE);
+		super("lightning_web", SpellActions.POINT, true);
 		this.aimAssist(0.6f);
 		addProperties(PRIMARY_DAMAGE, SECONDARY_DAMAGE, TERTIARY_DAMAGE, SECONDARY_RANGE, TERTIARY_RANGE,
 				SECONDARY_MAX_TARGETS, TERTIARY_MAX_TARGETS);
@@ -53,19 +53,19 @@ public class LightningWeb extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 
 			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
 					* modifiers.get(SpellModifiers.POTENCY), ticksInUse);
 			
 			// Secondary chaining effect
 
-			List<EntityLivingBase> secondaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+			List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
 					getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
 					target.posZ, world);
 			
 			secondaryTargets.remove(target);
-			secondaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+			secondaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
 				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
@@ -77,13 +77,13 @@ public class LightningWeb extends SpellRay {
 
 				// Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = WizardryUtilities.getEntitiesWithinRadius(
+				List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
 						getProperty(TERTIARY_RANGE).floatValue(), secondaryTarget.posX,
 						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
 				
 				tertiaryTargets.remove(target);
 				tertiaryTargets.removeAll(secondaryTargets);
-				tertiaryTargets.removeIf(e -> !WizardryUtilities.isLiving(e));
+				tertiaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
 				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
 				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
 					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
@@ -139,7 +139,7 @@ public class LightningWeb extends SpellRay {
 				((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
 						this.getNameForTranslationFormatted()), true);
 		}else{
-			WizardryUtilities.attackEntityWithoutKnockback(target,
+			EntityUtils.attackEntityWithoutKnockback(target,
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
 		}
 		

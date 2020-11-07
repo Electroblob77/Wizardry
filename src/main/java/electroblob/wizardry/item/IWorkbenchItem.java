@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 /**
  * Items that implement this interface may be placed in the central slot of the arcane workbench as long as
  * {@link IWorkbenchItem#canPlace(ItemStack)} returns true. The number of spell book slots displayed is also specified
@@ -37,7 +39,7 @@ public interface IWorkbenchItem {
 	 * Can be 0, but must not be negative.
 	 */
 	int getSpellSlotCount(ItemStack stack);
-	
+
 	/**
 	 * Called when this item is in the central slot of an arcane workbench and the apply button is pressed. Items must
 	 * implement this method to define what happens when the apply button is pressed. Note that {@link SpellBindEvent}
@@ -60,5 +62,20 @@ public interface IWorkbenchItem {
 	 * @return True if the workbench tooltip should be shown, false if not.
 	 */
 	boolean showTooltip(ItemStack stack);
+
+	/**
+	 * Applies the given upgrade to this wand. This method is responsible for all checks including tier, progression,
+	 * upgrade stack limits, etc. Subclasses are responsible for calling this (usually from
+	 * {@link IWorkbenchItem#onApplyButtonPressed(EntityPlayer, Slot, Slot, Slot, Slot[])}), but it has been extracted
+	 * as an interface method here for use by JEI 'recipes'.
+	 * @param player The player doing the upgrading, or null during JEI recipe lookup (mainly used for advancements)
+	 * @param stack The stack being upgraded (it is guaranteed that {@code this == stack.getItem()})
+	 * @param upgrade The upgrade item stack being applied. <b>This method is responsible for consuming it!</b>
+	 * @return The resulting upgraded wand stack. In many cases, this is simply the input {@code stack}, which has
+	 * had its NBT modified. If the given upgrade cannot be applied, simply return the input {@code stack}.
+	 */
+	default ItemStack applyUpgrade(@Nullable EntityPlayer player, ItemStack stack, ItemStack upgrade){
+		return stack;
+	}
 	
 }

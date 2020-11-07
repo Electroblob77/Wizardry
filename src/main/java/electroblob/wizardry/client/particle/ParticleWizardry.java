@@ -3,7 +3,7 @@ package electroblob.wizardry.client.particle;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.ClientProxy;
 import electroblob.wizardry.entity.ICustomHitbox;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * Abstract superclass for all of wizardry's particles. This replaces {@code ParticleCustomTexture} (the functionality of
  * which is no longer necessary since wizardry now uses {@code TextureAtlasSprite}s to do the rendering), and fits into
- * {@code ParticleBuilder} by exposing all the necessary variables through getters, allowing them to be set on the fly
+ * {@code ParticleBuilder} by exposing all the necessary variables through setters, allowing them to be set on the fly
  * rather than needing to be passed into the  constructor.
  * <p></p>
  * The new system is as follows:
@@ -206,7 +206,7 @@ public abstract class ParticleWizardry extends Particle {
 		this.entity = entity;
 		// Set these to the correct values
 		if(entity != null){
-			this.setPosition(this.entity.posX + relativeX, this.entity.getEntityBoundingBox().minY
+			this.setPosition(this.entity.posX + relativeX, this.entity.posY
 					+ relativeY, this.entity.posZ + relativeZ);
 			this.prevPosX = this.posX;
 			this.prevPosY = this.posY;
@@ -336,7 +336,7 @@ public abstract class ParticleWizardry extends Particle {
 	public void renderParticle(BufferBuilder buffer, Entity viewer, float partialTicks, float lookZ, float lookY,
 			float lookX, float lookXY, float lookYZ){
 
-		updateEntityLinking(partialTicks);
+		updateEntityLinking(viewer, partialTicks);
 		
 		if(Float.isNaN(this.yaw) || Float.isNaN(this.pitch)){
 			// Normal behaviour (rotates to face the viewer)
@@ -369,12 +369,18 @@ public abstract class ParticleWizardry extends Particle {
 		super.renderParticle(buffer, viewer, partialTicks, rotationX, rotationY, rotationZ, rotationYZ, rotationXY);
 	}
 
-	protected void updateEntityLinking(float partialTicks){
+	protected void updateEntityLinking(Entity viewer, float partialTicks){
+		// TODO: Still not working, it seems this bug was a thing back in 4.2.x anyway
 		if(this.entity != null){
 			// This is kind of cheating but we know it's always a constant velocity so it works fine
 			prevPosX = posX + entity.prevPosX - entity.posX - relativeMotionX * (1-partialTicks);
 			prevPosY = posY + entity.prevPosY - entity.posY - relativeMotionY * (1-partialTicks);
 			prevPosZ = posZ + entity.prevPosZ - entity.posZ - relativeMotionZ * (1-partialTicks);
+		}else if(this.getFXLayer() == 3){
+			// Not sure why, but when fx layer is 3, the interp pos is wrong when not linked to an entity
+			interpPosX = viewer.lastTickPosX + (viewer.posX - viewer.lastTickPosX) * (double)partialTicks;
+			interpPosY = viewer.lastTickPosY + (viewer.posY - viewer.lastTickPosY) * (double)partialTicks;
+			interpPosZ = viewer.lastTickPosZ + (viewer.posZ - viewer.lastTickPosZ) * (double)partialTicks;
 		}
 	}
 	
@@ -467,12 +473,12 @@ public abstract class ParticleWizardry extends Particle {
 
 			double searchRadius = 20;
 
-			List<Entity> nearbyEntities = WizardryUtilities.getEntitiesWithinRadius(searchRadius, this.posX,
+			List<Entity> nearbyEntities = EntityUtils.getEntitiesWithinRadius(searchRadius, this.posX,
 					this.posY, this.posZ, world, Entity.class);
 
-			nearbyEntities.removeIf(e -> !(e instanceof ICustomHitbox && ((ICustomHitbox)e).contains(new Vec3d(this.posX, this.posY, this.posZ))));
-
-			if(nearbyEntities.size() > 0) this.setExpired();
+			if(nearbyEntities.stream().anyMatch(e -> e instanceof ICustomHitbox
+					&& ((ICustomHitbox)e).calculateIntercept(new Vec3d(posX, posY, posZ),
+					new Vec3d(prevPosX, prevPosY, prevPosZ), 0) != null)) this.setExpired();
 
 		}
 
@@ -547,7 +553,7 @@ public abstract class ParticleWizardry extends Particle {
 
 	/** Internal overload for {@link ParticleWizardry#generateTextures(String, String, int, int)} which uses wizardry's
 	 * mod ID automatically. */
-	public static ResourceLocation[][] generateTextures(String stem, int m, int n){
+	static ResourceLocation[][] generateTextures(String stem, int m, int n){
 		return generateTextures(Wizardry.MODID, stem, m, n);
 	}
 	

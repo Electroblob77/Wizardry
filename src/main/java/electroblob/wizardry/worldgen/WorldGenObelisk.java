@@ -3,12 +3,15 @@ package electroblob.wizardry.worldgen;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockRunestone;
 import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.entity.living.EntityRemnant;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.WeightedSpawnerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.ITemplateProcessor;
@@ -16,7 +19,6 @@ import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -24,17 +26,7 @@ public class WorldGenObelisk extends WorldGenSurfaceStructure {
 
 	private static final String SPAWNER_DATA_BLOCK_TAG = "spawner";
 
-	private static final EnumMap<Element, ResourceLocation> MOB_TYPES = new EnumMap<>(Element.class);
-
-	static {
-		MOB_TYPES.put(Element.FIRE, new ResourceLocation(Wizardry.MODID, "blaze_minion"));
-		MOB_TYPES.put(Element.ICE, new ResourceLocation(Wizardry.MODID, "ice_wraith"));
-		MOB_TYPES.put(Element.LIGHTNING, new ResourceLocation(Wizardry.MODID, "lightning_wraith"));
-		MOB_TYPES.put(Element.NECROMANCY, new ResourceLocation(Wizardry.MODID, "wither_skeleton_minion"));
-		MOB_TYPES.put(Element.EARTH, new ResourceLocation(Wizardry.MODID, "spider_minion"));
-		MOB_TYPES.put(Element.SORCERY, new ResourceLocation(Wizardry.MODID, "vex_minion"));
-		MOB_TYPES.put(Element.HEALING, new ResourceLocation(Wizardry.MODID, "husk_minion"));
-	}
+	private static final ResourceLocation REMNANT_ID = new ResourceLocation(Wizardry.MODID, "remnant");
 
 	@Override
 	public String getStructureName(){
@@ -70,7 +62,7 @@ public class WorldGenObelisk extends WorldGenSurfaceStructure {
 		ITemplateProcessor processor = (w, p, i) -> i.blockState.getBlock() instanceof BlockRunestone ? new Template.BlockInfo(
 				i.pos, i.blockState.withProperty(BlockRunestone.ELEMENT, element), i.tileentityData) : i;
 
-		template.addBlocksToWorld(world, origin, processor, settings, 2);
+		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
 		WizardryAntiqueAtlasIntegration.markObelisk(world, origin.getX(), origin.getZ());
 
@@ -81,12 +73,25 @@ public class WorldGenObelisk extends WorldGenSurfaceStructure {
 
 			if(entry.getValue().equals(SPAWNER_DATA_BLOCK_TAG)){
 
-				world.setBlockState(entry.getKey(), Blocks.MOB_SPAWNER.getDefaultState());
+				BlockPos pos = entry.getKey();
 
-				if(world.getTileEntity(entry.getKey()) instanceof TileEntityMobSpawner){
+				world.setBlockState(pos, Blocks.MOB_SPAWNER.getDefaultState());
 
-					MobSpawnerBaseLogic spawnerLogic = ((TileEntityMobSpawner)world.getTileEntity(entry.getKey())).getSpawnerBaseLogic();
-					spawnerLogic.setEntityId(MOB_TYPES.get(element));
+				if(world.getTileEntity(pos) instanceof TileEntityMobSpawner){
+
+					MobSpawnerBaseLogic spawnerLogic = ((TileEntityMobSpawner)world.getTileEntity(pos)).getSpawnerBaseLogic();
+
+					EntityRemnant remant = new EntityRemnant(world);
+					remant.setElement(element);
+					remant.setBoundOrigin(pos);
+
+					NBTTagCompound entityTag = new NBTTagCompound();
+					entityTag.setString("id", REMNANT_ID.toString());
+					remant.writeEntityToNBT(entityTag);
+					NBTTagCompound nbt = new NBTTagCompound();
+					nbt.setTag("Entity", entityTag);
+
+					spawnerLogic.setNextSpawnData(new WeightedSpawnerEntity(nbt));
 
 				}else{
 					Wizardry.logger.info("Tried to set the mob spawned by an obelisk, but the expected TileEntityMobSpawner was not present");

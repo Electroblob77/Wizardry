@@ -39,9 +39,9 @@
 		"texture": "ebwizardry:gui/spell_hud/minimal",
 		"metadata": "ebwizardry:gui/spell_hud/minimal"
 	},
-	"no_icon": {
-		"texture": "ebwizardry:gui/spell_hud/no_icon",
-		"metadata": "ebwizardry:gui/spell_hud/no_icon"
+	"compact": {
+		"texture": "ebwizardry:gui/spell_hud/compact",
+		"metadata": "ebwizardry:gui/spell_hud/compact"
 	},
 	"skyrim_style": {
 		"texture": "ebwizardry:gui/spell_hud/skyrim_style",
@@ -78,5 +78,13 @@
 	"festive": {
 		"texture": "ebwizardry:gui/spell_hud/festive",
 		"metadata": "ebwizardry:gui/spell_hud/festive"
+	},
+	"library": {
+		"texture": "ebwizardry:gui/spell_hud/library",
+		"metadata": "ebwizardry:gui/spell_hud/library"
+	},
+	"altar": {
+		"texture": "ebwizardry:gui/spell_hud/altar",
+		"metadata": "ebwizardry:gui/spell_hud/altar"
 	}
 }

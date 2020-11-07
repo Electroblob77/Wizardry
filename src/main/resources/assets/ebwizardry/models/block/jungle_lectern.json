@@ -1,0 +1,10 @@
+{
+    "parent": "ebwizardry:block/lectern",
+	"textures": {
+		"particle": "ebwizardry:blocks/jungle_lectern_top",
+		"base": "ebwizardry:blocks/jungle_lectern_base",
+		"side": "ebwizardry:blocks/jungle_lectern_side",
+		"top": "ebwizardry:blocks/jungle_lectern_top",
+		"underside": "ebwizardry:blocks/jungle_lectern_underside"
+	}
+}

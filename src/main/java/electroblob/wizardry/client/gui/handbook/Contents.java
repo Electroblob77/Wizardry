@@ -3,7 +3,7 @@ package electroblob.wizardry.client.gui.handbook;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import electroblob.wizardry.client.DrawingUtils;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.JavaUtils;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.JsonUtils;
@@ -50,7 +50,7 @@ class Contents {
 
 	/** Returns an unmodifiable, flattened collection of all the buttons in this contents. */
 	Collection<GuiButton> getButtons(){
-		return WizardryUtilities.flatten(buttons);
+		return JavaUtils.flatten(buttons);
 	}
 
 	void addEntry(Section section){

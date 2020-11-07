@@ -2,20 +2,20 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
@@ -27,6 +27,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -40,7 +41,7 @@ public class MindControl extends SpellRay {
 	public static final String NBT_KEY = "controllingEntity";
 
 	public MindControl(){
-		super("mind_control", false, EnumAction.NONE);
+		super("mind_control", SpellActions.POINT, false);
 		addProperties(EFFECT_DURATION);
 	}
 	
@@ -50,7 +51,7 @@ public class MindControl extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(WizardryUtilities.isLiving(target)){
+		if(EntityUtils.isLiving(target)){
 				
 			if(!canControl(target)){
 				if(!world.isRemote){
@@ -71,7 +72,7 @@ public class MindControl extends SpellRay {
 				}
 
 				if(target instanceof EntitySheep && ((EntitySheep)target).getFleeceColor() == EnumDyeColor.BLUE
-						&& WizardryUtilities.canDamageBlocks(caster, world)){
+						&& EntityUtils.canDamageBlocks(caster, world)){
 					if(!world.isRemote) ((EntitySheep)target).setFleeceColor(EnumDyeColor.RED); // Wololo!
 					world.playSound(caster.posX, caster.posY, caster.posZ, SoundEvents.EVOCATION_ILLAGER_PREPARE_WOLOLO, WizardrySounds.SPELLS, 1, 1, false);
 				}
@@ -84,10 +85,10 @@ public class MindControl extends SpellRay {
 				
 				for(int i=0; i<10; i++){
 					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, target.posX,
-							target.getEntityBoundingBox().minY + target.getEyeHeight(), target.posZ, 0.25, false)
+							target.posY + target.getEyeHeight(), target.posZ, 0.25, false)
 					.clr(0.8f, 0.2f, 1.0f).spawn(world);
 					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, target.posX,
-							target.getEntityBoundingBox().minY + target.getEyeHeight(), target.posZ, 0.25, false)
+							target.posY + target.getEyeHeight(), target.posZ, 0.25, false)
 					.clr(0.2f, 0.04f, 0.25f).spawn(world);
 				}
 			}
@@ -135,11 +136,12 @@ public class MindControl extends SpellRay {
 		// As of 1.1, this now uses the creature's follow range, like normal targeting. It also
 		// no longer lasts until the creature dies; instead it is a potion effect which continues to
 		// set the target until it wears off.
-		List<EntityLivingBase> possibleTargets = WizardryUtilities.getEntitiesWithinRadius(
+		List<EntityLivingBase> possibleTargets = EntityUtils.getLivingWithinRadius(
 				target.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).getAttributeValue(),
 				target.posX, target.posY, target.posZ, world);
 
 		possibleTargets.remove(target);
+		possibleTargets.remove(target.getRidingEntity());
 		possibleTargets.removeIf(e -> e instanceof EntityArmorStand);
 
 		EntityLivingBase newAITarget = null;
@@ -152,10 +154,7 @@ public class MindControl extends SpellRay {
 		}
 
 		if(newAITarget != null){
-			// From 1.7.10 - this seems not to work quite right; the entity appears to continue attacking this target
-			// after it gets killed (not noticeable in survival since it will target the player again immediately.)
 			target.setAttackTarget(newAITarget);
-
 			return true;
 		}
 
@@ -172,7 +171,7 @@ public class MindControl extends SpellRay {
 
 			if(entityNBT != null && entityNBT.hasUniqueId(MindControl.NBT_KEY)){
 
-				Entity caster = WizardryUtilities.getEntityByUUID(world, entityNBT.getUniqueId(MindControl.NBT_KEY));
+				Entity caster = EntityUtils.getEntityByUUID(world, entityNBT.getUniqueId(MindControl.NBT_KEY));
 
 				if(caster instanceof EntityLivingBase){
 
@@ -197,7 +196,9 @@ public class MindControl extends SpellRay {
 		// more efficient (because it only fires when the entity tries to set a target)
 		// Of course, in survival this code is unlikely to be used much because the entity will always try to target the
 		// player and hence will rarely have no target.
-		if(event.getEntityLiving().isPotionActive(WizardryPotions.mind_control) && event.getEntityLiving() instanceof EntityLiving){
+		// No need to do it every tick either!
+		if(event.getEntity().ticksExisted % 50 == 0 && event.getEntityLiving().isPotionActive(WizardryPotions.mind_control)
+				&& event.getEntityLiving() instanceof EntityLiving){
 			
 			EntityLiving entity = (EntityLiving)event.getEntityLiving();
 			
@@ -205,7 +206,7 @@ public class MindControl extends SpellRay {
 			if(((EntityLiving)event.getEntityLiving()).getAttackTarget() == null
 				|| !((EntityLiving)event.getEntityLiving()).getAttackTarget().isEntityAlive()){
 			
-				processTargeting(entity.world, entity, entity.getAttackTarget());
+				processTargeting(entity.world, entity, null);
 			}
 		}
 	}
@@ -215,6 +216,23 @@ public class MindControl extends SpellRay {
 		// The != null check prevents infinite loops with mind trick
 		if(event.getTarget() != null && event.getEntityLiving() instanceof EntityLiving)
 			processTargeting(event.getEntity().world, (EntityLiving)event.getEntityLiving(), event.getTarget());
+	}
+
+	@SubscribeEvent
+	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
+		onEffectEnd(event.getPotionEffect(), event.getEntity());
+	}
+
+	@SubscribeEvent
+	public static void onPotionExpiryEvent(PotionEvent.PotionRemoveEvent event){
+		onEffectEnd(event.getPotionEffect(), event.getEntity());
+	}
+
+	private static void onEffectEnd(PotionEffect effect, Entity entity){
+		if(effect != null && effect.getPotion() == WizardryPotions.mind_control && entity instanceof EntityLiving){
+			((EntityLiving)entity).setAttackTarget(null); // End effect
+			((EntityLiving)entity).setRevengeTarget(null); // End effect
+		}
 	}
 
 }

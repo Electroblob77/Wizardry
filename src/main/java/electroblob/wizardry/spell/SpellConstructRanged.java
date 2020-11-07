@@ -2,14 +2,14 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.construct.EntityMagicConstruct;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.RayTracer;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -53,7 +53,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 	}
 
 	public SpellConstructRanged(String modID, String name, Function<World, T> constructFactory, boolean permanent){
-		super(modID, name, EnumAction.NONE, constructFactory, permanent);
+		super(modID, name, SpellActions.POINT, constructFactory, permanent);
 		this.addProperties(RANGE);
 		this.npcSelector((e, o) -> true);
 	}
@@ -109,7 +109,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				Vec3d look = caster.getLookVec();
 				
 				double x = caster.posX + look.x * range;
-				double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() + look.y * range;
+				double y = caster.posY + caster.getEyeHeight() + look.y * range;
 				double z = caster.posZ + look.z * range;
 				
 				if(!spawnConstruct(world, x, y, z, null, caster, modifiers)) return false;
@@ -118,8 +118,7 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 		}else{
 			return false;
 		}
-		
-		caster.swingArm(hand);
+
 		this.playSound(world, caster, ticksInUse, -1, modifiers);
 		return true;
 	}
@@ -129,7 +128,8 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 			SpellModifiers modifiers){
 
 		double range = getProperty(RANGE).doubleValue() * modifiers.get(WizardryItems.range_upgrade);
-		
+		Vec3d origin = caster.getPositionEyes(1);
+
 		if(target != null && caster.getDistance(target) <= range){
 
 			if(!world.isRemote){
@@ -138,12 +138,18 @@ public class SpellConstructRanged<T extends EntityMagicConstruct> extends SpellC
 				double y = target.posY;
 				double z = target.posZ;
 
+				RayTraceResult hit = world.rayTraceBlocks(origin, new Vec3d(x, y, z), hitLiquids, ignoreUncollidables, false);
+
+				if(hit != null && hit.typeOfHit == RayTraceResult.Type.BLOCK && !hit.getBlockPos().equals(new BlockPos(x, y, z))){
+					return false; // Something was in the way
+				}
+
 				EnumFacing side = null;
 				
 				// If the target is not on the ground but the construct must be placed on the floor, searches for the
 				// floor under the caster and returns false if it does not find one within 3 blocks.
 				if(!target.onGround && requiresFloor){
-					Integer floor = WizardryUtilities.getNearestFloor(world, new BlockPos(x, y, z), 3);
+					Integer floor = BlockUtils.getNearestFloor(world, new BlockPos(x, y, z), 3);
 					if(floor == null) return false;
 					y = floor;
 					side = EnumFacing.UP;

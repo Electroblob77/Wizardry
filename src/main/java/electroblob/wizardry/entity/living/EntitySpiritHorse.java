@@ -3,13 +3,15 @@ package electroblob.wizardry.entity.living;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.registry.WizardrySounds;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.passive.AbstractHorse;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,8 @@ import net.minecraft.world.World;
  */
 @SuppressWarnings("deprecation") // It's what Entity does, so...
 public class EntitySpiritHorse extends EntityHorse {
+
+	public static final IAttribute JUMP_STRENGTH = AbstractHorse.JUMP_STRENGTH;
 
 	private int idleTimer = 0;
 
@@ -97,7 +101,7 @@ public class EntitySpiritHorse extends EntityHorse {
 		// clicking mounts the horse in this case).
 		if(itemstack.getItem() instanceof ISpellCastingItem && this.getOwner() == player && player.isSneaking()){
 			// Prevents accidental double clicking.
-			if(this.ticksExisted > 20){
+			if(this.ticksExisted > 20 && dispelTimer == 0){
 
 				this.dispelTimer++;
 				
@@ -124,7 +128,7 @@ public class EntitySpiritHorse extends EntityHorse {
 	private EntityLivingBase getOwner(){
 
 		// I think the DataManager stores any objects, so it now stores the UUID instead of its string representation.
-		Entity owner = WizardryUtilities.getEntityByUUID(world, this.getOwnerUniqueId());
+		Entity owner = EntityUtils.getEntityByUUID(world, this.getOwnerUniqueId());
 
 		if(owner instanceof EntityLivingBase){
 			return (EntityLivingBase)owner;
@@ -163,7 +167,7 @@ public class EntitySpiritHorse extends EntityHorse {
 			this.idleTimer = 0;
 		}
 
-		if(this.idleTimer > 200){
+		if(this.idleTimer > 200 && dispelTimer == 0){
 			
 			this.playSound(WizardrySounds.ENTITY_SPIRIT_HORSE_VANISH, 0.7F, rand.nextFloat() * 0.4F + 1.0F);
 			

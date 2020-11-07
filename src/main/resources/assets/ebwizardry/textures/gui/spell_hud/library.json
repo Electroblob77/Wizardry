@@ -1,0 +1,33 @@
+{
+	"name": "Library",
+	"description": "I'm sure I put that book somewhere up here...",
+	"width": 128,
+	"height": 44,
+	"mirror": {
+		"x": true,
+		"y": true
+	},
+	"spell_icon_inset": {
+		"x": 2,
+		"y": 5
+	},
+	"text_inset": {
+		"x": 45,
+		"y": 21
+	},
+	"spell_cascade_offset": {
+		"x": 2,
+		"y": 8
+	},
+	"cooldown_bar": {
+		"x": 40,
+		"y": 2,
+		"length": 82,
+		"height": 3,
+		"mirror": {
+			"x": true,
+			"y": true
+		},
+		"show_when_full": true
+	}
+}

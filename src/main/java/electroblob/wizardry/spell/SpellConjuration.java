@@ -2,14 +2,14 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.IConjuredItem;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
@@ -46,7 +46,7 @@ public class SpellConjuration extends Spell {
 	}
 
 	public SpellConjuration(String modID, String name, Item item){
-		super(modID, name, EnumAction.BOW, false);
+		super(modID, name, SpellActions.IMBUE, false);
 		this.item = item;
 		addProperties(ITEM_LIFETIME);
 	}
@@ -70,7 +70,7 @@ public class SpellConjuration extends Spell {
 		
 		for(int i=0; i<10; i++){
 			double x = caster.posX + world.rand.nextDouble() * 2 - 1;
-			double y = caster.getEntityBoundingBox().minY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
+			double y = caster.posY + caster.getEyeHeight() - 0.5 + world.rand.nextDouble();
 			double z = caster.posZ + world.rand.nextDouble() * 2 - 1;
 			ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(0, 0.1, 0).clr(0.7f, 0.9f, 1).spawn(world);
 		}
@@ -83,17 +83,29 @@ public class SpellConjuration extends Spell {
 
 		ItemStack stack = new ItemStack(item);
 
+		if(InventoryUtils.doesPlayerHaveItem(caster, item)) return false;
+
 		IConjuredItem.setDurationMultiplier(stack, modifiers.get(WizardryItems.duration_upgrade));
 		IConjuredItem.setDamageMultiplier(stack, modifiers.get(SpellModifiers.POTENCY));
-		
-		if(WizardryUtilities.doesPlayerHaveItem(caster, item)) return false;
-		
+
+		addItemExtras(caster, stack, modifiers);
+
 		if(caster.getHeldItemMainhand().isEmpty()){
 			caster.setHeldItem(EnumHand.MAIN_HAND, stack);
-			return true;
 		}else{
-			return caster.inventory.addItemStackToInventory(stack);
+			if(!caster.inventory.addItemStackToInventory(stack)) return false;
 		}
+
+		return true;
 	}
+
+	/**
+	 * Called directly <i>before</i> the conjured item is added to the inventory to perform additional behaviour (such
+	 * as NBT modification). Does nothing by default.
+	 * @param caster The player that cast this spell
+	 * @param stack The item stack being conjured
+	 * @param modifiers The modifiers this spell was cast with
+	 */
+	protected void addItemExtras(EntityPlayer caster, ItemStack stack, SpellModifiers modifiers){}
 
 }

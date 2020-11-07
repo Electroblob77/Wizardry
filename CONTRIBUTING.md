@@ -8,7 +8,7 @@ When submitting an issue, I would be grateful if you could follow these few guid
 
 - Please stick to the issue template, it's there to help you provide the right information so I can fix the problem more easily. If you're not sure what to put for anything, that's ok, just leave it as it is.
 
-- One issue per issue please! Make a separate issue for each bug/suggestion. If you think multiple different issues may be related, reference between them using # followed by the issue number.
+- One issue per issue please! Make a separate issue for each bug/suggestion. If you think multiple different issues may be related, reference between them using # followed by the issue number, and github will automagically link them.
 
 - Please give me as much information about the issue as you can, but keep it relevant. "This is really annoying me and my friend" does not help me fix the problem!
 
@@ -17,6 +17,8 @@ When submitting an issue, I would be grateful if you could follow these few guid
 - There's no need to put 'tags' in square brackets in the issue title, I'll put proper github issue tags on it which will also help organise it. You can use them to search for issues too!
 
 - Don't close an issue unless it has actually been fixed or is no longer relevant - otherwise I might not end up fixing it at all! Usually I'll take care of closing issues anyway, so you don't have to worry about it.
+
+- Please don't revive old issues, _especially_ if they have been fixed, because I don't routinely check them. Make a new issue and link the old one to it if you think it's related.
 
 - Most importantly, use gist or pastebin to post crash reports. Do not paste the entire crash report inline, not even in a code block!
 > If you've got a git account (which you do, if you're posting an issue) you can access gist, and pastebin doesn't require an account at all, so there's no excuse!
@@ -43,4 +45,13 @@ Pull requests aren't just for code - if you would like to help translate Wizardr
 
 - Firstly, the .lang file: if you're familiar with translating mods, this is all pretty standard - it holds the names of blocks, items, mobs and so on. Ignore the %X$s bits, they're placeholders for stuff that gets put in by Wizardry when the game is running.
 
-- Secondly, the handbook text file: the US english version is named handbook_en_US.txt, and (rather obviously) other languages' text files replace 'en_US' with the name of their corresponding .lang file. Anything wirtten in BLOCK CAPITALS should be left alone, because Wizardry replaces it with the appropriate text when the game is running.
+- Secondly, the handbook JSON file: the US english version is named handbook_en_us.json, and (rather obviously) other languages' text files replace 'en_us' with the name of their corresponding .lang file. Make sure you only change the _values_ (after each `:`), not the identifiers - for a summary of JSON syntax, see the [JSON webpage](https://www.json.org/json-en.html). If you're familiar with advancements, loot tables and similar files, this won't be new to you. The handbook file also applies its own form of markup to the main text, with the following features:
+
+    - `#image tag` adds an image to the text with the given tag. Image tags are defined in the `"images": {...}` block at the start of the file. Each named entry in this block defines a single image with that name as its tag. Each entry is a JSON object containing a file location and optional caption/dimensions.
+    - `#recipe tag` adds a crafting recipe to the text with the given tag. Similar to image tags, recipe tags are defined in the `"recipes": {...}` block at the start of the file. Each named entry in this block defines a recipe with that name as its tag. Each entry contains a list of one or more locations or recipes to display (if more than one is specified, the display will cycle through the different recipes).
+    - Anything else with a `#` directly before it (with no space) will be treated as a format argument if possible. This means everything between the `#` and the next space will be replaced with something else at runtime, similar to the `%X$s` bits in a normal .lang file. The current available format arguments can be found [here](https://github.com/Electroblob77/Wizardry/blob/1.12.2/src/main/java/electroblob/wizardry/client/gui/handbook/GuiWizardHandbook.java#L177-L203).
+    - `@section@` adds a hyperlink to the given section, which will display as the name of that section. `@section alt text@` is the same, except alt text is displayed instead of the section name (alt text may contain spaces). It is also possible to hyperlink to a webpage, simply replace the section name with the url (e.g. `@https://example.com/@` or `@https://example.com/ alt text@`).
+    
+If all of that confused you, the simple rule is: _Don't translate anything directly after an `@` symbol, directly after a `#`, or the first word after `#image` or `#recipe`_. However, you should translate the `"caption"` entries in the `images` block.
+
+**Please ensure all translation files are encoded in UTF-8 format, otherwise they might crash the game!**

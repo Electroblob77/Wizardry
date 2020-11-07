@@ -14,8 +14,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class responsible for defining and registering wizardry's non-JSON recipes (i.e. smelting recipes and dynamic
@@ -29,14 +30,27 @@ public final class WizardryRecipes {
 
 	private WizardryRecipes(){} // No instances!
 
-	private static final Queue<Item> chargingRecipeQueue = new LinkedList<>();
+	private static final List<Item> chargeableItems = new ArrayList<>();
+
+	private static boolean registered;
 
 	/** Adds the given item to the list of items that can be charged using mana flasks. Dynamic charging recipes
 	 * will be added for these items during {@code RegistryEvent.Register<IRecipe>}. The item must implement
 	 * {@link IManaStoringItem} for the recipes to work correctly. This method should be called from the item's
 	 * constructor. */
 	public static void addToManaFlaskCharging(Item item){
-		chargingRecipeQueue.offer(item);
+
+		if(registered){
+			Wizardry.logger.warn("Tried to add an item to mana flask charging after it was registered, this will do nothing!");
+			return;
+		}
+
+		chargeableItems.add(item);
+	}
+
+	/** Returns an unmodifiable view of all registered items that can be charged with mana flasks. */
+	public static List<Item> getChargeableItems(){
+		return Collections.unmodifiableList(chargeableItems);
 	}
 
 	/** Now only deals with the dynamic crafting recipes and the smelting recipes. */
@@ -49,11 +63,7 @@ public final class WizardryRecipes {
 
 		// Mana flask recipes
 
-		Item chargeable;
-
-		while(!chargingRecipeQueue.isEmpty()){
-			// Use remove() and not poll() because the queue shouldn't be empty in here
-			chargeable = chargingRecipeQueue.remove();
+		for(Item chargeable : chargeableItems){
 
 			registry.register(new RecipeRechargeWithFlask(chargeable, (ItemManaFlask)WizardryItems.small_mana_flask)
 					.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/small_flask_" + chargeable.getRegistryName().getPath())));
@@ -65,6 +75,9 @@ public final class WizardryRecipes {
 					.setRegistryName(new ResourceLocation(Wizardry.MODID, "recipes/large_flask_" + chargeable.getRegistryName().getPath())));
 
 		}
+
+		registered = true;
+
 	}
 
 }

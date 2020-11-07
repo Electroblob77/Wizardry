@@ -41,6 +41,8 @@ public final class SpellModifiers {
 	public static final String POTENCY = "potency";
 	/** Constant string identifier for the mana cost modifier. */
 	public static final String COST = "cost";
+	/** Constant string identifier for the wand charge-up modifier. */
+	public static final String CHARGEUP = "chargeup";
 	/** Constant string identifier for the wand progression modifier. */
 	public static final String PROGRESSION = "progression";
 
@@ -56,20 +58,15 @@ public final class SpellModifiers {
 		syncedMultiplierMap = new HashMap<>();
 	}
 
-//	/** Returns a deep copy of this {@code SpellModifiers} object. */
-//	@Override
-//	public SpellModifiers clone(){
-//		SpellModifiers clone;
-//		try {
-//			clone = (SpellModifiers)super.clone();
-//		}catch(CloneNotSupportedException e){
-//			Wizardry.logger.error("Whaaaaat?!", e);
-//			return null;
-//		}
-//		clone.multiplierMap = new HashMap<>(this.multiplierMap);
-//		clone.syncedMultiplierMap = new HashMap<>(this.syncedMultiplierMap);
-//		return clone;
-//	}
+	private SpellModifiers(Map<String, Float> multiplierMap, Map<String, Float> syncedMultiplierMap){
+		this.multiplierMap = multiplierMap;
+		this.syncedMultiplierMap = syncedMultiplierMap;
+	}
+
+	/** Returns a deep copy (with copies of the underlying maps) of this {@code SpellModifiers} object. */
+	public SpellModifiers copy(){
+		return new SpellModifiers(new HashMap<>(this.multiplierMap), new HashMap<>(this.syncedMultiplierMap));
+	}
 
 	/**
 	 * Adds the given multiplier to this SpellModifiers object, using the string identifier that the given wand upgrade

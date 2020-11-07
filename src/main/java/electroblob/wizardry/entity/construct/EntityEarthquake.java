@@ -2,9 +2,10 @@ package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Earthquake;
+import electroblob.wizardry.util.BlockUtils;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
-import electroblob.wizardry.util.WizardryUtilities;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,12 +18,11 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityEarthquake extends EntityMagicConstruct {
+public class EntityEarthquake extends EntityMagicConstruct { // NOT a scaled construct, the size is controlled by time
 
 	public EntityEarthquake(World world){
 		super(world);
-		this.height = 1.0f;
-		this.width = 1.0f;
+		setSize(1, 1); // This one probably should be small
 	}
 
 	public void onUpdate(){
@@ -31,7 +31,7 @@ public class EntityEarthquake extends EntityMagicConstruct {
 
 		double speed = Spells.earthquake.getProperty(Earthquake.SPREAD_SPEED).doubleValue();
 
-		if(!world.isRemote){
+		if(!world.isRemote && EntityUtils.canDamageBlocks(getCaster(), world)){
 
 			// The further the earthquake is going to spread, the finer the angle increments.
 			for(float angle = 0; angle < 2 * Math.PI; angle += Math.PI / (lifetime * 1.5)){
@@ -46,10 +46,9 @@ public class EntityEarthquake extends EntityMagicConstruct {
 
 				BlockPos pos = new BlockPos(x, y, z);
 
-				if(!WizardryUtilities.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos)
-						&& world.isBlockNormalCube(pos, false)
+				if(!BlockUtils.isBlockUnbreakable(world, pos) && !world.isAirBlock(pos) && world.isBlockNormalCube(pos, false)
 						// Checks that the block above is not solid, since this causes the falling sand to vanish.
-						&& !world.isBlockNormalCube(pos.up(), false)){
+						&& !world.isBlockNormalCube(pos.up(), false) && BlockUtils.canBreakBlock(getCaster(), world, pos)){
 
 					// Falling blocks do the setting block to air themselves.
 					EntityFallingBlock fallingblock = new EntityFallingBlock(world, x + 0.5, y + 0.5, z + 0.5,
@@ -61,8 +60,8 @@ public class EntityEarthquake extends EntityMagicConstruct {
 
 		}
 
-		List<EntityLivingBase> targets = WizardryUtilities
-				.getEntitiesWithinRadius((this.ticksExisted * speed) + 1.5, this.posX, this.posY, this.posZ, world);
+		List<EntityLivingBase> targets = EntityUtils
+				.getLivingWithinRadius((this.ticksExisted * speed) + 1.5, this.posX, this.posY, this.posZ, world);
 
 		// In this particular instance, the caster is completely unaffected because they will always be in the
 		// centre.

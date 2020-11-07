@@ -1,6 +1,7 @@
 package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,9 @@ public class Curse extends PotionMagicEffect {
 	
 	@Override
 	public List<ItemStack> getCurativeItems(){
-		return new ArrayList<>(); // Cannot be cured!
+		List<ItemStack> items = new ArrayList<>();
+		items.add(new ItemStack(WizardryItems.purifying_elixir));
+		return items;
 	}
 	
 	@Override
@@ -39,12 +42,12 @@ public class Curse extends PotionMagicEffect {
 		
 		super.renderInventoryEffect(x, y, effect, mc);
 		
-		String name = net.minecraft.client.resources.I18n.format(this.getName());
+		String name = Wizardry.proxy.translate(this.getName());
 
 		// Amplifier 0 (which would be I) is not rendered and the tooltips only go up to X (amplifier 9)
 		// The vanilla implementation uses elseifs and only goes up to 4... how lazy.
 		if(effect.getAmplifier() > 0 && effect.getAmplifier() < 10){
-			name = name + " " + net.minecraft.client.resources.I18n.format("enchantment.level." + (effect.getAmplifier() + 1));
+			name = name + " " + Wizardry.proxy.translate("enchantment.level." + (effect.getAmplifier() + 1));
 		}
 
 		List<String> lines = mc.fontRenderer.listFormattedStringToWidth(name, 100);

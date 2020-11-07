@@ -26,6 +26,8 @@ public class Evade extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
+		if(!caster.onGround) return false; // Prevents cheesing with cooldown upgrades to effectively fly super-fast
+
 		Vec3d look = caster.getLookVec();
 		// We want a horizontal only vector
 		look = look.subtract(0, look.y, 0).normalize();

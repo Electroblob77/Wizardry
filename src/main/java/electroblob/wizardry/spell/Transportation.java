@@ -5,16 +5,17 @@ import electroblob.wizardry.data.IStoredVariable;
 import electroblob.wizardry.data.Persistence;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketTransportation;
 import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.util.GeometryUtils;
 import electroblob.wizardry.util.Location;
 import electroblob.wizardry.util.NBTExtras;
 import electroblob.wizardry.util.SpellModifiers;
-import electroblob.wizardry.util.WizardryUtilities;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.EnumAction;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -41,7 +42,7 @@ public class Transportation extends Spell {
 	public static final IStoredVariable<Integer> COUNTDOWN_KEY = IStoredVariable.StoredVariable.ofInt("tpCountdown", Persistence.NEVER).withTicker(Transportation::update);
 
 	public Transportation(){
-		super("transportation", EnumAction.BOW, false);
+		super("transportation", SpellActions.POINT_UP, false);
 		addProperties(TELEPORT_COUNTDOWN);
 		WizardData.registerStoredVariables(LOCATIONS_KEY, COUNTDOWN_KEY);
 	}
@@ -128,7 +129,7 @@ public class Transportation extends Spell {
 	public static boolean isLocationAimedAt(EntityPlayer player, BlockPos pos, float partialTicks){
 
 		Vec3d origin = player.getPositionEyes(partialTicks);
-		Vec3d centre = WizardryUtilities.getCentre(pos);
+		Vec3d centre = GeometryUtils.getCentre(pos);
 		Vec3d direction = centre.subtract(origin);
 		double distance = direction.length();
 
@@ -139,7 +140,7 @@ public class Transportation extends Spell {
 
 		Vec3d origin = player.getPositionEyes(partialTicks);
 		Vec3d look = player.getLook(partialTicks);
-		Vec3d centre = WizardryUtilities.getCentre(pos);
+		Vec3d centre = GeometryUtils.getCentre(pos);
 		Vec3d direction = centre.subtract(origin);
 		double distance = direction.length();
 
@@ -180,9 +181,21 @@ public class Transportation extends Spell {
 			Location destination = locations.get(locations.size() - 1);
 
 			if(countdown == 1 && destination.dimension == player.dimension){
+
+				Entity mount = player.getRidingEntity();
+				if(mount != null) player.dismountRidingEntity();
+
 				player.setPositionAndUpdate(destination.pos.getX() + 0.5, destination.pos.getY(), destination.pos.getZ() + 0.5);
+
+				boolean teleportMount = mount != null && ItemArtefact.isArtefactActive(player, WizardryItems.charm_mount_teleporting);
+
+				if(teleportMount){
+					mount.setPositionAndUpdate(destination.pos.getX() + 0.5, destination.pos.getY(), destination.pos.getZ() + 0.5);
+					player.startRiding(mount);
+				}
+
 				player.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 50, 0));
-				IMessage msg = new PacketTransportation.Message(player.getEntityId());
+				IMessage msg = new PacketTransportation.Message(destination.pos, teleportMount ? null : player);
 				WizardryPacketHandler.net.sendToDimension(msg, player.world.provider.getDimension());
 			}
 

@@ -83,6 +83,16 @@
 				]
 			}
 		},
+		"ring_meteor": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_meteor"
+					}
+				]
+			}
+		},
 		"ring_ice_melee": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -163,6 +173,16 @@
 				]
 			}
 		},
+		"ring_stormcloud": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_stormcloud"
+					}
+				]
+			}
+		},
 		"ring_soulbinding": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -239,6 +259,16 @@
 				"items": [
 					{
 						"item": "ebwizardry:ring_full_moon"
+					}
+				]
+			}
+		},
+		"ring_evoker": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:ring_evoker"
 					}
 				]
 			}
@@ -383,6 +413,16 @@
 				]
 			}
 		},
+		"amulet_frost_warding": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_frost_warding"
+					}
+				]
+			}
+		},
 		"amulet_potential": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -493,6 +533,16 @@
 				]
 			}
 		},
+		"amulet_absorption": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:amulet_absorption"
+					}
+				]
+			}
+		},
 		"charm_haggler": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -509,6 +559,26 @@
 				"items": [
 					{
 						"item": "ebwizardry:charm_experience_tome"
+					}
+				]
+			}
+		},
+		"charm_move_speed": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_move_speed"
+					}
+				]
+			}
+		},
+		"charm_spell_discovery": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_spell_discovery"
 					}
 				]
 			}
@@ -563,6 +633,26 @@
 				]
 			}
 		},
+		"charm_undead_helmets": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_undead_helmets"
+					}
+				]
+			}
+		},
+		"charm_hunger_casting": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_hunger_casting"
+					}
+				]
+			}
+		},
 		"charm_flight": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -603,6 +693,16 @@
 				]
 			}
 		},
+		"charm_sixth_sense": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_sixth_sense"
+					}
+				]
+			}
+		},
 		"charm_stop_time": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
@@ -629,6 +729,26 @@
 				"items": [
 					{
 						"item": "ebwizardry:charm_transportation"
+					}
+				]
+			}
+		},
+		"charm_black_hole": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_black_hole"
+					}
+				]
+			}
+		},
+		"charm_mount_teleporting": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "ebwizardry:charm_mount_teleporting"
 					}
 				]
 			}

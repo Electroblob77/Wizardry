@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketEntityEffect;
 import net.minecraft.network.play.server.SPacketRemoveEntityEffect;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -51,31 +52,26 @@ public interface ISyncedPotion {
 
 	@SubscribeEvent
 	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event){
-
-		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() instanceof ISyncedPotion
-				&& ((ISyncedPotion)event.getPotionEffect().getPotion()).shouldSync(event.getEntityLiving())){
-
-			if(!event.getEntityLiving().world.isRemote){
-				event.getEntityLiving().world.playerEntities.stream()
-						.filter(p -> p.getDistanceSq(event.getEntityLiving()) < SYNC_RADIUS * SYNC_RADIUS)
-						.forEach(p -> ((EntityPlayerMP)p).connection.sendPacket(new SPacketRemoveEntityEffect(
-								event.getEntity().getEntityId(), event.getPotionEffect().getPotion())));
-			}
-		}
+		onPotionEffectEnd(event.getPotionEffect(), event.getEntityLiving());
 	}
 
 	@SubscribeEvent
 	public static void onPotionRemoveEvent(PotionEvent.PotionRemoveEvent event){
+		onPotionEffectEnd(event.getPotionEffect(), event.getEntityLiving());
+	}
 
-		if(event.getPotionEffect() != null && event.getPotionEffect().getPotion() instanceof ISyncedPotion
-				&& ((ISyncedPotion)event.getPotionEffect().getPotion()).shouldSync(event.getEntityLiving())){
+	static void onPotionEffectEnd(PotionEffect effect, EntityLivingBase host){
 
-			if(!event.getEntityLiving().world.isRemote){
-				event.getEntityLiving().world.playerEntities.stream()
-						.filter(p -> p.getDistanceSq(event.getEntityLiving()) < SYNC_RADIUS * SYNC_RADIUS)
+		if(effect != null && effect.getPotion() instanceof ISyncedPotion
+				&& ((ISyncedPotion)effect.getPotion()).shouldSync(host)){
+
+			if(!host.world.isRemote){
+				host.world.playerEntities.stream()
+						.filter(p -> p.getDistanceSq(host) < SYNC_RADIUS * SYNC_RADIUS)
 						.forEach(p -> ((EntityPlayerMP)p).connection.sendPacket(new SPacketRemoveEntityEffect(
-								event.getEntity().getEntityId(), event.getPotionEffect().getPotion())));
+								host.getEntityId(), effect.getPotion())));
 			}
 		}
 	}
+
 }

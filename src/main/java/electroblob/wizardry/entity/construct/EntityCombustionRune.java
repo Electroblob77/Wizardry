@@ -2,7 +2,7 @@ package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
-import electroblob.wizardry.util.WizardryUtilities;
+import electroblob.wizardry.util.EntityUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
@@ -10,12 +10,21 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityCombustionRune extends EntityMagicConstruct {
+public class EntityCombustionRune extends EntityScaledConstruct {
 
 	public EntityCombustionRune(World world){
 		super(world);
-		this.height = 0.2f;
-		this.width = 2.0f;
+		setSize(2, 0.2f);
+	}
+
+	@Override
+	protected boolean shouldScaleWidth(){
+		return false; // We're using the blast modifier for an actual explosion here, rather than the entity size
+	}
+
+	@Override
+	protected boolean shouldScaleHeight(){
+		return false;
 	}
 
 	@Override
@@ -25,16 +34,16 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = WizardryUtilities.getEntitiesWithinRadius(width/2, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, posX, posY, posZ, world);
 
 			for(EntityLivingBase target : targets){
 
 				if(this.isValidTarget(target)){
 
-					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue();
+					float strength = Spells.combustion_rune.getProperty(Spell.BLAST_RADIUS).floatValue() * sizeMultiplier;
 
 					world.newExplosion(this.getCaster(), this.posX, this.posY, this.posZ, strength, true,
-							getCaster() != null && WizardryUtilities.canDamageBlocks(getCaster(), world));
+							EntityUtils.canDamageBlocks(getCaster(), world));
 
 					// The trap is destroyed once triggered.
 					this.setDead();
@@ -47,9 +56,6 @@ public class EntityCombustionRune extends EntityMagicConstruct {
 					this.posZ + radius * MathHelper.sin(angle), 0, 0, 0);
 		}
 	}
-
-	@Override
-	protected void entityInit(){}
 
 	@Override
 	public boolean canRenderOnFire(){

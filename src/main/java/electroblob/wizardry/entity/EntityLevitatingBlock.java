@@ -4,9 +4,9 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.AllyDesignationSystem;
+import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.NBTExtras;
-import electroblob.wizardry.util.WizardryUtilities;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
@@ -81,7 +81,7 @@ public class EntityLevitatingBlock extends EntityFallingBlock implements IEntity
 		}
 
 		if(this.getCaster() == null && this.casterUUID != null){
-			Entity entity = WizardryUtilities.getEntityByUUID(world, casterUUID);
+			Entity entity = EntityUtils.getEntityByUUID(world, casterUUID);
 			if(entity instanceof EntityLivingBase){
 				this.caster = new WeakReference<>((EntityLivingBase)entity);
 			}

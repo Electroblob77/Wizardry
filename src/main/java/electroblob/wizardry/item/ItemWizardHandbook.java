@@ -9,6 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -27,8 +29,8 @@ public class ItemWizardHandbook extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag flag) {
-		tooltip.add(
-				"\u00A77" + net.minecraft.client.resources.I18n.format("item." + Wizardry.MODID + ":wizard_handbook.desc", AUTHOR));
+		tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_handbook.author",
+				new Style().setColor(TextFormatting.GRAY), AUTHOR));
 	}
 
 	@Override
