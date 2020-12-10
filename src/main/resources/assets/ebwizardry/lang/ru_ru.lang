@@ -356,7 +356,7 @@ tile.ebwizardry:transportation_stone.invalid=Сначала вы должны с
 
 container.ebwizardry:arcane_workbench=Чародейский Стол
 container.ebwizardry:arcane_workbench.apply=Применить
-container.ebwizardry:arcane_workbench.mana=Мана:
+container.ebwizardry:arcane_workbench.mana=Мана\: %s/%s
 container.ebwizardry:arcane_workbench.upgrades=Применённые Улучшения:
 
 tier.novice=Начинающий
