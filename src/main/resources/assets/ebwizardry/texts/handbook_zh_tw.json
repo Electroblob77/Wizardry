@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench.png",
 			"caption": "法術工作台",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/ore_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_ore.png",
 			"caption": "水晶礦",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/flower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_flower.png",
 			"caption": "水晶花",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_tower.png",
 			"caption": "法師塔",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/armour_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_armour.png",
 			"caption": "法師服",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
 			"caption": "方尖碑",
 			"u": 0,
 			"v": 0,
@@ -79,15 +79,31 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine.png",
 			"caption": "神殿",
 			"u": 0,
 			"v": 0,
 			"width": 110,
 			"height": 67
 		},
+		"library_ruins": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/library_ruins.png",
+			"caption": "Library Ruins",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 57
+		},
+		"remnant": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/remnant.png",
+			"caption": "A Fire Remnant",
+			"u": 0,
+			"v": 0,
+			"width": 110,
+			"height": 73
+		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers.png",
 			"caption": "四種等級的法杖",
 			"u": 0,
 			"v": 0,
@@ -96,7 +112,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/elements_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements.png",
 			"caption": "七種法術元素",
 			"u": 0,
 			"v": 0,
@@ -224,6 +240,39 @@
 		},
 		"spark_bomb": {
 			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+		"gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
 		}
 	},
 	
@@ -341,7 +390,7 @@
 
 				"相對而言卷軸則有不同的用途: 拿著卷軸點擊滑鼠右鍵便會施展上面的法術並用掉卷軸。跟法術書一樣，卷軸在世界各地都能找到，但你也可以自己@enchanting_scrolls 製作@。",
 
-				"在你準備進行某個任務時，有些法術可能只會用到一兩次，\n所以你不想讓那些法術占用\n你的@wands 法杖@空間，此時卷軸就非常\n有用。不過得注意，比起法杖，卷軸還是效率較差的施法方式。",
+				"在你準備進行某個任務時，有些法術可能只會用到一兩次，\n所以你不想讓那些法術占用\n你的@wands 法杖@空間，此時卷軸就非常\n有用。They also have the advantage of being able to instantly cast spells that would normally require a charge-up period. 不過得注意，比起法杖，卷軸還是效率較差的施法方式。",
 
 				"未經訓練的眼睛無法閱讀法術中的魔法符文。然而若要鑑定一個法術，你當然可以冒著發生意外的風險來施展看看結果，但即便如此許多法術是要在特定的條件下才會發生作用。不過即便如此，還是有可能在施法時誤用了未鑑定的法術，其潛在的危險性取決於這個法術有多強大。因此更安全可靠的選擇是使用鑑定卷軸，可以在箱子裡找到或是向法師購買。拿著鑑定卷軸點擊滑鼠右鍵便會用掉卷軸並鑑定你快捷欄中第一個未知的法術書或卷軸。"
 			]
@@ -535,6 +584,34 @@
 						"由於這些神殿的重要意義及巨大的神秘力量，更別說裡面的寶物，對於志氣高昂的法師特別有吸引力。\n\n但是務必謹慎，有許多關於法師被關在封鎖區內，可能因為幽閉恐懼症導致慢慢發瘋的報導。且愈來愈多人認為，這就是神殿防護魔法的一個部分，而被關在其中的法師，其實是被控制用來守護神殿。這對於膽敢前往冒險的人來說，無疑是令人不寒而慄的結局..."
 					]
 				},
+				"library_ruins": {
+					"title": "Library Ruins",
+					"include_in_contents": "magical_world_subsections",
+					"triggers": [
+						"ebwizardry:find_library_ruins"
+					],
+					"text": [
+
+						"Wizards tend to accumulate rather a lot of spell books during their lifetime, and it is therefore usual for a wizard to build a library to store their collection. Some particularly secretive wizards have even been known to store their arcane knowledge underground, away from prying eyes. However, a library requires upkeep, and if its owner dies without an apprentice to inherit the books, the structure will quickly fall into disrepair. Thousands of years of magic use have seen more and more libraries left abandoned in this way, and you may perhaps stumble across one when exploring. They are often worth searching for any spell books or other items that might have survived the ravages of time.",
+
+						"#image library_ruins",
+
+						"Libraries are not just used for storing books, though. Wizards of the past harnessed the power of the imbuement altar, used to perform elemental imbuement rituals on magical materials. The positioning of the altar is a precise and difficult art as it must be aligned according to particular celestial movements and local mana fluctuations. The practice of building them has become much rarer in recent history, mainly because once built, a solid rock altar lasts for centuries, so there is little need for new ones. Instead, most wizards find and repair an existing altar for when they need to perform imbuement rituals - and library ruins are the perfect place to look.",
+
+						"You, too, may at some point find it useful to construct your own library, which will of course require some bookshelves:",
+
+						"#recipe bookshelves",
+
+						"#recipe gilded_wood",
+
+						"These bookshelves are not mere furniture, however. Infusing the most potent magic crystals into your bookshelves allows effortless transfer of knowledge between them and a nearby @arcane_workbench arcane workbench@ - very handy as one's collection expands. Equally useful is a lectern:",
+
+						"#recipe lecterns",
+
+						"The tome that floats above a lectern gathers the knowledge from nearby spell books, allowing each to be perused at leisure without remembering its precise location."
+					]
+				},
+
 				"creatures": {
 					"title": "魔法生物",
 					"include_in_contents": "magical_world_subsections",
@@ -543,8 +620,19 @@
 					],
 					"text": [
 
-						"除了法師，還有許多其它生物也會使用魔法。其中有許多是源自於魔法，且大部分都能用特定的@spells 法術@召喚。會看到這些生物，\n大多是在守護@obelisks 方尖碑@，但也可能\n遇到了強大的召喚法師。只有非常少數的神秘生物才會偶爾在野外發現。"
-					]
+						"除了法師，還有許多其它生物也會使用魔法。其中有許多是源自於魔法，且大部分都能用特定的@spells 法術@召喚。會看到這些生物，\n大多是在守護@obelisks 方尖碑@，但也可能\n遇到了強大的召喚法師。只有非常少數的神秘生物才會偶爾在野外發現。",
+
+						"A notable example is the remnant, a spirit-like being that forms naturally from the traces left behind by powerful magic and typically takes on one of the seven arcane @elements@. On their own, they are little more than a nuisance, but a swarm can quickly overwhelm the unprepared adventurer, and their innate resistance to magic makes it advisable to carry a bow or other ranged weapon.",
+
+						"#image remnant",
+
+						"Once slain, their spectral dust can be collected, which, besides emitting a colorful glow, has a variety of useful properties. A receptacle, crafted as shown, provides a convenient means of containing it.",
+
+						"#recipe receptacle",
+
+						"Receptacles may be placed atop a surface or affixed to a wall and right-clicked with spectral dust to fill them, acting as a soft light source. Right-clicking a filled receptacle empties it and retreives the dust."
+]
+
 				},
 				"artefacts": {
 					"title": "神器",
@@ -711,7 +799,11 @@
 				"#recipe firebomb",
 				"#recipe poison_bomb",
 				"#recipe smoke_bomb",
-				"#recipe spark_bomb"
+				"#recipe spark_bomb",
+				"#recipe gilded_wood",
+				"#recipe bookshelves",
+				"#recipe lecterns",
+				"#recipe receptacle"
 			]
 		},
 		
