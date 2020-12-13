@@ -11,7 +11,7 @@
 	
 	"images": {
 		"workbench": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/arcane_workbench.png",
 			"caption": "法術工作台",
 			"u": 0,
 			"v": 0,
@@ -19,7 +19,7 @@
 			"height": 110
 		},
 		"crystal_ore": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/ore_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_ore.png",
 			"caption": "水晶礦",
 			"u": 0,
 			"v": 0,
@@ -47,7 +47,7 @@
 			"border": false
 		},
 		"crystal_flower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/flower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/crystal_flower.png",
 			"caption": "水晶花",
 			"u": 0,
 			"v": 0,
@@ -55,7 +55,7 @@
 			"height": 48
 		},
 		"wizard_tower": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tower_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_tower.png",
 			"caption": "法師塔",
 			"u": 0,
 			"v": 0,
@@ -63,7 +63,7 @@
 			"height": 110
 		},
 		"wizard_armour": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/armour_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/wizard_armour.png",
 			"caption": "法師服",
 			"u": 0,
 			"v": 0,
@@ -71,7 +71,7 @@
 			"height": 90
 		},
 		"obelisk": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
 			"caption": "方尖碑",
 			"u": 0,
 			"v": 0,
@@ -79,7 +79,7 @@
 			"height": 67
 		},
 		"shrine": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/shrine_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/shrine.png",
 			"caption": "神殿",
 			"u": 0,
 			"v": 0,
@@ -87,7 +87,7 @@
 			"height": 67
 		},
 		"tiers": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/tiers_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/tiers.png",
 			"caption": "四種等級的法杖",
 			"u": 0,
 			"v": 0,
@@ -96,7 +96,7 @@
 			"border": false
 		},
 		"elements": {
-			"location": "ebwizardry:textures/gui/handbook/pictures/elements_picture.png",
+			"location": "ebwizardry:textures/gui/handbook/pictures/elements.png",
 			"caption": "七種法術元素",
 			"u": 0,
 			"v": 0,
@@ -224,6 +224,39 @@
 		},
 		"spark_bomb": {
 			"locations": [ "ebwizardry:spark_bomb" ]
+		},
+		"gilded_wood": {
+			"locations": [
+				"ebwizardry:gilded_oak_wood",
+				"ebwizardry:gilded_spruce_wood",
+				"ebwizardry:gilded_birch_wood",
+				"ebwizardry:gilded_jungle_wood",
+				"ebwizardry:gilded_acacia_wood",
+				"ebwizardry:gilded_dark_oak_wood"
+			]
+		},
+		"bookshelves": {
+			"locations": [
+				"ebwizardry:oak_bookshelf",
+				"ebwizardry:spruce_bookshelf",
+				"ebwizardry:birch_bookshelf",
+				"ebwizardry:jungle_bookshelf",
+				"ebwizardry:acacia_bookshelf",
+				"ebwizardry:dark_oak_bookshelf"
+			]
+		},
+		"lecterns": {
+			"locations": [
+				"ebwizardry:oak_lectern",
+				"ebwizardry:spruce_lectern",
+				"ebwizardry:birch_lectern",
+				"ebwizardry:jungle_lectern",
+				"ebwizardry:acacia_lectern",
+				"ebwizardry:dark_oak_lectern"
+			]
+		},
+		"receptacle": {
+			"locations": [ "ebwizardry:receptacle" ]
 		}
 	},
 	
