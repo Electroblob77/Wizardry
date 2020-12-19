@@ -30,13 +30,13 @@ In addition, I'd like to thank the following individuals for their contributions
 
 - Spanish: MadWrist, Alsentar
 - Mexican Spanish: MadWrist
-- Russian: VilagVil, kellixon, bigenergy, MugGod2
+- Russian: VilagVil, kellixon, bigenergy, MugGod2, DrHesperus
 - French: Hahdrim
 - Brazilian Portuguese: lorrampi
 - Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
-- Korean: shejery, rewi_wire, 방통
+- Korean: shejery, rewi_wire, 방통, red1854th
 - Polish: Trozuu, Olej
-- German: BirdyDragon
+- German: BirdyDragon, Lemopav
 - Chinese (Traditional): chesterccj305
 - Hungarian: Bombadil
 
