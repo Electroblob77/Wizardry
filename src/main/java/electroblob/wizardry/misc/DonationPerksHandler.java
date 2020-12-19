@@ -37,6 +37,9 @@ public class DonationPerksHandler {
 			.put(UUID.fromString("32ca0099-c1d6-4682-82ab-8f06059bb801"), new Box<>(Element.MAGIC))
 			.put(UUID.fromString("0a704e20-1e7a-413e-9122-fae5b244a05e"), new Box<>(Element.MAGIC))
 			.put(UUID.fromString("41fec037-12a5-4b19-868e-b62e39952e96"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("3f5e0cec-949a-4dd4-ae60-f4eae481dd06"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("3ad78c5f-d8cf-47f1-bff9-a890f8e638ff"), new Box<>(Element.MAGIC))
+			.put(UUID.fromString("93479771-d23a-4d80-8868-2950e144500b"), new Box<>(Element.MAGIC))
 	.build();
 
 	/** Returns true if the given player's UUID appears in the list of donor UUIDs, false otherwise (thread-safe). */
