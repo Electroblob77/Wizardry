@@ -19,7 +19,7 @@ import java.util.*;
 
 /**
  * Instances of this class represent sections in the wizard's handbook. As of wizardry 4.2, this class handles
- * everything within the section itself, including JSON parsing, unlock triggers and drawing the actual rawText.
+ * everything within the section itself, including JSON parsing, unlock triggers and drawing the actual text.
  * Sections may now also be nested and have other elements within them, such as images and a table of contents, a
  * behaviour which is also handled within this class.
  * <p></p>
@@ -313,8 +313,8 @@ class Section {
 						// The button id only does what you use it for, so we're just not using it at all.
 						this.buttons.get(pageRelative).add(GuiButtonHyperlink.create(x, y, font, upToLink, arguments, suffix, maxLineNumber - lineNumber - 1, GuiWizardHandbook.isRightPage(page)));
 
-						// The link button should exactly overlay the display rawText in the main string
-						// If the link has no display rawText specified, it displays the unformatted target string
+						// The link button should exactly overlay the display text in the main string
+						// If the link has no display text specified, it displays the unformatted target string
 						paragraph = paragraph.replace(linkRaw, arguments[arguments.length - 1]);
 					}
 
@@ -385,7 +385,7 @@ class Section {
 
 		if(JsonUtils.hasField(json, "text")){
 			section.rawText = Streams.stream(JsonUtils.getJsonArray(json, "text"))
-					.map(e -> JsonUtils.getString(e, "element of array rawText"))
+					.map(e -> JsonUtils.getString(e, "element of array text"))
 					.toArray(String[]::new);
 		}
 
