@@ -108,7 +108,18 @@ public class BlockImbuementAltar extends Block implements ITileEntityProvider {
 							&& world.getBlockState(pos.offset(s)).getValue(BlockReceptacle.FACING) == s);
 
 		if(world.getBlockState(pos).getValue(ACTIVE) != shouldBeActive){ // Only set when it actually needs changing
+
+			// Get contents of altar before replacing it
+			TileEntity te = world.getTileEntity(pos);
+			ItemStack stack = ItemStack.EMPTY;
+			if(te instanceof TileEntityImbuementAltar) stack = ((TileEntityImbuementAltar)te).getStack();
+
 			world.setBlockState(pos, world.getBlockState(pos).withProperty(ACTIVE, shouldBeActive));
+
+			// Copy over contents of altar from before to new tile entity
+			te = world.getTileEntity(pos);
+			if(te instanceof TileEntityImbuementAltar) ((TileEntityImbuementAltar)te).setStack(stack);
+
 			world.checkLight(pos);
 		}
 
