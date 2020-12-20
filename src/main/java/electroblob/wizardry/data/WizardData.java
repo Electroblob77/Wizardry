@@ -346,35 +346,47 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		// For each item in the player's inventory
 		for(ItemStack stack : player.inventory.mainInventory){
-			if(stack.isItemEnchanted()){
+			updateImbutedItem(stack, activeImbuements);
+		}
+		for(ItemStack stack : player.inventory.armorInventory){
+			updateImbutedItem(stack, activeImbuements);
+		}
+		for(ItemStack stack : player.inventory.offHandInventory){
+			updateImbutedItem(stack, activeImbuements);
+		}
 
-				NBTTagList enchantmentList = stack.getItem() == Items.ENCHANTED_BOOK ?
-						ItemEnchantedBook.getEnchantments(stack) : stack.getEnchantmentTagList();
+		// Removes all imbuements from the map that are no longer active
+		this.imbuementDurations.keySet().retainAll(activeImbuements);
+	}
 
-				Iterator<NBTBase> iterator = enchantmentList.iterator();
-				// For each of the item's enchantments
-				while(iterator.hasNext()){
-					NBTTagCompound enchantmentTag = (NBTTagCompound) iterator.next();
-					Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"));
-					// Ignores the enchantment unless it is an imbuement
-					if(enchantment instanceof Imbuement){
-						int duration = this.getImbuementDuration(enchantment);
-						// If the imbuement is still active:
-						if(duration > 0){
-							// Decrements the timer
-							this.imbuementDurations.put((Imbuement)enchantment, duration - IMBUEMENT_UPDATE_INTERVAL);
-							// Adds this imbuement to the set of imbuements that need to be kept
-							activeImbuements.add((Imbuement)enchantment);
-						}else{
-							// Otherwise, removes the enchantment from the item
-							iterator.remove(); // FIXME: Apparently this can cause a CME
-						}
+	private void updateImbutedItem(ItemStack stack, Set<Imbuement> activeImbuements){
+
+		if(stack.isItemEnchanted()){
+
+			NBTTagList enchantmentList = stack.getItem() == Items.ENCHANTED_BOOK ?
+					ItemEnchantedBook.getEnchantments(stack) : stack.getEnchantmentTagList();
+
+			Iterator<NBTBase> iterator = enchantmentList.iterator();
+			// For each of the item's enchantments
+			while(iterator.hasNext()){
+				NBTTagCompound enchantmentTag = (NBTTagCompound) iterator.next();
+				Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"));
+				// Ignores the enchantment unless it is an imbuement
+				if(enchantment instanceof Imbuement){
+					int duration = this.getImbuementDuration(enchantment);
+					// If the imbuement is still active:
+					if(duration > 0){
+						// Decrements the timer
+						this.imbuementDurations.put((Imbuement)enchantment, duration - IMBUEMENT_UPDATE_INTERVAL);
+						// Adds this imbuement to the set of imbuements that need to be kept
+						activeImbuements.add((Imbuement)enchantment);
+					}else{
+						// Otherwise, removes the enchantment from the item
+						iterator.remove(); // FIXME: Apparently this can cause a CME
 					}
 				}
 			}
 		}
-		// Removes all imbuements from the map that are no longer active
-		this.imbuementDurations.keySet().retainAll(activeImbuements);
 	}
 
 	// Ally designation system
