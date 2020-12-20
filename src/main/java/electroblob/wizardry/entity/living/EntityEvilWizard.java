@@ -278,7 +278,8 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt){
 		super.writeEntityToNBT(nbt);
-		nbt.setInteger("element", this.getElement().ordinal());
+		Element element = this.getElement();
+		nbt.setInteger("element", element == null ? 0 : element.ordinal());
 		nbt.setInteger("skin", this.textureIndex);
 		NBTExtras.storeTagSafely(nbt, "spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
 		nbt.setBoolean("hasStructure", this.hasStructure);

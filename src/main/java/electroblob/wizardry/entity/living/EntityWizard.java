@@ -404,7 +404,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			NBTExtras.storeTagSafely(nbt, "trades", this.trades.getRecipiesAsTags());
 		}
 
-		nbt.setInteger("element", this.getElement().ordinal());
+		Element element = this.getElement();
+		nbt.setInteger("element", element == null ? 0 : element.ordinal());
 		nbt.setInteger("skin", this.textureIndex);
 		NBTExtras.storeTagSafely(nbt, "spells", NBTExtras.listToNBT(spells, spell -> new NBTTagInt(spell.metadata())));
 
