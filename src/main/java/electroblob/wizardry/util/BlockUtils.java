@@ -419,7 +419,7 @@ public final class BlockUtils {
 			world.setBlockState(pos, Blocks.OBSIDIAN.getDefaultState());
 		}else if(freezeLava && (block == Blocks.LAVA || block == Blocks.FLOWING_LAVA)){
 			world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
-		}else if(block.isReplaceable(world, pos.up()) && Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos.up())){
+		}else if(world.getBlockState(pos).getBlock().isReplaceable(world, pos.up()) && Blocks.SNOW_LAYER.canPlaceBlockAt(world, pos.up())){
 			world.setBlockState(pos.up(), Blocks.SNOW_LAYER.getDefaultState());
 		}else{
 			return false;
