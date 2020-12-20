@@ -34,12 +34,13 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
-import java.nio.charset.StandardCharsets;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class GuiSpellDisplay {
@@ -96,9 +97,28 @@ public class GuiSpellDisplay {
 		return Collections.unmodifiableMap(skins);
 	}
 	
-	/** Returns the skin that corresponds to the given key. */
+	/** Returns the skin that corresponds to the given key. If no such skin exists, returns the default skin as a
+	 * fallback. If the fallback skin is missing, prints a warning to the console and returns null. */
+	@Nullable
 	public static Skin getSkin(String key){
-		return skins.get(key);
+
+		Skin skin = skins.get(key);
+
+		if(skin == null){
+
+			Wizardry.logger.info("The spell HUD skin '" + Wizardry.settings.spellHUDSkin + "' specified in the config"
+					+ " did not match any of the loaded skins; using the default skin as a fallback.");
+
+			skin = skins.get(Settings.DEFAULT_HUD_SKIN_KEY);
+
+			if(skin == null){
+				Wizardry.logger.warn("The default spell HUD skin is missing! A resource pack must have overridden it"
+						+ " with an invalid JSON file (default.json), please try again without any resource packs.");
+				return null;
+			}
+		}
+
+		return skin;
 	}
 	
 	// Normally when extending Gui, you'd have to have an instance to access its methods. However, we're not actually
@@ -212,21 +232,9 @@ public class GuiSpellDisplay {
 			flipX = flipX == ((mainHand ? player.getPrimaryHand() : player.getPrimaryHand().opposite()) == EnumHandSide.LEFT);
 		}
 
-		Skin skin = skins.get(Wizardry.settings.spellHUDSkin);
+		Skin skin = getSkin(Wizardry.settings.spellHUDSkin);
 
-		if(skin == null){
-
-			Wizardry.logger.info("The spell HUD skin '" + Wizardry.settings.spellHUDSkin + "' specified in the config"
-					+ " did not match any of the loaded skins; using the default skin as a fallback.");
-
-			skin = skins.get(Settings.DEFAULT_HUD_SKIN_KEY);
-
-			if(skin == null){
-				Wizardry.logger.warn("The default spell HUD skin is missing! A resource pack must have overridden it"
-						+ " with an invalid JSON file (default.json), please try again without any resource packs.");
-				return;
-			}
-		}
+		if(skin == null) return; // Can't draw anything if there is no skin loaded!
 
 		GlStateManager.pushMatrix();
 

@@ -59,31 +59,34 @@ public class GuiSelectHUDSkin extends GuiSelectString {
 			this.drawGradientRect(previewLeft, previewTop, previewRight, previewBottom, 0x88000000, 0x88000000);
 			
 			int previewBorder = 10;
-			
+
 			Skin skin = GuiSpellDisplay.getSkin((String)this.currentValue);
-			
-			float scale = Math.min((previewRight - previewLeft - 2*previewBorder)/(float)skin.getWidth(),
-									(previewBottom - previewTop - 2*previewBorder)/(float)skin.getHeight());
-			
-			float x = (previewLeft + previewRight)/2f - (skin.getWidth()*scale)/2;
-			float y = (previewBottom + previewTop)/2f + (skin.getHeight()*scale)/2;
-			
-			GlStateManager.pushMatrix();
-			
-			GlStateManager.scale(scale, scale, scale);
-			
-			skin.drawBackground((int)(x/scale), (int)(y/scale), false, false, 
-					Spells.magic_missile.getIcon(), 0.6f, false, false);
-			
-			skin.drawText((int)(x/scale), (int)(y/scale), false, false, 
-					Spells.none.getDisplayNameWithFormatting(),
-					Spells.magic_missile.getDisplayNameWithFormatting(),
-					Spells.none.getDisplayNameWithFormatting(), 0);
-			
-			GlStateManager.popMatrix();
-			
+
+			if(skin != null){
+
+				float scale = Math.min((previewRight - previewLeft - 2 * previewBorder) / (float)skin.getWidth(),
+						(previewBottom - previewTop - 2 * previewBorder) / (float)skin.getHeight());
+
+				float x = (previewLeft + previewRight) / 2f - (skin.getWidth() * scale) / 2;
+				float y = (previewBottom + previewTop) / 2f + (skin.getHeight() * scale) / 2;
+
+				GlStateManager.pushMatrix();
+
+				GlStateManager.scale(scale, scale, scale);
+
+				skin.drawBackground((int)(x / scale), (int)(y / scale), false, false,
+						Spells.magic_missile.getIcon(), 0.6f, false, false);
+
+				skin.drawText((int)(x / scale), (int)(y / scale), false, false,
+						Spells.none.getDisplayNameWithFormatting(),
+						Spells.magic_missile.getDisplayNameWithFormatting(),
+						Spells.none.getDisplayNameWithFormatting(), 0);
+
+				GlStateManager.popMatrix();
+			}
+
 			Skin hovered = getHoveredSkin(mouseX, mouseY);
-			
+
 			if(hovered != null){
 				this.drawToolTip(Lists.newArrayList("\u00A7a" + hovered.getName(), "\u00A7e" + hovered.getDescription()),
 						mouseX, mouseY);
