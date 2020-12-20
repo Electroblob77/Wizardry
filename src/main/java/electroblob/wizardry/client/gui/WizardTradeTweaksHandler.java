@@ -90,28 +90,30 @@ public class WizardTradeTweaksHandler {
 			// New spell indicator
 			if(gui.inventorySlots instanceof ContainerMerchant){
 
-				// Can't use getCurrentRecipe because that only gets updated when the correct items are given
-				MerchantRecipe recipe = trades.get(tradeIndex);
+				if(tradeIndex < trades.size()){ // Seems to happen with certain mods' GUIs
 
-				if(recipe != null && recipe.getItemToSell().getItem() instanceof ItemSpellBook){
+					// Can't use getCurrentRecipe because that only gets updated when the correct items are given
+					MerchantRecipe recipe = trades.get(tradeIndex);
 
-					EntityPlayer player = Minecraft.getMinecraft().player;
-					Spell spell = Spell.byMetadata(recipe.getItemToSell().getMetadata());
+					if(recipe != null && recipe.getItemToSell().getItem() instanceof ItemSpellBook){
 
-					if(Wizardry.settings.discoveryMode && !player.isCreative() && Wizardry.proxy.shouldDisplayDiscovered(spell, recipe.getItemToSell())
-							&& WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
-						
-						int x = gui.inventorySlots.getSlot(2).xPos + 14;
-						int y = gui.inventorySlots.getSlot(2).yPos - 17;
+						EntityPlayer player = Minecraft.getMinecraft().player;
+						Spell spell = Spell.byMetadata(recipe.getItemToSell().getMetadata());
 
-						RenderHelper.enableGUIStandardItemLighting();
-						GlStateManager.color(1, 1, 1);
-						Minecraft.getMinecraft().renderEngine.bindTexture(NEW_SPELL_ICON);
+						if(Wizardry.settings.discoveryMode && !player.isCreative() && Wizardry.proxy.shouldDisplayDiscovered(spell, recipe.getItemToSell())
+								&& WizardData.get(player) != null && !WizardData.get(player).hasSpellBeenDiscovered(spell)){
 
-						int frame = Math.max(player.ticksExisted/ANIMATION_FRAME_TIME % ANIMATION_PERIOD - (ANIMATION_PERIOD - ANIMATION_FRAMES), 0);
-						DrawingUtils.drawTexturedRect(x, y, 0, frame * ICON_HEIGHT, ICON_WIDTH, ICON_HEIGHT, ICON_WIDTH, ICON_HEIGHT * ANIMATION_FRAMES);
+							int x = gui.inventorySlots.getSlot(2).xPos + 14;
+							int y = gui.inventorySlots.getSlot(2).yPos - 17;
 
-						RenderHelper.disableStandardItemLighting();
+							RenderHelper.enableGUIStandardItemLighting();
+							GlStateManager.color(1, 1, 1);
+							Minecraft.getMinecraft().renderEngine.bindTexture(NEW_SPELL_ICON);
+
+							int frame = Math.max(player.ticksExisted / ANIMATION_FRAME_TIME % ANIMATION_PERIOD - (ANIMATION_PERIOD - ANIMATION_FRAMES), 0);
+							DrawingUtils.drawTexturedRect(x, y, 0, frame * ICON_HEIGHT, ICON_WIDTH, ICON_HEIGHT, ICON_WIDTH, ICON_HEIGHT * ANIMATION_FRAMES);
+
+							RenderHelper.disableStandardItemLighting();
 
 //						int mouseX = event.getMouseX() - gui.getGuiLeft();
 //						int mouseY = event.getMouseY() - gui.getGuiTop();
@@ -120,6 +122,7 @@ public class WizardTradeTweaksHandler {
 //							GuiUtils.drawHoveringText(Collections.singletonList("You haven't discovered this spell yet"), mouseX,
 //									mouseY, gui.width, gui.height, 150, Minecraft.getMinecraft().fontRenderer);
 //						}
+						}
 					}
 				}
 			}
