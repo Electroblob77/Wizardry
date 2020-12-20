@@ -30,12 +30,11 @@ import org.lwjgl.opengl.GL11;
 @EventBusSubscriber(Side.CLIENT)
 public class RenderSixthSense {
 
-	private static final ResourceLocation MARKER_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_marker.png");
 	private static final ResourceLocation SCREEN_OVERLAY_TEXTURE = new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_overlay.png");
 
-	private static final int PASSIVE_MOB_MARKER_COLOUR = 0xc6ff00;
-	private static final int HOSTILE_MOB_MARKER_COLOUR = 0x004a97;
-	private static final int PLAYER_MARKER_COLOUR = 0xffffff;
+	private static final ResourceLocation PASSIVE_MOB_MARKER_TEXTURE = 	new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_marker_passive.png");
+	private static final ResourceLocation HOSTILE_MOB_MARKER_TEXTURE = 	new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_marker_hostile.png");
+	private static final ResourceLocation PLAYER_MARKER_TEXTURE = 		new ResourceLocation(Wizardry.MODID, "textures/gui/sixth_sense_marker_player.png");
 
 	@SubscribeEvent
 	public static void onRenderGameOverlayEvent(RenderGameOverlayEvent.Post event){
@@ -88,25 +87,18 @@ public class RenderSixthSense {
 			GlStateManager.rotate(180 - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
-			// Makes the colour add to the colour of the texture pixels, rather than the default multiplying
-			GlStateManager.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_ADD);
+			GlStateManager.color(1, 1, 1, 1);
 
-			int colour = PASSIVE_MOB_MARKER_COLOUR;
+			ResourceLocation texture = PASSIVE_MOB_MARKER_TEXTURE;
 
 			if(ItemArtefact.isArtefactActive(mc.player, WizardryItems.charm_sixth_sense)){
-				if(event.getEntity() instanceof IMob) colour = HOSTILE_MOB_MARKER_COLOUR;
-				else if(event.getEntity() instanceof EntityPlayer) colour = PLAYER_MARKER_COLOUR;
+				if(event.getEntity() instanceof IMob) texture = HOSTILE_MOB_MARKER_TEXTURE;
+				else if(event.getEntity() instanceof EntityPlayer) texture = PLAYER_MARKER_TEXTURE;
 			}
 
-			int r = colour >> 16 & 255;
-			int g = colour >> 8 & 255;
-			int b = colour & 255;
-
-			GlStateManager.color(r/255f, g/255f, b/255f, 1);
+			mc.renderEngine.bindTexture(texture);
 
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-
-			mc.renderEngine.bindTexture(MARKER_TEXTURE);
 
 			buffer.pos(-0.6, 0.6, 0).tex(0, 0).endVertex();
 			buffer.pos(0.6, 0.6, 0).tex(1, 0).endVertex();
@@ -119,8 +111,6 @@ public class RenderSixthSense {
 			GlStateManager.disableBlend();
 			GlStateManager.enableLighting();
 			GlStateManager.enableDepth();
-			// Reverses the colour addition change from before
-			GlStateManager.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
 			GlStateManager.popMatrix();
 		}
