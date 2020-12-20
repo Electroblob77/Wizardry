@@ -17,6 +17,8 @@ import java.util.List;
 
 public class GrowthAura extends Spell {
 
+	private static final int FULL_GROWTH_TIMEOUT = 100;
+
 	public GrowthAura(){
 		super("growth_aura", SpellActions.POINT_DOWN, false);
 		addProperties(EFFECT_RADIUS);
@@ -49,7 +51,8 @@ public class GrowthAura extends Spell {
 					if(!world.isRemote){
 						if(plant.canUseBonemeal(world, world.rand, pos, state)){
 							if(world.rand.nextFloat() < 0.35f && ItemArtefact.isArtefactActive(caster, WizardryItems.charm_growth)){
-								while(plant.canGrow(world, pos, state, false)){
+								int i = 0;
+								while(plant.canGrow(world, pos, state, false) && i++ < FULL_GROWTH_TIMEOUT){
 									plant.grow(world, world.rand, pos, state);
 									state = world.getBlockState(pos); // Update the state with the new one
 									plant = (IGrowable)state.getBlock(); // Update the block with the new one
