@@ -119,13 +119,19 @@ public class BakedModelGenerateOverrides implements IBakedModel {
 
 			IBakedModel original = event.getModelRegistry().getObject(location);
 
-			// Ignore the warnings, IntelliJ is right that these can't be null in the dev environment but certain
-			// mods seem to be doing ASM hackery that makes it so they can be null
-			if(original != null && original.getOverrides() != null && original.getOverrides().getOverrides() != null){
-				original.getOverrides().getOverrides().stream().map(ItemOverride::getLocation)
-						.filter(l -> l.getPath().contains(OVERRIDE_GENERATORS)).findFirst()
-						.ifPresent(l -> event.getModelRegistry().putObject(location,
-								substituteWandModel(event.getModelManager(), location, original, l)));
+			try{
+
+				// Ignore the warnings, IntelliJ is right that these can't be null in the dev environment but certain
+				// mods seem to be doing ASM hackery that makes it so they can be null
+				if(original != null && original.getOverrides() != null && original.getOverrides().getOverrides() != null){
+					original.getOverrides().getOverrides().stream().map(ItemOverride::getLocation)
+							.filter(l -> l.getPath().contains(OVERRIDE_GENERATORS)).findFirst()
+							.ifPresent(l -> event.getModelRegistry().putObject(location,
+									substituteWandModel(event.getModelManager(), location, original, l)));
+				}
+
+			}catch(NullPointerException e){
+				Wizardry.logger.info("The model {} threw an error when trying to access item overrides, it will be ignored. If you're an addon dev and you made this model, something is wrong with it! Otherwise, please ignore this message.", location);
 			}
 		}
 	}
