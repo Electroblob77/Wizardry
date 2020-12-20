@@ -84,8 +84,6 @@ public class PlayerAnimator {
 		return Wizardry.settings.spellcastingAnimations && !overridden;
 	}
 
-	// TODO: Figure out if calling this from postInit ensures we catch all the layers, and lazy-load it if not
-	@SuppressWarnings("unchecked")
 	public static void init(){
 
 		if(Loader.isModLoaded("mobends")) overridden = true;
@@ -93,48 +91,56 @@ public class PlayerAnimator {
 		if(!areAnimationsEnabled()) return;
 
 		for(RenderPlayer renderer : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()){
+			loadLayersForRenderer(renderer);
+		}
+	}
 
-			List<ModelBiped> models = new ArrayList<>();
-			ModelRendererExtended.wrap(renderer.getMainModel());
-			models.add(renderer.getMainModel());
+	@SuppressWarnings("unchecked")
+	private static void loadLayersForRenderer(RenderPlayer renderer){
 
-			try {
+		List<ModelBiped> models = new ArrayList<>();
+		ModelRendererExtended.wrap(renderer.getMainModel());
+		models.add(renderer.getMainModel());
 
-				List<LayerRenderer<? extends EntityLivingBase>> layers = (List<LayerRenderer<? extends EntityLivingBase>>)layerRenderers.get(renderer);
+		try {
 
-				// Save armour layers for lazy-loading later (ignore other layers so iteration is faster)
-				playerLayers.put(renderer, layers.stream().filter(l -> l instanceof LayerBipedArmor).collect(Collectors.toList()));
+			List<LayerRenderer<? extends EntityLivingBase>> layers = (List<LayerRenderer<? extends EntityLivingBase>>)layerRenderers.get(renderer);
 
-				for(LayerRenderer<?> layer : layers){
+			// Save armour layers for lazy-loading later (ignore other layers so iteration is faster)
+			playerLayers.put(renderer, layers.stream().filter(l -> l instanceof LayerBipedArmor).collect(Collectors.toList()));
 
-					for(Field field : JavaUtils.getAllFields(layer.getClass())){
+			for(LayerRenderer<?> layer : layers){
 
-						field.setAccessible(true);
+				for(Field field : JavaUtils.getAllFields(layer.getClass())){
 
-						// If your layer model doesn't extend ModelBiped, you DESERVE to be incompatible!
-						// (Just kidding... there's nothing I can do about it anyway)
-						if(field.get(layer) instanceof ModelBiped){
-							ModelBiped model = (ModelBiped)field.get(layer);
-							ModelRendererExtended.wrap(model);
-							models.add(model);
-						}
+					field.setAccessible(true);
+
+					// If your layer model doesn't extend ModelBiped, you DESERVE to be incompatible!
+					// (Just kidding... there's nothing I can do about it anyway)
+					if(field.get(layer) instanceof ModelBiped){
+						ModelBiped model = (ModelBiped)field.get(layer);
+						ModelRendererExtended.wrap(model);
+						models.add(model);
 					}
-
 				}
 
-			}catch(IllegalAccessException e){
-				Wizardry.logger.error("Error during reflective access of render layers: ", e);
 			}
 
-			playerLayerModels.put(renderer, models);
-
+		}catch(IllegalAccessException e){
+			Wizardry.logger.error("Error during reflective access of render layers: ", e);
 		}
+
+		playerLayerModels.put(renderer, models);
 	}
 
 	private static void updateModels(EntityPlayer player, Render<?> renderer, float partialTicks, boolean firstPerson){
 
-		// TODO: This will stop the crashing but it might break animations for any mod that replaces the player renderer
-		//       There may be a way to make it compatible but we'll have to look into that at a later date
+		// Lazy-load models from custom renderers (some mods assign their custom renderers in postInit, so they might
+		// not be picked up from PlayerAnimator#init)
+		if(renderer instanceof RenderPlayer && !playerLayerModels.containsKey(renderer)){
+			loadLayersForRenderer((RenderPlayer)renderer);
+		}
+
 		List<ModelBiped> models = playerLayerModels.get(renderer);
 
 		// If no models were registered for the given renderer, don't do anything
@@ -231,11 +237,15 @@ public class PlayerAnimator {
 
 		if(!areAnimationsEnabled()) return;
 
-		for(ModelBiped model : playerLayerModels.get(event.getRenderer())){
-			for(ModelRenderer box : model.boxList){ // For ModelPlayer, this will include the second layer
-				// Some models have extra boxes, they (probably) don't need wrapping but we need this check!
-				if(box instanceof ModelRendererExtended){
-					((ModelRendererExtended)box).resetRotation();
+		List<ModelBiped> models = playerLayerModels.get(event.getRenderer());
+
+		if(models != null){
+			for(ModelBiped model : models){
+				for(ModelRenderer box : model.boxList){ // For ModelPlayer, this will include the second layer
+					// Some models have extra boxes, they (probably) don't need wrapping but we need this check!
+					if(box instanceof ModelRendererExtended){
+						((ModelRendererExtended)box).resetRotation();
+					}
 				}
 			}
 		}
