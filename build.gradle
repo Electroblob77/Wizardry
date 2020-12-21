@@ -31,6 +31,10 @@ repositories {
         name = "ModMaven"
         url = "modmaven.k-4u.nl"
     }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+    }
     flatDir {
         // evErYthINg hAS tO Be a mAVeN rEPoSiTOrY... (to use deobfProvided, for some reason)
         // The lack of documentation is actually quite impressive, see the following threads:
@@ -65,6 +69,9 @@ dependencies {
     deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
     // at runtime, use the full JEI jar
     runtime "mezz.jei:jei_${mc_version}:${jei_version}"
+
+    deobfCompile "curse.maven:antique-atlas-227795:2823030"
+    deobfCompile "curse.maven:baubles-227083:2518667"
 
     //deobfProvided "baubles:baubles-1.12:1.5.2:api" // #ihavenoideawhatimdoing #itjustworks
     //runtime "baubles:baubles-1.12:1.5.2" // If in doubt, copy what already works
