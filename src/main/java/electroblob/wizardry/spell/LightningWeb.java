@@ -49,52 +49,62 @@ public class LightningWeb extends SpellRay {
 	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
 		this.playSoundLoop(world, x, y, z, ticksInUse, duration);
 	}
-	
+
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
-		
+
 		if(EntityUtils.isLiving(target)){
 
 			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
 					* modifiers.get(SpellModifiers.POTENCY), ticksInUse);
-			
-			// Secondary chaining effect
 
-			List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
-					getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
-					target.posZ, world);
-			
-			secondaryTargets.remove(target);
-			secondaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
-			secondaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
-			if(secondaryTargets.size() > getProperty(SECONDARY_MAX_TARGETS).intValue())
-				secondaryTargets = secondaryTargets.subList(0, getProperty(SECONDARY_MAX_TARGETS).intValue());
+            // Secondary chaining effect
 
-			for(EntityLivingBase secondaryTarget : secondaryTargets){
+            List<EntityLivingBase> secondaryTargets = EntityUtils.getLivingWithinRadius(
+                getProperty(SECONDARY_RANGE).floatValue(), target.posX, target.posY + target.height / 2,
+                target.posZ, world);
 
-				electrocute(world, caster, target.getPositionVector().add(0, target.height/2, 0), secondaryTarget,
-						getProperty(SECONDARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
+            secondaryTargets.stream()
+                .filter(entity -> !entity.equals(target))
+                .filter(EntityUtils::isLiving)
+                .filter(e -> AllyDesignationSystem.isValidTarget(caster, e))
+                .limit(getProperty(SECONDARY_MAX_TARGETS).intValue())
+                .forEach(secondaryTarget -> {
+                    electrocute(world, caster,
+                        target.getPositionVector().add(0, target.height / 2, 0),
+                        secondaryTarget,
+                        getProperty(SECONDARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY),
+                        ticksInUse
+                    );
 
-				// Tertiary chaining effect
+                    // Tertiary chaining effect
 
-				List<EntityLivingBase> tertiaryTargets = EntityUtils.getLivingWithinRadius(
-						getProperty(TERTIARY_RANGE).floatValue(), secondaryTarget.posX,
-						secondaryTarget.posY + secondaryTarget.height / 2, secondaryTarget.posZ, world);
-				
-				tertiaryTargets.remove(target);
-				tertiaryTargets.removeAll(secondaryTargets);
-				tertiaryTargets.removeIf(e -> !EntityUtils.isLiving(e));
-				tertiaryTargets.removeIf(e -> !AllyDesignationSystem.isValidTarget(caster, e));
-				if(tertiaryTargets.size() > getProperty(TERTIARY_MAX_TARGETS).intValue())
-					tertiaryTargets = tertiaryTargets.subList(0, getProperty(TERTIARY_MAX_TARGETS).intValue());
+                    List<EntityLivingBase> tertiaryTargets =
+                        EntityUtils.getLivingWithinRadius(
+                            getProperty(TERTIARY_RANGE).floatValue(),
+                            secondaryTarget.posX,
+                            secondaryTarget.posY + secondaryTarget.height / 2,
+                            secondaryTarget.posZ,
+                            world
+                        );
 
-				for(EntityLivingBase tertiaryTarget : tertiaryTargets){
-					electrocute(world, caster, secondaryTarget.getPositionVector().add(0, secondaryTarget.height/2, 0),
-							tertiaryTarget, getProperty(TERTIARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY), ticksInUse);
-				}
-			}
+                    tertiaryTargets.stream()
+                        .filter(entity -> !secondaryTargets.contains(entity))
+                        .filter(entity -> !entity.equals(target))
+                        .filter(EntityUtils::isLiving)
+                        .filter(e -> AllyDesignationSystem.isValidTarget(caster, e))
+                        .limit(getProperty(TERTIARY_MAX_TARGETS).intValue())
+                        .forEach(tertiaryTarget ->
+                            electrocute(world, caster,
+                                secondaryTarget.getPositionVector().add(0, secondaryTarget.height / 2, 0),
+                                tertiaryTarget,
+                                getProperty(TERTIARY_DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY),
+                                ticksInUse
+                            )
+                        );
+                });
 		}
-		
+
 		return true;
 	}
 
@@ -128,10 +138,10 @@ public class LightningWeb extends SpellRay {
 				}
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	private void electrocute(World world, Entity caster, Vec3d origin, Entity target, float damage, int ticksInUse){
 
 		if(MagicDamage.isEntityImmune(DamageType.SHOCK, target)){
@@ -142,12 +152,12 @@ public class LightningWeb extends SpellRay {
 			EntityUtils.attackEntityWithoutKnockback(target,
 					MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK), damage);
 		}
-		
+
 		if(world.isRemote){
-			
+
 			ParticleBuilder.create(Type.BEAM).entity(caster).clr(0.2f, 0.6f, 1)
 			.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
-			
+
 			if(ticksInUse % 3 == 0){
 				ParticleBuilder.create(Type.LIGHTNING).entity(caster)
 				.pos(caster != null ? origin.subtract(caster.getPositionVector()) : origin).target(target).spawn(world);
