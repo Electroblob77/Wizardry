@@ -230,7 +230,7 @@ public class PlayerAnimator {
 	public static void onRenderPlayerPostEvent(RenderPlayerEvent.Post event){
 
 		if(!areAnimationsEnabled()) return;
-
+		if(event.getRenderer()==nul) return;
 		for(ModelBiped model : playerLayerModels.get(event.getRenderer())){
 			for(ModelRenderer box : model.boxList){ // For ModelPlayer, this will include the second layer
 				// Some models have extra boxes, they (probably) don't need wrapping but we need this check!
