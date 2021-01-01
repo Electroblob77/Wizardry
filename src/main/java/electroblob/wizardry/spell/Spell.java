@@ -31,9 +31,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.registries.ForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
@@ -136,6 +138,14 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/** The unlocalised name of the spell. */
 	private final String unlocalisedName;
+
+	// The spell properties system turned out to be a bit of a pain. Ideally I'd attach them to a world or whatever, but
+	// often we're accessing spell properties from places where a world is not available (and besides, I don't want to
+	// change the API now). Since spell properties are immutable and don't get reassigned while a world is loaded, in
+	// theory that makes them thread-safe (at least while the world is open, and they get wiped after that anyway).
+	// We still need to send them to clients in multiplayer (and LAN guests) so the simplest thing to do is send them
+	// to players' clients and only assign them if they haven't already been assigned, but without printing a warning.
+	// Yes, *technically* this is reaching across sides but the fields are effectively immutable so it doesn't matter.
 	/** This spell's associated SpellProperties object. */
 	private SpellProperties properties;
 	/** A reference to the global spell properties for this spell, so they are only loaded once. */
@@ -283,7 +293,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	}
 
 	/** Sets this spell's properties to the given {@link SpellProperties} object, but only if it doesn't already
-	 * have one. This prevents spell properties from being changed after initialisation. */
+	 * have one. This prevents spell properties from being changed after initialisation. <b>Server-side only!</b> */
 	public void setProperties(@Nonnull SpellProperties properties){
 
 		if(!arePropertiesInitialised()){
@@ -294,20 +304,23 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		}
 	}
 
+	/** <b>Internal, do not use.</b> Use {@link Spell#setProperties(SpellProperties)} to set a spell's properties. */
+	public void setPropertiesClient(SpellProperties properties){
+		// Quick sanity check
+		if(FMLCommonHandler.instance().getEffectiveSide() != Side.CLIENT) Wizardry.logger.warn("Spell#setPropertiesClient called from the server side!");
+		// This is like the other method but with no logging or global properties so that we can silently ignore syncing
+		// in singleplayer (LAN is like singleplayer because the host receives the packet before opening to LAN anyway)
+		if(!arePropertiesInitialised()) this.properties = properties;
+	}
+
 	/** Called from the event handler when a player logs in. */
-	public static void syncProperties(EntityPlayer player){
-		if(player instanceof EntityPlayerMP){
-			// On the server side, send a packet to the player to synchronise their spell properties
-			// To avoid sending extra data unnecessarily, the spell properties are sent in order of spell ID
-			List<Spell> spells = new ArrayList<>(registry.getValuesCollection());
-			spells.sort(Comparator.comparingInt(Spell::networkID));
-			WizardryPacketHandler.net.sendToAll(new PacketSpellProperties.Message(spells.stream()
-					.map(s -> s.properties).toArray(SpellProperties[]::new)));
-		}else{
-			// On the client side, wipe the spell properties so the new ones can be set
-			// Not sure if we can guarantee this happens before the packet arrives, but it hasn't caused any problems yet!
-			clearProperties();
-		}
+	public static void syncProperties(EntityPlayerMP player){
+		// On the server side, send a packet to the player to synchronise their spell properties
+		// To avoid sending extra data unnecessarily, the spell properties are sent in order of spell ID
+		List<Spell> spells = new ArrayList<>(registry.getValuesCollection());
+		spells.sort(Comparator.comparingInt(Spell::networkID));
+		WizardryPacketHandler.net.sendTo(new PacketSpellProperties.Message(spells.stream()
+				.map(s -> s.properties).toArray(SpellProperties[]::new)), player);
 	}
 
 	private static void clearProperties(){
@@ -561,32 +574,32 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 
 	/** Returns the tier that this spell belongs to. */
 	public final Tier getTier(){
-		return properties.tier;
+		return arePropertiesInitialised() ? properties.tier : Tier.NOVICE;
 	}
 
 	/** Returns the element that this spell belongs to. */
 	public final Element getElement(){
-		return properties.element;
+		return arePropertiesInitialised() ? properties.element : Element.MAGIC;
 	}
 
 	/** Returns the type of spell this is classified as. */
 	public final SpellType getType(){
-		return properties.type;
+		return arePropertiesInitialised() ? properties.type : SpellType.UTILITY;
 	}
 
 	/** Returns the mana cost of the spell. If it is a continuous spell the cost is per second. */
 	public final int getCost(){
-		return properties.cost;
+		return arePropertiesInitialised() ? properties.cost : 0;
 	}
 
 	/** Returns the charge-up time for the spell in ticks. */
 	public final int getChargeup(){
-		return properties.chargeup;
+		return arePropertiesInitialised() ? properties.chargeup : 0;
 	}
 
 	/** Returns the cooldown for the spell in ticks. */
 	public final int getCooldown(){
-		return properties.cooldown;
+		return arePropertiesInitialised() ? properties.cooldown : 0;
 	}
 
 	/**
@@ -595,7 +608,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @return True if a property has been defined for the given identifier, false if not.
 	 */
 	public final boolean hasProperty(String identifier){
-		return properties.hasBaseValue(identifier);
+		return arePropertiesInitialised() && properties.hasBaseValue(identifier);
 	}
 
 	/**
@@ -611,7 +624,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * @throws IllegalArgumentException if no property was defined with the given identifier.
 	 */
 	public final Number getProperty(String identifier){
-		return properties.getBaseValue(identifier);
+		return arePropertiesInitialised() ? properties.getBaseValue(identifier) : 0;
 	}
 
 	/**
@@ -1059,6 +1072,23 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 				if(!spell.arePropertiesInitialised()) spell.setProperties(spell.globalProperties);
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onClientConnectEvent(FMLNetworkEvent.ClientConnectedToServerEvent event){
+		// Right. Read carefully!
+		// This code would actually work perfectly well on a dedicated server. In singleplayer, however, it is a problem
+		// because the client and server SHARE STATIC VARIABLES (because they share the same JVM... stupid I know). LAN
+		// also has the same problem. The proper solution, of course, is to tie it to something that is different on
+		// different logical sides, or to simply use different variables and decide which to query on-the-fly.
+		// However, there's a bit of a problem because both of those 'proper' solutions need a world object to know
+		// which properties to access. Thing is, we can actually kind of cheat here: spell properties can't change from
+		// within a world, so they are effectively constants... so they are necessarily the same on both sides. Let's
+		// not fight against the same-JVM thing, let's just ignore the packet completely when it's in the same JVM.
+		// (What could possibly go wrong?!)
+
+		// If this is not a singleplayer game, clear the spell properties in preparation for receiving server ones
+		if(!event.isLocal()) clearProperties();
 	}
 
 	@SubscribeEvent

@@ -3,7 +3,6 @@ package electroblob.wizardry.packet;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellProperties;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -18,13 +17,11 @@ public class PacketSpellProperties implements IMessageHandler<PacketSpellPropert
 	public IMessage onMessage(Message message, MessageContext ctx){
 
 		// Just to make sure that the side is correct
-		if(ctx.side.isServer()){
+		if(ctx.side.isClient()){
 
-			final EntityPlayerMP player = ctx.getServerHandler().player;
-
-			player.getServerWorld().addScheduledTask(() -> {
+			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> {
 				for(int i=0; i<message.propertiesArray.length; i++){
-					Spell.byNetworkID(i).setProperties(message.propertiesArray[i]);
+					Spell.byNetworkID(i).setPropertiesClient(message.propertiesArray[i]);
 				}
 			});
 		}

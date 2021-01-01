@@ -79,13 +79,13 @@ public final class WizardryEventHandler {
 	public static void onPlayerLoggedInEvent(PlayerLoggedInEvent event){
 		// When a player logs in, they are sent the glyph data, server settings and spell properties.
 		if(event.player instanceof EntityPlayerMP){
-			SpellGlyphData.get(event.player.world).sync((EntityPlayerMP)event.player);
-			SpellEmitterData.get(event.player.world).sync((EntityPlayerMP)event.player);
-			Wizardry.settings.sync((EntityPlayerMP)event.player);
-			syncAdvancements((EntityPlayerMP)event.player, false);
+			EntityPlayerMP player = (EntityPlayerMP)event.player;
+			SpellGlyphData.get(player.world).sync(player);
+			SpellEmitterData.get(player.world).sync(player);
+			Wizardry.settings.sync(player);
+			syncAdvancements(player, false);
+			Spell.syncProperties(player);
 		}
-
-		Spell.syncProperties(event.player);
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
