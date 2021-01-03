@@ -47,10 +47,12 @@ public class ArcaneLock extends SpellRay {
 		
 		if(caster instanceof EntityPlayer){
 
-			if(toggleLock(world, pos, (EntityPlayer)caster)){
-				BlockPos otherHalf = BlockUtils.getConnectedChest(world, pos);
-				if(otherHalf != null) toggleLock(world, otherHalf, (EntityPlayer)caster);
-				return true;
+			if(!world.isRemote){
+				if(toggleLock(world, pos, (EntityPlayer)caster)){
+					BlockPos otherHalf = BlockUtils.getConnectedChest(world, pos);
+					if(otherHalf != null) toggleLock(world, otherHalf, (EntityPlayer)caster);
+					return true;
+				}
 			}
 		}
 		
@@ -67,11 +69,13 @@ public class ArcaneLock extends SpellRay {
 				// Unlocking
 				if(world.getPlayerEntityByUUID(tileentity.getTileData().getUniqueId(NBT_KEY)) == player){
 					NBTExtras.removeUniqueId(tileentity.getTileData(), NBT_KEY);
+					world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 					return true;
 				}
 			}else{
 				// Locking
 				tileentity.getTileData().setUniqueId(NBT_KEY, player.getUniqueID());
+				world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
 				return true;
 			}
 		}
