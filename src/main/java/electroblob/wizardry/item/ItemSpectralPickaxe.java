@@ -1,6 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,7 +63,7 @@ public class ItemSpectralPickaxe extends ItemPickaxe implements IConjuredItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
+		if(damage > stack.getMaxDamage()) InventoryUtils.replaceItemInInventory(entity, slot, stack, ItemStack.EMPTY);
 		stack.setItemDamage(damage + 1);
 	}
 

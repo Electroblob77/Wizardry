@@ -2,6 +2,7 @@ package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -105,7 +106,7 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
+		if(damage > stack.getMaxDamage()) InventoryUtils.replaceItemInInventory(entity, slot, stack, ItemStack.EMPTY);
 		stack.setItemDamage(damage + 1);
 	}
 

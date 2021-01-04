@@ -1,11 +1,11 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.entity.projectile.EntityFlamecatcherArrow;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Flamecatcher;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -111,7 +111,7 @@ public class ItemFlamecatcher extends ItemBow implements IConjuredItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
+		if(damage > stack.getMaxDamage()) InventoryUtils.replaceItemInInventory(entity, slot, stack, ItemStack.EMPTY);
 		stack.setItemDamage(damage + 1);
 	}
 

@@ -1,5 +1,6 @@
 package electroblob.wizardry.util;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -140,6 +142,30 @@ public final class InventoryUtils {
 				&& stack1.getItem() == stack2.getItem()
 				&& (!stack1.getHasSubtypes() || stack1.getMetadata() == stack2.getMetadata())
 				&& ItemStack.areItemStackTagsEqual(stack1, stack2);
+	}
+
+	/**
+	 * A version of {@link Entity#replaceItemInInventory(int, ItemStack)} that takes a slot index specific to the main,
+	 * armour and offhand inventories, as passed to {@link Item#onUpdate(ItemStack, World, Entity, int, boolean)},
+	 * rather than the proper slot index used everywhere else (just <i>why</i>, Mojang?).
+	 * @param entity The entity to replace the item for
+	 * @param slot The slot index to replace
+	 * @param original The item stack currently in the slot (required for technical reasons)
+	 * @param replacement The new item stack
+	 * @return True if an item was replaced, false if not
+	 */
+	public static boolean replaceItemInInventory(Entity entity, int slot, ItemStack original, ItemStack replacement){
+		// Check slots that aren't in the main inventory first by comparing with the existing item
+		if(entity instanceof EntityLivingBase){
+			for(EntityEquipmentSlot eslot : EntityEquipmentSlot.values()){
+				if(((EntityLivingBase)entity).getItemStackFromSlot(eslot) == original){
+					entity.setItemStackToSlot(eslot, replacement);
+					return true;
+				}
+			}
+		}
+		// Otherwise use the normal behaviour
+		return entity.replaceItemInInventory(slot, replacement);
 	}
 
 }

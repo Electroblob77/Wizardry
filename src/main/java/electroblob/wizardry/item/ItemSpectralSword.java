@@ -3,6 +3,7 @@ package electroblob.wizardry.item;
 import com.google.common.collect.Multimap;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -77,7 +78,7 @@ public class ItemSpectralSword extends ItemSword implements IConjuredItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
+		if(damage > stack.getMaxDamage()) InventoryUtils.replaceItemInInventory(entity, slot, stack, ItemStack.EMPTY);
 		stack.setItemDamage(damage + 1);
 	}
 

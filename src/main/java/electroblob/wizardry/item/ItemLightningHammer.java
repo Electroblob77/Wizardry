@@ -7,6 +7,7 @@ import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.LightningHammer;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.MagicDamage;
 import electroblob.wizardry.util.MagicDamage.DamageType;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -112,7 +113,7 @@ public class ItemLightningHammer extends Item implements IConjuredItem {
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean selected){
 		int damage = stack.getItemDamage();
-		if(damage > stack.getMaxDamage()) entity.replaceItemInInventory(slot, ItemStack.EMPTY);
+		if(damage > stack.getMaxDamage()) InventoryUtils.replaceItemInInventory(entity, slot, stack, ItemStack.EMPTY);
 		stack.setItemDamage(damage + 1);
 	}
 
