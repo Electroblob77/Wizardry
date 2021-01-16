@@ -40,6 +40,9 @@ public final class WizardrySounds {
 	public static final SoundEvent ITEM_WAND_MELEE = 				createSound("item.wand.melee");
 	public static final SoundEvent ITEM_WAND_CHARGEUP = 			createSound("item.wand.chargeup");
 	public static final SoundEvent ITEM_ARMOUR_EQUIP_SILK = 		createSound("item.armour.equip_silk");
+	public static final SoundEvent ITEM_ARMOUR_EQUIP_SAGE = 		createSound("item.armour.equip_sage");
+	public static final SoundEvent ITEM_ARMOUR_EQUIP_BATTLEMAGE = 	createSound("item.armour.equip_battlemage");
+	public static final SoundEvent ITEM_ARMOUR_EQUIP_WARLOCK = 		createSound("item.armour.equip_warlock");
 	public static final SoundEvent ITEM_PURIFYING_ELIXIR_DRINK = 	createSound("item.purifying_elixir.drink");
 	public static final SoundEvent ITEM_MANA_FLASK_USE = 			createSound("item.mana_flask.use");
 	public static final SoundEvent ITEM_MANA_FLASK_RECHARGE = 		createSound("item.mana_flask.recharge");

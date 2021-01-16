@@ -69,6 +69,26 @@ public final class SpellModifiers {
 	}
 
 	/**
+	 * Combines the given SpellModifiers object with this one. More specifically: for each modifier, multiplies the
+	 * values from both objects together and sets it to sync if either object does so. This method changes the object
+	 * it is called on but not the one given as a parameter; apart from this it does not matter which way round the two
+	 * objects are.
+	 * @param modifiers The SpellModifiers object to combine with this one; will not be modified by this method.
+	 * @return The SpellModifiers object, allowing this method to be chained onto the constructor.
+	 */
+	public SpellModifiers combine(SpellModifiers modifiers){
+		for(Entry<String, Float> entry : multiplierMap.entrySet()){
+			float newValue = entry.getValue() * modifiers.get(entry.getKey());
+			entry.setValue(newValue);
+			// Also need to update the synced map if the modifier is synced in either object
+			if(this.syncedMultiplierMap.containsKey(entry.getKey()) || modifiers.syncedMultiplierMap.containsKey(entry.getKey())){
+				this.syncedMultiplierMap.put(entry.getKey(), newValue);
+			}
+		}
+		return this;
+	}
+
+	/**
 	 * Adds the given multiplier to this SpellModifiers object, using the string identifier that the given wand upgrade
 	 * item was registered with.
 	 * 

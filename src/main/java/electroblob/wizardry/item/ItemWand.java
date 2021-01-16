@@ -101,7 +101,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 						|| s.getItemUseAction() == SpellActions.GRAPPLE
 						|| s.getItemUseAction() == SpellActions.SUMMON) ? 1 : 0);
 	}
-	
+
 	@Override
 	public Spell getCurrentSpell(ItemStack stack){
 		return WandHelper.getCurrentSpell(stack);
@@ -709,7 +709,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 				if(player != null) WizardData.get(player).setTierReached(tier);
 
-				ItemStack newWand = new ItemStack(WizardryItems.getWand(tier, this.element));
+				ItemStack newWand = new ItemStack(getWand(tier, this.element));
 				newWand.setTagCompound(wand.getTagCompound());
 				// This needs to be done after copying the tag compound so the mana capacity for the new wand
 				// takes storage upgrades into account
@@ -781,6 +781,30 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		}
 
 		return wand;
+	}
+
+	/**
+	 * Helper method to return the appropriate wand based on tier and element. This replaces the cumbersome wand map in
+	 * {@link WizardryItems} by accessing the item registry dynamically by generating the registry name on the fly.
+	 * <p></p>
+	 * <i><b>This method will only return wands from the base mod.</b> It is unlikely that addons will need it, but it
+	 * has been left public just in case. The intention is that this method is only used where there is no alternative.</i>
+	 *
+	 * @param tier The tier of the wand required.
+	 * @param element The element of the wand required. Null will be converted to {@link Element#MAGIC}.
+	 * @return The wand item which corresponds to the given tier and element, or null if no such item exists.
+	 * @throws NullPointerException if the given tier is null.
+	 */
+	// As noted above, in a few SPECIFIC cases this method is necessary (without using a data-driven system, at least,
+	// which I'm not going to spend the time making in the near future). Wizard trades and gear have been left using the
+	// WizardryItems version because they need to be replaced with a better system that doesn't use this at all.
+	public static Item getWand(Tier tier, Element element){
+		if(tier == null) throw new NullPointerException("The given tier cannot be null.");
+		if(element == null) element = Element.MAGIC;
+		String registryName = tier == Tier.NOVICE && element == Element.MAGIC ? "magic" : tier.getUnlocalisedName();
+		if(element != Element.MAGIC) registryName = registryName + "_" + element.getName();
+		registryName = registryName + "_wand";
+		return Item.REGISTRY.getObject(new ResourceLocation(Wizardry.MODID,  registryName));
 	}
 
 	@Override

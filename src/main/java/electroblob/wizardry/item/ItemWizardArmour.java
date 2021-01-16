@@ -1,17 +1,18 @@
 package electroblob.wizardry.item;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.event.SpellCastEvent;
-import electroblob.wizardry.registry.WizardryAdvancementTriggers;
 import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.registry.WizardryItems.Materials;
+import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.registry.WizardryRecipes;
 import electroblob.wizardry.registry.WizardryTabs;
+import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.EntityUtils.Operations;
 import electroblob.wizardry.util.InventoryUtils;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.enchantment.Enchantment;
@@ -24,13 +25,17 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.inventory.EntityEquipmentSlot.Type;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingSetAttackTargetEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -39,22 +44,60 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
 public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IManaStoringItem {
 
-	// VanillaCopy, ItemArmor has this set to private for some reason.
-    public static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
-	// Damage reduction values that used to be in WizardryItems.SILK [feet, legs, chest, head]
-    private static int[] reductions = new int[]{2, 4, 5, 2};
-	
-	public Element element;
+	// Full set bonuses
+	private static final float SAGE_OTHER_COST_REDUCTION = 0.2f;
+	private static final float WARLOCK_SPEED_BOOST = 0.2f;
+	private static final UUID WARLOCK_SPEED_BOOST_UUID = UUID.fromString("4bad7152-2663-4b1b-bb59-552e92847031");
 
-	public ItemWizardArmour(ArmorMaterial material, int renderIndex, EntityEquipmentSlot armourType, Element element){
-		super(material, renderIndex, armourType);
+	public enum ArmourClass {
+
+		WIZARD(Materials.SILK, () -> null, "wizard", 0.1f, 0, "hat", "robe", "leggings", "boots"),
+		SAGE(Materials.SAGE, () -> WizardryItems.resplendent_thread, "sage", 0.2f, 0, "hat", "robe", "leggings", "boots"),
+		BATTLEMAGE(Materials.BATTLEMAGE, () -> WizardryItems.crystal_silver_plating, "battlemage", 0.05f, 0.15f, "helmet", "chestplate", "leggings", "boots"),
+		WARLOCK(Materials.WARLOCK, () -> WizardryItems.ethereal_crystalweave, "warlock", 0.1f, 0.3f, "hood", "robe", "leggings", "boots");
+
+		/** The armour material to use for this armour class. */
+		final ArmorMaterial material;
+		/** The item that upgrades regular wizard armour into this class of armour. */
+		final Supplier<Item> upgradeItem;
+		/** The fraction by which spell cost is reduced for each armour piece of this class with the matching element. */
+		final float elementalCostReduction;
+		/** The fraction by which spell cooldown is reduced for each armour piece of this class. */
+		final float cooldownReduction;
+		/** The first part of the texture filenames for this armour class. Also defines certain translation keys. */
+		final String name;
+		/** The middle part of each item name (in the registry) for this armour class, e.g. "hat" or "chestplate". */
+		final Map<EntityEquipmentSlot, String> armourPieceNames;
+
+		ArmourClass(ArmorMaterial material, Supplier<Item> upgradeItem, String name, float elementalCostReduction,
+					float cooldownReduction, String... armourPieceNames){
+			this.material = material;
+			this.upgradeItem = upgradeItem;
+			this.name = name;
+			this.elementalCostReduction = elementalCostReduction;
+			this.cooldownReduction = cooldownReduction;
+			if(armourPieceNames.length != 4) throw new IllegalArgumentException("armourPieceNames must have a length of 4");
+			this.armourPieceNames = new EnumMap<>(EntityEquipmentSlot.class);
+			this.armourPieceNames.put(EntityEquipmentSlot.HEAD,  armourPieceNames[0]);
+			this.armourPieceNames.put(EntityEquipmentSlot.CHEST, armourPieceNames[1]);
+			this.armourPieceNames.put(EntityEquipmentSlot.LEGS,  armourPieceNames[2]);
+			this.armourPieceNames.put(EntityEquipmentSlot.FEET,  armourPieceNames[3]);
+		}
+
+	}
+
+	public final Element element;
+	public final ArmourClass armourClass;
+
+	public ItemWizardArmour(ArmourClass armourClass, EntityEquipmentSlot armourType, Element element){
+		super(armourClass.material, 1, armourType);
+		this.armourClass = armourClass;
 		this.element = element;
 		setCreativeTab(WizardryTabs.GEAR);
 		WizardryRecipes.addToManaFlaskCharging(this);
@@ -94,15 +137,75 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag advanced){
 
-		if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary"))
-			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.legendary",
-					new Style().setColor(TextFormatting.LIGHT_PURPLE)));
-
 		if(element != null){
-			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.buff",
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.element_cost_reduction",
 					new Style().setColor(TextFormatting.DARK_GRAY),
-					(int)(Constants.COST_REDUCTION_PER_ARMOUR * 100), element.getDisplayName()));
+					(int)(armourClass.elementalCostReduction * 100), element.getDisplayName()));
 		}
+
+		if(armourClass == ArmourClass.SAGE){
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.enchantability",
+					new Style().setColor(TextFormatting.BLUE)));
+		}
+
+		if(armourClass.cooldownReduction > 0){
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.cooldown_reduction",
+					new Style().setColor(TextFormatting.DARK_GRAY), (int)(armourClass.cooldownReduction * 100)));
+		}
+
+		if(armourClass != ArmourClass.WIZARD){
+
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":wizard_armour.full_set",
+					new Style().setColor(TextFormatting.AQUA)));
+
+			Object args = new Object[0];
+
+			if(armourClass == ArmourClass.SAGE) args = (int)(SAGE_OTHER_COST_REDUCTION * 100);
+			if(armourClass == ArmourClass.WARLOCK) args = (int)(WARLOCK_SPEED_BOOST * 100);
+
+			tooltip.add(Wizardry.proxy.translate("item." + Wizardry.MODID + ":" + armourClass.name
+					+ "_armour.full_set_bonus", new Style().setColor(TextFormatting.AQUA), args));
+
+		}
+
+	}
+
+	@Override
+	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
+		if(armorType == EntityEquipmentSlot.HEAD && isWearingFullSet(player, element, ArmourClass.BATTLEMAGE)
+				&& player.ticksExisted % 20 == 0){
+			player.addPotionEffect(new PotionEffect(WizardryPotions.ward, 219, 0, true, false));
+		}
+	}
+
+	/**
+	 * Allows this armour piece to change the modifiers for spells cast while wearing it. This is called once for
+	 * <b>each piece of wizard armour</b> the caster is wearing. This means if you need to apply a full set bonus, you
+	 * should have only one of the pieces handle it (by convention, this is usually the helmet, but it doesn't matter).
+	 * <p></p>
+	 * <i>N.B. The modifiers object passed into this method is not the actual one from the spell cast event. It is a
+	 * blank one local to armour that then gets combined with the actual one via
+	 * {@link SpellModifiers#combine(SpellModifiers)} after all four pieces have been processed. This is important as it
+	 * allows armour modifiers to stack linearly. This means the values should be <b>added/subtracted rather than multiplied.</b></i>
+	 * @param caster The entity casting the spell and wearing the armour.
+	 * @param spell The spell being cast.
+	 * @param modifiers The modifiers specific to armour to apply to the global ones after all four slots are processed.
+	 */
+	protected void applySpellModifiers(EntityLivingBase caster, Spell spell, SpellModifiers modifiers){
+
+		if(spell.getElement() == this.element){
+			modifiers.set(SpellModifiers.COST, modifiers.get(SpellModifiers.COST) - armourClass.elementalCostReduction, false);
+		}
+
+		modifiers.set(WizardryItems.cooldown_upgrade, modifiers.get(WizardryItems.cooldown_upgrade) - armourClass.cooldownReduction, true);
+
+		// Full set bonuses
+		if(this.armorType == EntityEquipmentSlot.HEAD && isWearingFullSet(caster, element, armourClass)){
+			if(armourClass == ArmourClass.SAGE && spell.getElement() != this.element){
+				modifiers.set(SpellModifiers.COST, 1 - SAGE_OTHER_COST_REDUCTION, false);
+			}
+		}
+
 	}
 
 	@Override
@@ -118,25 +221,18 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		// Legs use modelBiped
 		if(armourSlot == EntityEquipmentSlot.LEGS && !entityLiving.isInvisible()) return null;
 
-		return Wizardry.proxy.getWizardArmourModel();
+		return Wizardry.proxy.getWizardArmourModel(getArmorMaterial());
 	}
 
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type){
 
-		// Returns a completely transparent texture if the player is invisible. This is such an annoyingly easy
-		// fix, considering how long I spent trying to do this before - a bit of lateral thinking was all it took.
-		// Do note however that a texture pack could override this.
-//		if(entity instanceof EntityLivingBase && entity.isInvisible() && !entity.getEntityData().getBoolean(BlockStatue.PETRIFIED_NBT_KEY))
-//			return "ebwizardry:textures/armour/invisible_armour.png";
+		String s = armourClass.name + "_armour";
 
-		String s = "wizard_armour";
-
-		if(Wizardry.tisTheSeason){
+		if(Wizardry.tisTheSeason && armourClass == ArmourClass.WIZARD){
 			s = s + "_festive";
 		}else{
 			if(this.element != null) s = s + "_" + this.element.getName();
-			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) s = "legendary_" + s;
 		}
 
 		if(slot == EntityEquipmentSlot.LEGS) s = s + "_legs";
@@ -155,34 +251,6 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		return !(enchantment instanceof EnchantmentMending) && super.canApplyAtEnchantingTable(stack, enchantment);
 	}
 
-	/**
-	 * Properly handles the defence value of the armour. This method is responsible for the tooltip on top of
-	 * the armour value. It is also what handles armour toughness.
-	 */
-	@Override
-	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack){
-		
-		Multimap<String, AttributeModifier> map = HashMultimap.create();
-		
-		if(!this.isManaEmpty(stack) && this.armorType == slot){
-			
-			int defense = reductions[slot.getIndex()];
-			float toughness = 0f;
-			
-			if(stack.hasTagCompound() && stack.getTagCompound().getBoolean("legendary")) {
-				defense = ArmorMaterial.DIAMOND.getDamageReductionAmount(slot);
-				toughness = ArmorMaterial.DIAMOND.getToughness();
-			}
-			
-			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
-					"Armor modifier", defense, 0));
-			map.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], 
-					"Armor toughness", toughness, 0));
-		}
-		
-		return map;
-	}
-
 	// Workbench stuff
 
 	@Override
@@ -196,17 +264,17 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	@Override
 	public ItemStack applyUpgrade(@Nullable EntityPlayer player, ItemStack stack, ItemStack upgrade){
 
-		// Applies legendary upgrade
-		if(upgrade.getItem() == WizardryItems.armour_upgrade){
-
-			if(!stack.hasTagCompound()){
-				stack.setTagCompound(new NBTTagCompound());
-			}
-
-			if(!stack.getTagCompound().hasKey("legendary")){
-				stack.getTagCompound().setBoolean("legendary", true);
-				upgrade.shrink(1);
-				if(player != null) WizardryAdvancementTriggers.legendary.triggerFor(player);
+		// Apply class upgrades
+		if(this.armourClass == ArmourClass.WIZARD){
+			for(ArmourClass armourClass : ArmourClass.values()){
+				if(upgrade.getItem() == armourClass.upgradeItem.get()){
+					Item newArmour = getArmour(this.element, armourClass, this.getEquipmentSlot());
+					ItemStack newStack = new ItemStack(newArmour);
+					((ItemWizardArmour)newArmour).setMana(newStack, this.getMana(stack));
+					newStack.setTagCompound(stack.getTagCompound());
+					upgrade.shrink(1);
+					return newStack;
+				}
 			}
 		}
 
@@ -252,39 +320,91 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 	// Event Handlers
 
-//	@SubscribeEvent
-//	public static void onLivingUpdateEvent(LivingUpdateEvent event){
-//
-//		if(event.getEntityLiving() instanceof EntityPlayer){
-//
-//			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
-//
-//			for(ItemStack stack : player.getArmorInventoryList()){
-//				if(!(stack.getItem() instanceof ItemWizardArmour)){
-//					return; // If any of the armour slots doesn't contain wizard armour, don't trigger the achievement.
-//				}
-//			}
-//			// If it gets this far, then all slots must be wizard armour, so trigger the achievement.
-//			WizardryAdvancementTriggers.armour_set.triggerFor(player);
-//		}
-//	}
+	// Can't use Item#getItemAttributeModifiers because it's not player-sensitive, grrr
+	@SubscribeEvent
+	public static void onLivingEquipmentChangeEvent(LivingEquipmentChangeEvent event){
+
+		IAttributeInstance movementSpeed = event.getEntityLiving().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED);
+
+		if(isWearingFullSet(event.getEntityLiving(), null, ArmourClass.WARLOCK)){
+			// Only apply the modifier once (can't just check this is the helmet since it might not be the last piece equipped)
+			if(movementSpeed.getModifier(WARLOCK_SPEED_BOOST_UUID) == null){
+				movementSpeed.applyModifier(new AttributeModifier(WARLOCK_SPEED_BOOST_UUID, "Warlock set bonus", WARLOCK_SPEED_BOOST, Operations.MULTIPLY_FLAT));
+			}
+		}else{
+			movementSpeed.removeModifier(WARLOCK_SPEED_BOOST_UUID);
+		}
+	}
 
 	@SubscribeEvent(priority = EventPriority.LOW)
 	public static void onSpellCastPreEvent(SpellCastEvent.Pre event){
 		// Armour cost reduction
 		if(event.getCaster() == null) return;
-		int armourPieces = getMatchingArmourCount(event.getCaster(), event.getSpell().getElement());
-		float multiplier = 1f - armourPieces * Constants.COST_REDUCTION_PER_ARMOUR;
-		if(armourPieces == InventoryUtils.ARMOUR_SLOTS.length) multiplier -= Constants.FULL_ARMOUR_SET_BONUS;
-		event.getModifiers().set(SpellModifiers.COST, event.getModifiers().get(SpellModifiers.COST) * multiplier, false);
+
+		final SpellModifiers armourModifiers = new SpellModifiers();
+
+		Arrays.stream(InventoryUtils.ARMOUR_SLOTS).map(s -> event.getCaster().getItemStackFromSlot(s).getItem())
+				.filter(i -> i instanceof ItemWizardArmour)
+				.forEach(i -> ((ItemWizardArmour)i).applySpellModifiers(event.getCaster(), event.getSpell(), armourModifiers));
+
+		event.getModifiers().combine(armourModifiers);
 	}
 
-	/** Counts the number of armour pieces the given entity is wearing that match the given element. */
+	/**
+	 * Counts the number of armour pieces the given entity is wearing that match the given element.
+	 * @deprecated in favour of {@link ItemWizardArmour#applySpellModifiers(EntityLivingBase, Spell, SpellModifiers)}
+	 * and {@link ItemWizardArmour#isWearingFullSet(EntityLivingBase, Element, ArmourClass)}. Retained for API stability
+	 * between minor versions, will be removed in future.
+	 */
+	@Deprecated
 	public static int getMatchingArmourCount(EntityLivingBase entity, Element element){
 		return (int)Arrays.stream(InventoryUtils.ARMOUR_SLOTS)
 				.map(s -> entity.getItemStackFromSlot(s).getItem())
 				.filter(i -> i instanceof ItemWizardArmour && ((ItemWizardArmour)i).element == element)
 				.count();
+	}
+
+	/**
+	 * Helper method to return the appropriate wand based on tier and element. This replaces the cumbersome wand map in
+	 * {@link WizardryItems} by accessing the item registry dynamically by generating the registry name on the fly.
+	 * <p></p>
+	 * <i><b>This method will only return armour from the base mod.</b> It is unlikely that addons will need it, but it
+	 * has been left public just in case. The intention is that this method is only used where there is no alternative.</i>
+	 *
+	 * @param element The element of the wand required. Null will be converted to {@link Element#MAGIC}.
+	 * @param armourClass The {@link ArmourClass} required
+	 * @param slot EntityEquipmentSlot of the armour piece required
+	 * @return The wand item which corresponds to the given tier and element, or null if no such item exists.
+	 * @throws NullPointerException if the given tier is null.
+	 */
+	// As noted above, in a few SPECIFIC cases this method is necessary (without using a data-driven system, at least,
+	// which I'm not going to spend the time making in the near future). Wizard trades and gear have been left using the
+	// WizardryItems version because they need to be replaced with a better system that doesn't use this at all.
+	public static Item getArmour(Element element, ArmourClass armourClass, EntityEquipmentSlot slot){
+		if(slot == null || slot.getSlotType() != Type.ARMOR)
+			throw new IllegalArgumentException("Must be a valid armour slot");
+		if(element == null) element = Element.MAGIC;
+		String registryName = armourClass.name + "_" + armourClass.armourPieceNames.get(slot);
+		if(element != Element.MAGIC) registryName = registryName + "_" + element.getName();
+		return Item.REGISTRY.getObject(new ResourceLocation(Wizardry.MODID,  registryName));
+	}
+
+	/**
+	 * Returns whether the given entity is wearing a full set of wizard armour of the given class and element.
+	 * @param entity The entity to query.
+	 * @param element The element to check, or null to accept any element as long as they are all the same.
+	 * @param armourClass The class to check, or null to accept any class as long as they are all the same.
+	 * @return True if the entity is wearing a full set of the given element and class, false otherwise.
+	 */
+	private static boolean isWearingFullSet(EntityLivingBase entity, @Nullable Element element, @Nullable ArmourClass armourClass){
+		ItemStack helmet = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+		if(!(helmet.getItem() instanceof ItemWizardArmour)) return false;
+		Element e = element == null ? ((ItemWizardArmour)helmet.getItem()).element : element;
+		ArmourClass ac = armourClass == null ? ((ItemWizardArmour)helmet.getItem()).armourClass : armourClass;
+		return Arrays.stream(InventoryUtils.ARMOUR_SLOTS)
+				.allMatch(s -> entity.getItemStackFromSlot(s).getItem() instanceof ItemWizardArmour
+						&& ((ItemWizardArmour)entity.getItemStackFromSlot(s).getItem()).element == e
+						&& ((ItemWizardArmour)entity.getItemStackFromSlot(s).getItem()).armourClass == ac);
 	}
 
 	@SubscribeEvent
@@ -306,7 +426,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 			if(event.getTarget().isSneaking()) followRange *= 0.8;
 			float f = (float)armourPieces / ((EntityPlayer)event.getTarget()).inventory.armorInventory.size();
 			if(f < 0.1F) f = 0.1F;
-			followRange *= (double)(0.7F * f);
+			followRange *= 0.7F * f;
 			// Don't need to worry about the isSuitableTarget check since it must already have been checked to get this far
 			if(event.getTarget().getDistance(event.getEntity()) > followRange) ((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
 		}

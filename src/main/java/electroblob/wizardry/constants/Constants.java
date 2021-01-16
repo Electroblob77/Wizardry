@@ -22,10 +22,6 @@ public final class Constants {
 	public static final float STORAGE_INCREASE_PER_LEVEL = 0.15f;
 	/** The fraction by which potency is increased for each tier of matching wand. */
 	public static final float POTENCY_INCREASE_PER_TIER = 0.15f;
-	/** The fraction by which costs are reduced for each piece of matching armour. */
-	public static final float COST_REDUCTION_PER_ARMOUR = 0.15f;
-	/** The extra fraction by which costs are reduced for a full set of elemental armour. */
-	public static final float FULL_ARMOUR_SET_BONUS = 0.2f;
 	/** The fraction by which spell duration is increased for each level of duration upgrade. */
 	public static final float DURATION_INCREASE_PER_LEVEL = 0.25f;
 	/** The fraction by which spell range is increased for each level of range upgrade. */

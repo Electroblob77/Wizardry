@@ -261,7 +261,6 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 		registerBookModelTexture(() -> WizardryItems.scroll, 				new ResourceLocation(Wizardry.MODID, "blocks/scrolls_blue"));
 		registerBookModelTexture(() -> WizardryItems.blank_scroll, 			new ResourceLocation(Wizardry.MODID, "blocks/scrolls_blue"));
 		registerBookModelTexture(() -> WizardryItems.identification_scroll, new ResourceLocation(Wizardry.MODID, "blocks/scrolls_purple"));
-		registerBookModelTexture(() -> WizardryItems.armour_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_red"));
 		// Can't use the map in WandHelper because this is called from preInit (addons will have to add theirs manually)
 		registerBookModelTexture(() -> WizardryItems.storage_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));
 		registerBookModelTexture(() -> WizardryItems.siphon_upgrade, 		new ResourceLocation(Wizardry.MODID, "blocks/scrolls_wooden"));

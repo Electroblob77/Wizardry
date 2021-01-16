@@ -1,5 +1,8 @@
 package electroblob.wizardry;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
@@ -36,6 +39,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Calendar;
 
 /**
@@ -144,6 +149,34 @@ public class Wizardry {
 	@EventHandler
 	public void init(FMLInitializationEvent event){
 
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+		for(Item item : Item.REGISTRY){
+
+			if(item.getRegistryName().getNamespace().equals(MODID)){
+
+				try{
+
+					FileWriter writer = new FileWriter("generated\\" + item.getRegistryName().getPath() + ".json");
+
+					JsonObject json = new JsonObject();
+
+					json.addProperty("parent", "item/generated");
+
+					JsonObject textures = new JsonObject();
+					textures.addProperty("layer0", MODID + ":items/" + item.getRegistryName().getPath());
+					json.add("textures", textures);
+
+					gson.toJson(json, writer);
+
+					writer.close();
+
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+		}
+
 		settings.initConfigExtras();
 
 		// World generators
@@ -168,8 +201,6 @@ public class Wizardry {
 		// Post-registry extras
 		BlockBookshelf.compileBookModelTextures();
 		ContainerBookshelf.initDefaultBookItems();
-		WizardryItems.populateWandMap();
-		WizardryItems.populateArmourMap();
 		WizardryItems.registerDispenseBehaviours();
 		WizardryItems.registerBannerPatterns();
 		WandHelper.populateUpgradeMap();

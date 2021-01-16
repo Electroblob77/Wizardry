@@ -14,6 +14,8 @@ import electroblob.wizardry.client.gui.GuiSpellDisplay;
 import electroblob.wizardry.client.gui.config.NamedBooleanEntry;
 import electroblob.wizardry.client.gui.config.SpellHUDSkinChooserEntry;
 import electroblob.wizardry.client.gui.handbook.GuiWizardHandbook;
+import electroblob.wizardry.client.model.ModelRobeArmour;
+import electroblob.wizardry.client.model.ModelSageArmour;
 import electroblob.wizardry.client.model.ModelWizardArmour;
 import electroblob.wizardry.client.particle.*;
 import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
@@ -39,6 +41,7 @@ import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.*;
 import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryItems.Materials;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.*;
 import electroblob.wizardry.tileentity.*;
@@ -65,6 +68,7 @@ import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -120,8 +124,16 @@ public class ClientProxy extends CommonProxy {
 		}
 	}
 
-	// Armour Model
-	public static final ModelBiped WIZARD_ARMOUR_MODEL = new ModelWizardArmour(0.75f);
+	// Armour Models
+	// Can't use an EnumMap here because our additional values aren't really part of the enum
+	public static final Map<ArmorMaterial, ModelBiped> wizard_armour_models = new HashMap<>();
+
+	static {
+		wizard_armour_models.put(Materials.SILK, new ModelWizardArmour(0.75f));
+		wizard_armour_models.put(Materials.SAGE, new ModelSageArmour(0.75f));
+		wizard_armour_models.put(Materials.BATTLEMAGE, new ModelRobeArmour(0.75f, true));
+		wizard_armour_models.put(Materials.WARLOCK, new ModelRobeArmour(0.75f, false));
+	}
 
 	/** The wrap width for standard multi-line descriptions (see {@link ClientProxy#addMultiLineDescription(List, String, Style, Object...)}). */
 	private static final int TOOLTIP_WRAP_WIDTH = 140;
@@ -130,8 +142,8 @@ public class ClientProxy extends CommonProxy {
 	// ===============================================================================================================
 
 	@Override
-	public ModelBiped getWizardArmourModel(){
-		return WIZARD_ARMOUR_MODEL;
+	public ModelBiped getWizardArmourModel(ArmorMaterial material){
+		return wizard_armour_models.get(material);
 	}
 
 	@Override

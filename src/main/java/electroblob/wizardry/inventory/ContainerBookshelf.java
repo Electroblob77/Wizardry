@@ -133,7 +133,6 @@ public class ContainerBookshelf extends Container {
 		registerBookItem(WizardryItems.scroll);
 		registerBookItem(WizardryItems.blank_scroll);
 		registerBookItem(WizardryItems.identification_scroll);
-		registerBookItem(WizardryItems.armour_upgrade);
 		// Not using the map in WandHelper for consistency with BlockBookshelf (again, addons must add theirs manually)
 		registerBookItem(WizardryItems.storage_upgrade);
 		registerBookItem(WizardryItems.siphon_upgrade);

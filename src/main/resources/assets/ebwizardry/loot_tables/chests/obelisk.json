@@ -18,6 +18,11 @@
                     "weight": 2
                 },
                 {
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/armour_upgrades",
+                    "weight": 1
+                },
+                {
                     "type": "item",
                     "name": "ebwizardry:spell_book",
                     "weight": 20,

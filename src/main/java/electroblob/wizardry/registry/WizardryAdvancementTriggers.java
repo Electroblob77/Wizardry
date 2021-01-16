@@ -17,7 +17,6 @@ public final class WizardryAdvancementTriggers {
 
 	private WizardryAdvancementTriggers(){} // No instances!
 
-    public static final CustomAdvancementTrigger legendary = new CustomAdvancementTrigger("trigger_legendary");
     public static final CustomAdvancementTrigger max_out_wand = new CustomAdvancementTrigger("trigger_max_out_wand");
     public static final CustomAdvancementTrigger special_upgrade = new CustomAdvancementTrigger("trigger_special_upgrade");
     public static final CustomAdvancementTrigger anger_wizard = new CustomAdvancementTrigger("trigger_anger_wizard");
@@ -35,7 +34,6 @@ public final class WizardryAdvancementTriggers {
 
 	public static void register(){
 
-		CriteriaTriggers.register(legendary);
 		CriteriaTriggers.register(max_out_wand);
 		CriteriaTriggers.register(special_upgrade);
 		CriteriaTriggers.register(anger_wizard);

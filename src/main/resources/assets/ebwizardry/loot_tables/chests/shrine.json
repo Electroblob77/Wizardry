@@ -39,6 +39,11 @@
                     "weight": 4
                 },
                 {
+                    "type": "loot_table",
+                    "name": "ebwizardry:subsets/armour_upgrades",
+                    "weight": 2
+                },
+                {
                     "type": "item",
                     "name": "ebwizardry:spell_book",
                     "weight": 40,
@@ -99,11 +104,6 @@
                             }
                         }
                     ]
-                },
-                {
-                    "type": "item",
-                    "name": "ebwizardry:armour_upgrade",
-                    "weight": 1
                 },
                 {
                     "type": "item",

@@ -10,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
@@ -48,7 +49,7 @@ public class CommonProxy {
 
 	public void registerKeyBindings(){}
 
-	public net.minecraft.client.model.ModelBiped getWizardArmourModel(){
+	public net.minecraft.client.model.ModelBiped getWizardArmourModel(ArmorMaterial material){
 		return null;
 	}
 

@@ -1,0 +1,309 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancement.ebwizardry:warlock"
+        },
+        "description": {
+            "translate": "advancement.ebwizardry:warlock.desc"
+        },
+        "icon": {
+            "item": "ebwizardry:warlock_hood"
+        },
+		"frame": "goal"
+    },
+    "parent": "ebwizardry:armour_set",
+    "criteria": {
+        "head": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood"
+                }
+            }
+        },
+        "chest": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe"
+                }
+            }
+        },
+        "legs": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings"
+                }
+            }
+        },
+        "feet": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots"
+                }
+            }
+        },
+        "head_fire": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_fire"
+                }
+            }
+        },
+        "chest_fire": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_fire"
+                }
+            }
+        },
+        "legs_fire": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_fire"
+                }
+            }
+        },
+        "feet_fire": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_fire"
+                }
+            }
+        },
+        "head_ice": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_ice"
+                }
+            }
+        },
+        "chest_ice": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_ice"
+                }
+            }
+        },
+        "legs_ice": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_ice"
+                }
+            }
+        },
+        "feet_ice": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_ice"
+                }
+            }
+        },
+        "head_lightning": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_lightning"
+                }
+            }
+        },
+        "chest_lightning": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_lightning"
+                }
+            }
+        },
+        "legs_lightning": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_lightning"
+                }
+            }
+        },
+        "feet_lightning": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_lightning"
+                }
+            }
+        },
+        "head_necromancy": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_necromancy"
+                }
+            }
+        },
+        "chest_necromancy": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_necromancy"
+                }
+            }
+        },
+        "legs_necromancy": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_necromancy"
+                }
+            }
+        },
+        "feet_necromancy": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_necromancy"
+                }
+            }
+        },
+        "head_earth": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_earth"
+                }
+            }
+        },
+        "chest_earth": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_earth"
+                }
+            }
+        },
+        "legs_earth": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_earth"
+                }
+            }
+        },
+        "feet_earth": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_earth"
+                }
+            }
+        },
+        "head_sorcery": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_sorcery"
+                }
+            }
+        },
+        "chest_sorcery": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_sorcery"
+                }
+            }
+        },
+        "legs_sorcery": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_sorcery"
+                }
+            }
+        },
+        "feet_sorcery": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_sorcery"
+                }
+            }
+        },
+        "head_healing": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_hood_healing"
+                }
+            }
+        },
+        "chest_healing": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_robe_healing"
+                }
+            }
+        },
+        "legs_healing": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_leggings_healing"
+                }
+            }
+        },
+        "feet_healing": {
+            "trigger": "ebwizardry:arcane_workbench",
+            "conditions": {
+                "item": {
+                    "item": "ebwizardry:warlock_boots_healing"
+                }
+            }
+        }
+    },
+    "requirements": [
+        [
+            "head",
+            "chest",
+            "legs",
+            "feet",
+            "head_fire",
+            "chest_fire",
+            "legs_fire",
+            "feet_fire",
+            "head_ice",
+            "chest_ice",
+            "legs_ice",
+            "feet_ice",
+            "head_lightning",
+            "chest_lightning",
+            "legs_lightning",
+            "feet_lightning",
+            "head_necromancy",
+            "chest_necromancy",
+            "legs_necromancy",
+            "feet_necromancy",
+            "head_earth",
+            "chest_earth",
+            "legs_earth",
+            "feet_earth",
+            "head_sorcery",
+            "chest_sorcery",
+            "legs_sorcery",
+            "feet_sorcery",
+            "head_healing",
+            "chest_healing",
+            "legs_healing",
+            "feet_healing"
+        ]
+    ]
+}

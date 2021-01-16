@@ -73,7 +73,9 @@ public class WizardryJEIPlugin implements IModPlugin {
 		addItemInfo(registry, WizardryItems.identification_scroll, ".desc_extended");
 		addItemInfo(registry, WizardryItems.spell_book);
 		addItemInfo(registry, WizardryItems.scroll);
-		addItemInfo(registry, WizardryItems.armour_upgrade, ".desc_extended");
+		addItemInfo(registry, WizardryItems.resplendent_thread, ".desc_extended");
+		addItemInfo(registry, WizardryItems.crystal_silver_plating, ".desc_extended");
+		addItemInfo(registry, WizardryItems.ethereal_crystalweave, ".desc_extended");
 		addItemInfo(registry, WizardryItems.purifying_elixir, ".desc_extended");
 		addItemInfo(registry, WizardryItems.astral_diamond);
 		addItemInfo(registry, WizardryItems.ruined_spell_book);
