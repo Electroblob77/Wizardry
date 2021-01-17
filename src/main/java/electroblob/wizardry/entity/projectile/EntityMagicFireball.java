@@ -10,6 +10,7 @@ import electroblob.wizardry.util.ParticleBuilder;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,9 +76,9 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 
 				float damage = getDamage() * damageMultiplier;
 
-				entityHit.attackEntityFrom(
-						MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.FIRE).setProjectile(),
-						damage);
+				DamageSource source = getDamageSource(entityHit);
+
+				entityHit.attackEntityFrom(source, damage);
 
 				if(!MagicDamage.isEntityImmune(DamageType.FIRE, entityHit) && getBurnDuration() > 0)
 					entityHit.setFire(getBurnDuration());
@@ -97,6 +98,10 @@ public class EntityMagicFireball extends EntityMagicProjectile {
 
 			this.setDead();
 		}
+	}
+
+	protected DamageSource getDamageSource(Entity entityHit){
+		return MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.FIRE).setProjectile();
 	}
 
 	@Override

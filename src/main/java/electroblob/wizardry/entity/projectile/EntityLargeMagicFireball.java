@@ -4,9 +4,14 @@ import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.MagicDamage;
+import electroblob.wizardry.util.MagicDamage.DamageType;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.monster.EntityGhast;
 import net.minecraft.entity.projectile.EntityLargeFireball;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -45,6 +50,15 @@ public class EntityLargeMagicFireball extends EntityMagicFireball {
 	@Override
 	public float getDamage(){
 		return damage == -1 ? Spells.greater_fireball.getProperty(Spell.DAMAGE).floatValue() : damage;
+	}
+
+	@Override
+	protected DamageSource getDamageSource(Entity entityHit){
+		if(entityHit instanceof EntityGhast){
+			return MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.MAGIC).setProjectile();
+		}else{
+			return super.getDamageSource(entityHit);
+		}
 	}
 
 	@Override
