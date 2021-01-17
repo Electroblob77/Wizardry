@@ -237,7 +237,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 
 			if(Arrays.stream(receptacleElements).distinct().count() == 1 && receptacleElements[0] != null){ // All the same element
 
-				ItemStack result = new ItemStack(WizardryItems.getArmour(receptacleElements[0], ((ItemWizardArmour)input.getItem()).armorType));
+				ItemStack result = new ItemStack(ItemWizardArmour.getArmour(receptacleElements[0], ((ItemWizardArmour)input.getItem()).armourClass, ((ItemWizardArmour)input.getItem()).armorType));
 
 				result.setTagCompound(input.getTagCompound());
 				((IManaStoringItem)result.getItem()).setMana(result, ((ItemWizardArmour)input.getItem()).getMana(input));
