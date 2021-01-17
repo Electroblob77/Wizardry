@@ -45,7 +45,8 @@ public interface Imbuement {
 	public static void onLivingDropsEvent(LivingDropsEvent event){
 		// Instantly disenchants an imbued weapon if it is dropped when the player dies.
 		for(EntityItem item : event.getDrops()){
-			removeImbuements(item.getItem());
+			// Apparently some mods don't behave and shove null items in the list, quite why I have no idea
+			if(item != null) removeImbuements(item.getItem());
 		}
 	}
 
