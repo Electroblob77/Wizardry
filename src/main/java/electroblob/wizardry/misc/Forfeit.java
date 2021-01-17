@@ -15,8 +15,10 @@ import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Banish;
+import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.SpellProperties.Context;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.passive.EntitySquid;
@@ -296,6 +298,7 @@ public abstract class Forfeit {
 		}));
 
 		add(Tier.APPRENTICE, Element.LIGHTNING, create("storm", (w, p) -> {
+			if(!Spells.invoke_weather.isEnabled(Context.WANDS)) return;
 			int standardWeatherTime = (300 + (new Random()).nextInt(600)) * 20;
 			w.getWorldInfo().setRaining(true);
 			w.getWorldInfo().setRainTime(standardWeatherTime);
