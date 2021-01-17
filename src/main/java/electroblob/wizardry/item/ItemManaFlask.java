@@ -31,7 +31,7 @@ public class ItemManaFlask extends Item {
 	public enum Size {
 
 		SMALL(75, 25, EnumRarity.COMMON),
-		MEDIUM(700, 40, EnumRarity.COMMON),
+		MEDIUM(350, 40, EnumRarity.COMMON),
 		LARGE(1400, 60, EnumRarity.RARE);
 
 		public int capacity;
