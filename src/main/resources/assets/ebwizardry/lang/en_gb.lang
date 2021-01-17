@@ -1474,6 +1474,8 @@ commands.ebwizardry\:discoverspell.removespell=Removed %1$s from %2$s's spell di
 
 config.ebwizardry.title.general=Mod Options
 
+config.ebwizardry.redundant_keys=Your config file contains redundant options, these will not do anything! [See log for details]
+
 config.ebwizardry.generic.true=Enabled
 config.ebwizardry.generic.false=Disabled
 

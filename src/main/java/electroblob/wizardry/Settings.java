@@ -93,6 +93,8 @@ public final class Settings {
 	/** The wizardry config file. */
 	private Configuration config;
 
+	private List<String> redundantKeys = new ArrayList<>();
+
 	// Server-only settings. These only affect server-side code and hence are not synced. Changing these locally only
 	// has an effect if the local game is the host, i.e. a dedicated server, a LAN host or a singleplayer world.
 
@@ -446,6 +448,8 @@ public final class Settings {
 	 */
 	void initConfig(FMLPreInitializationEvent event){
 
+		redundantKeys.clear();
+
 		config = new Configuration(new File(Wizardry.configDirectory, Wizardry.MODID + ".cfg"));
 		config.load();
 
@@ -484,6 +488,8 @@ public final class Settings {
 	/** Called to save changes to the config file after it has been edited in game from the menus. */
 	void saveConfigChanges(){
 
+		redundantKeys.clear();
+
 		Wizardry.logger.info("Saving in-game config changes");
 
 		setupGameplayConfig();
@@ -498,6 +504,32 @@ public final class Settings {
 		setupResistancesConfig();
 
 		config.save();
+	}
+
+	void checkForRedundantOptions(String categoryName, Collection<String> validKeys){
+
+		ConfigCategory category = config.getCategory(categoryName);
+		boolean redundantKeysFound = false;
+
+		for(String key : category.keySet()){
+			if(!validKeys.contains(key)){
+				redundantKeys.add(key);
+				if(!redundantKeysFound){
+					redundantKeysFound = true;
+					Wizardry.logger.info("Config category {} contains redundant options:", categoryName);
+				}
+				Wizardry.logger.info(key);
+			}
+		}
+
+		if(redundantKeysFound){
+			Wizardry.logger.info("These options will have no effect (they are probably left over from an older version of wizardry). It is recommended to either remove them manually, or delete ebwizardry.cfg and allow a fresh config to be generated.");
+		}
+	}
+
+	/** Returns true if the config file contains keys that are not valid options (usually because of updates). */
+	public boolean hasRedundantKeys(){
+		return !redundantKeys.isEmpty();
 	}
 
 	/** Sends a packet to the specified player's client containing all the <b>synchronised</b> settings. */
@@ -518,7 +550,10 @@ public final class Settings {
 
 		Property property;
 
+		List<String> keys = new ArrayList<>();
+
 		for(Spell spell : Spell.getAllSpells()){
+			keys.add(spell.getRegistryName().toString());
 			property = config.get(SPELLS_CATEGORY, spell.getRegistryName().toString(), true,
 					"Set to false to disable this spell");
 			// Uses the same config key as the spell name, because - well, that's what it's called!
@@ -527,6 +562,7 @@ public final class Settings {
 			spell.setEnabled(property.getBoolean(true));
 		}
 
+		checkForRedundantOptions(SPELLS_CATEGORY, keys);
 	}
 
 	private void setupArtefactsConfig(){
@@ -536,8 +572,11 @@ public final class Settings {
 
 		Property property;
 
+		List<String> keys = new ArrayList<>();
+
 		for(Item item : Item.REGISTRY){
 			if(item instanceof ItemArtefact){
+				keys.add(item.getRegistryName().toString());
 				property = config.get(ARTEFACTS_CATEGORY, item.getRegistryName().toString(), true,
 						"Set to false to disable this item");
 				// Uses the same config key as the item name, because - well, that's what it's called!
@@ -547,6 +586,7 @@ public final class Settings {
 			}
 		}
 
+		checkForRedundantOptions(ARTEFACTS_CATEGORY, keys);
 	}
 
 	private void setupGameplayConfig(){
@@ -623,6 +663,7 @@ public final class Settings {
 		bonemealGrowsCrystalFlowers = property.getBoolean();
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(GAMEPLAY_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(GAMEPLAY_CATEGORY, propOrder);
 
 	}
@@ -730,6 +771,7 @@ public final class Settings {
 		lightningWraithSpawnRate = property.getInt();
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(DIFFICULTY_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(DIFFICULTY_CATEGORY, propOrder);
 
 	}
@@ -872,6 +914,7 @@ public final class Settings {
 			}
 		}
 
+		checkForRedundantOptions(TWEAKS_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(TWEAKS_CATEGORY, propOrder);
 
 	}
@@ -1019,6 +1062,7 @@ public final class Settings {
 		lootInjectionLocations = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(WORLDGEN_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(WORLDGEN_CATEGORY, propOrder);
 	}
 
@@ -1120,6 +1164,7 @@ public final class Settings {
 		donationPerkElement = Element.fromName(property.getString(), null); // Fallback to null for no element
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(CLIENT_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(CLIENT_CATEGORY, propOrder);
 	}
 
@@ -1166,6 +1211,7 @@ public final class Settings {
 		alliesCommandName = property.getString();
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(COMMANDS_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(COMMANDS_CATEGORY, propOrder);
 	}
 
@@ -1243,6 +1289,7 @@ public final class Settings {
 		}
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(RESISTANCES_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(RESISTANCES_CATEGORY, propOrder);
 	}
 
@@ -1332,6 +1379,7 @@ public final class Settings {
 		autoUndergroundLibraryMarkers = property.getBoolean();
 		propOrder.add(property.getName());
 
+		checkForRedundantOptions(COMPATIBILITY_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(COMPATIBILITY_CATEGORY, propOrder);
 
 	}

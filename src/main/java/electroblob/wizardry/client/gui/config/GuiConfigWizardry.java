@@ -1,5 +1,6 @@
 package electroblob.wizardry.client.gui.config;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,9 +19,13 @@ import java.util.List;
 public class GuiConfigWizardry extends GuiConfig {
 
 	public GuiConfigWizardry(GuiScreen parent){
+
 		super(parent, getConfigEntries(), Wizardry.MODID, false, false,
 				Wizardry.NAME + " - " + I18n.format("config." + Wizardry.MODID + ".title.general"));
-		// this.titleLine2 = "File location: " + Wizardry.config.getConfigFile().getAbsolutePath();
+
+		if(Wizardry.settings.hasRedundantKeys()){
+			this.titleLine2 = ChatFormatting.GOLD.toString() + I18n.format("config." + Wizardry.MODID + ".redundant_keys");
+		}
 	}
 
 	private static List<IConfigElement> getConfigEntries(){
