@@ -815,7 +815,7 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		if(upgrade.getHasStack()){
 			ItemStack original = centre.getStack().copy();
 			centre.putStack(this.applyUpgrade(player, centre.getStack(), upgrade.getStack()));
-			changed = ItemStack.areItemStacksEqual(centre.getStack(), original);
+			changed = !ItemStack.areItemStacksEqual(centre.getStack(), original);
 		}
 
 		// Reads NBT spell metadata array to variable, edits this, then writes it back to NBT.
