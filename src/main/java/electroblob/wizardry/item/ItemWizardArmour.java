@@ -92,8 +92,17 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 	}
 
-	public final Element element;
+	public Element element; // Should be final, but isn't for backwards compatibility
 	public final ArmourClass armourClass;
+
+	@Deprecated // Retained for backwards-compatibility with addons, will be removed in future
+	public ItemWizardArmour(ArmorMaterial material, int renderIndex, EntityEquipmentSlot armourType, Element element){
+		super(material, renderIndex, armourType);
+		this.armourClass = ArmourClass.WIZARD;
+		this.element = element;
+		setCreativeTab(WizardryTabs.GEAR);
+		WizardryRecipes.addToManaFlaskCharging(this);
+	}
 
 	public ItemWizardArmour(ArmourClass armourClass, EntityEquipmentSlot armourType, Element element){
 		super(armourClass.material, 1, armourType);
