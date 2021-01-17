@@ -225,6 +225,7 @@ public class EntityRemnant extends EntityMob {
 		@Override
 		public void startExecuting(){
 			EntityLivingBase entitylivingbase = EntityRemnant.this.getAttackTarget();
+			if(entitylivingbase == null) return;
 			Vec3d vec3d = entitylivingbase.getPositionEyes(1.0F);
 			EntityRemnant.this.moveHelper.setMoveTo(vec3d.x, vec3d.y, vec3d.z, 1.0D);
 			EntityRemnant.this.setAttacking(true);
@@ -240,6 +241,8 @@ public class EntityRemnant extends EntityMob {
 		public void updateTask(){
 
 			EntityLivingBase entitylivingbase = EntityRemnant.this.getAttackTarget();
+
+			if(entitylivingbase == null) return;
 
 			if(EntityRemnant.this.getEntityBoundingBox().intersects(entitylivingbase.getEntityBoundingBox())){
 				EntityRemnant.this.attackEntityAsMob(entitylivingbase);
