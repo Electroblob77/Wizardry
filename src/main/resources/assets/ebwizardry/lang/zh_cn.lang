@@ -1474,6 +1474,8 @@ commands.ebwizardry\:discoverspell.removespell=将 %1$s 由 %2$s 的已发现法
 
 config.ebwizardry.title.general=模组选项
 
+config.ebwizardry.redundant_keys=Your config file contains redundant options, these will not do anything! [See log for details]
+
 config.ebwizardry.generic.true=开启
 config.ebwizardry.generic.false=关闭
 
