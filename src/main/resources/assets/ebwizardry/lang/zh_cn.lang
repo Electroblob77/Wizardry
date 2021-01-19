@@ -206,11 +206,11 @@ item.ebwizardry\:resplendent_thread.desc_extended=一卷微光闪烁的丝线，
 
 item.ebwizardry\:crystal_silver_plating.name=晶银镶板
 item.ebwizardry\:crystal_silver_plating.desc=将寻常巫师盔甲升级至战斗法师盔甲
-item.ebwizardry\:crystal_silver_plating.desc_extended=一片近乎神话般的合金，于艾尔达的锻炉中铸造而成，具有出色的魔力偏转特性。\n\n在奥术工作台中将该升级圣物附加到一件武士盔甲上。
+item.ebwizardry\:crystal_silver_plating.desc_extended=一片近乎神话般的合金，于艾尔达的锻炉中铸造而成，具有出色的魔力偏转特性。\n\n在奥术工作台中将该升级圣物附加到一件巫师盔甲上。
 
 item.ebwizardry\:ethereal_crystalweave.name=缈晶纹绸
 item.ebwizardry\:ethereal_crystalweave.desc=将寻常巫师盔甲升级至巫术士盔甲
-item.ebwizardry\:ethereal_crystalweave.desc_extended=一块蕴含魔力的布匹，厚如动物的毛皮，但不知为何，放在手中时的感觉却比薄纸还要轻盈。\n\n在奥术工作台中将该升级圣物附加到一件武士盔甲上。
+item.ebwizardry\:ethereal_crystalweave.desc_extended=一块蕴含魔力的布匹，厚如动物的毛皮，但不知为何，放在手中时的感觉却比薄纸还要轻盈。\n\n在奥术工作台中将该升级圣物附加到一件巫师盔甲上。
 
 item.ebwizardry\:magic_silk.name=魔法绸缎
 
