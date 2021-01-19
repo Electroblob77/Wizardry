@@ -202,7 +202,7 @@ item.ebwizardry\:identification_scroll.nothing_to_identify=没有可鉴定的物
 
 item.ebwizardry\:resplendent_thread.name=魔辉丝线
 item.ebwizardry\:resplendent_thread.desc=将寻常巫师盔甲升级至贤者盔甲
-item.ebwizardry\:resplendent_thread.desc_extended=一卷微光闪烁的丝线，用于将奥术符纹刺绣至绝品的长袍之上，以提升其附魔能力。\n\n在奥术工作台中将该升级圣物附加到一件武士盔甲上。
+item.ebwizardry\:resplendent_thread.desc_extended=一卷微光闪烁的丝线，用于将奥术符纹刺绣至绝品的长袍之上，以提升其附魔能力。\n\n在奥术工作台中可将该升级圣物附加到一件巫师盔甲上。
 
 item.ebwizardry\:crystal_silver_plating.name=晶银镶板
 item.ebwizardry\:crystal_silver_plating.desc=将寻常巫师盔甲升级至战斗法师盔甲
