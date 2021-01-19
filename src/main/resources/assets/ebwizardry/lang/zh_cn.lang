@@ -216,7 +216,7 @@ item.ebwizardry\:magic_silk.name=魔法绸缎
 
 item.ebwizardry\:spectral_dust.name=灵尘
 
-item.ebwizardry\:wizard_armour.element_cost_reduction=-%1$s%% %2$s 魔力损耗
+item.ebwizardry\:wizard_armour.element_cost_reduction=-%1$s%% %2$s 魔力消耗
 item.ebwizardry\:wizard_armour.cooldown_reduction=-%1$s%% 冷却时间
 item.ebwizardry\:wizard_armour.enchantability=额外的附魔能力
 item.ebwizardry\:wizard_armour.mana=魔力：%1$s/%2$s
