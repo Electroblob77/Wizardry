@@ -149,34 +149,6 @@ public class Wizardry {
 	@EventHandler
 	public void init(FMLInitializationEvent event){
 
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-		for(Item item : Item.REGISTRY){
-
-			if(item.getRegistryName().getNamespace().equals(MODID)){
-
-				try{
-
-					FileWriter writer = new FileWriter("generated\\" + item.getRegistryName().getPath() + ".json");
-
-					JsonObject json = new JsonObject();
-
-					json.addProperty("parent", "item/generated");
-
-					JsonObject textures = new JsonObject();
-					textures.addProperty("layer0", MODID + ":items/" + item.getRegistryName().getPath());
-					json.add("textures", textures);
-
-					gson.toJson(json, writer);
-
-					writer.close();
-
-				}catch(IOException e){
-					e.printStackTrace();
-				}
-			}
-		}
-
 		settings.initConfigExtras();
 
 		// World generators
