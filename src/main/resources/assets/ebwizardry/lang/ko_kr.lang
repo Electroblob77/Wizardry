@@ -53,21 +53,21 @@ tile.ebwizardry\:receptacle.name=받침
 tile.ebwizardry\:imbuement_altar.name=고취의 제단
 
 item.ebwizardry\:crystal_magic.name=마법수정
-item.ebwizardry\:crystal_magic.desc=무지갯빛의 아름다운 수정, 마법의 기운이 내부에서 서서히 변화하고 소용돌이치고 있다. 어쩌면 이 수정은 사용하면...
+item.ebwizardry\:crystal_magic.desc=무지갯빛의 아름다운 수정, 마법의 기운이 내부에서 서서히 변화하며 소용돌이치고 있습니다. 어쩌면 이 수정은 사용하면...
 item.ebwizardry\:crystal_fire.name=화염의 수정
-item.ebwizardry\:crystal_fire.desc=주황빛으로 불타는 수정. 어쩌면 불의 원소를 푸는 열쇠일지도 모른다...
+item.ebwizardry\:crystal_fire.desc=주황빛으로 불타는 수정, 어쩌면 불의 원소를 푸는 열쇠일지도 모릅니다...
 item.ebwizardry\:crystal_ice.name=얼음의 수정
-item.ebwizardry\:crystal_ice.desc=푸르스름한 색조의 차가운 수정. 어쩌면 서리의 힘의 비밀을 간직하고 있을지도 모른다...
+item.ebwizardry\:crystal_ice.desc=푸르스름한 색조의 차가운 수정, 어쩌면 서리의 힘의 비밀을 간직하고 있을지도 모릅니다...
 item.ebwizardry\:crystal_lightning.name=폭풍의 수정
-item.ebwizardry\:crystal_lightning.desc=어지럽게 소용돌이치고 번쩍이는 수정. 어쩌면 더 큰 힘을 숨기고 있을지도 모른다...
+item.ebwizardry\:crystal_lightning.desc=어지럽게 소용돌이치고 번쩍이는 수정, 어쩌면 더 큰 힘을 숨기고 있을지도 모릅니다...
 item.ebwizardry\:crystal_necromancy.name=어둠의 수정
-item.ebwizardry\:crystal_necromancy.desc=마치 끌어당기는 듯한 깊고 푸르스름한 수정. 어쩌면 더 어두운 곳으로 가는 관문일지도 모른다...
+item.ebwizardry\:crystal_necromancy.desc=마치 끌어당기는 듯한 깊고 푸르스름한 수정, 어쩌면 더 어두운 곳으로 가는 관문일지도 모릅니다...
 item.ebwizardry\:crystal_earth.name=신록의 수정
-item.ebwizardry\:crystal_earth.desc=녹색과 약간의 갈색으로 이루어진 수정. 어쩌면 자연의 힘과 연관이 있을지도 모른다...
+item.ebwizardry\:crystal_earth.desc=녹색과 약간의 갈색으로 이루어진 수정, 어쩌면 자연의 힘과 연관이 있을지도 모릅니다...
 item.ebwizardry\:crystal_sorcery.name=신령의 수정
-item.ebwizardry\:crystal_sorcery.desc=푸르스름한 초록빛의 반짝거리는 수정. 어쩌면 고대의 힘의 비밀을 감추고 있을지도 모른다...
+item.ebwizardry\:crystal_sorcery.desc=푸르스름한 초록빛의 반짝거리는 수정, 어쩌면 고대의 힘의 비밀을 감추고 있을지도 모릅니다...
 item.ebwizardry\:crystal_healing.name=복사의 수정
-item.ebwizardry\:crystal_healing.desc=금빛 햇살처럼 노랗게 반짝이는 수정. 어쩌면 신성한 힘의 연결고리일지도 모른다...
+item.ebwizardry\:crystal_healing.desc=금빛 햇살처럼 노랗게 반짝이는 수정, 어쩌면 신성한 힘의 연결고리일지도 모릅니다...
 
 item.ebwizardry\:spell_book.name=주문서
 item.ebwizardry\:spell_book.desc=고대의 상형문자와 룬 문자로 채워진 책. 노력을 통해 그 내용을 해독할 수 있을 것 같습니다...\n\n책을 읽으려면 오른쪽 버튼을 누르세요.
@@ -75,7 +75,7 @@ item.ebwizardry\:spell_book.new=아직 발견되지 않았습니다!
 item.ebwizardry\:spell_book.apply_to_wizard=%1$s의 주문 %2$s을 %3$s로 대체하였습니다
 
 item.ebwizardry\:ruined_spell_book.name=빛바랜 주문서
-item.ebwizardry\:ruined_spell_book.desc=이 너덜너덜한 주문서는 너무 손상되어 제대로 읽혀지지 않지만, 어찌된 일인지, 아직도 마법의 기운이 남아있다. 만약 복원될 수만 있다면...
+item.ebwizardry\:ruined_spell_book.desc=이 너덜너덜한 주문서는 너무 손상되어 제대로 읽혀지지 않지만, 어찌된 일인지, 아직도 마법의 기운이 남아있습니다. 만약 복원될 수만 있다면...
 
 item.ebwizardry\:arcane_tome.name=마도서
 item.ebwizardry\:arcane_tome.desc=아무 %1$s지팡이를 %2$s지팡이로 강화합니다
@@ -112,7 +112,7 @@ item.ebwizardry\:novice_healing_wand.name=회복 지팡이
 item.ebwizardry\:apprentice_fire_wand.name=견습 화염 지팡이
 item.ebwizardry\:apprentice_ice_wand.name=견습 얼음 지팡이
 item.ebwizardry\:apprentice_lightning_wand.name=견습 벼락 지팡이
-item.ebwizardry\:apprentice_necromancy_wand.name=견습 혼령 지팡이
+item.ebwizardry\:apprentice_necromancy_wand.name=견습 사령 지팡이
 item.ebwizardry\:apprentice_earth_wand.name=견습 대지 지팡이
 item.ebwizardry\:apprentice_sorcery_wand.name=견습 신비 지팡이
 item.ebwizardry\:apprentice_healing_wand.name=견습 치유 지팡이
@@ -120,7 +120,7 @@ item.ebwizardry\:apprentice_healing_wand.name=견습 치유 지팡이
 item.ebwizardry\:advanced_fire_wand.name=숙련 화염술사의 지팡이
 item.ebwizardry\:advanced_ice_wand.name=숙련 얼음법사의 지팡이
 item.ebwizardry\:advanced_lightning_wand.name=숙련 벼락술사의 지팡이
-item.ebwizardry\:advanced_necromancy_wand.name=숙련 혼령술사의 지팡이
+item.ebwizardry\:advanced_necromancy_wand.name=숙련 사령술사의 지팡이
 item.ebwizardry\:advanced_earth_wand.name=숙련 대지법사의 지팡이
 item.ebwizardry\:advanced_sorcery_wand.name=숙련 신비술사의 지팡이
 item.ebwizardry\:advanced_healing_wand.name=숙련 치유사의 지팡이
@@ -146,16 +146,16 @@ item.ebwizardry\:large_mana_flask.name=큰 마나병
 item.ebwizardry\:mana_flask.desc=제작을 통해 %s마나를 지팡이나 갑옷에 충전합니다
 
 item.ebwizardry\:grand_crystal.name=거대한 마법수정
-item.ebwizardry\:grand_crystal.desc=자연적으로 발견된 것의 몇 배 크기인 거대한 마법의 수정. 누군가 인공적으로 만든 게 틀림없다. 하지만 어떻게?
+item.ebwizardry\:grand_crystal.desc=자연적으로 발견된 것의 몇 배 크기인 거대한 마법의 수정, 누군가 인공적으로 만든 게 틀림없습니다. 하지만 어떻게?
 item.ebwizardry\:crystal_shard.name=마법수정 조각
-item.ebwizardry\:crystal_shard.desc=산산조각난 마법 수정의 작은 조각. 그 자체로는 마력이 거의 없지만, 다른 용도가 있을지도 모른다...
+item.ebwizardry\:crystal_shard.desc=산산조각난 마법 수정의 작은 조각, 그 자체로는 마력이 거의 없지만, 다른 용도가 있을지도 모릅니다...
 
 item.ebwizardry\:astral_diamond.name=별의 다이아몬드
-item.ebwizardry\:astral_diamond.desc=별빛 아래 밝게 빛나는 아름다운 보석. 어떠한 마법사들은 강력한 마법의 거래 대가로 별의 다이아몬드를 찾는다네.
+item.ebwizardry\:astral_diamond.desc=별빛 아래 밝게 빛나는 아름다운 보석이라네. 어떠한 마법사들은 강력한 마법의 거래 대가로 별의 다이아몬드를 찾는다네.
 
 item.ebwizardry\:purifying_elixir.name=정화의 영약
 item.ebwizardry\:purifying_elixir.desc=저주를 제거합니다
-item.ebwizardry\:purifying_elixir.desc_extended=특이한 금빛 액체가 담긴 작은 병으로, 강력한 회복의 특성을 보이고 있습니다.
+item.ebwizardry\:purifying_elixir.desc_extended=특이한 금빛 액체가 담긴 작은 병으로, 강력한 회복력을 보이고 있습니다.
 
 item.ebwizardry\:storage_upgrade.name=지팡이 용량 강화
 item.ebwizardry\:siphon_upgrade.name=지팡이 흡수 강화
@@ -194,23 +194,37 @@ item.ebwizardry\:blank_scroll.name=빈 두루마리
 item.ebwizardry\:scroll.generic=두루마리
 item.ebwizardry\:scroll.name=%1$s의 두루마리
 item.ebwizardry\:scroll.undiscovered.name="%1$s"두루마리
-item.ebwizardry\:scroll.desc=끈으로 느슨하게 묶인 마법이 부여된 종이. 두루마리에 부여된 주문을 외우면 외운 주문이 시전된다 .\n시전하려면 오른쪽 버튼을 누르세요.
+item.ebwizardry\:scroll.desc=끈으로 느슨하게 묶인 마법이 부여된 종이. 두루마리에 부여된 주문을 외우면 외운 주문이 시전됩니다.\n시전하려면 오른쪽 버튼을 누르세요.
 item.ebwizardry\:identification_scroll.name=지식의 두루마리
 item.ebwizardry\:identification_scroll.desc=알 수 없는 주문서나 두루마리를 식별합니다
 item.ebwizardry\:identification_scroll.desc_extended=오른쪽 버튼을 클릭하여 식별하지 않은 주문서를 식별할 수 있습니다.
 item.ebwizardry\:identification_scroll.nothing_to_identify=식별할 주문이 없습니다!
 
-item.ebwizardry\:armour_upgrade.name=신비로운 보호의 문양
-item.ebwizardry\:armour_upgrade.desc=아무 마법사의 갑옷을 전설등급으로 만듭니다
-item.ebwizardry\:armour_upgrade.desc_extended=신비로운 작업대에서 갑옷에 적용할 수 있습니다.
+item.ebwizardry\:resplendent_thread.name=찬란의 실
+item.ebwizardry\:resplendent_thread.desc=일반적인 마법사의 갑옷을 학자의 갑옷으로 강화합니다
+item.ebwizardry\:resplendent_thread.desc_extended=희미하게 빛나는 실로 신비로운 무늬를 수놓아 로브의 질을 높이고, 마법 부여의 효과를 상승시킵니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
+
+item.ebwizardry\:crystal_silver_plating.name=은도금된 수정
+item.ebwizardry\:crystal_silver_plating.desc=일반적인 마법사의 갑옷을 전투법사의 갑옷으로 강화합니다
+item.ebwizardry\:crystal_silver_plating.desc_extended=엘다르의 공장에서 만들어진 거의 신화적인 합금으로, 우수한 마법 굴절도를 가지고 있습니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
+
+item.ebwizardry\:ethereal_crystalweave.name=천상의 수정천
+item.ebwizardry\:ethereal_crystalweave.desc=일반적인 마법사의 갑옷을 워록의 갑옷으로 강화합니다
+item.ebwizardry\:ethereal_crystalweave.desc_extended=동물의 가죽처럼 두껍지만 한 장의 종이보다 가벼운 마나의 천입니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
 
 item.ebwizardry\:magic_silk.name=마법 비단
 
 item.ebwizardry\:spectral_dust.name=망령의 가루
 
-item.ebwizardry\:wizard_armour.legendary=전설
-item.ebwizardry\:wizard_armour.buff=%2$s 주문의 비용이 %1$s 감소
+item.ebwizardry\:wizard_armour.element_cost_reduction=%2$s 주문의 마나 소모량이 %1$s 감소
+item.ebwizardry\:wizard_armour.cooldown_reduction=재사용 대기시간이 %1$s%% 감소
+item.ebwizardry\:wizard_armour.enchantability=마법 부여의 효과 상승
 item.ebwizardry\:wizard_armour.mana=마나\: %1$s/%2$s
+
+item.ebwizardry\:wizard_armour.full_set=전부 착용 시:
+item.ebwizardry\:sage_armour.full_set_bonus=다른 원소의 주문의 마나 소모량이 %1$s%% 감소
+item.ebwizardry\:battlemage_armour.full_set_bonus=보호 I 효과가 부여
+item.ebwizardry\:warlock_armour.full_set_bonus=이동속도가 %1$s%% 상승
 
 item.ebwizardry\:wizard_hat.name=마법사 모자
 item.ebwizardry\:wizard_robe.name=마법사 로브
@@ -232,10 +246,10 @@ item.ebwizardry\:wizard_robe_lightning.name=벼락술사 로브
 item.ebwizardry\:wizard_leggings_lightning.name=벼락술사 각반
 item.ebwizardry\:wizard_boots_lightning.name=벼락술사 부츠
 
-item.ebwizardry\:wizard_hat_necromancy.name=혼령술사 모자
-item.ebwizardry\:wizard_robe_necromancy.name=혼령술사 로브
-item.ebwizardry\:wizard_leggings_necromancy.name=혼령술사 각반
-item.ebwizardry\:wizard_boots_necromancy.name=혼령술사 부츠
+item.ebwizardry\:wizard_hat_necromancy.name=사령술사 모자
+item.ebwizardry\:wizard_robe_necromancy.name=사령술사 로브
+item.ebwizardry\:wizard_leggings_necromancy.name=사령술사 각반
+item.ebwizardry\:wizard_boots_necromancy.name=사령술사 부츠
 
 item.ebwizardry\:wizard_hat_earth.name=대지법사 모자
 item.ebwizardry\:wizard_robe_earth.name=대지법사 로브
@@ -252,6 +266,126 @@ item.ebwizardry\:wizard_robe_healing.name=치유사 로브
 item.ebwizardry\:wizard_leggings_healing.name=치유사 각반
 item.ebwizardry\:wizard_boots_healing.name=치유사 부츠
 
+item.ebwizardry\:sage_hat.name=학자 모자
+item.ebwizardry\:sage_robe.name=학자 로브
+item.ebwizardry\:sage_leggings.name=학자 각반
+item.ebwizardry\:sage_boots.name=학자 부츠
+
+item.ebwizardry\:sage_hat_fire.name=화염학자 모자
+item.ebwizardry\:sage_robe_fire.name=화염학자 로브
+item.ebwizardry\:sage_leggings_fire.name=화염학자 각반
+item.ebwizardry\:sage_boots_fire.name=화염학자 부츠
+
+item.ebwizardry\:sage_hat_ice.name=얼음학자 모자
+item.ebwizardry\:sage_robe_ice.name=얼음학자 로브
+item.ebwizardry\:sage_leggings_ice.name=얼음학자 각반
+item.ebwizardry\:sage_boots_ice.name=얼음학자 부츠
+
+item.ebwizardry\:sage_hat_lightning.name=벼락학자 모자
+item.ebwizardry\:sage_robe_lightning.name=벼락학자 로브
+item.ebwizardry\:sage_leggings_lightning.name=벼락학자 각반
+item.ebwizardry\:sage_boots_lightning.name=벼락학자 부츠
+
+item.ebwizardry\:sage_hat_necromancy.name=사령학자 모자
+item.ebwizardry\:sage_robe_necromancy.name=사령학자 로브
+item.ebwizardry\:sage_leggings_necromancy.name=사령학자 각반
+item.ebwizardry\:sage_boots_necromancy.name=사령학자 부츠
+
+item.ebwizardry\:sage_hat_earth.name=대지학자 모자
+item.ebwizardry\:sage_robe_earth.name=대지학자 로브
+item.ebwizardry\:sage_leggings_earth.name=대지학자 각반
+item.ebwizardry\:sage_boots_earth.name=대지학자 부츠
+
+item.ebwizardry\:sage_hat_sorcery.name=신비학자 모자
+item.ebwizardry\:sage_robe_sorcery.name=신비학자 로브
+item.ebwizardry\:sage_leggings_sorcery.name=신비학자 각반
+item.ebwizardry\:sage_boots_sorcery.name=신비학자 부츠
+
+item.ebwizardry\:sage_hat_healing.name=치유학자 모자
+item.ebwizardry\:sage_robe_healing.name=치유학자 로브
+item.ebwizardry\:sage_leggings_healing.name=치유학자 각반
+item.ebwizardry\:sage_boots_healing.name=치유학자 부츠
+
+item.ebwizardry\:battlemage_helmet.name=전투법사 투구
+item.ebwizardry\:battlemage_chestplate.name=전투법사 흉갑
+item.ebwizardry\:battlemage_leggings.name=전투법사 각반
+item.ebwizardry\:battlemage_boots.name=전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_fire.name=화염 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_fire.name=화염 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_fire.name=화염 전투법사 각반
+item.ebwizardry\:battlemage_boots_fire.name=화염 전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_ice.name=얼음 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_ice.name=얼음 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_ice.name=얼음 전투법사 각반
+item.ebwizardry\:battlemage_boots_ice.name=얼음 전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_lightning.name=벼락 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_lightning.name=벼락 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_lightning.name=벼락 전투법사 각반
+item.ebwizardry\:battlemage_boots_lightning.name=벼락 전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_necromancy.name=사령 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_necromancy.name=사령 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_necromancy.name=사령 전투법사 각반
+item.ebwizardry\:battlemage_boots_necromancy.name=사령 전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_earth.name=대지 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_earth.name=대지 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_earth.name=대지 전투법사 각반
+item.ebwizardry\:battlemage_boots_earth.name=대지 전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_sorcery.name=신비 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_sorcery.name=신비 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_sorcery.name=신비 전투법사 각반
+item.ebwizardry\:battlemage_boots_sorcery.name=신비 전투법사 부츠
+
+item.ebwizardry\:battlemage_helmet_healing.name=치유 전투법사 투구
+item.ebwizardry\:battlemage_chestplate_healing.name=치유 전투법사 흉갑
+item.ebwizardry\:battlemage_leggings_healing.name=치유 전투법사 각반
+item.ebwizardry\:battlemage_boots_healing.name=치유 전투법사 부츠
+
+item.ebwizardry\:warlock_hood.name=워록 후드
+item.ebwizardry\:warlock_robe.name=워록 로브
+item.ebwizardry\:warlock_leggings.name=워록 각반
+item.ebwizardry\:warlock_boots.name=워록 부츠
+
+item.ebwizardry\:warlock_hood_fire.name=화염워록 후드
+item.ebwizardry\:warlock_robe_fire.name=화염워록 로브
+item.ebwizardry\:warlock_leggings_fire.name=화염워록 각반
+item.ebwizardry\:warlock_boots_fire.name=화염워록 부츠
+
+item.ebwizardry\:warlock_hood_ice.name=얼음워록 후드
+item.ebwizardry\:warlock_robe_ice.name=얼음워록 로브
+item.ebwizardry\:warlock_leggings_ice.name=얼음워록 각반
+item.ebwizardry\:warlock_boots_ice.name=얼음워록 부츠
+
+item.ebwizardry\:warlock_hood_lightning.name=벼락워록 후드
+item.ebwizardry\:warlock_robe_lightning.name=벼락워록 로브
+item.ebwizardry\:warlock_leggings_lightning.name=벼락워록 각반
+item.ebwizardry\:warlock_boots_lightning.name=벼락워록 부츠
+
+item.ebwizardry\:warlock_hood_necromancy.name=사령워록 후드
+item.ebwizardry\:warlock_robe_necromancy.name=사령워록 로브
+item.ebwizardry\:warlock_leggings_necromancy.name=사령워록 각반
+item.ebwizardry\:warlock_boots_necromancy.name=사령워록 부츠
+
+item.ebwizardry\:warlock_hood_earth.name=대지워록 후드
+item.ebwizardry\:warlock_robe_earth.name=대지워록 로브
+item.ebwizardry\:warlock_leggings_earth.name=대지워록 각반
+item.ebwizardry\:warlock_boots_earth.name=대지워록 부츠
+
+item.ebwizardry\:warlock_hood_sorcery.name=신비워록 후드
+item.ebwizardry\:warlock_robe_sorcery.name=신비워록 로브
+item.ebwizardry\:warlock_leggings_sorcery.name=신비워록 각반
+item.ebwizardry\:warlock_boots_sorcery.name=신비워록 부츠
+
+item.ebwizardry\:warlock_hood_healing.name=치유워록 후드
+item.ebwizardry\:warlock_robe_healing.name=치유워록 로브
+item.ebwizardry\:warlock_leggings_healing.name=치유워록 각반
+item.ebwizardry\:warlock_boots_healing.name=치유워록 부츠
+
 item.ebwizardry\:spawn_wizard.name=생성: 마법사
 item.ebwizardry\:spawn_evil_wizard.name=생성: 사악한 마법사
 
@@ -265,9 +399,9 @@ item.ebwizardry\:flamecatcher.name=화염의 활
 
 item.ebwizardry\:generic.disabled=이 아이템은 설정에서 사용할 수 없도록 설정됨
 
-item.ebwizardry\:ring.generic.desc=버블즈 인벤토리에 장착하거나, 단축바에 두어 최대 2개 까지 장착할 수 있다.
-item.ebwizardry\:amulet.generic.desc=버블즈 인벤토리에 장착하거나, 단축바에 두어 한 번에 한 개만 장착할 수 있다.
-item.ebwizardry\:charm.generic.desc=버블즈 인벤토리에 장착하거나, 단축바에 두어 한 번에 한 개만 장착할 수 있다.
+item.ebwizardry\:ring.generic.desc=버블즈 인벤토리에 장착하거나, 단축바에 올려둬 최대 2개 까지 장착할 수 있습니다.
+item.ebwizardry\:amulet.generic.desc=버블즈 인벤토리에 장착하거나, 단축바에 올려둬 한 번에 한 개만 장착할 수 있습니다.
+item.ebwizardry\:charm.generic.desc=버블즈 인벤토리에 장착하거나, 단축바에 올려둬 한 번에 한 개만 장착할 수 있습니다.
 
 item.ebwizardry\:ring_condensing.name=축전의 반지
 item.ebwizardry\:ring_condensing.desc=단축바에 있는 모든 지팡이의 마나를 천천히 재생시킵니다
@@ -577,6 +711,7 @@ entity.ebwizardry\:wizard.player_combat_3=너의 부주의함이 대가를 치�
 entity.ebwizardry\:wizard.player_combat_4=싸울 준비나 해라, 악당아!
 entity.ebwizardry\:wizard.player_combat_5=분노를 느낄 준비나 해라!
 
+entity.ebwizardry\:zombie_minion.name=좀비
 entity.ebwizardry\:husk_minion.name=허스크
 entity.ebwizardry\:skeleton_minion.name=스켈레톤
 entity.ebwizardry\:stray_minion.name=스트레이
@@ -599,7 +734,7 @@ entity.ebwizardry\:decoy.name=분산
 entity.ebwizardry\:vex_minion.name=벡스
 entity.ebwizardry\:remnant.name=잔존체
 
-entity.ebwizardry\:마법_missile.name=마법
+entity.ebwizardry\:magic_missile.name=마법
 entity.ebwizardry\:arc.name=마법
 entity.ebwizardry\:spark_bomb.name=마법
 entity.ebwizardry\:ice_shard.name=마법
@@ -711,8 +846,12 @@ advancement.ebwizardry\:craft_lectern.desc=주문서 책장을 관리하기 위�
 
 advancement.ebwizardry\:armour_set=이제야 좀 제대로 된 마법사 같네
 advancement.ebwizardry\:armour_set.desc=마법사 갑옷의 모자, 로브, 각반, 부츠를 모두 장착하세요
-advancement.ebwizardry\:legendary=전설!
-advancement.ebwizardry\:legendary.desc=전설 마법사 갑옷을 획득하세요
+advancement.ebwizardry\:sage=학자의 길
+advancement.ebwizardry\:sage.desc=학자의 갑옷을 획득하세요
+advancement.ebwizardry\:battlemage=전투법사의 서약
+advancement.ebwizardry\:battlemage.desc=전투법사의 갑옷을 획득하세요
+advancement.ebwizardry\:warlock=워록의 방식
+advancement.ebwizardry\:warlock.desc=워록의 갑옷을 획득하세요
 
 advancement.ebwizardry\:enchant_scroll=두루마리!
 advancement.ebwizardry\:enchant_scroll.desc=빈 두루마리를 만들고 신비로운 작업대에서 주문의 마법을 부여하세요
@@ -758,7 +897,7 @@ element.magic.wizard=마법사
 element.fire.wizard=화염술사
 element.ice.wizard=얼음법사
 element.lightning.wizard=벼락술사
-element.necromancy.wizard=혼령술사
+element.necromancy.wizard=사령술사
 element.earth.wizard=대지법사
 element.sorcery.wizard=신비술사
 element.healing.wizard=치유사
