@@ -277,7 +277,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		if(this.armourClass == ArmourClass.WIZARD){
 			for(ArmourClass armourClass : ArmourClass.values()){
 				if(upgrade.getItem() == armourClass.upgradeItem.get()){
-					Item newArmour = getArmour(this.element, armourClass, this.getEquipmentSlot());
+					Item newArmour = getArmour(this.element, armourClass, this.armorType);
 					ItemStack newStack = new ItemStack(newArmour);
 					((ItemWizardArmour)newArmour).setMana(newStack, this.getMana(stack));
 					newStack.setTagCompound(stack.getTagCompound());
