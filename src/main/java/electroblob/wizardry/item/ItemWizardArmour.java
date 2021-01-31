@@ -59,8 +59,8 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 		WIZARD(Materials.SILK, () -> null, "wizard", 0.1f, 0, "hat", "robe", "leggings", "boots"),
 		SAGE(Materials.SAGE, () -> WizardryItems.resplendent_thread, "sage", 0.2f, 0, "hat", "robe", "leggings", "boots"),
-		BATTLEMAGE(Materials.BATTLEMAGE, () -> WizardryItems.crystal_silver_plating, "battlemage", 0.05f, 0.15f, "helmet", "chestplate", "leggings", "boots"),
-		WARLOCK(Materials.WARLOCK, () -> WizardryItems.ethereal_crystalweave, "warlock", 0.1f, 0.3f, "hood", "robe", "leggings", "boots");
+		BATTLEMAGE(Materials.BATTLEMAGE, () -> WizardryItems.crystal_silver_plating, "battlemage", 0.05f, 0.05f, "helmet", "chestplate", "leggings", "boots"),
+		WARLOCK(Materials.WARLOCK, () -> WizardryItems.ethereal_crystalweave, "warlock", 0.1f, 0.1f, "hood", "robe", "leggings", "boots");
 
 		/** The armour material to use for this armour class. */
 		final ArmorMaterial material;

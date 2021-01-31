@@ -251,6 +251,7 @@ public final class WandHelper {
 
 		for(int i = 0; i < cooldowns.length; i++){
 			if(cooldowns[i] > 0) cooldowns[i]--;
+			if(cooldowns[i] < 0) cooldowns[i] = 0; // In case it got broken
 		}
 
 		setCooldowns(wand, cooldowns);
@@ -311,6 +312,8 @@ public final class WandHelper {
 		// The length of the spells array must be greater than 0 since this method can only be called if a spell is
 		// cast, which is impossible if there are no spells.
 		if(cooldowns.length <= selectedSpell) cooldowns = new int[spellCount];
+
+		if(cooldown <= 0) cooldown = 1;
 
 		cooldowns[selectedSpell] = cooldown;
 
