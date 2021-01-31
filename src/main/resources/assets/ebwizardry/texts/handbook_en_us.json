@@ -70,6 +70,15 @@
 			"width": 90,
 			"height": 90
 		},
+		"classes": {
+			"location": "ebwizardry:textures/gui/handbook/pictures/classes.png",
+			"caption": "The Three Classes",
+			"u": 0,
+			"v": 0,
+			"width": 96,
+			"height": 32,
+			"border": false
+		},
 		"obelisk": {
 			"location": "ebwizardry:textures/gui/handbook/pictures/obelisk.png",
 			"caption": "An Obelisk",
@@ -492,11 +501,25 @@
 				"#recipe wizard_leggings",
 				"#recipe wizard_boots",
 
-				"One may enchant wizard armour using a normal enchantment table, and due to the inherent properties of magical silk, it tends to be quite effective at holding enchantments. Of particular utility to a wizard are the Magic, Frost and Shock Protection enchantments, which may prove useful defending against other wielders of magic.",
+				"One may enchant wizard armor using a normal enchantment table, and due to the inherent properties of magical silk, it tends to be quite effective at holding enchantments. Of particular utility to a wizard are the Magic, Frost and Shock Protection enchantments, which may prove useful defending against other wielders of magic.",
 
 				"Those wizards who devote themselves to the practise of one element sometimes wear special garments which grant bonuses for that element. Full sets of such garments are very sought after among wizards and are not easy to find.",
 
-				"Legend speaks of an arcane seal used by the most powerful wizards to greatly improve their armor."
+				"Once they have mastered the fundamentals of magic, many wizards choose to follow a particular path, or class, to further their training. There are three main classes that a wizard may align themselves with: sage, battlemage and warlock. Members of each class can easily be distinguished by their robes, which are modified - usually with rare and exotic materials - to better suit their needs.",
+
+				"#image classes",
+
+				"The Sage",
+
+				"By devoting their life to the pursuit of knowledge, the sage has perfected the art of efficient spellcasting, allowing them to cast spells using the smallest possible amount of mana. The finery of their silken robes belies the substantial protection they provide, as the sage is also an adept enchanter - though they are still no match for solid metal plating. Spending such long periods in the safety of a library does, however, make them rather sluggish in combat.",
+
+				"The Battlemage",
+
+				"The battlemage is geared for combat, clad in a combination of toughened cloth and crystal-silver plating sourced from the most skilled of foundries. Through discipline and training, the battlemage has also improved their speed and reactions, allowing them to cast spells more often. This does not come cheap, however, and a battlemage must be careful not to burn through mana too quickly.",
+
+				"The Warlock",
+
+				"The warlock lives for exploration, pushing the boundaries of what is possible to unearth lost arcane secrets. This, along with a willingness to experiment with what others may deem forbidden, has allowed them to break the constraints of traditional training and cast spells at a formidable rate, as well as reducing their mana usage. Their lightweight robes, though good for exploration, provide less protection in combat than their counterparts."
 			]
 		},
 
