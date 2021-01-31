@@ -84,8 +84,15 @@ public class ItemManaFlask extends Item {
 		stacks.addAll(player.inventory.armorInventory); // player#getArmorInventoryList() only returns an Iterable
 
 		if(stacks.stream().anyMatch(s -> s.getItem() instanceof IManaStoringItem && !((IManaStoringItem)s.getItem()).isManaFull(s))){
-			player.setActiveHand(hand);
+
+			if(player.capabilities.isCreativeMode){
+				findAndChargeItem(flask, player);
+			}else{
+				player.setActiveHand(hand);
+			}
+
 			return new ActionResult<>(EnumActionResult.SUCCESS, flask);
+
 		}else{
 			return new ActionResult<>(EnumActionResult.FAIL, flask);
 		}
@@ -106,30 +113,32 @@ public class ItemManaFlask extends Item {
 	public ItemStack onItemUseFinish(ItemStack stack, World world, EntityLivingBase entity){
 
 		if(entity instanceof EntityPlayer){
-
-			EntityPlayer player = (EntityPlayer)entity;
-
-			List<ItemStack> stacks = InventoryUtils.getPrioritisedHotbarAndOffhand(player);
-			stacks.addAll(player.inventory.armorInventory); // player#getArmorInventoryList() only returns an Iterable
-
-			// Find the chargeable item with the least mana
-			ItemStack toCharge = stacks.stream()
-					.filter(s -> s.getItem() instanceof IManaStoringItem && !((IManaStoringItem)s.getItem()).isManaFull(s))
-					.min(Comparator.comparingDouble(s -> ((IManaStoringItem)s.getItem()).getFullness(s))).orElse(null);
-
-			if(toCharge != null){
-
-				((IManaStoringItem)toCharge.getItem()).rechargeMana(toCharge, size.capacity);
-
-				EntityUtils.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_USE, 1, 1);
-				EntityUtils.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_RECHARGE, 0.7f, 1.1f);
-
-				if(!player.isCreative()) stack.shrink(1);
-				player.getCooldownTracker().setCooldown(this, 20);
-			}
+			findAndChargeItem(stack, (EntityPlayer)entity);
 		}
 
 		return stack;
+	}
+
+	private void findAndChargeItem(ItemStack stack, EntityPlayer player){
+
+		List<ItemStack> stacks = InventoryUtils.getPrioritisedHotbarAndOffhand(player);
+		stacks.addAll(player.inventory.armorInventory); // player#getArmorInventoryList() only returns an Iterable
+
+		// Find the chargeable item with the least mana
+		ItemStack toCharge = stacks.stream()
+				.filter(s -> s.getItem() instanceof IManaStoringItem && !((IManaStoringItem)s.getItem()).isManaFull(s))
+				.min(Comparator.comparingDouble(s -> ((IManaStoringItem)s.getItem()).getFullness(s))).orElse(null);
+
+		if(toCharge != null){
+
+			((IManaStoringItem)toCharge.getItem()).rechargeMana(toCharge, size.capacity);
+
+			EntityUtils.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_USE, 1, 1);
+			EntityUtils.playSoundAtPlayer(player, WizardrySounds.ITEM_MANA_FLASK_RECHARGE, 0.7f, 1.1f);
+
+			if(!player.isCreative()) stack.shrink(1);
+			player.getCooldownTracker().setCooldown(this, 20);
+		}
 	}
 
 }
