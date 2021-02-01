@@ -1,5 +1,6 @@
 package electroblob.wizardry.util;
 
+import com.google.common.collect.Sets;
 import electroblob.wizardry.event.SpellCastEvent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -77,13 +78,11 @@ public final class SpellModifiers {
 	 * @return The SpellModifiers object, allowing this method to be chained onto the constructor.
 	 */
 	public SpellModifiers combine(SpellModifiers modifiers){
-		for(Entry<String, Float> entry : multiplierMap.entrySet()){
-			float newValue = entry.getValue() * modifiers.get(entry.getKey());
-			entry.setValue(newValue);
+		for(String key : Sets.union(this.multiplierMap.keySet(), modifiers.multiplierMap.keySet())){
+			float newValue = this.get(key) * modifiers.get(key);
 			// Also need to update the synced map if the modifier is synced in either object
-			if(this.syncedMultiplierMap.containsKey(entry.getKey()) || modifiers.syncedMultiplierMap.containsKey(entry.getKey())){
-				this.syncedMultiplierMap.put(entry.getKey(), newValue);
-			}
+			boolean sync = this.syncedMultiplierMap.containsKey(key) || modifiers.syncedMultiplierMap.containsKey(key);
+			this.set(key, newValue, sync);
 		}
 		return this;
 	}
