@@ -200,16 +200,16 @@ item.ebwizardry\:identification_scroll.desc=알 수 없는 주문서나 두루�
 item.ebwizardry\:identification_scroll.desc_extended=오른쪽 버튼을 클릭하여 식별하지 않은 주문서를 식별할 수 있습니다.
 item.ebwizardry\:identification_scroll.nothing_to_identify=식별할 주문이 없습니다!
 
-item.ebwizardry\:resplendent_thread.name=찬란의 실
+item.ebwizardry\:resplendent_thread.name=찬란한 실타래
 item.ebwizardry\:resplendent_thread.desc=일반적인 마법사의 갑옷을 학자의 갑옷으로 강화합니다
 item.ebwizardry\:resplendent_thread.desc_extended=희미하게 빛나는 실로 신비로운 무늬를 수놓아 로브의 질을 높이고, 마법 부여의 효과를 상승시킵니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
 
 item.ebwizardry\:crystal_silver_plating.name=은도금된 수정
 item.ebwizardry\:crystal_silver_plating.desc=일반적인 마법사의 갑옷을 전투법사의 갑옷으로 강화합니다
-item.ebwizardry\:crystal_silver_plating.desc_extended=엘다르의 공장에서 만들어진 거의 신화적인 합금으로, 우수한 마법 굴절도를 가지고 있습니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
+item.ebwizardry\:crystal_silver_plating.desc_extended=엘다르의 대장간에서 만들어진 거의 신화적인 합금으로, 우수한 마법 굴절도를 가지고 있습니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
 
 item.ebwizardry\:ethereal_crystalweave.name=천상의 수정천
-item.ebwizardry\:ethereal_crystalweave.desc=일반적인 마법사의 갑옷을 워록의 갑옷으로 강화합니다
+item.ebwizardry\:ethereal_crystalweave.desc=일반적인 마법사의 갑옷을 주술사의 갑옷으로 강화합니다
 item.ebwizardry\:ethereal_crystalweave.desc_extended=동물의 가죽처럼 두껍지만 한 장의 종이보다 가벼운 마나의 천입니다.\n\n신비로운 작업대에서 마법사 갑옷에 이 강화를 적용할 수 있습니다.
 
 item.ebwizardry\:magic_silk.name=마법 비단
@@ -346,45 +346,45 @@ item.ebwizardry\:battlemage_chestplate_healing.name=치유 전투법사 흉갑
 item.ebwizardry\:battlemage_leggings_healing.name=치유 전투법사 각반
 item.ebwizardry\:battlemage_boots_healing.name=치유 전투법사 부츠
 
-item.ebwizardry\:warlock_hood.name=워록 후드
-item.ebwizardry\:warlock_robe.name=워록 로브
-item.ebwizardry\:warlock_leggings.name=워록 각반
-item.ebwizardry\:warlock_boots.name=워록 부츠
+item.ebwizardry\:warlock_hood.name=주술사 후드
+item.ebwizardry\:warlock_robe.name=주술사 로브
+item.ebwizardry\:warlock_leggings.name=주술사 각반
+item.ebwizardry\:warlock_boots.name=주술사 부츠
 
-item.ebwizardry\:warlock_hood_fire.name=화염워록 후드
-item.ebwizardry\:warlock_robe_fire.name=화염워록 로브
-item.ebwizardry\:warlock_leggings_fire.name=화염워록 각반
-item.ebwizardry\:warlock_boots_fire.name=화염워록 부츠
+item.ebwizardry\:warlock_hood_fire.name=화염주술사 후드
+item.ebwizardry\:warlock_robe_fire.name=화염주술사 로브
+item.ebwizardry\:warlock_leggings_fire.name=화염주술사 각반
+item.ebwizardry\:warlock_boots_fire.name=화염주술사 부츠
 
-item.ebwizardry\:warlock_hood_ice.name=얼음워록 후드
-item.ebwizardry\:warlock_robe_ice.name=얼음워록 로브
-item.ebwizardry\:warlock_leggings_ice.name=얼음워록 각반
-item.ebwizardry\:warlock_boots_ice.name=얼음워록 부츠
+item.ebwizardry\:warlock_hood_ice.name=얼음주술사 후드
+item.ebwizardry\:warlock_robe_ice.name=얼음주술사 로브
+item.ebwizardry\:warlock_leggings_ice.name=얼음주술사 각반
+item.ebwizardry\:warlock_boots_ice.name=얼음주술사 부츠
 
-item.ebwizardry\:warlock_hood_lightning.name=벼락워록 후드
-item.ebwizardry\:warlock_robe_lightning.name=벼락워록 로브
-item.ebwizardry\:warlock_leggings_lightning.name=벼락워록 각반
-item.ebwizardry\:warlock_boots_lightning.name=벼락워록 부츠
+item.ebwizardry\:warlock_hood_lightning.name=벼락주술사 후드
+item.ebwizardry\:warlock_robe_lightning.name=벼락주술사 로브
+item.ebwizardry\:warlock_leggings_lightning.name=벼락주술사 각반
+item.ebwizardry\:warlock_boots_lightning.name=벼락주술사 부츠
 
-item.ebwizardry\:warlock_hood_necromancy.name=사령워록 후드
-item.ebwizardry\:warlock_robe_necromancy.name=사령워록 로브
-item.ebwizardry\:warlock_leggings_necromancy.name=사령워록 각반
-item.ebwizardry\:warlock_boots_necromancy.name=사령워록 부츠
+item.ebwizardry\:warlock_hood_necromancy.name=사령주술사 후드
+item.ebwizardry\:warlock_robe_necromancy.name=사령주술사 로브
+item.ebwizardry\:warlock_leggings_necromancy.name=사령주술사 각반
+item.ebwizardry\:warlock_boots_necromancy.name=사령주술사 부츠
 
-item.ebwizardry\:warlock_hood_earth.name=대지워록 후드
-item.ebwizardry\:warlock_robe_earth.name=대지워록 로브
-item.ebwizardry\:warlock_leggings_earth.name=대지워록 각반
-item.ebwizardry\:warlock_boots_earth.name=대지워록 부츠
+item.ebwizardry\:warlock_hood_earth.name=대지주술사 후드
+item.ebwizardry\:warlock_robe_earth.name=대지주술사 로브
+item.ebwizardry\:warlock_leggings_earth.name=대지주술사 각반
+item.ebwizardry\:warlock_boots_earth.name=대지주술사 부츠
 
-item.ebwizardry\:warlock_hood_sorcery.name=신비워록 후드
-item.ebwizardry\:warlock_robe_sorcery.name=신비워록 로브
-item.ebwizardry\:warlock_leggings_sorcery.name=신비워록 각반
-item.ebwizardry\:warlock_boots_sorcery.name=신비워록 부츠
+item.ebwizardry\:warlock_hood_sorcery.name=신비주술사 후드
+item.ebwizardry\:warlock_robe_sorcery.name=신비주술사 로브
+item.ebwizardry\:warlock_leggings_sorcery.name=신비주술사 각반
+item.ebwizardry\:warlock_boots_sorcery.name=신비주술사 부츠
 
-item.ebwizardry\:warlock_hood_healing.name=치유워록 후드
-item.ebwizardry\:warlock_robe_healing.name=치유워록 로브
-item.ebwizardry\:warlock_leggings_healing.name=치유워록 각반
-item.ebwizardry\:warlock_boots_healing.name=치유워록 부츠
+item.ebwizardry\:warlock_hood_healing.name=치유주술사 후드
+item.ebwizardry\:warlock_robe_healing.name=치유주술사 로브
+item.ebwizardry\:warlock_leggings_healing.name=치유주술사 각반
+item.ebwizardry\:warlock_boots_healing.name=치유주술사 부츠
 
 item.ebwizardry\:spawn_wizard.name=생성: 마법사
 item.ebwizardry\:spawn_evil_wizard.name=생성: 사악한 마법사
@@ -538,7 +538,7 @@ item.ebwizardry\:charm_flight.name=에메랄드 딱정벌레 날개
 item.ebwizardry\:charm_flight.desc=비행 및 활공 속도가 50%%더 빨라집니다
 item.ebwizardry\:charm_growth.name=마법수정 꽃 부적
 item.ebwizardry\:charm_growth.desc=수확의 축복 주문이 35%%확률로 식물을 완전히 자라게 합니다
-item.ebwizardry\:charm_abseiling.name=마법이 부여된 실타래
+item.ebwizardry\:charm_abseiling.name=마법이 부여된 실뭉치
 item.ebwizardry\:charm_abseiling.desc=덩굴의 얽매임을 사용하며 공중에 있을 때 웅크리면 덩굴의 길이가 늘어납니다
 item.ebwizardry\:charm_silk_touch.name=월광석 보주
 item.ebwizardry\:charm_silk_touch.desc=채광 주문에 섬세한 손길이 적용됩니다
@@ -850,8 +850,8 @@ advancement.ebwizardry\:sage=학자의 길
 advancement.ebwizardry\:sage.desc=학자의 갑옷을 획득하세요
 advancement.ebwizardry\:battlemage=전투법사의 서약
 advancement.ebwizardry\:battlemage.desc=전투법사의 갑옷을 획득하세요
-advancement.ebwizardry\:warlock=워록의 방식
-advancement.ebwizardry\:warlock.desc=워록의 갑옷을 획득하세요
+advancement.ebwizardry\:warlock=주술사의 방식
+advancement.ebwizardry\:warlock.desc=주술사의 갑옷을 획득하세요
 
 advancement.ebwizardry\:enchant_scroll=두루마리!
 advancement.ebwizardry\:enchant_scroll.desc=빈 두루마리를 만들고 신비로운 작업대에서 주문의 마법을 부여하세요
