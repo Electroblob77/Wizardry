@@ -1,19 +1,21 @@
 package electroblob.wizardry.misc;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ItemManaFlask;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+
+import java.util.Collection;
 
 /**
  * Implements a dynamic crafting recipe for recharging items with mana flasks.
@@ -23,6 +25,8 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
  */
 @Mod.EventBusSubscriber
 public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
+
+	private static final Multimap<Item, RecipeRechargeWithFlask> FLASK_RECIPES = HashMultimap.create();
 
 	private final IManaStoringItem chargeable;
 	private final ItemManaFlask flask;
@@ -38,6 +42,7 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 		if(!(chargeable instanceof IManaStoringItem)) throw new IllegalArgumentException("Item to be charged must be an instance of IManaStoringItem");
 		this.chargeable = (IManaStoringItem)chargeable;
 		this.flask = flask;
+		FLASK_RECIPES.put(chargeable, this);
 	}
 
 	// Commented out for now because JEI spams the log with errors about the recipe having no output
@@ -91,11 +96,11 @@ public class RecipeRechargeWithFlask extends ShapelessOreRecipe {
 		// This means that although I no longer have to replace the result every tick, I still need to do it here
 		// ... I thought the whole point of the new recipe system was so that I DIDN'T have to do this?!
 		if(event.craftMatrix instanceof InventoryCrafting){
-			for(IRecipe recipe : CraftingManager.REGISTRY){
-				if(recipe instanceof RecipeRechargeWithFlask
-						&& recipe.matches((InventoryCrafting)event.craftMatrix, event.player.world)){
+			Collection<RecipeRechargeWithFlask> recipes = FLASK_RECIPES.get(event.crafting.getItem());
+			for(RecipeRechargeWithFlask recipe : recipes){
+				if(recipe.matches((InventoryCrafting)event.craftMatrix, event.player.world)){
 					// Have to modify the itemstack in the actual event, it cannot be replaced
-					((RecipeRechargeWithFlask)recipe).rechargeItemAndCopyNBT(event.crafting, (InventoryCrafting)event.craftMatrix);
+					recipe.rechargeItemAndCopyNBT(event.crafting, (InventoryCrafting)event.craftMatrix);
 				}
 			}
 		}
