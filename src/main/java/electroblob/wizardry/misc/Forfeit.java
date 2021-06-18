@@ -12,12 +12,15 @@ import electroblob.wizardry.entity.living.*;
 import electroblob.wizardry.entity.projectile.EntityFirebomb;
 import electroblob.wizardry.entity.projectile.EntityMagicFireball;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
+import electroblob.wizardry.item.IManaStoringItem;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Banish;
-import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.SpellProperties.Context;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -173,6 +176,23 @@ public abstract class Forfeit {
 				}
 
 				forfeit.apply(event.getWorld(), player);
+
+				ItemStack stack = player.getHeldItemMainhand();
+
+				if(!(stack.getItem() instanceof ISpellCastingItem)){
+					stack = player.getHeldItemOffhand();
+					if(!(stack.getItem() instanceof ISpellCastingItem)) stack = ItemStack.EMPTY;
+				}
+
+				if(!stack.isEmpty()){
+					// Still need to charge the player mana or consume the scroll
+					if(event.getSource() == Source.SCROLL){
+						if(!player.isCreative()) stack.shrink(1);
+					}else if(stack.getItem() instanceof IManaStoringItem){
+						int cost = (int)(event.getSpell().getCost() * event.getModifiers().get(SpellModifiers.COST) + 0.1f); // Weird floaty rounding
+						((IManaStoringItem)stack.getItem()).consumeMana(stack, cost, player);
+					}
+				}
 
 				WizardryAdvancementTriggers.spell_failure.triggerFor(player);
 
