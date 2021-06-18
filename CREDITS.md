@@ -12,6 +12,11 @@ Thanks also to the Minecraft modding community, which always has an answer to my
 
 In addition, I'd like to thank the following individuals for their contributions to the mod:
 
+#### Discord Moderators (and all-round awesome people)
+
+- FavouriteDragon
+- WinDanesz
+
 #### Code
 
 - Corail31
@@ -27,13 +32,14 @@ In addition, I'd like to thank the following individuals for their contributions
 - rafasoares
 - xinyuan-liu
 - SettingDust
+- Aralu115
 
 #### Translations
 
 - Spanish: MadWrist, Alsentar
 - Mexican Spanish: MadWrist
 - Russian: VilagVil, kellixon, bigenergy, MugGod2, DrHesperus
-- French: Hahdrim
+- French: Hahdrim, Crowller
 - Brazilian Portuguese: lorrampi
 - Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
 - Korean: shejery, rewi_wire, 방통, red1854th
