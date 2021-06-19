@@ -1,5 +1,6 @@
 package electroblob.wizardry.client.gui.handbook;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -34,6 +35,8 @@ import java.util.*;
 // Because these are now generated on resource pack reload (not on handbook open, as before), this class can no longer
 // be a non-static inner class
 class Section {
+
+	private static final Set<String> SPACELESS_LANGUAGES = ImmutableSet.of("zh_cn", "zh_tw");
 
 	// Final fields are mandatory (none here though), the rest are optional
 	String title;
@@ -293,7 +296,12 @@ class Section {
 
 						String linkRaw = paragraph.substring(linkStart, linkEnd + 1);
 						String[] arguments = paragraph.substring(linkStart + 1, linkEnd).split("\\s", 2);
-						String suffix = paragraph.substring(linkEnd).split("\\s", 2)[0].substring(1); // substring(1) to remove the @
+						String suffix = "";
+
+						// Account for trailing punctuation, except in languages that don't use spaces such as Chinese
+						if(!SPACELESS_LANGUAGES.contains(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode())){
+							paragraph.substring(linkEnd).split("\\s", 2)[0].substring(1); // substring(1) to remove the @
+						}
 
 						// The index of the single page currently being formatted, relative to the section
 						int pageRelative = (lines.size() + upToLink.size() - 1) / maxLineNumber;
