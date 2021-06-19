@@ -151,7 +151,7 @@ class Contents {
 				int x = GuiWizardHandbook.isRightPage(startPage) ? left + GuiWizardHandbook.GUI_WIDTH - GuiWizardHandbook.TEXT_INSET_X - GuiWizardHandbook.PAGE_WIDTH : left + GuiWizardHandbook.TEXT_INSET_X;
 				int y = top + GuiWizardHandbook.TEXT_INSET_Y + startLine * font.FONT_HEIGHT;
 
-				list.add(new GuiButtonHyperlink.Internal(0, x, y, font, entry.title, entry, 0, "", maxLineNumber-startLine, GuiWizardHandbook.isRightPage(startPage)));
+				list.add(new GuiButtonHyperlink.Internal(0, x, y, font, entry.title, entry, 0, "", maxLineNumber-startLine, GuiWizardHandbook.isRightPage(startPage), false));
 
 				startLine++;
 

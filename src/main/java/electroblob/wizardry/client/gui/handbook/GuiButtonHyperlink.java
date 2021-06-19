@@ -28,15 +28,17 @@ public abstract class GuiButtonHyperlink extends GuiButton {
 	final List<String> lines;
 	final int linesLeft;
 
-	GuiButtonHyperlink(int id, int x, int y, FontRenderer font, String text, int indent, String suffix, int linesLeft, boolean rightPage){
+	GuiButtonHyperlink(int id, int x, int y, FontRenderer font, String text, int indent, String suffix, int linesLeft, boolean rightPage, boolean spaceless){
 
 		super(id, x, y, font.getStringWidth(text), font.FONT_HEIGHT, text);
 
 		// Sometimes a link has punctuation or something after it that causes it to wrap onto a new line
 		String linkWithSuffix = text + suffix;
 
-		// If the string won't fit any words at the end of the current line, treat it as if we started a new line
-		if(font.getStringWidth(linkWithSuffix.split("\\s")[0]) > GuiWizardHandbook.PAGE_WIDTH - indent){
+		// If the string won't fit any words (or characters in a spaceless language) at the end of the current line,
+		// treat it as if we started a new line
+		String firstWord = spaceless ? linkWithSuffix.substring(0, 1) : linkWithSuffix.split("\\s")[0];
+		if(font.getStringWidth(firstWord) > GuiWizardHandbook.PAGE_WIDTH - indent){
 			indent = 0;
 			this.y += font.FONT_HEIGHT;
 		}
@@ -149,7 +151,7 @@ public abstract class GuiButtonHyperlink extends GuiButton {
 	 * @throws IllegalArgumentException if the given argument array is empty or contains more than 2 arguments
 	 * @throws JsonSyntaxException if the specified link target is not a URL or a valid section ID
 	 */
-	public static GuiButtonHyperlink create(int x, int y, FontRenderer font, List<String> upToLink, String[] arguments, String suffix, int linesLeft, boolean rightPage){
+	public static GuiButtonHyperlink create(int x, int y, FontRenderer font, List<String> upToLink, String[] arguments, String suffix, int linesLeft, boolean rightPage, boolean spaceless){
 
 		if(arguments.length == 0 || arguments.length > 2) throw new IllegalArgumentException("Incorrect array length!");
 
@@ -158,7 +160,7 @@ public abstract class GuiButtonHyperlink extends GuiButton {
 		if(arguments[0].matches(URL_REGEX)){
 
 			button = new GuiButtonHyperlink.External(0, x, y, font, arguments[arguments.length - 1], arguments[0],
-					font.getStringWidth(upToLink.get(upToLink.size() - 1)), suffix, linesLeft, rightPage);
+					font.getStringWidth(upToLink.get(upToLink.size() - 1)), suffix, linesLeft, rightPage, spaceless);
 
 		}else{
 
@@ -167,7 +169,7 @@ public abstract class GuiButtonHyperlink extends GuiButton {
 			if(target == null) throw new JsonSyntaxException("Hyperlink points to nonexistent section id " + arguments[0]);
 
 			button = new GuiButtonHyperlink.Internal(0, x, y, font, arguments[arguments.length - 1],
-					target, font.getStringWidth(upToLink.get(upToLink.size() - 1)), suffix, linesLeft, rightPage);
+					target, font.getStringWidth(upToLink.get(upToLink.size() - 1)), suffix, linesLeft, rightPage, spaceless);
 		}
 
 		return button;
@@ -177,8 +179,8 @@ public abstract class GuiButtonHyperlink extends GuiButton {
 
 		final Section target;
 
-		Internal(int id, int x, int y, FontRenderer font, String text, Section target, int indent, String suffix, int linesLeft, boolean rightPage){
-			super(id, x, y, font, text, indent, suffix, linesLeft, rightPage);
+		Internal(int id, int x, int y, FontRenderer font, String text, Section target, int indent, String suffix, int linesLeft, boolean rightPage, boolean spaceless){
+			super(id, x, y, font, text, indent, suffix, linesLeft, rightPage, spaceless);
 			this.target = target;
 		}
 
@@ -216,8 +218,8 @@ public abstract class GuiButtonHyperlink extends GuiButton {
 
 		final ITextComponent link;
 
-		External(int id, int x, int y, FontRenderer font, String text, String url, int indent, String suffix, int linesLeft, boolean rightPage){
-			super(id, x, y, font, text, indent, suffix, linesLeft, rightPage);
+		External(int id, int x, int y, FontRenderer font, String text, String url, int indent, String suffix, int linesLeft, boolean rightPage, boolean spaceless){
+			super(id, x, y, font, text, indent, suffix, linesLeft, rightPage, spaceless);
 			this.link = new TextComponentString(text);
 			link.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, url)).setColor(TextFormatting.DARK_BLUE);
 		}

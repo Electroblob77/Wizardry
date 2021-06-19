@@ -299,9 +299,8 @@ class Section {
 						String suffix = "";
 
 						// Account for trailing punctuation, except in languages that don't use spaces such as Chinese
-						if(!SPACELESS_LANGUAGES.contains(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode())){
-							paragraph.substring(linkEnd).split("\\s", 2)[0].substring(1); // substring(1) to remove the @
-						}
+						boolean spaceless = SPACELESS_LANGUAGES.contains(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode());
+						if(!spaceless) paragraph.substring(linkEnd).split("\\s", 2)[0].substring(1); // substring(1) to remove the @
 
 						// The index of the single page currently being formatted, relative to the section
 						int pageRelative = (lines.size() + upToLink.size() - 1) / maxLineNumber;
@@ -319,7 +318,7 @@ class Section {
 						}
 
 						// The button id only does what you use it for, so we're just not using it at all.
-						this.buttons.get(pageRelative).add(GuiButtonHyperlink.create(x, y, font, upToLink, arguments, suffix, maxLineNumber - lineNumber - 1, GuiWizardHandbook.isRightPage(page)));
+						this.buttons.get(pageRelative).add(GuiButtonHyperlink.create(x, y, font, upToLink, arguments, suffix, maxLineNumber - lineNumber - 1, GuiWizardHandbook.isRightPage(page), spaceless));
 
 						// The link button should exactly overlay the display text in the main string
 						// If the link has no display text specified, it displays the unformatted target string
