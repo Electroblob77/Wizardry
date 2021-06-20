@@ -344,6 +344,8 @@ public class ItemArtefact extends Item {
 
 					findMatchingWandAndExecute(player, Spells.shield, wand -> {
 
+						if(wand.getItem() instanceof ItemScroll) return; // Ignore scrolls since they shouldn't work
+
 						List<Entity> projectiles = EntityUtils.getEntitiesWithinRadius(5, player.posX, player.posY, player.posZ, world, Entity.class);
 						projectiles.removeIf(e -> !(e instanceof IProjectile));
 						Vec3d look = player.getLookVec();
