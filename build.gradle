@@ -59,6 +59,7 @@ dependencies {
 
     deobfCompile "baubles:Baubles:${mc_version_short}:${baubles_version}"
     deobfCompile "antique-atlas:antiqueatlas:${mc_version}:${antique_atlas_version}"
+    deobfCompile "constructs-armory:conarm:${mc_version}:${conarm_version}"
 
 }
 
