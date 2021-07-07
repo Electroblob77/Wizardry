@@ -33,7 +33,7 @@ import java.util.Iterator;
  * than having to deal with each of them separately, which would be inefficient and cumbersome (the former of those
  * classes cannot extend the latter because they both need to extend different subclasses of
  * {@link net.minecraft.enchantment.Enchantment}).
- * 
+ *
  * @since Wizardry 1.2
  */
 @Mod.EventBusSubscriber
@@ -69,11 +69,15 @@ public interface Imbuement {
 				Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"));
 				// If the item contains a magic weapon enchantment, remove it from the item
 				if(enchantment instanceof Imbuement){
+					((Imbuement) enchantment).onImbuementRemoval(stack);
 					enchantmentIt.remove();
 				}
 			}
 		}
 	}
+
+	/** Allows executing some custom logic before this imbuement is being removed from the stack. Called when the imbuement is about to be removed. */
+	default void onImbuementRemoval(ItemStack stack){}
 
 	@SubscribeEvent
 	public static void onPlayerOpenContainerEvent(PlayerContainerEvent event){
