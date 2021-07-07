@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-Please read the [guide for contributing](https://github.com/Electroblob77/Wizardry/blob/1.12.2/CONTRIBUTING.md) before posting.
+Please read the [guide for contributing](https://github.com/Electroblob77/Wizardry/blob/1.12.2/CONTRIBUTING.md) before posting. You may also find the [troubleshooting page](https://github.com/Electroblob77/Wizardry/wiki/Troubleshooting) helpful.
 
 Minecraft version: 1.12.2 [change as necessary]  
 Wizardry version: 4.3.4 [change as necessary]
