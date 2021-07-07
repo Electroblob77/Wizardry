@@ -123,6 +123,8 @@ public class ItemArtefact extends Item {
 		this.enabled = enabled;
 	}
 
+	public boolean isEnabled() { return enabled; }
+
 	@Override
 	public EnumRarity getRarity(ItemStack stack){
 		return rarity;
