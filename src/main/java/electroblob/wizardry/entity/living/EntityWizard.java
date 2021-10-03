@@ -81,11 +81,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	private static final DataParameter<Integer> HEAL_COOLDOWN = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
 	/** Data parameter for the wizard's element. */
 	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
+	/** Data parameters for the wizard's current continuous spell. */
+	private static final DataParameter<String> CONTINUOUS_SPELL = EntityDataManager.createKey(EntityEvilWizard.class, DataSerializers.STRING);
+	private static final DataParameter<Integer> SPELL_COUNTER = EntityDataManager.createKey(EntityEvilWizard.class, DataSerializers.VARINT);
 
 	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
-	private Spell continuousSpell;
-	private int spellCounter;
 
 	/** A set of the positions of the blocks that are part of this wizard's tower. */
 	private Set<BlockPos> towerBlocks;
@@ -102,6 +103,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		super.entityInit();
 		this.dataManager.register(HEAL_COOLDOWN, -1);
 		this.dataManager.register(ELEMENT, 0);
+		this.dataManager.register(CONTINUOUS_SPELL, "ebwizardry:none");
+		this.dataManager.register(SPELL_COUNTER, 0);
 	}
 
 	@Override
@@ -182,23 +185,23 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	}
 
 	@Override
-	public void setContinuousSpell(Spell spell){
-		this.continuousSpell = spell;
+	public void setContinuousSpell(Spell spell) {
+		this.dataManager.set(CONTINUOUS_SPELL, spell.getRegistryName().toString());
 	}
 
 	@Override
-	public Spell getContinuousSpell(){
-		return this.continuousSpell;
+	public Spell getContinuousSpell() {
+		return Spell.get(this.dataManager.get(CONTINUOUS_SPELL));
 	}
 
 	@Override
-	public void setSpellCounter(int count){
-		spellCounter = count;
+	public void setSpellCounter(int count) {
+		this.dataManager.set(SPELL_COUNTER, count);
 	}
 
 	@Override
-	public int getSpellCounter(){
-		return spellCounter;
+	public int getSpellCounter() {
+		return this.dataManager.get(SPELL_COUNTER);
 	}
 
 	@Override
