@@ -1,4 +1,3 @@
-# PARSE_ESCAPES
 tile.ebwizardry\:arcane_workbench.name=奧術工作檯
 tile.ebwizardry\:crystal_ore.name=水晶礦
 tile.ebwizardry\:petrified_stone.name=石化石
@@ -18,7 +17,6 @@ tile.ebwizardry\:obsidian_crust.name=黑曜石層
 tile.ebwizardry\:dry_frosted_ice.name=乾燥霜冰
 tile.ebwizardry\:crystal_flower_pot.name=花盆
 tile.ebwizardry\:permafrost.name=永凍冰晶
-
 tile.ebwizardry\:magic_crystal_block.name=水晶塊
 tile.ebwizardry\:fire_crystal_block.name=赤焰晶塊
 tile.ebwizardry\:ice_crystal_block.name=寒霜晶塊
@@ -27,31 +25,26 @@ tile.ebwizardry\:necromancy_crystal_block.name=邃暗晶塊
 tile.ebwizardry\:earth_crystal_block.name=蒼翠晶塊
 tile.ebwizardry\:sorcery_crystal_block.name=秘源晶塊
 tile.ebwizardry\:healing_crystal_block.name=光輝晶塊
-
 tile.ebwizardry\:oak_gilded_wood.name=鍍金橡木
 tile.ebwizardry\:spruce_gilded_wood.name=鍍金杉木
-tile.ebwizardry\:birch_gilded_wood.name=鍍金樺木木
+tile.ebwizardry\:birch_gilded_wood.name=鍍金樺木
 tile.ebwizardry\:jungle_gilded_wood.name=鍍金叢林木
-tile.ebwizardry\:acacia_gilded_wood.name=鍍金相思木木
+tile.ebwizardry\:acacia_gilded_wood.name=鍍金相思木
 tile.ebwizardry\:dark_oak_gilded_wood.name=鍍金黑橡木
-
 tile.ebwizardry\:oak_bookshelf.name=橡木書櫥
 tile.ebwizardry\:spruce_bookshelf.name=杉木書櫥
-tile.ebwizardry\:birch_bookshelf.name=樺木木書櫥
+tile.ebwizardry\:birch_bookshelf.name=樺木書櫃
 tile.ebwizardry\:jungle_bookshelf.name=叢林木書櫥
-tile.ebwizardry\:acacia_bookshelf.name=相思木木書櫥
+tile.ebwizardry\:acacia_bookshelf.name=相思木書櫃
 tile.ebwizardry\:dark_oak_bookshelf.name=黑橡木書櫥
-
 tile.ebwizardry\:oak_lectern.name=橡木覽術台
 tile.ebwizardry\:spruce_lectern.name=杉木覽術台
-tile.ebwizardry\:birch_lectern.name=樺木木覽術台
+tile.ebwizardry\:birch_lectern.name=樺木講台
 tile.ebwizardry\:jungle_lectern.name=叢林木覽術台
-tile.ebwizardry\:acacia_lectern.name=相思木木覽術台
+tile.ebwizardry\:acacia_lectern.name=相思木講台
 tile.ebwizardry\:dark_oak_lectern.name=黑橡木覽術台
-
 tile.ebwizardry\:receptacle.name=容杯
 tile.ebwizardry\:imbuement_altar.name=注靈祭壇
-
 item.ebwizardry\:crystal_magic.name=魔力水晶
 item.ebwizardry\:crystal_magic.desc=水晶閃耀斑斕的色彩似乎在緩慢地變幻流轉，暗示著其內蘊含的魔法能量。或許能以某種方法來駕馭這種魔力……
 item.ebwizardry\:crystal_fire.name=赤焰水晶
@@ -68,39 +61,29 @@ item.ebwizardry\:crystal_sorcery.name=秘源水晶
 item.ebwizardry\:crystal_sorcery.desc=散發著碧綠微光的水晶。也許它封存著遠古之力的奧秘……
 item.ebwizardry\:crystal_healing.name=光輝水晶
 item.ebwizardry\:crystal_healing.desc=在日光下閃耀金黃色光芒的水晶。或許它連結著神聖之力……
-
 item.ebwizardry\:spell_book.name=法術書
 item.ebwizardry\:spell_book.desc=一本寫滿了遠古文稿裡符號與雕文的書。通過刻苦鑽研，或許能破譯它的內容……\n\n手持這本書時右擊即可閱讀。
 item.ebwizardry\:spell_book.new=尚未鑑定！
 item.ebwizardry\:spell_book.apply_to_wizard=將 %1$s 的法術 %2$s 替換為 %3$s
-
 item.ebwizardry\:ruined_spell_book.name=破損的法術書
 item.ebwizardry\:ruined_spell_book.desc=這本破舊不堪的法術書中的書頁破損嚴重，已經無法閱讀了，但不知為何，你能感受到其中仍有魔法遺存——要是能夠復原它……
-
 item.ebwizardry\:arcane_tome.name=奧法寶典
 item.ebwizardry\:arcane_tome.desc=將任意滿足進度條件的 %1$s 等級的魔杖升級至 %2$s 等級
-
 item.ebwizardry\:wizard_handbook.name=巫師手札
 item.ebwizardry\:wizard_handbook.author=%1$s 著
 item.ebwizardry\:wizard_handbook.desc=屬於你的、不太能塞進口袋裡的奧術藝術指南！對任何滿懷雄心壯志，不懈探索以學習魔法知識的巫師而言，這本手札都是不可或缺的。\n\n手持此書時右擊即可閱讀。
-
 item.ebwizardry\:wand.generic=魔杖
-
 item.ebwizardry\:wand.buff=+%1$s %2$s 法術強度
 item.ebwizardry\:wand.spell=目前法術：%1$s
 item.ebwizardry\:wand.mana=魔力值：%1$s/%2$s
 item.ebwizardry\:wand.progression=魔杖升級進度：%1$s/%2$s
-
 item.ebwizardry\:wand.levelup=%1$s 已經準備好升至 %2$s 級
-
 item.ebwizardry\:wand.addally=%1$s已被加入到你的盟友名單
 item.ebwizardry\:wand.removeally=%1$s已被移出你的盟友名單
-
 item.ebwizardry\:magic_wand.name=魔杖
 item.ebwizardry\:apprentice_wand.name=學徒魔杖
 item.ebwizardry\:advanced_wand.name=進階魔杖
 item.ebwizardry\:master_wand.name=大師魔杖
-
 item.ebwizardry\:novice_fire_wand.name=烈焰魔杖
 item.ebwizardry\:novice_ice_wand.name=冰霜魔杖
 item.ebwizardry\:novice_lightning_wand.name=雷電魔杖
@@ -108,7 +91,6 @@ item.ebwizardry\:novice_necromancy_wand.name=死靈魔杖
 item.ebwizardry\:novice_earth_wand.name=自然魔杖
 item.ebwizardry\:novice_sorcery_wand.name=秘法魔杖
 item.ebwizardry\:novice_healing_wand.name=治癒魔杖
-
 item.ebwizardry\:apprentice_fire_wand.name=『學徒』火術師魔杖
 item.ebwizardry\:apprentice_ice_wand.name=『學徒』冰術師魔杖
 item.ebwizardry\:apprentice_lightning_wand.name=『學徒』雷術師魔杖
@@ -116,7 +98,6 @@ item.ebwizardry\:apprentice_necromancy_wand.name=『學徒』死靈師魔杖
 item.ebwizardry\:apprentice_earth_wand.name=『學徒』地術師魔杖
 item.ebwizardry\:apprentice_sorcery_wand.name=『學徒』秘術師魔杖
 item.ebwizardry\:apprentice_healing_wand.name=『學徒』治療師魔杖
-
 item.ebwizardry\:advanced_fire_wand.name=『進階』舞焰者魔杖
 item.ebwizardry\:advanced_ice_wand.name=『進階』縱霜者魔杖
 item.ebwizardry\:advanced_lightning_wand.name=『進階』馴雷者魔杖
@@ -124,7 +105,6 @@ item.ebwizardry\:advanced_necromancy_wand.name=『進階』御冥者魔杖
 item.ebwizardry\:advanced_earth_wand.name=『進階』游息者魔杖
 item.ebwizardry\:advanced_sorcery_wand.name=『進階』詭秘者魔杖
 item.ebwizardry\:advanced_healing_wand.name=『進階』守護者魔杖
-
 item.ebwizardry\:master_fire_wand.name=『大師』獄炎業火之杖
 item.ebwizardry\:master_ice_wand.name=『大師』萬古冰封之杖
 item.ebwizardry\:master_lightning_wand.name=『大師』雷霆萬鈞之杖
@@ -132,31 +112,24 @@ item.ebwizardry\:master_necromancy_wand.name=『大師』冥域喚靈之杖
 item.ebwizardry\:master_earth_wand.name=『大師』萬物吹息之杖
 item.ebwizardry\:master_sorcery_wand.name=『大師』扭曲現實之杖
 item.ebwizardry\:master_healing_wand.name=『大師』聖境守護之杖
-
 item.ebwizardry\:spectral_sword.name=幽冥劍
 item.ebwizardry\:spectral_pickaxe.name=幽冥鎬
 item.ebwizardry\:spectral_bow.name=幽冥弓
-
 item.ebwizardry\:spectral_sword_upgraded.name=幽冥劍
 item.ebwizardry\:spectral_pickaxe_upgraded.name=幽冥鎬
-
 item.ebwizardry\:small_mana_flask.name=小型魔力瓶
 item.ebwizardry\:medium_mana_flask.name=中型魔力瓶
 item.ebwizardry\:large_mana_flask.name=大型魔力瓶
 item.ebwizardry\:mana_flask.desc=與一柄魔杖或是一件巫師盔甲合成可為其恢復 %s 點魔力
-
 item.ebwizardry\:grand_crystal.name=大型魔力水晶
 item.ebwizardry\:grand_crystal.desc=一塊巨大的魔力水晶，尺寸是自然生成水晶的數倍。肯定是有人手動使其生長——但是如何做到的？
 item.ebwizardry\:crystal_shard.name=魔力水晶碎片
 item.ebwizardry\:crystal_shard.desc=一小塊破碎的魔力水晶。它自身容納的魔力很少，但也許有其他用途……
-
 item.ebwizardry\:astral_diamond.name=星芒寶鑽
 item.ebwizardry\:astral_diamond.desc=一顆稀世珍寶，在星光下熠熠生輝。據說最強大的巫師會尋求星芒寶鑽，以換取最晦澀的奧術知識。
-
 item.ebwizardry\:purifying_elixir.name=淨化聖水
 item.ebwizardry\:purifying_elixir.desc=使用後消除詛咒
 item.ebwizardry\:purifying_elixir.desc_extended=一小瓶奇特的金黃色液體，顯然有著強力的治癒作用。明智的做法是留存儉用，以備不時之需。
-
 item.ebwizardry\:storage_upgrade.name=魔力儲能升級卷軸
 item.ebwizardry\:siphon_upgrade.name=魔力吸取升級卷軸
 item.ebwizardry\:condenser_upgrade.name=魔力凝結升級卷軸
@@ -166,9 +139,7 @@ item.ebwizardry\:cooldown_upgrade.name=法術冷卻升級卷軸
 item.ebwizardry\:blast_upgrade.name=法術範圍升級卷軸
 item.ebwizardry\:attunement_upgrade.name=法術欄位升級卷軸
 item.ebwizardry\:melee_upgrade.name=魔杖近戰升級卷軸
-
 item.ebwizardry\:wand_upgrade.generic.desc=在奧術工作檯中將這張升級卷軸附加到魔杖上。
-
 item.ebwizardry\:storage_upgrade.desc=增加魔杖的最大魔力容量
 item.ebwizardry\:siphon_upgrade.desc=擊殺怪物恢復魔力
 item.ebwizardry\:condenser_upgrade.desc=緩慢恢復魔杖內的魔力
@@ -178,18 +149,14 @@ item.ebwizardry\:cooldown_upgrade.desc=提升魔杖的法術冷卻速度
 item.ebwizardry\:blast_upgrade.desc=增加法術的作用範圍
 item.ebwizardry\:attunement_upgrade.desc=增加法術欄位
 item.ebwizardry\:melee_upgrade.desc=提升魔杖在使用法術時造成的傷害
-
 item.ebwizardry\:flaming_axe.name=熾烈之斧
 item.ebwizardry\:frost_axe.name=冰霜之斧
-
 item.ebwizardry\:flaming_axe_upgraded.name=熾烈之斧
 item.ebwizardry\:frost_axe_upgraded.name=冰霜之斧
-
 item.ebwizardry\:firebomb.name=燃燒彈
 item.ebwizardry\:poison_bomb.name=毒液彈
 item.ebwizardry\:smoke_bomb.name=煙霧彈
 item.ebwizardry\:spark_bomb.name=電擊彈
-
 item.ebwizardry\:blank_scroll.name=空白卷軸
 item.ebwizardry\:scroll.generic=卷軸
 item.ebwizardry\:scroll.name=%1$s卷軸
@@ -199,210 +166,165 @@ item.ebwizardry\:identification_scroll.name=鑑定卷軸
 item.ebwizardry\:identification_scroll.desc=識別的未知法術書或卷軸
 item.ebwizardry\:identification_scroll.desc_extended=手持鑑定卷軸右擊，以鑑定快捷欄中的第一個未鑑定的法術書或卷軸。
 item.ebwizardry\:identification_scroll.nothing_to_identify=沒有可鑑定的物品！
-
 item.ebwizardry\:resplendent_thread.name=魔輝絲線
 item.ebwizardry\:resplendent_thread.desc=將尋常巫師盔甲升級至賢者盔甲
 item.ebwizardry\:resplendent_thread.desc_extended=一卷微光閃爍的絲線，用於將奧術符紋刺繡至絕品的長袍之上，以提升其附魔能力。\n\n在奧術工作檯中可將該升級聖物附加到一件巫師盔甲上。
-
 item.ebwizardry\:crystal_silver_plating.name=晶銀鑲板
 item.ebwizardry\:crystal_silver_plating.desc=將尋常巫師盔甲升級至戰鬥法師盔甲
 item.ebwizardry\:crystal_silver_plating.desc_extended=一片近乎神話般的合金，於艾爾達的鍛爐中鑄造而成，具有出色的魔力偏轉特性。\n\n在奧術工作檯中將該升級聖物附加到一件巫師盔甲上。
-
 item.ebwizardry\:ethereal_crystalweave.name=緲晶紋綢
 item.ebwizardry\:ethereal_crystalweave.desc=將尋常巫師盔甲升級至巫術士盔甲
 item.ebwizardry\:ethereal_crystalweave.desc_extended=一塊蘊含魔力的布匹，厚如動物的毛皮，但不知為何，放在手中時的感覺卻比薄紙還要輕盈。\n\n在奧術工作檯中將該升級聖物附加到一件巫師盔甲上。
-
 item.ebwizardry\:magic_silk.name=魔法綢緞
-
 item.ebwizardry\:spectral_dust.name=靈塵
-
 item.ebwizardry\:wizard_armour.element_cost_reduction=-%1$s%% %2$s 魔力消耗
 item.ebwizardry\:wizard_armour.cooldown_reduction=-%1$s%% 冷卻時間
 item.ebwizardry\:wizard_armour.enchantability=額外的附魔能力
 item.ebwizardry\:wizard_armour.mana=魔力：%1$s/%2$s
-
 item.ebwizardry\:wizard_armour.full_set=全套：
 item.ebwizardry\:sage_armour.full_set_bonus=-%1$s%% 其他元素法術魔力損耗
 item.ebwizardry\:battlemage_armour.full_set_bonus=魔法護盾 I 效果
 item.ebwizardry\:warlock_armour.full_set_bonus=+%1$s%% 移動速度
-
 item.ebwizardry\:wizard_hat.name=巫師帽
 item.ebwizardry\:wizard_robe.name=巫師長袍
 item.ebwizardry\:wizard_leggings.name=巫師護腿
 item.ebwizardry\:wizard_boots.name=巫師靴子
-
 item.ebwizardry\:wizard_hat_fire.name=烈焰巫師帽
 item.ebwizardry\:wizard_robe_fire.name=烈焰巫師長袍
 item.ebwizardry\:wizard_leggings_fire.name=烈焰巫師護腿
 item.ebwizardry\:wizard_boots_fire.name=烈焰巫師靴子
-
 item.ebwizardry\:wizard_hat_ice.name=冰霜巫師帽
 item.ebwizardry\:wizard_robe_ice.name=冰霜巫師長袍
 item.ebwizardry\:wizard_leggings_ice.name=冰霜巫師護腿
 item.ebwizardry\:wizard_boots_ice.name=冰霜巫師靴子
-
 item.ebwizardry\:wizard_hat_lightning.name=雷電巫師帽
 item.ebwizardry\:wizard_robe_lightning.name=雷電巫師長袍
 item.ebwizardry\:wizard_leggings_lightning.name=雷電巫師護腿
 item.ebwizardry\:wizard_boots_lightning.name=雷電巫師靴子
-
 item.ebwizardry\:wizard_hat_necromancy.name=死靈巫師帽
 item.ebwizardry\:wizard_robe_necromancy.name=死靈巫師長袍
 item.ebwizardry\:wizard_leggings_necromancy.name=死靈巫師護腿
 item.ebwizardry\:wizard_boots_necromancy.name=死靈巫師靴子
-
 item.ebwizardry\:wizard_hat_earth.name=自然巫師帽
 item.ebwizardry\:wizard_robe_earth.name=自然巫師長袍
 item.ebwizardry\:wizard_leggings_earth.name=自然巫師護腿
 item.ebwizardry\:wizard_boots_earth.name=自然巫師靴子
-
 item.ebwizardry\:wizard_hat_sorcery.name=秘法巫師帽
 item.ebwizardry\:wizard_robe_sorcery.name=秘法巫師長袍
 item.ebwizardry\:wizard_leggings_sorcery.name=秘法巫師護腿
 item.ebwizardry\:wizard_boots_sorcery.name=秘法巫師靴子
-
 item.ebwizardry\:wizard_hat_healing.name=治癒巫師帽
 item.ebwizardry\:wizard_robe_healing.name=治癒巫師長袍
 item.ebwizardry\:wizard_leggings_healing.name=治癒巫師護腿
 item.ebwizardry\:wizard_boots_healing.name=治癒巫師靴子
-
 item.ebwizardry\:sage_hat.name=賢者帽
 item.ebwizardry\:sage_robe.name=賢者長袍
 item.ebwizardry\:sage_leggings.name=賢者護腿
 item.ebwizardry\:sage_boots.name=賢者靴子
-
 item.ebwizardry\:sage_hat_fire.name=烈焰賢者帽
 item.ebwizardry\:sage_robe_fire.name=烈焰賢者長袍
 item.ebwizardry\:sage_leggings_fire.name=烈焰賢者護腿
 item.ebwizardry\:sage_boots_fire.name=烈焰賢者靴子
-
 item.ebwizardry\:sage_hat_ice.name=冰霜賢者帽
 item.ebwizardry\:sage_robe_ice.name=冰霜賢者長袍
 item.ebwizardry\:sage_leggings_ice.name=冰霜賢者護腿
 item.ebwizardry\:sage_boots_ice.name=冰霜賢者靴子
-
 item.ebwizardry\:sage_hat_lightning.name=雷電賢者帽
 item.ebwizardry\:sage_robe_lightning.name=雷電賢者長袍
 item.ebwizardry\:sage_leggings_lightning.name=雷電賢者護腿
 item.ebwizardry\:sage_boots_lightning.name=雷電賢者靴子
-
 item.ebwizardry\:sage_hat_necromancy.name=死靈賢者帽
 item.ebwizardry\:sage_robe_necromancy.name=死靈賢者長袍
 item.ebwizardry\:sage_leggings_necromancy.name=死靈賢者護腿
 item.ebwizardry\:sage_boots_necromancy.name=死靈賢者靴子
-
 item.ebwizardry\:sage_hat_earth.name=自然賢者帽
 item.ebwizardry\:sage_robe_earth.name=自然賢者長袍
 item.ebwizardry\:sage_leggings_earth.name=自然賢者護腿
 item.ebwizardry\:sage_boots_earth.name=自然賢者靴子
-
 item.ebwizardry\:sage_hat_sorcery.name=秘法賢者帽
 item.ebwizardry\:sage_robe_sorcery.name=秘法賢者長袍
 item.ebwizardry\:sage_leggings_sorcery.name=秘法賢者護腿
 item.ebwizardry\:sage_boots_sorcery.name=秘法賢者靴子
-
 item.ebwizardry\:sage_hat_healing.name=治癒賢者帽
 item.ebwizardry\:sage_robe_healing.name=治癒賢者長袍
 item.ebwizardry\:sage_leggings_healing.name=治癒賢者護腿
 item.ebwizardry\:sage_boots_healing.name=治癒賢者靴子
-
 item.ebwizardry\:battlemage_helmet.name=戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate.name=戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings.name=戰鬥法師護腿
 item.ebwizardry\:battlemage_boots.name=戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_fire.name=烈焰戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_fire.name=烈焰戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_fire.name=烈焰戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_fire.name=烈焰戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_ice.name=冰霜戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_ice.name=冰霜戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_ice.name=冰霜戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_ice.name=冰霜戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_lightning.name=雷電戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_lightning.name=雷電戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_lightning.name=雷電戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_lightning.name=雷電戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_necromancy.name=死靈戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_necromancy.name=死靈戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_necromancy.name=死靈戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_necromancy.name=死靈戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_earth.name=自然戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_earth.name=自然戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_earth.name=自然戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_earth.name=自然戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_sorcery.name=秘法戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_sorcery.name=秘法戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_sorcery.name=秘法戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_sorcery.name=秘法戰鬥法師靴子
-
 item.ebwizardry\:battlemage_helmet_healing.name=治癒戰鬥法師頭盔
 item.ebwizardry\:battlemage_chestplate_healing.name=治癒戰鬥法師胸甲
 item.ebwizardry\:battlemage_leggings_healing.name=治癒戰鬥法師護腿
 item.ebwizardry\:battlemage_boots_healing.name=治癒戰鬥法師靴子
-
 item.ebwizardry\:warlock_hood.name=巫術士兜帽
 item.ebwizardry\:warlock_robe.name=巫術士長袍
 item.ebwizardry\:warlock_leggings.name=巫術士護腿
 item.ebwizardry\:warlock_boots.name=巫術士靴子
-
 item.ebwizardry\:warlock_hood_fire.name=烈焰巫術士兜帽
 item.ebwizardry\:warlock_robe_fire.name=烈焰巫術士長袍
 item.ebwizardry\:warlock_leggings_fire.name=烈焰巫術士護腿
 item.ebwizardry\:warlock_boots_fire.name=烈焰巫術士靴子
-
 item.ebwizardry\:warlock_hood_ice.name=冰霜巫術士兜帽
 item.ebwizardry\:warlock_robe_ice.name=冰霜巫術士長袍
 item.ebwizardry\:warlock_leggings_ice.name=冰霜巫術士護腿
 item.ebwizardry\:warlock_boots_ice.name=冰霜巫術士靴子
-
 item.ebwizardry\:warlock_hood_lightning.name=雷電巫術士兜帽
 item.ebwizardry\:warlock_robe_lightning.name=雷電巫術士長袍
 item.ebwizardry\:warlock_leggings_lightning.name=雷電巫術士護腿
 item.ebwizardry\:warlock_boots_lightning.name=雷電巫術士靴子
-
 item.ebwizardry\:warlock_hood_necromancy.name=死靈巫術士兜帽
 item.ebwizardry\:warlock_robe_necromancy.name=死靈巫術士長袍
 item.ebwizardry\:warlock_leggings_necromancy.name=死靈巫術士護腿
 item.ebwizardry\:warlock_boots_necromancy.name=死靈巫術士靴子
-
 item.ebwizardry\:warlock_hood_earth.name=自然巫術士兜帽
 item.ebwizardry\:warlock_robe_earth.name=自然巫術士長袍
 item.ebwizardry\:warlock_leggings_earth.name=自然巫術士護腿
 item.ebwizardry\:warlock_boots_earth.name=自然巫術士靴子
-
 item.ebwizardry\:warlock_hood_sorcery.name=秘法巫術士兜帽
 item.ebwizardry\:warlock_robe_sorcery.name=秘法巫術士長袍
 item.ebwizardry\:warlock_leggings_sorcery.name=秘法巫術士護腿
 item.ebwizardry\:warlock_boots_sorcery.name=秘法巫術士靴子
-
 item.ebwizardry\:warlock_hood_healing.name=治癒巫術士兜帽
 item.ebwizardry\:warlock_robe_healing.name=治癒巫術士長袍
 item.ebwizardry\:warlock_leggings_healing.name=治癒巫術士護腿
 item.ebwizardry\:warlock_boots_healing.name=治癒巫術士靴子
-
 item.ebwizardry\:spawn_wizard.name=生成巫師
 item.ebwizardry\:spawn_evil_wizard.name=生成邪惡巫師
-
 item.ebwizardry\:spectral_helmet.name=幽冥頭盔
 item.ebwizardry\:spectral_chestplate.name=幽冥胸甲
 item.ebwizardry\:spectral_leggings.name=幽冥護腿
 item.ebwizardry\:spectral_boots.name=幽冥靴子
-
 item.ebwizardry\:lightning_hammer.name=雷霆聖錘
 item.ebwizardry\:flamecatcher.name=獵焰者
-
 item.ebwizardry\:generic.disabled=該物品已在設定中停用
-
 item.ebwizardry\:ring.generic.desc=在飾品欄中裝備這枚指環，或將其放入快捷欄以使用。一次最多能裝備2枚指環。
 item.ebwizardry\:amulet.generic.desc=在飾品欄中裝備這件護身符，或將其放入快捷欄以使用。一次只能裝備一件護身符。
 item.ebwizardry\:charm.generic.desc=在飾品欄中裝備這件墜飾，或將其放入快捷欄以使用。一次只能裝備一件墜飾。
-
 item.ebwizardry\:ring_condensing.name=聚能戒指
 item.ebwizardry\:ring_condensing.desc=緩慢為你的快捷欄中的所有魔杖恢復魔力值
 item.ebwizardry\:ring_siphoning.name=虹吸戒指
@@ -469,7 +391,6 @@ item.ebwizardry\:ring_paladin.name=聖騎士戒指
 item.ebwizardry\:ring_paladin.desc=當你治療你自己或者盟友時，附近的盟友也會得到少量治療
 item.ebwizardry\:ring_interdiction.name=禁域之戒
 item.ebwizardry\:ring_interdiction.desc=你釋放的力場護盾會傷害觸及它的生物
-
 item.ebwizardry\:amulet_arcane_defence.name=奧術守衛護符
 item.ebwizardry\:amulet_arcane_defence.desc=為你身上所有破損的巫師護具緩慢恢復魔力
 item.ebwizardry\:amulet_warding.name=魔法抗性護符
@@ -510,7 +431,6 @@ item.ebwizardry\:amulet_auto_shield.name=Hyeleth 的護符
 item.ebwizardry\:amulet_auto_shield.desc=當你的快捷欄中存在魔杖已綁定法術護盾時，有25%%觸發法術護盾
 item.ebwizardry\:amulet_absorption.name=生機護符
 item.ebwizardry\:amulet_absorption.desc=治療法術獲得的生命值會被轉化為吸收值
-
 item.ebwizardry\:charm_haggler.name=討價之證
 item.ebwizardry\:charm_haggler.desc=每次與巫師交易後必定會刷新交易
 item.ebwizardry\:charm_experience_tome.name=勤勉者之書
@@ -555,7 +475,6 @@ item.ebwizardry\:charm_mount_teleporting.name=幽靈拴鏈
 item.ebwizardry\:charm_mount_teleporting.desc=在騎乘動物或交通工具時傳送會帶著它們一併傳送
 item.ebwizardry\:charm_feeding.name=無底食糧
 item.ebwizardry\:charm_feeding.desc=當你快捷欄中的魔杖綁定有飽食恢復法術時，飽食恢復法術將會被自動觸發
-
 item.charge_status.full=全滿
 item.charge_status.almost_full=近滿
 item.charge_status.mostly_full=充裕
@@ -563,7 +482,6 @@ item.charge_status.half_full=半滿
 item.charge_status.mostly_empty=空虛
 item.charge_status.almost_empty=將盡
 item.charge_status.empty=枯竭
-
 item.banner.wizardry_fire.black=黑色火焰徽記
 item.banner.wizardry_fire.red=紅色火焰徽記
 item.banner.wizardry_fire.green=綠色火焰徽記
@@ -580,7 +498,6 @@ item.banner.wizardry_fire.lightBlue=藍色火焰徽記
 item.banner.wizardry_fire.magenta=洋紅色火焰徽記
 item.banner.wizardry_fire.orange=橙色火焰徽記
 item.banner.wizardry_fire.white=白色火焰徽記
-
 item.banner.wizardry_ice.black=黑色冰霜徽記
 item.banner.wizardry_ice.red=紅色冰霜徽記
 item.banner.wizardry_ice.green=綠色冰霜徽記
@@ -597,7 +514,6 @@ item.banner.wizardry_ice.lightBlue=淺藍色冰霜徽記
 item.banner.wizardry_ice.magenta=洋紅色冰霜徽記
 item.banner.wizardry_ice.orange=橙色冰霜徽記
 item.banner.wizardry_ice.white=白色冰霜徽記
-
 item.banner.wizardry_lightning.black=黑色雷電徽記
 item.banner.wizardry_lightning.red=紅色雷電徽記
 item.banner.wizardry_lightning.green=綠色雷電徽記
@@ -614,7 +530,6 @@ item.banner.wizardry_lightning.lightBlue=淺藍色雷電徽記
 item.banner.wizardry_lightning.magenta=洋紅色雷電徽記
 item.banner.wizardry_lightning.orange=橙色雷電徽記
 item.banner.wizardry_lightning.white=白色雷電徽記
-
 item.banner.wizardry_necromancy.black=黑色死靈徽記
 item.banner.wizardry_necromancy.red=紅色死靈徽記
 item.banner.wizardry_necromancy.green=綠色死靈徽記
@@ -631,7 +546,6 @@ item.banner.wizardry_necromancy.lightBlue=淺藍色死靈徽記
 item.banner.wizardry_necromancy.magenta=洋紅色死靈徽記
 item.banner.wizardry_necromancy.orange=橙色死靈徽記
 item.banner.wizardry_necromancy.white=白色死靈徽記
-
 item.banner.wizardry_earth.black=黑色自然徽記
 item.banner.wizardry_earth.red=紅色自然徽記
 item.banner.wizardry_earth.green=綠色自然徽記
@@ -648,7 +562,6 @@ item.banner.wizardry_earth.lightBlue=淺藍色自然徽記
 item.banner.wizardry_earth.magenta=洋紅色自然徽記
 item.banner.wizardry_earth.orange=橙色自然徽記
 item.banner.wizardry_earth.white=白色自然徽記
-
 item.banner.wizardry_sorcery.black=黑色秘法徽記
 item.banner.wizardry_sorcery.red=紅色秘法徽記
 item.banner.wizardry_sorcery.green=綠色秘法徽記
@@ -665,7 +578,6 @@ item.banner.wizardry_sorcery.lightBlue=淺藍色秘法徽記
 item.banner.wizardry_sorcery.magenta=洋紅色秘法徽記
 item.banner.wizardry_sorcery.orange=橙色秘法徽記
 item.banner.wizardry_sorcery.white=白色秘法徽記
-
 item.banner.wizardry_healing.black=黑色治癒徽記
 item.banner.wizardry_healing.red=紅色治癒徽記
 item.banner.wizardry_healing.green=綠色治癒徽記
@@ -682,10 +594,8 @@ item.banner.wizardry_healing.lightBlue=淺藍色治癒徽記
 item.banner.wizardry_healing.magenta=洋紅色治癒徽記
 item.banner.wizardry_healing.orange=橙色治癒徽記
 item.banner.wizardry_healing.white=白色治癒徽記
-
 entity.ebwizardry\:summonedcreature.nameplate=%1$s 的 %2$s
 entity.ebwizardry\:summonedcreature.nameplate_fallback=某人的 %1$s
-
 entity.ebwizardry\:wizard.greeting_0=早上好，流髑。
 entity.ebwizardry\:wizard.greeting_1=你好，旅行者。什麼風把你吹來的？
 entity.ebwizardry\:wizard.greeting_2=啊，在這裡也能見到人，真不錯。
@@ -709,7 +619,6 @@ entity.ebwizardry\:wizard.player_combat_2=只有愚昧之徒才但敢激怒巫�
 entity.ebwizardry\:wizard.player_combat_3=你會為你的冒失付出代價，冒險者！
 entity.ebwizardry\:wizard.player_combat_4=想法子保命吧！惡棍！
 entity.ebwizardry\:wizard.player_combat_5=感受我的憤怒！
-
 entity.ebwizardry\:zombie_minion.name=殭屍
 entity.ebwizardry\:husk_minion.name=屍殼
 entity.ebwizardry\:skeleton_minion.name=骷髏
@@ -732,7 +641,6 @@ entity.ebwizardry\:evil_wizard.name=巫師
 entity.ebwizardry\:decoy.name=誘餌
 entity.ebwizardry\:vex_minion.name=惱鬼
 entity.ebwizardry\:remnant.name=遺靈
-
 entity.ebwizardry\:magic_missile.name=魔法
 entity.ebwizardry\:arc.name=魔法
 entity.ebwizardry\:spark_bomb.name=魔法
@@ -758,7 +666,6 @@ entity.ebwizardry\:smoke_bomb.name=魔法
 entity.ebwizardry\:ice_spike.name=魔法
 entity.ebwizardry\:combustion_rune.name=魔法
 entity.ebwizardry\:flamecatcher_arrow.name=魔法
-
 entity.ebwizardry\:black_hole.name=黑洞
 entity.ebwizardry\:shield.name=法術護盾
 entity.ebwizardry\:meteor.name=流星
@@ -778,18 +685,15 @@ entity.ebwizardry\:zombie_spawner.name=殭屍創生門
 entity.ebwizardry\:boulder.name=巨石
 entity.ebwizardry\:radiant_totem.name=光輝圖騰
 entity.ebwizardry\:withering_totem.name=凋零圖騰
-
 itemGroup.ebwizardry=巫術學
 itemGroup.ebwizardryspells=法術
 itemGroup.ebwizardrygear=巫師裝備
-
 advancement.ebwizardry\:root=魔法之途
 advancement.ebwizardry\:root.desc=一位巫師踏上追求奧術的旅程
 advancement.ebwizardry\:crystal=奇妙的水晶……
 advancement.ebwizardry\:crystal.desc=挖掘一個魔力水晶
 advancement.ebwizardry\:arcane_initiate=初窺奧秘
 advancement.ebwizardry\:arcane_initiate.desc=利用金粒，木棒和魔力水晶製造一根魔杖
-
 advancement.ebwizardry\:apprentice=學徒巫師
 advancement.ebwizardry\:apprentice.desc=使用奧法寶典來升級你的魔杖
 advancement.ebwizardry\:special_upgrade=奧術進階
@@ -802,7 +706,6 @@ advancement.ebwizardry\:max_out_wand=滿配
 advancement.ebwizardry\:max_out_wand.desc=將一根魔杖裝滿升級
 advancement.ebwizardry\:all_spells=樣樣精通
 advancement.ebwizardry\:all_spells.desc=在遊戲中將所有法術施放一遍
-
 advancement.ebwizardry\:wizard_tower=誰住在這裡？
 advancement.ebwizardry\:wizard_tower.desc=拜訪一座巫師塔
 advancement.ebwizardry\:wizard_trade=魔法交易
@@ -813,7 +716,6 @@ advancement.ebwizardry\:defeat_evil_wizard=正義
 advancement.ebwizardry\:defeat_evil_wizard.desc=擊敗一名邪惡的巫師
 advancement.ebwizardry\:buy_master_spell=知識就是力量
 advancement.ebwizardry\:buy_master_spell.desc=向巫師購買一個大師級卷軸
-
 advancement.ebwizardry\:discover_spell=重複試驗
 advancement.ebwizardry\:discover_spell.desc=通過施法和觀察現象來鑑定一個法術
 advancement.ebwizardry\:identify_spell=奧術鑑定
@@ -822,14 +724,12 @@ advancement.ebwizardry\:spell_failure=事與願違
 advancement.ebwizardry\:spell_failure.desc=探尋法術失控原因的艱難道路
 advancement.ebwizardry\:discover_master_spell=九死一生的實驗
 advancement.ebwizardry\:discover_master_spell.desc=通過反覆試驗，成功鑑定一個大師級法術
-
 advancement.ebwizardry\:visit_shrine=聖祠之中
 advancement.ebwizardry\:visit_shrine.desc=進入聖祠並觸發古代魔法
 advancement.ebwizardry\:artefact=聖遺物
 advancement.ebwizardry\:artefact.desc=消除聖祠的保護魔法，並取得其中的寶藏
 advancement.ebwizardry\:all_artefacts=認證博物館
 advancement.ebwizardry\:all_artefacts.desc=集齊所有的戒指，護符和聖物
-
 advancement.ebwizardry\:defeat_remnant=拂去箭塵
 advancement.ebwizardry\:defeat_remnant.desc=獵殺守護方尖碑的遺靈並收集它們的靈塵
 advancement.ebwizardry\:find_library_ruins=我想我的書過期了
@@ -842,7 +742,6 @@ advancement.ebwizardry\:restore_ruined_book=奧術考古學家
 advancement.ebwizardry\:restore_ruined_book.desc=在注靈祭壇上修復一本破損的法術書
 advancement.ebwizardry\:craft_lectern=奧術百科全書
 advancement.ebwizardry\:craft_lectern.desc=合成一個覽術台以隨時掌握你的法術圖書館的資訊
-
 advancement.ebwizardry\:armour_set=現在你是一名真正的巫師了
 advancement.ebwizardry\:armour_set.desc=製作並裝備全套巫師護甲
 advancement.ebwizardry\:sage=賢者之道
@@ -851,47 +750,37 @@ advancement.ebwizardry\:battlemage=戰鬥法師之證
 advancement.ebwizardry\:battlemage.desc=獲得一件戰鬥法師盔甲
 advancement.ebwizardry\:warlock=巫術士之途
 advancement.ebwizardry\:warlock.desc=獲得一件巫術士盔甲
-
 advancement.ebwizardry\:enchant_scroll=魔法卷軸！
 advancement.ebwizardry\:enchant_scroll.desc=製作一個空白卷軸，並在奧術工作檯上用法術書附魔
-
 handbook.toast.title=手札已解鎖新內容！
-
 gui.ebwizardry\:spell_book.tier=等階: %s
 gui.ebwizardry\:spell_book.element=元素: %s
 gui.ebwizardry\:spell_book.element_undiscovered=元素: ？
 gui.ebwizardry\:spell_book.mana_cost=魔力消耗: %s
 gui.ebwizardry\:spell_book.mana_cost_continuous=魔力消耗: %s/s
 gui.ebwizardry\:spell_book.mana_cost_undiscovered=魔力消耗: ？
-
 gui.ebwizardry\:lectern.title=法術查閱
-
 container.ebwizardry\:arcane_workbench=奧術工作檯
 container.ebwizardry\:arcane_workbench.mana=魔力：%s/%s
 container.ebwizardry\:arcane_workbench.upgrades=已有升級
-
 container.ebwizardry\:arcane_workbench.bookshelves=書櫥
 container.ebwizardry\:arcane_workbench.sort_tier=按等階排序
 container.ebwizardry\:arcane_workbench.sort_element=按元素排序
 container.ebwizardry\:arcane_workbench.sort_alphabetical=按字母排序
 container.ebwizardry\:arcane_workbench.search_tooltip=%1$s搜尋提示\n\ntier=%2$s， %1$st=%2$s： 匹配等階\n%1$selement=%2$s， %1$se=%2$s： 匹配元素\n%1$stype=%2$s， %1$sp=%2$s： 匹配法術類型\n%1$sdiscovered=true/false%2$s， %1$sd=t/f%2$s： 只包括（未）發現的\n%1$smodid=%2$s， %1$sm=%2$s： 匹配模組ID\n\n用 %1$s,%2$s 將多個值分開\n用 %1$s;%2$s 將多個條件分開
-
 container.ebwizardry\:bookshelf=書櫥
-
 tier.novice=新手
 tier.apprentice=學徒
 tier.advanced=進階
 tier.master=大師
-
 element.magic=無屬性
-element.fire=火焰
+element.fire=火
 element.ice=冰霜
-element.lightning=雷電
+element.lightning=閃電
 element.necromancy=死靈
-element.earth=自然
+element.earth=大地
 element.sorcery=秘法
 element.healing=治癒
-
 element.magic.wizard=巫師
 element.fire.wizard=舞焰師
 element.ice.wizard=縱霜師
@@ -900,7 +789,6 @@ element.necromancy.wizard=御冥師
 element.earth.wizard=地術師
 element.sorcery.wizard=秘術師
 element.healing.wizard=治療師
-
 spelltype.attack=攻擊
 spelltype.defence=防禦
 spelltype.utility=功能
@@ -909,11 +797,9 @@ spelltype.buff=加成
 spelltype.construct=造物
 spelltype.projectile=彈射物
 spelltype.alteration=施變
-
 spell.disabled=%1$s 已在設定檔案中停用
 spell.resist=%1$s 豁免了 %2$s
 spell.discover=成功鑑定了 %1$s 這個法術！
-
 spell.ebwizardry\:agility=敏捷
 spell.ebwizardry\:arc=電弧
 spell.ebwizardry\:arcane_jammer=奧術干擾
@@ -1103,7 +989,6 @@ spell.ebwizardry\:wither=凋零
 spell.ebwizardry\:wither_skull=凋零怪頭顱
 spell.ebwizardry\:withering_totem=凋零圖騰
 spell.ebwizardry\:zombie_apocalypse=殭屍天啟
-
 spell.ebwizardry\:agility.desc=為施法者提供更快的移速和更高的跳躍高度，持續時間30秒。
 spell.ebwizardry\:arc.desc=向目標發射一道電弧。
 spell.ebwizardry\:arcane_jammer.desc=阻止目標使用魔法15秒。
@@ -1293,7 +1178,6 @@ spell.ebwizardry\:wither.desc=發射一股暗黑射線，任何與其接觸的�
 spell.ebwizardry\:wither_skull.desc=在你指向的方向發射一個凋零怪頭顱。
 spell.ebwizardry\:withering_totem.desc=在你所指的地方召喚一個凋零圖騰，它將緩慢吸收附近生物的生命值。圖騰會在30秒後爆炸，吸收的生命值越多則造成的傷害越高。
 spell.ebwizardry\:zombie_apocalypse.desc=打開地獄之門輕而易舉。難的是在事態惡化時將其重新關閉……
-
 spell.ebwizardry\:invoke_weather.sun=雨停了……
 spell.ebwizardry\:invoke_weather.rain=傾盆大雨……
 spell.ebwizardry\:transportation.missing=你記錄的傳送石圈已遺失或是被阻擋……
@@ -1321,9 +1205,7 @@ spell.ebwizardry\:resurrection.resurrect_ally=%s被%s復活
 spell.ebwizardry\:resurrection.resurrect_self=%s恢復了生機
 spell.ebwizardry\:resurrection.button_wait=復活（%ss）
 spell.ebwizardry\:resurrection.button_ready=復活
-
 forfeit.ebwizardry\:do_nothing=什麼也沒有發生。
-
 forfeit.ebwizardry\:burn_self=%s在你的手中迸發出火焰！
 forfeit.ebwizardry\:fireball=一個火球出現在你的前面！
 forfeit.ebwizardry\:firebomb=燃燒彈出現在你的上方！
@@ -1331,7 +1213,6 @@ forfeit.ebwizardry\:explode=突如其來的爆炸將你撞倒在地！
 forfeit.ebwizardry\:blazes=突然，敵對的烈焰使者你周身顯現！
 forfeit.ebwizardry\:burn_surroundings=你周圍的區域被點燃了！
 forfeit.ebwizardry\:meteors=毀滅世界的烈焰從天而降！
-
 forfeit.ebwizardry\:freeze_self=你感到一股冰冷寒意湧來！
 forfeit.ebwizardry\:freeze_self_2=%s 釋放出如此強烈的寒冷，竟將你原地鎖住！
 forfeit.ebwizardry\:ice_spikes=冰霜尖刺從你腳下的地面刺出！
@@ -1339,7 +1220,6 @@ forfeit.ebwizardry\:blizzard=你突然被狂暴的暴風雪包圍了！
 forfeit.ebwizardry\:ice_wraiths=忽然，你的周圍出現了充滿敵意的冰封幽靈！
 forfeit.ebwizardry\:hailstorm=冰雹像雨點一樣砸在你身上！
 forfeit.ebwizardry\:ice_giant=一個充滿敵意的冰霜巨人出現在你面前！
-
 forfeit.ebwizardry\:thunder=卷軸發出震耳欲聾的聲音，將你撞倒在地！
 forfeit.ebwizardry\:storm=看起來風暴正在醞釀之中！
 forfeit.ebwizardry\:lightning_sigils=注意你的腳下！
@@ -1347,27 +1227,23 @@ forfeit.ebwizardry\:lightning=你被閃電擊中了！
 forfeit.ebwizardry\:paralyse_self=你被麻痺了！
 forfeit.ebwizardry\:lightning_wraiths=忽然，你的周圍出現了充滿敵意的閃電幽靈！
 forfeit.ebwizardry\:storm_elementals=充滿敵意的風暴元素從四面包圍而來！
-
 forfeit.ebwizardry\:nausea=……嗯？ 剛剛發生了什麼？ 我在哪裡？
 forfeit.ebwizardry\:zombie_horde=一大群殭屍出現在你的周圍！
 forfeit.ebwizardry\:wither_self=黑暗將使你的靈魂凋亡！
 forfeit.ebwizardry\:cripple_self=%s 發出死亡般震徹骨髓的嚎叫，你的靈魂盤踞著在絕望中顫抖！
 forfeit.ebwizardry\:shadow_wraiths=你的周圍出現了大片的暗影幽靈！
-
 forfeit.ebwizardry\:snares=這是一個陷阱！
 forfeit.ebwizardry\:squid=烏賊！
 forfeit.ebwizardry\:uproot_plants=附近的植物都被連根拔起！
 forfeit.ebwizardry\:poison_self=你中毒了！
 forfeit.ebwizardry\:flood=水湧了出來！
 forfeit.ebwizardry\:bury_self=地面在你身下坍塌！
-
 forfeit.ebwizardry\:spill_inventory=你的物品四下紛飛！
 forfeit.ebwizardry\:teleport_self=你被瞬間傳送到了哪裡！
 forfeit.ebwizardry\:levitate_self=你開始無助地向上漂浮！
 forfeit.ebwizardry\:vex_horde=一大堆惱鬼出現在你身邊！
 forfeit.ebwizardry\:black_hole=旋轉的漩渦出現在你面前！
 forfeit.ebwizardry\:arrow_rain=箭雨朝你落下！
-
 forfeit.ebwizardry\:damage_self=哎喲！
 forfeit.ebwizardry\:spill_armour=你所有的盔甲都掉了！
 forfeit.ebwizardry\:hunger=你突然覺得很餓！
@@ -1375,7 +1251,6 @@ forfeit.ebwizardry\:blind_self=你什麼都看不見了！
 forfeit.ebwizardry\:weaken_self=你被嚴重削弱了！
 forfeit.ebwizardry\:jam_self=你的魔法全部失去了效用！
 forfeit.ebwizardry\:curse_self=你被詛咒了！
-
 potion.ebwizardry\:frost=凍傷
 potion.ebwizardry\:fireskin=獄炎肌膚
 potion.ebwizardry\:ice_shroud=冰霜護體
@@ -1400,29 +1275,23 @@ potion.ebwizardry\:containment=收容
 potion.ebwizardry\:frost_step=霜步
 potion.ebwizardry\:mark_of_sacrifice=獻祭印記
 potion.ebwizardry\:mirage=蜃影
-
 enchantment.ebwizardry\:magic_sword=魔力灌注
 enchantment.ebwizardry\:magic_bow=魔力灌注
 enchantment.ebwizardry\:flaming_weapon=火焰灌注
 enchantment.ebwizardry\:freezing_weapon=冰霜灌注
 enchantment.ebwizardry\:shocking_weapon=雷電灌注
-
 enchantment.ebwizardry\:magic_protection=魔法保護
 enchantment.ebwizardry\:frost_protection=冰霜保護
 enchantment.ebwizardry\:shock_protection=雷電保護
-
 enchantment.ebwizardry.magic_sword.desc=由武器注魔法術生成的附魔書,在生存模式下無法取得（該種附魔書無法正常發揮作用）。
 enchantment.ebwizardry.magic_bow.desc=由武器注魔法術生成的附魔書,在生存模式下無法取得（該種附魔書無法正常發揮作用）。
 enchantment.ebwizardry.flaming_weapon.desc=由火焰灌注法術生成的附魔書,在生存模式下無法取得（該種附魔書無法正常發揮作用）。
 enchantment.ebwizardry.freezing_weapon.desc=由冰霜灌注法術生成的附魔書,在生存模式下無法取得（該種附魔書無法正常發揮作用）。
 enchantment.ebwizardry.shocking_weapon.desc=由雷電灌注法術生成的附魔書,在生存模式下無法取得（該種附魔書無法正常發揮作用）。
-
 enchantment.ebwizardry.magic_protection.desc=減少所有魔法傷害。
 enchantment.ebwizardry.frost_protection.desc=減少凍傷傷害的效果。
 enchantment.ebwizardry.shock_protection.desc=減少雷電傷害的效果。
-
 key.categories.ebwizardry=巫術學
-
 key.ebwizardry.next_spell=下一個法術
 key.ebwizardry.previous_spell=上一個法術
 key.ebwizardry.spell_1=法術欄位 1
@@ -1433,12 +1302,9 @@ key.ebwizardry.spell_5=法術欄位 5
 key.ebwizardry.spell_6=法術欄位 6
 key.ebwizardry.spell_7=法術欄位 7
 key.ebwizardry.spell_8=法術欄位 8
-
 death.attack.wizardry_magic=%1$s 被 %2$s 使用魔法殺死
 death.attack.indirect_wizardry_magic=%1$s 被 %2$s 使用魔法殺死
-
 soundCategory.ebwizardry_spells=法術
-
 commands.ebwizardry\:cast.usage=/%1$s <法術ID> [玩家名 | x y z 方向] [持續時間] [modifiers]
 commands.ebwizardry\:cast.success=成功施放 %s
 commands.ebwizardry\:cast.success_continuous=成功施放 %s ，法術將持續 %s 秒
@@ -1452,48 +1318,38 @@ commands.ebwizardry\:cast.invalid_direction=無效方向：%1$s（有效方向�
 commands.ebwizardry\:cast.tag_error=數據標籤分析失敗：%s
 commands.ebwizardry\:cast.origin_not_specified=你必須寫明一個玩家或者一個施法位置
 commands.ebwizardry\:cast.duration_not_specified=你必須寫明法術的持續時間
-
 commands.ebwizardry\:ally.usage=/%1$s <玩家名> [玩家名]
 commands.ebwizardry\:ally.addally=%1$s 成為 %2$s 的盟友了
 commands.ebwizardry\:ally.removeally=%1$s 不再是 %2$s 的盟友
 commands.ebwizardry\:ally.self=玩家不能成為自身的盟友！
 commands.ebwizardry\:ally.permission=你沒有權限變更其他玩家的盟友
-
 commands.ebwizardry\:allies.usage=/%1$s [玩家名]
 commands.ebwizardry\:allies.list=你的盟友：%1$s
 commands.ebwizardry\:allies.list_other=%1$s 的盟友：%2$s
 commands.ebwizardry\:allies.permission=你沒有權限查看其他玩家的盟友
 commands.ebwizardry\:allies.none=無
-
 commands.ebwizardry\:discoverspell.usage=/%1$s <法術ID/all/clear> [玩家名]
 commands.ebwizardry\:discoverspell.not_found=沒有ID為 %1$s 的法術
 commands.ebwizardry\:discoverspell.clear=清空了 %1$s 的已發現法術列表
 commands.ebwizardry\:discoverspell.all=將所有法術加入至 %1$s 的已發現法術列表
 commands.ebwizardry\:discoverspell.addspell=將 %1$s 加入至了 2%$s 的已發現法術列表
 commands.ebwizardry\:discoverspell.removespell=將 %1$s 由 %2$s 的已發現法術列表
-
 config.ebwizardry.title.general=模組選項
-
 config.ebwizardry.redundant_keys=你的設定檔案含有多餘選項，它們不會發揮任何作用！ [查看日誌以取得詳情]
-
 config.ebwizardry.generic.true=開啟
 config.ebwizardry.generic.false=關閉
-
 config.ebwizardry.category.spells=法術設定
 config.ebwizardry.category.spells.tooltip=選擇啟用的法術
 config.ebwizardry.title.spells=法術設定
 config.ebwizardry.subtitle.spells=在這裡全局停用指定法術，該設定將會覆蓋具體法術JSON檔案裡的設定
-
 config.ebwizardry.category.artefacts=聖遺物設定
 config.ebwizardry.category.artefacts.tooltip=選擇啟用的聖遺物
 config.ebwizardry.title.artefacts=聖遺物設定
 config.ebwizardry.subtitle.artefacts=在這裡停用個別的指環、護身符或墜飾。
-
 config.ebwizardry.category.gameplay=遊戲機制設定
 config.ebwizardry.category.gameplay.tooltip=變更遊戲機制通用設定
 config.ebwizardry.title.gameplay=遊戲機制設定
 config.ebwizardry.subtitle.gameplay=影響遊戲機制的全局設定。
-
 config.ebwizardry.players_move_each_other=玩家相互強制位移
 config.ebwizardry.players_move_each_other.tooltip=控制是否允許玩家互相使用強制位移.
 config.ebwizardry.players_move_each_other.true=開啟——該我上場表演了！
@@ -1514,7 +1370,7 @@ config.ebwizardry.teleport_through_unbreakable_blocks.true=開啟——窺探虛
 config.ebwizardry.teleport_through_unbreakable_blocks.false=關閉——基岩乃世界之際，不得僭越
 config.ebwizardry.world_time_manipulation=世界時間控制
 config.ebwizardry.world_time_manipulation.tooltip=控制是否允許玩家能否使用斗轉星移魔法來加快整個世界的時間流逝。如果關閉，時間加速不會影響世界的時間流逝速度，但仍會加快周圍方塊和實體的tick。
-config.ebwizardry.world_time_manipulation.true=開啟——天堂製造……
+config.ebwizardry.world_time_manipulation.true=開啟——天境製造……
 config.ebwizardry.world_time_manipulation.false=關閉——晚上十一點睡，每天要睡足8個小時！
 config.ebwizardry.creative_bypasses_arcane_lock=控制哪些玩家可以無視奧術鎖
 config.ebwizardry.creative_bypasses_arcane_lock.tooltip=控制哪些玩家可以無視奧術鎖。
@@ -1524,12 +1380,10 @@ config.ebwizardry.slow_time_affects_players=時間滯留影響玩家
 config.ebwizardry.slow_time_affects_players.tooltip=控制是否允許一個玩家通過時間滯留來減緩附近另一個玩家的動作。如果此設定被關閉，怪物和彈射物仍然會被減慢，但玩家則仍能以常規速度運動。
 config.ebwizardry.bonemeal_grows_crystal_flowers=控制骨粉能否催生水晶花
 config.ebwizardry.bonemeal_grows_crystal_flowers.tooltip=對草地使用骨粉時是否有機會生成水晶花。
-
 config.ebwizardry.category.difficulty=難易度設定
 config.ebwizardry.category.difficulty.tooltip=調整巫術學的難易度
 config.ebwizardry.title.difficulty=難易度設定
 config.ebwizardry.subtitle.difficulty=會影響mod難易度的設定。
-
 config.ebwizardry.discovery_mode=探索模式
 config.ebwizardry.discovery_mode.tooltip=當此項設定為 enabled 時，直到某一法術被施放後你才能閱讀該法術的法術書（基於每個世界的設定），在創造模式下此項設定無效。如果設定為disabled，生存模式下將無法獲得鑑定卷軸。
 config.ebwizardry.legacy_wand_levelling=魔杖升級
@@ -1560,12 +1414,10 @@ config.ebwizardry.ice_wraith_spawn_rate=冰封幽靈
 config.ebwizardry.ice_wraith_spawn_rate.tooltip=冰封幽靈的自然生成；數值與生成率成正比。5 相當於女巫生成率，100 相對於殭屍，骷髏，以及苦力怕的生成率。若設定為零，則會完全阻止冰封幽靈的生成。
 config.ebwizardry.lightning_wraith_spawn_rate=閃電幽靈
 config.ebwizardry.lightning_wraith_spawn_rate.tooltip=閃電幽靈的自然生成；數值與生成率成正比。5 相當於女巫生成率，100 相對於殭屍，骷髏，以及苦力怕的生成率。若設定為零，則會完全阻止閃電幽靈的生成。
-
 config.ebwizardry.category.tweaks=調整設定
 config.ebwizardry.category.tweaks.tooltip=調整巫術學的特性
 config.ebwizardry.title.tweaks=調整設定
 config.ebwizardry.subtitle.tweaks=用於調整mod特性的各種設定。
-
 config.ebwizardry.replace_vanilla_fireballs=替換原版火球
 config.ebwizardry.replace_vanilla_fireballs.tooltip=控制是否用模組的燃燒彈彈替換原版的火焰彈，若設定為disabled，只有此模組的生物才會使用模組自帶的燃燒彈。
 config.ebwizardry.replace_vanilla_fireballs.true=開啟——燃起來吧！
@@ -1606,12 +1458,10 @@ config.ebwizardry.bookshelf_search_radius=書櫥檢索半徑
 config.ebwizardry.bookshelf_search_radius.tooltip=使書櫥可以連接奧術工作檯和覽術台的最遠距離格數
 config.ebwizardry.currency_items=貨幣物品
 config.ebwizardry.currency_items.tooltip=可以用作貨幣的物品的列表（第一格；第二格沒用）。每一個新的物品應當寫入物品名，空格，接著一個整數以代表該物品的價值。價值越高則交易需要的該物品量越少。
-
 config.ebwizardry.category.worldgen=世界生成設定
 config.ebwizardry.category.worldgen.tooltip=控制本模組的世界生成
 config.ebwizardry.title.worldgen=世界生成設定
 config.ebwizardry.subtitle.worldgen=變更世界生成的設定
-
 config.ebwizardry.fast_worldgen=結構建築生成設定
 config.ebwizardry.fast_worldgen.tooltip=控制本模組結構的生成規律。精緻模式下,結構將不會生成在懸崖，洞穴內，以及其他可與本模組結構交錯的結構內，同時生成結構後會清除建築物中的浮空樹。快速世界去除了這些功能以為了達到更快的世界生成速度。遊戲效能的高低取決於你的設定。此設定會變更生成世界時的種子，但當你在生成世界中選擇特定種子生成時，其結構也絕對不會是快速模式下生成的結構。
 config.ebwizardry.fast_worldgen.true=快速
@@ -1654,12 +1504,10 @@ config.ebwizardry.flower_dimensions=水晶花生成維度
 config.ebwizardry.flower_dimensions.tooltip=水晶花會生成的維度ID。在此刪除所有維度將會停用水晶花的生成。
 config.ebwizardry.loot_injection_locations=戰利品名單
 config.ebwizardry.loot_injection_locations.tooltip=本模組的戰利品名單（詳情請見 loot_tables/chests/dungeon_additions.json ）。
-
 config.ebwizardry.category.client=客戶端設定
 config.ebwizardry.category.client.tooltip=設定本模組的顯示和控制
 config.ebwizardry.title.client=客戶端設定
 config.ebwizardry.subtitle.client=僅影響本地的客戶端設定。
-
 config.ebwizardry.shift_scrolling=Shift 切換
 config.ebwizardry.shift_scrolling.tooltip=控制是否希望在按住 Shift 時滑動滾輪會切換法術。注意：這只會影響你自己的操作，其他玩家仍可以依據自己的設定操作。
 config.ebwizardry.reverse_scroll_direction=滾動方向
@@ -1703,12 +1551,10 @@ config.ebwizardry.spellcasting_animations=施放法術動畫
 config.ebwizardry.spellcasting_animations.tooltip=控制玩家使用法術時是否使用自訂動畫。如果此動畫與其他mod的動畫發生衝突時，請停用此項。
 config.ebwizardry.donation_perk_element=貢獻者獎勵元素
 config.ebwizardry.donation_perk_element.tooltip=該遊戲元素用於在捐贈者和貢獻者玩家身上呈現出環繞飛翔的球體，在此留空將會停用該功能。如果你是貢獻者中的一員，此設定將會變更所有玩家看到你的方式（如果你不屬於其中的一員，則該設定沒有作用）。
-
 config.ebwizardry.category.commands=指令設定
 config.ebwizardry.category.commands.tooltip=本模組的指令設定
 config.ebwizardry.title.commands=指令設定
 config.ebwizardry.subtitle.commands=本模組的指令設定
-
 config.ebwizardry.cast_command_multiplier_limit=Cast 指令最大可輸入的法術倍數數值
 config.ebwizardry.cast_command_multiplier_limit.tooltip=輸入 /cast 指令生成的法術最大級別上限，這是為了阻止玩家因為輸入過大數值導致意外毀壞存檔/使伺服器崩潰的措施。過大級別的爆炸會造成伺服器極大的延遲——你已經被警告過了！
 config.ebwizardry.cast_command_name=Cast 法術生成指令的使用名稱
@@ -1719,12 +1565,10 @@ config.ebwizardry.ally_command_name=Ally 設定盟友指令的使用名稱
 config.ebwizardry.ally_command_name.tooltip=/ally設定盟友指令的使用名稱。這是你輸入/後應該輸入的內容。如果這個設定中填入的為「magic」，那麼不需要輸入/ally，而是輸入/magic。
 config.ebwizardry.allies_command_name=Allies查看盟友指令的使用名稱
 config.ebwizardry.allies_command_name.tooltip=/allies查看盟友指令的使用名稱。這是你直接輸入/後應該輸入的內容。如果這個設定中填入的為「magic」，那麼不需要輸入/allies，而是輸入/magic。
-
 config.ebwizardry.category.resistances=魔法元素抗性設定
 config.ebwizardry.category.resistances.tooltip=設定什麼實體可以對哪種元素的魔法產生抗性
 config.ebwizardry.title.resistances=魔法元素抗性設定
 config.ebwizardry.subtitle.resistances=允許變更實體對某種元素的魔法產生抗性
-
 config.ebwizardry.mobs_immune_to_fire=免疫火焰元素傷害的實體
 config.ebwizardry.mobs_immune_to_fire.tooltip=除了預設不受火焰元素傷害的實體以外,不受火焰元素傷害的實體名單。如果你想讓某個實體不受火焰元素法術的傷害，請把這個實體的名稱加入到這個列表中。實體名稱不區分大小寫。對於其他mod實體，你需要填入它的模組id(例如 ebwizardry\:wizard)。
 config.ebwizardry.mobs_immune_to_ice=免疫冰霜元素傷害的實體
@@ -1735,12 +1579,10 @@ config.ebwizardry.mobs_immune_to_wither=免疫死靈元素傷害的實體
 config.ebwizardry.mobs_immune_to_wither.tooltip=除了預設不受死靈元素傷害的實體以外,不受死靈元素傷害的實體名單。如果你想讓某個實體不受死靈元素法術的傷害，請把這個實體的名稱加入到這個列表中。實體名稱不區分大小寫。對於其他mod實體，你需要填入它的模組id(例如 ebwizardry\:wizard)。
 config.ebwizardry.mobs_immune_to_poison=免疫自然元素傷害的實體
 config.ebwizardry.mobs_immune_to_poison.tooltip=除了預設不受自然元素傷害的實體以外,不受自然元素傷害的實體名單。如果你想讓某個實體不受自然元素法術的傷害，請把這個實體的名稱加入到這個列表中。實體名稱不區分大小寫。對於其他mod實體，你需要填入它的模組id(例如 ebwizardry\:wizard)。
-
 config.ebwizardry.category.compatibility=模組相容性設定
 config.ebwizardry.category.compatibility.tooltip=設定本模組與其他模組的相容性
 config.ebwizardry.title.compatibility=模組相容性設定
 config.ebwizardry.subtitle.compatibility=變更本模組與其他模組相容性的設定
-
 config.ebwizardry.damage_source_blacklist=傷害源黑名單
 config.ebwizardry.damage_source_blacklist.tooltip=免疫來自特定傷害源的傷害名單。若本模組檢測有特定傷害源應被加入黑名單則會提醒，否則不要擅自變更此設定。
 config.ebwizardry.compatibility_warnings=相容性警告
@@ -1761,18 +1603,14 @@ config.ebwizardry.auto_place_library_markers=自動標記圖書館廢墟
 config.ebwizardry.auto_place_library_markers.tooltip=控制古式地圖是否自動標記圖書館廢墟。
 config.ebwizardry.auto_place_underground_library_markers=自動標記地下圖書館廢墟
 config.ebwizardry.auto_place_underground_library_markers.tooltip=控制古式地圖是否自動標記地下的圖書館廢墟。
-
 integration.jei.category.ebwizardry\:arcane_workbench=奧術工作檯
 integration.jei.category.ebwizardry\:imbuement_altar=注靈祭壇
-
 integration.antiqueatlas.marker.ebwizardry.wizard_tower=巫師塔
 integration.antiqueatlas.marker.ebwizardry.obelisk=方尖碑
 integration.antiqueatlas.marker.ebwizardry.shrine=聖祠
 integration.antiqueatlas.marker.ebwizardry.library_ruins=圖書館遺跡
-
 spell.ebwizardry\:magic_missile_festive=魔法飛彈
 spell.ebwizardry\:summon_snow_golem_festive=生成雪人
 spell.ebwizardry\:invigorating_presence_festive=鼓舞之心
 spell.ebwizardry\:empowering_presence_festive=魔力增強
-
 wizard.debug=%1$s， %2$s， %3$s
