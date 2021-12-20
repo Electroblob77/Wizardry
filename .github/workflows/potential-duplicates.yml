@@ -1,0 +1,38 @@
+name: Potential Duplicates
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: bubkoo/potential-duplicates@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          label: potential duplicate
+          exclude: |
+            adding
+            add
+            creating
+            create
+            icons
+            icon
+            logos
+            logo
+            missing
+            miss
+            needing
+            need
+            please
+            requesting
+            request
+            1.12.2
+            wizardry
+          state: all
+          threshold: 0.5
+          comment: |
+            This issue is potentially a duplicate of one of the following issues:
+            {{#issues}}
+              - [#{{ number }}] {{ title }} ({{ accuracy }}% match)
+            {{/issues}}
