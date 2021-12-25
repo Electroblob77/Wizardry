@@ -63,7 +63,7 @@ public class MarkSacrifice extends SpellRay {
 		PotionEffect effect = event.getEntityLiving().getActivePotionEffect(WizardryPotions.mark_of_sacrifice);
 
 		if(effect != null && event.getSource().isMagicDamage()){
-			event.setAmount(event.getAmount() * (1 + effect.getAmplifier() * DAMAGE_INCREASE_PER_LEVEL));
+			event.setAmount(event.getAmount() * (1 + effect.getAmplifier()) * DAMAGE_INCREASE_PER_LEVEL);
 			event.getEntityLiving().removePotionEffect(WizardryPotions.mark_of_sacrifice);
 		}
 	}
