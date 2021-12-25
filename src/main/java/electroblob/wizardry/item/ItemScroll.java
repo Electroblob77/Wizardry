@@ -195,7 +195,7 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 				if(!spell.isContinuous && !caster.isCreative()) stack.shrink(1);
 
 				// Now uses the vanilla cooldown mechanic to prevent spamming of spells
-				if(!spell.isContinuous) caster.getCooldownTracker().setCooldown(this, spell.getCooldown());
+				if(!spell.isContinuous && !caster.isCreative()) caster.getCooldownTracker().setCooldown(this, spell.getCooldown());
 			}
 
 			return true;
