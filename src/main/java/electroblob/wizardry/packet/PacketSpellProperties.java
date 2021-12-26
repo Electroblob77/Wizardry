@@ -20,7 +20,9 @@ public class PacketSpellProperties implements IMessageHandler<PacketSpellPropert
 		if(ctx.side.isClient()){
 
 			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> {
-				for(int i=0; i<message.propertiesArray.length; i++){
+
+				int first = message.firstId;
+				for(int i = first; i <message.propertiesArray.length; i++){
 					Spell.byNetworkID(i).setPropertiesClient(message.propertiesArray[i]);
 				}
 			});
@@ -32,21 +34,24 @@ public class PacketSpellProperties implements IMessageHandler<PacketSpellPropert
 	public static class Message implements IMessage {
 
 		private SpellProperties[] propertiesArray;
-
+		private int firstId;
+		private int count;
 		// This constructor is required otherwise you'll get errors (used somewhere in fml through reflection)
 		public Message(){}
 
-		public Message(SpellProperties... properties){
+		public Message(int firstId, int count, SpellProperties... properties){
+			this.firstId = firstId;
+			this.count = count;
 			this.propertiesArray = properties;
 		}
 
 		@Override
 		public void fromBytes(ByteBuf buf){
-
 			List<SpellProperties> propertiesList = new ArrayList<>();
-			int i = 0;
-
-			while(buf.isReadable()){
+			int i = buf.readInt();
+			count = buf.readInt();
+			firstId = i;
+			while(buf.isReadable() && i < count){
 				propertiesList.add(new SpellProperties(Spell.byNetworkID(i++), buf));
 			}
 
@@ -55,6 +60,8 @@ public class PacketSpellProperties implements IMessageHandler<PacketSpellPropert
 
 		@Override
 		public void toBytes(ByteBuf buf){
+			buf.writeInt(firstId);
+			buf.writeInt(count);
 			for(SpellProperties properties : propertiesArray) properties.write(buf);
 		}
 	}
