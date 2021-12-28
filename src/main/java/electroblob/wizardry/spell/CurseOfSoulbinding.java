@@ -53,7 +53,7 @@ public class CurseOfSoulbinding extends SpellRay {
 
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
-		
+
 		if(EntityUtils.isLiving(target) && caster instanceof EntityPlayer){
 			WizardData data = WizardData.get((EntityPlayer)caster);
 			if(data != null){
@@ -66,7 +66,7 @@ public class CurseOfSoulbinding extends SpellRay {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -79,7 +79,7 @@ public class CurseOfSoulbinding extends SpellRay {
 	protected boolean onMiss(World world, EntityLivingBase caster, Vec3d origin, Vec3d direction, int ticksInUse, SpellModifiers modifiers){
 		return true;
 	}
-	
+
 	@Override
 	protected void spawnParticle(World world, double x, double y, double z, double vx, double vy, double vz){
 		ParticleBuilder.create(Type.DARK_MAGIC).pos(x, y, z).clr(0.4f, 0, 0).spawn(world);
@@ -103,9 +103,9 @@ public class CurseOfSoulbinding extends SpellRay {
 
 					Entity entity = EntityUtils.getEntityByUUID(player.world, iterator.next());
 
-					if(entity == null) iterator.remove();
-
-					if(entity instanceof EntityLivingBase){
+					if (entity == null || (entity instanceof EntityLivingBase && !((EntityLivingBase) entity).isPotionActive(WizardryPotions.curse_of_soulbinding))) {
+						iterator.remove();
+					} else if (entity instanceof EntityLivingBase) {
 						// Retaliatory effect
 						if(DamageSafetyChecker.attackEntitySafely(entity, MagicDamage.causeDirectMagicDamage(player,
 								MagicDamage.DamageType.MAGIC, true), event.getAmount(), event.getSource().getDamageType(),
