@@ -12,10 +12,15 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
@@ -95,6 +100,13 @@ public class ItemSpellBook extends Item {
 			if(discovered && advanced.isAdvanced()){ // No cheating!
 				tooltip.add(spell.getElement().getDisplayName());
 				tooltip.add(spell.getType().getDisplayName());
+			}
+			// Advanced tooltips displays the source mod's name if the spell is not from Wizardry
+			if (advanced.isAdvanced() && this.getRegistryName().toString().equals(Wizardry.MODID + ":spell_book") && !spell.getRegistryName().getNamespace().equals(Wizardry.MODID)) {
+				String modId = spell.getRegistryName().getNamespace();
+				String name = new Style().setColor(TextFormatting.BLUE).setItalic(true).getFormattingCode() +
+						Loader.instance().getIndexedModList().get(modId).getMetadata().name;
+				tooltip.add(name);
 			}
 		}
 	}
