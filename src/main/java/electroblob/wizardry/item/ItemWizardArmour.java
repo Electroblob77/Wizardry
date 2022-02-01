@@ -1,5 +1,7 @@
 package electroblob.wizardry.item;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Streams;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
@@ -44,7 +46,11 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber
@@ -54,6 +60,28 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	private static final float SAGE_OTHER_COST_REDUCTION = 0.2f;
 	private static final float WARLOCK_SPEED_BOOST = 0.2f;
 	private static final UUID WARLOCK_SPEED_BOOST_UUID = UUID.fromString("4bad7152-2663-4b1b-bb59-552e92847031");
+	// Standard ItemArmor modifiers
+	private static final UUID[] ARMOR_MODIFIERS = new UUID[] {UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+
+	@Override
+	public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot slot) {
+		// The vanilla armor handling logic from ItemArmor.getItemAttributeModifiers was moved to ItemWizardArmour.getAttributeModifiers to allow checking if the stack has enough mana
+		Multimap<String, AttributeModifier> multimap = ArrayListMultimap.create();
+		return multimap;
+	}
+
+	@Override
+	public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+		Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(slot, stack);
+
+		// only grant armor if the equipment has mana
+		if (slot == this.armorType && !((ItemWizardArmour) stack.getItem()).isManaEmpty(stack)) {
+			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], "Armor modifier", this.damageReduceAmount, 0));
+			multimap.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getName(), new AttributeModifier(ARMOR_MODIFIERS[slot.getIndex()], "Armor toughness", this.toughness, 0));
+		}
+
+		return multimap;
+	}
 
 	public enum ArmourClass {
 
