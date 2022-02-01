@@ -111,6 +111,9 @@ public class MindControl extends SpellRay {
 
 	/** Returns true if the given entity can be mind controlled (i.e. is not a player, npc, evil wizard or boss). */
 	public static boolean canControl(Entity target){
+
+		// TODO: Add a max health limit that scales with potency
+
 		return target instanceof EntityLiving && target.isNonBoss() && !(target instanceof INpc)
 				&& !(target instanceof EntityEvilWizard) && !Arrays.asList(Wizardry.settings.mindControlTargetsBlacklist)
 				.contains(EntityList.getKey(target.getClass()));
