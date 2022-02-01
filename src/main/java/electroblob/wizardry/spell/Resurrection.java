@@ -2,6 +2,7 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.event.ResurrectionEvent;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.packet.PacketResurrection;
@@ -18,6 +19,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -61,6 +63,9 @@ public class Resurrection extends Spell {
 					.orElse(null);
 
 			if(nearestDeadAlly != null){
+
+				if(MinecraftForge.EVENT_BUS.post(new ResurrectionEvent(nearestDeadAlly, caster))) return false;
+
 				// When the player entity dies, it is removed from world#loadedEntityList. However, it is NOT removed
 				// from playerEntityList (and probably a few other places) until respawn is clicked, and since that
 				// never happens here we need to clean up those references or the player will have duplicate entries

@@ -1,6 +1,7 @@
 package electroblob.wizardry.packet;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.event.ResurrectionEvent;
 import electroblob.wizardry.inventory.ContainerArcaneWorkbench;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.packet.PacketControlInput.Message;
@@ -13,6 +14,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -79,6 +81,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 								.filter(s -> Resurrection.canStackResurrect(s, player)).findFirst().orElse(null);
 
 						if(stack != null){
+							if(MinecraftForge.EVENT_BUS.post(new ResurrectionEvent(player, player))) break;
 							// This should suffice, since this is the only way a player can cast resurrection when dead!
 							((ISpellCastingItem)stack.getItem()).cast(stack, Spells.resurrection, player, EnumHand.MAIN_HAND, 0, new SpellModifiers());
 							break;
