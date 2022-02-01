@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.SpellActions;
@@ -8,6 +9,7 @@ import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.ParticleBuilder;
+import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -16,11 +18,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.Arrays;
 import java.util.Comparator;
 
+@EventBusSubscriber
 public class Resurrection extends Spell {
 
 	public static final String WAIT_TIME = "wait_time";
@@ -110,6 +116,44 @@ public class Resurrection extends Spell {
 		return stack.getItem() instanceof ISpellCastingItem
 				&& Arrays.asList(((ISpellCastingItem)stack.getItem()).getSpells(stack)).contains(Spells.resurrection)
 				&& ((ISpellCastingItem)stack.getItem()).canCast(stack, Spells.resurrection, player, EnumHand.MAIN_HAND, 0, new SpellModifiers());
+	}
+
+	@SubscribeEvent
+	public static void onPlayerTickEvent(LivingUpdateEvent event){
+
+		if(event.getEntity() instanceof EntityPlayer){
+
+			EntityPlayer player = (EntityPlayer)event.getEntity();
+
+			if(player.world.isRemote && !player.isEntityAlive()){
+
+				EntityPlayer firstPersonPlayer = Wizardry.proxy.getThePlayer();
+
+				if(WizardData.get(firstPersonPlayer).isPlayerAlly(player)){
+
+					ItemStack wand = firstPersonPlayer.getHeldItemMainhand();
+
+					if(!(wand.getItem() instanceof ISpellCastingItem)){
+						wand = firstPersonPlayer.getHeldItemOffhand();
+						if(!(wand.getItem() instanceof ISpellCastingItem)) return;
+					}
+
+					if(((ISpellCastingItem)wand.getItem()).getCurrentSpell(wand) == Spells.resurrection){
+
+						// TODO: Find some way of getting at the modifiers before the spell is cast
+						int waitTime = Spells.resurrection.getProperty(WAIT_TIME).intValue();
+
+						if(player.deathTime > waitTime){
+							ParticleBuilder.create(Type.SPARKLE, player.world.rand, player.posX, player.posY + 0.5, player.posZ, 0.5, false)
+									.clr(1, 1, 0.3f).vel(0, 0.02, 0).spawn(player.world);
+						}else{
+							ParticleBuilder.create(Type.DUST, player.world.rand, player.posX, player.posY + 0.5, player.posZ, 0.5, false)
+									.clr(1, 1, 0.3f).vel(0, 0.02, 0).time(50).spawn(player.world);
+						}
+					}
+				}
+			}
+		}
 	}
 
 }
