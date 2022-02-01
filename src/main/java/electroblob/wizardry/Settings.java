@@ -198,6 +198,8 @@ public final class Settings {
 	public boolean blindnessTweak = true;
 	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
 	public boolean bonemealGrowsCrystalFlowers = true;
+	/** <b>[Server-only]</b> Whether to enable Wizardry mob loot injection. Allows an easier switch instead of blacklisting all entities. */
+	public boolean injectMobDrops = true;
 	/**
 	 * <b>[Server-only]</b> List of registry names of entities which summoned creatures are allowed to attack, in addition
 	 * to the defaults.
@@ -805,6 +807,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".blindness_tweak");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		blindnessTweak = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "injectMobDrops", true,
+				"Whether to inject Wizardry loot to mobs, based on the loot table 'Mob Loot Table Whitelist' / 'Mob Loot Table Blacklist' settings. If disabled, the lists won't have any effect!");
+		property.setLanguageKey("config." + Wizardry.MODID + ".inject_mob_drops");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		injectMobDrops = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");
