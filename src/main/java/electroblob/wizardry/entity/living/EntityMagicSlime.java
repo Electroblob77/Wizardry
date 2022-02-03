@@ -52,7 +52,7 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 		super(world);
 		this.setPosition(target.posX, target.posY, target.posZ);
 		this.startRiding(target);
-		this.setOwnerId(caster.getUniqueID());
+		if (caster != null) this.setOwnerId(caster.getUniqueID());
 		this.setSlimeSize(2, false); // Needs to be called before setting the experience value to 0
 		this.experienceValue = 0;
 		this.lifetime = lifetime;
