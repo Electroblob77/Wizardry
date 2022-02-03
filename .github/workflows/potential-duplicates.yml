@@ -30,7 +30,7 @@ jobs:
             1.12.2
             wizardry
           state: all
-          threshold: 0.5
+          threshold: 0.7
           comment: |
             This issue is potentially a duplicate of one of the following issues:
             {{#issues}}
