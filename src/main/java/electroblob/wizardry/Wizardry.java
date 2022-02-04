@@ -10,6 +10,7 @@ import electroblob.wizardry.command.CommandSetAlly;
 import electroblob.wizardry.command.CommandViewAllies;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.entity.data.Behaviour;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.integration.baubles.WizardryBaublesIntegration;
 import electroblob.wizardry.inventory.ContainerBookshelf;
@@ -143,6 +144,8 @@ public class Wizardry {
 
 		WizardryBaublesIntegration.init();
 		WizardryAntiqueAtlasIntegration.init();
+
+		Behaviour.registerBehaviours();
 
 	}
 
