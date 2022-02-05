@@ -82,8 +82,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	/** Data parameter for the wizard's element. */
 	private static final DataParameter<Integer> ELEMENT = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
 	/** Data parameters for the wizard's current continuous spell. */
-	private static final DataParameter<String> CONTINUOUS_SPELL = EntityDataManager.createKey(EntityEvilWizard.class, DataSerializers.STRING);
-	private static final DataParameter<Integer> SPELL_COUNTER = EntityDataManager.createKey(EntityEvilWizard.class, DataSerializers.VARINT);
+	private static final DataParameter<String> CONTINUOUS_SPELL = EntityDataManager.createKey(EntityWizard.class, DataSerializers.STRING);
+	private static final DataParameter<Integer> SPELL_COUNTER = EntityDataManager.createKey(EntityWizard.class, DataSerializers.VARINT);
 
 	// Field implementations
 	private List<Spell> spells = new ArrayList<Spell>(4);
