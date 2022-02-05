@@ -1,8 +1,5 @@
 package electroblob.wizardry;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.command.CommandCastSpell;
 import electroblob.wizardry.command.CommandDiscoverSpell;
@@ -16,11 +13,22 @@ import electroblob.wizardry.inventory.ContainerBookshelf;
 import electroblob.wizardry.misc.DonationPerksHandler;
 import electroblob.wizardry.misc.Forfeit;
 import electroblob.wizardry.packet.WizardryPacketHandler;
-import electroblob.wizardry.registry.*;
+import electroblob.wizardry.registry.Spells;
+import electroblob.wizardry.registry.WizardryAdvancementTriggers;
+import electroblob.wizardry.registry.WizardryBlocks;
+import electroblob.wizardry.registry.WizardryItems;
+import electroblob.wizardry.registry.WizardryLoot;
+import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.SpellProperties;
 import electroblob.wizardry.util.WandHelper;
-import electroblob.wizardry.worldgen.*;
+import electroblob.wizardry.worldgen.WorldGenCrystalFlower;
+import electroblob.wizardry.worldgen.WorldGenCrystalOre;
+import electroblob.wizardry.worldgen.WorldGenLibraryRuins;
+import electroblob.wizardry.worldgen.WorldGenObelisk;
+import electroblob.wizardry.worldgen.WorldGenShrine;
+import electroblob.wizardry.worldgen.WorldGenUndergroundLibraryRuins;
+import electroblob.wizardry.worldgen.WorldGenWizardTower;
 import net.minecraft.item.Item;
 import net.minecraft.util.SoundCategory;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,8 +47,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Calendar;
 
 /**
@@ -56,6 +62,7 @@ import java.util.Calendar;
 
 @Mod(modid = Wizardry.MODID, name = Wizardry.NAME, version = Wizardry.VERSION, acceptedMinecraftVersions = "[1.12.2]",
 		guiFactory = "electroblob.wizardry.WizardryGuiFactory",
+		updateJSON = Wizardry.updateJSON,
 		dependencies = "required-after:forge@[14.23.5.2847,);after:jei@[4.15.0,);after:baubles@[1.5.2,);after:antiqueatlas@[4.6,)")
 
 public class Wizardry {
@@ -74,7 +81,13 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "4.3.4";
+	public static final String VERSION = "4.3.5";
+
+	/**
+	 * Json file used by Forge's built-in <a href="https://mcforge.readthedocs.io/en/1.12.x/gettingstarted/autoupdate/">update checker</a>.
+	 * Used by the in-game mod menu to show that green icon whenever a newer version is available of the mod.
+	 */
+	public static final String updateJSON = "https://github.com/Electroblob77/Wizardry/blob/1.12.2/.forge/update.json";
 
 	// IDEA: Triggering of inbuilt Forge events in relevant places?
 	// IDEA: Abstract the vanilla particles behind the particle builder
