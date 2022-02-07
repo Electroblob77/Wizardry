@@ -4,8 +4,10 @@ import electroblob.wizardry.Wizardry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ISpecialArmor;
 
 public class CurseUndeath extends Curse {
 
@@ -25,7 +27,7 @@ public class CurseUndeath extends Curse {
 
 		// Adapted from EntityZombie
 		if(entitylivingbase.world.isDaytime() && !entitylivingbase.world.isRemote){
-			
+
 			float f = entitylivingbase.getBrightness();
 
 			if(f > 0.5F && entitylivingbase.world.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
@@ -35,14 +37,17 @@ public class CurseUndeath extends Curse {
 				boolean flag = true;
 				ItemStack itemstack = entitylivingbase.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-				if(!itemstack.isEmpty()){
-					if(itemstack.isItemStackDamageable()){
+				if (!itemstack.isEmpty()) {
+					if (itemstack.isItemStackDamageable()) {
 
-						itemstack.setItemDamage(itemstack.getItemDamage() + entitylivingbase.world.rand.nextInt(2));
-
-						if(itemstack.getItemDamage() >= itemstack.getMaxDamage()){
-							entitylivingbase.renderBrokenItemStack(itemstack);
-							entitylivingbase.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+						if (itemstack.getItem() instanceof ISpecialArmor) {
+							((ISpecialArmor) itemstack.getItem()).damageArmor(entitylivingbase, itemstack, DamageSource.ON_FIRE, entitylivingbase.world.rand.nextInt(2), EntityEquipmentSlot.HEAD.getSlotIndex());
+						} else {
+							itemstack.setItemDamage(itemstack.getItemDamage() + entitylivingbase.world.rand.nextInt(2));
+							if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
+								entitylivingbase.renderBrokenItemStack(itemstack);
+								entitylivingbase.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+							}
 						}
 					}
 
