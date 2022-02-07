@@ -59,18 +59,19 @@ public class FrostRay extends SpellRay {
 						this.getNameForTranslationFormatted()), true);
 			// This now only damages in line with the maxHurtResistantTime. Some mods don't play nicely and fiddle
 			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
-			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
+			}else{
 				// For frost ray the entity can move slightly, unlike freeze
 				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
 						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
 						getProperty(EFFECT_STRENGTH).intValue()));
 
-				float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
-				if(target instanceof EntityBlaze || target instanceof EntityMagmaCube) damage *= 2;
-				
-				EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeDirectMagicDamage(caster,
-						DamageType.FROST), damage);
+				if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
+					float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
+					if(target instanceof EntityBlaze || target instanceof EntityMagmaCube) damage *= 2;
 
+					EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeDirectMagicDamage(caster,
+							DamageType.FROST), damage);
+				}
 			}
 		}
 		
