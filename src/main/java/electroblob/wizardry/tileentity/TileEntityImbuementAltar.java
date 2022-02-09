@@ -2,6 +2,7 @@ package electroblob.wizardry.tileentity;
 
 import electroblob.wizardry.block.BlockReceptacle;
 import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.event.ImbuementActivateEvent;
 import electroblob.wizardry.item.IManaStoringItem;
 import electroblob.wizardry.item.ItemWizardArmour;
 import electroblob.wizardry.registry.*;
@@ -24,6 +25,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootTable;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
@@ -232,6 +234,14 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 	 * @return The resulting item stack, or an empty stack if the given combination is not a valid imbuement
 	 */
 	public static ItemStack getImbuementResult(ItemStack input, Element[] receptacleElements, boolean fullLootGen, World world, EntityPlayer lastUser){
+
+		ItemStack eventResult = ItemStack.EMPTY;
+
+		if (world != null && MinecraftForge.EVENT_BUS.post(new ImbuementActivateEvent(input, receptacleElements, world, lastUser, eventResult))) {
+			// return the stack if something changes the result from an empty stack.
+			//noinspection ConstantConditions
+			if (eventResult != ItemStack.EMPTY) return eventResult;
+		}
 
 		if(input.getItem() instanceof ItemWizardArmour && ((ItemWizardArmour)input.getItem()).element == null){
 

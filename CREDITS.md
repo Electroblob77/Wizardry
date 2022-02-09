@@ -1,7 +1,7 @@
 # Credits
 
 Electroblob's Wizardry  
-Version 4.3.4  
+Version 4.3.5  
 For Minecraft 1.12.2
 
 Designed, coded and textured by Electroblob
@@ -11,6 +11,11 @@ Thanks to Minecraft Forge and MCP, without which this mod would not have been po
 Thanks also to the Minecraft modding community, which always has an answer to my modding problems!
 
 In addition, I'd like to thank the following individuals for their contributions to the mod:
+
+#### Discord Moderators (and all-round awesome people)
+
+- FavouriteDragon
+- WinDanesz
 
 #### Code
 
@@ -27,13 +32,14 @@ In addition, I'd like to thank the following individuals for their contributions
 - rafasoares
 - xinyuan-liu
 - SettingDust
+- Aralu115
 
 #### Translations
 
 - Spanish: MadWrist, Alsentar
 - Mexican Spanish: MadWrist
 - Russian: VilagVil, kellixon, bigenergy, MugGod2, DrHesperus
-- French: Hahdrim
+- French: Hahdrim, Crowller
 - Brazilian Portuguese: lorrampi
 - Chinese (Simplified): ZHENGLOC, dragon-evol, Hokorizero, TUsama, Determancer
 - Korean: shejery, rewi_wire, 방통, red1854th

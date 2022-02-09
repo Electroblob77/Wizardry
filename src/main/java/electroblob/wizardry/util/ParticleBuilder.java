@@ -34,7 +34,9 @@ import java.util.Random;
  * <code>ParticleBuilder.create(Type.SPARKLE).pos(x, y, z).vel(vx, vy, vz).clr(r, g, b).spawn(world);</code>
  * <p></p>
  * It also goes without saying that <b>this class should only ever be used client-side</b>. Attempting to spawn particles
- * on the server side will not work and will print a warning to the console.
+ * on the server side will not work and will print a warning to the console. {@code ParticleBuilder} is not threadsafe
+ * and attempting to call it from multiple threads at once will very likely cause an {@link IllegalStateException}.
+ *
  * @author Electroblob
  * @since Wizardry 4.2
  */

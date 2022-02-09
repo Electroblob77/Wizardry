@@ -496,24 +496,30 @@ public class GuiWizardHandbook extends GuiScreen {
 
 				Section currentSection = null;
 
-				for(Section section : sections.values()){
-					// We always want this button to do something, and taking the right-hand page means it always does
-					if(section.containsPage(doubleToSinglePage(currentPage, true))){
-						currentSection = section;
-						break;
+				if(currentPage < singleToDoublePage(pageCount)){
+					// Find current section
+					for(Section section : sections.values()){
+						// Take the right-hand page if going to the next section, and the left-hand page otherwise
+						if(section.containsPage(doubleToSinglePage(currentPage, button == nextSection))){
+							currentSection = section;
+							break;
+						}
 					}
 				}
 
-				if(currentSection != null){
+				List<Section> visibleSections = new ArrayList<>(sectionList);
+				visibleSections.removeIf(s -> !s.isUnlocked());
 
-					List<Section> visibleSections = new ArrayList<>(sectionList);
-					visibleSections.removeIf(s -> !s.isUnlocked());
+				int index = currentSection == null ? visibleSections.size() : visibleSections.indexOf(currentSection);
 
-					int index = visibleSections.indexOf(currentSection);
-
-					if(button == nextSection && index + 1 < visibleSections.size()){
+				if(button == nextSection){
+					if(index + 1 < visibleSections.size()){
 						currentPage = singleToDoublePage(visibleSections.get(index + 1).startPage);
-					}else if(index > 0){
+					}else{
+						currentPage = singleToDoublePage(pageCount);
+					}
+				}else{
+					if(index > 0){
 						currentPage = singleToDoublePage(visibleSections.get(index - 1).startPage);
 					}
 				}

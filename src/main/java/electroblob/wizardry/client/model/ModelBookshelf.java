@@ -13,16 +13,16 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
 public class ModelBookshelf implements IModel {
 
-	private static final ResourceLocation DEFAULT_BOOK_TEXTURE = new ResourceLocation(Wizardry.MODID, "blocks/books");
+	//private static final ResourceLocation DEFAULT_BOOK_TEXTURE = new ResourceLocation(Wizardry.MODID, "blocks/books");
 
 	private static final List<ResourceLocation> bookModelLocations = new ArrayList<>();
+
+	private static final Map<String, IBakedModel[][]> bakedBookModels = new HashMap<>();
 
 	private final ModelResourceLocation bookshelfModelLocation;
 	private final String variant;
@@ -49,19 +49,7 @@ public class ModelBookshelf implements IModel {
 			// I don't know why default state works here (surely it ought to be the state param?), but it works so who cares
 			IBakedModel bookshelf = bookshelfModel.bake(bookshelfModel.getDefaultState(), format, bakedTextureGetter);
 
-			ImmutableList<ResourceLocation> textures = BlockBookshelf.getBookTextures();
-
-			IBakedModel[][] books = new IBakedModel[textures.size()][BlockBookshelf.SLOT_COUNT];
-
-			for(int i = 0; i < textures.size(); i++){
-
-				ImmutableMap<String, String> retexturer = ImmutableMap.of("books", textures.get(i).toString());
-
-				for(int j = 0; j < BlockBookshelf.SLOT_COUNT; j++){
-					IModel bookModel = ModelLoaderRegistry.getModel(new ModelResourceLocation(bookModelLocations.get(j), variant)).retexture(retexturer);
-					books[i][j] = bookModel.bake(bookModel.getDefaultState(), format, bakedTextureGetter); // Same here!
-				}
-			}
+			IBakedModel[][] books = getBakedBookModels(format, bakedTextureGetter);
 
 			// To clarify: the whole point of doing this was to avoid having to bake 4 * 2^12 models per bookshelf type
 			// Therefore we have to have a baked bookshelf model that's kind of dynamic
@@ -72,6 +60,29 @@ public class ModelBookshelf implements IModel {
 			return ModelLoaderRegistry.getMissingModel().bake(state, format, bakedTextureGetter);
 		}
 
+	}
+
+	/** Retrieves the baked book models, or bakes them if they haven't been created yet. */
+	protected IBakedModel[][] getBakedBookModels(VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) throws Exception{
+
+		if(bakedBookModels.get(variant) == null){
+
+			ImmutableList<ResourceLocation> textures = BlockBookshelf.getBookTextures();
+
+			bakedBookModels.put(variant, new IBakedModel[textures.size()][BlockBookshelf.SLOT_COUNT]);
+
+			for(int i = 0; i < textures.size(); i++){
+
+				ImmutableMap<String, String> retexturer = ImmutableMap.of("books", textures.get(i).toString());
+
+				for(int j = 0; j < BlockBookshelf.SLOT_COUNT; j++){
+					IModel bookModel = ModelLoaderRegistry.getModel(new ModelResourceLocation(bookModelLocations.get(j), variant)).retexture(retexturer);
+					bakedBookModels.get(variant)[i][j] = bookModel.bake(bookModel.getDefaultState(), format, bakedTextureGetter); // Same here!
+				}
+			}
+		}
+
+		return bakedBookModels.get(variant);
 	}
 
 	@Override

@@ -123,6 +123,8 @@ public class ItemArtefact extends Item {
 		this.enabled = enabled;
 	}
 
+	public boolean isEnabled() { return enabled; }
+
 	@Override
 	public EnumRarity getRarity(ItemStack stack){
 		return rarity;
@@ -343,6 +345,8 @@ public class ItemArtefact extends Item {
 				}else if(artefact == WizardryItems.amulet_auto_shield){
 
 					findMatchingWandAndExecute(player, Spells.shield, wand -> {
+
+						if(wand.getItem() instanceof ItemScroll) return; // Ignore scrolls since they shouldn't work
 
 						List<Entity> projectiles = EntityUtils.getEntitiesWithinRadius(5, player.posX, player.posY, player.posZ, world, Entity.class);
 						projectiles.removeIf(e -> !(e instanceof IProjectile));

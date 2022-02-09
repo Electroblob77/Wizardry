@@ -15,9 +15,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -99,6 +106,13 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 				tooltip.add(spell.getTier().getDisplayName());
 				tooltip.add(spell.getElement().getDisplayName());
 				tooltip.add(spell.getType().getDisplayName());
+			}
+			// Advanced tooltips displays the source mod's name if the spell is not from Wizardry
+			if (advanced.isAdvanced() && this.getRegistryName().toString().equals(Wizardry.MODID + ":scroll") && !spell.getRegistryName().getNamespace().equals(Wizardry.MODID)) {
+				String modId = spell.getRegistryName().getNamespace();
+				String name = new Style().setColor(TextFormatting.BLUE).setItalic(true).getFormattingCode() +
+						Loader.instance().getIndexedModList().get(modId).getMetadata().name;
+				tooltip.add(name);
 			}
 		}
 	}
@@ -195,7 +209,7 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 				if(!spell.isContinuous && !caster.isCreative()) stack.shrink(1);
 
 				// Now uses the vanilla cooldown mechanic to prevent spamming of spells
-				if(!spell.isContinuous) caster.getCooldownTracker().setCooldown(this, spell.getCooldown());
+				if(!spell.isContinuous && !caster.isCreative()) caster.getCooldownTracker().setCooldown(this, spell.getCooldown());
 			}
 
 			return true;

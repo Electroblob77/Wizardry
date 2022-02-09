@@ -18,6 +18,6 @@
 	"cooldown": 400,
 	"base_properties": {
 		"effect_radius": 8,
-		"wait_time": 300
+		"wait_time": 200
 	}
 }

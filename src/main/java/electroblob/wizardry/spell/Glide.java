@@ -8,6 +8,7 @@ import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
@@ -24,14 +25,14 @@ public class Glide extends Spell {
 
 	@Override
 	protected void playSound(World world, EntityLivingBase entity, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
-		if(ticksInUse == 0 && world.isRemote) Wizardry.proxy.playSpellSoundLoop(entity, this, this.sounds[0], this.sounds[0], this.sounds[0],
+		if(ticksInUse == 0 && world.isRemote) Wizardry.proxy.playSpellSoundLoop(entity, this, this.sounds[0], this.sounds[0], SoundEvents.UI_TOAST_OUT,
 				WizardrySounds.SPELLS, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f));
 	}
 
 	@Override
 	protected void playSound(World world, double x, double y, double z, int ticksInUse, int duration, SpellModifiers modifiers, String... sounds){
 		if(ticksInUse == 0 && world.isRemote){
-			Wizardry.proxy.playSpellSoundLoop(world, x, y, z, this, this.sounds[0], this.sounds[0], this.sounds[0],
+			Wizardry.proxy.playSpellSoundLoop(world, x, y, z, this, this.sounds[0], this.sounds[0], SoundEvents.UI_TOAST_OUT,
 					WizardrySounds.SPELLS, volume, pitch + pitchVariation * (world.rand.nextFloat() - 0.5f), duration);
 		}
 	}

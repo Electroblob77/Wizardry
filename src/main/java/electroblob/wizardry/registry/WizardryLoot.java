@@ -6,7 +6,11 @@ import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryTable;
+import net.minecraft.world.storage.loot.LootPool;
+import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
@@ -90,23 +94,27 @@ public final class WizardryLoot {
 			event.getTable().addPool(getAdditive(Wizardry.MODID + ":chests/jungle_dispenser_additions", Wizardry.MODID + "_additional_dispenser_loot"));
 		}
 		// Mob drops
-		// Let's hope mods will play nice and store their entity loot tables under 'entities' or 'entity'
-		// If not, packmakers will have to sort it out themselves using the whitelist/blacklist
-		if(Arrays.asList(Wizardry.settings.mobLootTableWhitelist).contains(event.getName())){
-			event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
-
-		}else if(!Arrays.asList(Wizardry.settings.mobLootTableBlacklist).contains(event.getName())
-				&& event.getName().getPath().contains("entities") || event.getName().getPath().contains("entity")){
-			// Get the filename of the loot table json, for well-behaved mods this will be the entity name
-			String[] split = event.getName().getPath().split("/");
-			String entityName = split[split.length - 1];
-
-			EntityEntry entry = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityName));
-			if(entry == null) return; // If this is true it didn't work :(
-			Class entityClass = entry.getEntityClass();
-
-			if(EnumCreatureType.MONSTER.getCreatureClass().isAssignableFrom(entityClass)){
+		if (Wizardry.settings.injectMobDrops) {
+			// Let's hope mods will play nice and store their entity loot tables under 'entities' or 'entity'
+			// If not, packmakers will have to sort it out themselves using the whitelist/blacklist
+			if (Arrays.asList(Wizardry.settings.mobLootTableWhitelist).contains(event.getName())) {
 				event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
+
+			} else if (!Arrays.asList(Wizardry.settings.mobLootTableBlacklist).contains(event.getName())
+					&& event.getName().getPath().contains("entities") || event.getName().getPath().contains("entity")) {
+				// Get the filename of the loot table json, for well-behaved mods this will be the entity name
+				String[] split = event.getName().getPath().split("/");
+				String entityName = split[split.length - 1];
+
+				EntityEntry entry = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityName));
+				if (entry == null) {
+					return; // If this is true it didn't work :(
+				}
+				Class entityClass = entry.getEntityClass();
+
+				if (EnumCreatureType.MONSTER.getCreatureClass().isAssignableFrom(entityClass)) {
+					event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
+				}
 			}
 		}
 		// Fishing loot

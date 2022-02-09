@@ -12,12 +12,15 @@ import electroblob.wizardry.entity.living.*;
 import electroblob.wizardry.entity.projectile.EntityFirebomb;
 import electroblob.wizardry.entity.projectile.EntityMagicFireball;
 import electroblob.wizardry.event.SpellCastEvent;
+import electroblob.wizardry.event.SpellCastEvent.Source;
+import electroblob.wizardry.item.IManaStoringItem;
+import electroblob.wizardry.item.ISpellCastingItem;
 import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.*;
 import electroblob.wizardry.spell.Banish;
-import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.util.BlockUtils;
 import electroblob.wizardry.util.EntityUtils;
+import electroblob.wizardry.util.SpellModifiers;
 import electroblob.wizardry.util.SpellProperties.Context;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -174,6 +177,23 @@ public abstract class Forfeit {
 
 				forfeit.apply(event.getWorld(), player);
 
+				ItemStack stack = player.getHeldItemMainhand();
+
+				if(!(stack.getItem() instanceof ISpellCastingItem)){
+					stack = player.getHeldItemOffhand();
+					if(!(stack.getItem() instanceof ISpellCastingItem)) stack = ItemStack.EMPTY;
+				}
+
+				if(!stack.isEmpty()){
+					// Still need to charge the player mana or consume the scroll
+					if(event.getSource() == Source.SCROLL){
+						if(!player.isCreative()) stack.shrink(1);
+					}else if(stack.getItem() instanceof IManaStoringItem){
+						int cost = (int)(event.getSpell().getCost() * event.getModifiers().get(SpellModifiers.COST) + 0.1f); // Weird floaty rounding
+						((IManaStoringItem)stack.getItem()).consumeMana(stack, cost, player);
+					}
+				}
+
 				WizardryAdvancementTriggers.spell_failure.triggerFor(player);
 
 				EntityUtils.playSoundAtPlayer(player, forfeit.getSound(), WizardrySounds.SPELLS, 1, 1);
@@ -222,10 +242,11 @@ public abstract class Forfeit {
 		}));
 
 		add(Tier.MASTER, Element.FIRE, create("burn_surroundings", (w, p) -> {
-			if(!w.isRemote){
+			if(!w.isRemote && EntityUtils.canDamageBlocks(p, w)){
 				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition(), 6);
 				for(BlockPos pos : sphere){
-					if(w.rand.nextBoolean() && w.isAirBlock(pos)) w.setBlockState(pos, Blocks.FIRE.getDefaultState());
+					if(w.rand.nextBoolean() && w.isAirBlock(pos) && BlockUtils.canPlaceBlock(p, w, pos))
+						w.setBlockState(pos, Blocks.FIRE.getDefaultState());
 				}
 			}
 		}));
@@ -376,10 +397,11 @@ public abstract class Forfeit {
 		}));
 
 		add(Tier.NOVICE, Element.EARTH, create("snares", (w, p) -> {
-			if(!w.isRemote){
+			if(!w.isRemote && EntityUtils.canDamageBlocks(p, w)){
 				for(EnumFacing direction : EnumFacing.HORIZONTALS){
 					BlockPos pos = p.getPosition().offset(direction);
-					if(BlockUtils.canBlockBeReplaced(w, pos)) w.setBlockState(pos, WizardryBlocks.snare.getDefaultState());
+					if(BlockUtils.canBlockBeReplaced(w, pos) && BlockUtils.canPlaceBlock(p, w, pos))
+						w.setBlockState(pos, WizardryBlocks.snare.getDefaultState());
 				}
 			}
 		}));
@@ -393,9 +415,9 @@ public abstract class Forfeit {
 		}));
 
 		add(Tier.APPRENTICE, Element.EARTH, create("uproot_plants", (w, p) -> {
-			if(!w.isRemote){
+			if(!w.isRemote && EntityUtils.canDamageBlocks(p, w)){
 				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition(), 5);
-				sphere.removeIf(pos -> !(w.getBlockState(pos).getBlock() instanceof IPlantable));
+				sphere.removeIf(pos -> !(w.getBlockState(pos).getBlock() instanceof IPlantable) || !BlockUtils.canBreakBlock(p, w, pos));
 				sphere.forEach(pos -> w.destroyBlock(pos, true));
 			}
 		}));
@@ -403,9 +425,9 @@ public abstract class Forfeit {
 		add(Tier.APPRENTICE, Element.EARTH, create("poison_self", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.POISON, 400, 1))));
 
 		add(Tier.ADVANCED, Element.EARTH, create("flood", (w, p) -> {
-			if(!w.isRemote){
+			if(!w.isRemote && EntityUtils.canDamageBlocks(p, w)){
 				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition().up(), 2);
-				sphere.removeIf(pos -> !BlockUtils.canBlockBeReplaced(w, pos, true));
+				sphere.removeIf(pos -> !BlockUtils.canBlockBeReplaced(w, pos, true) || !BlockUtils.canPlaceBlock(p, w, pos));
 				sphere.forEach(pos -> w.setBlockState(pos, Blocks.WATER.getDefaultState()));
 			}
 		}));
@@ -413,8 +435,7 @@ public abstract class Forfeit {
 		add(Tier.MASTER, Element.EARTH, create("bury_self", (w, p) -> {
 			if(!w.isRemote){
 				List<BlockPos> sphere = BlockUtils.getBlockSphere(p.getPosition(), 4);
-				sphere.removeIf(pos -> !w.getBlockState(pos).isFullCube());
-				sphere.removeIf(pos -> BlockUtils.isBlockUnbreakable(w, pos));
+				sphere.removeIf(pos -> !w.getBlockState(pos).isFullCube() || BlockUtils.isBlockUnbreakable(w, pos) || BlockUtils.canBreakBlock(p, w, pos));
 				sphere.forEach(pos -> {
 					EntityFallingBlock block = new EntityFallingBlock(w, pos.getX() + 0.5, pos.getY() + 0.5,
 							pos.getZ() + 0.5, w.getBlockState(pos));
