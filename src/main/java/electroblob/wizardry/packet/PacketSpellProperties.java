@@ -21,9 +21,13 @@ public class PacketSpellProperties implements IMessageHandler<PacketSpellPropert
 
 			net.minecraft.client.Minecraft.getMinecraft().addScheduledTask(() -> {
 
-				int first = message.firstId;
-				for(int i = first; i <message.propertiesArray.length; i++){
-					Spell.byNetworkID(i).setPropertiesClient(message.propertiesArray[i]);
+				int spellId = message.firstId;
+
+				for(int i = 0; i <message.propertiesArray.length; i++){
+					Spell spell = Spell.byNetworkID(spellId);
+					SpellProperties props = message.propertiesArray[i];
+					spell.setPropertiesClient(props);
+					spellId++;
 				}
 			});
 		}
@@ -43,16 +47,22 @@ public class PacketSpellProperties implements IMessageHandler<PacketSpellPropert
 			this.firstId = firstId;
 			this.count = count;
 			this.propertiesArray = properties;
+
 		}
 
 		@Override
 		public void fromBytes(ByteBuf buf){
 			List<SpellProperties> propertiesList = new ArrayList<>();
-			int i = buf.readInt();
+			firstId = buf.readInt();
 			count = buf.readInt();
-			firstId = i;
-			while(buf.isReadable() && i < count){
-				propertiesList.add(new SpellProperties(Spell.byNetworkID(i++), buf));
+
+			int k = 0;
+			int j = firstId;
+			while(k < count){
+				SpellProperties props = new SpellProperties(Spell.byNetworkID(j), buf);
+				propertiesList.add(props);
+				k++;
+				j++;
 			}
 
 			propertiesArray = propertiesList.toArray(new SpellProperties[0]);
