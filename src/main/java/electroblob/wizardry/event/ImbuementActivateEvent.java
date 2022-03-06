@@ -31,19 +31,19 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 public class ImbuementActivateEvent extends Event {
 
 	/** The item stack being imbued */
-	ItemStack input;
+	public ItemStack input;
 
 	/** The elements of the four receptacles */
-	Element[] receptacleElements;
+	public Element[] receptacleElements;
 
 	/** A reference to the current world object (may be null if {@code fullLootGen} is false) */
-	World world;
+	public World world;
 
 	/** The player that last interacted with the imbuement altar, or null if there isn't one (or if this is being queried for other reasons, e.g. JEI) */
-	EntityPlayer lastUser;
+	public EntityPlayer lastUser;
 
 	/** The resulting item stack of the imbuement process */
-	ItemStack result;
+	public ItemStack result;
 
 	public ImbuementActivateEvent(ItemStack input, Element[] receptacleElements, World world, EntityPlayer lastUser, ItemStack result) {
 		super();
