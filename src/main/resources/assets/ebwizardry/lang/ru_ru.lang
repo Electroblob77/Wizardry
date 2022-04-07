@@ -856,10 +856,10 @@ advancement.ebwizardry\:enchant_scroll.desc=Создай чистый свито
 handbook.toast.title=Открыт новый раздел в руководстве!
 
 gui.ebwizardry\:spell_book.tier=Уровень: %s
-gui.ebwizardry\:spell_book.element=Элемент: %s
-gui.ebwizardry\:spell_book.element_undiscovered=Элемент: ?
+gui.ebwizardry\:spell_book.element=Стихия: %s
+gui.ebwizardry\:spell_book.element_undiscovered=Стихия: ?
 gui.ebwizardry\:spell_book.mana_cost=Расход маны: %s
-gui.ebwizardry\:spell_book.mana_cost_continuous=Расход маны: %s/в секундах
+gui.ebwizardry\:spell_book.mana_cost_continuous=Расход маны: %s/в сек.
 gui.ebwizardry\:spell_book.mana_cost_undiscovered=Расход маны: ?
 
 gui.ebwizardry\:lectern.title=Поиск заклинания
