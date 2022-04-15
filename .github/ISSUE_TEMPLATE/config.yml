@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Mod Wiki Page
+    url: https://github.com/Electroblob77/Wizardry/wiki
+    about: Most features are documented in the mod's wiki page --- Link --->
+  - name: 💬 Electroblob's Wizardry discord
+    url: https://discord.gg/hs8yJP2
+    about: Ask for help or get more info on Discord. --- Discord Server link --->
+  - name: 💡 Feature requests / suggestions
+    url: https://discord.gg/hs8yJP2
+    about: Please use the discord server to suggest stuff. --- Discord Server link --->
+  - name: ❓ Question
+    url: https://discord.gg/hs8yJP2
+    about: Ask a question about the mod or the code. --- Discord Server link --->
