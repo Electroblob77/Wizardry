@@ -189,7 +189,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	private static int nextSpellId = 0;
 	/** The spell's integer ID, mainly used for networking. */
 	// This was added after I learnt the hard way why you can't assume Forge's registry IDs are sequential...
-	private final int id;
+	private int id;
 
 	/**
 	 * This constructor should be called from any subclasses, either feeding in the constants directly or through their
@@ -225,6 +225,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		this.icon = new ResourceLocation(modID, "textures/spells/" + name + ".png");
 		this.sounds = createSounds();
 		this.id = nextSpellId++;
+		Wizardry.logger.debug("Registering spell " + this.unlocalisedName +" with networkID " + id);
 		this.items(WizardryItems.spell_book, WizardryItems.scroll);
 		this.npcSelector((e, o) -> false);
 	}
@@ -558,6 +559,11 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * used for data storage. */
 	public final int networkID(){
 		return id;
+	}
+
+	/** Sets the networkID of this spell. Do not call this or it will cause all packets to fail. */
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	/** Returns the {@code ResourceLocation} for this spell's icon. */

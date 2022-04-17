@@ -20,6 +20,7 @@ import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryLoot;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
+import electroblob.wizardry.util.SpellNetworkIDSorter;
 import electroblob.wizardry.util.SpellProperties;
 import electroblob.wizardry.util.WandHelper;
 import electroblob.wizardry.worldgen.WorldGenCrystalFlower;
@@ -202,6 +203,8 @@ public class Wizardry {
 	public void postInit(FMLPostInitializationEvent event){
 		proxy.initialiseLayers();
 		proxy.initialiseAnimations();
+
+		SpellNetworkIDSorter.init();
 	}
 
 	@EventHandler
