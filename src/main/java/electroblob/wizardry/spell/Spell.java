@@ -319,24 +319,8 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		// To avoid sending extra data unnecessarily, the spell properties are sent in order of spell ID
 		List<Spell> spells = new ArrayList<>(registry.getValuesCollection());
 		spells.sort(Comparator.comparingInt(Spell::networkID));
-
-		SpellProperties[] propertiesArray = spells.stream().map(s -> s.properties).toArray(SpellProperties[]::new);
-
-		// splitting the packet into batches of 100 spells
-		int i = 0;
-		while (i < propertiesArray.length) {
-			List<SpellProperties> propertiesList = new ArrayList<>();
-			int first = i;
-			int batchCounter = 0;
-			for (int currentIndex = i; currentIndex < propertiesArray.length && batchCounter < 100; currentIndex++) {
-				propertiesList.add(propertiesArray[currentIndex]);
-				batchCounter++;
-				i++;
-			}
-			SpellProperties[] currentArray = propertiesList.toArray(new SpellProperties[0]);
-			PacketSpellProperties.Message currentPacket = new PacketSpellProperties.Message(first, currentArray.length, currentArray);
-			WizardryPacketHandler.net.sendTo(currentPacket, player);
-		}
+		WizardryPacketHandler.net.sendTo(new PacketSpellProperties.Message(spells.stream()
+				.map(s -> s.properties).toArray(SpellProperties[]::new)), player);
 	}
 
 	private static void clearProperties(){
