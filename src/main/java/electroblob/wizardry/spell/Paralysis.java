@@ -30,9 +30,14 @@ public class Paralysis extends SpellRay {
 	 * will end. */
 	private static final String CRITICAL_HEALTH = "critical_health";
 
+	/**
+	 * Multiplier for affecting players
+	 */
+	private static final String PLAYER_EFFECT_DURATION_MULTIPLIER = "player_effect_duration_multiplier";
+
 	public Paralysis(){
 		super("paralysis", SpellActions.POINT, false);
-		addProperties(DAMAGE, EFFECT_DURATION, CRITICAL_HEALTH);
+		addProperties(DAMAGE, EFFECT_DURATION, CRITICAL_HEALTH, PLAYER_EFFECT_DURATION_MULTIPLIER);
 	}
 
 	@Override
@@ -57,9 +62,10 @@ public class Paralysis extends SpellRay {
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.SHOCK),
 						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
 			}
-			
+
+			float durationMultiplier = target instanceof EntityPlayer ? modifiers.get(PLAYER_EFFECT_DURATION_MULTIPLIER) : 1.0f;
 			((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.paralysis,
-					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)), 0));
+					(int)(getProperty(EFFECT_DURATION).floatValue() * durationMultiplier * modifiers.get(WizardryItems.duration_upgrade)), 0));
 		}
 		
 		return false;

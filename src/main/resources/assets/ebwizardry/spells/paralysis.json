@@ -20,6 +20,7 @@
     "range": 10,
     "damage": 4,
     "effect_duration": 100,
-    "critical_health": 4
+    "critical_health": 4,
+    "player_effect_duration_multiplier": 0.5
   }
 }
