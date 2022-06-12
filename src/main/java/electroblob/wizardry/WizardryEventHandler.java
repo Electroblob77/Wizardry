@@ -307,7 +307,7 @@ public final class WizardryEventHandler {
 		PotionEffect effect = event.getEntityLiving().getActivePotionEffect(WizardryPotions.ward);
 
 		if(effect != null && event.getSource().isMagicDamage()){
-			event.setAmount(event.getAmount() * Math.max(0, 1 - 0.4f * effect.getAmplifier())); // Resistance is 20%
+			event.setAmount(event.getAmount() * Math.max(0, 1 - 0.2f * (1 + effect.getAmplifier()))); // Resistance is 20%
 		}
 
 		// Flaming and freezing swords
