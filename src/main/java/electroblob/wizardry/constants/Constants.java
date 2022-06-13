@@ -46,7 +46,5 @@ public final class Constants {
 	 * won't spawn again if something is already standing in it.
 	 */
 	public static final int DECAY_SPREAD_INTERVAL = 8;
-	/** The fraction by which potency is increased per level of the empowerment effect. */
-	public static final float EMPOWERMENT_POTENCY_PER_LEVEL = 0.25f;
 
 }

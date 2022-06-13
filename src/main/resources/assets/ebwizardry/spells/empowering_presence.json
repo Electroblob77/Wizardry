@@ -19,6 +19,7 @@
   "base_properties": {
     "effect_radius": 5,
     "effect_duration": 900,
-    "effect_strength": 1
+    "effect_strength": 1,
+    "potency_per_level": 0.15
   }
 }

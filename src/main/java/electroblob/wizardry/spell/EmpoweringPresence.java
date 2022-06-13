@@ -5,6 +5,7 @@ import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.entity.living.ISpellCaster;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
 import electroblob.wizardry.util.ParticleBuilder;
@@ -24,11 +25,14 @@ import javax.annotation.Nullable;
 @Mod.EventBusSubscriber
 public class EmpoweringPresence extends SpellAreaEffect {
 
+	/** The fraction by which potency is increased per level of the empowerment effect. */
+	public static final String POTENCY_PER_LEVEL = "potency_per_level";
+
 	public EmpoweringPresence(){
 		super("empowering_presence", SpellActions.POINT_UP, false);
 		this.alwaysSucceed(true);
 		this.targetAllies(true);
-		addProperties(EFFECT_DURATION, EFFECT_STRENGTH);
+		addProperties(EFFECT_DURATION, EFFECT_STRENGTH, POTENCY_PER_LEVEL);
 	}
 
 	@Override
@@ -62,7 +66,7 @@ public class EmpoweringPresence extends SpellAreaEffect {
 		if(event.getCaster() != null && event.getCaster().isPotionActive(WizardryPotions.empowerment)
 				&& !(event.getSpell() instanceof EmpoweringPresence)){ // Prevent exponential empowerment stacking!
 
-			float potency = 1 + Constants.EMPOWERMENT_POTENCY_PER_LEVEL
+			float potency = 1 + Spells.empowering_presence.getProperty(POTENCY_PER_LEVEL).floatValue()
 					* (event.getCaster().getActivePotionEffect(WizardryPotions.empowerment).getAmplifier() + 1);
 
 			event.getModifiers().set(SpellModifiers.POTENCY,
