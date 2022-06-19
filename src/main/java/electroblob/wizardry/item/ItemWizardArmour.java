@@ -209,8 +209,8 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
-		if(armorType == EntityEquipmentSlot.HEAD && isWearingFullSet(player, element, ArmourClass.BATTLEMAGE)
-				&& player.ticksExisted % 20 == 0){
+		if(armorType == EntityEquipmentSlot.HEAD && player.ticksExisted % 20 == 0
+				&& isWearingFullSet(player, element, ArmourClass.BATTLEMAGE) && doAllArmourPiecesHaveMana(player)){
 			player.addPotionEffect(new PotionEffect(WizardryPotions.ward, 219, 0, true, false));
 		}
 	}
@@ -237,7 +237,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		modifiers.set(WizardryItems.cooldown_upgrade, modifiers.get(WizardryItems.cooldown_upgrade) - armourClass.cooldownReduction, true);
 
 		// Full set bonuses
-		if(this.armorType == EntityEquipmentSlot.HEAD && isWearingFullSet(caster, element, armourClass)){
+		if(this.armorType == EntityEquipmentSlot.HEAD && isWearingFullSet(caster, element, armourClass) && doAllArmourPiecesHaveMana(caster)){
 			if(armourClass == ArmourClass.SAGE && spell.getElement() != this.element){
 				modifiers.set(SpellModifiers.COST, 1 - SAGE_OTHER_COST_REDUCTION, false);
 			}
@@ -363,7 +363,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 		IAttributeInstance movementSpeed = event.getEntityLiving().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED);
 
-		if(isWearingFullSet(event.getEntityLiving(), null, ArmourClass.WARLOCK)){
+		if(isWearingFullSet(event.getEntityLiving(), null, ArmourClass.WARLOCK) && doAllArmourPiecesHaveMana(event.getEntityLiving())){
 			// Only apply the modifier once (can't just check this is the helmet since it might not be the last piece equipped)
 			if(movementSpeed.getModifier(WARLOCK_SPEED_BOOST_UUID) == null){
 				movementSpeed.applyModifier(new AttributeModifier(WARLOCK_SPEED_BOOST_UUID, "Warlock set bonus", WARLOCK_SPEED_BOOST, Operations.MULTIPLY_FLAT));
@@ -433,7 +433,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	 * @param armourClass The class to check, or null to accept any class as long as they are all the same.
 	 * @return True if the entity is wearing a full set of the given element and class, false otherwise.
 	 */
-	private static boolean isWearingFullSet(EntityLivingBase entity, @Nullable Element element, @Nullable ArmourClass armourClass){
+	public static boolean isWearingFullSet(EntityLivingBase entity, @Nullable Element element, @Nullable ArmourClass armourClass){
 		ItemStack helmet = entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 		if(!(helmet.getItem() instanceof ItemWizardArmour)) return false;
 		Element e = element == null ? ((ItemWizardArmour)helmet.getItem()).element : element;
@@ -442,6 +442,16 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 				.allMatch(s -> entity.getItemStackFromSlot(s).getItem() instanceof ItemWizardArmour
 						&& ((ItemWizardArmour)entity.getItemStackFromSlot(s).getItem()).element == e
 						&& ((ItemWizardArmour)entity.getItemStackFromSlot(s).getItem()).armourClass == ac);
+	}
+
+	/**
+	 * Returns whether the given entity's armour pieces which implement {@link IManaStoringItem} has mana. Ignores pieces which doesn't have a mana storage.
+	 * @param entity The entity to query.
+	 * @return True if all armour pieces which implement {@link IManaStoringItem} has mana, false otherwise.
+	 */
+	public static boolean doAllArmourPiecesHaveMana(EntityLivingBase entity){
+		return Arrays.stream(InventoryUtils.ARMOUR_SLOTS).noneMatch(s -> entity.getItemStackFromSlot(s).getItem() instanceof IManaStoringItem
+						&& ((IManaStoringItem) entity.getItemStackFromSlot(s).getItem()).isManaEmpty(entity.getItemStackFromSlot(s)));
 	}
 
 	@SubscribeEvent
