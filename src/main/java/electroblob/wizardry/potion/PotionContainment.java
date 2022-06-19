@@ -59,10 +59,9 @@ public class PotionContainment extends PotionMagicEffect {
 
 		if(x != target.posX || y != target.posY || z != target.posZ)
 		{
+			target.addVelocity(0.15 * Math.signum(x - target.posX), 0.15 * Math.signum(y - target.posY), 0.15 * Math.signum(z - target.posZ));
+			EntityUtils.undoGravity(target);
 			if(target.world.isRemote){
-				EntityUtils.undoGravity(target);
-				target.addVelocity(0.15 * Math.signum(x - target.posX), 0.15 * Math.signum(y - target.posY), 0.15 * Math.signum(z - target.posZ));
-
 				target.world.playSound(target.posX, target.posY, target.posZ, WizardrySounds.ENTITY_FORCEFIELD_DEFLECT,
 						WizardrySounds.SPELLS, 0.3f, 1f, false);
 			}
