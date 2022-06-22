@@ -17,7 +17,7 @@
   "chargeup": 0,
   "cooldown": 50,
   "base_properties": {
-    "resistance_duration": 600,
-    "resistance_strength": 0
+    "oakflesh_duration": 600,
+    "oakflesh_strength": 0
   }
 }

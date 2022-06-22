@@ -359,7 +359,7 @@ public final class Spells {
 		registry.register(new GreaterHeal());
 		registry.register(new SpellConstruct<>("healing_aura", SpellActions.POINT_DOWN, EntityHealAura::new, false).addProperties(Spell.EFFECT_RADIUS, Spell.DAMAGE, Spell.HEALTH));
 		registry.register(new Forcefield());
-		registry.register(new SpellBuff("ironflesh", 0.4f, 0.5f, 0.6f, () -> MobEffects.RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
+		registry.register(new SpellBuff("ironflesh", 0.4f, 0.5f, 0.6f, () -> WizardryPotions.ironflesh).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new Transience());
 
 		registry.register(new Meteor());
@@ -380,7 +380,7 @@ public final class Spells {
 		registry.register(new Shockwave());
 		registry.register(new SummonIronGolem());
 		registry.register(new ArrowRain());
-		registry.register(new SpellBuff("diamondflesh", 0.1f, 0.7f, 1, () -> MobEffects.RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
+		registry.register(new SpellBuff("diamondflesh", 0.1f, 0.7f, 1, () -> WizardryPotions.diamondflesh).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new SpellBuff("font_of_vitality", 1, 0.8f, 0.3f, () -> MobEffects.ABSORPTION, () -> MobEffects.REGENERATION).soundValues(0.7f, 1.2f, 0.4f));
 
 		// Wizardry 1.1 spells
@@ -398,7 +398,7 @@ public final class Spells {
 		registry.register(new PocketWorkbench());
 		registry.register(new ImbueWeapon());
 		registry.register(new InvigoratingPresence());
-		registry.register(new SpellBuff("oakflesh", 0.6f, 0.5f, 0.4f, () -> MobEffects.RESISTANCE).soundValues(0.7f, 1.2f, 0.4f));
+		registry.register(new SpellBuff("oakflesh", 0.6f, 0.5f, 0.4f, () -> WizardryPotions.oakflesh).soundValues(0.7f, 1.2f, 0.4f));
 
 		registry.register(new SpellProjectile<>("greater_fireball", EntityLargeMagicFireball::new).addProperties(Spell.DAMAGE, EntityLargeMagicFireball.EXPLOSION_POWER));//new GreaterFireball());
 		registry.register(new FlamingWeapon());

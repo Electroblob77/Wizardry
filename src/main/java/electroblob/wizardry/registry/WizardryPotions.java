@@ -57,6 +57,9 @@ public final class WizardryPotions {
 	public static final Potion frost_step = placeholder();
 	public static final Potion mark_of_sacrifice = placeholder();
 	public static final Potion mirage = placeholder();
+	public static final Potion oakflesh = placeholder();
+	public static final Potion ironflesh = placeholder();
+	public static final Potion diamondflesh = placeholder();
 
 	/**
 	 * Sets both the registry and unlocalised names of the given potion, then registers it with the given registry. Use
@@ -200,6 +203,10 @@ public final class WizardryPotions {
 			@Override
 			public void spawnCustomParticle(World world, double x, double y, double z){} // We only want the syncing
 		}.setBeneficial());
+
+		registerPotion(registry, "oakflesh", new PotionOakflesh(false, 0).setBeneficial());
+		registerPotion(registry, "ironflesh", new PotionIronflesh(false, 0).setBeneficial());
+		registerPotion(registry, "diamondflesh", new PotionDiamondflesh(false, 0).setBeneficial());
 
 	}
 

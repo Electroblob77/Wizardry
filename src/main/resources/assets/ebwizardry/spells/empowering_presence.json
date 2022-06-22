@@ -14,12 +14,12 @@
   "element": "healing",
   "type": "buff",
   "cost": 30,
-  "chargeup": 0,
+  "chargeup": 20,
   "cooldown": 60,
   "base_properties": {
     "effect_radius": 5,
     "effect_duration": 900,
-    "effect_strength": 1,
+    "effect_strength": 0,
     "potency_per_level": 0.15
   }
 }

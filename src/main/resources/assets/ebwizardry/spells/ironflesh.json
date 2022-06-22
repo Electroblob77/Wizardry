@@ -17,7 +17,7 @@
   "chargeup": 15,
   "cooldown": 100,
   "base_properties": {
-    "resistance_duration": 600,
-    "resistance_strength": 1
+    "ironflesh_duration": 600,
+    "ironflesh_strength": 0
   }
 }

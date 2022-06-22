@@ -17,7 +17,7 @@
   "chargeup": 25,
   "cooldown": 300,
   "base_properties": {
-    "resistance_duration": 600,
-    "resistance_strength": 2
+    "diamondflesh_duration": 600,
+    "diamondflesh_strength": 0
   }
 }
