@@ -167,6 +167,7 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 						if(target instanceof EntityPlayerMP){
 							((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
 						}
+						this.lifetime = (int) (lifetime * 0.92);
 
 					}else{
 
