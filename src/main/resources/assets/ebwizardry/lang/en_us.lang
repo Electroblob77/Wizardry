@@ -759,6 +759,7 @@ entity.ebwizardry\:smoke_bomb.name=Magic
 entity.ebwizardry\:ice_spike.name=Magic
 entity.ebwizardry\:combustion_rune.name=Magic
 entity.ebwizardry\:flamecatcher_arrow.name=Magic
+entity.ebwizardry\:conjured_arrow.name=Magic
 
 entity.ebwizardry\:black_hole.name=Black Hole
 entity.ebwizardry\:shield.name=Shield
