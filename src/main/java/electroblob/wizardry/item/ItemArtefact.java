@@ -769,6 +769,7 @@ public class ItemArtefact extends Item {
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
 							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.NECROMANCY))){
 
+						event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.curse_of_soulbinding, 400));
 						CurseOfSoulbinding.getSoulboundCreatures(WizardData.get(player)).add(event.getEntity().getUniqueID());
 					}
 
