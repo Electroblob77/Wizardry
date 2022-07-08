@@ -378,7 +378,8 @@ public final class Spells {
 		registry.register(new SpellMinion<>("silverfish_swarm", EntitySilverfishMinion::new).soundValues(1, 1.1f, 0.1f));
 		registry.register(new SpellConstructRanged<>("black_hole", EntityBlackHole::new, false).addProperties(Spell.EFFECT_RADIUS).soundValues(2, 0.7f, 0));
 		registry.register(new Shockwave());
-		registry.register(new SummonIronGolem());
+		registry.register(new SpellMinion<>("summon_iron_golem", EntitySpectralGolem::new).soundValues(1, 1.1f, 0.1f));
+
 		registry.register(new ArrowRain());
 		registry.register(new SpellBuff("diamondflesh", 0.1f, 0.7f, 1, () -> WizardryPotions.diamondflesh).soundValues(0.7f, 1.2f, 0.4f));
 		registry.register(new SpellBuff("font_of_vitality", 1, 0.8f, 0.3f, () -> MobEffects.ABSORPTION, () -> MobEffects.REGENERATION).soundValues(0.7f, 1.2f, 0.4f));

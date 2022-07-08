@@ -733,6 +733,7 @@ entity.ebwizardry\:evil_wizard.name=Wizard
 entity.ebwizardry\:decoy.name=Decoy
 entity.ebwizardry\:vex_minion.name=Vex
 entity.ebwizardry\:remnant.name=Remnant
+entity.ebwizardry\:spectral_golem.name=Spectral Golem
 
 entity.ebwizardry\:magic_missile.name=Magic
 entity.ebwizardry\:arc.name=Magic
@@ -1077,7 +1078,7 @@ spell.ebwizardry\:stormcloud=Stormcloud
 spell.ebwizardry\:summon_blaze=Summon Blaze
 spell.ebwizardry\:summon_ice_giant=Summon Ice Giant
 spell.ebwizardry\:summon_ice_wraith=Summon Ice Wraith
-spell.ebwizardry\:summon_iron_golem=Summon Iron Golem
+spell.ebwizardry\:summon_iron_golem=Summon Spectral Golem
 spell.ebwizardry\:summon_lightning_wraith=Summon Lightning Wraith
 spell.ebwizardry\:summon_phoenix=Summon Phoenix
 spell.ebwizardry\:summon_shadow_wraith=Summon Shadow Wraith

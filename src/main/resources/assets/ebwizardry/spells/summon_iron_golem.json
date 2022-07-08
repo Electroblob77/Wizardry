@@ -17,6 +17,8 @@
   "chargeup": 20,
   "cooldown": 400,
   "base_properties": {
+    "minion_lifetime": 600,
+    "minion_count": 1,
     "summon_radius": 2
   }
 }

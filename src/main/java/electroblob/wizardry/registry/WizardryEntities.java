@@ -88,6 +88,7 @@ public class WizardryEntities {
 		registry.register(createEntry(EntitySpiritHorse.class, 		"spirit_horse", 		TrackingType.LIVING).egg(0x5464c6, 0xbcc2e8).build());
 		registry.register(createEntry(EntityPhoenix.class, 			"phoenix", 			TrackingType.LIVING).egg(0xff4900, 0xfde535).build());
 		registry.register(createEntry(EntityIceGiant.class, 		"ice_giant", 			TrackingType.LIVING).egg(0x5bacd9, 0xeffaff).build());
+		registry.register(createEntry(EntitySpectralGolem.class,	"spectral_golem",		TrackingType.LIVING).egg(0x5bacd9, 0xeffaff).build());
 
 		registry.register(createEntry(EntityMagicSlime.class, 		"magic_slime", 		TrackingType.LIVING).build());
 		registry.register(createEntry(EntityDecoy.class, 			"decoy", 				TrackingType.LIVING).build());

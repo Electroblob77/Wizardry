@@ -20,6 +20,7 @@ import electroblob.wizardry.client.model.ModelSageArmour;
 import electroblob.wizardry.client.model.ModelWizardArmour;
 import electroblob.wizardry.client.particle.*;
 import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
+import electroblob.wizardry.client.renderer.RenderSpectralGolem;
 import electroblob.wizardry.client.renderer.entity.*;
 import electroblob.wizardry.client.renderer.entity.layers.*;
 import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
@@ -771,6 +772,7 @@ public class ClientProxy extends CommonProxy {
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityIceGiant.class, RenderIceGiant::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityPhoenix.class, RenderPhoenix::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntitySpectralGolem.class, RenderSpectralGolem::new);
 
 		// Projectiles
 		RenderingRegistry.registerEntityRenderingHandler(EntityMagicMissile.class, manager -> new RenderMagicArrow(manager,
