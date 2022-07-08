@@ -849,7 +849,12 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 			
 			int chargeDepleted = this.getManaCapacity(centre.getStack()) - this.getMana(centre.getStack());
 
-			int manaPerItem = Constants.MANA_PER_CRYSTAL;
+			// Not too pretty but allows addons implementing the IManaStoringItem interface to provide their mana amount for custom crystals,
+			// previously this was defaulted to the regular crystal's amount, allowing players to exploit it if a crystal was worth less mana than that.
+			int manaPerItem = crystals.getStack().getItem() instanceof IManaStoringItem ?
+					((IManaStoringItem) crystals.getStack().getItem()).getMana(crystals.getStack()) :
+					crystals.getStack().getItem() instanceof ItemCrystal ? Constants.MANA_PER_CRYSTAL : Constants.MANA_PER_SHARD;
+
 			if(crystals.getStack().getItem() == WizardryItems.crystal_shard) manaPerItem = Constants.MANA_PER_SHARD;
 			if(crystals.getStack().getItem() == WizardryItems.grand_crystal) manaPerItem = Constants.GRAND_CRYSTAL_MANA;
 			
