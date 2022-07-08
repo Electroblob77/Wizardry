@@ -10,6 +10,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -36,7 +37,11 @@ public class ItemWizardHandbook extends Item {
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand){
 		ItemStack stack = player.getHeldItem(hand);
-		player.openGui(Wizardry.instance, WizardryGuiHandler.WIZARD_HANDBOOK, world, 0, 0, 0);
+		if (Wizardry.settings.loadHandbook) {
+			player.openGui(Wizardry.instance, WizardryGuiHandler.WIZARD_HANDBOOK, world, 0, 0, 0);
+		} else if (!world.isRemote){
+			player.sendStatusMessage(new TextComponentTranslation("item." + Wizardry.MODID + ":wizard_handbook.disabled"), false);
+		}
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
 

@@ -127,11 +127,10 @@ public class Wizardry {
 	public void preInit(FMLPreInitializationEvent event){
 
 		logger = event.getModLog();
-		
-		proxy.registerResourceReloadListeners();
 
 		configDirectory = new File(event.getModConfigurationDirectory(), Wizardry.MODID);
 		settings.initConfig(event);
+		proxy.registerResourceReloadListeners();
 
 		Calendar calendar = Calendar.getInstance();
 		tisTheSeason = calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DAY_OF_MONTH) >= 24

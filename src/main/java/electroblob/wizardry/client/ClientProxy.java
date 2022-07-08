@@ -1,6 +1,7 @@
 package electroblob.wizardry.client;
 
 import electroblob.wizardry.CommonProxy;
+import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.client.animation.ActionAnimation;
@@ -164,7 +165,8 @@ public class ClientProxy extends CommonProxy {
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 		if(manager instanceof IReloadableResourceManager){
 			((IReloadableResourceManager)manager).registerReloadListener(GuiSpellDisplay::loadSkins);
-			((IReloadableResourceManager)manager).registerReloadListener(GuiWizardHandbook::loadHandbookFile);
+			if (Wizardry.settings.loadHandbook)
+				((IReloadableResourceManager)manager).registerReloadListener(GuiWizardHandbook::loadHandbookFile);
 		}
 	}
 

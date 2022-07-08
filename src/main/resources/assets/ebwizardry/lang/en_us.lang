@@ -83,6 +83,7 @@ item.ebwizardry\:arcane_tome.desc=Upgrades any %1$s wand with sufficient progres
 item.ebwizardry\:wizard_handbook.name=The Wizard's Handbook
 item.ebwizardry\:wizard_handbook.author=by %1$s
 item.ebwizardry\:wizard_handbook.desc=Your not-so-pocket-sized guide to the arcane arts! A must-have for any aspiring wizard who seeks to learn the secrets of magic.\n\nRight-click while holding this book to read it.
+item.ebwizardry\:wizard_handbook.disabled=This item was disabled in the config!
 
 item.ebwizardry\:wand.generic=wand
 
