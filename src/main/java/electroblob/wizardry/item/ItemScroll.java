@@ -244,7 +244,7 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Finish(Source.SCROLL, spell, user, modifiers, castingTick));
 			spell.finishCasting(user.world, user, Double.NaN, Double.NaN, Double.NaN, null, castingTick, modifiers);
 
-			if(user instanceof EntityPlayer){
+			if(user instanceof EntityPlayer && !((EntityPlayer)user).isCreative()){
 				((EntityPlayer)user).getCooldownTracker().setCooldown(this, spell.getCooldown());
 			}
 		}
