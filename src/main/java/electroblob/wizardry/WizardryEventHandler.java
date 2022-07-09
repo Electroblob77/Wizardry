@@ -801,7 +801,7 @@ public class WizardryEventHandler {
 	@SubscribeEvent
 	public void onLivingDropsEvent(LivingDropsEvent event){
 		// Evil wizards drop spell books themselves
-		if(event.entityLiving instanceof EntityMob && !(event.entityLiving instanceof EntityEvilWizard) && event.source.getEntity() instanceof EntityPlayer && Wizardry.spellBookDropChance > 0){
+		if(event.entityLiving instanceof EntityMob && !(event.entityLiving instanceof EntityEvilWizard) && event.source.getEntity() instanceof EntityPlayer && !(event.source.getEntity() instanceof FakePlayer) && Wizardry.spellBookDropChance > 0){
 
 			// This does exactly what the entity drop method does, but with a different random number so that the
 			// spell book doesn't always drop with other rare drops.
