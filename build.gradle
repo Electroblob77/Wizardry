@@ -1,13 +1,26 @@
 buildscript {
     repositories {
-        mavenCentral()
+
+        // [HTTPS FIX] Replace mavenCentral() with the code block below
+        maven {
+            url = "https://maven.minecraftforge.net/"
+        }
+
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "forge2"
+            url = "https://maven.minecraftforge.net/"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+
+        flatDir {
+            dirs 'libs'
         }
     }
     dependencies {
