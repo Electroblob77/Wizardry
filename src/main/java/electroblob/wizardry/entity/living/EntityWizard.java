@@ -617,7 +617,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 	private ItemStack getRandomItemOfTier(Tier tier){
 
-		int randomiser;
+		int randomiser, i;
 
 		// All enabled spells of the given tier
 		List<Spell> spells = Spell.getSpells(new Spell.TierElementFilter(tier, null, SpellProperties.Context.TRADES));
@@ -628,19 +628,26 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		spells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
 		specialismSpells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
 
+		Item spellBook = WizardryItems.spell_book;
+
 		// This code is sooooooo much neater with the new filter system!
 		switch(tier){
 
 		case NOVICE:
 			randomiser = rand.nextInt(5);
+
 			if(randomiser < 4 && !spells.isEmpty()){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
+					i = rand.nextInt(specialismSpells.size());
+					if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+					return new ItemStack(spellBook, 1,
+							specialismSpells.get(i).metadata());
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
+					i = rand.nextInt(spells.size());
+					if(!spells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = spells.get(i).getApplicableItems()[0];
+					return new ItemStack(spellBook, 1, spells.get(i).metadata());
 				}
 			}else{
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -659,10 +666,14 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1,
+					i = rand.nextInt(specialismSpells.size());
+					if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+					return new ItemStack(spellBook, 1,
 							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
+					i = rand.nextInt(spells.size());
+					if(!spells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = spells.get(i).getApplicableItems()[0];
+					return new ItemStack(spellBook, 1, spells.get(i).metadata());
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -696,10 +707,14 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1,
+					i = rand.nextInt(specialismSpells.size());
+					if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+					return new ItemStack(spellBook, 1,
 							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
+					i = rand.nextInt(spells.size());
+					if(!spells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = spells.get(i).getApplicableItems()[0];
+					return new ItemStack(spellBook, 1, spells.get(i).metadata());
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -724,7 +739,9 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			if(randomiser < 5 && this.getElement() != Element.MAGIC && !specialismSpells.isEmpty()){
 				// Master spells can only be sold by a specialist in that element.
-				return new ItemStack(WizardryItems.spell_book, 1,
+				i = rand.nextInt(specialismSpells.size());
+				if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+				return new ItemStack(spellBook, 1,
 						specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 
 			}else if(randomiser < 6){
