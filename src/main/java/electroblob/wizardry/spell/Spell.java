@@ -921,6 +921,12 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	public boolean applicableForItem(Item item){
 		return Arrays.asList(applicableItems).contains(item);
 	}
+	
+	/** Returns Items spell applicable to. Used in {@link EntityWizard#getRandomItemOfTier(Tier)}
+	 * First(0) element is {@link ItemSpellBook()}, when the Second one (1) is {@link ItemScroll ()} **/
+	public Item[] getApplicableItems(){
+		return new Item[]{WizardryItems.spell_book, WizardryItems.scroll};
+	}
 
 	/**
 	 * Sets which items this spell can appear on (these default to the regular spell book and scroll).
