@@ -628,7 +628,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		spells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
 		specialismSpells.removeIf(s -> !s.isEnabled(SpellProperties.Context.BOOK));
 
-		Item spellBook = WizardryItems.spell_book;
+		// Used to define spellbook
+		Item spellBook;
 
 		// This code is sooooooo much neater with the new filter system!
 		switch(tier){
@@ -641,12 +642,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
 					i = rand.nextInt(specialismSpells.size());
-					if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+					spellBook = getApplicableSpellbook(specialismSpells.get(i));
 					return new ItemStack(spellBook, 1,
 							specialismSpells.get(i).metadata());
 				}else{
 					i = rand.nextInt(spells.size());
-					if(!spells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = spells.get(i).getApplicableItems()[0];
+					spellBook = getApplicableSpellbook(spells.get(i));
 					return new ItemStack(spellBook, 1, spells.get(i).metadata());
 				}
 			}else{
@@ -667,12 +668,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
 					i = rand.nextInt(specialismSpells.size());
-					if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+					spellBook = getApplicableSpellbook(specialismSpells.get(i));
 					return new ItemStack(spellBook, 1,
 							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
 					i = rand.nextInt(spells.size());
-					if(!spells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = spells.get(i).getApplicableItems()[0];
+					spellBook = getApplicableSpellbook(spells.get(i));
 					return new ItemStack(spellBook, 1, spells.get(i).metadata());
 				}
 			}else if(randomiser < 6){
@@ -708,12 +709,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
 					i = rand.nextInt(specialismSpells.size());
-					if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+					spellBook = getApplicableSpellbook(specialismSpells.get(i));
 					return new ItemStack(spellBook, 1,
 							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 				}else{
 					i = rand.nextInt(spells.size());
-					if(!spells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = spells.get(i).getApplicableItems()[0];
+					spellBook = getApplicableSpellbook(spells.get(i));
 					return new ItemStack(spellBook, 1, spells.get(i).metadata());
 				}
 			}else if(randomiser < 6){
@@ -740,7 +741,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			if(randomiser < 5 && this.getElement() != Element.MAGIC && !specialismSpells.isEmpty()){
 				// Master spells can only be sold by a specialist in that element.
 				i = rand.nextInt(specialismSpells.size());
-				if(!specialismSpells.get(i).applicableForItem(WizardryItems.spell_book)) spellBook = specialismSpells.get(i).getApplicableItems()[0];
+				spellBook = getApplicableSpellbook(specialismSpells.get(i));
 				return new ItemStack(spellBook, 1,
 						specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
 
@@ -757,6 +758,17 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		}
 
 		return new ItemStack(Blocks.STONE);
+	}
+
+	/** Used to get Applicable spellbook automatically. If there is no custom book for it, then it sets it to default one.
+	 *  **/
+	private Item getApplicableSpellbook(Spell spell){
+		Collection<Item> values = ForgeRegistries.ITEMS.getValuesCollection();
+		List<Item> book = values.stream().filter(spellBook ->
+				spellBook instanceof ItemSpellBook && spell.applicableForItem(spellBook)).collect(Collectors.toList());
+		if(!book.isEmpty())
+			return book.get(0);
+		return WizardryItems.spell_book;
 	}
 
 	@Override
