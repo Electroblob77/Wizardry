@@ -47,6 +47,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -637,10 +638,9 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
+					return getBookStackForSpell(specialismSpells.get(rand.nextInt(specialismSpells.size())));
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
+					return getBookStackForSpell(spells.get(rand.nextInt(spells.size())));
 				}
 			}else{
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -659,10 +659,9 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
+					return getBookStackForSpell(specialismSpells.get(rand.nextInt(specialismSpells.size())));
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
+					return getBookStackForSpell(spells.get(rand.nextInt(spells.size())));
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -696,10 +695,9 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0 && !specialismSpells.isEmpty()){
 					// This means it is more likely for spell books sold to be of the same element as the wizard if the
 					// wizard has an element.
-					return new ItemStack(WizardryItems.spell_book, 1,
-							specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
+					return getBookStackForSpell(specialismSpells.get(rand.nextInt(specialismSpells.size())));
 				}else{
-					return new ItemStack(WizardryItems.spell_book, 1, spells.get(rand.nextInt(spells.size())).metadata());
+					return getBookStackForSpell(spells.get(rand.nextInt(spells.size())));
 				}
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -724,8 +722,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			if(randomiser < 5 && this.getElement() != Element.MAGIC && !specialismSpells.isEmpty()){
 				// Master spells can only be sold by a specialist in that element.
-				return new ItemStack(WizardryItems.spell_book, 1,
-						specialismSpells.get(rand.nextInt(specialismSpells.size())).metadata());
+				return getBookStackForSpell(specialismSpells.get(rand.nextInt(specialismSpells.size())));
 
 			}else if(randomiser < 6){
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -847,6 +844,22 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		}
 
 		return maxTier;
+	}
+
+	/**
+	 * Helper method to handle addon spell books.
+	 * @param spell the spell to look up.
+	 * @return Checks all items of the spell's namespace (modid) if they are applicable for the spell and returns the first match, or falls back to WizardryItems.spell_book if no match was found.
+	 */
+	public static ItemStack getBookStackForSpell(Spell spell) {
+		String modid = spell.getRegistryName().getNamespace();
+		if (modid.equals(Wizardry.MODID)) {
+			return new ItemStack(WizardryItems.spell_book, 1, spell.metadata());
+		}
+		Optional<Item> firstMatch = ForgeRegistries.ITEMS.getValuesCollection().stream().filter(v -> v instanceof ItemSpellBook && spell.applicableForItem(v)
+						&& v.getRegistryName().getNamespace().equals(modid)).findFirst();
+
+		return firstMatch.map(item -> new ItemStack(item, 1, spell.metadata())).orElseGet(() -> new ItemStack(WizardryItems.spell_book, 1, spell.metadata()));
 	}
 
 	@Override
