@@ -798,7 +798,6 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		Tier maxTier = Tier.NOVICE;
 
 		List<Spell> npcSpells = Spell.getSpells(s -> s.canBeCastBy(wizard, false));
-		npcSpells.removeIf(s -> !s.applicableForItem(WizardryItems.spell_book));
 
 		for(int i = 0; i < n; i++){
 
