@@ -227,8 +227,8 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld){
-
-		WandHelper.decrementCooldowns(stack);
+		
+		if(isHeld) WandHelper.decrementCooldowns(stack);
 
 		// Decrements wand damage (increases mana) every 1.5 seconds if it has a condenser upgrade
 		if(!world.isRemote && !this.isManaFull(stack) && world.getTotalWorldTime() % Constants.CONDENSER_TICK_INTERVAL == 0){
