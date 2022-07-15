@@ -1,21 +1,15 @@
 package electroblob.wizardry.client;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
+import codechicken.nei.VisiblityData;
+import codechicken.nei.api.INEIGuiHandler;
+import codechicken.nei.api.TaggedInventoryArea;
+import cpw.mods.fml.common.Optional.Interface;
+import cpw.mods.fml.common.Optional.Method;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import electroblob.wizardry.ExtendedPlayer;
 import electroblob.wizardry.SpellGlyphData;
 import electroblob.wizardry.WandHelper;
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.WizardryGuiHandler;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketControlInput;
 import electroblob.wizardry.packet.WizardryPacketHandler;
@@ -23,32 +17,39 @@ import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.tileentity.ContainerArcaneWorkbench;
 import electroblob.wizardry.tileentity.SlotWizardry;
 import electroblob.wizardry.tileentity.TileEntityArcaneWorkbench;
+import java.awt.Rectangle;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
-public class GuiArcaneWorkbench extends GuiContainer {
+@Interface(iface = "codechicken.nei.api.INEIGuiHandler", modid = "NotEnoughItems")
+public class GuiArcaneWorkbench extends GuiContainer implements INEIGuiHandler {
 
 	private GuiButton applyBtn;
 	private static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/arcane_workbench.png");
 
 	private IInventory playerInventory;
 	private IInventory arcaneWorkbenchInventory;
-
-	private final int tooltipWidth = 164;
+	
+	private static final int tooltipWidth = 164;
+	private static final int tooltipHeight = 155;
 
 	public GuiArcaneWorkbench(InventoryPlayer invPlayer, TileEntityArcaneWorkbench entity) {
 		super(new ContainerArcaneWorkbench(invPlayer, entity));
@@ -61,16 +62,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	@Override
 	public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_){
 
-		// Tests if there is a wand in the workbench and edits the positioning accordingly
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
-			guiLeft = (this.width - this.xSize - tooltipWidth)/2;
-			this.applyBtn.xPosition = (this.width - tooltipWidth)/2 + 48;
-		}else{
-			guiLeft = (this.width - this.xSize)/2;
-			this.applyBtn.xPosition = this.width/2 + 48;
-		}
-
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack()){
+		if(this.hasWand()){
 			this.applyBtn.enabled = true;
 		}else{
 			this.applyBtn.enabled = false;
@@ -87,7 +79,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		this.fontRendererObj.drawString(this.arcaneWorkbenchInventory.hasCustomInventoryName() ? this.arcaneWorkbenchInventory.getInventoryName() : I18n.format(this.arcaneWorkbenchInventory.getInventoryName()), 8, 6, 4210752);
 		this.fontRendererObj.drawString(this.playerInventory.hasCustomInventoryName() ? this.playerInventory.getInventoryName() : I18n.format(this.playerInventory.getInventoryName()), 8, this.ySize - 96 + 2, 4210752);
 
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
+		if(this.hasWand()){
 
 			ItemStack wand = this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack();
 
@@ -156,7 +148,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 
 		// Tooltip only drawn if there is a wand
-		if(this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack() && this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand){
+		if(this.hasWand()){
 
 			// Tooltip box
 			drawTexturedModalRect(guiLeft + xSize, guiTop, xSize, 0, 256 - xSize - 4, ySize);
@@ -191,8 +183,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				
 				if(level > 0){
 					ItemStack stack = new ItemStack(item, level);
-					this.itemRender.renderItemAndEffectIntoGUI(this.fontRendererObj, this.mc.getTextureManager(), stack, guiLeft + xSize + 6 + x, y);
-					this.itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, this.mc.getTextureManager(), stack, guiLeft + xSize + 6 + x, y);
+					itemRender.renderItemAndEffectIntoGUI(this.fontRendererObj, this.mc.getTextureManager(), stack, guiLeft + xSize + 6 + x, y);
+					itemRender.renderItemOverlayIntoGUI(this.fontRendererObj, this.mc.getTextureManager(), stack, guiLeft + xSize + 6 + x, y);
 					x += 18;
 				}
 			}
@@ -222,7 +214,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		}
 	}
 
-	public void initGui()
+	@SuppressWarnings("unchecked")
+    public void initGui()
 	{
 		this.mc.thePlayer.openContainer = this.inventorySlots;
 		this.guiLeft = (this.width - this.xSize) / 2;
@@ -263,7 +256,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		return par5 >= par1 - 1 && par5 < par1 + par3 + 1 && par6 >= par2 - 1 && par6 < par2 + par4 + 1;
 	}
 
-	protected void drawItemStackTooltip(ItemStack par1ItemStack, int par2, int par3)
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+    protected void drawItemStackTooltip(ItemStack par1ItemStack, int par2, int par3)
 	{
 		List list = par1ItemStack.getTooltip(this.mc.thePlayer, this.mc.gameSettings.advancedItemTooltips);
 
@@ -283,7 +277,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		drawHoveringText(list, par2, par3, (font == null ? fontRendererObj : font));
 	}
 
-	protected void drawHoveringText(List par1List, int par2, int par3, FontRenderer font)
+	@SuppressWarnings("rawtypes")
+    protected void drawHoveringText(List par1List, int par2, int par3, FontRenderer font)
 	{
 		if (!par1List.isEmpty())
 		{
@@ -359,6 +354,72 @@ public class GuiArcaneWorkbench extends GuiContainer {
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		}
 	}
+
+    /**
+     * @return A list of TaggedInventoryAreas that will be used with the savestates.
+     */
+	@Method(modid = "NotEnoughItems")
+    @Override
+    public List<TaggedInventoryArea> getInventoryAreas(GuiContainer gui) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * NEI will give the specified item to the InventoryRange returned if the player's inventory is full.
+     * Should not return null, just an empty list
+     */
+    @Method(modid = "NotEnoughItems")
+    @Override
+    public Iterable<Integer> getItemSpawnSlots(GuiContainer gui, ItemStack item) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Handles clicks while an itemstack has been dragged from the item panel. Use this to set configurable slots and the like.
+     * Changes made to the stackSize of the dragged stack will be kept
+     * @param gui The current gui instance
+     * @param mousex The x position of the mouse
+     * @param mousey The y position of the mouse
+     * @param draggedStack The stack being dragged from the item panel
+     * @param button The button presed
+     * @return True if the drag n drop was handled. False to resume processing through other routes. The held stack will be deleted if draggedStack.stackSize == 0
+     */
+    @Method(modid = "NotEnoughItems")
+    @Override
+    public boolean handleDragNDrop(GuiContainer gui, int mousex, int mousey, ItemStack draggedStack, int button) {
+        return false;
+    }
+
+    /**
+     * Used to prevent the item panel from drawing on top of other gui elements.
+     * This function will also be called with a 1x1 size rectangle on the mouse position for determining if the given coordinate should override item panel functions such as scrolling
+     * @param x The x coordinate of the rectangle bounding the slot
+     * @param y The y coordinate of the rectangle bounding the slot
+     * @param w The w coordinate of the rectangle bounding the slot
+     * @param h The h coordinate of the rectangle bounding the slot
+     * @return true if the item panel slot within the specified rectangle should not be rendered.
+     */
+    @Method(modid = "NotEnoughItems")
+    @Override
+    public boolean hideItemPanelSlot(GuiContainer gui, int x, int y, int w, int h) {
+        if(this.hasWand()) {
+            Rectangle itemPanel = new Rectangle(x, y, w, h);
+            Rectangle tooltip = new Rectangle(this.guiLeft + this.xSize, this.guiTop, tooltipWidth, tooltipHeight);
+            return itemPanel.intersects(tooltip);
+        }
+        return false;
+    }
+
+    @Method(modid = "NotEnoughItems")
+    @Override
+    public VisiblityData modifyVisiblity(GuiContainer gui, VisiblityData currentVisibility) {
+        return currentVisibility;
+    }
+    
+    private boolean hasWand() {
+        return this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getHasStack()
+                && this.inventorySlots.getSlot(ContainerArcaneWorkbench.WAND_SLOT).getStack().getItem() instanceof ItemWand;
+    }
 
 }
 
