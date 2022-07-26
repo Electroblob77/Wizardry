@@ -39,6 +39,11 @@ public class LayerIron extends LayerTiledOverlay<EntityLivingBase> {
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
+		int j = entity.getBrightnessForRender();
+        	int k = j % 65536;
+        	int l = j / 65536;
+        	OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) k, (float) l);
+
 		super.doRenderLayer(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
 
 		GlStateManager.disableBlend();
