@@ -256,7 +256,7 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 			}
 		}
 
-		if((input.getItem() == WizardryItems.magic_crystal || input.getItem() == Item.getItemFromBlock(WizardryBlocks.crystal_block))
+		if((input.getItem() == WizardryItems.crystal_magic || input.getItem() == Item.getItemFromBlock(WizardryBlocks.crystal_block))
 				&& input.getMetadata() == 0){
 
 			if(Arrays.stream(receptacleElements).distinct().count() == 1 && receptacleElements[0] != null){ // All the same element

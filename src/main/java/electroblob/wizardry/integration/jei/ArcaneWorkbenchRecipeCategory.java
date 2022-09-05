@@ -23,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -214,7 +215,9 @@ public class ArcaneWorkbenchRecipeCategory implements IRecipeCategory<ArcaneWork
 		List<ArcaneWorkbenchRecipe> recipes = new ArrayList<>();
 
 		List<ItemStack> crystals = new ArrayList<>();
-		for(int meta = 0; meta < Element.values().length; meta++) crystals.add(new ItemStack(WizardryItems.magic_crystal, 1, meta));
+		for (Element element : Element.values()) {
+			crystals.add(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "crystal_" + element.name().toLowerCase()))));
+		}
 		List<ItemStack> shard = Collections.singletonList(new ItemStack(WizardryItems.crystal_shard));
 		List<ItemStack> grandCrystal = Collections.singletonList(new ItemStack(WizardryItems.grand_crystal));
 

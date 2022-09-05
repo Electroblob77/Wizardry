@@ -26,11 +26,13 @@ import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.BannerPattern;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -78,7 +80,14 @@ public final class WizardryItems {
 	// point where all the items were listed, but that's not possible within the current system unless you use an array,
 	// which means you lose the individual fields...
 
-	public static final Item magic_crystal = placeholder();
+	public static final Item crystal_magic = placeholder();
+	public static final Item crystal_earth = placeholder();
+	public static final Item crystal_fire = placeholder();
+	public static final Item crystal_healing = placeholder();
+	public static final Item crystal_ice = placeholder();
+	public static final Item crystal_lightning = placeholder();
+	public static final Item crystal_necromancy = placeholder();
+	public static final Item crystal_sorcery = placeholder();
 
 	public static final Item grand_crystal = placeholder();
 	public static final Item crystal_shard = placeholder();
@@ -162,7 +171,13 @@ public final class WizardryItems {
 	public static final Item smoke_bomb = placeholder();
 	public static final Item spark_bomb = placeholder();
 
-	public static final Item spectral_dust = placeholder();
+	public static final Item spectral_dust_earth = placeholder();
+	public static final Item spectral_dust_fire = placeholder();
+	public static final Item spectral_dust_healing = placeholder();
+	public static final Item spectral_dust_ice = placeholder();
+	public static final Item spectral_dust_lightning = placeholder();
+	public static final Item spectral_dust_necromancy = placeholder();
+	public static final Item spectral_dust_sorcery = placeholder();
 
 	public static final Item wizard_hat = placeholder();
 	public static final Item wizard_robe = placeholder();
@@ -567,7 +582,14 @@ public final class WizardryItems {
 
 		// Items
 
-		registerItem(registry, "magic_crystal", 					new ItemCrystal());
+		registerItem(registry, "crystal_magic",					new ItemCrystal());
+		registerItem(registry, "crystal_earth",					new ItemCrystal());
+		registerItem(registry, "crystal_fire", 					new ItemCrystal());
+		registerItem(registry, "crystal_healing", 				new ItemCrystal());
+		registerItem(registry, "crystal_ice", 					new ItemCrystal());
+		registerItem(registry, "crystal_lightning", 				new ItemCrystal());
+		registerItem(registry, "crystal_necromancy", 				new ItemCrystal());
+		registerItem(registry, "crystal_sorcery", 				new ItemCrystal());
 
 		registerItem(registry, "crystal_shard", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 		registerItem(registry, "grand_crystal", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));
@@ -654,7 +676,13 @@ public final class WizardryItems {
 		registerItem(registry, "smoke_bomb", 						new ItemSmokeBomb());
 		registerItem(registry, "spark_bomb", 						new ItemSparkBomb());
 
-		registerItem(registry, "spectral_dust", 					new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_earth",		 		new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_fire",		 		new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_healing",		 	new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_ice",		 		new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_lightning",		 	new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_necromancy",	 	new ItemSpectralDust());
+		registerItem(registry, "spectral_dust_sorcery",		 	new ItemSpectralDust());
 
 		registerItem(registry, "wizard_hat", 						new ItemWizardArmour(ArmourClass.WIZARD, EntityEquipmentSlot.HEAD, null), true);
 		registerItem(registry, "wizard_robe", 					new ItemWizardArmour(ArmourClass.WIZARD, EntityEquipmentSlot.CHEST, null));
@@ -991,9 +1019,11 @@ public final class WizardryItems {
 	/** Called from init() in the main mod class to register wizardry's banner patterns. */
 	public static void registerBannerPatterns(){
 		for(Element element : Element.values()){
-			if(element != Element.MAGIC) addBannerPattern("WIZARDRY_" + element.getName().toUpperCase(Locale.ROOT),
-					"wizardry_" + element.getName(), "eb" + element.getName().charAt(0),
-					new ItemStack(WizardryItems.magic_crystal, 1, element.ordinal()));
+			if (element != Element.MAGIC) {
+				addBannerPattern("WIZARDRY_" + element.getName().toUpperCase(Locale.ROOT),
+						"wizardry_" + element.getName(), "eb" + element.getName().charAt(0),
+						new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "crystal_" + element.name().toLowerCase()))));
+			}
 		}
 	}
 

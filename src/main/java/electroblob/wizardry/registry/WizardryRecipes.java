@@ -59,7 +59,7 @@ public final class WizardryRecipes {
 
 		IForgeRegistry<IRecipe> registry = event.getRegistry();
 
-		FurnaceRecipes.instance().addSmeltingRecipeForBlock(WizardryBlocks.crystal_ore, new ItemStack(WizardryItems.magic_crystal), 0.5f);
+		FurnaceRecipes.instance().addSmeltingRecipeForBlock(WizardryBlocks.crystal_ore, new ItemStack(WizardryItems.crystal_magic), 0.5f);
 
 		// Mana flask recipes
 

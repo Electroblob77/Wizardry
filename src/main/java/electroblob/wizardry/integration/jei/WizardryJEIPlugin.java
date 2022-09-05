@@ -66,7 +66,7 @@ public class WizardryJEIPlugin implements IModPlugin {
 			}
 		}
 
-		addItemInfo(registry, WizardryItems.magic_crystal);
+		addItemInfo(registry, WizardryItems.crystal_magic);
 		addItemInfo(registry, WizardryItems.wizard_handbook);
 		addItemInfo(registry, WizardryItems.crystal_shard);
 		addItemInfo(registry, WizardryItems.grand_crystal);

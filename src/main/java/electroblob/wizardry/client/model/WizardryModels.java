@@ -78,7 +78,7 @@ public final class WizardryModels {
 
 		// Items
 
-		registerMultiTexturedModel((ItemCrystal)WizardryItems.magic_crystal);
+		//registerMultiTexturedModel((ItemCrystal)WizardryItems.magic_crystal);
 
 		registerWandModel(WizardryItems.magic_wand);
 		registerWandModel(WizardryItems.apprentice_wand);
@@ -120,8 +120,6 @@ public final class WizardryModels {
 		registerWandModel(WizardryItems.master_earth_wand);
 		registerWandModel(WizardryItems.master_sorcery_wand);
 		registerWandModel(WizardryItems.master_healing_wand);
-
-		registerMultiTexturedModel((ItemSpectralDust)WizardryItems.spectral_dust);
 
 		// Automatic item model registry
 		for(Item item : Item.REGISTRY){

@@ -40,7 +40,7 @@ public class BlockCrystalOre extends Block {
 
 	@Override
 	public Item getItemDropped(IBlockState state, Random random, int fortune){
-		return WizardryItems.magic_crystal;
+		return WizardryItems.crystal_magic;
 	}
 	
 	@Override

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "item",
-                    "name": "ebwizardry:spectral_dust",
+                    "name": "ebwizardry:spectral_dust_earth",
                     "weight": 1,
                     "functions": [
 						{
@@ -15,11 +15,7 @@
 								"min": 0,
 								"max": 1
 							}
-						},
-						{
-							"function": "minecraft:set_data",
-							"data": 5
-                        }
+						}
                     ]
 				}
 			]

@@ -216,6 +216,13 @@ item.ebwizardry\:ethereal_crystalweave.desc_extended=An enchanted fabric that is
 item.ebwizardry\:magic_silk.name=Magical Silk
 
 item.ebwizardry\:spectral_dust.name=Spectral Dust
+item.ebwizardry\:spectral_dust_earth.name=Spectral Dust
+item.ebwizardry\:spectral_dust_fire.name=Spectral Dust
+item.ebwizardry\:spectral_dust_healing.name=Spectral Dust
+item.ebwizardry\:spectral_dust_ice.name=Spectral Dust
+item.ebwizardry\:spectral_dust_lightning.name=Spectral Dust
+item.ebwizardry\:spectral_dust_necromancy.name=Spectral Dust
+item.ebwizardry\:spectral_dust_sorcery.name=Spectral Dust
 
 item.ebwizardry\:wizard_armour.element_cost_reduction=-%1$s%% %2$s cost
 item.ebwizardry\:wizard_armour.cooldown_reduction=-%1$s%% Cooldown

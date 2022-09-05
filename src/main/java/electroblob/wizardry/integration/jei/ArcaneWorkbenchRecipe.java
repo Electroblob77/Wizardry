@@ -1,5 +1,6 @@
 package electroblob.wizardry.integration.jei;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.DrawingUtils;
 import electroblob.wizardry.constants.Constants;
 import electroblob.wizardry.constants.Element;
@@ -11,7 +12,9 @@ import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,9 +97,9 @@ public class ArcaneWorkbenchRecipe implements IRecipeWrapper {
 		int count = MathHelper.ceil((float)mana / Constants.MANA_PER_CRYSTAL);
 		// A stack of crystals will almost certainly be enough mana, but you never know!
 		// Using ItemStack.EMPTY to avoid deprecated method; crystals' stack size is not stack-sensitive so it doesn't matter
-		if(count <= WizardryItems.magic_crystal.getItemStackLimit(ItemStack.EMPTY)){
-			for(int meta = 0; meta < Element.values().length; meta++){
-				crystalStacks.add(new ItemStack(WizardryItems.magic_crystal, count, meta));
+		if(count <= WizardryItems.crystal_magic.getItemStackLimit(ItemStack.EMPTY)){
+			for (Element element : Element.values()) {
+				crystalStacks.add(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "crystal_" + element.name().toLowerCase())), count));
 			}
 		}
 

@@ -1,6 +1,7 @@
 package electroblob.wizardry.block;
 
 import com.google.common.collect.Maps;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.item.ItemSpectralDust;
 import electroblob.wizardry.registry.*;
@@ -20,12 +21,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -110,7 +113,7 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 
 		if(tileEntity instanceof TileEntityReceptacle){
 			Element element = ((TileEntityReceptacle)tileEntity).getElement();
-			if(element != null) drops.add(new ItemStack(WizardryItems.spectral_dust, 1, element.ordinal()));
+			if(element != null) drops.add(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "spectral_dust_" + element.name().toLowerCase())), 1));
 		}
 	}
 
@@ -219,7 +222,7 @@ public class BlockReceptacle extends BlockTorch implements ITileEntityProvider {
 
 				((TileEntityReceptacle)tileEntity).setElement(null);
 
-				ItemStack dust = new ItemStack(WizardryItems.spectral_dust, 1, currentElement.ordinal());
+				ItemStack dust = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "spectral_dust_" + currentElement.name().toLowerCase())));
 
 				if(stack.isEmpty()){
 					player.setHeldItem(hand, dust);

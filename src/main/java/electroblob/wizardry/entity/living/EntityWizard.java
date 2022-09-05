@@ -72,7 +72,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
     /** The wizard's current customer. */
     @Nullable
     private EntityPlayer customer;
-    
+
 	private int timeUntilReset;
 
 	/** addDefaultEquipmentAndRecipies is called if this is true */
@@ -258,11 +258,11 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 	@Override
 	public ITextComponent getDisplayName(){
-		
+
 		if(this.hasCustomName()){
             return super.getDisplayName();
         }
-		
+
 		return this.getElement().getWizardName();
 	}
 
@@ -270,7 +270,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	protected boolean canDespawn(){
 		return false;
 	}
-	
+
 	@Override
 	protected SoundEvent getAmbientSound(){
 		if(Wizardry.tisTheSeason) return WizardrySounds.ENTITY_WIZARD_HOHOHO;
@@ -506,7 +506,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			// All wizards will buy spell books
 			ItemStack anySpellBook = new ItemStack(WizardryItems.spell_book, 1, OreDictionary.WILDCARD_VALUE);
-			ItemStack crystalStack = new ItemStack(WizardryItems.magic_crystal, 5);
+			ItemStack crystalStack = new ItemStack(WizardryItems.crystal_magic, 5);
 
 			this.trades.add(new MerchantRecipe(anySpellBook, crystalStack));
 
@@ -576,7 +576,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			if(itemToSell.isEmpty()) return;
 
 			ItemStack secondItemToBuy = tier == Tier.MASTER ? new ItemStack(WizardryItems.astral_diamond)
-					: new ItemStack(WizardryItems.magic_crystal, tier.ordinal() * 3 + 1 + rand.nextInt(4));
+					: new ItemStack(WizardryItems.crystal_magic, tier.ordinal() * 3 + 1 + rand.nextInt(4));
 
 			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), secondItemToBuy, itemToSell));
 		}
@@ -884,7 +884,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	/**
 	 * Sets the list of blocks that are part of this wizard's tower. If a player breaks any of these blocks, the wizard
 	 * will get angry and attack them.
-	 * 
+	 *
 	 * @param blocks A Set of BlockPos objects representing the blocks in the tower.
 	 */
 	public void setTowerBlocks(Set<BlockPos> blocks){
@@ -916,11 +916,11 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			}
 		}
 	}
-	
+
 	// Copied from their respective AI classes
-	
+
 	public static class EntityAILookAtTradePlayer extends EntityAIWatchClosest {
-		
+
 	    private final EntityWizard wizard;
 
 	    public EntityAILookAtTradePlayer(EntityWizard wizard){
@@ -938,9 +938,9 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	        }
 	    }
 	}
-	
+
 	public static class EntityAITradePlayer extends EntityAIBase {
-		
+
 		private final EntityWizard wizard;
 
 	    public EntityAITradePlayer(EntityWizard wizard){
@@ -950,7 +950,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 	    @Override
 	    public boolean shouldExecute(){
-	    	
+
 	        if(!this.wizard.isEntityAlive()){
 	            return false;
 	        }else if(this.wizard.isInWater()){
@@ -960,7 +960,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	        }else if(this.wizard.velocityChanged){
 	            return false;
 	        }else{
-	        	
+
 	            EntityPlayer entityplayer = this.wizard.getCustomer();
 
 	            if(entityplayer == null){

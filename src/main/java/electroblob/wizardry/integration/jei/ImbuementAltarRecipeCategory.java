@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -118,7 +119,13 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 		List<ImbuementAltarRecipe> recipes = new ArrayList<>();
 
 		NonNullList<ItemStack> variants = NonNullList.create();
-		WizardryItems.spectral_dust.getSubItems(WizardryItems.spectral_dust.getCreativeTab(), variants);
+		variants.add(new ItemStack(WizardryItems.spectral_dust_earth));
+		variants.add(new ItemStack(WizardryItems.spectral_dust_fire));
+		variants.add(new ItemStack(WizardryItems.spectral_dust_healing));
+		variants.add(new ItemStack(WizardryItems.spectral_dust_ice));
+		variants.add(new ItemStack(WizardryItems.spectral_dust_lightning));
+		variants.add(new ItemStack(WizardryItems.spectral_dust_necromancy));
+		variants.add(new ItemStack(WizardryItems.spectral_dust_sorcery));
 
 		List<List<ItemStack>> dusts = new ArrayList<>();
 		// Generate 4 separate lists, each in a different order to make it obvious they can be any element
@@ -137,11 +144,12 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 
 		List<ImbuementAltarRecipe> recipes = new ArrayList<>();
 
-		ItemStack input = new ItemStack(WizardryItems.magic_crystal);
+		ItemStack input = new ItemStack(WizardryItems.crystal_magic);
 
-		for(int meta = 1; meta < Element.values().length; meta++){
-			List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(WizardryItems.spectral_dust, 1, meta)));
-			ItemStack output = new ItemStack(WizardryItems.magic_crystal, 1, meta);
+		for(Element element : Element.values()){
+			List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID,
+					"spectral_dust_" + element.name().toLowerCase())))));
+			ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "crystal_" + element.name().toLowerCase())));
 			recipes.add(new ImbuementAltarRecipe(input, dusts, output));
 		}
 
@@ -155,10 +163,14 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 
 		ItemStack input = new ItemStack(WizardryBlocks.crystal_block);
 
-		for(int meta = 1; meta < Element.values().length; meta++){
-			List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(WizardryItems.spectral_dust, 1, meta)));
-			ItemStack output = new ItemStack(WizardryBlocks.crystal_block, 1, meta);
-			recipes.add(new ImbuementAltarRecipe(input, dusts, output));
+		for(Element element : Element.values()){
+			if(element == Element.MAGIC) continue;
+
+				int meta = element.ordinal();
+				List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(ForgeRegistries.ITEMS.getValue(
+						new ResourceLocation(Wizardry.MODID, "spectral_dust_" + element.name().toLowerCase())))));
+				ItemStack output = new ItemStack(WizardryBlocks.crystal_block, 1, meta);
+				recipes.add(new ImbuementAltarRecipe(input, dusts, output));
 		}
 
 		return recipes;
@@ -179,7 +191,8 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 
 					if(e == Element.MAGIC) continue;
 
-					List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(WizardryItems.spectral_dust, 1, e.ordinal())));
+					List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(
+							ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "spectral_dust_" + e.name().toLowerCase())))));
 					ItemStack output = TileEntityImbuementAltar.getImbuementResult(input, new Element[]{e, e, e, e}, false, null, null);
 
 					if(!output.isEmpty()) recipes.add(new ImbuementAltarRecipe(input, dusts, output));
