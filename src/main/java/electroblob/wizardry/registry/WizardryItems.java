@@ -93,7 +93,9 @@ public final class WizardryItems {
 	public static final Item crystal_shard = placeholder();
 
 	public static final Item wizard_handbook = placeholder();
-	public static final Item arcane_tome = placeholder();
+	public static final Item arcane_tome_apprentice = placeholder();
+	public static final Item arcane_tome_advanced = placeholder();
+	public static final Item arcane_tome_master = placeholder();
 	public static final Item spell_book = placeholder();
 	public static final Item scroll = placeholder();
 	public static final Item ruined_spell_book = placeholder();
@@ -595,7 +597,9 @@ public final class WizardryItems {
 		registerItem(registry, "grand_crystal", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 
 		registerItem(registry, "wizard_handbook", 				new ItemWizardHandbook(), true);
-		registerItem(registry, "arcane_tome", 					new ItemArcaneTome());
+		registerItem(registry, "arcane_tome_apprentice", 			new ItemArcaneTome(EnumRarity.UNCOMMON, Tier.APPRENTICE));
+		registerItem(registry, "arcane_tome_advanced", 			new ItemArcaneTome(EnumRarity.RARE, Tier.ADVANCED));
+		registerItem(registry, "arcane_tome_master", 				new ItemArcaneTome(EnumRarity.EPIC, Tier.MASTER));
 		registerItem(registry, "spell_book", 						new ItemSpellBook(), true);
 		registerItem(registry, "scroll", 							new ItemScroll());
 		registerItem(registry, "ruined_spell_book", 				new Item().setCreativeTab(WizardryTabs.WIZARDRY).setMaxStackSize(16));

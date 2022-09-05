@@ -188,7 +188,9 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 
 		}else if(slotNumber == ContainerArcaneWorkbench.UPGRADE_SLOT){
 			Set<Item> upgrades = new HashSet<>(WandHelper.getSpecialUpgrades());
-			upgrades.add(WizardryItems.arcane_tome);
+			upgrades.add(WizardryItems.arcane_tome_apprentice);
+			upgrades.add(WizardryItems.arcane_tome_advanced);
+			upgrades.add(WizardryItems.arcane_tome_master);
 			upgrades.add(WizardryItems.resplendent_thread);
 			upgrades.add(WizardryItems.crystal_silver_plating);
 			upgrades.add(WizardryItems.ethereal_crystalweave);

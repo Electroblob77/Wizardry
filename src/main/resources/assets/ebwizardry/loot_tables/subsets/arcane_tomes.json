@@ -6,39 +6,18 @@
 			"entries": [
 				{
                     "type": "item",
-					"entryName": "apprentice_tome",
-                    "name": "ebwizardry:arcane_tome",
-                    "weight": 4,
-                    "functions": [
-                        {
-                            "function": "set_data",
-							"data": 1
-                        }
-                    ]
+                    "name": "ebwizardry:arcane_tome_apprentice",
+                    "weight": 4
                 },
                 {
                     "type": "item",
-					"entryName": "advanced_tome",
-                    "name": "ebwizardry:arcane_tome",
-                    "weight": 2,
-                    "functions": [
-                        {
-                            "function": "set_data",
-							"data": 2
-                        }
-                    ]
+                    "name": "ebwizardry:arcane_tome_advanced",
+                    "weight": 2
                 },
                 {
                     "type": "item",
-					"entryName": "master_tome",
-                    "name": "ebwizardry:arcane_tome",
-                    "weight": 1,
-                    "functions": [
-                        {
-                            "function": "set_data",
-							"data": 3
-                        }
-                    ]
+                    "name": "ebwizardry:arcane_tome_master",
+                    "weight": 1
                 }
 			]
 		}

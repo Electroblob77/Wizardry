@@ -98,7 +98,9 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		this.addSlotToContainer(new SlotWorkbenchItem(tileentity, CENTRE_SLOT, 80, 64, this));
 
 		Set<Item> upgrades = new HashSet<>(WandHelper.getSpecialUpgrades()); // Can't be done statically.
-		upgrades.add(WizardryItems.arcane_tome);
+		upgrades.add(WizardryItems.arcane_tome_apprentice);
+		upgrades.add(WizardryItems.arcane_tome_advanced);
+		upgrades.add(WizardryItems.arcane_tome_master);
 		upgrades.add(WizardryItems.resplendent_thread);
 		upgrades.add(WizardryItems.crystal_silver_plating);
 		upgrades.add(WizardryItems.ethereal_crystalweave);

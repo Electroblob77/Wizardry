@@ -687,9 +687,9 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 
 		// Upgrades wand if necessary. Damage is copied, preserving remaining durability,
 		// and also the entire NBT tag compound.
-		if(upgrade.getItem() == WizardryItems.arcane_tome){
+		if(upgrade.getItem() instanceof ItemArcaneTome){
 
-			Tier tier = Tier.values()[upgrade.getItemDamage()];
+			Tier tier = ((ItemArcaneTome) upgrade.getItem()).getTier();
 
 			// Checks the wand upgrade is for the tier above the wand's tier, and that either the wand has enough
 			// progression or the player is in creative mode.

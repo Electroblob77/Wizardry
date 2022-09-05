@@ -673,7 +673,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 							WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}else if(randomiser < 8){
-				return new ItemStack(WizardryItems.arcane_tome, 1, 1);
+				return new ItemStack(WizardryItems.arcane_tome_apprentice, 1);
 			}else if(randomiser < 10){
 				EntityEquipmentSlot slot = InventoryUtils.ARMOUR_SLOTS[rand.nextInt(InventoryUtils.ARMOUR_SLOTS.length)];
 				if(this.getElement() != Element.MAGIC && rand.nextInt(4) > 0){
@@ -709,7 +709,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 							WizardryItems.getWand(tier, Element.values()[rand.nextInt(Element.values().length)]));
 				}
 			}else if(randomiser < 8){
-				return new ItemStack(WizardryItems.arcane_tome, 1, 2);
+				return new ItemStack(WizardryItems.arcane_tome_advanced, 1);
 			}else{
 				List<Item> upgrades = new ArrayList<Item>(WandHelper.getSpecialUpgrades());
 				randomiser = rand.nextInt(upgrades.size());
@@ -732,7 +732,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					return new ItemStack(WizardryItems.master_wand);
 				}
 			}else{
-				return new ItemStack(WizardryItems.arcane_tome, 1, 3);
+				return new ItemStack(WizardryItems.arcane_tome_master, 1);
 			}
 		}
 

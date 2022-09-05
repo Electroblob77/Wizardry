@@ -3,11 +3,9 @@ package electroblob.wizardry.item;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Tier;
 import electroblob.wizardry.registry.WizardryTabs;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,54 +14,33 @@ import java.util.List;
 
 public class ItemArcaneTome extends Item {
 
-	public ItemArcaneTome(){
+	private final EnumRarity rarity;
+	private final Tier tier;
+
+	public ItemArcaneTome(EnumRarity rarity, Tier tier){
 		super();
-		setHasSubtypes(true);
 		setMaxStackSize(1);
 		setCreativeTab(WizardryTabs.WIZARDRY);
+		this.rarity = rarity;
+		this.tier = tier;
 	}
 
-	@Override
-	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list){
-		if(tab == WizardryTabs.WIZARDRY){ // Don't use isInCreativeTab here.
-			for(int i = 1; i < Tier.values().length; i++){
-				list.add(new ItemStack(this, 1, i));
-			}
-		}
-	}
+	public Tier getTier() { return tier; }
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean hasEffect(ItemStack stack){
-		return true;
-	}
+	public boolean hasEffect(ItemStack stack){ return true; }
 
 	@Override
-	public EnumRarity getRarity(ItemStack stack){
-		switch(this.getDamage(stack)){
-		case 1:
-			return EnumRarity.UNCOMMON;
-		case 2:
-			return EnumRarity.RARE;
-		case 3:
-			return EnumRarity.EPIC;
-		}
-		return EnumRarity.COMMON;
-	}
+	public EnumRarity getRarity(ItemStack stack){ return rarity; }
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, net.minecraft.client.util.ITooltipFlag showAdvanced){
-
-		if(stack.getItemDamage() < 1){
-			return; // If something's up with the metadata it will display a 'generic' tome of arcana with no info
-		}
-
-		Tier tier = Tier.values()[stack.getItemDamage()];
-		Tier tier2 = Tier.values()[stack.getItemDamage() - 1];
-
 		tooltip.add(tier.getDisplayNameWithFormatting());
-		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + this.getRegistryName() + ".desc",
+		Tier tier2 = Tier.values()[tier.ordinal() - 1];
+
+		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + Wizardry.MODID + "arcane_tome.desc",
 				tier2.getDisplayNameWithFormatting() + "\u00A77", tier.getDisplayNameWithFormatting() + "\u00A77");
 	}
 
