@@ -80,14 +80,14 @@ public final class WizardryItems {
 	// point where all the items were listed, but that's not possible within the current system unless you use an array,
 	// which means you lose the individual fields...
 
-	public static final Item crystal_magic = placeholder();
-	public static final Item crystal_earth = placeholder();
-	public static final Item crystal_fire = placeholder();
-	public static final Item crystal_healing = placeholder();
-	public static final Item crystal_ice = placeholder();
-	public static final Item crystal_lightning = placeholder();
-	public static final Item crystal_necromancy = placeholder();
-	public static final Item crystal_sorcery = placeholder();
+	public static final Item magic_crystal = placeholder();
+	public static final Item earth_crystal = placeholder();
+	public static final Item fire_crystal = placeholder();
+	public static final Item healing_crystal = placeholder();
+	public static final Item ice_crystal = placeholder();
+	public static final Item lightning_crystal = placeholder();
+	public static final Item necromancy_crystal = placeholder();
+	public static final Item sorcery_crystal = placeholder();
 
 	public static final Item grand_crystal = placeholder();
 	public static final Item crystal_shard = placeholder();
@@ -560,7 +560,15 @@ public final class WizardryItems {
 		String[] elements = Arrays.stream(Element.values()).map(Element::getName).toArray(String[]::new);
 		String[] woodTypes = Arrays.stream(BlockPlanks.EnumType.values()).map(BlockPlanks.EnumType::getName).toArray(String[]::new);
 
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.crystal_block, true, elements);
+		registerItemBlock(registry, WizardryBlocks.magic_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.fire_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.ice_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.lightning_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.necromancy_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.earth_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.sorcery_crystal_block);
+		registerItemBlock(registry, WizardryBlocks.healing_crystal_block);
+
 		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone, false, elements);
 		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone_pedestal, false, elements);
 		registerMultiTexturedItemBlock(registry, WizardryBlocks.gilded_wood, true, woodTypes);
@@ -584,14 +592,14 @@ public final class WizardryItems {
 
 		// Items
 
-		registerItem(registry, "crystal_magic",					new ItemCrystal());
-		registerItem(registry, "crystal_earth",					new ItemCrystal());
-		registerItem(registry, "crystal_fire", 					new ItemCrystal());
-		registerItem(registry, "crystal_healing", 				new ItemCrystal());
-		registerItem(registry, "crystal_ice", 					new ItemCrystal());
-		registerItem(registry, "crystal_lightning", 				new ItemCrystal());
-		registerItem(registry, "crystal_necromancy", 				new ItemCrystal());
-		registerItem(registry, "crystal_sorcery", 				new ItemCrystal());
+		registerItem(registry, "magic_crystal",					new ItemCrystal());
+		registerItem(registry, "earth_crystal",					new ItemCrystal());
+		registerItem(registry, "fire_crystal", 					new ItemCrystal());
+		registerItem(registry, "healing_crystal", 				new ItemCrystal());
+		registerItem(registry, "ice_crystal", 					new ItemCrystal());
+		registerItem(registry, "lightning_crystal", 				new ItemCrystal());
+		registerItem(registry, "necromancy_crystal", 				new ItemCrystal());
+		registerItem(registry, "sorcery_crystal", 				new ItemCrystal());
 
 		registerItem(registry, "crystal_shard", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 		registerItem(registry, "grand_crystal", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));

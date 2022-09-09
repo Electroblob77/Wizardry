@@ -92,7 +92,7 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		}
 
 		this.addSlotToContainer(new SlotItemList(tileentity, CRYSTAL_SLOT, 13, 101, 64,
-				WizardryItems.crystal_magic, WizardryItems.crystal_shard, WizardryItems.grand_crystal))
+				WizardryItems.magic_crystal, WizardryItems.crystal_shard, WizardryItems.grand_crystal))
 				.setBackgroundName(EMPTY_SLOT_CRYSTAL.toString());
 
 		this.addSlotToContainer(new SlotWorkbenchItem(tileentity, CENTRE_SLOT, 80, 64, this));

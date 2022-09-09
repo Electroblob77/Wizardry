@@ -7,8 +7,7 @@
             "translate": "advancement.ebwizardry:defeat_remnant.desc"
         },
         "icon": {
-			"item": "ebwizardry:spectral_dust",
-			"data": 6
+			"item": "ebwizardry:spectral_dust_sorcery"
         }
     },
     "parent": "ebwizardry:arcane_initiate",
@@ -18,8 +17,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
-						"data": 1
+						"item": "ebwizardry:spectral_dust_fire"
 					}
 				]
 			}
@@ -29,8 +27,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
-						"data": 2
+						"item": "ebwizardry:spectral_dust_ice"
 					}
 				]
 			}
@@ -40,8 +37,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
-						"data": 3
+						"item": "ebwizardry:spectral_dust_lightning"
 					}
 				]
 			}
@@ -51,8 +47,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
-						"data": 4
+						"item": "ebwizardry:spectral_dust_necromancy"
 					}
 				]
 			}
@@ -62,8 +57,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
-						"data": 5
+						"item": "ebwizardry:spectral_dust_earth"
 					}
 				]
 			}
@@ -73,8 +67,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
-						"data": 6
+						"item": "ebwizardry:spectral_dust_sorcery"
 					}
 				]
 			}
@@ -84,7 +77,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_dust",
+						"item": "ebwizardry:spectral_healing",
 						"data": 7
 					}
 				]

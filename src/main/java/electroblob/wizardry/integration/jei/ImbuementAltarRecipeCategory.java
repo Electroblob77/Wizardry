@@ -144,12 +144,12 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 
 		List<ImbuementAltarRecipe> recipes = new ArrayList<>();
 
-		ItemStack input = new ItemStack(WizardryItems.crystal_magic);
+		ItemStack input = new ItemStack(WizardryItems.magic_crystal);
 
 		for(Element element : Element.values()){
 			List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID,
 					"spectral_dust_" + element.name().toLowerCase())))));
-			ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "crystal_" + element.name().toLowerCase())));
+			ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, element.name().toLowerCase() + "_crystal")));
 			recipes.add(new ImbuementAltarRecipe(input, dusts, output));
 		}
 
@@ -161,16 +161,17 @@ public class ImbuementAltarRecipeCategory implements IRecipeCategory<ImbuementAl
 
 		List<ImbuementAltarRecipe> recipes = new ArrayList<>();
 
-		ItemStack input = new ItemStack(WizardryBlocks.crystal_block);
+		ItemStack input = new ItemStack(WizardryBlocks.magic_crystal_block);
 
-		for(Element element : Element.values()){
-			if(element == Element.MAGIC) continue;
+		for (Element element : Element.values()) {
+			if (element == Element.MAGIC) { continue; }
 
-				int meta = element.ordinal();
-				List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(ForgeRegistries.ITEMS.getValue(
-						new ResourceLocation(Wizardry.MODID, "spectral_dust_" + element.name().toLowerCase())))));
-				ItemStack output = new ItemStack(WizardryBlocks.crystal_block, 1, meta);
-				recipes.add(new ImbuementAltarRecipe(input, dusts, output));
+			List<List<ItemStack>> dusts = Collections.nCopies(4, Collections.singletonList(new ItemStack(ForgeRegistries.ITEMS.getValue(
+					new ResourceLocation(Wizardry.MODID, "spectral_dust_" + element.name().toLowerCase())))));
+
+			ItemStack output = new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, element.getName().toLowerCase()
+					+ "_crystal_block")));
+			recipes.add(new ImbuementAltarRecipe(input, dusts, output));
 		}
 
 		return recipes;

@@ -55,14 +55,14 @@ tile.ebwizardry\:imbuement_altar.name=Nasycony Ołtarz
 
 
 
-item.ebwizardry\:crystal_magic.name=Magiczny Kryształ
-item.ebwizardry\:crystal_fire.name=Ognisty Kryształ
-item.ebwizardry\:crystal_ice.name=Lodowy Kryształ
-item.ebwizardry\:crystal_lightning.name=Sztormowy Kryształ
-item.ebwizardry\:crystal_necromancy.name=Mroczny Kryształ
-item.ebwizardry\:crystal_earth.name=Zielny Kryształ
-item.ebwizardry\:crystal_sorcery.name=Mistyczny Kryształ
-item.ebwizardry\:crystal_healing.name=Promienisty Kryształ
+item.ebwizardry\:magic_crystal.name=Magiczny Kryształ
+item.ebwizardry\:fire_crystal.name=Ognisty Kryształ
+item.ebwizardry\:ice_crystal.name=Lodowy Kryształ
+item.ebwizardry\:lightning_crystal.name=Sztormowy Kryształ
+item.ebwizardry\:necromancy_crystal.name=Mroczny Kryształ
+item.ebwizardry\:earth_crystal.name=Zielny Kryształ
+item.ebwizardry\:sorcery_crystal.name=Mistyczny Kryształ
+item.ebwizardry\:healing_crystal.name=Promienisty Kryształ
 
 item.ebwizardry\:magic_wand.name=Magiczna Różdżka
 item.ebwizardry\:apprentice_wand.name=Uczniowska Różdżka
@@ -454,7 +454,7 @@ entity.ebwizardry\:skeleton_minion.name=Szkielet
 entity.ebwizardry\:stray_minion.name=Tułacz
 entity.ebwizardry\:spider_minion.name=Pająk
 entity.ebwizardry\:blaze_minion.name=Płomyk
-entity.ebwizardry\:wither_skeleton_minion.name=Obumar�y Szkielet
+entity.ebwizardry\:wither_skeleton_minion.name=Obumar�y Szkielet
 entity.ebwizardry\:ice_wraith.name=Sługa Lodu
 entity.ebwizardry\:lightning_wraith.name=Sługa Piorunów
 entity.ebwizardry\:shadow_wraith.name=Sługa Cienia

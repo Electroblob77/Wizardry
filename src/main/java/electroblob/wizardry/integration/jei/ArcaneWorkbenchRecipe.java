@@ -97,9 +97,9 @@ public class ArcaneWorkbenchRecipe implements IRecipeWrapper {
 		int count = MathHelper.ceil((float)mana / Constants.MANA_PER_CRYSTAL);
 		// A stack of crystals will almost certainly be enough mana, but you never know!
 		// Using ItemStack.EMPTY to avoid deprecated method; crystals' stack size is not stack-sensitive so it doesn't matter
-		if(count <= WizardryItems.crystal_magic.getItemStackLimit(ItemStack.EMPTY)){
+		if(count <= WizardryItems.magic_crystal.getItemStackLimit(ItemStack.EMPTY)){
 			for (Element element : Element.values()) {
-				crystalStacks.add(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, "crystal_" + element.name().toLowerCase())), count));
+				crystalStacks.add(new ItemStack(ForgeRegistries.ITEMS.getValue(new ResourceLocation(Wizardry.MODID, element.name().toLowerCase() + "_crystal")), count));
 			}
 		}
 

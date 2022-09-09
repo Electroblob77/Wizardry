@@ -40,7 +40,7 @@ public class ItemArcaneTome extends Item {
 		tooltip.add(tier.getDisplayNameWithFormatting());
 		Tier tier2 = Tier.values()[tier.ordinal() - 1];
 
-		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + Wizardry.MODID + "arcane_tome.desc",
+		Wizardry.proxy.addMultiLineDescription(tooltip, "item." + Wizardry.MODID + ":arcane_tome.desc",
 				tier2.getDisplayNameWithFormatting() + "\u00A77", tier.getDisplayNameWithFormatting() + "\u00A77");
 	}
 

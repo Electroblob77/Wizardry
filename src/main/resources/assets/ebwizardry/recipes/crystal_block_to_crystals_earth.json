@@ -3,13 +3,11 @@
 	"group": "magic_crystal",
     "ingredients": [
         {
-            "item": "ebwizardry:crystal_block",
-			"data": 5
+            "item": "ebwizardry:earth_crystal_block"
         }
     ],
     "result": {
-        "item": "ebwizardry:magic_crystal",
-		"data": 5,
+        "item": "ebwizardry:earth_crystal",
         "count": 9
     }
 }

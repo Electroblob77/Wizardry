@@ -6,37 +6,37 @@
 			"entries": [
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_earth",
+                    "name": "ebwizardry:earth_crystal",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_fire",
+                    "name": "ebwizardry:fire_crystal",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_healing",
+                    "name": "ebwizardry:healing_crystal",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_ice",
+                    "name": "ebwizardry:ice_crystal",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_lightning",
+                    "name": "ebwizardry:lightning_crystal",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_necromancy",
+                    "name": "ebwizardry:necromancy_crystal",
                     "weight": 1
                 },
 				{
                     "type": "item",
-                    "name": "ebwizardry:crystal_sorcery",
+                    "name": "ebwizardry:sorcery_crystal",
                     "weight": 1
                 }
 			]

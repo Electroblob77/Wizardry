@@ -27,7 +27,7 @@
 			"height": 64
 		},
 		"magic_crystal": {
-			"location": "ebwizardry:textures/items/crystal_magic.png",
+			"location": "ebwizardry:textures/items/magic_crystal.png",
 			"caption": "Волшебный кристалл",
 			"u": 6,
 			"v": 6,
@@ -161,14 +161,14 @@
 		},
 		"crystal_blocks": {
 			"locations": [
-				"ebwizardry:crystal_block",
-				"ebwizardry:crystal_block_fire",
-				"ebwizardry:crystal_block_ice",
-				"ebwizardry:crystal_block_lightning",
-				"ebwizardry:crystal_block_necromancy",
-				"ebwizardry:crystal_block_earth",
-				"ebwizardry:crystal_block_sorcery",
-				"ebwizardry:crystal_block_healing"
+				"ebwizardry:magic_crystal_block",
+				"ebwizardry:fire_crystal_block",
+				"ebwizardry:ice_crystal_block",
+				"ebwizardry:lightning_crystal_block",
+				"ebwizardry:necromancy_crystal_block",
+				"ebwizardry:earth_crystal_block",
+				"ebwizardry:sorcery_crystal_block",
+				"ebwizardry:healing_crystal_block"
 			]
 		},
 		"crystal_blocks_to_crystals": {

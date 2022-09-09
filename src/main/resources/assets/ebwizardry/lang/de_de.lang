@@ -53,14 +53,14 @@ tile.ebwizardry\:dark_oak_lectern.name=Schwarzeichenholz Pult
 tile.ebwizardry\:receptacle.name=Gefäß
 tile.ebwizardry\:imbuement_altar.name=Ermächtungsaltar
 
-item.ebwizardry\:crystal_magic.name=Magischer Kristall
-item.ebwizardry\:crystal_fire.name=Feuriger Kristall
-item.ebwizardry\:crystal_ice.name=Eisiger Kristall
-item.ebwizardry\:crystal_lightning.name=Stürmischer Kristall
-item.ebwizardry\:crystal_necromancy.name=Dunkler Kristall
-item.ebwizardry\:crystal_earth.name=Erdkristall
-item.ebwizardry\:crystal_sorcery.name=Mystischer Kristall
-item.ebwizardry\:crystal_healing.name=Strahlender Kristall
+item.ebwizardry\:magic_crystal.name=Magischer Kristall
+item.ebwizardry\:fire_crystal.name=Feuriger Kristall
+item.ebwizardry\:ice_crystal.name=Eisiger Kristall
+item.ebwizardry\:lightning_crystal.name=Stürmischer Kristall
+item.ebwizardry\:necromancy_crystal.name=Dunkler Kristall
+item.ebwizardry\:earth_crystal.name=Erdkristall
+item.ebwizardry\:sorcery_crystal.name=Mystischer Kristall
+item.ebwizardry\:healing_crystal.name=Strahlender Kristall
 
 item.ebwizardry\:magic_wand.name=Magischer Zauberstab
 item.ebwizardry\:apprentice_wand.name=Lehrlingszauberstab
@@ -184,7 +184,13 @@ item.ebwizardry\:armour_upgrade.desc_extended=%1$sum sie %2$slegendär zu machen
 
 item.ebwizardry\:magic_silk.name=Magische Seide
 
-item.ebwizardry\:spectral_dust.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_fire.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_ice.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_lightning.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_healing.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_sorcery.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_necromancy.name=Spektraler Staub
+item.ebwizardry\:spectral_dust_healing.name=Spektraler Staub
 
 item.ebwizardry\:wizard_armour.legendary=Legendär
 item.ebwizardry\:wizard_armour.buff=-%1$s %2$s Kosten

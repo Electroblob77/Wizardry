@@ -2,6 +2,7 @@ package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.*;
+import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -43,7 +44,15 @@ public final class WizardryBlocks {
 	public static final Block crystal_ore = placeholder();
 	public static final Block crystal_flower = placeholder();
 	public static final Block transportation_stone = placeholder();
-	public static final Block crystal_block = placeholder();
+
+	public static final Block magic_crystal_block = placeholder();
+	public static final Block fire_crystal_block = placeholder();
+	public static final Block ice_crystal_block = placeholder();
+	public static final Block lightning_crystal_block = placeholder();
+	public static final Block necromancy_crystal_block = placeholder();
+	public static final Block earth_crystal_block = placeholder();
+	public static final Block sorcery_crystal_block = placeholder();
+	public static final Block healing_crystal_block = placeholder();
 
 	public static final Block petrified_stone = placeholder();
 	public static final Block ice_statue = placeholder();
@@ -108,7 +117,15 @@ public final class WizardryBlocks {
 		registerBlock(registry, "crystal_ore", 			new BlockCrystalOre(Material.ROCK).setHardness(3.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "crystal_flower", 		new BlockCrystalFlower(Material.PLANTS).setHardness(0.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 		registerBlock(registry, "transportation_stone", 	new BlockTransportationStone(Material.ROCK).setHardness(0.3F).setLightLevel(0.5f).setLightOpacity(0).setCreativeTab(WizardryTabs.WIZARDRY));
-		registerBlock(registry, "crystal_block", 			new BlockCrystal(Material.IRON).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+
+		registerBlock(registry, "magic_crystal_block", 			new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "fire_crystal_block", 			new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "ice_crystal_block", 				new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "lightning_crystal_block", 		new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "necromancy_crystal_block", 		new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "earth_crystal_block", 			new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "sorcery_crystal_block", 			new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
+		registerBlock(registry, "healing_crystal_block", 			new BlockCrystal(Element.MAGIC).setHardness(5.0F).setResistance(10.0F).setCreativeTab(WizardryTabs.WIZARDRY));
 
 		registerBlock(registry, "petrified_stone", 		new BlockStatue(Material.ROCK).setHardness(1.5F).setResistance(10.0F));
 		registerBlock(registry, "ice_statue", 			new BlockStatue(Material.ICE).setHardness(0.5F).setLightOpacity(3));

@@ -27,7 +27,7 @@
 			"height": 64
 		},
 		"magic_crystal": {
-			"location": "ebwizardry:textures/items/crystal_magic.png",
+			"location": "ebwizardry:textures/items/magic_crystal.png",
 			"caption": "魔力水晶",
 			"u": 6,
 			"v": 6,

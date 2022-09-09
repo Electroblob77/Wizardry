@@ -51,13 +51,6 @@ public final class WizardryModels {
 	public static void register(ModelRegistryEvent event){
 
 		// ItemBlocks
-
-		ModelLoader.setCustomStateMapper(WizardryBlocks.crystal_block, new StateMap.Builder()
-				.withName(BlockCrystal.ELEMENT).withSuffix("_crystal_block").build());
-		// Yay unchecked casting! But we know it's always ok here, and it makes everything much neater.
-		ItemBlockMultiTextured crystalBlockItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.crystal_block);
-		registerMultiTexturedModel(crystalBlockItem);
-
 		ModelLoader.setCustomStateMapper(WizardryBlocks.runestone, new StateMap.Builder()
 				.withName(BlockRunestone.ELEMENT).withSuffix("_runestone").build());
 		ItemBlockMultiTextured runestoneItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.runestone);

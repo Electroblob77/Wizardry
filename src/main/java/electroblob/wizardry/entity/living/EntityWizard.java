@@ -506,7 +506,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 
 			// All wizards will buy spell books
 			ItemStack anySpellBook = new ItemStack(WizardryItems.spell_book, 1, OreDictionary.WILDCARD_VALUE);
-			ItemStack crystalStack = new ItemStack(WizardryItems.crystal_magic, 5);
+			ItemStack crystalStack = new ItemStack(WizardryItems.magic_crystal, 5);
 
 			this.trades.add(new MerchantRecipe(anySpellBook, crystalStack));
 
@@ -576,7 +576,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			if(itemToSell.isEmpty()) return;
 
 			ItemStack secondItemToBuy = tier == Tier.MASTER ? new ItemStack(WizardryItems.astral_diamond)
-					: new ItemStack(WizardryItems.crystal_magic, tier.ordinal() * 3 + 1 + rand.nextInt(4));
+					: new ItemStack(WizardryItems.magic_crystal, tier.ordinal() * 3 + 1 + rand.nextInt(4));
 
 			merchantrecipelist.add(new MerchantRecipe(this.getRandomPrice(tier), secondItemToBuy, itemToSell));
 		}

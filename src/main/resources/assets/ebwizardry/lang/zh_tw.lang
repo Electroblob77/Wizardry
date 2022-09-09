@@ -26,14 +26,14 @@ tile.ebwizardry\:earth_crystal_block.name=碧綠水晶方塊
 tile.ebwizardry\:sorcery_crystal_block.name=神秘水晶方塊
 tile.ebwizardry\:healing_crystal_block.name=聖光水晶方塊
 
-item.ebwizardry\:crystal_magic.name=魔法水晶
-item.ebwizardry\:crystal_fire.name=火焰水晶
-item.ebwizardry\:crystal_ice.name=寒冰水晶
-item.ebwizardry\:crystal_lightning.name=雷電水晶
-item.ebwizardry\:crystal_necromancy.name=黑暗水晶
-item.ebwizardry\:crystal_earth.name=碧綠水晶
-item.ebwizardry\:crystal_sorcery.name=神秘水晶
-item.ebwizardry\:crystal_healing.name=聖光水晶
+item.ebwizardry\:magic_crystal.name=魔法水晶
+item.ebwizardry\:fire_crystal.name=火焰水晶
+item.ebwizardry\:ice_crystal.name=寒冰水晶
+item.ebwizardry\:lightning_crystal.name=雷電水晶
+item.ebwizardry\:necromancy_crystal.name=黑暗水晶
+item.ebwizardry\:earth_crystal.name=碧綠水晶
+item.ebwizardry\:sorcery_crystal.name=神秘水晶
+item.ebwizardry\:healing_crystal.name=聖光水晶
 
 item.ebwizardry\:magic_wand.name=基礎法杖
 item.ebwizardry\:apprentice_wand.name=學徒法杖

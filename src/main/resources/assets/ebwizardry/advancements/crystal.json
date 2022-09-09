@@ -7,8 +7,7 @@
             "translate": "advancement.ebwizardry:crystal.desc"
         },
         "icon": {
-            "item": "ebwizardry:magic_crystal",
-			"data": 0
+            "item": "ebwizardry:magic_crystal"
         }
     },
     "parent": "ebwizardry:root",
@@ -18,8 +17,28 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "ebwizardry:magic_crystal",
-						"data": 0
+                        "item": "ebwizardry:magic_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:fire_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:ice_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:lightning_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:necromancy_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:earth_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:sorcery_crystal"
+                    },
+                    {
+                        "item": "ebwizardry:healing_crystal"
                     }
                 ]
             }

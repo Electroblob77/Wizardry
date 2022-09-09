@@ -7,12 +7,10 @@
     ],
     "key": {
         "z": {
-            "item": "ebwizardry:magic_crystal",
-			"data": 6
+            "item": "ebwizardry:healing_crystal"
         }
     },
     "result": {
-        "item": "ebwizardry:crystal_block",
-		"data": 6
+        "item": "ebwizardry:healing_crystal_block"
     }
 }

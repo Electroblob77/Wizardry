@@ -341,7 +341,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 		int j = 3 + this.rand.nextInt(3) + this.rand.nextInt(1 + lootingLevel);
 
 		for(int k = 0; k < j; k++){
-			this.dropItem(WizardryItems.crystal_magic, 1);
+			this.dropItem(WizardryItems.magic_crystal, 1);
 		}
 
 		// Evil wizards occasionally drop one of their spells as a spell book, but not magic missile. This isn't in

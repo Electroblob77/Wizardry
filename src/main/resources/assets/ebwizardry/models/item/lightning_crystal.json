@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ebwizardry:items/crystal_fire"
+        "layer0": "ebwizardry:items/lightning_crystal"
     }
 }

@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ebwizardry:items/crystal_earth"
+        "layer0": "ebwizardry:items/magic_crystal"
     }
 }
