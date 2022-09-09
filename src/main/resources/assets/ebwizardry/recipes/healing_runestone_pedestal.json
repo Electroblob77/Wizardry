@@ -2,13 +2,12 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "zzz",
-        "zyz",
-        "zzz"
+        "yyy",
+        "zyz"
     ],
     "key": {
         "y": {
-            "item": "ebwizardry:magic_crystal",
-			"data": 4
+            "item": "ebwizardry:healing_crystal"
         },
         "z": {
             "type": "forge:ore_dict",
@@ -16,8 +15,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:runestone",
-		"data": 4,
-        "count": 8
+        "item": "ebwizardry:healing_runestone_pedestal",
+        "count": 2
     }
 }

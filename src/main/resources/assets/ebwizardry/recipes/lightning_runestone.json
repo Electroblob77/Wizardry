@@ -2,13 +2,12 @@
     "type": "minecraft:crafting_shaped",
     "pattern": [
         "zzz",
-        "yyy",
-        "zyz"
+        "zyz",
+        "zzz"
     ],
     "key": {
         "y": {
-            "item": "ebwizardry:magic_crystal",
-			"data": 7
+            "item": "ebwizardry:lightning_crystal"
         },
         "z": {
             "type": "forge:ore_dict",
@@ -16,8 +15,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:runestone_pedestal",
-		"data": 7,
-        "count": 2
+        "item": "ebwizardry:lightning_runestone",
+        "count": 8
     }
 }

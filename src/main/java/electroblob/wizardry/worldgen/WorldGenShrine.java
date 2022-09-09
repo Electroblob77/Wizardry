@@ -1,13 +1,14 @@
 package electroblob.wizardry.worldgen;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.block.BlockPedestal;
+import electroblob.wizardry.block.BlockRunestonePedestal;
 import electroblob.wizardry.block.BlockRunestone;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.spell.ArcaneLock;
 import electroblob.wizardry.tileentity.TileEntityShrineCore;
+import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -15,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.ITemplateProcessor;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Map;
@@ -50,9 +52,10 @@ public class WorldGenShrine extends WorldGenSurfaceStructure {
 	public void spawnStructure(Random random, World world, BlockPos origin, Template template, PlacementSettings settings, ResourceLocation structureFile){
 
 		final Element element = Element.values()[1 + random.nextInt(Element.values().length-1)];
+		Block runeStone = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Wizardry.MODID, element.getName().toLowerCase() + "_runestone"));
 
 		ITemplateProcessor processor = (w, p, i) -> i.blockState.getBlock() instanceof BlockRunestone ? new Template.BlockInfo(
-				i.pos, i.blockState.withProperty(BlockRunestone.ELEMENT, element), i.tileentityData) : i;
+				i.pos, runeStone.getDefaultState(), i.tileentityData) : i;
 
 		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 
@@ -65,8 +68,8 @@ public class WorldGenShrine extends WorldGenSurfaceStructure {
 
 			if(entry.getValue().equals(CORE_DATA_BLOCK_TAG)){
 				// This bit could have been done with a template processor, but we also need to link the chest and lock it
-				world.setBlockState(entry.getKey(), WizardryBlocks.runestone_pedestal.getDefaultState()
-						.withProperty(BlockPedestal.ELEMENT, element).withProperty(BlockPedestal.NATURAL, true));
+				world.setBlockState(entry.getKey(), ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Wizardry.MODID, element.getName().toLowerCase()
+						+ "_runestone_pedestal")).getDefaultState().withProperty(BlockRunestonePedestal.NATURAL, true));
 
 				TileEntity core = world.getTileEntity(entry.getKey());
 				TileEntity container = world.getTileEntity(entry.getKey().up());

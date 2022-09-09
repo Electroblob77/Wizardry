@@ -1,13 +1,9 @@
 package electroblob.wizardry.client.model;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.block.BlockCrystal;
-import electroblob.wizardry.block.BlockPedestal;
-import electroblob.wizardry.block.BlockRunestone;
+import electroblob.wizardry.block.BlockRunestonePedestal;
 import electroblob.wizardry.item.IMultiTexturedItem;
 import electroblob.wizardry.item.ItemBlockMultiTextured;
-import electroblob.wizardry.item.ItemCrystal;
-import electroblob.wizardry.item.ItemSpectralDust;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.registry.WizardryItems;
 import net.minecraft.block.BlockPlanks;
@@ -49,17 +45,6 @@ public final class WizardryModels {
 
 	@SubscribeEvent
 	public static void register(ModelRegistryEvent event){
-
-		// ItemBlocks
-		ModelLoader.setCustomStateMapper(WizardryBlocks.runestone, new StateMap.Builder()
-				.withName(BlockRunestone.ELEMENT).withSuffix("_runestone").build());
-		ItemBlockMultiTextured runestoneItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.runestone);
-		registerMultiTexturedModel(runestoneItem);
-
-		ModelLoader.setCustomStateMapper(WizardryBlocks.runestone_pedestal, new StateMap.Builder()
-				.withName(BlockPedestal.ELEMENT).ignore(BlockPedestal.NATURAL).withSuffix("_runestone_pedestal").build()); // Don't care about NATURAL property
-		ItemBlockMultiTextured pedestalItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.runestone_pedestal);
-		registerMultiTexturedModel(pedestalItem);
 
 		ModelLoader.setCustomStateMapper(WizardryBlocks.gilded_wood, new StateMap.Builder()
 				.withName(BlockPlanks.VARIANT).withSuffix("_gilded_wood").build());

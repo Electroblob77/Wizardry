@@ -7,8 +7,7 @@
             "translate": "advancement.ebwizardry:visit_shrine.desc"
         },
         "icon": {
-            "item": "ebwizardry:runestone",
-            "data": 5
+            "item": "ebwizardry:ice_runestone"
         }
     },
     "parent": "ebwizardry:defeat_evil_wizard",

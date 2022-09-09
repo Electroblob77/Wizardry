@@ -569,8 +569,14 @@ public final class WizardryItems {
 		registerItemBlock(registry, WizardryBlocks.sorcery_crystal_block);
 		registerItemBlock(registry, WizardryBlocks.healing_crystal_block);
 
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone, false, elements);
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.runestone_pedestal, false, elements);
+		registerItemBlock(registry, WizardryBlocks.fire_runestone);
+		registerItemBlock(registry, WizardryBlocks.ice_runestone);
+		registerItemBlock(registry, WizardryBlocks.lightning_runestone);
+		registerItemBlock(registry, WizardryBlocks.necromancy_runestone);
+		registerItemBlock(registry, WizardryBlocks.earth_runestone);
+		registerItemBlock(registry, WizardryBlocks.sorcery_runestone);
+		registerItemBlock(registry, WizardryBlocks.healing_runestone);
+
 		registerMultiTexturedItemBlock(registry, WizardryBlocks.gilded_wood, true, woodTypes);
 
 		registerItemBlock(registry, WizardryBlocks.oak_bookshelf);
@@ -592,14 +598,14 @@ public final class WizardryItems {
 
 		// Items
 
-		registerItem(registry, "magic_crystal",					new ItemCrystal());
-		registerItem(registry, "earth_crystal",					new ItemCrystal());
-		registerItem(registry, "fire_crystal", 					new ItemCrystal());
-		registerItem(registry, "healing_crystal", 				new ItemCrystal());
-		registerItem(registry, "ice_crystal", 					new ItemCrystal());
-		registerItem(registry, "lightning_crystal", 				new ItemCrystal());
-		registerItem(registry, "necromancy_crystal", 				new ItemCrystal());
-		registerItem(registry, "sorcery_crystal", 				new ItemCrystal());
+		registerItem(registry, "magic_crystal",					new ItemCrystal(Element.MAGIC));
+		registerItem(registry, "earth_crystal",					new ItemCrystal(Element.EARTH));
+		registerItem(registry, "fire_crystal",					new ItemCrystal(Element.FIRE));
+		registerItem(registry, "healing_crystal",					new ItemCrystal(Element.HEALING));
+		registerItem(registry, "ice_crystal",						new ItemCrystal(Element.ICE));
+		registerItem(registry, "lightning_crystal",				new ItemCrystal(Element.LIGHTNING));
+		registerItem(registry, "necromancy_crystal",				new ItemCrystal(Element.NECROMANCY));
+		registerItem(registry, "sorcery_crystal",					new ItemCrystal(Element.SORCERY));
 
 		registerItem(registry, "crystal_shard", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));
 		registerItem(registry, "grand_crystal", 					new Item().setCreativeTab(WizardryTabs.WIZARDRY));

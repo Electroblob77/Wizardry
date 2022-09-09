@@ -68,7 +68,21 @@ public final class WizardryBlocks {
 	public static final Block permafrost = placeholder();
 
 	public static final Block runestone = placeholder();
-	public static final Block runestone_pedestal = placeholder();
+	public static final Block fire_runestone = placeholder();
+	public static final Block ice_runestone = placeholder();
+	public static final Block lightning_runestone = placeholder();
+	public static final Block necromancy_runestone = placeholder();
+	public static final Block earth_runestone = placeholder();
+	public static final Block sorcery_runestone = placeholder();
+	public static final Block healing_runestone = placeholder();
+
+	public static final Block fire_runestone_pedestal = placeholder();
+	public static final Block ice_runestone_pedestal = placeholder();
+	public static final Block lightning_runestone_pedestal = placeholder();
+	public static final Block necromancy_runestone_pedestal = placeholder();
+	public static final Block earth_runestone_pedestal = placeholder();
+	public static final Block healing_runestone_pedestal = placeholder();
+	public static final Block sorcery_runestone_pedestal = placeholder();
 
 	public static final Block gilded_wood = placeholder();
 
@@ -140,8 +154,21 @@ public final class WizardryBlocks {
 		registerBlock(registry, "crystal_flower_pot", 	new BlockCrystalFlowerPot());
 		registerBlock(registry, "permafrost", 			new BlockPermafrost());
 
-		registerBlock(registry, "runestone", 				new BlockRunestone(Material.ROCK));
-		registerBlock(registry, "runestone_pedestal", 	new BlockPedestal(Material.ROCK));
+		registerBlock(registry, "fire_runestone", 		new BlockRunestone(Material.ROCK, Element.FIRE));
+		registerBlock(registry, "ice_runestone", 			new BlockRunestone(Material.ROCK, Element.ICE));
+		registerBlock(registry, "lightning_runestone", 	new BlockRunestone(Material.ROCK, Element.LIGHTNING));
+		registerBlock(registry, "necromancy_runestone", 	new BlockRunestone(Material.ROCK, Element.NECROMANCY));
+		registerBlock(registry, "earth_runestone", 		new BlockRunestone(Material.ROCK, Element.EARTH));
+		registerBlock(registry, "sorcery_runestone", 		new BlockRunestone(Material.ROCK, Element.SORCERY));
+		registerBlock(registry, "healing_runestone", 		new BlockRunestone(Material.ROCK, Element.HEALING));
+
+		registerBlock(registry, "fire_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.FIRE));
+		registerBlock(registry, "ice_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.ICE));
+		registerBlock(registry, "lightning_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.LIGHTNING));
+		registerBlock(registry, "necromancy_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.NECROMANCY));
+		registerBlock(registry, "earth_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.EARTH));
+		registerBlock(registry, "healing_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.HEALING));
+		registerBlock(registry, "sorcery_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.SORCERY));
 
 		registerBlock(registry, "gilded_wood", 			new BlockGildedWood());
 

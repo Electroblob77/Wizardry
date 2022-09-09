@@ -1,7 +1,9 @@
 package electroblob.wizardry.tileentity;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.block.BlockPedestal;
+import electroblob.wizardry.api.IElemental;
+import electroblob.wizardry.block.BlockRunestonePedestal;
+import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.entity.living.EntityEvilWizard;
 import electroblob.wizardry.entity.living.EntityWizard;
 import electroblob.wizardry.packet.PacketConquerShrine;
@@ -101,7 +103,8 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 					}
 
 					wizard.setLocationAndAngles(x1, y1 + 0.5, z1, 0, 0);
-					wizard.setElement(world.getBlockState(pos).getValue(BlockPedestal.ELEMENT));
+					wizard.setElement(world.getBlockState(pos).getBlock() instanceof IElemental
+							? ((IElemental) world.getBlockState(pos).getBlock()).getElement() : Element.MAGIC);
 					wizard.onInitialSpawn(world.getDifficultyForLocation(pos), null);
 					wizard.hasStructure = true;
 
@@ -144,9 +147,8 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 			WizardryPacketHandler.net.sendToAllAround(new PacketConquerShrine.Message(this.pos),
 					new NetworkRegistry.TargetPoint(this.world.provider.getDimension(), x, y, z, 64));
 
-			if(world.getBlockState(pos).getBlock() == WizardryBlocks.runestone_pedestal){
-				world.setBlockState(pos, WizardryBlocks.runestone_pedestal.getDefaultState()
-						.withProperty(BlockPedestal.ELEMENT, world.getBlockState(pos).getValue(BlockPedestal.ELEMENT)));
+			if(world.getBlockState(pos).getBlock() instanceof BlockRunestonePedestal){
+				world.setBlockState(pos, world.getBlockState(pos).getBlock().getDefaultState());
 			}else{
 				Wizardry.logger.warn("What's going on?! A shrine core is being conquered but the block at its position is not a runestone pedestal!");
 			}

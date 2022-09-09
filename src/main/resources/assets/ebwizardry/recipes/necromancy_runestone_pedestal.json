@@ -7,8 +7,7 @@
     ],
     "key": {
         "y": {
-            "item": "ebwizardry:magic_crystal",
-			"data": 4
+            "item": "ebwizardry:necromancy_crystal"
         },
         "z": {
             "type": "forge:ore_dict",
@@ -16,8 +15,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:runestone_pedestal",
-		"data": 4,
+        "item": "ebwizardry:necromancy_runestone_pedestal",
         "count": 2
     }
 }

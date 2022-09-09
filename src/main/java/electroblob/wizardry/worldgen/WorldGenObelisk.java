@@ -5,6 +5,7 @@ import electroblob.wizardry.block.BlockRunestone;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.entity.living.EntityRemnant;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
+import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
@@ -17,6 +18,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.ITemplateProcessor;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Map;
@@ -58,9 +60,10 @@ public class WorldGenObelisk extends WorldGenSurfaceStructure {
 	public void spawnStructure(Random random, World world, BlockPos origin, Template template, PlacementSettings settings, ResourceLocation structureFile){
 
 		final Element element = Element.values()[1 + random.nextInt(Element.values().length-1)];
+		Block runeStone = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Wizardry.MODID, element.getName().toLowerCase() + "_runestone"));
 
 		ITemplateProcessor processor = (w, p, i) -> i.blockState.getBlock() instanceof BlockRunestone ? new Template.BlockInfo(
-				i.pos, i.blockState.withProperty(BlockRunestone.ELEMENT, element), i.tileentityData) : i;
+				i.pos, runeStone.getDefaultState(), i.tileentityData) : i;
 
 		template.addBlocksToWorld(world, origin, processor, settings, 2 | 16);
 

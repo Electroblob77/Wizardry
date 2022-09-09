@@ -1,5 +1,6 @@
 package electroblob.wizardry.block;
 
+import electroblob.wizardry.api.IElemental;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.registry.WizardryTabs;
 import net.minecraft.block.Block;
@@ -11,7 +12,7 @@ import net.minecraft.world.IBlockAccess;
 
 import java.util.EnumMap;
 
-public class BlockCrystal extends Block {
+public class BlockCrystal extends Block implements IElemental {
 
 	private static final EnumMap<Element, MapColor> map_colours = new EnumMap<>(Element.class);
 
@@ -25,6 +26,9 @@ public class BlockCrystal extends Block {
 		map_colours.put(Element.SORCERY, MapColor.LIME);
 		map_colours.put(Element.HEALING, MapColor.YELLOW);
 	}
+
+	@Override
+	public Element getElement() { return element; }
 
 	private final Element element;
 
