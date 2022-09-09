@@ -577,7 +577,20 @@ public final class WizardryItems {
 		registerItemBlock(registry, WizardryBlocks.sorcery_runestone);
 		registerItemBlock(registry, WizardryBlocks.healing_runestone);
 
-		registerMultiTexturedItemBlock(registry, WizardryBlocks.gilded_wood, true, woodTypes);
+		registerItemBlock(registry, WizardryBlocks.fire_runestone_pedestal);
+		registerItemBlock(registry, WizardryBlocks.ice_runestone_pedestal);
+		registerItemBlock(registry, WizardryBlocks.lightning_runestone_pedestal);
+		registerItemBlock(registry, WizardryBlocks.necromancy_runestone_pedestal);
+		registerItemBlock(registry, WizardryBlocks.earth_runestone_pedestal);
+		registerItemBlock(registry, WizardryBlocks.healing_runestone_pedestal);
+		registerItemBlock(registry, WizardryBlocks.sorcery_runestone_pedestal);
+
+		registerItemBlock(registry, WizardryBlocks.acacia_gilded_wood);
+		registerItemBlock(registry, WizardryBlocks.birch_gilded_wood);
+		registerItemBlock(registry, WizardryBlocks.dark_oak_gilded_wood);
+		registerItemBlock(registry, WizardryBlocks.jungle_gilded_wood);
+		registerItemBlock(registry, WizardryBlocks.oak_gilded_wood);
+		registerItemBlock(registry, WizardryBlocks.spruce_gilded_wood);
 
 		registerItemBlock(registry, WizardryBlocks.oak_bookshelf);
 		registerItemBlock(registry, WizardryBlocks.spruce_bookshelf);

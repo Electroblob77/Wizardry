@@ -16,8 +16,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:gilded_wood",
-		"data": 4,
+        "item": "ebwizardry:acacia_gilded_wood",
         "count": 8
     }
 }

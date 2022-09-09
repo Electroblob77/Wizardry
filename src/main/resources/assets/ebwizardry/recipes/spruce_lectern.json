@@ -13,8 +13,7 @@
             "item": "ebwizardry:grand_crystal"
         },
         "w": {
-            "item": "ebwizardry:gilded_wood",
-            "data": 1
+            "item": "ebwizardry:spruce_gilded_wood"
         }
     },
     "result": {

@@ -84,7 +84,12 @@ public final class WizardryBlocks {
 	public static final Block healing_runestone_pedestal = placeholder();
 	public static final Block sorcery_runestone_pedestal = placeholder();
 
-	public static final Block gilded_wood = placeholder();
+	public static final Block acacia_gilded_wood = placeholder();
+	public static final Block birch_gilded_wood = placeholder();
+	public static final Block dark_oak_gilded_wood = placeholder();
+	public static final Block jungle_gilded_wood = placeholder();
+	public static final Block oak_gilded_wood = placeholder();
+	public static final Block spruce_gilded_wood = placeholder();
 
 	public static final Block oak_bookshelf = placeholder();
 	public static final Block spruce_bookshelf = placeholder();
@@ -170,7 +175,12 @@ public final class WizardryBlocks {
 		registerBlock(registry, "healing_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.HEALING));
 		registerBlock(registry, "sorcery_runestone_pedestal", 	new BlockRunestonePedestal(Material.ROCK, Element.SORCERY));
 
-		registerBlock(registry, "gilded_wood", 			new BlockGildedWood());
+		registerBlock(registry, "acacia_gilded_wood", 		new BlockGildedWood());
+		registerBlock(registry, "birch_gilded_wood", 			new BlockGildedWood());
+		registerBlock(registry, "dark_oak_gilded_wood", 		new BlockGildedWood());
+		registerBlock(registry, "jungle_gilded_wood", 		new BlockGildedWood());
+		registerBlock(registry, "oak_gilded_wood", 			new BlockGildedWood());
+		registerBlock(registry, "spruce_gilded_wood", 		new BlockGildedWood());
 
 		registerBlock(registry, "oak_bookshelf", 			new BlockBookshelf());
 		registerBlock(registry, "spruce_bookshelf", 		new BlockBookshelf());

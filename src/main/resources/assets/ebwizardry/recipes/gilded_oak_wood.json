@@ -16,8 +16,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:gilded_wood",
-		"data": 0,
+        "item": "ebwizardry:oak_gilded_wood",
         "count": 8
     }
 }

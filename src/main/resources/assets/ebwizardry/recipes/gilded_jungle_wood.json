@@ -16,8 +16,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:gilded_wood",
-		"data": 3,
+        "item": "ebwizardry:jungle_gilded_wood",
         "count": 8
     }
 }

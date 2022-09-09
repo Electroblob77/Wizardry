@@ -16,8 +16,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:gilded_wood",
-		"data": 2,
+        "item": "ebwizardry:birch_gilded_wood",
         "count": 8
     }
 }

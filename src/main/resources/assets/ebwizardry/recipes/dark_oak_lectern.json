@@ -13,8 +13,7 @@
             "item": "ebwizardry:grand_crystal"
         },
         "w": {
-            "item": "ebwizardry:gilded_wood",
-            "data": 5
+            "item": "ebwizardry:dark_oak_gilded_wood"
         }
     },
     "result": {

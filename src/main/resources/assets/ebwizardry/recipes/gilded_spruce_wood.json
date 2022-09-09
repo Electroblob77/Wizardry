@@ -16,8 +16,7 @@
         }
     },
     "result": {
-        "item": "ebwizardry:gilded_wood",
-		"data": 1,
+        "item": "ebwizardry:spruce_gilded_wood"
         "count": 8
     }
 }

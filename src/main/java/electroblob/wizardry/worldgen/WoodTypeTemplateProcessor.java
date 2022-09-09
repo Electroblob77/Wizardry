@@ -1,5 +1,6 @@
 package electroblob.wizardry.worldgen;
 
+import electroblob.wizardry.block.BlockGildedWood;
 import electroblob.wizardry.registry.WizardryBlocks;
 import electroblob.wizardry.util.BlockUtils;
 import net.minecraft.block.Block;
@@ -89,11 +90,24 @@ public class WoodTypeTemplateProcessor implements ITemplateProcessor {
 	public Template.BlockInfo processBlock(World world, BlockPos pos, Template.BlockInfo info){
 
 		// Why do these each have their own property key?
-		if(info.blockState.getBlock() instanceof BlockPlanks){ // This covers gilded wood too
+		if(info.blockState.getBlock() instanceof BlockPlanks){ // This doesn't cover gilded wood
 			return new Template.BlockInfo(info.pos, info.blockState.withProperty(BlockPlanks.VARIANT, woodType), info.tileentityData);
-		}else if(info.blockState.getBlock() instanceof BlockWoodSlab){
-			return new Template.BlockInfo(info.pos, info.blockState.withProperty(BlockWoodSlab.VARIANT, woodType), info.tileentityData);
-		// This is a mess, no wonder the flattening happened
+		}else if(info.blockState.getBlock() instanceof BlockGildedWood){
+			switch (woodType) {
+				case OAK:
+					return new Template.BlockInfo(info.pos, WizardryBlocks.oak_gilded_wood.getDefaultState(), info.tileentityData);
+				case SPRUCE:
+					return new Template.BlockInfo(info.pos, WizardryBlocks.spruce_gilded_wood.getDefaultState(), info.tileentityData);
+				case BIRCH:
+					return new Template.BlockInfo(info.pos, WizardryBlocks.birch_gilded_wood.getDefaultState(), info.tileentityData);
+				case JUNGLE:
+					return new Template.BlockInfo(info.pos, WizardryBlocks.jungle_gilded_wood.getDefaultState(), info.tileentityData);
+				case ACACIA:
+					return new Template.BlockInfo(info.pos, WizardryBlocks.acacia_gilded_wood.getDefaultState(), info.tileentityData);
+				case DARK_OAK:
+					return new Template.BlockInfo(info.pos, WizardryBlocks.dark_oak_gilded_wood.getDefaultState(), info.tileentityData);
+			}
+			// This is a mess, no wonder the flattening happened
 		}else if(DOORS.containsValue(info.blockState.getBlock())){
 			return new Template.BlockInfo(info.pos, BlockUtils.copyState(DOORS.get(woodType), info.blockState), info.tileentityData);
 		}else if(STAIRS.containsValue(info.blockState.getBlock())){

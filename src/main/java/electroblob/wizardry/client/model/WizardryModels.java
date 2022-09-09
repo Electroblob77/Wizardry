@@ -46,11 +46,6 @@ public final class WizardryModels {
 	@SubscribeEvent
 	public static void register(ModelRegistryEvent event){
 
-		ModelLoader.setCustomStateMapper(WizardryBlocks.gilded_wood, new StateMap.Builder()
-				.withName(BlockPlanks.VARIANT).withSuffix("_gilded_wood").build());
-		ItemBlockMultiTextured gildedWoodItem = (ItemBlockMultiTextured)Item.getItemFromBlock(WizardryBlocks.gilded_wood);
-		registerMultiTexturedModel(gildedWoodItem);
-
 		// Explanation for all this here -> https://github.com/TheGreyGhost/MinecraftByExample/tree/master/src/main/java/minecraftbyexample/mbe05_block_dynamic_block_model2
 		ModelLoaderRegistry.registerLoader(new ModelLoaderBookshelf());
 
