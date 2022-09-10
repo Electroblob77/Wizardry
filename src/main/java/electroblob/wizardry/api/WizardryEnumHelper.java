@@ -18,7 +18,7 @@ public final class WizardryEnumHelper {
 	// Make sure these are updated if the relevant constructors are updated!
 	// Can't we do some kind of reflection to access them and generate these arrays?
 	private static final Class[] TIER_ARGUMENTS = new Class[]{Integer.class, Integer.class, Integer.class, Style.class, String.class};
-	private static final Class[] ELEMENT_ARGUMENTS = new Class[]{Style.class, String.class, String.class};
+	private static final Class[] ELEMENT_ARGUMENTS = new Class[]{Style.class, String.class, String.class, boolean.class, boolean.class};
 	private static final Class[] SPELL_TYPE_ARGUMENTS = new Class[]{String.class};
 	private static final Class[] SPELL_CONTEXT_ARGUMENTS = new Class[]{String.class};
 
@@ -55,12 +55,14 @@ public final class WizardryEnumHelper {
 	 * @param colour The colour of text associated with this element, as a style object.
 	 * @param name The unlocalised name of this element, as used in translation keys.
 	 * @param modID The mod ID of the mod that added this element, for icon rendering purposes.
+	 * @param worldgen Whether this element should have obelisks and shrines.
+	 * @param wizards Whether this element should have naturally occurring evil and good wizards.
 	 * @return The resulting {@code Element} enum constant.
 	 */
 	// This is the only one that needs the mod ID argument because elements are the only ones that have icons
 	// For some reason Minecraft doesn't seem to care about the resource domain for lang files, it just pools them
-	public static Element addElement(String codeName, Style colour, String name, String modID){
-		return EnumHelper.addEnum(Element.class, codeName, ELEMENT_ARGUMENTS, colour, name, modID);
+	public static Element addElement(String codeName, Style colour, String name, String modID, boolean worldgen, boolean wizards){
+		return EnumHelper.addEnum(Element.class, codeName, ELEMENT_ARGUMENTS, colour, name, modID, worldgen, wizards);
 	}
 
 	/**

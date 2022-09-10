@@ -21,6 +21,7 @@ import net.minecraft.world.gen.structure.template.Template;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 
@@ -59,8 +60,9 @@ public class WorldGenObelisk extends WorldGenSurfaceStructure {
 	@Override
 	public void spawnStructure(Random random, World world, BlockPos origin, Template template, PlacementSettings settings, ResourceLocation structureFile){
 
-		final Element element = Element.values()[1 + random.nextInt(Element.values().length-1)];
-		Block runeStone = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(Wizardry.MODID, element.getName().toLowerCase() + "_runestone"));
+		Element[] elements = (Element[]) Arrays.stream(Element.values()).filter(Element::hasWorldgen).toArray();
+		final Element element = elements[1 + random.nextInt(elements.length-1)];
+		Block runeStone = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(element.getModid(), element.getName().toLowerCase() + "_runestone"));
 
 		ITemplateProcessor processor = (w, p, i) -> i.blockState.getBlock() instanceof BlockRunestone ? new Template.BlockInfo(
 				i.pos, runeStone.getDefaultState(), i.tileentityData) : i;

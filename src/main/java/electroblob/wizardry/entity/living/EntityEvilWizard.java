@@ -365,7 +365,8 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 
 		if(getElement() == null){
 			if(rand.nextBoolean()){
-				this.setElement(Element.values()[rand.nextInt(Element.values().length - 1) + 1]);
+				Element[] elements = (Element[]) Arrays.stream(Element.values()).filter(Element::hasWizards).toArray();
+				this.setElement(elements[rand.nextInt(elements.length - 1) + 1]);
 			}else{
 				this.setElement(Element.MAGIC);
 			}

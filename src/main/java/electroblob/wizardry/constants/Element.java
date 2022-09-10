@@ -30,14 +30,23 @@ public enum Element implements IStringSerializable {
 	/** The {@link ResourceLocation} for this element's 8x8 icon (displayed in the arcane workbench GUI) */
 	private final ResourceLocation icon;
 
+	private String modid;
+	/** true if this element should have worldgen structures generated (Obelisk, Shrine) */
+	private final boolean worldgen;
+	/** true if evil/good wizards of this element should naturally spawn */
+	private final boolean wizards;
+
 	Element(Style colour, String name){
-		this(colour, name, Wizardry.MODID);
+		this(colour, name, Wizardry.MODID, true, true);
 	}
 
-	Element(Style colour, String name, String modid){
+	Element(Style colour, String name, String modid, boolean worldgen, boolean wizards){
 		this.colour = colour;
 		this.unlocalisedName = name;
 		this.icon = new ResourceLocation(modid, "textures/gui/container/element_icon_" + unlocalisedName + ".png");
+		this.modid = modid;
+		this.worldgen = worldgen;
+		this.wizards = wizards;
 	}
 
 	/** Returns the element with the given name, or throws an {@link java.lang.IllegalArgumentException} if no such
@@ -93,4 +102,10 @@ public enum Element implements IStringSerializable {
 	public ResourceLocation getIcon(){
 		return icon;
 	}
+
+	public boolean hasWorldgen() { return worldgen; }
+
+	public boolean hasWizards() { return wizards; }
+
+	public String getModid() { return modid; }
 }
