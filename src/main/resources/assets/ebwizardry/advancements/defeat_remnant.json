@@ -77,7 +77,7 @@
 			"conditions": {
 				"items": [
 					{
-						"item": "ebwizardry:spectral_healing",
+						"item": "ebwizardry:spectral_dust_healing",
 						"data": 7
 					}
 				]

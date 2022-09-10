@@ -5,7 +5,13 @@
             "conditions": {
                 "items": [
                     {
-                        "item": "ebwizardry:arcane_tome"
+                        "item": "ebwizardry:arcane_tome_apprentice"
+                    },
+                    {
+                        "item": "ebwizardry:arcane_tome_advanced"
+                    },
+                    {
+                        "item": "ebwizardry:arcane_tome_master"
                     }
                 ]
             }

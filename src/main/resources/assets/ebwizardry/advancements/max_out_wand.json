@@ -7,7 +7,7 @@
             "translate": "advancement.ebwizardry:max_out_wand.desc"
         },
         "icon": {
-            "item": "ebwizardry:arcane_tome"
+            "item": "ebwizardry:arcane_tome_master"
         },
 		"frame": "goal"
     },
