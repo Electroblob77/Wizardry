@@ -203,7 +203,6 @@ public final class WizardryEventHandler {
 				// Find the angle between the direction the mob is looking and the direction the player is in
 				// Angle between a and b = acos((a.b) / (|a|*|b|))
 				double angle = Math.acos(vec.dotProduct(event.getEntity().getLookVec()) / vec.length());
-				System.out.println(angle);
 				// If the player is not within the 144-degree arc in front of the mob, it won't detect them
 				if(angle > 0.4 * Math.PI){
 					((EntityLiving)event.getEntityLiving()).setAttackTarget(null);
