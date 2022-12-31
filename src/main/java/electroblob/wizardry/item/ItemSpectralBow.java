@@ -1,6 +1,7 @@
 package electroblob.wizardry.item;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.entity.projectile.EntityConjuredArrow;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.util.InventoryUtils;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -14,6 +15,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemBow;
+import net.minecraft.item.ItemSpectralArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
@@ -197,8 +199,7 @@ public class ItemSpectralBow extends ItemBow implements IConjuredItem {
 
 				if(!world.isRemote){
 
-					ItemArrow itemarrow = (ItemArrow)Items.ARROW;
-					EntityArrow entityarrow = itemarrow.createArrow(world, new ItemStack(itemarrow), entityplayer);
+					EntityConjuredArrow entityarrow = new EntityConjuredArrow(world, entityplayer);
 					entityarrow.shoot(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F,
 							f * 3.0F, 1.0F);
 
