@@ -1,6 +1,7 @@
 package electroblob.wizardry.potion;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemWizardArmour;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -45,8 +46,12 @@ public class CurseUndeath extends Curse {
 						} else {
 							itemstack.setItemDamage(itemstack.getItemDamage() + entitylivingbase.world.rand.nextInt(2));
 							if (itemstack.getItemDamage() >= itemstack.getMaxDamage()) {
-								entitylivingbase.renderBrokenItemStack(itemstack);
-								entitylivingbase.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+								if (itemstack.getItem() instanceof ItemWizardArmour) {
+									entitylivingbase.setFire(8);
+								} else {
+									entitylivingbase.renderBrokenItemStack(itemstack);
+									entitylivingbase.setItemStackToSlot(EntityEquipmentSlot.HEAD, ItemStack.EMPTY);
+								}
 							}
 						}
 					}
