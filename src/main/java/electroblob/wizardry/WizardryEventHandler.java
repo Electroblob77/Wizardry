@@ -268,7 +268,7 @@ public final class WizardryEventHandler {
 				// Fireskin
 				if(event.getEntityLiving().isPotionActive(WizardryPotions.fireskin)
 						&& !MagicDamage.isEntityImmune(DamageType.FIRE, event.getEntityLiving()))
-					attacker.setFire(Spells.fire_breath.getProperty(Spell.BURN_DURATION).intValue());
+					attacker.setFire(Spells.fire_breath.getProperty(Spell.BURN_DURATION).intValue() * 20);
 
 				// Ice Shroud
 				if(event.getEntityLiving().isPotionActive(WizardryPotions.ice_shroud)
