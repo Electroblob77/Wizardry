@@ -382,6 +382,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 						activeImbuements.add((Imbuement)enchantment);
 					}else{
 						// Otherwise, removes the enchantment from the item
+						((Imbuement) enchantment).onImbuementRemoval(stack);
 						iterator.remove(); // FIXME: Apparently this can cause a CME
 					}
 				}
