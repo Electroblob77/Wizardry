@@ -363,6 +363,7 @@
 	"spell.zombie_apocalypse.start": 	{"category": "spells", "sounds": ["ebwizardry:dark_aura_start"]},
 	"spell.zombie_apocalypse.loop": 	{"category": "spells", "sounds": ["ebwizardry:dark_aura_loop"]},
 	"spell.zombie_apocalypse.end": 		{"category": "spells", "sounds": ["ebwizardry:dark_aura_end"]},
+	"spell.mirage": 				{"category": "spells", "sounds": ["ebwizardry:buff"]},
 
 	"forfeit.burn_self":				{"category": "spells", "sounds": ["fire/ignite"]},
 	"forfeit.fireball":					{"category": "spells", "sounds": ["mob/ghast/fireball4"]},
