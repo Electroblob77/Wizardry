@@ -53,7 +53,7 @@ public class FireBreath extends SpellRay {
 						this.getNameForTranslationFormatted()), true);
 			// This now only damages in line with the maxHurtResistantTime. Some mods don't play nicely and fiddle
 			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
-			}else if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
+			}else if(ticksInUse % 10 == 0){
 				target.setFire((int)(getProperty(BURN_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 				EntityUtils.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.FIRE),
