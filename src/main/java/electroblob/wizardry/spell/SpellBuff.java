@@ -125,7 +125,8 @@ public class SpellBuff extends Spell {
 	@Override
 	public boolean cast(World world, EntityLiving caster, EnumHand hand, int ticksInUse, EntityLivingBase target, SpellModifiers modifiers){
 		// Wizards can only cast a buff spell if they don't already have its effects.
-		if(caster.getActivePotionMap().keySet().containsAll(potionSet)) return false;
+		// Some buff spells doesn't add any potion effects, those are ignored by this check
+		if(!potionSet.isEmpty() && caster.getActivePotionMap().keySet().containsAll(potionSet)) return false;
 		// Only return on the server side or the client probably won't spawn particles
 		if(!this.applyEffects(caster, modifiers) && !world.isRemote) return false;
 		if(world.isRemote) this.spawnParticles(world, caster, modifiers);
