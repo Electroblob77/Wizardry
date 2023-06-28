@@ -201,7 +201,7 @@ public final class AllyDesignationSystem {
 		// Owned entities inherit their owner's allies
 		if(allyOf instanceof IEntityOwnable){
 			Entity owner = ((IEntityOwnable)allyOf).getOwner();
-			if(owner instanceof EntityLivingBase && isAllied((EntityLivingBase)owner, possibleAlly)) return true;
+			if(owner instanceof EntityLivingBase && (owner == possibleAlly || isAllied((EntityLivingBase)owner, possibleAlly))) return true;
 		}
 
 		if(allyOf instanceof EntityPlayer && possibleAlly instanceof EntityPlayer
