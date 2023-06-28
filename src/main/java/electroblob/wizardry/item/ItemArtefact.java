@@ -10,6 +10,7 @@ import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.entity.projectile.EntityDart;
 import electroblob.wizardry.entity.projectile.EntityForceOrb;
 import electroblob.wizardry.entity.projectile.EntityIceShard;
+import electroblob.wizardry.event.ArtefactCheckEvent;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.integration.DamageSafetyChecker;
@@ -37,6 +38,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -181,6 +183,13 @@ public class ItemArtefact extends Item {
 		if(!(artefact instanceof ItemArtefact)) throw new IllegalArgumentException("Not an artefact!");
 
 		if(!((ItemArtefact)artefact).enabled) return false; // Disabled in the config
+
+		ArtefactCheckEvent event = new ArtefactCheckEvent(player, (ItemArtefact) artefact);
+		if(MinecraftForge.EVENT_BUS.post(event)) return false;
+
+		if (event.getResult() == Event.Result.ALLOW) {
+			return true;
+		}
 
 		if(WizardryBaublesIntegration.enabled()){
 			return WizardryBaublesIntegration.isBaubleEquipped(player, artefact);
