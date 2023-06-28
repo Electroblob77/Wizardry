@@ -1530,6 +1530,8 @@ config.ebwizardry.slow_time_affects_players=Slow Time Affects Players
 config.ebwizardry.slow_time_affects_players.tooltip=Whether players are slowed when another nearby player uses the slow time spell. If this is disabled, mobs and projectiles will still be affected but players will move at normal speed.
 config.ebwizardry.bonemeal_grows_crystal_flowers=Bonemeal Grows Crystal Flowers
 config.ebwizardry.bonemeal_grows_crystal_flowers.tooltip=Whether using bonemeal on grass blocks has a chance to grow crystal flowers.
+config.ebwizardry.wands_must_be_held_to_decrement_cooldown=Wands Must Be Held To Decrement Cooldown
+config.ebwizardry.wands_must_be_held_to_decrement_cooldown.tooltip=Whether wands only decrement their cooldowns if a player holds them.
 
 config.ebwizardry.category.difficulty=Difficulty Settings
 config.ebwizardry.category.difficulty.tooltip=Configure wizardry's difficulty

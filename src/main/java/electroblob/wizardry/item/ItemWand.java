@@ -226,9 +226,15 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 	}
 
 	@Override
-	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeld){
-		
-		if(isHeld) WandHelper.decrementCooldowns(stack);
+	public void onUpdate(ItemStack stack, World world, Entity entity, int slot, boolean isHeldInMainhand){
+		boolean isHeld = isHeldInMainhand || entity instanceof EntityLivingBase && ItemStack.areItemStacksEqual(stack, ((EntityLivingBase) entity).getHeldItemOffhand());
+
+		// If Wizardry.settings.wandsMustBeHeldToDecrementCooldown is false, the cooldowns will be decremented.
+		// If Wizardry.settings.wandsMustBeHeldToDecrementCooldown is true and isHeld is true, the cooldowns will also be decremented.
+		// If Wizardry.settings.wandsMustBeHeldToDecrementCooldown is true and isHeld is false, the cooldowns will not be decremented.
+		if (!Wizardry.settings.wandsMustBeHeldToDecrementCooldown || isHeld) {
+			WandHelper.decrementCooldowns(stack);
+		}
 
 		// Decrements wand damage (increases mana) every 1.5 seconds if it has a condenser upgrade
 		if(!world.isRemote && !this.isManaFull(stack) && world.getTotalWorldTime() % Constants.CONDENSER_TICK_INTERVAL == 0){
