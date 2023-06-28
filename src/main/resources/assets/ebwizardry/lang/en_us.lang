@@ -882,6 +882,7 @@ container.ebwizardry\:arcane_workbench.sort_tier=Sort by Tier
 container.ebwizardry\:arcane_workbench.sort_element=Sort by Element
 container.ebwizardry\:arcane_workbench.sort_alphabetical=Sort Alphabetically
 container.ebwizardry\:arcane_workbench.search_tooltip=%1$sSearch Tips\n\ntier=%2$s, %1$st=%2$s: match tiers\n%1$selement=%2$s, %1$se=%2$s: match elements\n%1$stype=%2$s, %1$sp=%2$s: match spell types\n%1$sdiscovered=true/false%2$s, %1$sd=t/f%2$s: include only (un)discovered\n%1$smodid=%2$s, %1$sm=%2$s: match mod IDs\n\nSeparate multiple values with %1$s,%2$s\nSeparate multiple criteria with %1$s;
+container.ebwizardry\:arcane_workbench.clear=Clear Spell Slots
 
 container.ebwizardry\:bookshelf=Bookshelf
 
@@ -1370,6 +1371,7 @@ forfeit.ebwizardry\:bury_self=The ground collapses beneath you!
 
 forfeit.ebwizardry\:spill_inventory=Your items spill themselves everywhere!
 forfeit.ebwizardry\:teleport_self=You are instantly teleported somewhere!
+forfeit.ebwizardry\:teleport_self_large_distance=You are instantly teleported somewhere far away!
 forfeit.ebwizardry\:levitate_self=You begin to float upwards helplessly!
 forfeit.ebwizardry\:vex_horde=A horde of vexes materializes around you!
 forfeit.ebwizardry\:black_hole=A swirling vortex appears in front of you!

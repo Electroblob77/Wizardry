@@ -51,6 +51,17 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 
 					break;
 
+				case CLEAR_BUTTON:
+
+					if(!(player.openContainer instanceof ContainerArcaneWorkbench)){
+						Wizardry.logger.warn("Received a PacketControlInput, but the player that sent it was not " +
+								"currently using an arcane workbench. This should not happen!");
+					}else{
+						((ContainerArcaneWorkbench)player.openContainer).onClearButtonPressed(player);
+					}
+
+					break;
+
 				case NEXT_SPELL_KEY:
 
 					if(wand.getItem() instanceof ISpellCastingItem){
@@ -133,7 +144,7 @@ public class PacketControlInput implements IMessageHandler<Message, IMessage> {
 	}
 
 	public enum ControlType {
-		APPLY_BUTTON, NEXT_SPELL_KEY, PREVIOUS_SPELL_KEY, RESURRECT_BUTTON, CANCEL_RESURRECT, POSSESSION_PROJECTILE
+		APPLY_BUTTON, NEXT_SPELL_KEY, PREVIOUS_SPELL_KEY, RESURRECT_BUTTON, CANCEL_RESURRECT, POSSESSION_PROJECTILE, CLEAR_BUTTON
 	}
 
 	public static class Message implements IMessage {

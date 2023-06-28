@@ -56,6 +56,26 @@ public interface IWorkbenchItem {
 	boolean onApplyButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks);
 
 	/**
+	 * Called when this item is in the central slot of an arcane workbench and the apply clear is pressed. Items must
+	 * implement this method to define what happens when the apply button is pressed.
+	 * @param player The player that pressed the apply button.
+	 * @param centre The central slot in the arcane workbench. This slot will always contain a stack of the implementing
+	 * item, or in other words, <i>it is guaranteed that</i> {@code this == centre.getStack().getItem()}.
+	 * @param crystals The magic crystal slot of the arcane workbench.
+	 * @param upgrade The upgrade slot of the arcane workbench.
+	 * @param spellBooks An array of the <i>active</i> (visible) spell book slots in the arcane workbench. The length of
+	 * the array will be equal to the value returned by {@link IWorkbenchItem#getSpellSlotCount(ItemStack)}.
+	 * */
+	default void onClearButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){};
+
+	/**
+	 * Must be overridden in the item class to make the clear button in the Arcane Workbench clickable.
+	 * */
+	default boolean isClearable() {
+		return false;
+	}
+
+	/**
 	 * Returns whether the tooltip (dark grey box) should be drawn when this item is in an arcane workbench. Only
 	 * called client-side.
 	 * @param stack The itemstack to query.

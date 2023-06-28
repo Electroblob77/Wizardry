@@ -93,6 +93,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	private ContainerArcaneWorkbench arcaneWorkbenchContainer;
 
 	private GuiButton applyBtn;
+	private GuiButton clearBtn;
 	private GuiButton[] sortButtons = new GuiButton[3];
 
 	private GuiTextField searchField;
@@ -126,6 +127,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		this.buttonList.clear();
 		this.buttonList.add(this.applyBtn = new GuiButtonApply(0, this.width / 2 + 64, this.height / 2 + 3));
+		this.buttonList.add(this.clearBtn = new GuiButtonClear(0, this.width / 2 + 64, this.height / 2 - 16));
 		this.buttonList.add(sortButtons[0] = new GuiButtonSpellSort(1, this.guiLeft - 44, this.guiTop + 8, ISpellSortable.SortType.TIER, arcaneWorkbenchContainer, this));
 		this.buttonList.add(sortButtons[1] = new GuiButtonSpellSort(2, this.guiLeft - 31, this.guiTop + 8, ISpellSortable.SortType.ELEMENT, arcaneWorkbenchContainer, this));
 		this.buttonList.add(sortButtons[2] = new GuiButtonSpellSort(3, this.guiLeft - 18, this.guiTop + 8, ISpellSortable.SortType.ALPHABETICAL, arcaneWorkbenchContainer, this));
@@ -205,6 +207,7 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 		// Show/hide the relevant gui elements
 		this.applyBtn.enabled = centreSlot.getHasStack();
+		this.clearBtn.enabled = centreSlot.getHasStack() && centreSlot.getStack().getItem() instanceof IWorkbenchItem && ((IWorkbenchItem) centreSlot.getStack().getItem()).isClearable();
 		for(GuiButton button : this.sortButtons) button.visible = arcaneWorkbenchContainer.hasBookshelves();
 		this.searchField.setVisible(arcaneWorkbenchContainer.hasBookshelves());
 
@@ -440,6 +443,17 @@ public class GuiArcaneWorkbench extends GuiContainer {
 				// Sound
 				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
 						WizardrySounds.BLOCK_ARCANE_WORKBENCH_SPELLBIND, 1));
+				// Animation
+				animationTimer = 20;
+			}
+
+			if(button == clearBtn){
+				// Packet building
+				IMessage msg = new PacketControlInput.Message(PacketControlInput.ControlType.CLEAR_BUTTON);
+				WizardryPacketHandler.net.sendToServer(msg);
+				// Sound
+				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(
+						WizardrySounds.BLOCK_ARCANE_WORKBENCH_SPELLBIND, 0.8f));
 				// Animation
 				animationTimer = 20;
 			}
@@ -988,6 +1002,38 @@ public class GuiArcaneWorkbench extends GuiContainer {
 
 			int k = 72;
 			int l = 220;
+			//int colour = 14737632;
+
+			if(this.enabled){
+				if(this.hovered){
+					k += this.width * 2;
+					//colour = 16777120;
+				}
+			}else{
+				k += this.width;
+				//colour = 10526880;
+			}
+
+			DrawingUtils.drawTexturedRect(this.x, this.y, k, l, this.width, this.height, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+			//this.drawCenteredString(minecraft.fontRenderer, this.displayString, this.x + this.width / 2,
+			//		this.y + (this.height - 8) / 2, colour);
+		}
+	}
+
+	private static class GuiButtonClear extends GuiButton {
+
+		public GuiButtonClear(int id, int x, int y){
+			super(id, x, y, 16, 16, I18n.format("container." + Wizardry.MODID + ":arcane_workbench.clear"));
+		}
+
+		@Override
+		public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks){
+
+			// Whether the button is highlighted
+			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+
+			int k = 72;
+			int l = 236;
 			//int colour = 14737632;
 
 			if(this.enabled){

@@ -452,6 +452,24 @@ public class ContainerArcaneWorkbench extends Container implements ISpellSortabl
 		}
 	}
 
+	/**
+	 * Called (via {@link electroblob.wizardry.packet.PacketControlInput PacketControlInput}) when the clear button in
+	 * the arcane workbench GUI is pressed.
+	 */
+	// As of 2.1, for the sake of events and neatness of code, this was moved here from TileEntityArcaneWorkbench.
+	// As of 4.2, the spell binding/charging/upgrading code was delegated (via IWorkbenchItem) to the items themselves.
+	public void onClearButtonPressed(EntityPlayer player){
+
+		Slot centre = this.getSlot(CENTRE_SLOT);
+
+		if(centre.getStack().getItem() instanceof IWorkbenchItem){ // Should always be true, but no harm in checking.
+
+			Slot[] spellBooks = this.inventorySlots.subList(0, 8).toArray(new Slot[8]);
+
+			((IWorkbenchItem) centre.getStack().getItem()).onClearButtonPressed(player, centre, this.getSlot(CRYSTAL_SLOT), this.getSlot(UPGRADE_SLOT), spellBooks);
+		}
+	}
+
 	/** Scrolls to the given row number. */
 	public void scrollTo(int row){
 		this.scroll = row;

@@ -28,6 +28,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -880,6 +881,19 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		
 		return changed;
 	}
+
+	@Override
+	public void onClearButtonPressed(EntityPlayer player, Slot centre, Slot crystals, Slot upgrade, Slot[] spellBooks){
+		ItemStack stack = centre.getStack();
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey(WandHelper.SPELL_ARRAY_KEY)) {
+			NBTTagCompound nbt = stack.getTagCompound();
+			nbt.removeTag(WandHelper.SPELL_ARRAY_KEY);
+			stack.setTagCompound(nbt);
+		}
+	}
+
+	@Override
+	public boolean isClearable() { return true; }
 
 	// hitEntity is only called server-side, so we'll have to use events
 	@SubscribeEvent
