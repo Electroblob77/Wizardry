@@ -198,6 +198,8 @@ public final class Settings {
 	public boolean blindnessTweak = true;
 	/** <b>[Server-only]</b> Whether using bonemeal on grass blocks has a chance to grow crystal flowers. */
 	public boolean bonemealGrowsCrystalFlowers = true;
+	/** <b>[Server-only]</b> Whether wands only decrement their cooldowns if a player holds them. */
+	public boolean wandsMustBeHeldToDecrementCooldown = false;
 	/** <b>[Server-only]</b> Whether to enable Wizardry mob loot injection. Allows an easier switch instead of blacklisting all entities. */
 	public boolean injectMobDrops = true;
 	/**
@@ -666,6 +668,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".bonemeal_grows_crystal_flowers");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		bonemealGrowsCrystalFlowers = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "wandsMustBeHeldToDecrementCooldown", false,
+				"Whether wands only decrement their cooldowns if a player holds them.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".wands_must_be_held_to_decrement_cooldown");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		wandsMustBeHeldToDecrementCooldown = property.getBoolean();
 		propOrder.add(property.getName());
 
 		checkForRedundantOptions(GAMEPLAY_CATEGORY, propOrder); // Must be before the order is set!
