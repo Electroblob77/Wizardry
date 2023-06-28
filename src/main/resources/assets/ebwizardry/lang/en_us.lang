@@ -403,6 +403,10 @@ item.ebwizardry\:generic.disabled=This item has been disabled in the config
 item.ebwizardry\:ring.generic.desc=Equip this ring in the Baubles inventory or by placing it on your hotbar. Up to 2 rings may be equipped at once.
 item.ebwizardry\:amulet.generic.desc=Equip this amulet in the Baubles inventory or by placing it on your hotbar. Only one amulet may be equipped at a time.
 item.ebwizardry\:charm.generic.desc=Equip this charm in the Baubles inventory or by placing it on your hotbar. Only one charm may be equipped at a time.
+item.ebwizardry\:belt.generic.desc=Equip this belt in the Baubles inventory or by placing it on your hotbar. Only one belt may be equipped at a time.
+item.ebwizardry\:body.generic.desc=Equip this body item in the Baubles inventory or by placing it on your hotbar. Only one body item may be equipped at a time.
+item.ebwizardry\:trinket.generic.desc=Equip this trinket in the Baubles inventory or by placing it on your hotbar. Only one trinklet may be equipped at a time.
+item.ebwizardry\:head.generic.desc=Equip this headgear in the Baubles inventory or by placing it on your hotbar. Only one headgear may be equipped at a time.
 
 item.ebwizardry\:ring_condensing.name=Ring of Condensing
 item.ebwizardry\:ring_condensing.desc=Slowly regenerates mana for all wands on your hotbar
