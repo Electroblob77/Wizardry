@@ -1,5 +1,6 @@
 package electroblob.wizardry.constants;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryEventHandler;
 
 /** Stores various global constants used in Wizardry. */
@@ -17,17 +18,17 @@ public final class Constants {
 	/** The bonus amount of wand upgrades that can be applied to a non-elemental wand. */
 	public static final int NON_ELEMENTAL_UPGRADE_BONUS = 3;
 	/** The fraction by which cooldowns are reduced for each level of cooldown upgrade. */
-	public static final float COOLDOWN_REDUCTION_PER_LEVEL = 0.15f;
+	public static float COOLDOWN_REDUCTION_PER_LEVEL = 0.15f;
 	/** The fraction by which maximum charge is increased for each level of storage upgrade. */
 	public static final float STORAGE_INCREASE_PER_LEVEL = 0.15f;
 	/** The fraction by which potency is increased for each tier of matching wand. */
-	public static final float POTENCY_INCREASE_PER_TIER = 0.15f;
+	public static float POTENCY_INCREASE_PER_TIER = 0.15f;
 	/** The fraction by which spell duration is increased for each level of duration upgrade. */
-	public static final float DURATION_INCREASE_PER_LEVEL = 0.25f;
+	public static float DURATION_INCREASE_PER_LEVEL = 0.25f;
 	/** The fraction by which spell range is increased for each level of range upgrade. */
-	public static final float RANGE_INCREASE_PER_LEVEL = 0.25f;
+	public static float RANGE_INCREASE_PER_LEVEL = 0.25f;
 	/** The fraction by which spell blast radius is increased for each level of range upgrade. */
-	public static final float BLAST_RADIUS_INCREASE_PER_LEVEL = 0.25f;
+	public static float BLAST_RADIUS_INCREASE_PER_LEVEL = 0.25f;
 	/** The fraction by which movement speed is reduced per level of frost effect. */
 	public static final double FROST_SLOWNESS_PER_LEVEL = 0.5;
 	/** The fraction by which movement speed is reduced per level of decay effect. */
@@ -47,4 +48,14 @@ public final class Constants {
 	 */
 	public static final int DECAY_SPREAD_INTERVAL = 8;
 
+
+	// making this as an update to the existing values to not break addons directly relying on the fields
+	static {
+		POTENCY_INCREASE_PER_TIER = (float) Wizardry.settings.potencyIncreasePerTier;
+		COOLDOWN_REDUCTION_PER_LEVEL = (float) Wizardry.settings.cooldownReductionPerLevel;
+		DURATION_INCREASE_PER_LEVEL = (float) Wizardry.settings.durationIncreasePerLevel;
+		RANGE_INCREASE_PER_LEVEL = (float) Wizardry.settings.rangeIncreasePerLevel;
+		BLAST_RADIUS_INCREASE_PER_LEVEL = (float) Wizardry.settings.blastIncreasePerLevel;
+		RANGE_INCREASE_PER_LEVEL = (float) Wizardry.settings.frostSlownessIncreasePerLevel;
+	}
 }

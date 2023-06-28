@@ -156,6 +156,12 @@ public final class Settings {
 	public Pair<ResourceLocation, Short>[] treeBlocks = parseItemMetaStrings(DEFAULT_TREE_BLOCKS);
 	/** <b>[Server-only]</b> The chance for wizard towers to generate with an evil wizard and chest inside. */
 	public double evilWizardChance = 0.2;
+	public double cooldownReductionPerLevel = 0.15;
+	public double potencyIncreasePerTier = 0.15;
+	public double durationIncreasePerLevel = 0.25;
+	public double rangeIncreasePerLevel = 0.25;
+	public double blastIncreasePerLevel = 0.25;
+	public double frostSlownessIncreasePerLevel = 0.5;
 	/** <b>[Server-only]</b> List of dimension ids in which to generate crystal ore. */
 	public int[] oreDimensions = {0};
 	/** <b>[Server-only]</b> List of dimension ids in which to generate crystal flowers. */
@@ -934,6 +940,50 @@ public final class Settings {
 				Wizardry.logger.warn("Invalid integer in currency items: {}", args[1]);
 			}
 		}
+
+		property = config.get(TWEAKS_CATEGORY, "cooldown_reduction_per_level", 0.15,
+				"The fraction by which cooldowns are reduced for each level of cooldown upgrade.",
+				0.05, Integer.MAX_VALUE); // Sure, I mean you COULD set it to 2^31-1... what could possibly go wrong?
+		property.setLanguageKey("config." + Wizardry.MODID + ".cast_command_multiplier_limit");
+		cooldownReductionPerLevel = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "potency_increase_per_tier", 0.15,
+				"The fraction by which potency is increased for each tier of matching wand. May cause extreme lag with high values!",
+				0.05, Integer.MAX_VALUE);
+		property.setLanguageKey("config." + Wizardry.MODID + ".potency_increase_per_tier");
+		potencyIncreasePerTier = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "duration_increase_per_level", 0.25,
+				"The fraction by which spell duration is increased for each level of duration upgrade.",
+				0.05, Integer.MAX_VALUE);
+		property.setLanguageKey("config." + Wizardry.MODID + ".duration_increase_per_level");
+		durationIncreasePerLevel = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "range_increase_per_level", 0.25,
+				"The fraction by which spell range is increased for each level of range upgrade. May cause extreme lag with high values!",
+				0.05, Integer.MAX_VALUE);
+		property.setLanguageKey("config." + Wizardry.MODID + ".range_increase_per_level");
+		rangeIncreasePerLevel = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "blast_increase_per_level", 0.25,
+				"The fraction by which spell blast is increased for each level of blast upgrade. May cause extreme lag with high values!",
+				0.05, Integer.MAX_VALUE);
+		property.setLanguageKey("config." + Wizardry.MODID + ".blast_increase_per_level");
+		blastIncreasePerLevel = property.getDouble();
+		propOrder.add(property.getName());
+
+
+		property = config.get(TWEAKS_CATEGORY, "frost_slowness_increase_per_level", 0.5,
+				"The fraction by which movement speed is reduced per level of frost effect.",
+				0.05, Integer.MAX_VALUE);
+		property.setLanguageKey("config." + Wizardry.MODID + ".frost_slowness_increase_per_level");
+		frostSlownessIncreasePerLevel = property.getDouble();
+		propOrder.add(property.getName());
+
 
 		checkForRedundantOptions(TWEAKS_CATEGORY, propOrder); // Must be before the order is set!
 		config.setCategoryPropertyOrder(TWEAKS_CATEGORY, propOrder);
