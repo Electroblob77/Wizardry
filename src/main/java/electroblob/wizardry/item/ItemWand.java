@@ -46,6 +46,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -843,8 +844,16 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				Spell spell = Spell.byMetadata(spellBooks[i].getStack().getItemDamage());
 				// If the wand is powerful enough for the spell, it's not already bound to that slot and it's enabled for wands
 				if(!(spell.getTier().level > this.tier.level) && spells[i] != spell && spell.isEnabled(SpellProperties.Context.WANDS)){
+
+					// Decide if we can bind this multiple times
+					if (Wizardry.settings.preventBindingSameSpellTwiceToWands && Arrays.stream(spells).anyMatch(s -> s == spell)) {
+						continue;
+					}
+
 					spells[i] = spell;
 					changed = true;
+
+					// setting to consume books upon use
 					if (Wizardry.settings.singleUseSpellBooks) {
 						spellBooks[i].getStack().shrink(1);
 					}

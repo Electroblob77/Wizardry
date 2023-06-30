@@ -203,6 +203,8 @@ public final class Settings {
 	public boolean damageTypePerElement = false;
 	/** <b>[Server-only]</b> Whether spell books are consumed when they are bound to a wand.*/
 	public boolean singleUseSpellBooks = false;
+	/** <b>[Server-only]</b> Whether to prevent binding the same spell to a wand multiple times*/
+	public boolean preventBindingSameSpellTwiceToWands = false;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
 	/** <b>[Server-only]</b> Whether to tweak the blindness effect to reduce follow distance when used on non-players. */
@@ -644,6 +646,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".single_use_spell_books");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		singleUseSpellBooks = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "preventBindingSameSpellTwiceToWands", false,
+				"Whether to prevent binding the same spell to a wand multiple times");
+		property.setLanguageKey("config." + Wizardry.MODID + ".prevent_binding_same_spell_twice_to_wands");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		preventBindingSameSpellTwiceToWands = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,
