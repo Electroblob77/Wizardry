@@ -198,6 +198,9 @@ public final class Settings {
 	public boolean playerBlockDamage = true;
 	/** <b>[Server-only]</b> Whether spells cast by dispensers can destroy blocks in the world. */
 	public boolean dispenserBlockDamage = true;
+	/** <b>[Server-only]</b> Whether damage should be registered with the old system (wizardry_magic/indirect_wizardry_magic) prefixed damage with the elements like
+	 * necromancy_indirect_wizardry_magic, necromancy_wizardry_magic*/
+	public boolean damageTypePerElement = false;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
 	/** <b>[Server-only]</b> Whether to tweak the blindness effect to reduce follow distance when used on non-players. */
@@ -623,6 +626,15 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".dispenser_block_damage");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		dispenserBlockDamage = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "damageTypePerElement", false,
+				"Whether damage should be registered with the old system (wizardry_magic/indirect_wizardry_magic) prefixed damage with the elements like "
+						+ "necromancy_indirect_wizardry_magic, necromancy_wizardry_magic. This is disabled by default to not break existing modpacks." 
+						+ "The intention of this setting is to allow differentiating various damage types for e.g. the Distinct Damage Descriptions mod");
+		property.setLanguageKey("config." + Wizardry.MODID + ".damage_type_per_element");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		damageTypePerElement = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,

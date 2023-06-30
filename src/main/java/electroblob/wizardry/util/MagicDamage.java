@@ -1,5 +1,7 @@
 package electroblob.wizardry.util;
 
+import electroblob.wizardry.Settings;
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.entity.living.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
@@ -195,7 +197,7 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 * @return A damagesource object of type EntityDamageSource
 	 */
 	public static DamageSource causeDirectMagicDamage(Entity caster, DamageType type, boolean isRetaliatory){
-		return new MagicDamage(DIRECT_MAGIC_DAMAGE, caster, type, isRetaliatory);
+		return new MagicDamage(getDirectDamageNameForType(type), caster, type, isRetaliatory);
 	}
 
 	/**
@@ -241,7 +243,15 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	 */
 	public static DamageSource causeIndirectMagicDamage(Entity magic, Entity caster, DamageType type,
 			boolean isRetaliatory){
-		return new IndirectMagicDamage(INDIRECT_MAGIC_DAMAGE, magic, caster, type, isRetaliatory);
+		return new IndirectMagicDamage(getIndirectDamageNameForType(type), magic, caster, type, isRetaliatory);
+	}
+
+	public static String getIndirectDamageNameForType(DamageType type) {
+		return Wizardry.settings.damageTypePerElement ? type.name().toLowerCase() + "_" + INDIRECT_MAGIC_DAMAGE : INDIRECT_MAGIC_DAMAGE;
+	}
+
+	public static String getDirectDamageNameForType(DamageType type) {
+		return Wizardry.settings.damageTypePerElement ? type.name().toLowerCase() + "_" + DIRECT_MAGIC_DAMAGE : DIRECT_MAGIC_DAMAGE;
 	}
 
 	@Override

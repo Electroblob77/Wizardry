@@ -1448,6 +1448,25 @@ key.ebwizardry.spell_8=Spell Slot 8
 
 death.attack.wizardry_magic=%1$s was killed by %2$s using magic
 death.attack.indirect_wizardry_magic=%1$s was killed by %2$s using magic
+death.attack.magic_wizardry_magic=%1$s was killed by %2$s using magic
+death.attack.magic_indirect_wizardry_magic=%1$s was killed by %2$s using magic
+
+death.attack.fire_wizardry_magic=%1$s was killed by %2$s using fire magic
+death.attack.fire_indirect_wizardry_magic=%1$s was killed by %2$s using fire magic
+death.attack.frost_wizardry_magic=%1$s was killed by %2$s using frost magic
+death.attack.frost_indirect_wizardry_magic=%1$s was killed by %2$s using frost magic
+death.attack.shock_wizardry_magic=%1$s was killed by %2$s using a shock magic
+death.attack.shock_indirect_wizardry_magic=%1$s was killed by %2$s using shock magic
+death.attack.wither_wizardry_magic=%1$s was killed by %2$s using withering magic
+death.attack.wither_indirect_wizardry_magic=%1$s was killed by %2$s withering magic
+death.attack.poison_wizardry_magic=%1$s was killed by %2$s using poison magic
+death.attack.poison_indirect_wizardry_magic=%1$s was killed by %2$s poison magic
+death.attack.force_wizardry_magic=%1$s was killed by %2$s using a magical force
+death.attack.force_indirect_wizardry_magic=%1$s was killed by %2$s using magical force
+death.attack.blast_wizardry_magic=%1$s was killed by %2$s using a magical blast
+death.attack.blast_indirect_wizardry_magic=%1$s was killed by %2$s using magical blast
+death.attack.radiant_wizardry_magic=%1$s was killed by %2$s using radiant magic
+death.attack.radiant_indirect_wizardry_magic=%1$s was killed by %2$s using radiant magic
 
 soundCategory.ebwizardry_spells=Spells
 
@@ -1516,6 +1535,8 @@ config.ebwizardry.player_block_damage.true=Yes - kaboom!
 config.ebwizardry.player_block_damage.false=No - activate anti-grief (TM)
 config.ebwizardry.dispenser_block_damage=Dispenser Block Damage
 config.ebwizardry.dispenser_block_damage.tooltip=Whether spells cast by dispensers can destroy blocks in the world. Wizardry makes every attempt to respect protection mods and plugins, but cannot guarantee it will work in all cases for every mod. If you need absolutely watertight anti-grief, disable this setting.
+config.ebwizardry.damage_type_per_element=Damage Type Per Element
+config.ebwizardry.damage_type_per_element.tooltip=Whether damage should be registered with the old system (wizardry_magic/indirect_wizardry_magic) prefixed damage with the elements like necromancy_indirect_wizardry_magic, necromancy_wizardry_magic. This is disabled by default to not break existing modpacks. The intention of this setting is to allow differentiating various damage types for e.g. the Distinct Damage Descriptions mod
 config.ebwizardry.telekinetic_disarmament=Telekinetic Disarmament
 config.ebwizardry.telekinetic_disarmament.tooltip=Whether to allow players to disarm other players using the telekinesis spell. Disable to prevent stealing of items.
 config.ebwizardry.telekinetic_disarmament.true=Yes - let people steal things
