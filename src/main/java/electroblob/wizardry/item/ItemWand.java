@@ -845,6 +845,9 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 				if(!(spell.getTier().level > this.tier.level) && spells[i] != spell && spell.isEnabled(SpellProperties.Context.WANDS)){
 					spells[i] = spell;
 					changed = true;
+					if (Wizardry.settings.singleUseSpellBooks) {
+						spellBooks[i].getStack().shrink(1);
+					}
 				}
 			}
 		}

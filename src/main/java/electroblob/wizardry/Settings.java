@@ -201,6 +201,8 @@ public final class Settings {
 	/** <b>[Server-only]</b> Whether damage should be registered with the old system (wizardry_magic/indirect_wizardry_magic) prefixed damage with the elements like
 	 * necromancy_indirect_wizardry_magic, necromancy_wizardry_magic*/
 	public boolean damageTypePerElement = false;
+	/** <b>[Server-only]</b> Whether spell books are consumed when they are bound to a wand.*/
+	public boolean singleUseSpellBooks = false;
 	/** <b>[Server-only]</b> Whether to revert to the old wand upgrade system, which only requires tomes of arcana. */
 	public boolean legacyWandLevelling = false;
 	/** <b>[Server-only]</b> Whether to tweak the blindness effect to reduce follow distance when used on non-players. */
@@ -635,6 +637,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".damage_type_per_element");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		damageTypePerElement = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "singleUseSpellBooks", false,
+				"Whether spell books are consumed when they are bound to a wand.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".single_use_spell_books");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		singleUseSpellBooks = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,
