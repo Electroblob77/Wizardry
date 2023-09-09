@@ -65,7 +65,7 @@ public class FrostRay extends SpellRay {
 						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
 						getProperty(EFFECT_STRENGTH).intValue()));
 
-				if(ticksInUse % ((EntityLivingBase)target).maxHurtResistantTime == 1){
+				if(ticksInUse % 10 == 0){
 					float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
 					if(target instanceof EntityBlaze || target instanceof EntityMagmaCube) damage *= 2;
 

@@ -58,7 +58,7 @@ public class RayOfPurification extends SpellRay {
 				if(!world.isRemote && ticksInUse == 1 && caster instanceof EntityPlayer) ((EntityPlayer)caster)
 				.sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(),
 						this.getNameForTranslationFormatted()), true);
-			}else{
+			}else if (ticksInUse % 10 == 0) {
 
 				float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
 				// Fire

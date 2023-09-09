@@ -53,7 +53,7 @@ public class LightningWeb extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 
-		if(EntityUtils.isLiving(target)){
+		if(EntityUtils.isLiving(target) && ticksInUse % 10 == 0){
 
 			electrocute(world, caster, origin, target, getProperty(PRIMARY_DAMAGE).floatValue()
 					* modifiers.get(SpellModifiers.POTENCY), ticksInUse);

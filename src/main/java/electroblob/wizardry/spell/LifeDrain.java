@@ -47,7 +47,7 @@ public class LifeDrain extends SpellRay {
 		
 		if(EntityUtils.isLiving(target)){
 
-			if(ticksInUse % 12 == 0){
+			if(ticksInUse % 10 == 0){
 				
 				float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);
 				
