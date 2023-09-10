@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 /**
- * SpellBindEvent is fired when a check happens for an ItemArtefact using {@link electroblob.wizardry.item.ItemArtefact#isArtefactActive(net.minecraft.entity.player.EntityPlayer, net.minecraft.item.Item)}
+ * ArtefactCheckEvent is fired when a check happens for an ItemArtefact using {@link electroblob.wizardry.item.ItemArtefact#isArtefactActive(net.minecraft.entity.player.EntityPlayer, net.minecraft.item.Item)}
  * <i>Fired on both sides.</i><br>
  * <br>
  * This event is {@link Cancelable}. <br>
