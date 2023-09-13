@@ -14,7 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderForcefield extends Render<EntityForcefield> {
 
-	private static final float EXPANSION_TIME = 3;
+	private static final float EXPANSION_TIME = 5;
+	//changed from 3-5 to give more time for animations
 
 	public RenderForcefield(RenderManager renderManager){
 		super(renderManager);
@@ -45,6 +46,9 @@ public class RenderForcefield extends Render<EntityForcefield> {
 		float radius = entity.getRadius();
 		float a = 0.5f;
 
+		/*
+
+		//OLD ANIMATION
 		if(entity.ticksExisted > entity.lifetime - EXPANSION_TIME){
 			radius *= 1 + 0.2f * (entity.ticksExisted + partialTicks - (entity.lifetime - EXPANSION_TIME))/EXPANSION_TIME;
 			a *= Math.max(0, 1 - (entity.ticksExisted + partialTicks - (entity.lifetime - EXPANSION_TIME))/EXPANSION_TIME);
@@ -52,6 +56,17 @@ public class RenderForcefield extends Render<EntityForcefield> {
 			radius *= 1 - (EXPANSION_TIME - entity.ticksExisted - partialTicks)/EXPANSION_TIME;
 			a *= 1 - (EXPANSION_TIME - entity.ticksExisted - partialTicks)/EXPANSION_TIME;
 		}
+		*/
+
+		if(entity.ticksExisted > entity.lifetime - EXPANSION_TIME*2){
+			radius *= 1 + 0.08f * (entity.ticksExisted - (entity.lifetime - EXPANSION_TIME*2) + partialTicks);
+			a *= Math.max(0, 1 - (entity.ticksExisted - (entity.lifetime - EXPANSION_TIME*2) + partialTicks)/EXPANSION_TIME);
+		}else if(entity.ticksExisted < EXPANSION_TIME){
+			radius *= 1 - (EXPANSION_TIME - entity.ticksExisted - partialTicks)/EXPANSION_TIME;
+			a *= 1 - (EXPANSION_TIME - entity.ticksExisted - partialTicks)/EXPANSION_TIME;
+		}
+
+
 
 		// Draw the inside first
 		drawSphere(radius - 0.1f - 0.025f * pulse, latStep, longStep, true, r, g, b, a);

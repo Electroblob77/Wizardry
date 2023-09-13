@@ -87,6 +87,39 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 			Wizardry.proxy.playMovingSound(this, WizardrySounds.ENTITY_FORCEFIELD_AMBIENT, WizardrySounds.SPELLS, 0.5f, 1, true);
 		}
 
+		//If there is no caster forcefield shouldn't remain. This happens when casters dies or leaves game.
+		if(getCaster() == null){
+			if(this.ticksExisted < this.lifetime - 15) {
+				this.ticksExisted = this.lifetime - 15;
+			}
+		}else{
+
+			Vec3d casterpos = (getCaster().getPositionVector());
+			Vec3d forcefieldpos = (this.getPositionVector());
+			double dist = casterpos.distanceTo(forcefieldpos);
+
+			//Check the casters position if in forcefield radius if not set the forcefield lifetime to its end.
+			if (dist > getRadius()) {
+				//Need a check if the lifetime is under its breaking period so the forcefield isn't stuck at breaking period.
+				if(this.ticksExisted < this.lifetime - 15) {
+					this.ticksExisted = this.lifetime - 15;
+				}
+			}
+		}
+
+
+		//Plays breaking sound (mod needs sound effect for this)
+		/*
+		if(this.lifetime - this.ticksExisted == 11){
+			this.playSound(WizardrySounds.ENTITY_FORCEFIELD_BREAK, 1, 1);
+		}
+		 */
+
+
+
+
+
+
 		// New forcefield repulsion system:
 		// Searches for all entities near the forcefield and determines where they will be next tick.
 		// If they will be inside the forcefield next tick, sets their position and velocity such that they appear to

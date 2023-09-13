@@ -15,6 +15,7 @@ import electroblob.wizardry.spell.SixthSense;
 import electroblob.wizardry.spell.SlowTime;
 import electroblob.wizardry.spell.Transience;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -84,6 +85,16 @@ public final class WizardryClientEventHandler {
 	@SubscribeEvent
 	public static void onClientTickEvent(TickEvent.ClientTickEvent event){
 
+		if(Minecraft.getMinecraft().player != null){
+			EntityPlayerSP playerSP = Minecraft.getMinecraft().player;
+			if(playerSP.isPotionActive(WizardryPotions.paralysis) && !LockCameraHandler.isCameraLocked){
+				LockCameraHandler.lockCurrentCamera();
+			}else if(!playerSP.isPotionActive(WizardryPotions.paralysis) && LockCameraHandler.isCameraLocked){
+				LockCameraHandler.unlockCurrentCamera();
+			}
+		}
+
+
 		if(event.phase == TickEvent.Phase.END && !net.minecraft.client.Minecraft.getMinecraft().isGamePaused()){
 
 			World world = net.minecraft.client.Minecraft.getMinecraft().world;
@@ -116,10 +127,6 @@ public final class WizardryClientEventHandler {
 		if(Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.paralysis)
 				&& Minecraft.getMinecraft().inGameHasFocus){
 			event.setCanceled(true);
-			Minecraft.getMinecraft().player.prevRotationYaw = 0;
-			Minecraft.getMinecraft().player.prevRotationPitch = 0;
-			Minecraft.getMinecraft().player.rotationYaw = 0;
-			Minecraft.getMinecraft().player.rotationPitch = 0;
 		}
 	}
 
@@ -186,6 +193,7 @@ public final class WizardryClientEventHandler {
 			}
 		}
 	}
+
 
 	/**
 	 * Renders an overlay across the entire screen.
