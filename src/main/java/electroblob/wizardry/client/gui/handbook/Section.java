@@ -299,7 +299,7 @@ class Section {
 						String suffix = "";
 
 						// Account for trailing punctuation, except in languages that don't use spaces such as Chinese
-						boolean spaceless = SPACELESS_LANGUAGES.contains(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode());
+						boolean spaceless = SPACELESS_LANGUAGES.contains(Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage() == null ? "en_us" : Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode());
 						if(!spaceless) paragraph.substring(linkEnd).split("\\s", 2)[0].substring(1); // substring(1) to remove the @
 
 						// The index of the single page currently being formatted, relative to the section
