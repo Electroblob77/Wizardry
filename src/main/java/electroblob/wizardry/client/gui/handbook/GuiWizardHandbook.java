@@ -33,9 +33,13 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
-import java.util.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * GUI class for the wizard's handbook. Like any GUI class, this is instantiated each time the book is opened. As of
@@ -54,6 +58,8 @@ import java.nio.charset.StandardCharsets;
 public class GuiWizardHandbook extends GuiScreen {
 
 	private static final ResourceLocation DEFAULT = new ResourceLocation(Wizardry.MODID, "texts/handbook_en_us.json");
+
+	private static List<String> ADDONS = new ArrayList<>();
 
 	static final ResourceLocation texture = new ResourceLocation(Wizardry.MODID, "textures/gui/handbook/handbook.png");
 
@@ -406,9 +412,10 @@ public class GuiWizardHandbook extends GuiScreen {
 			return;
 		}
 
-		IResource handbookFile = getHandbookResource(manager);
+	//	IResource handbookFile = getHandbookResource(manager);
+		List<IResource> handbookFiles = getHandbookResource(manager);
 
-		if(handbookFile != null){
+		if(!handbookFiles.isEmpty()){
 
 			// Wipes all the maps before repopulating them
 			images.clear();
@@ -418,28 +425,31 @@ public class GuiWizardHandbook extends GuiScreen {
 
 			bookmarkSection = null; // Also need to wipe the reference to the old bookmarked section
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(handbookFile.getInputStream(), StandardCharsets.UTF_8));
+			for (IResource handbookFile : handbookFiles) {
 
-			JsonElement je = gson.fromJson(reader, JsonElement.class);
-			JsonObject json = je.getAsJsonObject();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(handbookFile.getInputStream(), StandardCharsets.UTF_8));
 
-			JsonUtils.getJsonObject(json, "colours").entrySet().forEach(e -> colours.put(e.getKey(),
-					Color.decode(e.getValue().getAsString()).getRGB()));
+				JsonElement je = gson.fromJson(reader, JsonElement.class);
+				JsonObject json = je.getAsJsonObject();
 
-			// Repopulates the remaining maps
-			Image.populate(images, json);
-			CraftingRecipe.populate(recipes, json);
-			Section.populate(sections, json);
+				JsonUtils.getJsonObject(json, "colours").entrySet().forEach(e -> colours.put(e.getKey(),
+						Color.decode(e.getValue().getAsString()).getRGB()));
 
-			sectionList = Collections.unmodifiableList(new ArrayList<>(sections.values()));
+				// Repopulates the remaining maps
+				Image.populate(images, json);
+				CraftingRecipe.populate(recipes, json);
+				Section.populate(sections, json);
 
-			if(sections.isEmpty()){
-				Wizardry.logger.warn("Handbook has no sections! Aborting loading...");
-				return;
+				sectionList = Collections.unmodifiableList(new ArrayList<>(sections.values()));
+
+				if(sections.isEmpty()){
+					Wizardry.logger.warn("Handbook has no sections! Aborting loading...");
+					return;
+				}
+
+				bookmarkSection = JsonUtils.getString(json, "bookmark_start_section");
+				if(!sections.containsKey(bookmarkSection)) throw new JsonSyntaxException("Section with id " + bookmarkSection + " is undefined");
 			}
-
-			bookmarkSection = JsonUtils.getString(json, "bookmark_start_section");
-			if(!sections.containsKey(bookmarkSection)) throw new JsonSyntaxException("Section with id " + bookmarkSection + " is undefined");
 		}
 
 		// The first resource load on startup is done before the packet handler is loaded
@@ -455,16 +465,17 @@ public class GuiWizardHandbook extends GuiScreen {
 	 * @param manager The resource manager instance to use.
 	 * @return The handbook JSON file, as an IResource, or null if it was not found.
 	 */
-	private static IResource getHandbookResource(IResourceManager manager){
+	private static List<IResource> getHandbookResource(IResourceManager manager){
 
 		// TODO: Implement resource pack stacking to allow addon mods and texture packs to add/overwrite content
 
 		IResource handbookFile = null;
+		List<IResource> handbookFiles = new ArrayList<>();
 
 		try{
 			handbookFile = manager.getResource(new ResourceLocation(Wizardry.MODID, "texts/handbook_"
 					+ Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode() + ".json"));
-		}catch(IOException e){
+		}catch(Exception e){
 
 			Wizardry.logger.info("Wizard handbook JSON file missing for the current language (" + Minecraft.getMinecraft()
 					.getLanguageManager().getCurrentLanguage() + "). Using default (English-US) instead.");
@@ -476,7 +487,29 @@ public class GuiWizardHandbook extends GuiScreen {
 			}
 		}
 
-		return handbookFile;
+		handbookFiles.add(handbookFile);
+
+		for (String modid : ADDONS) {
+			// Addons
+			Wizardry.logger.info("Registering addon Wizard's Handbook contents for " + modid);
+			try{
+				handbookFile = manager.getResource(new ResourceLocation(modid, "texts/handbook_"
+						+ Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode() + ".json"));
+			}catch(Exception e){
+
+				Wizardry.logger.info("Wizard handbook JSON file missing for the current language (" + Minecraft.getMinecraft()
+						.getLanguageManager().getCurrentLanguage() + "). Using default (English-US) instead.");
+
+				try{
+					handbookFile = manager.getResource(new ResourceLocation(modid, "texts/handbook_en_us.json"));
+				}catch(IOException x){
+					Wizardry.logger.error("Couldn't find file: " + DEFAULT + ". The file may be missing; please try re-downloading and reinstalling Wizardry.", x);
+				}
+			}
+			handbookFiles.add(handbookFile);
+		}
+
+		return handbookFiles;
 	}
 
 	// Controls
@@ -576,4 +609,9 @@ public class GuiWizardHandbook extends GuiScreen {
 		sections.values().forEach(s -> s.updateUnlockStatus(showToasts, completedAdvancements));
 	}
 
+	public static void registerAddonHandbookContent(String modid) {
+		if (!ADDONS.contains(modid)) {
+			ADDONS.add(modid);
+		}
+	}
 }

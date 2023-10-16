@@ -130,7 +130,6 @@ public class Wizardry {
 
 		configDirectory = new File(event.getModConfigurationDirectory(), Wizardry.MODID);
 		settings.initConfig(event);
-		proxy.registerResourceReloadListeners();
 
 		Calendar calendar = Calendar.getInstance();
 		tisTheSeason = calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DAY_OF_MONTH) >= 24
@@ -161,6 +160,7 @@ public class Wizardry {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event){
+		proxy.registerResourceReloadListeners();
 
 		settings.initConfigExtras();
 
