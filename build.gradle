@@ -38,7 +38,7 @@ apply plugin: org.ajoberstar.grgit.gradle.GrgitPlugin
 apply plugin: 'wtf.gofancy.fancygradle'
 
 
-version = "4.3.11"
+version = "4.3.12"
 group= "electroblob.wizardry"// http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "ElectroblobsWizardry"
 
