@@ -486,6 +486,8 @@ public abstract class Forfeit {
 			}
 		}));
 
+		add(Tier.MASTER, Element.SORCERY, create("teleport_self_large_distance", (w, p) -> ((Banish)Spells.banish).teleport(p, w, 8 + w.rand.nextDouble() * 700)));
+
 		add(Tier.NOVICE, Element.HEALING, create("damage_self", (w, p) -> p.attackEntityFrom(DamageSource.MAGIC, 4)));
 
 		add(Tier.NOVICE, Element.HEALING, create("spill_armour", (w, p) -> {
