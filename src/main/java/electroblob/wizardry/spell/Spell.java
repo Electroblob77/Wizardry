@@ -922,6 +922,11 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 		return Arrays.asList(applicableItems).contains(item);
 	}
 
+	/** Returns the list of items this spell is applicable to. */
+	public List<Item> getApplicableItems() {
+		return Arrays.asList(applicableItems);
+	}
+
 	/**
 	 * Sets which items this spell can appear on (these default to the regular spell book and scroll).
 	 * @param applicableItems The items this spell should naturally appear on (or no items at all).
