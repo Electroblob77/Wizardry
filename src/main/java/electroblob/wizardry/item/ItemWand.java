@@ -899,7 +899,16 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		ItemStack stack = centre.getStack();
 		if (stack.hasTagCompound() && stack.getTagCompound().hasKey(WandHelper.SPELL_ARRAY_KEY)) {
 			NBTTagCompound nbt = stack.getTagCompound();
-			nbt.removeTag(WandHelper.SPELL_ARRAY_KEY);
+			int[] spells = nbt.getIntArray(WandHelper.SPELL_ARRAY_KEY);
+			int expectedSlotCount = BASE_SPELL_SLOTS + WandHelper.getUpgradeLevel(stack,
+					WizardryItems.attunement_upgrade);
+
+			// unbrick broken wands
+			if (spells.length < expectedSlotCount) {
+				spells = new int[expectedSlotCount];
+			}
+			Arrays.fill(spells, 0);
+			nbt.setIntArray(WandHelper.SPELL_ARRAY_KEY, spells);
 			stack.setTagCompound(nbt);
 		}
 	}
