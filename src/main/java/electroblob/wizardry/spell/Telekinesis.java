@@ -1,7 +1,9 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.util.SpellModifiers;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -34,7 +36,8 @@ public class Telekinesis extends SpellRay {
 			target.motionZ = (origin.z - target.posZ) / 6;
 			return true;
 
-		}else if(target instanceof EntityPlayer && (Wizardry.settings.telekineticDisarmament || !(caster instanceof EntityPlayer))){
+		} else if (target instanceof EntityPlayer && (Wizardry.settings.telekineticDisarmament || !(caster instanceof EntityPlayer)) &&
+				ItemArtefact.isArtefactActive((EntityPlayer) target, WizardryItems.amulet_anchoring)) {
 
 			EntityPlayer player = (EntityPlayer)target;
 			
