@@ -20,8 +20,7 @@ public interface ISpellSortable {
 
 		TIER("tier", Comparator.naturalOrder()),
 		ELEMENT("element", Comparator.comparing(Spell::getElement).thenComparing(Spell::getTier)),
-		ALPHABETICAL("alphabetical", Comparator.comparing(Spell::getUnlocalisedName));
-
+		ALPHABETICAL("alphabetical", Comparator.comparing(s -> s.getRegistryName().getPath().toString()));
 		public String name;
 		public Comparator<? super Spell> comparator;
 
