@@ -34,7 +34,7 @@ public class EntityFireSigil extends EntityScaledConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinCylinder(this.width/2, this.posX, this.posY, this.posZ, this.height, this.world);
 
 			for(EntityLivingBase target : targets){
 

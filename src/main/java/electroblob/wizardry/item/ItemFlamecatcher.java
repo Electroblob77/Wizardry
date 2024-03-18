@@ -193,20 +193,20 @@ public class ItemFlamecatcher extends ItemBow implements IConjuredItem {
 			charge = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, world, (EntityPlayer)entity, charge, true);
 			if(charge < 0) return;
 
-			if(stack.getTagCompound() != null){
-				int shotsLeft = stack.getTagCompound().getInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY) - 1;
-				stack.getTagCompound().setInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY, shotsLeft);
-				if(shotsLeft == 0 && !world.isRemote){
-					stack.setItemDamage(getMaxDamage(stack) - getAnimationFrames());
-				}
-			}
-
 			float velocity = (float)charge / DRAW_TIME;
 			velocity = (velocity * velocity + velocity * 2) / 3;
 
 			if(velocity > 1) velocity = 1;
 
 			if((double)velocity >= 0.1D){
+
+				if(stack.getTagCompound() != null){
+					int shotsLeft = stack.getTagCompound().getInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY) - 1;
+					stack.getTagCompound().setInteger(Flamecatcher.SHOTS_REMAINING_NBT_KEY, shotsLeft);
+					if(shotsLeft == 0 && !world.isRemote){
+						stack.setItemDamage(getMaxDamage(stack) - getAnimationFrames());
+					}
+				}
 
 				if(!world.isRemote){
 					EntityFlamecatcherArrow arrow = new EntityFlamecatcherArrow(world);
