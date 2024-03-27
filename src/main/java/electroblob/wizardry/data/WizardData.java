@@ -199,9 +199,14 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	}
 
 	/** Returns a set containing the registered {@link IStoredVariable} objects for which {@link IVariable#isSynced()}
-	 * returns true. Used internally for packet reading. */
-	public static Set<IVariable> getSyncedVariables(){
-		return storedVariables.stream().filter(IVariable::isSynced).collect(Collectors.toSet());
+	 * returns true, ordered by their keys obtained from {@link IVariable#getKey()}. Used internally for packets. */
+	public static Set<IVariable> getSyncedVariablesOrderedByKey(){
+		Comparator<IVariable> keyComparator = Comparator.comparing(IVariable::getKey);
+
+		return storedVariables.stream()
+				.filter(IVariable::isSynced)
+				.sorted(keyComparator)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	/**

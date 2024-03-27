@@ -64,6 +64,11 @@ public interface IStoredVariable<T> extends IVariable<T> {
 			this.ticker = (p, t) -> t; // Initialise this with a do-nothing function, can be overwritten later
 		}
 
+		@Override
+		public String getKey() {
+			return key;
+		}
+
 		/**
 		 * Replaces this variable's update method with the given update function. <i>Beware of auto-unboxing of
 		 * primitive types! For lambda expressions, check the second parameter isn't null before operating on it.

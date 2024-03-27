@@ -10,7 +10,11 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * <b>[Server -> Client]</b> This packet is sent to synchronise any fields that need synchronising in
@@ -54,9 +58,8 @@ public class PacketPlayerSync implements IMessageHandler<Message, IMessage> {
 
 			this.seed = buf.readLong();
 			this.selectedMinionID = buf.readInt();
-
 			this.spellData = new HashMap<>();
-			WizardData.getSyncedVariables().forEach(v -> spellData.put(v, v.read(buf)));
+			WizardData.getSyncedVariablesOrderedByKey().forEach(v -> spellData.put(v, v.read(buf)));
 			// Have to send empty tags to guarantee correct ByteBuf size/order, but no point keeping the resulting nulls
 			spellData.values().removeIf(Objects::isNull);
 
@@ -73,7 +76,7 @@ public class PacketPlayerSync implements IMessageHandler<Message, IMessage> {
 			buf.writeLong(seed);
 			buf.writeInt(selectedMinionID);
 
-			WizardData.getSyncedVariables().forEach(v -> v.write(buf, spellData.get(v)));
+			WizardData.getSyncedVariablesOrderedByKey().forEach(v -> v.write(buf, spellData.get(v)));
 
 			if(this.spellsDiscovered == null) return;
 			for(Spell spell : this.spellsDiscovered){

@@ -47,7 +47,10 @@ public interface IVariable<T> {
 	 */
 	void write(ByteBuf buf, T value);
 
+	String getKey();
+
 	/**
+	 *
 	 * Reads this variable's value from the given {@link ByteBuf}.
 	 */
 	T read(ByteBuf buf);
@@ -108,6 +111,11 @@ public interface IVariable<T> {
 		@Override
 		public void write(ByteBuf buf, T value){
 			// NYI
+		}
+
+		@Override
+		public String getKey() {
+			return "none"; // we don't mind as these are never synced (electroblob.wizardry.data.IVariable.Variable.isSynced)
 		}
 
 		@Override
