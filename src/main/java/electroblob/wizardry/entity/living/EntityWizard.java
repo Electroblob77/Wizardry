@@ -130,8 +130,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			if(entity != null && !entity.isInvisible()
 					&& AllyDesignationSystem.isValidTarget(EntityWizard.this, entity)){
 
-				// ... and is a mob, a summoned creature ...
-				if((entity instanceof IMob || entity instanceof ISummonedCreature
+				// ... and is a non summoned creature mob ...
+				if((entity instanceof IMob && !(entity instanceof ISummonedCreature)
+
+						// or is a summoned creature with a mob owner or an owner who has attacked the wizard ...
+						|| entity instanceof ISummonedCreature && (((ISummonedCreature)entity).getOwner() instanceof IMob || ((ISummonedCreature)entity).getOwner() == this.getRevengeTarget() || ((ISummonedCreature) entity).getOwner() == this.getAttackTarget())
+
 						// ... or in the whitelist ...
 						|| Arrays.asList(Wizardry.settings.summonedCreatureTargetsWhitelist)
 								.contains(EntityList.getKey(entity.getClass())))

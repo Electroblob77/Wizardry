@@ -39,8 +39,8 @@ public class EntityLightningSigil extends EntityScaledConstruct {
 			this.setDead();
 		}
 
-		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, this.posX, this.posY,
-				this.posZ, this.world);
+		List<EntityLivingBase> targets = EntityUtils.getLivingWithinCylinder(this.width/2, this.posX, this.posY,
+				this.posZ, this.height, this.world);
 
 		for(EntityLivingBase target : targets){
 

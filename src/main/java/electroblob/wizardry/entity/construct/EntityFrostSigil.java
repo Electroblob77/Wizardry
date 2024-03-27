@@ -36,8 +36,8 @@ public class EntityFrostSigil extends EntityScaledConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, this.posX, this.posY,
-					this.posZ, this.world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinCylinder(width/2, this.posX, this.posY,
+					this.posZ, this.height, this.world);
 
 			for(EntityLivingBase target : targets){
 

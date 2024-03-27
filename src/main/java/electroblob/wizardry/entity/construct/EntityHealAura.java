@@ -33,30 +33,32 @@ public class EntityHealAura extends EntityScaledConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(width/2, posX, posY, posZ, world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinCylinder(width/2, posX, posY, posZ, this.height, world);
 
 			for(EntityLivingBase target : targets){
 
 				if(this.isValidTarget(target)){
 
-					if(target.isEntityUndead()){
+					if(target.isEntityUndead()) {
 
 						double velX = target.motionX;
 						double velY = target.motionY;
 						double velZ = target.motionZ;
 
-						if(this.getCaster() != null){
-							target.attackEntityFrom(
-									MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT),
-									Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
-						}else{
-							target.attackEntityFrom(DamageSource.MAGIC, Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
-						}
+						if (this.ticksExisted % 10 == 1) {
+							if (this.getCaster() != null) {
+								target.attackEntityFrom(
+										MagicDamage.causeIndirectMagicDamage(this, getCaster(), DamageType.RADIANT),
+										Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
+							} else {
+								target.attackEntityFrom(DamageSource.MAGIC, Spells.healing_aura.getProperty(Spell.DAMAGE).floatValue() * damageMultiplier);
+							}
 
-						// Removes knockback
-						target.motionX = velX;
-						target.motionY = velY;
-						target.motionZ = velZ;
+							// Removes knockback
+							target.motionX = velX;
+							target.motionY = velY;
+							target.motionZ = velZ;
+						}
 					}
 
 				}else if(target.getHealth() < target.getMaxHealth() && target.ticksExisted % 5 == 0){

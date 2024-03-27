@@ -118,6 +118,45 @@ public final class EntityUtils {
 	}
 
 	/**
+	 * Returns all EntityLivingBase within the cylinder radius of the given coordinates. This should
+	 * used by circle effects.
+	 *
+	 * @param radius The search radius
+	 * @param x The x coordinate to search around
+	 * @param y The y coordinate to search around
+	 * @param z The z coordinate to search around
+	 * @param height The height of the cylinder
+	 * @param world The world to search in
+	 */
+	public static List<EntityLivingBase> getLivingWithinCylinder(double radius, double x, double y, double z, double height, World world) {
+		return getEntitiesWithinCylinder(radius, x, y, z, height, world, EntityLivingBase.class);
+	}
+
+	/**
+	 * Returns all entities of the specified type within the cylinder radius of the given coordinates. This should
+	 * used by circle effects.
+	 *
+	 * @param radius The search radius
+	 * @param x The x coordinate to search around
+	 * @param y The y coordinate to search around
+	 * @param z The z coordinate to search around
+	 * @param height The height of the cylinder
+	 * @param world The world to search in
+	 * @param entityType The class of entity to search for; pass in Entity.class for all entities
+	 */
+	public static <T extends Entity> List<T> getEntitiesWithinCylinder(double radius, double x, double y, double z, double height, World world, Class<T> entityType) {
+		AxisAlignedBB aabb = new AxisAlignedBB(x - radius, y, z - radius, x + radius, y + height, z + radius);
+		List<T> entityList = world.getEntitiesWithinAABB(entityType, aabb);
+		for(T entity : entityList) {
+			if (entity.getDistance(x, entity.posY, z) > radius) {
+				entityList.remove(entity);
+				break;
+			}
+		}
+		return entityList;
+	}
+
+	/**
 	 * Gets an entity from its UUID. If the UUID is known to belong to an {@code EntityPlayer}, use the more efficient
 	 * {@link World#getPlayerEntityByUUID(UUID)} instead.
 	 *

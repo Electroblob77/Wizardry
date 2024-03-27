@@ -3,10 +3,7 @@ package electroblob.wizardry.client;
 import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.SpellEmitterData;
-import electroblob.wizardry.item.ItemArtefact;
-import electroblob.wizardry.item.ItemFlamecatcher;
-import electroblob.wizardry.item.ItemSpectralBow;
-import electroblob.wizardry.item.ItemWand;
+import electroblob.wizardry.item.*;
 import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryPotions;
@@ -120,6 +117,7 @@ public final class WizardryClientEventHandler {
 			Minecraft.getMinecraft().player.prevRotationPitch = 0;
 			Minecraft.getMinecraft().player.rotationYaw = 0;
 			Minecraft.getMinecraft().player.rotationPitch = 0;
+
 		}
 	}
 
@@ -133,10 +131,10 @@ public final class WizardryClientEventHandler {
 			event.getMovementInput().jump = false;
 			event.getMovementInput().sneak = false;
 		}
-
+		
 		if(ItemArtefact.isArtefactActive(event.getEntityPlayer(), WizardryItems.charm_move_speed)
 				&& event.getEntityPlayer().isHandActive()
-				&& event.getEntityPlayer().getActiveItemStack().getItem() instanceof ItemWand){
+				&& event.getEntityPlayer().getActiveItemStack().getItem() instanceof ISpellCastingItem){
 			// Normally speed is set to 20% when using items, this makes it 80%
 			event.getMovementInput().moveStrafe *= 4;
 			event.getMovementInput().moveForward *= 4;
