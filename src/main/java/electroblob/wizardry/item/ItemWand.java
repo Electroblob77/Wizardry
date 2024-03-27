@@ -864,33 +864,10 @@ public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem,
 		WandHelper.setSpells(centre.getStack(), spells);
 
 		// Charges wand by appropriate amount
-		if(crystals.getStack() != ItemStack.EMPTY && !this.isManaFull(centre.getStack())){
-			
-			int chargeDepleted = this.getManaCapacity(centre.getStack()) - this.getMana(centre.getStack());
-
-			// Not too pretty but allows addons implementing the IManaStoringItem interface to provide their mana amount for custom crystals,
-			// previously this was defaulted to the regular crystal's amount, allowing players to exploit it if a crystal was worth less mana than that.
-			int manaPerItem = crystals.getStack().getItem() instanceof IManaStoringItem ?
-					((IManaStoringItem) crystals.getStack().getItem()).getMana(crystals.getStack()) :
-					crystals.getStack().getItem() instanceof ItemCrystal ? Constants.MANA_PER_CRYSTAL : Constants.MANA_PER_SHARD;
-
-			if(crystals.getStack().getItem() == WizardryItems.crystal_shard) manaPerItem = Constants.MANA_PER_SHARD;
-			if(crystals.getStack().getItem() == WizardryItems.grand_crystal) manaPerItem = Constants.GRAND_CRYSTAL_MANA;
-			
-			if(crystals.getStack().getCount() * manaPerItem < chargeDepleted){
-				// If there aren't enough crystals to fully charge the wand
-				this.rechargeMana(centre.getStack(), crystals.getStack().getCount() * manaPerItem);
-				crystals.decrStackSize(crystals.getStack().getCount());
-
-			}else{
-				// If there are excess crystals (or just enough)
-				this.setMana(centre.getStack(), this.getManaCapacity(centre.getStack()));
-				crystals.decrStackSize((int)Math.ceil(((double)chargeDepleted) / manaPerItem));
-			}
-
+		if (WandHelper.rechargeManaOnApplyButtonPressed(centre, crystals)) {
 			changed = true;
 		}
-		
+
 		return changed;
 	}
 

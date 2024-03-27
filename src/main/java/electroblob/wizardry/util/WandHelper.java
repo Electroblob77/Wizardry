@@ -1,9 +1,14 @@
 package electroblob.wizardry.util;
 
+import electroblob.wizardry.constants.Constants;
+import electroblob.wizardry.item.IManaStoringItem;
+import electroblob.wizardry.item.IWorkbenchItem;
+import electroblob.wizardry.item.ItemCrystal;
 import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -494,4 +499,49 @@ public final class WandHelper {
 		setProgression(wand, getProgression(wand) + progression);
 	}
 
+	/**
+	 * Recharges the mana of an item when the apply button is pressed in the arcane workbench GUI.
+	 * This method requires the central item to implement both the {@link IWorkbenchItem} and {@link IManaStoringItem} interfaces.
+	 *
+	 * @param centre The slot representing the central item to be recharged.
+	 * @param crystals The slot containing mana crystals for recharging.
+	 * @return {@code true} if the mana of the central item was successfully recharged, {@code false} otherwise.
+	 */
+	public static boolean rechargeManaOnApplyButtonPressed(Slot centre, Slot crystals) {
+		boolean changed = false;
+		if (!(centre.getStack().getItem() instanceof IWorkbenchItem) || !(centre.getStack().getItem() instanceof IManaStoringItem)) {
+			return false;
+		}
+		IManaStoringItem iManaStoringItem = (IManaStoringItem) centre.getStack().getItem();
+
+		// Charges the item by appropriate amount
+		if (crystals.getStack() != ItemStack.EMPTY && !iManaStoringItem.isManaFull(centre.getStack())) {
+
+			int chargeDepleted = iManaStoringItem.getManaCapacity(centre.getStack()) - iManaStoringItem.getMana(centre.getStack());
+
+			// Not too pretty but allows addons implementing the IManaStoringItem interface to provide their mana amount for custom crystals,
+			// previously this was defaulted to the regular crystal's amount, allowing players to exploit it if a crystal was worth less mana than that.
+			int manaPerItem = crystals.getStack().getItem() instanceof IManaStoringItem ?
+					((IManaStoringItem) crystals.getStack().getItem()).getMana(crystals.getStack()) :
+					crystals.getStack().getItem() instanceof ItemCrystal ? Constants.MANA_PER_CRYSTAL : Constants.MANA_PER_SHARD;
+
+			if (crystals.getStack().getItem() == WizardryItems.crystal_shard) {manaPerItem = Constants.MANA_PER_SHARD;}
+			if (crystals.getStack().getItem() == WizardryItems.grand_crystal) {manaPerItem = Constants.GRAND_CRYSTAL_MANA;}
+
+			if (crystals.getStack().getCount() * manaPerItem < chargeDepleted) {
+				// If there aren't enough crystals to fully charge the item
+				iManaStoringItem.rechargeMana(centre.getStack(), crystals.getStack().getCount() * manaPerItem);
+				crystals.decrStackSize(crystals.getStack().getCount());
+
+			} else {
+				// If there are excess crystals (or just enough)
+				iManaStoringItem.setMana(centre.getStack(), iManaStoringItem.getManaCapacity(centre.getStack()));
+				crystals.decrStackSize((int) Math.ceil(((double) chargeDepleted) / manaPerItem));
+			}
+
+			changed = true;
+		}
+
+		return changed;
+	}
 }
