@@ -93,7 +93,7 @@ public class WandHelper {
 
 			int selectedSpell = wand.stackTagCompound.getInteger(SELECTED_SPELL_KEY);
 
-			if(selectedSpell < spells.length){
+			if(selectedSpell < spells.length && selectedSpell >= 0){
 				return spells[selectedSpell];
 			}
 		}
