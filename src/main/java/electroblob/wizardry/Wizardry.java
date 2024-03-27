@@ -82,7 +82,7 @@ public class Wizardry {
 	 * 1.x.x represents Minecraft 1.7.x versions, 2.x.x represents Minecraft 1.10.x versions, 3.x.x represents Minecraft
 	 * 1.11.x versions, and so on.
 	 */
-	public static final String VERSION = "4.3.12";
+	public static final String VERSION = "4.3.13";
 
 	/**
 	 * Json file used by Forge's built-in <a href="https://mcforge.readthedocs.io/en/1.12.x/gettingstarted/autoupdate/">update checker</a>.
