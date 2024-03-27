@@ -68,7 +68,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	protected Predicate<Entity> targetSelector;
 
 	/** The wizard's trades. */
-	private MerchantRecipeList trades;
+	public MerchantRecipeList trades;
     /** The wizard's current customer. */
     @Nullable
     private EntityPlayer customer;
