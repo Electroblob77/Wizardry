@@ -1,26 +1,13 @@
 buildscript {
     repositories {
-
-        // [HTTPS FIX] Replace mavenCentral() with the code block below
-        maven {
-            url = "https://maven.minecraftforge.net/"
-        }
-
+        mavenCentral()
         maven {
             name = "forge"
-            url = "https://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "forge2"
             url = "https://maven.minecraftforge.net/"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-
-        flatDir {
-            dirs 'libs'
         }
     }
     dependencies {
@@ -28,14 +15,16 @@ buildscript {
     }
 }
 
+apply plugin: 'java'
+apply plugin: 'idea'
 apply plugin: 'forge'
 
-version = " 1.1.4 - MC 1.7.10"
-group= "electroblob.wizardry"// http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = " 1.1.5 - MC 1.7.10"
+group = "electroblob.wizardry"// http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Electroblob's Wizardry "
 
 minecraft {
-    version = "1.7.10-10.13.4.1558-1.7.10"
+    version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "eclipse"
 }
 
@@ -54,24 +43,18 @@ artifacts {
     archives jar
 }
 
-dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+repositories {
+    maven {
+        name 'ChickenBones maven'
+        url 'https://chickenbones.net/maven/'
+    }
 }
 
-processResources
-{
+dependencies {
+    compileOnly 'codechicken:NotEnoughItems:1.7.10-1.0.5.120:dev'
+}
+
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -79,11 +62,11 @@ processResources
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
-                
+
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
-        
+
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'

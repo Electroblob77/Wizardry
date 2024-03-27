@@ -2,8 +2,8 @@
 {
   "modid" : "wizardry",
   "name" : "Electroblob's Wizardry",
-  "version" : "1.1.5",
-  "url" : "https://minecraft.curseforge.com/projects/electroblobs-wizardry",
+  "version" : "${version}",
+  "url" : "https://www.curseforge.com/minecraft/mc-mods/electroblobs-wizardry/",
   "credits" : "Made by Electroblob",
   "authors" : [
     "Electroblob"
