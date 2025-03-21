@@ -30,7 +30,7 @@ public final class Constants {
 	/** The fraction by which spell blast radius is increased for each level of range upgrade. */
 	public static float BLAST_RADIUS_INCREASE_PER_LEVEL = 0.25f;
 	/** The fraction by which movement speed is reduced per level of frost effect. */
-	public static final double FROST_SLOWNESS_PER_LEVEL = 0.5;
+	public static double FROST_SLOWNESS_PER_LEVEL = 0.5;
 	/** The fraction by which movement speed is reduced per level of decay effect. */
 	public static final double DECAY_SLOWNESS_PER_LEVEL = 0.2;
 	/** The fraction by which dig speed is reduced per level of frostbite effect. */
@@ -56,6 +56,6 @@ public final class Constants {
 		DURATION_INCREASE_PER_LEVEL = (float) Wizardry.settings.durationIncreasePerLevel;
 		RANGE_INCREASE_PER_LEVEL = (float) Wizardry.settings.rangeIncreasePerLevel;
 		BLAST_RADIUS_INCREASE_PER_LEVEL = (float) Wizardry.settings.blastIncreasePerLevel;
-		RANGE_INCREASE_PER_LEVEL = (float) Wizardry.settings.frostSlownessIncreasePerLevel;
+		FROST_SLOWNESS_PER_LEVEL = (float) Wizardry.settings.frostSlownessIncreasePerLevel;
 	}
 }

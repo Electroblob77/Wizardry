@@ -60,10 +60,12 @@ public class RenderSixthSense {
 
 		Minecraft mc = Minecraft.getMinecraft();
 		RenderManager renderManager = event.getRenderer().getRenderManager();
+		float effectRadius = Spells.sixth_sense.getProperty(Spell.EFFECT_RADIUS).floatValue();
+		float distance = event.getEntity().getDistance(mc.player);
 
 		if(mc.player.isPotionActive(WizardryPotions.sixth_sense) && !(event.getEntity() instanceof EntityArmorStand)
 				&& event.getEntity() != mc.player && mc.player.getActivePotionEffect(WizardryPotions.sixth_sense) != null
-				&& event.getEntity().getDistance(mc.player) < Spells.sixth_sense.getProperty(Spell.EFFECT_RADIUS).floatValue()
+				&& distance < effectRadius
 				* (1 + mc.player.getActivePotionEffect(WizardryPotions.sixth_sense).getAmplifier() * Constants.RANGE_INCREASE_PER_LEVEL)){
 
 			Tessellator tessellator = Tessellator.getInstance();
@@ -87,7 +89,13 @@ public class RenderSixthSense {
 			GlStateManager.rotate(180 - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 			GlStateManager.rotate(yaw, 1.0F, 0.0F, 0.0F);
 
-			GlStateManager.color(1, 1, 1, 1);
+			//Decreases the opacity of the marker after 80% of the effect distance
+			float alpha = 1f;
+			float f = 5 * (1f - distance / effectRadius);
+			if (f <= 1) {
+				alpha = f;
+			}
+			GlStateManager.color(1, 1, 1, alpha);
 
 			ResourceLocation texture = PASSIVE_MOB_MARKER_TEXTURE;
 
