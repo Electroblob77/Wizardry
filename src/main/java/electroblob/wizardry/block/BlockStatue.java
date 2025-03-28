@@ -191,7 +191,7 @@ public class BlockStatue extends Block implements ITileEntityProvider {
 	// Making this an instance method means it works equally well for both types of statue
 	public boolean convertToStatue(EntityLiving target, @Nullable EntityLivingBase caster, int duration){
 		
-		if(target.deathTime > 0) return false;
+		if(target.deathTime > 0 || target.world.isRemote) return false;
 
 		BlockPos pos = new BlockPos(target);
 		World world = target.world;
