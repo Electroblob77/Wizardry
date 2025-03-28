@@ -130,17 +130,7 @@ public final class WizardryPotions {
 		registerPotion(registry, "decay", new PotionDecay(true, 0x3c006c));
 
 		registerPotion(registry, "sixth_sense", new PotionMagicEffect(false, 0xc6ff01,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/sixth_sense.png")){
-			@Override
-			public void performEffect(EntityLivingBase target, int strength){
-				// Reset the shader (a bit dirty but both the potion expiry hooks are only fired server-side, and
-				// there's no point sending packets unnecessarily if we can just do this instead)
-				if(target.getActivePotionEffect(this).getDuration() <= 1 && target.world.isRemote
-						&& target == net.minecraft.client.Minecraft.getMinecraft().player){
-					net.minecraft.client.Minecraft.getMinecraft().entityRenderer.stopUseShader();
-				}
-			}
-		}.setBeneficial());
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/sixth_sense.png")).setBeneficial());
 
 		registerPotion(registry, "arcane_jammer", new PotionMagicEffect(true, 0xcf4aa2,
 				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/arcane_jammer.png")));
