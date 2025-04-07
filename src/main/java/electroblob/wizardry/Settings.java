@@ -1382,8 +1382,7 @@ public final class Settings {
 			MagicDamage.addEntityImmunity(EntityList.getClass(new ResourceLocation(property.getStringList()[i])),
 					DamageType.MAGIC);
 		}
-		propOrder.add(property.getName())
-
+		propOrder.add(property.getName());
 		property = config.get(RESISTANCES_CATEGORY, "mobsImmuneToWither", new String[]{},
 				"List of names of entities that are immune to wither effects, in addition to the defaults. Add mod creatures to this list if you want them to be immune to withering magic and they aren't already. SoundLoopSpellEntity names are not case sensitive. For mod entities, prefix with the mod ID (e.g. " + Wizardry.MODID + ":wizard).");
 		property.setLanguageKey("config." + Wizardry.MODID + ".mobs_immune_to_wither");
