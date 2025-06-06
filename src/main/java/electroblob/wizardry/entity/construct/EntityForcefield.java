@@ -146,23 +146,28 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 					if(EntityUtils.isLiving(target)) nudgeVelocity = 0.25;
 					Vec3d extraVelocity = targetRelativePos.normalize().scale(nudgeVelocity);
 
-					// ...make it bounce off!
-					target.motionX = target.motionX * -BOUNCINESS + extraVelocity.x;
-					target.motionY = target.motionY * -BOUNCINESS + extraVelocity.y;
-					target.motionZ = target.motionZ * -BOUNCINESS + extraVelocity.z;
-
-					// Prevents the forcefield bouncing things into the floor
-					if(target.onGround && target.motionY < 0) target.motionY = 0.1;
-
-					// How far the target needs to move towards the centre (negative means away from the centre)
-					double distanceTowardsCentre = -(targetRelativePos.length() - radius) - (radius - nextTickDistance);
-					Vec3d targetNewPos = target.getPositionVector().add(targetRelativePos.normalize().scale(distanceTowardsCentre));
-					target.setPosition(targetNewPos.x, targetNewPos.y, targetNewPos.z);
-
-					world.playSound(target.posX, target.posY, target.posZ, WizardrySounds.ENTITY_FORCEFIELD_DEFLECT,
-							WizardrySounds.SPELLS, 0.3f, 1.3f, false);
-
+					//Moved up the check by "19" so that way allied players aren't being moved out of the forcefield because
+					//allied players aren't synced to client like minions. Minions are only synced because it's saved to their
+					//entity data which is synced in their serialize/deserialize methods
 					if(!world.isRemote){
+						// ...make it bounce off!
+
+						target.motionX = target.motionX * -BOUNCINESS + extraVelocity.x;
+						target.motionY = target.motionY * -BOUNCINESS + extraVelocity.y;
+						target.motionZ = target.motionZ * -BOUNCINESS + extraVelocity.z;
+
+						// Prevents the forcefield bouncing things into the floor
+						if(target.onGround && target.motionY < 0) target.motionY = 0.1;
+
+						// How far the target needs to move towards the centre (negative means away from the centre)
+						double distanceTowardsCentre = -(targetRelativePos.length() - radius) - (radius - nextTickDistance);
+						Vec3d targetNewPos = target.getPositionVector().add(targetRelativePos.normalize().scale(distanceTowardsCentre));
+						target.setPosition(targetNewPos.x, targetNewPos.y, targetNewPos.z);
+
+						world.playSound(target.posX, target.posY, target.posZ, WizardrySounds.ENTITY_FORCEFIELD_DEFLECT,
+								WizardrySounds.SPELLS, 0.3f, 1.3f, false);
+
+
 						// Player motion is handled on that player's client so needs packets
 						if(target instanceof EntityPlayerMP){
 							((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
@@ -173,6 +178,11 @@ public class EntityForcefield extends EntityMagicConstruct implements ICustomHit
 						}
 
 					}else{
+
+						//This is a super lazy way to make sure the visual isn't playing for players and probably won't display the visual
+						//for players if their velocity towards the forcefield is high. But it prevents the visual being spammed when ally player
+						//is in forcefield so it's fine #19
+						if(target instanceof EntityPlayer && target.getPositionVector().distanceTo(this.getPositionVector()) < this.getRadius()) return;
 
 						Vec3d relativeImpactPos = targetRelativePos.normalize().scale(radius);
 

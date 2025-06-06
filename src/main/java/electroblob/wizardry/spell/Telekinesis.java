@@ -38,7 +38,7 @@ public class Telekinesis extends SpellRay {
 
 		} else if (target instanceof EntityPlayer && (Wizardry.settings.telekineticDisarmament && !ItemArtefact.isArtefactActive((EntityPlayer) target, WizardryItems.amulet_anchoring))) {
 
-			EntityPlayer player = (EntityPlayer) target;
+      EntityPlayer player = (EntityPlayer) target;
 
 			// IDEA: Disarm the offhand if the mainhand is empty or otherwise harmless?
 
