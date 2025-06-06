@@ -137,8 +137,8 @@ public class GuiArcaneWorkbench extends GuiContainer {
 		this.searchField.setEnableBackgroundDrawing(false);
 		this.searchField.setVisible(true);
 		this.searchField.setTextColor(16777215);
-		this.searchField.setCanLoseFocus(false);
-		this.searchField.setFocused(true);
+		this.searchField.setCanLoseFocus(Wizardry.settings.unfocusedSearchBars); // false by default
+		this.searchField.setFocused(!Wizardry.settings.unfocusedSearchBars); // true by default
 
 		this.tooltipElements.clear();
 		this.tooltipElements.add(new TooltipElementItemName(new Style().setColor(TextFormatting.WHITE), LINE_SPACING_WIDE));
@@ -430,6 +430,16 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	}
 
 	// Controls
+
+	@Override
+	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+		if (this.searchField != null) {
+			this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
+			// Set focus depending on whether the click was inside the search field
+			this.searchField.setFocused(this.searchField.isFocused());
+		}
+	}
 
 	@Override
 	protected void actionPerformed(GuiButton button){

@@ -397,6 +397,8 @@ public final class Settings {
 	/** <b>[Client-only]</b> Whether to initialise the handbook's data. Setting this to false will break the in-game handbook, but might help with some
 	 * startup crashes */
 	public boolean loadHandbook = true;
+	/** <b>[Client-only]</b> Whether to allow the Arcane Workbench and lectern search field to lose focus and start unfocused. */
+	public boolean unfocusedSearchBars = false;
 	/** <b>[Client-only]</b> The position of the spell HUD. */
 	public GuiPosition spellHUDPosition = GuiPosition.BOTTOM_LEFT;
 
@@ -1203,12 +1205,18 @@ public final class Settings {
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		showChargeMeter = property.getBoolean();
 		propOrder.add(property.getName());
-
 		property = config.get(CLIENT_CATEGORY, "loadHandbook", true, "Whether to initialise the in-game handbook. Setting this to false will brick the in-game handbook, but it might help if you have startup crashes.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".load_handbook");
 		property.setRequiresWorldRestart(false);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		loadHandbook = property.getBoolean();
+		propOrder.add(property.getName());
+		
+		property = config.get(CLIENT_CATEGORY, "unfocusedSearchBars", false, "Whether to allow the Arcane Workbench and lectern search field to lose focus and start unfocused. If true, the search field won't automatically capture keyboard input.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".unfocused_search_bars");
+		property.setRequiresWorldRestart(false);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		unfocusedSearchBars = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(CLIENT_CATEGORY, "spellHUDPosition", GuiPosition.BOTTOM_LEFT.name, "The position of the spell HUD.", GuiPosition.names);

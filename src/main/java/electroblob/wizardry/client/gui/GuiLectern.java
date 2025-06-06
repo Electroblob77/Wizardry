@@ -184,9 +184,8 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 		this.searchField.setEnableBackgroundDrawing(false);
 		this.searchField.setVisible(true);
 		this.searchField.setTextColor(16777215);
-		this.searchField.setCanLoseFocus(false);
-		this.searchField.setFocused(true);
-
+		this.searchField.setCanLoseFocus(Wizardry.settings.unfocusedSearchBars); // false by default
+		this.searchField.setFocused(!Wizardry.settings.unfocusedSearchBars); // true by default
 		refreshAvailableSpells(); // Must be done last
 
 	}
@@ -269,8 +268,13 @@ public class GuiLectern extends GuiSpellInfo implements ISpellSortable {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		searchNeedsClearing = true;
+	   super.mouseClicked(mouseX, mouseY, mouseButton);
+	   if (this.searchField != null) {
+		   this.searchField.mouseClicked(mouseX, mouseY, mouseButton);
+		   // Set focus depending on whether the click was inside the search field
+		   this.searchField.setFocused(this.searchField.isFocused());
+	   }
+	   searchNeedsClearing = true;
 	}
 
 	@Override

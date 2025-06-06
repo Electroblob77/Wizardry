@@ -1581,6 +1581,7 @@ config.ebwizardry.category.difficulty.tooltip=Configure wizardry's difficulty
 config.ebwizardry.title.difficulty=Difficulty Settings
 config.ebwizardry.subtitle.difficulty=Settings that affect the mod's difficulty.
 
+config.ebwizardry.unfocused_search_bars=Whether to autofocus search bar in Arcane Workbench and lectern
 config.ebwizardry.discovery_mode=Discovery Mode
 config.ebwizardry.discovery_mode.tooltip=For those who like a sense of mystery! When enabled, spells you haven't cast yet will be unreadable until you cast them (on a per-world basis). Has no effect when in creative mode. Spells of identification will be unobtainable in survival mode if this is disabled.
 config.ebwizardry.legacy_wand_levelling=Legacy Wand Levelling
