@@ -3,6 +3,7 @@ package electroblob.wizardry.client;
 import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.SpellEmitterData;
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.*;
 import electroblob.wizardry.potion.PotionSlowTime;
 import electroblob.wizardry.registry.WizardryItems;
@@ -12,7 +13,9 @@ import electroblob.wizardry.spell.SixthSense;
 import electroblob.wizardry.spell.SlowTime;
 import electroblob.wizardry.spell.Transience;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -23,10 +26,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.FOVUpdateEvent;
-import net.minecraftforge.client.event.InputUpdateEvent;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -181,6 +181,17 @@ public final class WizardryClientEventHandler {
 				}
 
 				event.setNewfov(event.getFov() * 1.0F - maxUseSeconds * 0.15F);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onGuiOpenEvent(GuiOpenEvent event){
+
+		if(Minecraft.getMinecraft().player != null && event.getGui() instanceof GuiContainer) {
+			WizardData data = WizardData.get(Minecraft.getMinecraft().player);
+			if (data != null && data.getVariable(Possession.POSSESSEE_KEY) != null) {
+				event.setCanceled(true);
 			}
 		}
 	}
