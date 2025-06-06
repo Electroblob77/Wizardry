@@ -93,8 +93,7 @@ public class ItemArtefact extends Item {
 		/** An artefact that improves utility spells. One of these can be active at any one time. */ CHARM(1),
 		/** Added for add-on artefacts. */ BELT(1),
 		/** Added for add-on artefacts. */ BODY(1),
-		/** Added for add-on artefacts. */ HEAD(1),
-		/** Added for add-on artefacts. */ TRINKET(1);
+		/** Added for add-on artefacts. */ HEAD(1);
 
 		public final int maxAtOnce;
 

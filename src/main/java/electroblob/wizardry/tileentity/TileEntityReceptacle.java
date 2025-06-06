@@ -27,7 +27,7 @@ public class TileEntityReceptacle extends TileEntity {
 
 	public void setElement(@Nullable Element element){
 		this.element = element;
-		world.notifyNeighborsRespectDebug(pos, blockType, true); // Update altar if connected
+		world.notifyNeighborsRespectDebug(pos, getBlockType(), true); // Update altar if connected
 		world.checkLight(pos);
 	}
 

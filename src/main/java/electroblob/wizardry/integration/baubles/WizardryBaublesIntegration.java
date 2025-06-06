@@ -49,7 +49,6 @@ public final class WizardryBaublesIntegration {
 		ARTEFACT_TYPE_MAP.put(ItemArtefact.Type.BELT, BaubleType.BELT);
 		ARTEFACT_TYPE_MAP.put(ItemArtefact.Type.BODY, BaubleType.BODY);
 		ARTEFACT_TYPE_MAP.put(ItemArtefact.Type.HEAD, BaubleType.HEAD);
-		ARTEFACT_TYPE_MAP.put(ItemArtefact.Type.TRINKET, BaubleType.TRINKET);
 	}
 
 	public static boolean enabled(){

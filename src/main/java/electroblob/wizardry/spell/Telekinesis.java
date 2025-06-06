@@ -38,13 +38,13 @@ public class Telekinesis extends SpellRay {
 
 		} else if (target instanceof EntityPlayer && (Wizardry.settings.telekineticDisarmament && !ItemArtefact.isArtefactActive((EntityPlayer) target, WizardryItems.amulet_anchoring))) {
 
-			EntityPlayer player = (EntityPlayer)target;
-			
+      EntityPlayer player = (EntityPlayer) target;
+
 			// IDEA: Disarm the offhand if the mainhand is empty or otherwise harmless?
 
-			if(!player.getHeldItemMainhand().isEmpty()){
+			if (!player.getHeldItemMainhand().isEmpty()) {
 
-				if(!world.isRemote){
+				if (!world.isRemote) {
 					EntityItem item = player.entityDropItem(player.getHeldItemMainhand(), 0);
 					// Makes the item move towards the caster
 					item.motionX = (origin.x - player.posX) / 20;
@@ -52,7 +52,7 @@ public class Telekinesis extends SpellRay {
 				}
 
 				player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
-				
+
 				return true;
 			}
 		}
