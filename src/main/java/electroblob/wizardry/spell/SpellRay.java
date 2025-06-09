@@ -47,7 +47,7 @@ import javax.annotation.Nullable;
 public abstract class SpellRay extends Spell {
 	
 	/** The distance below the caster's eyes that the bolt particles start from. */
-	protected static final double Y_OFFSET = 0.25;
+	public static final double Y_OFFSET = 0.25;
 
 	/** The distance between spawned particles. Defaults to 0.85. */
 	// 0.85 was chosen to keep it similar to the most common method used previously, which gave an effective spacing of
