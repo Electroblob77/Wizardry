@@ -215,6 +215,8 @@ public final class Settings {
 	public boolean wandsMustBeHeldToDecrementCooldown = false;
 	/** <b>[Server-only]</b> Whether to enable Wizardry mob loot injection. Allows an easier switch instead of blacklisting all entities. */
 	public boolean injectMobDrops = true;
+	/** <b>[Server-only]</b> The time in ticks after which recent spell casts expire and no longer count toward progression penalties. */
+	public int recentSpellExpiryTime = 1200;
 	/**
 	 * <b>[Server-only]</b> List of registry names of entities which summoned creatures are allowed to attack, in addition
 	 * to the defaults.
@@ -864,6 +866,14 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".inject_mob_drops");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		injectMobDrops = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "recentSpellExpiryTime", 1200,
+				"The time in ticks after which recent spell casts expire and no longer count toward progression penalties. Default is 1200 ticks (1 minute). Lower values make progression penalties shorter-lived, higher values make them last longer.",
+				60, 72000); // Between 3 seconds and 1 hour
+		property.setLanguageKey("config." + Wizardry.MODID + ".recent_spell_expiry_time");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		recentSpellExpiryTime = property.getInt();
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "mobLootTableWhitelist", new String[0], "Whitelist for loot tables to inject additional mob drops (as specified in loot_tables/entities/mob_additions.json) into. Wizardry makes a best guess as to which loot tables belong to hostile mobs, but this may not always be correct or appropriate; add loot table locations (not entity IDs) to this list to manually include them.");

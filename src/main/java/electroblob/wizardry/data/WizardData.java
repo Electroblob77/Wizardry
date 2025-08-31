@@ -47,6 +47,7 @@ import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.AbstractMap.SimpleEntry;
 
 /**
  * Capability-based replacement for the old ExtendedPlayer class from 1.7.10. This has been reworked to leave minimum
@@ -126,7 +127,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * be modified via {@link WizardData#setVariable(IVariable, Object)}, which (as a method) is able to enforce it. */
 	private final Map<IVariable, Object> spellData;
 
-	private Queue<Spell> recentSpells;
+	private Queue<SimpleEntry<Spell, Long>> recentSpells;
 
 	// This one is still necessary, because I can't override the equip animation for items that aren't from Wizardry.
 	// Leaving this for now because merging it into the spell data system will be more tricky
@@ -294,15 +295,19 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	 * @param spell The spell to be tracked.
 	 */
 	public void trackRecentSpell(Spell spell){
-		this.recentSpells.add(spell);
+		this.recentSpells.add(new SimpleEntry<>(spell, player.world.getTotalWorldTime()));
 	}
 
 	/**
 	 * Returns the number of times the given spell is tracked in this player's recently-cast spells.
+	 * Only counts spells cast within the configured expiry time.
 	 * @param spell The spell to count casts for.
 	 */
 	public int countRecentCasts(Spell spell){
-		return (int)this.recentSpells.stream().filter(s -> s == spell).count(); // We know this can't be more than 5
+		long currentTime = player.world.getTotalWorldTime();
+		return (int)this.recentSpells.stream()
+				.filter(entry -> entry.getKey() == spell && (currentTime - entry.getValue()) < Wizardry.settings.recentSpellExpiryTime)
+				.count(); // We know this can't be more than 5
 	}
 
 	// Imbuements
@@ -513,6 +518,12 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 		if(player.ticksExisted % IMBUEMENT_UPDATE_INTERVAL == 0) updateImbuedItems();
 		updateContinuousSpellCasting();
 
+		// Clean up expired recent spells every 60 ticks (1 second)
+		if(player.ticksExisted % 60 == 0) {
+			long currentTime = player.world.getTotalWorldTime();
+			this.recentSpells.removeIf(entry -> (currentTime - entry.getValue()) >= Wizardry.settings.recentSpellExpiryTime);
+		}
+
 		this.spellData.forEach((k, v) -> this.spellData.put(k, k.update(player, v)));
 		this.spellData.keySet().removeIf(k -> k.canPurge(player, this.spellData.get(k)));
 	}
@@ -579,7 +590,15 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		properties.setInteger("maxTierReached", maxTierReached.ordinal());
 
-		NBTExtras.storeTagSafely(properties, "recentSpells", NBTExtras.listToNBT(recentSpells, s -> new NBTTagInt(s.metadata())));
+		// Serialize recent spells with timestamps as compound tags
+		NBTTagList recentSpellsList = new NBTTagList();
+		for(SimpleEntry<Spell, Long> entry : recentSpells) {
+			NBTTagCompound spellTag = new NBTTagCompound();
+			spellTag.setInteger("spellId", entry.getKey().metadata());
+			spellTag.setLong("timestamp", entry.getValue());
+			recentSpellsList.appendTag(spellTag);
+		}
+		NBTExtras.storeTagSafely(properties, "recentSpells", recentSpellsList);
 
 		storedVariables.forEach(k -> k.write(properties, this.spellData.get(k)));
 
@@ -606,8 +625,14 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 			// Probably won't be null but we may as well just reinitialise it instead of clearing it
 			this.recentSpells = EvictingQueue.create(MAX_RECENT_SPELLS);
-			this.recentSpells.addAll(NBTExtras.NBTToList(nbt.getTagList("recentSpells", NBT.TAG_INT),
-					(NBTTagInt tag) -> Spell.byMetadata(tag.getInt())));
+			// Deserialize recent spells with timestamps
+			NBTTagList recentSpellsList = nbt.getTagList("recentSpells", NBT.TAG_COMPOUND);
+			for(int i = 0; i < recentSpellsList.tagCount(); i++) {
+				NBTTagCompound spellTag = recentSpellsList.getCompoundTagAt(i);
+				Spell spell = Spell.byMetadata(spellTag.getInteger("spellId"));
+				long timestamp = spellTag.getLong("timestamp");
+				this.recentSpells.add(new SimpleEntry<>(spell, timestamp));
+			}
 
 			try{
 				storedVariables.forEach(k -> this.spellData.put(k, k.read(nbt)));
