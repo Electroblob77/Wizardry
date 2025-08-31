@@ -164,6 +164,9 @@ public class Wizardry {
 
 		settings.initConfigExtras();
 
+		// Update constants with configured values
+		settings.updateConstantsFromSettings();
+
 		// World generators
 		// Weight is a misnomer, it's actually the priority (where lower numbers get generated first)
 		// Literally nothing on typical 'weight' values here, there isn't even an upper limit

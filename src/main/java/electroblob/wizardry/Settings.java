@@ -266,6 +266,24 @@ public final class Settings {
 	/** <b>[Server-only]</b> List of registry names of biomes in which wizardry's hostile mobs cannot spawn. */
 	public ResourceLocation[] mobSpawnBiomeBlacklist = toResourceLocations("mushroom_island", "mushroom_island_shore");
 
+	// Mana and upgrade constants
+	/** <b>[Server-only]</b> The amount of mana a crystal shard is worth */
+	public int manaPerShard = 10;
+	/** <b>[Server-only]</b> The amount of mana each magic crystal is worth */
+	public int manaPerCrystal = 100;
+	/** <b>[Server-only]</b> The amount of mana a grand magic crystal is worth */
+	public int grandCrystalMana = 400;
+	/** <b>[Server-only]</b> The maximum number of one type of wand upgrade which can be applied to a wand. */
+	public int upgradeStackLimit = 3;
+	/** <b>[Server-only]</b> The bonus amount of wand upgrades that can be applied to a non-elemental wand. */
+	public int nonElementalUpgradeBonus = 3;
+	/** <b>[Server-only]</b> The fraction by which maximum charge is increased for each level of storage upgrade. */
+	public float storageIncreasePerLevel = 0.15f;
+	/** <b>[Server-only]</b> The amount of mana given for a kill for each level of siphon upgrade. */
+	public int siphonManaPerLevel = 5;
+	/** <b>[Server-only]</b> The number of ticks between each mana increase for wands with the condenser upgrade. */
+	public int condenserTickInterval = 50;
+
 	// Commands (these don't need synchronising since typing a command always queries the server).
 	/**
 	 * <b>[Server-only]</b> The maximum allowed multiplier for the /cast command. This limit is here to stop people from
@@ -533,7 +551,28 @@ public final class Settings {
 		setupArtefactsConfig();
 		setupResistancesConfig();
 
+		// Update the constants with new values
+		updateConstantsFromSettings();
+
 		config.save();
+	}
+
+	/** Updates the Constants class with the current settings values */
+	public void updateConstantsFromSettings(){
+		electroblob.wizardry.constants.Constants.MANA_PER_SHARD = this.manaPerShard;
+		electroblob.wizardry.constants.Constants.MANA_PER_CRYSTAL = this.manaPerCrystal;
+		electroblob.wizardry.constants.Constants.GRAND_CRYSTAL_MANA = this.grandCrystalMana;
+		electroblob.wizardry.constants.Constants.UPGRADE_STACK_LIMIT = this.upgradeStackLimit;
+		electroblob.wizardry.constants.Constants.NON_ELEMENTAL_UPGRADE_BONUS = this.nonElementalUpgradeBonus;
+		electroblob.wizardry.constants.Constants.COOLDOWN_REDUCTION_PER_LEVEL = (float) this.cooldownReductionPerLevel;
+		electroblob.wizardry.constants.Constants.STORAGE_INCREASE_PER_LEVEL = this.storageIncreasePerLevel;
+		electroblob.wizardry.constants.Constants.POTENCY_INCREASE_PER_TIER = (float) this.potencyIncreasePerTier;
+		electroblob.wizardry.constants.Constants.DURATION_INCREASE_PER_LEVEL = (float) this.durationIncreasePerLevel;
+		electroblob.wizardry.constants.Constants.RANGE_INCREASE_PER_LEVEL = (float) this.rangeIncreasePerLevel;
+		electroblob.wizardry.constants.Constants.BLAST_RADIUS_INCREASE_PER_LEVEL = (float) this.blastIncreasePerLevel;
+		electroblob.wizardry.constants.Constants.FROST_SLOWNESS_PER_LEVEL = (float) this.frostSlownessIncreasePerLevel;
+		electroblob.wizardry.constants.Constants.SIPHON_MANA_PER_LEVEL = this.siphonManaPerLevel;
+		electroblob.wizardry.constants.Constants.CONDENSER_TICK_INTERVAL = this.condenserTickInterval;
 	}
 
 	void checkForRedundantOptions(String categoryName, Collection<String> validKeys){
@@ -663,6 +702,55 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".prevent_binding_same_spell_twice_to_wands");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		preventBindingSameSpellTwiceToWands = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "manaPerShard", 10,
+				"The amount of mana a crystal shard is worth.", 1, 1000);
+		property.setLanguageKey("config." + Wizardry.MODID + ".mana_per_shard");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		manaPerShard = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "manaPerCrystal", 100,
+				"The amount of mana each magic crystal is worth.", 1, 10000);
+		property.setLanguageKey("config." + Wizardry.MODID + ".mana_per_crystal");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		manaPerCrystal = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "grandCrystalMana", 400,
+				"The amount of mana a grand magic crystal is worth.", 1, 10000);
+		property.setLanguageKey("config." + Wizardry.MODID + ".grand_crystal_mana");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		grandCrystalMana = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "upgradeStackLimit", 3,
+				"The maximum number of one type of wand upgrade which can be applied to a wand.", 1, 10);
+		property.setLanguageKey("config." + Wizardry.MODID + ".upgrade_stack_limit");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		upgradeStackLimit = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "nonElementalUpgradeBonus", 3,
+				"The bonus amount of wand upgrades that can be applied to a non-elemental wand.", 0, 10);
+		property.setLanguageKey("config." + Wizardry.MODID + ".non_elemental_upgrade_bonus");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		nonElementalUpgradeBonus = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "siphonManaPerLevel", 5,
+				"The amount of mana given for a kill for each level of siphon upgrade.", 0, 100);
+		property.setLanguageKey("config." + Wizardry.MODID + ".siphon_mana_per_level");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		siphonManaPerLevel = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "condenserTickInterval", 50,
+				"The number of ticks between each mana increase for wands with the condenser upgrade.", 1, 1000);
+		property.setLanguageKey("config." + Wizardry.MODID + ".condenser_tick_interval");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		condenserTickInterval = property.getInt();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,
@@ -992,8 +1080,15 @@ public final class Settings {
 		property = config.get(TWEAKS_CATEGORY, "cooldown_reduction_per_level", 0.15,
 				"The fraction by which cooldowns are reduced for each level of cooldown upgrade.",
 				0.05, Integer.MAX_VALUE); // Sure, I mean you COULD set it to 2^31-1... what could possibly go wrong?
-		property.setLanguageKey("config." + Wizardry.MODID + ".cast_command_multiplier_limit");
+		property.setLanguageKey("config." + Wizardry.MODID + ".cooldown_reduction_per_level");
 		cooldownReductionPerLevel = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "storage_increase_per_level", 0.15,
+				"The fraction by which maximum charge is increased for each level of storage upgrade.",
+				0.05, Integer.MAX_VALUE);
+		property.setLanguageKey("config." + Wizardry.MODID + ".storage_increase_per_level");
+		storageIncreasePerLevel = (float) property.getDouble();
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "potency_increase_per_tier", 0.15,
