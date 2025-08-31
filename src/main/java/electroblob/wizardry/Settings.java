@@ -283,6 +283,8 @@ public final class Settings {
 	public int siphonManaPerLevel = 5;
 	/** <b>[Server-only]</b> The number of ticks between each mana increase for wands with the condenser upgrade. */
 	public int condenserTickInterval = 50;
+	/** <b>[Server-only]</b> The number of spell slots a wand has with no attunement upgrades applied. */
+	public int baseSpellSlots = 5;
 
 	// Commands (these don't need synchronising since typing a command always queries the server).
 	/**
@@ -573,6 +575,8 @@ public final class Settings {
 		electroblob.wizardry.constants.Constants.FROST_SLOWNESS_PER_LEVEL = (float) this.frostSlownessIncreasePerLevel;
 		electroblob.wizardry.constants.Constants.SIPHON_MANA_PER_LEVEL = this.siphonManaPerLevel;
 		electroblob.wizardry.constants.Constants.CONDENSER_TICK_INTERVAL = this.condenserTickInterval;
+		electroblob.wizardry.item.ItemWand.BASE_SPELL_SLOTS = this.baseSpellSlots;
+		electroblob.wizardry.data.WizardData.MAX_RECENT_SPELLS = this.baseSpellSlots;
 	}
 
 	void checkForRedundantOptions(String categoryName, Collection<String> validKeys){
@@ -751,6 +755,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".condenser_tick_interval");
 		Wizardry.proxy.setToNumberSliderEntry(property);
 		condenserTickInterval = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(GAMEPLAY_CATEGORY, "baseSpellSlots", 5,
+				"The number of spell slots a wand has with no attunement upgrades applied.", 1, 5);
+		property.setLanguageKey("config." + Wizardry.MODID + ".base_spell_slots");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		baseSpellSlots = property.getInt();
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "playersMoveEachOther", true,

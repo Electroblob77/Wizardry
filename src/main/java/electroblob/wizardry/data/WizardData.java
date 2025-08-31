@@ -74,7 +74,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	private static final Set<IStoredVariable> storedVariables = new HashSet<>();
 
 	/** The maximum number of recent spells to track. */
-	public static final int MAX_RECENT_SPELLS = ItemWand.BASE_SPELL_SLOTS;
+	public static int MAX_RECENT_SPELLS;
 
 	private static final int IMBUEMENT_UPDATE_INTERVAL = 20;
 

@@ -70,7 +70,7 @@ import java.util.Random;
 public class ItemWand extends Item implements IWorkbenchItem, ISpellCastingItem, IManaStoringItem {
 	
 	/** The number of spell slots a wand has with no attunement upgrades applied. */
-	public static final int BASE_SPELL_SLOTS = 5;
+	public static int BASE_SPELL_SLOTS;
 
 	/** The number of ticks between each time a continuous spell is added to the player's recently-cast spells. */
 	private static final int CONTINUOUS_TRACKING_INTERVAL = 20;
