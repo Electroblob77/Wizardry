@@ -67,7 +67,9 @@ public class TileEntityArcaneWorkbench extends TileEntity implements IInventory,
 		if(stack.getItem() instanceof IManaStoringItem && !this.world.isRemote && !((IManaStoringItem)stack.getItem()).isManaFull(stack)
 				&& this.world.getTotalWorldTime() % electroblob.wizardry.constants.Constants.CONDENSER_TICK_INTERVAL == 0){
 			// If the upgrade level is 0, this does nothing anyway.
-			((IManaStoringItem)stack.getItem()).rechargeMana(stack, WandHelper.getUpgradeLevel(stack, WizardryItems.condenser_upgrade));
+			int baseAmount = WandHelper.getUpgradeLevel(stack, WizardryItems.condenser_upgrade);
+			int amount = (int)(baseAmount * Wizardry.settings.condenserAmountMultiplier);
+			((IManaStoringItem)stack.getItem()).rechargeMana(stack, amount);
 		}
 
 		// The server doesn't care what these are, and there's no need for them to be synced or saved.

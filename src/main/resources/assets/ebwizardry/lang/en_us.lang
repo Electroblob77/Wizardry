@@ -1650,6 +1650,9 @@ config.ebwizardry.advanced_upgrade_limit.tooltip=Maximum number of upgrades an a
 
 config.ebwizardry.master_upgrade_limit=Master Upgrade Limit
 config.ebwizardry.master_upgrade_limit.tooltip=Maximum number of upgrades a master wand can have.
+
+config.ebwizardry.condenser_amount_multiplier=Condenser Amount Multiplier
+config.ebwizardry.condenser_amount_multiplier.tooltip=Multiplier for condenser upgrade mana regeneration amount. Higher values make condensers more effective.
 config.ebwizardry.player_damage_scaling=Player Damage Scaling Factor
 config.ebwizardry.player_damage_scaling.tooltip=Global damage scaling factor for the damage dealt by players casting spells, relative to 1.
 config.ebwizardry.npc_damage_scaling=NPC Damage Scaling Factor

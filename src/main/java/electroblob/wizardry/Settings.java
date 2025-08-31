@@ -370,6 +370,9 @@ public final class Settings {
 	public Integer apprenticeUpgradeLimit = 5;
 	public Integer advancedUpgradeLimit = 7;
 	public Integer masterUpgradeLimit = 9;
+	
+	/** <b>[Synchronised]</b> Multiplier for condenser upgrade mana regeneration amount */
+	public double condenserAmountMultiplier = 1.0;
 
 	/**
 	 * <b>[Synchronised]</b> The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be
@@ -962,6 +965,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".master_upgrade_limit");
 		property.setRequiresWorldRestart(true);
 		masterUpgradeLimit = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "condenserAmountMultiplier", 1.0,
+				"Multiplier for condenser upgrade mana regeneration amount. Higher values make condensers more effective.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".condenser_amount_multiplier");
+		property.setRequiresWorldRestart(true);
+		condenserAmountMultiplier = property.getDouble();
 		propOrder.add(property.getName());
 
 
