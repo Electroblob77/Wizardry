@@ -2,6 +2,7 @@ package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.potion.*;
+import electroblob.wizardry.potion.PotionFireskin;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import net.minecraft.entity.EntityLivingBase;
@@ -95,19 +96,8 @@ public final class WizardryPotions {
 			}
 		}.setBeneficial()); // 0xffe89b
 		
-		registerPotion(registry, "fireskin", new PotionMagicEffectParticles(false, 0,
-				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/fireskin.png")){
-			@Override
-			public void spawnCustomParticle(World world, double x, double y, double z){
-				world.spawnParticle(EnumParticleTypes.FLAME, x, y, z, 0, 0, 0);
-			}
-
-			@Override
-			public void performEffect(EntityLivingBase entitylivingbase, int strength){
-				entitylivingbase.extinguish(); // Stops melee mobs that are on fire from setting the player on fire,
-				// without allowing the player to actually stand in fire or swim in lava without taking damage.
-			}
-		}.setBeneficial()); // 0xff2f02
+		registerPotion(registry, "fireskin", new PotionFireskin(false, 0xff2f02,
+				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/fireskin.png")));
 		
 		registerPotion(registry, "ice_shroud", new PotionMagicEffectParticles(false, 0,
 				new ResourceLocation(Wizardry.MODID, "textures/gui/potion_icons/ice_shroud.png")){
