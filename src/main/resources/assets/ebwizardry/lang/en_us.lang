@@ -1832,3 +1832,5 @@ spell.ebwizardry\:invigorating_presence_festive=Invigorating Presents
 spell.ebwizardry\:empowering_presence_festive=Empowering Presents
 
 wizard.debug=%1$s, %2$s, %3$s
+
+wizardry.shrine_already_looted=You have already looted this shrine!

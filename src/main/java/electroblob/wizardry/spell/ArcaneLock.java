@@ -13,13 +13,17 @@ import net.minecraft.tileentity.TileEntityDispenser;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDestroyBlockEvent;
+
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+
 
 @Mod.EventBusSubscriber
 public class ArcaneLock extends SpellRay {
@@ -166,5 +170,9 @@ public class ArcaneLock extends SpellRay {
 		event.getAffectedBlocks().removeIf(pos -> event.getWorld().getTileEntity(pos) != null
 				&& event.getWorld().getTileEntity(pos).getTileData().hasUniqueId(NBT_KEY));
 	}
+
+
+
+
 
 }

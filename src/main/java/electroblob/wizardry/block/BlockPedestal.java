@@ -1,5 +1,6 @@
 package electroblob.wizardry.block;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.tileentity.TileEntityShrineCore;
@@ -81,11 +82,25 @@ public class BlockPedestal extends Block implements ITileEntityProvider {
 
 	@Override
 	public float getBlockHardness(IBlockState state, World world, BlockPos pos){
+		// If shrine regeneration is enabled, make pedestal blocks with shrine cores unbreakable to prevent exploitation
+		if(!world.isRemote && Wizardry.settings != null && Wizardry.settings.shrineRegenerationEnabled){
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if(tileEntity instanceof TileEntityShrineCore){
+				return -1; // Unbreakable if it has a shrine core
+			}
+		}
 		return state.getValue(NATURAL) ? -1 : super.getBlockHardness(state, world, pos);
 	}
 
 	@Override
 	public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion){
+		// If shrine regeneration is enabled, make pedestal blocks with shrine cores unbreakable to prevent exploitation
+		if(!world.isRemote && Wizardry.settings != null && Wizardry.settings.shrineRegenerationEnabled){
+			TileEntity tileEntity = world.getTileEntity(pos);
+			if(tileEntity instanceof TileEntityShrineCore){
+				return 6000000.0F; // Unbreakable if it has a shrine core
+			}
+		}
 		return world.getBlockState(pos).getValue(NATURAL) ? 6000000.0F : super.getExplosionResistance(world, pos, exploder, explosion);
 	}
 

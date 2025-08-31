@@ -74,12 +74,26 @@ public class WorldGenShrine extends WorldGenSurfaceStructure {
 				if(container != null){
 
 					container.getTileData().setUniqueId(ArcaneLock.NBT_KEY, new UUID(0, 0)); // Nil UUID
+					container.markDirty(); // Mark tile entity as dirty for client sync
 
-					if(core instanceof TileEntityShrineCore){
-						((TileEntityShrineCore)core).linkContainer(container);
-					}else{
-						Wizardry.logger.info("What?!");
+					// Trigger visual update for arcane lock effect
+					BlockPos chestPos = entry.getKey().up();
+					net.minecraft.block.state.IBlockState blockState = world.getBlockState(chestPos);
+					world.markAndNotifyBlock(chestPos, null, blockState, blockState, 3);
+					world.notifyBlockUpdate(chestPos, blockState, blockState, 3); // Additional client sync
+
+					// Set up the loot table for the shrine chest
+					if(container instanceof net.minecraft.tileentity.TileEntityChest){
+						net.minecraft.tileentity.TileEntityChest chest = (net.minecraft.tileentity.TileEntityChest) container;
+						chest.setLootTable(new net.minecraft.util.ResourceLocation(Wizardry.MODID, "chests/shrine"), world.rand.nextLong());
 					}
+
+									if(core instanceof TileEntityShrineCore){
+					((TileEntityShrineCore)core).linkContainer(container);
+					((TileEntityShrineCore)core).setShrineElement(element);
+				}else{
+					Wizardry.logger.info("What?!");
+				}
 
 				}else{
 					Wizardry.logger.info("Expected chest or other container at {} in structure {}, found no tile entity", entry.getKey(), structureFile);

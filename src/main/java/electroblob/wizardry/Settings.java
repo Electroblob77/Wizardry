@@ -138,6 +138,12 @@ public final class Settings {
 			new ResourceLocation(Wizardry.MODID, "shrine_5"),
 			new ResourceLocation(Wizardry.MODID, "shrine_6"),
 			new ResourceLocation(Wizardry.MODID, "shrine_7")};
+	/** <b>[Server-only]</b> Whether conquered shrines should regenerate after a period of time. */
+	public boolean shrineRegenerationEnabled = true;
+	/** <b>[Server-only]</b> Time in minutes for a conquered shrine to regenerate. */
+	public int shrineRegenerationTime = 1;
+	/** <b>[Server-only]</b> Whether players can loot shrines multiple times. If false, each player can only loot each shrine once. */
+	public boolean shrineAllowMultipleLoot = false;
 	/** <b>[Server-only]</b> List of dimension ids in which to generate library ruins. */
 	public int[] libraryDimensions = {0};
 	/** <b>[Server-only]</b> The rarity of library ruins, used by the world generator. Larger numbers are rarer. */
@@ -1122,6 +1128,22 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_files");
 		property.setRequiresWorldRestart(true);
 		shrineFiles = getResourceLocationList(property);
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "shrineRegenerationEnabled", true, "Whether conquered shrines should regenerate after a period of time. When disabled, shrines remain conquered permanently.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_regeneration_enabled");
+		shrineRegenerationEnabled = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "shrineRegenerationTime", 1, "Time in minutes for a conquered shrine to regenerate. Minimum 1 minute, maximum 1440 minutes (24 hours).", 1, 1440);
+		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_regeneration_time");
+		Wizardry.proxy.setToNumberSliderEntry(property);
+		shrineRegenerationTime = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(WORLDGEN_CATEGORY, "shrineAllowMultipleLoot", false, "Whether players can loot shrines multiple times. If false, each player can only loot each shrine once until it regenerates.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_allow_multiple_loot");
+		shrineAllowMultipleLoot = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(WORLDGEN_CATEGORY, "libraryDimensions", new int[]{0}, "List of dimension ids in which library ruins will generate. Remove all dimensions to disable library ruins completely.");
