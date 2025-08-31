@@ -373,6 +373,19 @@ public final class Settings {
 	
 	/** <b>[Synchronised]</b> Multiplier for condenser upgrade mana regeneration amount */
 	public double condenserAmountMultiplier = 1.0;
+	/** <b>[Synchronised]</b> Whether flesh spells (DiamondFlesh, IronFlesh, OakFlesh) apply slowness */
+	public boolean fleshSpellsCauseSlowness = true;
+
+	/** <b>[Synchronised]</b> Armor bonus for DiamondFlesh spell */
+	public double diamondFleshArmorBonus = 4.0;
+	/** <b>[Synchronised]</b> Armor toughness bonus for DiamondFlesh spell */
+	public double diamondFleshArmorToughnessBonus = 3.0;
+	/** <b>[Synchronised]</b> Armor bonus for IronFlesh spell */
+	public double ironFleshArmorBonus = 4.0;
+	/** <b>[Synchronised]</b> Armor bonus for OakFlesh spell */
+	public double oakFleshArmorBonus = 3.0;
+	/** <b>[Synchronised]</b> Health bonus for OakFlesh spell */
+	public double oakFleshHealthBonus = 0.2;
 
 	/**
 	 * <b>[Synchronised]</b> The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be
@@ -974,6 +987,49 @@ public final class Settings {
 		condenserAmountMultiplier = property.getDouble();
 		propOrder.add(property.getName());
 
+		property = config.get(DIFFICULTY_CATEGORY, "fleshSpellsCauseSlowness", true,
+				"Whether flesh spells (DiamondFlesh, IronFlesh, OakFlesh) apply slowness. When disabled, these spells only provide their defensive benefits without movement penalty.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".flesh_spells_cause_slowness");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		property.requiresMcRestart();
+		fleshSpellsCauseSlowness = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "diamondFleshArmorBonus", 4.0,
+				"Armor bonus provided by the DiamondFlesh spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".diamond_flesh_armor_bonus");
+		property.setRequiresWorldRestart(true);
+		diamondFleshArmorBonus = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "diamondFleshArmorToughnessBonus", 3.0,
+				"Armor toughness bonus provided by the DiamondFlesh spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".diamond_flesh_armor_toughness_bonus");
+		property.setRequiresWorldRestart(true);
+		diamondFleshArmorToughnessBonus = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "ironFleshArmorBonus", 4.0,
+				"Armor bonus provided by the IronFlesh spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".iron_flesh_armor_bonus");
+		property.setRequiresWorldRestart(true);
+		ironFleshArmorBonus = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "oakFleshArmorBonus", 3.0,
+				"Armor bonus provided by the OakFlesh spell.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".oak_flesh_armor_bonus");
+		property.setRequiresWorldRestart(true);
+		oakFleshArmorBonus = property.getDouble();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "oakFleshHealthBonus", 0.2,
+				"Health bonus provided by the OakFlesh spell (as a multiplier, e.g., 0.2 = 20% increase).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".oak_flesh_health_bonus");
+		property.setRequiresWorldRestart(true);
+		oakFleshHealthBonus = property.getDouble();
+		propOrder.add(property.getName());
+
 
 
 		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
@@ -1324,7 +1380,7 @@ public final class Settings {
 		shrineFiles = getResourceLocationList(property);
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "shrineRegenerationEnabled", true, "Whether conquered shrines should regenerate after a period of time. When disabled, shrines remain conquered permanently.");
+		property = config.get(WORLDGEN_CATEGORY, "shrineRegenerationEnabled", false, "Whether conquered shrines should regenerate after a period of time. When disabled, shrines remain conquered permanently.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_regeneration_enabled");
 		shrineRegenerationEnabled = property.getBoolean();
 		propOrder.add(property.getName());

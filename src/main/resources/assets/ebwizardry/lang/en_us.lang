@@ -1653,6 +1653,21 @@ config.ebwizardry.master_upgrade_limit.tooltip=Maximum number of upgrades a mast
 
 config.ebwizardry.condenser_amount_multiplier=Condenser Amount Multiplier
 config.ebwizardry.condenser_amount_multiplier.tooltip=Multiplier for condenser upgrade mana regeneration amount. Higher values make condensers more effective.
+
+config.ebwizardry.flesh_spells_cause_slowness=Flesh Spells Cause Slowness
+config.ebwizardry.flesh_spells_cause_slowness.tooltip=Whether flesh spells (DiamondFlesh, IronFlesh, OakFlesh) apply slowness. When disabled, these spells only provide their defensive benefits without movement penalty.
+config.ebwizardry.flesh_spells_cause_slowness.true=Yes - flesh spells slow you down
+config.ebwizardry.flesh_spells_cause_slowness.false=No - flesh spells don't slow you down
+config.ebwizardry.diamond_flesh_armor_bonus=DiamondFlesh Armor Bonus
+config.ebwizardry.diamond_flesh_armor_bonus.tooltip=Armor bonus provided by the DiamondFlesh spell.
+config.ebwizardry.diamond_flesh_armor_toughness_bonus=DiamondFlesh Armor Toughness Bonus
+config.ebwizardry.diamond_flesh_armor_toughness_bonus.tooltip=Armor toughness bonus provided by the DiamondFlesh spell.
+config.ebwizardry.iron_flesh_armor_bonus=IronFlesh Armor Bonus
+config.ebwizardry.iron_flesh_armor_bonus.tooltip=Armor bonus provided by the IronFlesh spell.
+config.ebwizardry.oak_flesh_armor_bonus=OakFlesh Armor Bonus
+config.ebwizardry.oak_flesh_armor_bonus.tooltip=Armor bonus provided by the OakFlesh spell.
+config.ebwizardry.oak_flesh_health_bonus=OakFlesh Health Bonus
+config.ebwizardry.oak_flesh_health_bonus.tooltip=Health bonus provided by the OakFlesh spell (as a multiplier, e.g., 0.2 = 20% increase).
 config.ebwizardry.player_damage_scaling=Player Damage Scaling Factor
 config.ebwizardry.player_damage_scaling.tooltip=Global damage scaling factor for the damage dealt by players casting spells, relative to 1.
 config.ebwizardry.npc_damage_scaling=NPC Damage Scaling Factor
