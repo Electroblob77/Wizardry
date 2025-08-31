@@ -359,6 +359,18 @@ public final class Settings {
 	public double forfeitChance = 0.2;
 	/** <b>[Synchronised]</b> Progression requirements for upgrading a wand to each tier. */
 	public int[] progressionRequirements = {1500, 3500, 6000};
+
+	// Integer wrappers for tier values
+	public Integer noviceMaxCharge = 700;
+	public Integer apprenticeMaxCharge = 1000;
+	public Integer advancedMaxCharge = 1500;
+	public Integer masterMaxCharge = 2500;
+	
+	public Integer noviceUpgradeLimit = 3;
+	public Integer apprenticeUpgradeLimit = 5;
+	public Integer advancedUpgradeLimit = 7;
+	public Integer masterUpgradeLimit = 9;
+
 	/**
 	 * <b>[Synchronised]</b> The maximum number of blocks a bookshelf can be from an arcane workbench or lectern to be
 	 * able to link to it.
@@ -888,6 +900,72 @@ public final class Settings {
 		progressionRequirements = property.getIntList();
 		propOrder.add(property.getName());
 
+		property = config.get(DIFFICULTY_CATEGORY, "tierMaxCharges", new int[]{700, 1000, 1500, 2500},
+				"Maximum mana each tier can store (novice, apprentice, advanced, master respectively).");
+		property.setLanguageKey("config." + Wizardry.MODID + ".tier_max_charges");
+		property.setRequiresWorldRestart(true);
+		//tierMaxCharges = property.getIntList();
+		propOrder.add(property.getName());
+
+		// Individual tier configuration
+		property = config.get(DIFFICULTY_CATEGORY, "noviceMaxCharge", 700,
+				"Maximum mana a novice wand can store.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".novice_max_charge");
+		property.setRequiresWorldRestart(true);
+		noviceMaxCharge = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "apprenticeMaxCharge", 1000,
+				"Maximum mana an apprentice wand can store.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".apprentice_max_charge");
+		property.setRequiresWorldRestart(true);
+		apprenticeMaxCharge = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "advancedMaxCharge", 1500,
+				"Maximum mana an advanced wand can store.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".advanced_max_charge");
+		property.setRequiresWorldRestart(true);
+		advancedMaxCharge = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "masterMaxCharge", 2500,
+				"Maximum mana a master wand can store.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".master_max_charge");
+		property.setRequiresWorldRestart(true);
+		masterMaxCharge = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "noviceUpgradeLimit", 3,
+				"Maximum number of upgrades a novice wand can have.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".novice_upgrade_limit");
+		property.setRequiresWorldRestart(true);
+		noviceUpgradeLimit = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "apprenticeUpgradeLimit", 5,
+				"Maximum number of upgrades an apprentice wand can have.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".apprentice_upgrade_limit");
+		property.setRequiresWorldRestart(true);
+		apprenticeUpgradeLimit = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "advancedUpgradeLimit", 7,
+				"Maximum number of upgrades an advanced wand can have.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".advanced_upgrade_limit");
+		property.setRequiresWorldRestart(true);
+		advancedUpgradeLimit = property.getInt();
+		propOrder.add(property.getName());
+
+		property = config.get(DIFFICULTY_CATEGORY, "masterUpgradeLimit", 9,
+				"Maximum number of upgrades a master wand can have.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".master_upgrade_limit");
+		property.setRequiresWorldRestart(true);
+		masterUpgradeLimit = property.getInt();
+		propOrder.add(property.getName());
+
+
+
 		// These two aren't sliders because using a slider makes it difficult to fine-tune the numbers; the nature of a
 		// scaling factor means that 0.5 is as big a change as 2.0, so whilst a slider is fine for increasing the
 		// damage, it doesn't give fine enough control for values less than 1.
@@ -1241,7 +1319,7 @@ public final class Settings {
 		shrineRegenerationEnabled = property.getBoolean();
 		propOrder.add(property.getName());
 
-		property = config.get(WORLDGEN_CATEGORY, "shrineRegenerationTime", 1, "Time in minutes for a conquered shrine to regenerate. Minimum 1 minute, maximum 1440 minutes (24 hours).", 1, 1440);
+		property = config.get(WORLDGEN_CATEGORY, "shrineRegenerationTime", 20, "Time in minutes for a conquered shrine to regenerate. Minimum 1 minute, maximum 1440 minutes (24 hours).", 1, 1440);
 		property.setLanguageKey("config." + Wizardry.MODID + ".shrine_regeneration_time");
 		Wizardry.proxy.setToNumberSliderEntry(property);
 		shrineRegenerationTime = property.getInt();

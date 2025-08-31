@@ -10,10 +10,10 @@ import java.util.Random;
 
 public enum Tier {
 
-	NOVICE(700, 3, 12, new Style().setColor(TextFormatting.WHITE), "novice"),
-	APPRENTICE(1000, 5, 5, new Style().setColor(TextFormatting.AQUA), "apprentice"),
-	ADVANCED(1500, 7, 2, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
-	MASTER(2500, 9, 1, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
+	NOVICE(Wizardry.settings.noviceMaxCharge, Wizardry.settings.noviceUpgradeLimit, 12, new Style().setColor(TextFormatting.WHITE), "novice"),
+	APPRENTICE(Wizardry.settings.apprenticeMaxCharge, Wizardry.settings.apprenticeUpgradeLimit, 5, new Style().setColor(TextFormatting.AQUA), "apprentice"),
+	ADVANCED(Wizardry.settings.advancedMaxCharge, Wizardry.settings.advancedUpgradeLimit, 2, new Style().setColor(TextFormatting.DARK_BLUE), "advanced"),
+	MASTER(Wizardry.settings.masterMaxCharge, Wizardry.settings.masterUpgradeLimit, 1, new Style().setColor(TextFormatting.DARK_PURPLE), "master");
 
 	/** Maximum mana a wand of this tier can store. */
 	public final int maxCharge;

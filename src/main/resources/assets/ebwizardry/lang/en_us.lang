@@ -1620,6 +1620,36 @@ config.ebwizardry.forfeit_chance=Forfeit Chance
 config.ebwizardry.forfeit_chance.tooltip=The chance to 'misread' an undiscovered spell and trigger a forfeit instead. Setting this to 0 effectively disables the forfeit mechanic. Has no effect if discovery mode is disabled.
 config.ebwizardry.progression_requirements=Progression Requirements
 config.ebwizardry.progression_requirements.tooltip=The progression required to upgrade a wand to each tier (apprentice, advanced and master respectively).
+
+config.ebwizardry.tier_max_charges=Tier Maximum Charges
+config.ebwizardry.tier_max_charges.tooltip=Maximum mana each tier can store (novice, apprentice, advanced, master respectively).
+
+config.ebwizardry.tier_upgrade_limits=Tier Upgrade Limits
+config.ebwizardry.tier_upgrade_limits.tooltip=Maximum number of upgrades each tier can have (novice, apprentice, advanced, master respectively).
+
+config.ebwizardry.novice_max_charge=Novice Maximum Charge
+config.ebwizardry.novice_max_charge.tooltip=Maximum mana a novice wand can store.
+
+config.ebwizardry.apprentice_max_charge=Apprentice Maximum Charge
+config.ebwizardry.apprentice_max_charge.tooltip=Maximum mana an apprentice wand can store.
+
+config.ebwizardry.advanced_max_charge=Advanced Maximum Charge
+config.ebwizardry.advanced_max_charge.tooltip=Maximum mana an advanced wand can store.
+
+config.ebwizardry.master_max_charge=Master Maximum Charge
+config.ebwizardry.master_max_charge.tooltip=Maximum mana a master wand can store.
+
+config.ebwizardry.novice_upgrade_limit=Novice Upgrade Limit
+config.ebwizardry.novice_upgrade_limit.tooltip=Maximum number of upgrades a novice wand can have.
+
+config.ebwizardry.apprentice_upgrade_limit=Apprentice Upgrade Limit
+config.ebwizardry.apprentice_upgrade_limit.tooltip=Maximum number of upgrades an apprentice wand can have.
+
+config.ebwizardry.advanced_upgrade_limit=Advanced Upgrade Limit
+config.ebwizardry.advanced_upgrade_limit.tooltip=Maximum number of upgrades an advanced wand can have.
+
+config.ebwizardry.master_upgrade_limit=Master Upgrade Limit
+config.ebwizardry.master_upgrade_limit.tooltip=Maximum number of upgrades a master wand can have.
 config.ebwizardry.player_damage_scaling=Player Damage Scaling Factor
 config.ebwizardry.player_damage_scaling.tooltip=Global damage scaling factor for the damage dealt by players casting spells, relative to 1.
 config.ebwizardry.npc_damage_scaling=NPC Damage Scaling Factor
