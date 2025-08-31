@@ -220,6 +220,16 @@ public final class AllyDesignationSystem {
 			if(allyOf instanceof EntityPlayer && isOwnerAlly((EntityPlayer)allyOf, pet)) return true;
 		}
 
+		// Check if the possibleAlly is mind controlled by the allyOf entity
+		if(possibleAlly instanceof EntityLiving && possibleAlly.isPotionActive(WizardryPotions.mind_control)){
+			NBTTagCompound entityNBT = possibleAlly.getEntityData();
+
+			if(entityNBT != null && entityNBT.hasUniqueId(MindControl.NBT_KEY)){
+				Entity controller = EntityUtils.getEntityByUUID(possibleAlly.world, entityNBT.getUniqueId(MindControl.NBT_KEY));
+				return controller == allyOf;
+			}
+		}
+
 		return false;
 	}
 
