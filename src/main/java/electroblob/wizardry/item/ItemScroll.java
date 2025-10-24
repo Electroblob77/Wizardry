@@ -173,7 +173,7 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 
 			// Continuous spells (these must check if they can be cast each tick since the mana changes)
 			// In theory the spell is always continuous here but just in case it isn't...
-			// Do not check canCast() on tick 0 as it is already done in onItemRightClick() and will duplicated modifiers
+			// Do not check canCast() on tick 0 as it is already done in onItemRightClick() and would duplicate modifiers
 			if(spell.isContinuous && (castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers))){
 				cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
 			}else{
