@@ -78,7 +78,7 @@ public abstract class Forfeit {
 
 	public Forfeit(ResourceLocation name){
 		this.name = name;
-		this.sound = WizardrySounds.createSound("forfeit." + name.getPath());
+		this.sound = WizardrySounds.createSound(name.getNamespace(), "forfeit." + name.getPath());
 	}
 
 	public abstract void apply(World world, EntityPlayer player);
