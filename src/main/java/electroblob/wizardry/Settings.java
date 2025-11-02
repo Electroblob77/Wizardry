@@ -207,7 +207,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> Whether damage should be registered with the old system (wizardry_magic/indirect_wizardry_magic) prefixed damage with the elements like
 	 * necromancy_indirect_wizardry_magic, necromancy_wizardry_magic*/
 	public boolean damageTypePerElement = false;
-	/** <b>[Server-only]</b> Whether spell books are consumed when they are bound to a wand.*/
+	/** <b>[Server-only]</b> Whether spell books are consumed when they are bound to a wand. Does not affect scrolls.*/
 	public boolean singleUseSpellBooks = false;
 	/** <b>[Server-only]</b> Whether to prevent binding the same spell to a wand multiple times*/
 	public boolean preventBindingSameSpellTwiceToWands = false;
@@ -723,7 +723,7 @@ public final class Settings {
 		propOrder.add(property.getName());
 
 		property = config.get(GAMEPLAY_CATEGORY, "singleUseSpellBooks", false,
-				"Whether spell books are consumed when they are bound to a wand.");
+				"Whether spell books are consumed when they are bound to a wand. This does not affect scrolls, which cannot be placed in the arcane workbench.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".single_use_spell_books");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		singleUseSpellBooks = property.getBoolean();
