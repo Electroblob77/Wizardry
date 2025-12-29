@@ -1213,7 +1213,7 @@ public final class Settings {
 		bookshelfSearchRadius = property.getInt();
 		propOrder.add(property.getName());
 
-		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade.",
+		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade. To specify metadata, use the format 'modid:item:meta value'. For example, 'minecraft:wool:1 5'. If no metadata is given, any metadata will be accepted.",
 				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
 		propOrder.add(property.getName());
@@ -1817,16 +1817,46 @@ public final class Settings {
 
 		string = string.toLowerCase(Locale.ROOT).trim();
 
-		String[] itemArgs = string.split(":");
 		String item;
 		short meta;
 
-		try {
-			meta = Short.parseShort(itemArgs[itemArgs.length-1]);
-			item = String.join(":", Arrays.copyOfRange(itemArgs, 0, itemArgs.length-1));
-		}catch(NumberFormatException e){ // If no metadata is specified
-			meta = OreDictionary.WILDCARD_VALUE;
+		int lastColon = string.lastIndexOf(':');
+
+		if (lastColon > -1 && lastColon < string.length() - 1) { // if there is a colon and it's not the last char
+			String metaString = string.substring(lastColon + 1);
+			try {
+				short parsedMeta = Short.parseShort(metaString);
+				String itemString = string.substring(0, lastColon);
+
+				// If itemString has no colon, it could be 'item:meta' or 'namespace:numeric_path'.
+				// e.g., 'wool:1' vs 'mod:123'. We want to support 'wool:1' as item 'wool' with meta 1.
+				// We can't reliably distinguish the two cases without knowing all namespaces, so we have to use
+				// a heuristic. The original code favoured the 'item:meta' interpretation, let's stick with that.
+				// The issue was with 'namespace:numeric_path' which this logic now handles.
+				if (itemString.indexOf(':') == -1) {
+					item = itemString;
+					meta = parsedMeta;
+				} else {
+					// Disambiguate things like 'mod:123:4' (item 'mod:123' with meta 4) vs 'mod:item:123' (item 'mod:item' with meta 123)
+					// If the bit before the last colon is a valid resource location, it's probably item:meta
+					try {
+						new ResourceLocation(itemString);
+						item = itemString;
+						meta = parsedMeta;
+					} catch (Exception e) {
+						item = string;
+						meta = OreDictionary.WILDCARD_VALUE;
+					}
+				}
+
+			} catch (NumberFormatException e) {
+				// The part after colon is not a number, so it's part of the name
+				item = string;
+				meta = OreDictionary.WILDCARD_VALUE;
+			}
+		} else {
 			item = string;
+			meta = OreDictionary.WILDCARD_VALUE;
 		}
 
 		return Pair.of(new ResourceLocation(item), meta);
