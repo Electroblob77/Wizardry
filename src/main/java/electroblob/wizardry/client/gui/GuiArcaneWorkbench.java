@@ -515,12 +515,13 @@ public class GuiArcaneWorkbench extends GuiContainer {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 
-		if(this.searchNeedsClearing){
-			this.searchNeedsClearing = false;
+        if(this.searchNeedsClearing){
+            this.searchNeedsClearing = false;
 			this.searchField.setText("");
 		}
 
-		if(this.searchField.textboxKeyTyped(typedChar, keyCode)){
+        // Allow exiting the GUI by pressing the inventory button. Does not work if bookshelves are present by default
+		if(this.searchField.getVisible() && this.searchField.textboxKeyTyped(typedChar, keyCode)){
 			arcaneWorkbenchContainer.setSearchText(searchField.getText().toLowerCase(Locale.ROOT));
 		}else{
 			super.keyTyped(typedChar, keyCode);
