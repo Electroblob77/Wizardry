@@ -160,12 +160,21 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 
 			Spell spell = Spell.byMetadata(stack.getItemDamage());
 			// By default, scrolls have no modifiers - but with the event system, they could be added.
-			SpellModifiers modifiers = new SpellModifiers();
+
+			SpellModifiers modifiers;
+
+			if(WizardData.get(player) != null){
+				modifiers = WizardData.get(player).itemCastingModifiers;
+			}else{
+				modifiers = new SpellModifiers();
+			}
+
 			int castingTick = stack.getMaxItemUseDuration() - count;
 
 			// Continuous spells (these must check if they can be cast each tick since the mana changes)
 			// In theory the spell is always continuous here but just in case it isn't...
-			if(spell.isContinuous && canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers)){
+			// Do not check canCast() on tick 0 as it is already done in onItemRightClick() and would duplicate modifiers
+			if(spell.isContinuous && (castingTick == 0 || canCast(stack, spell, player, player.getActiveHand(), castingTick, modifiers))){
 				cast(stack, spell, player, player.getActiveHand(), castingTick, modifiers);
 			}else{
 				// Scrolls normally work on the max use duration so this isn't ever reached by wizardry, but if the
