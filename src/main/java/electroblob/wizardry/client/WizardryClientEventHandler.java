@@ -1,5 +1,6 @@
 package electroblob.wizardry.client;
 
+import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.client.renderer.overlay.RenderBlinkEffect;
 import electroblob.wizardry.data.DispenserCastingData;
 import electroblob.wizardry.data.SpellEmitterData;
@@ -13,7 +14,6 @@ import electroblob.wizardry.spell.SixthSense;
 import electroblob.wizardry.spell.SlowTime;
 import electroblob.wizardry.spell.Transience;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -31,6 +31,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -192,6 +195,15 @@ public final class WizardryClientEventHandler {
 			WizardData data = WizardData.get(Minecraft.getMinecraft().player);
 			if (data != null && data.getVariable(Possession.POSSESSEE_KEY) != null) {
 				event.setCanceled(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onItemTooltip(ItemTooltipEvent event) {
+		if (event.getItemStack().getItem() == WizardryItems.charm_spell_discovery) {
+			if (Wizardry.settings.spellBookColorsRequireArchivistsEyeglass) {
+				event.getToolTip().add(TextFormatting.GRAY + I18n.format("item.ebwizardry:charm_spell_discovery.desc.color"));
 			}
 		}
 	}

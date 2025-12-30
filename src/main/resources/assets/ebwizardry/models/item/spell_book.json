@@ -1,14 +1,17 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "ebwizardry:items/spell_book"
-    },
+    "parent": "ebwizardry:item/spell_book_undiscovered",
     "overrides": [
         {
             "predicate": {
                 "festive": 1
             },
             "model": "ebwizardry:item/festive_spell_book"
+        },
+        {
+            "predicate": {
+                "ebwizardry:discovered": 1
+            },
+            "model": "ebwizardry:item/spell_book_discovered"
         }
     ]
 }

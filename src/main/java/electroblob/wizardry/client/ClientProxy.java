@@ -1,7 +1,6 @@
 package electroblob.wizardry.client;
 
 import electroblob.wizardry.CommonProxy;
-import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.block.BlockBookshelf;
 import electroblob.wizardry.client.animation.ActionAnimation;
@@ -19,6 +18,8 @@ import electroblob.wizardry.client.model.ModelRobeArmour;
 import electroblob.wizardry.client.model.ModelSageArmour;
 import electroblob.wizardry.client.model.ModelWizardArmour;
 import electroblob.wizardry.client.particle.*;
+import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.client.particle.ParticleWizardry.IWizardryParticleFactory;
 import electroblob.wizardry.client.renderer.RenderSpectralGolem;
 import electroblob.wizardry.client.renderer.entity.*;
@@ -38,6 +39,7 @@ import electroblob.wizardry.entity.projectile.*;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
 import electroblob.wizardry.integration.antiqueatlas.WizardryAntiqueAtlasIntegration;
+import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.item.ItemScroll;
 import electroblob.wizardry.item.ItemSpellBook;
 import electroblob.wizardry.item.ItemWand;
@@ -876,5 +878,65 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLectern.class, new RenderLectern());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityImbuementAltar.class, new RenderImbuementAltar());
 
+	}
+
+	public void registerItemColorHandlers() {
+		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+			if (Wizardry.settings.spellBookColors && tintIndex == 1) { // layer 1 is the overlay
+				Spell spell = Spell.byMetadata(stack.getMetadata());
+
+				if (shouldDisplayDiscovered(spell, stack)) {
+					// Even if the spell is discovered, the charm might be required for colouration
+					if(Wizardry.settings.spellBookColorsRequireArchivistsEyeglass && !ItemArtefact.isArtefactActive(getThePlayer(), WizardryItems.charm_spell_discovery)) {
+						return -1;
+					}
+
+					Element element = spell.getElement();
+					if (element != null) {
+						switch (element) {
+							case MAGIC:
+								return 0xAAAAAA; // GRAY
+							case FIRE:
+								return 0xAA0000; // DARK_RED
+							case ICE:
+								return 0x55FFFF; // AQUA
+							case LIGHTNING:
+								return 0x00AAAA; // DARK_AQUA
+							case NECROMANCY:
+								return 0xAA00AA; // DARK_PURPLE
+							case EARTH:
+								return 0x00AA00; // DARK_GREEN
+							case SORCERY:
+								return 0x55FF55; // GREEN
+							case HEALING:
+								return 0xFFFF55; // YELLOW
+						}
+					}
+				}
+			}
+			return -1;
+		}, WizardryItems.spell_book);
+	}
+
+	public void registerModelProperties() {
+		Item spellBook = WizardryItems.spell_book;
+		ResourceLocation discoveredProperty = new ResourceLocation(Wizardry.MODID, "discovered");
+
+		spellBook.addPropertyOverride(discoveredProperty, (stack, world, entity) -> {
+			if (!Wizardry.settings.spellBookColors) return 0.0f;
+
+			boolean discovered = shouldDisplayDiscovered(Spell.byMetadata(stack.getMetadata()), stack);
+
+			if(discovered && Wizardry.settings.spellBookColorsRequireArchivistsEyeglass){
+				// Entity can be null so we have to check
+				if(entity instanceof EntityPlayer){
+					return ItemArtefact.isArtefactActive((EntityPlayer)entity, WizardryItems.charm_spell_discovery) ? 1.0f : 0.0f;
+				}
+				// If there's no entity, there's no charm, so no colour
+				return 0.0f;
+			}
+
+			return discovered ? 1.0f : 0.0f;
+		});
 	}
 }

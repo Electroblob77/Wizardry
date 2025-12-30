@@ -43,6 +43,10 @@ public class CommonProxy {
 
 	public void registerRenderers(){}
 
+	public void registerItemColorHandlers(){}
+
+	public void registerModelProperties(){}
+
 	public void initialiseLayers(){}
 
 	public void initialiseAnimations(){}

@@ -198,6 +198,8 @@ public class Wizardry {
 		// Client-side stuff (via proxies)
 		proxy.initGuiBits();
 		proxy.registerParticles();
+		proxy.registerItemColorHandlers();
+		proxy.registerModelProperties();
 		proxy.registerSoundEventListener();
 	}
 

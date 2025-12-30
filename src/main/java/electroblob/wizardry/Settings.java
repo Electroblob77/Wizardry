@@ -355,6 +355,8 @@ public final class Settings {
 	 * velocity-based one.
 	 */
 	public boolean replaceVanillaFallDamage = true;
+	/** <b>[Synchronised]</b> Whether spell book colors are only shown when the player has the Archivist's Eyeglass equipped. */
+	public boolean spellBookColorsRequireArchivistsEyeglass = false;
 	/** <b>[Synchronised]</b> Chance of 'misreading' an undiscovered spell and triggering a forfeit instead. */
 	public double forfeitChance = 0.2;
 	/** <b>[Synchronised]</b> Progression requirements for upgrading a wand to each tier. */
@@ -461,6 +463,8 @@ public final class Settings {
 	public static final String DEFAULT_HUD_SKIN_KEY = "default"; // Defined here so it's not in a client-only class.
 	/** <b>[Client-only]</b> The string identifier of the skin used for the spell HUD. */
 	public String spellHUDSkin = DEFAULT_HUD_SKIN_KEY;
+	/** <b>[Client-only]</b> Whether to show elemental colors on spell books for discovered spells. */
+	public boolean spellBookColors = true;
 
 	/** Set of constants for each of the eight positions that the spell HUD can be in. */
 	public enum GuiPosition {
@@ -1103,6 +1107,13 @@ public final class Settings {
 		replaceVanillaFallDamage = property.getBoolean();
 		propOrder.add(property.getName());
 
+		property = config.get(TWEAKS_CATEGORY, "spellBookColorsRequireArchivistsEyeglass", false,
+				"If true, spell book colors are only shown when the player has the charm of spell discovery equipped.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".spell_book_colors_require_charm");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		spellBookColorsRequireArchivistsEyeglass = property.getBoolean();
+		propOrder.add(property.getName());
+
 		property = config.get(TWEAKS_CATEGORY, "blindnessTweak", true,
 				"Whether to tweak the blindness effect to reduce follow distance when used on non-players. This automatically disables itself in favour of Potion Core's implementation if installed.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".blindness_tweak");
@@ -1487,6 +1498,14 @@ public final class Settings {
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		showChargeMeter = property.getBoolean();
 		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "spellBookColors", true, "Whether to show elemental colors on spell books for discovered spells.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".spell_book_colors");
+		property.setRequiresWorldRestart(false);
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		spellBookColors = property.getBoolean();
+		propOrder.add(property.getName());
+
 		property = config.get(CLIENT_CATEGORY, "loadHandbook", true, "Whether to initialise the in-game handbook. Setting this to false will brick the in-game handbook, but it might help if you have startup crashes.");
 		property.setLanguageKey("config." + Wizardry.MODID + ".load_handbook");
 		property.setRequiresWorldRestart(false);
