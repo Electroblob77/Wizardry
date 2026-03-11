@@ -7,7 +7,6 @@ import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.entity.living.ISummonedCreature;
 import electroblob.wizardry.event.SpellCastEvent;
 import electroblob.wizardry.event.SpellCastEvent.Source;
-import electroblob.wizardry.item.ItemWand;
 import electroblob.wizardry.packet.PacketCastContinuousSpell;
 import electroblob.wizardry.packet.PacketPlayerSync;
 import electroblob.wizardry.packet.WizardryPacketHandler;
@@ -356,20 +355,20 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		// For each item in the player's inventory
 		for(ItemStack stack : player.inventory.mainInventory){
-			updateImbutedItem(stack, activeImbuements);
+			updateImbuedItem(stack, activeImbuements);
 		}
 		for(ItemStack stack : player.inventory.armorInventory){
-			updateImbutedItem(stack, activeImbuements);
+			updateImbuedItem(stack, activeImbuements);
 		}
 		for(ItemStack stack : player.inventory.offHandInventory){
-			updateImbutedItem(stack, activeImbuements);
+			updateImbuedItem(stack, activeImbuements);
 		}
 
 		// Removes all imbuements from the map that are no longer active
 		this.imbuementDurations.keySet().retainAll(activeImbuements);
 	}
 
-	private void updateImbutedItem(ItemStack stack, Set<Imbuement> activeImbuements){
+	private void updateImbuedItem(ItemStack stack, Set<Imbuement> activeImbuements){
 
 		if(stack.isItemEnchanted()){
 
@@ -466,7 +465,7 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		if(this.castCommandSpell != null && this.castCommandSpell.isContinuous){
 
-			if(castCommandTick >= castCommandDuration){
+			if(castCommandTick > castCommandDuration){
 				this.stopCastingContinuousSpell();
 				return;
 			}
