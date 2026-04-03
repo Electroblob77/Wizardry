@@ -117,6 +117,9 @@ public final class AllyDesignationSystem {
 		// Always return true if the attacker is null - this must be after the target null check!
 		if(attacker == null) return true;
 
+		// Teammates are allies
+		if(attacker.isOnSameTeam(target)) return false;
+
 		// Tests whether the target is the attacker
 		if(target == attacker) return false;
 
@@ -218,6 +221,10 @@ public final class AllyDesignationSystem {
 			IEntityOwnable pet = (IEntityOwnable)possibleAlly;
 			if(pet.getOwner() == allyOf) return true;
 			if(allyOf instanceof EntityPlayer && isOwnerAlly((EntityPlayer)allyOf, pet)) return true;
+		}
+
+		if(possibleAlly.isOnSameTeam(allyOf)) {
+			return true;
 		}
 
 		// Check if the possibleAlly is mind controlled by the allyOf entity
