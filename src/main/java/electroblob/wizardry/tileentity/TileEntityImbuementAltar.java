@@ -235,12 +235,11 @@ public class TileEntityImbuementAltar extends TileEntity implements ITickable {
 	 */
 	public static ItemStack getImbuementResult(ItemStack input, Element[] receptacleElements, boolean fullLootGen, World world, EntityPlayer lastUser){
 
-		ItemStack eventResult = ItemStack.EMPTY;
+		ImbuementActivateEvent event = new ImbuementActivateEvent(input, receptacleElements, world, lastUser, ItemStack.EMPTY);
 
-		if (world != null && MinecraftForge.EVENT_BUS.post(new ImbuementActivateEvent(input, receptacleElements, world, lastUser, eventResult))) {
-			// return the stack if something changes the result from an empty stack.
-			//noinspection ConstantConditions
-			if (eventResult != ItemStack.EMPTY) return eventResult;
+		if (world != null && MinecraftForge.EVENT_BUS.post(event)) {
+			// Event was cancelled; return whatever result the handler set (may be empty to suppress all recipes).
+			return event.result;
 		}
 
 		if(input.getItem() instanceof ItemWizardArmour && ((ItemWizardArmour)input.getItem()).element == null){
