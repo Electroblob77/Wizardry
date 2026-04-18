@@ -907,7 +907,7 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	 * its JSON file using a resource pack. If called with no arguments, defaults to any context, i.e. only returns
 	 * false if the spell is completely disabled in all contexts. */
 	public final boolean isEnabled(SpellProperties.Context... contexts){
-		return enabled && (contexts.length == 0 || properties.isEnabled(contexts));
+		return enabled && (contexts.length == 0 || (arePropertiesInitialised() && properties.isEnabled(contexts)));
 	}
 
 	/** Sets whether the spell is enabled or not. */
