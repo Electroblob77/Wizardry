@@ -717,6 +717,65 @@ public class ClientProxy extends CommonProxy {
 		}else Wizardry.logger.warn("Received a PacketConquerShrine, but there was no shrine core at the position sent");
 	}
 
+	@Override
+	public void handleBombExplosionPacket(PacketBombExplosion.Message message){
+
+		net.minecraft.world.World world = Minecraft.getMinecraft().world;
+		double x = message.x, y = message.y, z = message.z;
+		float blastMultiplier = message.blastMultiplier;
+
+		switch(message.bombType){
+
+			case PacketBombExplosion.FIREBOMB:
+				ParticleBuilder.create(Type.FLASH).pos(x, y, z).scale(5 * blastMultiplier).clr(1, 0.6f, 0).spawn(world);
+				for(int i = 0; i < 60 * blastMultiplier; i++){
+					ParticleBuilder.create(Type.MAGIC_FIRE, world.rand, x, y, z, 2 * blastMultiplier, false)
+							.time(10 + world.rand.nextInt(4)).scale(2 + world.rand.nextFloat()).spawn(world);
+					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, x, y, z, 2 * blastMultiplier, false)
+							.clr(1.0f, 0.2f + world.rand.nextFloat() * 0.4f, 0.0f).spawn(world);
+				}
+				world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y, z, 0, 0, 0);
+				break;
+
+			case PacketBombExplosion.POISON_BOMB:
+				ParticleBuilder.create(Type.FLASH).pos(x, y, z).scale(5 * blastMultiplier)
+						.clr(0.2f + world.rand.nextFloat() * 0.3f, 0.6f, 0.0f).spawn(world);
+				for(int i = 0; i < 60 * blastMultiplier; i++){
+					ParticleBuilder.create(Type.SPARKLE, world.rand, x, y, z, 2 * blastMultiplier, false).time(35)
+							.scale(2).clr(0.2f + world.rand.nextFloat() * 0.3f, 0.6f, 0.0f).spawn(world);
+					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, x, y, z, 2 * blastMultiplier, false)
+							.clr(0.2f + world.rand.nextFloat() * 0.2f, 0.8f, 0.0f).spawn(world);
+				}
+				world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y, z, 0, 0, 0);
+				break;
+
+			case PacketBombExplosion.SMOKE_BOMB:
+				ParticleBuilder.create(Type.FLASH).pos(x, y, z).scale(5 * blastMultiplier).clr(0, 0, 0).spawn(world);
+				world.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, x, y, z, 0, 0, 0);
+				for(int i = 0; i < 60 * blastMultiplier; i++){
+					float brightness = world.rand.nextFloat() * 0.1f + 0.1f;
+					ParticleBuilder.create(Type.CLOUD, world.rand, x, y, z, 2 * blastMultiplier, false)
+							.clr(brightness, brightness, brightness).time(80 + world.rand.nextInt(12)).shaded(true).spawn(world);
+					brightness = world.rand.nextFloat() * 0.3f;
+					ParticleBuilder.create(Type.DARK_MAGIC, world.rand, x, y, z, 2 * blastMultiplier, false)
+							.clr(brightness, brightness, brightness).spawn(world);
+				}
+				break;
+
+			case PacketBombExplosion.SPARK_BOMB:
+				ParticleBuilder.spawnShockParticles(world, x, y, z);
+				for(int id : message.secondaryTargetIDs){
+					net.minecraft.entity.Entity target = world.getEntityByID(id);
+					if(target instanceof net.minecraft.entity.EntityLivingBase){
+						ParticleBuilder.create(Type.LIGHTNING).pos(x, y, z).target(target).spawn(world);
+						ParticleBuilder.spawnShockParticles(world, target.posX,
+								target.posY + target.height / 2, target.posZ);
+					}
+				}
+				break;
+		}
+	}
+
 	// Rendering
 	// ===============================================================================================================
 
@@ -881,48 +940,13 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	public void registerItemColorHandlers() {
-		Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-			if (Wizardry.settings.spellBookColors && tintIndex == 1) { // layer 1 is the overlay
-				Spell spell = Spell.byMetadata(stack.getMetadata());
-
-				if (shouldDisplayDiscovered(spell, stack)) {
-					// Even if the spell is discovered, the charm might be required for colouration
-					if(Wizardry.settings.spellBookColorsRequireArchivistsEyeglass && !ItemArtefact.isArtefactActive(getThePlayer(), WizardryItems.charm_spell_discovery)) {
-						return -1;
-					}
-
-					Element element = spell.getElement();
-					if (element != null) {
-						switch (element) {
-							case MAGIC:
-								return 0xAAAAAA; // GRAY
-							case FIRE:
-								return 0xAA0000; // DARK_RED
-							case ICE:
-								return 0x55FFFF; // AQUA
-							case LIGHTNING:
-								return 0x00AAAA; // DARK_AQUA
-							case NECROMANCY:
-								return 0xAA00AA; // DARK_PURPLE
-							case EARTH:
-								return 0x00AA00; // DARK_GREEN
-							case SORCERY:
-								return 0x55FF55; // GREEN
-							case HEALING:
-								return 0xFFFF55; // YELLOW
-						}
-					}
-				}
-			}
-			return -1;
-		}, WizardryItems.spell_book);
+		// Spell book overlay textures are now per-element, so no runtime tinting is needed.
 	}
 
 	public void registerModelProperties() {
 		Item spellBook = WizardryItems.spell_book;
-		ResourceLocation discoveredProperty = new ResourceLocation(Wizardry.MODID, "discovered");
 
-		spellBook.addPropertyOverride(discoveredProperty, (stack, world, entity) -> {
+		spellBook.addPropertyOverride(new ResourceLocation(Wizardry.MODID, "discovered"), (stack, world, entity) -> {
 			if (!Wizardry.settings.spellBookColors) return 0.0f;
 
 			boolean discovered = shouldDisplayDiscovered(Spell.byMetadata(stack.getMetadata()), stack);
@@ -937,6 +961,28 @@ public class ClientProxy extends CommonProxy {
 			}
 
 			return discovered ? 1.0f : 0.0f;
+		});
+
+		// Returns ordinal+1 for each element (1=MAGIC through 8=HEALING), or 0 if not yet discovered.
+		// Drives per-element bookmark texture selection via model overrides in spell_book.json.
+		spellBook.addPropertyOverride(new ResourceLocation(Wizardry.MODID, "element"), (stack, world, entity) -> {
+			if (!Wizardry.settings.spellBookColors) return 0.0f;
+
+			Spell spell = Spell.byMetadata(stack.getMetadata());
+			boolean discovered = shouldDisplayDiscovered(spell, stack);
+
+			if(!discovered) return 0.0f;
+
+			if(Wizardry.settings.spellBookColorsRequireArchivistsEyeglass){
+				if(entity instanceof EntityPlayer){
+					if(!ItemArtefact.isArtefactActive((EntityPlayer)entity, WizardryItems.charm_spell_discovery)) return 0.0f;
+				} else {
+					return 0.0f;
+				}
+			}
+
+			Element element = spell.getElement();
+			return element == null ? 0.0f : (float)(element.ordinal() + 1);
 		});
 	}
 }

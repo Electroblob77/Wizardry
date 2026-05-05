@@ -1,0 +1,7 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "ebwizardry:items/spell_book",
+        "layer1": "ebwizardry:items/spell_book_overlay_lightning"
+    }
+}

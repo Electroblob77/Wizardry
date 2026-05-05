@@ -179,6 +179,8 @@ public class CommonProxy {
 
 	public void handleConquerShrinePacket(PacketConquerShrine.Message message){}
 
+	public void handleBombExplosionPacket(PacketBombExplosion.Message message){}
+
 	// SECTION Misc
 	// ===============================================================================================================
 

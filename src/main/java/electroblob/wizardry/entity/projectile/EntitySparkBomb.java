@@ -1,5 +1,7 @@
 package electroblob.wizardry.entity.projectile;
 
+import electroblob.wizardry.packet.PacketBombExplosion;
+import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
@@ -13,7 +15,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntitySparkBomb extends EntityBomb {
@@ -31,47 +35,37 @@ public class EntitySparkBomb extends EntityBomb {
 
 	@Override
 	protected void onImpact(RayTraceResult rayTrace){
-		
-		this.playSound(WizardrySounds.ENTITY_SPARK_BOMB_HIT_BLOCK, 0.5f, 0.5f);
 
-		Entity entityHit = rayTrace.entityHit;
+		if(!this.world.isRemote){
 
-		if(entityHit != null){
-			// This is if the spark bomb gets a direct hit
-			float damage = Spells.spark_bomb.getProperty(Spell.DIRECT_DAMAGE).floatValue() * damageMultiplier;
+			Entity entityHit = rayTrace.entityHit;
 
-			this.playSound(WizardrySounds.ENTITY_SPARK_BOMB_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
+			if(entityHit != null){
+				// This is if the spark bomb gets a direct hit
+				float damage = Spells.spark_bomb.getProperty(Spell.DIRECT_DAMAGE).floatValue() * damageMultiplier;
 
-			entityHit.attackEntityFrom(
-					MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK).setProjectile(),
-					damage);
+				this.playSound(WizardrySounds.ENTITY_SPARK_BOMB_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 
-		}
+				entityHit.attackEntityFrom(
+						MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK).setProjectile(),
+						damage);
+			}
 
-		// Particle effect
-		if(world.isRemote){
-			ParticleBuilder.spawnShockParticles(world, posX, posY + height/2, posZ);
-		}
+			double seekerRange = Spells.spark_bomb.getProperty(Spell.EFFECT_RADIUS).doubleValue() * blastMultiplier;
 
-		double seekerRange = Spells.spark_bomb.getProperty(Spell.EFFECT_RADIUS).doubleValue() * blastMultiplier;
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(seekerRange, this.posX, this.posY,
+					this.posZ, this.world);
 
-		List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(seekerRange, this.posX, this.posY,
-				this.posZ, this.world);
+			List<Integer> secondaryTargetIDs = new ArrayList<>();
 
-		for(int i = 0; i < Math.min(targets.size(), Spells.spark_bomb.getProperty(SECONDARY_MAX_TARGETS).intValue()); i++){
+			for(int i = 0; i < Math.min(targets.size(), Spells.spark_bomb.getProperty(SECONDARY_MAX_TARGETS).intValue()); i++){
 
-			boolean flag = targets.get(i) != entityHit && targets.get(i) != this.getThrower()
-					&& !(targets.get(i) instanceof EntityPlayer
-							&& ((EntityPlayer)targets.get(i)).isCreative());
+				boolean flag = targets.get(i) != entityHit && targets.get(i) != this.getThrower()
+						&& !(targets.get(i) instanceof EntityPlayer
+								&& ((EntityPlayer)targets.get(i)).isCreative());
 
-			// Detects (client side) if target is the thrower, to stop particles being spawned around them.
-			//if(flag && world.isRemote && targets.get(i).getEntityId() == this.playerID) flag = false;
-
-			if(flag){
-
-				EntityLivingBase target = targets.get(i);
-
-				if(!this.world.isRemote){
+				if(flag){
+					EntityLivingBase target = targets.get(i);
 
 					target.playSound(WizardrySounds.ENTITY_SPARK_BOMB_CHAIN, 1.0F, rand.nextFloat() * 0.4F + 1.5F);
 
@@ -79,11 +73,18 @@ public class EntitySparkBomb extends EntityBomb {
 							MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.SHOCK),
 							Spells.spark_bomb.getProperty(Spell.SPLASH_DAMAGE).floatValue() * damageMultiplier);
 
-				}else{
-					ParticleBuilder.create(Type.LIGHTNING).pos(this.getPositionVector()).target(target).spawn(world);
-					ParticleBuilder.spawnShockParticles(world, target.posX, target.posY + target.height/2, target.posZ);
+					secondaryTargetIDs.add(target.getEntityId());
 				}
 			}
+
+			// Notify clients to play the explosion effect, including lightning arcs to secondary targets
+			int[] idArray = secondaryTargetIDs.stream().mapToInt(Integer::intValue).toArray();
+			WizardryPacketHandler.net.sendToAllAround(
+					new PacketBombExplosion.Message(PacketBombExplosion.SPARK_BOMB, posX, posY + height / 2, posZ,
+							blastMultiplier, idArray),
+					new NetworkRegistry.TargetPoint(world.provider.getDimension(), posX, posY, posZ, 64));
+
+			this.playSound(WizardrySounds.ENTITY_SPARK_BOMB_HIT_BLOCK, 0.5f, 0.5f);
 		}
 
 		this.setDead();

@@ -1,17 +1,14 @@
 {
     "parent": "ebwizardry:item/spell_book_undiscovered",
     "overrides": [
-        {
-            "predicate": {
-                "festive": 1
-            },
-            "model": "ebwizardry:item/festive_spell_book"
-        },
-        {
-            "predicate": {
-                "ebwizardry:discovered": 1
-            },
-            "model": "ebwizardry:item/spell_book_discovered"
-        }
+        {"predicate": {"ebwizardry:element": 1}, "model": "ebwizardry:item/spell_book_discovered_magic"},
+        {"predicate": {"ebwizardry:element": 2}, "model": "ebwizardry:item/spell_book_discovered_fire"},
+        {"predicate": {"ebwizardry:element": 3}, "model": "ebwizardry:item/spell_book_discovered_ice"},
+        {"predicate": {"ebwizardry:element": 4}, "model": "ebwizardry:item/spell_book_discovered_lightning"},
+        {"predicate": {"ebwizardry:element": 5}, "model": "ebwizardry:item/spell_book_discovered_necromancy"},
+        {"predicate": {"ebwizardry:element": 6}, "model": "ebwizardry:item/spell_book_discovered_earth"},
+        {"predicate": {"ebwizardry:element": 7}, "model": "ebwizardry:item/spell_book_discovered_sorcery"},
+        {"predicate": {"ebwizardry:element": 8}, "model": "ebwizardry:item/spell_book_discovered_healing"},
+        {"predicate": {"festive": 1},            "model": "ebwizardry:item/festive_spell_book"}
     ]
 }
