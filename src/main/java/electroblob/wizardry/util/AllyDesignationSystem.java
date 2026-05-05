@@ -206,6 +206,10 @@ public final class AllyDesignationSystem {
 	 * generally used to determine targets for healing or other group buffs. */
 	public static boolean isAllied(EntityLivingBase allyOf, EntityLivingBase possibleAlly){
 
+        if (allyOf == null || possibleAlly == null) {
+            return false;
+        }
+
 		// Owned entities inherit their owner's allies
 		if(allyOf instanceof IEntityOwnable){
 			Entity owner = ((IEntityOwnable)allyOf).getOwner();
