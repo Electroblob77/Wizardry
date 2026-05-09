@@ -258,7 +258,10 @@ public final class AllyDesignationSystem {
 		WizardData data = WizardData.get(allyOf);
 		if(data == null) return false;
 		Entity owner = ownable.getOwner();
-		return owner instanceof EntityPlayer ? data.isPlayerAlly((EntityPlayer)owner) : data.isPlayerAlly(ownable.getOwnerId());
+		if(owner == null) return data.isPlayerAlly(ownable.getOwnerId()); // offline owner
+		if(owner instanceof EntityPlayer) return data.isPlayerAlly((EntityPlayer)owner);
+		if(owner instanceof IEntityOwnable) return isOwnerAlly(allyOf, (IEntityOwnable)owner); // recurse
+		return false;
 	}
 
 	@SubscribeEvent
