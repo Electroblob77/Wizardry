@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import electroblob.wizardry.Settings;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.WizardryGuiHandler;
+import electroblob.wizardry.inventory.ContainerBookshelf;
 import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardryTabs;
 import electroblob.wizardry.tileentity.TileEntityBookshelf;
@@ -22,6 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -162,7 +164,37 @@ public class BlockBookshelf extends BlockHorizontal implements ITileEntityProvid
 
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if(tileEntity == null || player.isSneaking()){
+		if(tileEntity == null){
+			return false;
+		}
+
+		if(player.isSneaking()){
+			ItemStack heldItem = player.getHeldItem(hand);
+			if(heldItem.isEmpty() && tileEntity instanceof TileEntityBookshelf){
+				if(!world.isRemote){
+					TileEntityBookshelf bookshelf = (TileEntityBookshelf)tileEntity;
+					for(int i = 0; i < bookshelf.getSizeInventory(); i++){
+						ItemStack stack = bookshelf.getStackInSlot(i);
+						if(!stack.isEmpty()){
+							player.addItemStackToInventory(stack.copy());
+							bookshelf.setInventorySlotContents(i, ItemStack.EMPTY);
+							break;
+						}
+					}
+				}
+				return true;
+			}else if(!heldItem.isEmpty() && ContainerBookshelf.isBook(heldItem) && tileEntity instanceof TileEntityBookshelf){
+				if(!world.isRemote){
+					TileEntityBookshelf bookshelf = (TileEntityBookshelf)tileEntity;
+					for(int i = 0; i < bookshelf.getSizeInventory(); i++){
+						if(bookshelf.getStackInSlot(i).isEmpty()){
+							bookshelf.setInventorySlotContents(i, heldItem.splitStack(1));
+							break;
+						}
+					}
+				}
+				return true;
+			}
 			return false;
 		}
 
