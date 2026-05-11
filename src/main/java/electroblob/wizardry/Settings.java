@@ -13,6 +13,9 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -251,6 +254,8 @@ public final class Settings {
 	public Pair<ResourceLocation, Short>[] bowItemWhitelist = parseItemMetaStrings();
 	/** <b>[Server-only]</b> Map of items to values which wizard trades may use as currency. */
 	public Map<Pair<ResourceLocation, Short>, Integer> currencyItems = new HashMap<>();
+	/** <b>[Server-only]</b> Map of optional NBT tags for currency items, keyed the same as {@link #currencyItems}. */
+	public Map<Pair<ResourceLocation, Short>, NBTTagCompound> currencyItemNbt = new HashMap<>();
 	/** <b>[Server-only]</b> Global damage scaling factor for all player magic damage. */
 	public double playerDamageScale = 1.0;
 	/** <b>[Server-only]</b> Global damage scaling factor for all npc magic damage. */
@@ -1224,22 +1229,43 @@ public final class Settings {
 		bookshelfSearchRadius = property.getInt();
 		propOrder.add(property.getName());
 
-		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade. To specify metadata, use the format 'modid:item:meta value'. For example, 'minecraft:wool:1 5'. If no metadata is given, any metadata will be accepted.",
-				Pattern.compile("[A-Za-z0-9:_]+ [0-9]+"));
+		property = config.get(TWEAKS_CATEGORY, "currencyItems", new String[]{"gold_ingot 3", "emerald 6"}, "List of registry names of items which wizard trades can use as currency (in the first slot; the second slot is unaffected). Each entry in this list should consist of an item registry name, followed by a single space, then an integer which defines the 'value' of the item. Higher values mean fewer of that currency item are required for a given trade. To specify metadata, use the format 'modid:item:meta value'. For example, 'minecraft:wool:1 5'. If no metadata is given, any metadata will be accepted. NBT tags may optionally be specified in SNBT format immediately after the item/metadata, e.g. 'minecraft:potion{Potion:\"minecraft:strength\"} 3'.",
+				Pattern.compile(".+ [0-9]+"));
 		property.setLanguageKey("config." + Wizardry.MODID + ".currency_items");
 		propOrder.add(property.getName());
 		currencyItems = new HashMap<>();
+		currencyItemNbt = new HashMap<>();
 		for(String string : property.getStringList()){
-			string = string.toLowerCase(Locale.ROOT).trim();
-			String[] args = string.split(" ");
-			if(args.length != 2){
+			string = string.trim();
+			// Split on the last space to separate the item spec from the integer value; this correctly
+			// handles NBT strings that contain spaces inside quoted values.
+			int lastSpace = string.lastIndexOf(' ');
+			if(lastSpace < 0){
 				Wizardry.logger.warn("Invalid entry in currency items: {}", string);
-				continue; // Ignore invalid entries, the pattern above should ensure this never happens
+				continue;
+			}
+			String itemSpec = string.substring(0, lastSpace).toLowerCase(Locale.ROOT);
+			String valueStr = string.substring(lastSpace + 1);
+			// Check for an optional NBT tag (do NOT lowercase the raw NBT string - it is case-sensitive)
+			int nbtStart = itemSpec.indexOf('{');
+			NBTTagCompound nbt = null;
+			if(nbtStart >= 0){
+				// Re-extract the NBT portion from the original (non-lowercased) string to preserve case
+				String rawNbt = string.substring(nbtStart, lastSpace);
+				itemSpec = itemSpec.substring(0, nbtStart);
+				try{
+					nbt = JsonToNBT.getTagFromJson(rawNbt);
+				}catch(NBTException e){
+					Wizardry.logger.warn("Invalid NBT in currency items '{}': {}", string, e.getMessage());
+					continue;
+				}
 			}
 			try{
-				currencyItems.put(parseItemMetaString(args[0]), Integer.parseInt(args[1]));
+				Pair<ResourceLocation, Short> key = parseItemMetaString(itemSpec);
+				currencyItems.put(key, Integer.parseInt(valueStr));
+				if(nbt != null) currencyItemNbt.put(key, nbt);
 			}catch(NumberFormatException e){
-				Wizardry.logger.warn("Invalid integer in currency items: {}", args[1]);
+				Wizardry.logger.warn("Invalid integer in currency items: {}", valueStr);
 			}
 		}
 
