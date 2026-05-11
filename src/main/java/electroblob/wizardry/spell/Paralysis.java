@@ -64,8 +64,10 @@ public class Paralysis extends SpellRay {
 			}
 
 			float durationMultiplier = target instanceof EntityPlayer ? modifiers.get(PLAYER_EFFECT_DURATION_MULTIPLIER) : 1.0f;
-			((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.paralysis,
-					(int)(getProperty(EFFECT_DURATION).floatValue() * durationMultiplier * modifiers.get(WizardryItems.duration_upgrade)), 0));
+			if(!world.isRemote){
+				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.paralysis,
+						(int)(getProperty(EFFECT_DURATION).floatValue() * durationMultiplier * modifiers.get(WizardryItems.duration_upgrade)), 0));
+			}
 		}
 		
 		return false;

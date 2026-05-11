@@ -60,7 +60,7 @@ public class IceAge extends SpellAreaEffect {
 					caster, (int)(getProperty(FREEZE_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)))){
 				target.playSound(WizardrySounds.MISC_FREEZE, 1.0F, world.rand.nextFloat() * 0.4F + 0.8F);
 			}
-		}else if(target instanceof EntityPlayer){
+		}else if(target instanceof EntityPlayer && !world.isRemote){
 			target.addPotionEffect(new PotionEffect(WizardryPotions.frost,
 					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
 					getProperty(EFFECT_STRENGTH).intValue()));

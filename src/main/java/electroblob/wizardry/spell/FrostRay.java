@@ -61,9 +61,11 @@ public class FrostRay extends SpellRay {
 			// with this mechanic for their own purposes, so this line makes sure that doesn't affect wizardry.
 			}else{
 				// For frost ray the entity can move slightly, unlike freeze
-				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-						getProperty(EFFECT_STRENGTH).intValue()));
+				if(!world.isRemote){
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+							getProperty(EFFECT_STRENGTH).intValue()));
+				}
 
 				if(ticksInUse % 10 == 0){
 					float damage = getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY);

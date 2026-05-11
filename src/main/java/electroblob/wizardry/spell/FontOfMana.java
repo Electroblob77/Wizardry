@@ -33,7 +33,7 @@ public class FontOfMana extends SpellAreaEffect {
 	@Override
 	protected boolean affectEntity(World world, Vec3d origin, @Nullable EntityLivingBase caster, EntityLivingBase target, int targetCount, int ticksInUse, SpellModifiers modifiers){
 
-		if(target instanceof EntityPlayer){ // Font of mana is only useful to players
+		if(target instanceof EntityPlayer && !world.isRemote){ // Font of mana is only useful to players
 			target.addPotionEffect(new PotionEffect(WizardryPotions.font_of_mana,
 					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
 					(int)(getProperty(EFFECT_STRENGTH).intValue() + (modifiers.get(SpellModifiers.POTENCY) - 1) * 2)));

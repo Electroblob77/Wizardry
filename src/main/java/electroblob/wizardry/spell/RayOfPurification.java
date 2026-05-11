@@ -69,8 +69,10 @@ public class RayOfPurification extends SpellRay {
 				EntityUtils.attackEntityWithoutKnockback(target,
 						MagicDamage.causeDirectMagicDamage(caster, DamageType.RADIANT), damage);
 				// Blindness
-				((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade))));
+				if(!world.isRemote){
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS,
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade))));
+				}
 			}
 		}
 		

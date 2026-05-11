@@ -157,8 +157,10 @@ public class Transportation extends Spell {
 
 		if(BlockTransportationStone.testForCircle(world, destination)){
 			this.playSound(world, player, 0, -1, modifiers);
-			player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 150, 0));
-			data.setVariable(COUNTDOWN_KEY, getProperty(TELEPORT_COUNTDOWN).intValue());
+			if(!world.isRemote){
+				player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 150, 0));
+				data.setVariable(COUNTDOWN_KEY, getProperty(TELEPORT_COUNTDOWN).intValue());
+			}
 			return true;
 		}else{
 			if(!world.isRemote) player.sendStatusMessage(new TextComponentTranslation("spell." + this.getUnlocalisedName() + ".missing"), true);

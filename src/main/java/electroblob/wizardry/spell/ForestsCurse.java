@@ -38,9 +38,11 @@ public class ForestsCurse extends SpellAreaEffect {
 			int duration = (int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
 			int amplifier = (int)(getProperty(EFFECT_STRENGTH).floatValue() + bonusAmplifier);
 
-			target.addPotionEffect(new PotionEffect(MobEffects.POISON, duration, amplifier));
-			target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, amplifier));
-			target.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, duration, amplifier));
+			if(!world.isRemote){
+				target.addPotionEffect(new PotionEffect(MobEffects.POISON, duration, amplifier));
+				target.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, duration, amplifier));
+				target.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, duration, amplifier));
+			}
 		}
 
 		return true;

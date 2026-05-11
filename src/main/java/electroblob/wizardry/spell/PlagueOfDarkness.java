@@ -34,9 +34,11 @@ public class PlagueOfDarkness extends SpellAreaEffect {
 		if(!MagicDamage.isEntityImmune(DamageType.WITHER, target)){
 			target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER),
 					getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
-			target.addPotionEffect(new PotionEffect(MobEffects.WITHER,
-					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-					getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));
+			if(!world.isRemote){
+				target.addPotionEffect(new PotionEffect(MobEffects.WITHER,
+						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+						getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));
+			}
 		}
 
 		return true;

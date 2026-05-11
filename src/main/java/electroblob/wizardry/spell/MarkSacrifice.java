@@ -32,7 +32,7 @@ public class MarkSacrifice extends SpellRay {
 	@Override
 	protected boolean onEntityHit(World world, Entity target, Vec3d hit, EntityLivingBase caster, Vec3d origin, int ticksInUse, SpellModifiers modifiers){
 		
-		if(EntityUtils.isLiving(target)){
+		if(EntityUtils.isLiving(target) && !world.isRemote){
 			((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.mark_of_sacrifice,
 					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
 					getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));

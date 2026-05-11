@@ -41,8 +41,10 @@ public class Shield extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		caster.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 10,
-				getProperty(EFFECT_STRENGTH).intValue(), false, false));
+		if(!world.isRemote){
+			caster.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 10,
+					getProperty(EFFECT_STRENGTH).intValue(), false, false));
+		}
 
 		if(WizardData.get(caster).getVariable(SHIELD_KEY) == null){
 

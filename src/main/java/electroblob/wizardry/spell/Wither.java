@@ -39,9 +39,11 @@ public class Wither extends SpellRay {
 			}else{
 				target.attackEntityFrom(MagicDamage.causeDirectMagicDamage(caster, DamageType.WITHER),
 						getProperty(DAMAGE).floatValue() * modifiers.get(SpellModifiers.POTENCY));
-				((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.WITHER,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-						getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));
+				if(!world.isRemote){
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.WITHER,
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+							getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));
+				}
 			}
 		}
 		
