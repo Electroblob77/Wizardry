@@ -57,7 +57,7 @@ public class BlockCrystalFlower extends BlockBush {
 	@SubscribeEvent
 	public static void onBonemealEvent(BonemealEvent event){
 		// Grows crystal flowers when bonemeal is used on grass
-		if(Wizardry.settings.bonemealGrowsCrystalFlowers && event.getBlock().getBlock() == Blocks.GRASS){
+		if(!event.getWorld().isRemote && Wizardry.settings.bonemealGrowsCrystalFlowers && event.getBlock().getBlock() == Blocks.GRASS){
 
 			BlockPos pos = event.getPos().add(event.getWorld().rand.nextInt(8) - event.getWorld().rand.nextInt(8),
 					event.getWorld().rand.nextInt(4) - event.getWorld().rand.nextInt(4),

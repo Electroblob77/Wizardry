@@ -12,15 +12,104 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiPredicate;
+
 /**
  * Contains some useful static methods for interacting with the ally designation system. Also handles the friendly fire
  * setting. This was split off from {@code WizardryUtilities} as of wizardry 4.2 in an effort to make the code easier to
  * navigate.
+ * <p></p>
+ * <b>Addon API:</b> External mods can extend the ally system without modifying wizardry by registering predicates via
+ * {@link #registerValidTargetPredicate(BiPredicate)} and {@link #registerAllyPredicate(BiPredicate)}. Predicates are
+ * registered once at mod initialisation and called on every ally check with the live entity references, so any
+ * dynamic ownership model (NBT, capabilities, in-memory maps) is supported. Predicates run after all built-in
+ * wizardry logic and are additive — they can protect additional entity pairs but cannot remove existing protections
+ * such as direct ownership or scoreboard teams.
  */
 @Mod.EventBusSubscriber
 public final class AllyDesignationSystem {
 
 	private AllyDesignationSystem(){} // No instances!
+
+	/**
+	 * Predicates registered by external mods for {@link #isValidTarget}. Using {@link CopyOnWriteArrayList} so that
+	 * registration from any thread during mod initialisation is safe, while iteration on the server tick thread is
+	 * lock-free.
+	 */
+	private static final List<BiPredicate<Entity, Entity>> validTargetPredicates = new CopyOnWriteArrayList<>();
+
+	/**
+	 * Predicates registered by external mods for {@link #isAllied}. See {@link #validTargetPredicates}.
+	 */
+	private static final List<BiPredicate<EntityLivingBase, EntityLivingBase>> allyPredicates = new CopyOnWriteArrayList<>();
+
+	/**
+	 * Registers a predicate that extends the ally check performed by {@link #isValidTarget(Entity, Entity)}.
+	 * <p></p>
+	 * Call this method <b>once</b> during your mod's initialisation (e.g. {@code FMLInitializationEvent}). The
+	 * predicate is stored statically and invoked on every {@code isValidTarget} call, so it must be cheap — avoid
+	 * world queries or heavy computation inside the lambda.
+	 * <p></p>
+	 * <b>Predicate semantics:</b> return {@code true} to declare that {@code target} should be treated as an ally of
+	 * {@code attacker} and therefore must not be attacked. Return {@code false} to defer to other registered
+	 * predicates or the default result.
+	 * <p></p>
+	 * <b>Scope:</b> Predicates run after all built-in wizardry rules (direct ownership, scoreboard teams, player ally
+	 * list, mind-control, etc.) and only when none of those rules already produced a result. They are therefore
+	 * additive — they can protect additional pairs but cannot override existing protections.
+	 * <p></p>
+	 * <b>Recursion note:</b> {@code isValidTarget} recurses automatically for owned attackers (e.g. a summoned zombie
+	 * delegates to its owner). Predicates are only invoked at the root of that recursion (i.e. when the attacker is
+	 * not itself an {@link IEntityOwnable}), so each logical query triggers the predicate exactly once regardless of
+	 * ownership chain depth.
+	 * <p></p>
+	 * <b>Example</b> — protecting minions of allied players in an external mod that tracks ownership via a capability:
+	 * <pre>{@code
+	 * AllyDesignationSystem.registerValidTargetPredicate((attacker, target) -> {
+	 *     UUID summonerOfTarget = MyMod.getOwnerUUID(target);   // reads your capability / NBT
+	 *     if (summonerOfTarget == null) return false;            // not one of our mobs
+	 *     UUID summonerOfAttacker = MyMod.getOwnerUUID(attacker);
+	 *     if (summonerOfAttacker == null) return false;
+	 *     // Protect if both are owned by the same player, or by players who are wizardry allies
+	 *     if (summonerOfTarget.equals(summonerOfAttacker)) return true;
+	 *     EntityPlayer ownerA = ...; EntityPlayer ownerB = ...;
+	 *     return AllyDesignationSystem.isPlayerAlly(ownerA, ownerB);
+	 * });
+	 * }</pre>
+	 *
+	 * @param predicate A {@link BiPredicate} receiving {@code (attacker, target)}. Must be non-null and thread-safe.
+	 */
+	public static void registerValidTargetPredicate(BiPredicate<Entity, Entity> predicate){
+		validTargetPredicates.add(predicate);
+	}
+
+	/**
+	 * Registers a predicate that extends the ally check performed by {@link #isAllied(EntityLivingBase, EntityLivingBase)}.
+	 * <p></p>
+	 * Call this method <b>once</b> during your mod's initialisation (e.g. {@code FMLInitializationEvent}). The
+	 * predicate is stored statically and invoked on every {@code isAllied} call.
+	 * <p></p>
+	 * <b>Predicate semantics:</b> return {@code true} to declare that {@code possibleAlly} should be considered allied
+	 * with {@code allyOf}. Returning {@code true} affects any system that calls {@code isAllied}, including healing
+	 * AoE spells, {@code EntityRadiantTotem}, and the friendly-fire event handler. Return {@code false} to defer.
+	 * <p></p>
+	 * <b>Scope:</b> Same additive-only guarantee as {@link #registerValidTargetPredicate} — predicates run after all
+	 * built-in rules and cannot remove existing ally relationships.
+	 * <p></p>
+	 * <b>Example</b> — treating faction members as allies for healing spells:
+	 * <pre>{@code
+	 * AllyDesignationSystem.registerAllyPredicate((allyOf, possibleAlly) ->
+	 *     MyFactionMod.sameFaction(allyOf, possibleAlly)
+	 * );
+	 * }</pre>
+	 *
+	 * @param predicate A {@link BiPredicate} receiving {@code (allyOf, possibleAlly)}. Must be non-null and thread-safe.
+	 */
+	public static void registerAllyPredicate(BiPredicate<EntityLivingBase, EntityLivingBase> predicate){
+		allyPredicates.add(predicate);
+	}
 
 	/** Set of constants for each of the four friendly fire settings. */
 	public enum FriendlyFire {
@@ -197,6 +286,15 @@ public final class AllyDesignationSystem {
 			}
 		}
 
+		// Addon predicate registry — only evaluated at the root of the ownership recursion (i.e. when the attacker is
+		// not itself an IEntityOwnable). Owned attackers already delegate upward via the recursive call at the top of
+		// this method, so skipping them here ensures each logical query fires the predicates exactly once.
+		if(!validTargetPredicates.isEmpty() && !(attacker instanceof IEntityOwnable)){
+			for(BiPredicate<Entity, Entity> predicate : validTargetPredicates){
+				if(predicate.test(attacker, target)) return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -241,6 +339,13 @@ public final class AllyDesignationSystem {
 			}
 		}
 
+		// Addon predicate registry — runs after all built-in rules; additive only.
+		if(!allyPredicates.isEmpty()){
+			for(BiPredicate<EntityLivingBase, EntityLivingBase> predicate : allyPredicates){
+				if(predicate.test(allyOf, possibleAlly)) return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -258,7 +363,10 @@ public final class AllyDesignationSystem {
 		WizardData data = WizardData.get(allyOf);
 		if(data == null) return false;
 		Entity owner = ownable.getOwner();
-		return owner instanceof EntityPlayer ? data.isPlayerAlly((EntityPlayer)owner) : data.isPlayerAlly(ownable.getOwnerId());
+		if(owner == null) return data.isPlayerAlly(ownable.getOwnerId()); // offline owner
+		if(owner instanceof EntityPlayer) return data.isPlayerAlly((EntityPlayer)owner);
+		if(owner instanceof IEntityOwnable) return isOwnerAlly(allyOf, (IEntityOwnable)owner); // recurse
+		return false;
 	}
 
 	@SubscribeEvent
