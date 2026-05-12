@@ -330,9 +330,11 @@ public class Possession extends SpellRay {
 			victim.setPosition(player.posX, player.posY, player.posZ);
 			if(!player.world.isRemote) player.world.spawnEntity(victim);
 
-			for(PotionEffect effect : player.getActivePotionEffects()){
-				if(effect.getPotion() instanceof PotionSlowTime) continue; // Don't transfer slow time
-				victim.addPotionEffect(effect);
+			if(!player.world.isRemote){
+				for(PotionEffect effect : player.getActivePotionEffects()){
+					if(effect.getPotion() instanceof PotionSlowTime) continue; // Don't transfer slow time
+					victim.addPotionEffect(effect);
+				}
 			}
 		}
 

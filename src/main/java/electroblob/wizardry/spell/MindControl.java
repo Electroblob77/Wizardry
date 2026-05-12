@@ -120,8 +120,10 @@ public class MindControl extends SpellRay {
 	}
 
 	public static void startControlling(EntityLiving target, EntityLivingBase controller, int duration){
-		target.getEntityData().setUniqueId(NBT_KEY, controller.getUniqueID());
-		target.addPotionEffect(new PotionEffect(WizardryPotions.mind_control, duration, 0));
+		if(!target.world.isRemote){
+			target.getEntityData().setUniqueId(NBT_KEY, controller.getUniqueID());
+			target.addPotionEffect(new PotionEffect(WizardryPotions.mind_control, duration, 0));
+		}
 	}
 
 	/**

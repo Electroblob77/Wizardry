@@ -52,12 +52,14 @@ public class Intimidate extends SpellAreaEffect {
 
 			int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
 
-			NBTTagCompound entityNBT = target.getEntityData();
-			if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
+			if(!world.isRemote){
+				NBTTagCompound entityNBT = target.getEntityData();
+				if(entityNBT != null) entityNBT.setUniqueId(NBT_KEY, caster.getUniqueID());
 
-			target.addPotionEffect(new PotionEffect(WizardryPotions.fear,
-					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-					getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
+				target.addPotionEffect(new PotionEffect(WizardryPotions.fear,
+						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+						getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
+			}
 		}
 
 		return true;

@@ -42,9 +42,11 @@ public class Freeze extends SpellRay {
 				if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
 						new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
 			}else{
-				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
-						(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-						getProperty(EFFECT_STRENGTH).intValue()));
+				if(!world.isRemote){
+					((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.frost,
+							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+							getProperty(EFFECT_STRENGTH).intValue()));
+				}
 			}
 
 			if(target.isBurning()) target.extinguish();

@@ -617,7 +617,10 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 		// ((tier.ordinal() + 1) * 16 + rand.nextInt(6)) gives a 'value' for the item being bought
 		// This is then divided by the value of the currency item to give a price
 		// The absolute maximum stack size that can result from this calculation (with value = 1) is 64.
-		return new ItemStack(item, MathHelper.clamp((8 + tier.ordinal() * 16 + rand.nextInt(9)) / value, 1, 64), meta);
+		ItemStack result = new ItemStack(item, MathHelper.clamp((8 + tier.ordinal() * 16 + rand.nextInt(9)) / value, 1, 64), meta);
+		NBTTagCompound nbt = Wizardry.settings.currencyItemNbt.get(itemName);
+		if(nbt != null) result.setTagCompound(nbt.copy());
+		return result;
 	}
 
 	private ItemStack getRandomItemOfTier(Tier tier){

@@ -168,6 +168,8 @@ public class SpellBuff extends Spell {
 	 * Returns a boolean to allow subclasses to cause the spell to fail if for some reason the effect cannot be applied
 	 * (for example, {@link Heal} fails if the caster is on full health). */
 	protected boolean applyEffects(EntityLivingBase caster, SpellModifiers modifiers){
+		if(caster.world.isRemote) return true;
+
 		// This will generate 0 for novice and apprentice, and 1 for advanced and master
 		// TODO: Once we've found a way of detecting if amplifiers actually affect the potion type, implement it here.
 		int bonusAmplifier = getBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));

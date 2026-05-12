@@ -35,9 +35,11 @@ public class SixthSense extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		caster.addPotionEffect(new PotionEffect(WizardryPotions.sixth_sense,
-				(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-				(int)((modifiers.get(WizardryItems.range_upgrade) - 1f) / Constants.RANGE_INCREASE_PER_LEVEL)));
+		if(!world.isRemote){
+			caster.addPotionEffect(new PotionEffect(WizardryPotions.sixth_sense,
+					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+					(int)((modifiers.get(WizardryItems.range_upgrade) - 1f) / Constants.RANGE_INCREASE_PER_LEVEL)));
+		}
 
 		if(world.isRemote){
 			Wizardry.proxy.loadShader(caster, SHADER);

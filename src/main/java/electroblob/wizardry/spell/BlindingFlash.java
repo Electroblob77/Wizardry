@@ -27,7 +27,9 @@ public class BlindingFlash extends SpellAreaEffect {
 
 		if(EntityUtils.isLiving(target)){
 			int duration = (int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade));
-			target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
+			if(!world.isRemote){
+				target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
+			}
 		}
 
 		return true;

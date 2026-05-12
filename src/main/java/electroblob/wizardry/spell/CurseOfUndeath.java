@@ -28,8 +28,10 @@ public class CurseOfUndeath extends SpellRay {
 		if(EntityUtils.isLiving(target)){
 
 			// This will actually run out in the end, but only if you leave Minecraft running for 3.4 years
-			((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.curse_of_undeath, Integer.MAX_VALUE,
-					getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));
+			if(!world.isRemote){
+				((EntityLivingBase)target).addPotionEffect(new PotionEffect(WizardryPotions.curse_of_undeath, Integer.MAX_VALUE,
+						getProperty(EFFECT_STRENGTH).intValue() + SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY))));
+			}
 		}
 
 		return true;

@@ -29,9 +29,11 @@ public class InvigoratingPresence extends SpellAreaEffect {
 
 		int bonusAmplifier = SpellBuff.getStandardBonusAmplifier(modifiers.get(SpellModifiers.POTENCY));
 
-		target.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,
-				(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
-				getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
+		if(!world.isRemote){
+			target.addPotionEffect(new PotionEffect(MobEffects.STRENGTH,
+					(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)),
+					getProperty(EFFECT_STRENGTH).intValue() + bonusAmplifier));
+		}
 
 		return true;
 	}
