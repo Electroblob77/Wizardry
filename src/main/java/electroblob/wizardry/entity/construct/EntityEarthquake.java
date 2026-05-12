@@ -81,7 +81,7 @@ public class EntityEarthquake extends EntityMagicConstruct { // NOT a scaled con
 					target.attackEntityFrom(
 							MagicDamage.causeIndirectMagicDamage(this, this.getCaster(), DamageType.BLAST),
 							10 * this.damageMultiplier);
-					target.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 400, 1));
+					if(!world.isRemote) target.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 400, 1));
 				}
 
 				// All targets are thrown, even those immune to the damage, so they don't fall into the ground.

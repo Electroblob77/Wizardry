@@ -257,9 +257,9 @@ public abstract class Forfeit {
 						1, EntityUtils.canDamageBlocks(p, w)));
 		}));
 
-		add(Tier.NOVICE, Element.ICE, create("freeze_self", (w, p) -> p.addPotionEffect(new PotionEffect(WizardryPotions.frost, 200))));
+		add(Tier.NOVICE, Element.ICE, create("freeze_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(WizardryPotions.frost, 200)); }));
 
-		add(Tier.APPRENTICE, Element.ICE, create("freeze_self_2", (w, p) -> p.addPotionEffect(new PotionEffect(WizardryPotions.frost, 300, 1))));
+		add(Tier.APPRENTICE, Element.ICE, create("freeze_self_2", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(WizardryPotions.frost, 300, 1)); }));
 
 		add(Tier.APPRENTICE, Element.ICE, create("ice_spikes", (w, p) -> {
 			if(!w.isRemote){
@@ -342,7 +342,7 @@ public abstract class Forfeit {
 
 		add(Tier.ADVANCED, Element.LIGHTNING, create("lightning", (w, p) -> w.addWeatherEffect(new EntityLightningBolt(w, p.posX, p.posY, p.posZ, false))));
 
-		add(Tier.ADVANCED, Element.LIGHTNING, create("paralyse_self", (w, p) -> p.addPotionEffect(new PotionEffect(WizardryPotions.paralysis, 200))));
+		add(Tier.ADVANCED, Element.LIGHTNING, create("paralyse_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(WizardryPotions.paralysis, 200)); }));
 
 		add(Tier.ADVANCED, Element.LIGHTNING, create("lightning_wraiths", (w, p) -> {
 			if(!w.isRemote){
@@ -367,7 +367,7 @@ public abstract class Forfeit {
 			}
 		}));
 
-		add(Tier.NOVICE, Element.NECROMANCY, create("nausea", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 400))));
+		add(Tier.NOVICE, Element.NECROMANCY, create("nausea", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 400)); }));
 
 		add(Tier.APPRENTICE, Element.NECROMANCY, create("zombie_horde", (w, p) -> {
 			if(!w.isRemote){
@@ -381,7 +381,7 @@ public abstract class Forfeit {
 			}
 		}));
 
-		add(Tier.ADVANCED, Element.NECROMANCY, create("wither_self", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.WITHER, 400))));
+		add(Tier.ADVANCED, Element.NECROMANCY, create("wither_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.WITHER, 400)); }));
 
 		add(Tier.MASTER, Element.NECROMANCY, create("cripple_self", (w, p) -> p.attackEntityFrom(DamageSource.MAGIC, p.getHealth() - 1)));
 
@@ -422,7 +422,7 @@ public abstract class Forfeit {
 			}
 		}));
 
-		add(Tier.APPRENTICE, Element.EARTH, create("poison_self", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.POISON, 400, 1))));
+		add(Tier.APPRENTICE, Element.EARTH, create("poison_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.POISON, 400, 1)); }));
 
 		add(Tier.ADVANCED, Element.EARTH, create("flood", (w, p) -> {
 			if(!w.isRemote && EntityUtils.canDamageBlocks(p, w)){
@@ -457,7 +457,7 @@ public abstract class Forfeit {
 
 		add(Tier.APPRENTICE, Element.SORCERY, create("teleport_self", (w, p) -> ((Banish)Spells.banish).teleport(p, w, 8 + w.rand.nextDouble() * 8)));
 
-		add(Tier.ADVANCED, Element.SORCERY, create("levitate_self", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.LEVITATION, 200))));
+		add(Tier.ADVANCED, Element.SORCERY, create("levitate_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.LEVITATION, 200)); }));
 
 		add(Tier.ADVANCED, Element.SORCERY, create("vex_horde", (w, p) -> {
 			if(!w.isRemote){
@@ -500,15 +500,15 @@ public abstract class Forfeit {
 			}
 		}));
 
-		add(Tier.APPRENTICE, Element.HEALING, create("hunger", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 400, 4))));
+		add(Tier.APPRENTICE, Element.HEALING, create("hunger", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.HUNGER, 400, 4)); }));
 
-		add(Tier.APPRENTICE, Element.HEALING, create("blind_self", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 200))));
+		add(Tier.APPRENTICE, Element.HEALING, create("blind_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 200)); }));
 
-		add(Tier.ADVANCED, Element.HEALING, create("weaken_self", (w, p) -> p.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 600, 3))));
+		add(Tier.ADVANCED, Element.HEALING, create("weaken_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 600, 3)); }));
 
-		add(Tier.ADVANCED, Element.HEALING, create("jam_self", (w, p) -> p.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer, 300))));
+		add(Tier.ADVANCED, Element.HEALING, create("jam_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(WizardryPotions.arcane_jammer, 300)); }));
 
-		add(Tier.MASTER, Element.HEALING, create("curse_self", (w, p) -> p.addPotionEffect(new PotionEffect(WizardryPotions.curse_of_undeath, Integer.MAX_VALUE))));
+		add(Tier.MASTER, Element.HEALING, create("curse_self", (w, p) -> { if(!w.isRemote) p.addPotionEffect(new PotionEffect(WizardryPotions.curse_of_undeath, Integer.MAX_VALUE)); }));
 
 	}
 

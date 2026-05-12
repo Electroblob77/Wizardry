@@ -27,7 +27,7 @@ public class EntityDart extends EntityMagicArrow {
 	@Override
 	public void onEntityHit(EntityLivingBase entityHit){
 		// Adds a weakness effect to the target.
-		entityHit.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, Spells.dart.getProperty(Spell.EFFECT_DURATION).intValue(),
+		if(!entityHit.world.isRemote) entityHit.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, Spells.dart.getProperty(Spell.EFFECT_DURATION).intValue(),
 				Spells.dart.getProperty(Spell.EFFECT_STRENGTH).intValue(), false, false));
 		this.playSound(WizardrySounds.ENTITY_DART_HIT, 1.0F, 1.2F / (this.rand.nextFloat() * 0.2F + 0.9F));
 	}

@@ -209,7 +209,7 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 
 	@Override
 	public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack){
-		if(armorType == EntityEquipmentSlot.HEAD && player.ticksExisted % 20 == 0
+		if(!world.isRemote && armorType == EntityEquipmentSlot.HEAD && player.ticksExisted % 20 == 0
 				&& isWearingFullSet(player, element, ArmourClass.BATTLEMAGE) && doAllArmourPiecesHaveMana(player)){
 			player.addPotionEffect(new PotionEffect(WizardryPotions.ward, 219, 0, true, false));
 		}

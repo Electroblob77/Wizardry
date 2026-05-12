@@ -139,7 +139,7 @@ public class EntityWitherSkeletonMinion extends EntityWitherSkeleton implements 
 
 	@Override
 	public void onSuccessfulAttack(EntityLivingBase target){
-		target.addPotionEffect(new PotionEffect(MobEffects.WITHER, 200));
+		if(!target.world.isRemote) target.addPotionEffect(new PotionEffect(MobEffects.WITHER, 200));
 	}
 
 	@Override

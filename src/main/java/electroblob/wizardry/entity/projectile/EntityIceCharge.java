@@ -48,7 +48,7 @@ public class EntityIceCharge extends EntityBomb {
 					MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.FROST).setProjectile(),
 					damage);
 
-			if(entityHit instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.FROST, entityHit))
+			if(!this.world.isRemote && entityHit instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.FROST, entityHit))
 				((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(WizardryPotions.frost,
 						Spells.ice_charge.getProperty(Spell.DIRECT_EFFECT_DURATION).intValue(),
 						Spells.ice_charge.getProperty(Spell.DIRECT_EFFECT_STRENGTH).intValue()));

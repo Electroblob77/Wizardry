@@ -44,7 +44,7 @@ public class EntityPoisonBomb extends EntityBomb {
 						MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.POISON).setProjectile(),
 						damage);
 
-				if(entityHit instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.POISON, entityHit))
+				if(!this.world.isRemote && entityHit instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.POISON, entityHit))
 					((EntityLivingBase)entityHit).addPotionEffect(new PotionEffect(MobEffects.POISON,
 							Spells.poison_bomb.getProperty(Spell.DIRECT_EFFECT_DURATION).intValue(),
 							Spells.poison_bomb.getProperty(Spell.DIRECT_EFFECT_STRENGTH).intValue()));
@@ -69,9 +69,11 @@ public class EntityPoisonBomb extends EntityBomb {
 					target.attackEntityFrom(
 							MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.POISON),
 							Spells.poison_bomb.getProperty(Spell.SPLASH_DAMAGE).floatValue() * damageMultiplier);
-					target.addPotionEffect(new PotionEffect(MobEffects.POISON,
-							Spells.poison_bomb.getProperty(Spell.SPLASH_EFFECT_DURATION).intValue(),
-							Spells.poison_bomb.getProperty(Spell.SPLASH_EFFECT_STRENGTH).intValue()));
+					if(!this.world.isRemote){
+						target.addPotionEffect(new PotionEffect(MobEffects.POISON,
+								Spells.poison_bomb.getProperty(Spell.SPLASH_EFFECT_DURATION).intValue(),
+								Spells.poison_bomb.getProperty(Spell.SPLASH_EFFECT_STRENGTH).intValue()));
+					}
 				}
 			}
 		}

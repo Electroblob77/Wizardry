@@ -359,7 +359,7 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 					this.updateRecipes = false;
 				}
 
-				this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 0));
+				if(!this.world.isRemote) this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 200, 0));
 			}
 		}
 

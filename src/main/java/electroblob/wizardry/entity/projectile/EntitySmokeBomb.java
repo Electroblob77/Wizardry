@@ -48,7 +48,7 @@ public class EntitySmokeBomb extends EntityBomb {
 
 			for(EntityLivingBase target : targets){
 				if(target != this.getThrower()){
-					target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
+					if(!this.world.isRemote) target.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, duration, 0));
 				}
 			}
 		}
