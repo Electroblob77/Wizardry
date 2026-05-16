@@ -675,7 +675,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.amulet_transience){
 
-					if(player.getHealth() <= 6 && player.world.rand.nextFloat() < 0.25f){
+					if(!player.world.isRemote && player.getHealth() <= 6 && player.world.rand.nextFloat() < 0.25f){
 						player.addPotionEffect(new PotionEffect(WizardryPotions.transience, 300));
 						player.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 300, 0, false, false));
 					}
@@ -701,7 +701,7 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.ring_ice_melee){
 
-					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(!player.world.isRemote && EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.ICE){
 						event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, 200, 0));
 					}
@@ -734,14 +734,14 @@ public class ItemArtefact extends Item {
 
 				}else if(artefact == WizardryItems.ring_necromancy_melee){
 
-					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(!player.world.isRemote && EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.NECROMANCY){
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.WITHER, 200, 0));
 					}
 
 				}else if(artefact == WizardryItems.ring_earth_melee){
 
-					if(EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
+					if(!player.world.isRemote && EntityUtils.isMeleeDamage(event.getSource()) && mainhandItem.getItem() instanceof ItemWand
 							&& ((ItemWand)mainhandItem.getItem()).element == Element.EARTH){
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
 					}
@@ -774,12 +774,12 @@ public class ItemArtefact extends Item {
 				}else if(artefact == WizardryItems.ring_soulbinding){
 
 					// Best guess at necromancy spell damage: either it's wither damage...
-					if((event.getSource() instanceof IElementalDamage
+					if(!player.world.isRemote && ((event.getSource() instanceof IElementalDamage
 							&& (((IElementalDamage)event.getSource()).getType() == MagicDamage.DamageType.WITHER))
 						// or it's direct, non-melee damage and the player is holding a wand with a necromancy spell selected
 						|| (event.getSource().getImmediateSource() == player && !EntityUtils.isMeleeDamage(event.getSource())
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
-							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.NECROMANCY))){
+							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.NECROMANCY)))){
 
 						event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.curse_of_soulbinding, 400));
 						CurseOfSoulbinding.getSoulboundCreatures(WizardData.get(player)).add(event.getEntity().getUniqueID());
@@ -804,14 +804,14 @@ public class ItemArtefact extends Item {
 				}else if(artefact == WizardryItems.ring_poison){
 
 					// Best guess at earth spell damage: either it's poison damage...
-					if((event.getSource() instanceof IElementalDamage
+					if(!player.world.isRemote && ((event.getSource() instanceof IElementalDamage
 							&& (((IElementalDamage)event.getSource()).getType() == MagicDamage.DamageType.POISON))
 							// ...or it was from a dart...
 							|| event.getSource().getImmediateSource() instanceof EntityDart
 							// ...or it's direct, non-melee damage and the player is holding a wand with an earth spell selected
 							|| (event.getSource().getImmediateSource() == player && !EntityUtils.isMeleeDamage(event.getSource())
 							&& Streams.stream(player.getHeldEquipment()).anyMatch(s -> s.getItem() instanceof ISpellCastingItem
-							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.EARTH))){
+							&& ((ISpellCastingItem)s.getItem()).getCurrentSpell(s).getElement() == Element.EARTH)))){
 
 						event.getEntityLiving().addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 0));
 					}

@@ -120,7 +120,7 @@ public class EntityMagicSlime extends EntitySlime implements ISummonedCreature {
 				&& ((EntityLivingBase)this.getRidingEntity()).getHealth() > 0){
 			if(this.ticksExisted % 16 == 1){
 				this.getRidingEntity().attackEntityFrom(DamageSource.MAGIC, 1);
-				if(this.getRidingEntity() != null){ // Some mobs force-dismount when attacked (normally when dying)
+				if(this.getRidingEntity() != null && !this.world.isRemote){ // Some mobs force-dismount when attacked (normally when dying)
 					((EntityLivingBase)this.getRidingEntity())
 							.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 20, 2));
 				}

@@ -145,7 +145,7 @@ public class EntityWitheringTotem extends EntityScaledConstruct {
 
 		for(EntityLivingBase target : nearby){
 
-			if(EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(this,
+			if(!world.isRemote && EntityUtils.attackEntityWithoutKnockback(target, MagicDamage.causeIndirectMagicDamage(this,
 					getCaster(), DamageType.MAGIC), damage)){
 				target.addPotionEffect(new PotionEffect(MobEffects.WITHER, Spells.withering_totem.getProperty(Spell.EFFECT_DURATION).intValue(),
 						Spells.withering_totem.getProperty(Spell.EFFECT_STRENGTH).intValue()));

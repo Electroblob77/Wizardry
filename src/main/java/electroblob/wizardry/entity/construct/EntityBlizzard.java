@@ -62,7 +62,7 @@ public class EntityBlizzard extends EntityScaledConstruct {
 				}
 
 				// All entities are slowed, even the caster (except those immune to frost effects)
-				if(!MagicDamage.isEntityImmune(DamageType.FROST, target))
+				if(!world.isRemote && !MagicDamage.isEntityImmune(DamageType.FROST, target))
 					target.addPotionEffect(new PotionEffect(WizardryPotions.frost, 20, 0));
 			}
 			

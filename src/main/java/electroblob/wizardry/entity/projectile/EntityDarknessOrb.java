@@ -33,7 +33,7 @@ public class EntityDarknessOrb extends EntityMagicProjectile {
 					MagicDamage.causeIndirectMagicDamage(this, this.getThrower(), DamageType.WITHER).setProjectile(),
 					damage);
 
-			if(target instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.WITHER, target))
+			if(!this.world.isRemote && target instanceof EntityLivingBase && !MagicDamage.isEntityImmune(DamageType.WITHER, target))
 				((EntityLivingBase)target).addPotionEffect(new PotionEffect(MobEffects.WITHER,
 						Spells.darkness_orb.getProperty(Spell.EFFECT_DURATION).intValue(),
 						Spells.darkness_orb.getProperty(Spell.EFFECT_STRENGTH).intValue()));

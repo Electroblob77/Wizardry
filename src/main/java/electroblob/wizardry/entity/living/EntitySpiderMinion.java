@@ -129,7 +129,7 @@ public class EntitySpiderMinion extends EntityCaveSpider implements ISummonedCre
 			seconds = 15;
 		}
 
-		if(seconds > 0){
+		if(seconds > 0 && !target.world.isRemote){
 			target.addPotionEffect(new PotionEffect(MobEffects.POISON, seconds * 20, 0));
 		}
 	}

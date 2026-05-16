@@ -340,7 +340,7 @@ public class TileEntityShrineCore extends TileEntity implements ITickable {
 		List<EntityLivingBase> entities = world.getEntitiesWithinAABB(EntityLivingBase.class, containmentField, e -> e instanceof EntityPlayer || e instanceof EntityWizard || e instanceof EntityEvilWizard);
 
 		for (EntityLivingBase entity : entities) {
-			entity.addPotionEffect(new PotionEffect(WizardryPotions.containment, 219));
+			if(!world.isRemote) entity.addPotionEffect(new PotionEffect(WizardryPotions.containment, 219));
 			NBTExtras.storeTagSafely(entity.getEntityData(), PotionContainment.ENTITY_TAG, NBTUtil.createPosTag(this.pos));
 		}
 	}

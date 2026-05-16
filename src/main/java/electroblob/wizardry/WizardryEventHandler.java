@@ -274,7 +274,7 @@ public final class WizardryEventHandler {
 				if(event.getEntityLiving().isPotionActive(WizardryPotions.ice_shroud)
 						&& !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving())
 						&& !(attacker instanceof FakePlayer)) // Fake players cause problems
-					attacker.addPotionEffect(new PotionEffect(WizardryPotions.frost,
+					if(!world.isRemote) attacker.addPotionEffect(new PotionEffect(WizardryPotions.frost,
 							Spells.ice_shroud.getProperty(Spell.EFFECT_DURATION).intValue(),
 							Spells.ice_shroud.getProperty(Spell.EFFECT_STRENGTH).intValue()));
 
@@ -326,7 +326,7 @@ public final class WizardryEventHandler {
 				level = EnchantmentHelper.getEnchantmentLevel(WizardryEnchantments.freezing_weapon,
 						attacker.getHeldItemMainhand());
 				// Frost lasts for longer because it doesn't do any actual damage
-				if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
+				if(!event.getEntityLiving().world.isRemote && level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
 					event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level * 200, 0));
 			}
 		}
@@ -338,7 +338,7 @@ public final class WizardryEventHandler {
 			int level = event.getSource().getImmediateSource().getEntityData()
 					.getInteger(FreezingWeapon.FREEZING_ARROW_NBT_KEY);
 
-			if(level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
+			if(!event.getEntityLiving().world.isRemote && level > 0 && !MagicDamage.isEntityImmune(DamageType.FROST, event.getEntityLiving()))
 				event.getEntityLiving().addPotionEffect(new PotionEffect(WizardryPotions.frost, level * 150, 0));
 		}
 
