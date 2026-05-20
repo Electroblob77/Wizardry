@@ -86,7 +86,13 @@ public class RandomSpell extends LootFunction {
 		// (And WHY does it only return an entity?! The underlying field is always a player so I'm casting it anyway)
 		EntityPlayer player = (EntityPlayer)context.getKillerPlayer();
 
-		Spell spell = pickRandomSpell(stack, random, spellContext, player);
+        Spell spell;
+        try {
+            spell = pickRandomSpell(stack, random, spellContext, player);
+        } catch (ClassCastException e) {
+            Wizardry.logger.warn("Failed to apply random_spell function! An item ({}) was passed to a spell's compatibility check that it couldn't handle.", stack.getItem().getRegistryName(), e);
+            return stack; // Safely bypass processing and return the raw item intact
+        }
 
 		if(spell == Spells.none) Wizardry.logger.warn("Tried to apply the random_spell loot function to an item, but no"
 					+ " enabled spells matched the criteria specified. Substituting placeholder (metadata 0) item.");
