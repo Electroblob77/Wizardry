@@ -36,6 +36,7 @@ public class WizardryPacketHandler {
 		registerMessage(PacketRequestDonationPerks.class, 	PacketRequestDonationPerks.Message.class);
 		registerMessage(PacketSyncDonationPerks.class, 		PacketSyncDonationPerks.Message.class);
 		registerMessage(PacketBombExplosion.class, 			PacketBombExplosion.Message.class);
+		registerMessage(PacketSyncArcaneLock.class, 		PacketSyncArcaneLock.Message.class);
 	}
 
 	private static int nextPacketId = 0;

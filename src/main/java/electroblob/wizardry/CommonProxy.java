@@ -181,6 +181,8 @@ public class CommonProxy {
 
 	public void handleBombExplosionPacket(PacketBombExplosion.Message message){}
 
+	public void handleArcaneLockSyncPacket(PacketSyncArcaneLock.Message message){}
+
 	// SECTION Misc
 	// ===============================================================================================================
 

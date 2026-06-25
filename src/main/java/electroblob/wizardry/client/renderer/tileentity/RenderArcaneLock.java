@@ -60,8 +60,12 @@ public class RenderArcaneLock {
 
 					GlStateManager.pushMatrix();
 					GlStateManager.enableBlend();
+					GlStateManager.enableDepth();
+					GlStateManager.depthMask(true);
+					GlStateManager.disableCull();
 					lighting = GL11.glIsEnabled(GL11.GL_LIGHTING);
 					GlStateManager.disableLighting();
+					GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 					OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 					GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -90,6 +94,7 @@ public class RenderArcaneLock {
 
 			tessellator.draw();
 
+			GlStateManager.enableCull();
 			GlStateManager.disableBlend();
 			GlStateManager.enableTexture2D();
 			if(lighting){

@@ -718,6 +718,20 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void handleArcaneLockSyncPacket(PacketSyncArcaneLock.Message message){
+		if(Minecraft.getMinecraft().world != null){
+			TileEntity tileentity = Minecraft.getMinecraft().world.getTileEntity(message.pos);
+			if(tileentity != null){
+				if(message.locked){
+					tileentity.getTileData().setUniqueId(electroblob.wizardry.spell.ArcaneLock.NBT_KEY, message.owner);
+				}else{
+					electroblob.wizardry.util.NBTExtras.removeUniqueId(tileentity.getTileData(), electroblob.wizardry.spell.ArcaneLock.NBT_KEY);
+				}
+			}
+		}
+	}
+
+	@Override
 	public void handleBombExplosionPacket(PacketBombExplosion.Message message){
 
 		net.minecraft.world.World world = Minecraft.getMinecraft().world;

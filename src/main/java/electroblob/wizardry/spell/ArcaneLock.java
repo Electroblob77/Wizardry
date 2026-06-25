@@ -2,6 +2,8 @@ package electroblob.wizardry.spell;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.SpellActions;
+import electroblob.wizardry.packet.PacketSyncArcaneLock;
+import electroblob.wizardry.packet.WizardryPacketHandler;
 import electroblob.wizardry.util.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -74,12 +76,14 @@ public class ArcaneLock extends SpellRay {
 				if(world.getPlayerEntityByUUID(tileentity.getTileData().getUniqueId(NBT_KEY)) == player){
 					NBTExtras.removeUniqueId(tileentity.getTileData(), NBT_KEY);
 					world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
+					WizardryPacketHandler.net.sendToDimension(new PacketSyncArcaneLock.Message(pos, false, null), world.provider.getDimension());
 					return true;
 				}
 			}else{
 				// Locking
 				tileentity.getTileData().setUniqueId(NBT_KEY, player.getUniqueID());
 				world.markAndNotifyBlock(pos, null, world.getBlockState(pos), world.getBlockState(pos), 3);
+				WizardryPacketHandler.net.sendToDimension(new PacketSyncArcaneLock.Message(pos, true, player.getUniqueID()), world.provider.getDimension());
 				return true;
 			}
 		}
