@@ -25,6 +25,7 @@ import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,6 +33,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
@@ -53,6 +55,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -78,13 +81,6 @@ import java.util.stream.Collectors;
  */
 @Mod.EventBusSubscriber
 public class ItemArtefact extends Item {
-
-	// Artefact checklist:
-	// - Create and register item, add model and texture
-	// - Program effect, using events if possible (if it only affects a specific spell or entity, in there is ok)
-	// - Add name AND description to lang files
-	// - Add to loot_tables/subsets/[rarity]_artefacts.json
-	// - Add to advancements/artefact.json and advancements/all_artefacts.json
 
 	public enum Type {
 
@@ -157,11 +153,6 @@ public class ItemArtefact extends Item {
 		return WizardryBaublesIntegration.enabled() ? new WizardryBaublesIntegration.ArtefactBaubleProvider(type) : null;
 	}
 
-	// IBauble does of course have an onWornTick method. However, because it's an optional dependency, it doesn't really
-	// make sense to use that method when it's easier to just use the isBaubleEquipped method in the same
-	// place as the non-baubles check. In other words, most artefacts are event-driven anyway so I'd rather have the
-	// tick-driven ones use events as well for the sake of consistency.
-
 	/**
 	 * Returns whether the given artefact is active for the given player. If Baubles is loaded, an artefact is active
 	 * when it is equipped in an appropriate bauble slot. If Baubles is not loaded, an artefact is active if it is one
@@ -176,32 +167,35 @@ public class ItemArtefact extends Item {
 	 * item is not an instance of {@code ItemArtefact}.
 	 * @throws IllegalArgumentException If the given item is not an artefact.
 	 */
-	// It's cleaner to cast to ItemArtefact here than wherever it is used - items can't be stored as ItemWhatever objects
-	public static boolean isArtefactActive(EntityPlayer player, Item artefact){
-
-		if(!(artefact instanceof ItemArtefact)) throw new IllegalArgumentException("Not an artefact!");
-
-		if(!((ItemArtefact)artefact).enabled) return false; // Disabled in the config
-
-		ArtefactCheckEvent event = new ArtefactCheckEvent(player, (ItemArtefact) artefact);
-		if(MinecraftForge.EVENT_BUS.post(event)) return false;
-
-		if (event.getResult() == Event.Result.ALLOW) {
-			return true;
-		}
-
-		if(WizardryBaublesIntegration.enabled()){
-			return WizardryBaublesIntegration.isBaubleEquipped(player, artefact);
-		}else{
+	public static boolean isArtefactActive(EntityPlayer player, Item artefact) {
+		if (!(artefact instanceof ItemArtefact)) throw new IllegalArgumentException("Not an artefact!");
+		if (!((ItemArtefact)artefact).enabled) return false; // Disabled in the config
+		boolean equipped;
+		if (WizardryBaublesIntegration.enabled()) {
+			equipped = WizardryBaublesIntegration.isBaubleEquipped(player, artefact);
+		} else {
 			// To find out if the given artefact is one of the first n on the player's hotbar (where n is the maximum
 			// number of that kind of artefact that can be active at once):
-			return InventoryUtils.getPrioritisedHotbarAndOffhand(player).stream() // Retrieve the stacks in question
+			equipped = InventoryUtils.getPrioritisedHotbarAndOffhand(player).stream() // Retrieve the stacks in question
 					// Filter out all except artefacts of the same type as the given one (preserving order)
 					.filter(s -> s.getItem() instanceof ItemArtefact && ((ItemArtefact)s.getItem()).type == ((ItemArtefact)artefact).type)
 					.limit(((ItemArtefact)artefact).type.maxAtOnce)    // Ignore all but the first n
 					.anyMatch(s -> s.getItem() == artefact); // Check if the remaining stacks contain the artefact
 			// Note that streaming a list DOES retain the order (unless you call unordered(), obviously)
 		}
+		ArtefactCheckEvent event = new ArtefactCheckEvent(player, new ArrayList<>());
+		//Return false if the artefact was canceled
+		if (MinecraftForge.EVENT_BUS.post(event)) {
+			return false;
+		}
+		//Return true if there's at least one artefact that matches
+		for (TrackedArtefact trackedArtefact : event.getArtefacts()) {
+			if (trackedArtefact.itemStack.getItem() == artefact) {
+				equipped = true;
+				break;
+			}
+		}
+		return equipped;
 	}
 
 	/**
@@ -217,29 +211,114 @@ public class ItemArtefact extends Item {
 	 * item is not an instance of {@code ItemArtefact}.
 	 */
 	public static List<ItemArtefact> getActiveArtefacts(EntityPlayer player, Type... types){
-
-		if(types.length == 0) types = Type.values();
-
-		if(WizardryBaublesIntegration.enabled()){
-			List<ItemArtefact> artefacts = WizardryBaublesIntegration.getEquippedArtefacts(player, types);
-			artefacts.removeIf(i -> !i.enabled); // Remove artefacts that are disabled in the config
-			return artefacts;
-		}else{
-
-			List<ItemArtefact> artefacts = new ArrayList<>();
-
+		if (types.length == 0) types = Type.values();
+		List<ItemArtefact> artefacts;
+		if (WizardryBaublesIntegration.enabled()) {
+			artefacts = WizardryBaublesIntegration.getEquippedArtefacts(player, types);
+			artefacts.removeIf(i -> !i.isEnabled()); // Remove artefacts that are disabled in the config
+		} else {
+			artefacts = new ArrayList<>();
 			for(Type type : types){
 				artefacts.addAll(InventoryUtils.getPrioritisedHotbarAndOffhand(player).stream()
 						.filter(s -> s.getItem() instanceof ItemArtefact)
 						.map(s -> (ItemArtefact)s.getItem())
-						.filter(i -> type == i.type && i.enabled)
+						.filter(i -> type == i.getType() && i.isEnabled())
 						.limit(type.maxAtOnce)
 						.collect(Collectors.toList()));
 			}
-
-			return artefacts;
 		}
+		List<TrackedArtefact> slotItemStacks = new ArrayList<>();
+		//Add the active artefacts as SlotItemStacks so that they can be evaluated by the event
+		for (ItemArtefact artefact : artefacts) {
+			slotItemStacks.add(new TrackedArtefact(new ItemStack(artefact)));
+		}
+		ArtefactCheckEvent event = new ArtefactCheckEvent(player, slotItemStacks);
+		//Return an empty list if the event is canceled
+		if (MinecraftForge.EVENT_BUS.post(event)) {
+			return new ArrayList<>();
+		}
+		//Empty the list and add the items of the event artefacts
+		artefacts.clear();
+		for (TrackedArtefact trackedArtefact : slotItemStacks) {
+			Item item = trackedArtefact.itemStack.getItem();
+			if (item instanceof ItemArtefact) {
+				artefacts.add((ItemArtefact)item);
+			}
+		}
+		return artefacts;
 	}
+
+	public static List<TrackedArtefact> getActiveTrackedArtefacts(EntityPlayer player, Type... types) {
+		if (types.length == 0) {
+			types = Type.values();
+		}
+		List<TrackedArtefact> artefacts = new ArrayList<>();
+		if (WizardryBaublesIntegration.enabled()) {
+			artefacts = WizardryBaublesIntegration.getEquippedTrackedArtefacts(player, types);
+		} else {
+			List<TrackedArtefact> possibleArtefacts = new ArrayList<>();
+			int slot = 0;
+			NonNullList<ItemStack> mainInventory = player.inventory.mainInventory;
+			while (slot < 9) {
+				possibleArtefacts.add(new TrackedArtefact(mainInventory.get(slot), slot, player.inventory));
+				slot++;
+			}
+			possibleArtefacts.add(0, new TrackedArtefact(player.getHeldItemOffhand(), 0, player.inventory.offHandInventory));
+			possibleArtefacts.removeIf(trackedArtefact -> trackedArtefact.getItemStack() == player.getHeldItemMainhand());
+			possibleArtefacts.add(0, new TrackedArtefact(player.getHeldItemOffhand(), 0, player.inventory.mainInventory));
+			for (TrackedArtefact possibleArtefact : possibleArtefacts) {
+				for (Type type : types) {
+					int max = 0;
+					if (possibleArtefact.getItemStack().getItem() instanceof ItemArtefact) {
+						ItemStack itemStack = possibleArtefact.getItemStack();
+						while (max < type.maxAtOnce) {
+							ItemArtefact itemArtefact = (ItemArtefact)itemStack.getItem();
+							if (itemArtefact.isEnabled() && itemArtefact.getType() == type) {
+								artefacts.add(possibleArtefact);
+							}
+							max++;
+						}
+					}
+				}
+			}
+		}
+		//Event injection
+		ArtefactCheckEvent event = new ArtefactCheckEvent(player, artefacts);
+		if (MinecraftForge.EVENT_BUS.post(event)) {
+			return new ArrayList<>();
+		}
+		return artefacts;
+	}
+
+	//Use this to safely modify equipped artefacts with getActiveTrackedArtefacts
+	//Returns a boolean to enable effects only if the artefact is modified
+	public static boolean modifyArtefact(TrackedArtefact artefact) {
+		if (artefact.isModifiable()) {
+			if (artefact.getInventory() instanceof IInventory) {
+				if (artefact.getSlot() < ((IInventory)artefact.getInventory()).getSizeInventory()) {
+					((IInventory)artefact.getInventory()).setInventorySlotContents(artefact.getSlot(), artefact.getItemStack());
+					return true;
+				} else {
+					throw new IllegalArgumentException("Slot is outside the the inventory bounds!");
+				}
+			} else if (artefact.getInventory() instanceof IItemHandlerModifiable) {
+				if (artefact.getSlot() >= 0 && artefact.getSlot() < ((IItemHandlerModifiable)artefact.getInventory()).getSlots()) {
+					((IItemHandlerModifiable)artefact.getInventory()).setStackInSlot(artefact.getSlot(), artefact.getItemStack());
+					return true;
+				} else {
+					throw new IllegalArgumentException("Slot is outside the the inventory bounds!");
+				}
+			} else {
+				throw new IllegalArgumentException("Inventory must be of type IInventory or IItemHandlerModifiable into order to modify!");
+			}
+		}
+		return false;
+	}
+
+	// IBauble does of course have an onWornTick method. However, because it's an optional dependency, it doesn't really
+	// make sense to use that method when it's easier to just use the isBaubleEquipped method in the same
+	// place as the non-baubles check. In other words, most artefacts are event-driven anyway so I'd rather have the
+	// tick-driven ones use events as well for the sake of consistency.
 
 	/**
 	 * Helper method that scans through all wands on the given player's hotbar and offhand and executes the given action
@@ -946,6 +1025,49 @@ public class ItemArtefact extends Item {
 				findMatchingWandAndCast(event.player, Spells.pocket_furnace);
 			}
 		}
+	}
+
+	public static final class TrackedArtefact {
+
+		private final ItemStack itemStack;
+		//Set to -1 to disable modification
+		private final int slot;
+		@Nullable
+		private final Object inventory;
+
+		public TrackedArtefact(ItemStack itemStack, int slot, @Nullable Object inventory) {
+			if (itemStack == null) {
+				//Cant be null!
+				this.itemStack = ItemStack.EMPTY;
+			} else {
+				//Make the ItemStack a copy so you cant modify it
+				this.itemStack = itemStack.copy();
+			}
+			this.slot = slot;
+			this.inventory = inventory;
+		}
+
+		public TrackedArtefact(ItemStack itemStack) {
+			this(itemStack, -1, null);
+		}
+
+		public ItemStack getItemStack() {
+			return this.itemStack;
+		}
+
+		public int getSlot() {
+			return this.slot;
+		}
+
+		@Nullable
+		public Object getInventory() {
+			return this.inventory;
+		}
+
+		public boolean isModifiable() {
+			return this.slot >= 0;
+		}
+
 	}
 
 }
