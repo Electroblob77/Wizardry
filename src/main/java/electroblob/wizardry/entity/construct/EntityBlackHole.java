@@ -137,8 +137,7 @@ public class EntityBlackHole extends EntityScaledConstruct {
 				if(this.isValidTarget(target)){
 
 					// If the target can't be moved, it isn't sucked in but is still damaged if it gets too close
-					if(!(target instanceof EntityPlayer && ((getCaster() instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
-							|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)))){
+					if(EntityUtils.canEntityBeMoved(this.getCaster(), target)){
 
 						EntityUtils.undoGravity(target);
 						if(target instanceof EntityLevitatingBlock) ((EntityLevitatingBlock)target).suspend();

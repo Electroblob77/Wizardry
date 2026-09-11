@@ -1,9 +1,7 @@
 package electroblob.wizardry.entity.construct;
 
 import electroblob.wizardry.Wizardry;
-import electroblob.wizardry.item.ItemArtefact;
 import electroblob.wizardry.registry.Spells;
-import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.registry.WizardrySounds;
 import electroblob.wizardry.spell.Spell;
 import electroblob.wizardry.spell.Tornado;
@@ -18,7 +16,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketEntityVelocity;
@@ -79,15 +76,9 @@ public class EntityTornado extends EntityScaledConstruct {
 
 		if(!this.world.isRemote){
 
-			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, this.posX, this.posY,
-					this.posZ, this.world);
+			List<EntityLivingBase> targets = EntityUtils.getLivingWithinRadius(radius, this.posX, this.posY, this.posZ, this.world);
 
 			for(EntityLivingBase target : targets){
-
-				if(target instanceof EntityPlayer && ((getCaster() instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
-						|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
-					continue;
-				}
 
 				if(this.isValidTarget(target)){
 
@@ -110,13 +101,14 @@ public class EntityTornado extends EntityScaledConstruct {
 						target.attackEntityFrom(DamageSource.MAGIC, damage);
 					}
 
-					target.motionX = dx;
-					target.motionY = velY + Spells.tornado.getProperty(Tornado.UPWARD_ACCELERATION).floatValue();
-					target.motionZ = dz;
-
-					// Player motion is handled on that player's client so needs packets
-					if(target instanceof EntityPlayerMP){
-						((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+					if(EntityUtils.canEntityBeMoved(this.getCaster(), target)) {
+						target.motionX = dx;
+						target.motionY = velY + Spells.tornado.getProperty(Tornado.UPWARD_ACCELERATION).floatValue();
+						target.motionZ = dz;
+						// Player motion is handled on that player's client so needs packets
+						if (target instanceof EntityPlayerMP) {
+							((EntityPlayerMP)target).connection.sendPacket(new SPacketEntityVelocity(target));
+						}
 					}
 				}
 			}
@@ -156,16 +148,14 @@ public class EntityTornado extends EntityScaledConstruct {
 						ResourceLocation type = null;
 
 						if(block.getMaterial() == Material.LEAVES) type = Type.LEAF;
-						if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW)
-							type = Type.SNOW;
+						if(block.getMaterial() == Material.SNOW || block.getMaterial() == Material.CRAFTED_SNOW) type = Type.SNOW;
+
+						//If the tornado is burning, use fire particles because fire beats grass and ice
+						if(this.isBurning()) type = Type.MAGIC_FIRE;
 
 						if(type != null){
 							double yPos1 = rand.nextDouble() * 8;
-							ParticleBuilder.create(type)
-									.pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1,
-											this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d))
-									.time(40 + rand.nextInt(10))
-									.spawn(world);
+							ParticleBuilder.create(type).pos(this.posX + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d), this.posY + yPos1, this.posZ + (rand.nextDouble() * 2 - 1) * (yPos1 / 3 + 0.5d)).time(40 + rand.nextInt(10)).spawn(world);
 						}
 					}
 				}

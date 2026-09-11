@@ -42,16 +42,9 @@ public class Shockwave extends SpellAreaEffect {
 
 		float radius = getProperty(EFFECT_RADIUS).floatValue() * modifiers.get(WizardryItems.blast_upgrade);
 
-		if(target instanceof EntityPlayer){
-
-			if(!Wizardry.settings.playersMoveEachOther) return false;
-
-			if(ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)){
-				if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
-						new TextComponentTranslation("spell.resist", target.getName(),
-								this.getNameForTranslationFormatted()), true);
-				return false;
-			}
+		if (!EntityUtils.canEntityBeMoved(caster, target)) {
+			if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
+			return false;
 		}
 
 		// Produces a linear profile from 0 at the edge of the radius to 1 at the epicentre radius, then
