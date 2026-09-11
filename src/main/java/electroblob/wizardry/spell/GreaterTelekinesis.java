@@ -69,8 +69,7 @@ public class GreaterTelekinesis extends SpellRay {
 		// Can't be cast by dispensers so we know caster isn't null, but just in case...
 		if(caster != null && (target instanceof EntityLivingBase || target instanceof EntityLevitatingBlock || target instanceof EntityTNTPrimed)){
 
-			if(target instanceof EntityPlayer && ((caster instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
-					|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
+			if(!EntityUtils.canEntityBeMoved(caster, target)){
 
 				if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
 						new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);

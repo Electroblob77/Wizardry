@@ -4,6 +4,7 @@ import baubles.api.BaubleType;
 import baubles.api.BaublesApi;
 import baubles.api.IBauble;
 import baubles.api.cap.BaublesCapabilities;
+import baubles.api.cap.IBaublesItemHandler;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.item.ItemArtefact;
 import net.minecraft.entity.player.EntityPlayer;
@@ -88,6 +89,27 @@ public final class WizardryBaublesIntegration {
 		}
 
 		return artefacts;
+	}
+
+	public static List<ItemArtefact.TrackedArtefact> getEquippedTrackedArtefacts(EntityPlayer player, ItemArtefact.Type... types) {
+		List<ItemArtefact.TrackedArtefact> artefacts = new ArrayList<>();
+		IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
+		for (ItemArtefact.Type type : types) {
+			for (int slot : ARTEFACT_TYPE_MAP.get(type).getValidSlots()) {
+				ItemStack stack = handler.getStackInSlot(slot);
+				if (stack.getItem() instanceof ItemArtefact) {
+					ItemArtefact itemArtefact = (ItemArtefact)stack.getItem();
+					if (itemArtefact.isEnabled() && itemArtefact.getType() == type) {
+						artefacts.add(new ItemArtefact.TrackedArtefact(stack, slot, handler));
+					}
+				}
+			}
+		}
+		return artefacts;
+	}
+
+	public static Map<ItemArtefact.Type, BaubleType> getArtefactTypeMap() {
+		return ARTEFACT_TYPE_MAP;
 	}
 
 	// Shamelessly copied from The Twilight Forest, with a few modifications

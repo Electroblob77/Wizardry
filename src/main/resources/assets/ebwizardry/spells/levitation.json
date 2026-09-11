@@ -17,7 +17,7 @@
   "chargeup": 0,
   "cooldown": 0,
   "base_properties": {
-    "speed": 0.5,
+    "speed": 0.3,
     "acceleration": 0.1
   }
 }
