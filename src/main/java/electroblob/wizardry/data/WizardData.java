@@ -135,6 +135,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** Stores this player's y velocity from the previous tick; used for the velocity-based fall damage replacement. */
 	public double prevMotionY;
 
+	//Used to store the player's pitch and rotation when affected by the paralysis spell so they remain looking at the position during which they were paralyzed
+	public float paralyzedRotationPitch;
+	public float paralyzedRotationYaw;
+
 	public WizardData(){
 		this(null); // Nullary constructor for the registration method factory parameter
 	}
