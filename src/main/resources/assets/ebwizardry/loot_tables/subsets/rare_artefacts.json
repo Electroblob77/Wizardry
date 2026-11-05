@@ -26,6 +26,11 @@
                 },
 				{
                     "type": "item",
+                    "name": "ebwizardry:ring_stormcloud",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
                     "name": "ebwizardry:ring_leeching",
                     "weight": 1
                 },
@@ -77,6 +82,11 @@
 				{
                     "type": "item",
                     "name": "ebwizardry:amulet_fire_cloaking",
+                    "weight": 1
+                },
+				{
+                    "type": "item",
+                    "name": "ebwizardry:amulet_frost_warding",
                     "weight": 1
                 },
 				{
