@@ -104,6 +104,7 @@ public final class WizardryLoot {
 			// If not, packmakers will have to sort it out themselves using the whitelist/blacklist
 			if (Arrays.asList(Wizardry.settings.mobLootTableWhitelist).contains(event.getName())) {
 				event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
+				Wizardry.logger.info("Added wizardry mob drops to loot table {} (explicitly whitelisted)", event.getName());
 
 			// Note the parentheses here - without them, a loot table path containing "entity" (but not "entities")
 			// would always match regardless of the blacklist, due to operator precedence
@@ -121,6 +122,7 @@ public final class WizardryLoot {
 
 				if (EnumCreatureType.MONSTER.getCreatureClass().isAssignableFrom(entityClass)) {
 					event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
+					Wizardry.logger.info("Added wizardry mob drops to loot table {} (auto-detected as a hostile mob)", event.getName());
 				}
 			}
 		}
