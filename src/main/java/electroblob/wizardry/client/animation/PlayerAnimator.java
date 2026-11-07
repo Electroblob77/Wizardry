@@ -33,9 +33,12 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +59,16 @@ public class PlayerAnimator {
 	private static final Map<RenderPlayer, List<LayerRenderer<? extends EntityLivingBase>>> playerLayers = new HashMap<>();
 	/** Stores the main model for each renderer plus all models for registered layer renderers. */
 	private static final Map<RenderPlayer, List<ModelBiped>> playerLayerModels = new HashMap<>();
+	/** Stores the currently-tracked armour model for each registered armour layer/slot combination, so that a model
+	 * can be replaced when it changes instead of accumulating indefinitely. Some armour items (via
+	 * {@link ForgeHooksClient#getArmorModel}) return a brand new, unwrapped {@link ModelBiped} instance every time
+	 * they are queried rather than a cached one; without this, that caused a severe memory leak (see issue #916). */
+	private static final Map<RenderPlayer, Map<LayerRenderer<? extends EntityLivingBase>, Map<EntityEquipmentSlot, ModelBiped>>> armourModelsBySlot = new HashMap<>();
+	/** Stores the armour models that were added to {@link #playerLayerModels} lazily by {@link #updateModels}, as
+	 * opposed to the models that were registered up front (the main model and the layers' own default armour models,
+	 * which are shared between several slots). Only models in here are ever removed again, and only once no slot is
+	 * using them any more. */
+	private static final Map<RenderPlayer, Set<ModelBiped>> lazyArmourModels = new HashMap<>();
 	/** Reflected into {@link RenderLivingBase}{@code #layerRenderers}. */
 	private static final Field layerRenderers;
 
@@ -149,12 +162,22 @@ public class PlayerAnimator {
 			List<LayerRenderer<? extends EntityLivingBase>> layers = playerLayers.get(renderer);
 
 			// If no layers were registered for the given renderer there's no point trying to lazy-load anything!
-			if(layers != null){
+			if(layers != null && renderer instanceof RenderPlayer){ // playerLayers is only ever keyed by RenderPlayers
+
+				RenderPlayer playerRenderer = (RenderPlayer)renderer;
+
+				Map<LayerRenderer<? extends EntityLivingBase>, Map<EntityEquipmentSlot, ModelBiped>> trackedByLayer
+						= armourModelsBySlot.computeIfAbsent(playerRenderer, r -> new HashMap<>());
+				Set<ModelBiped> lazyModels = lazyArmourModels.computeIfAbsent(playerRenderer,
+						r -> Collections.newSetFromMap(new IdentityHashMap<>()));
 
 				// Biped armour is special because of Forge's armour item render hook
 				// This needs to be lazy-loaded because we need access to an actual item
 				for(LayerRenderer<? extends EntityLivingBase> layer : layers){
 					if(layer instanceof LayerBipedArmor){
+
+						Map<EntityEquipmentSlot, ModelBiped> trackedModels = trackedByLayer.computeIfAbsent(layer, l -> new HashMap<>());
+
 						for(EntityEquipmentSlot slot : InventoryUtils.ARMOUR_SLOTS){
 
 							ItemStack armour = player.getItemStackFromSlot(slot);
@@ -162,9 +185,25 @@ public class PlayerAnimator {
 							// optimise it further, we *have* to retrieve the model every time (shouldn't be too bad though)
 							ModelBiped model = ForgeHooksClient.getArmorModel(player, armour, slot, ((LayerBipedArmor)layer).getModelFromSlot(slot));
 
-							if(!models.contains(model)){ // Ignore already-wrapped models
-								models.add(model);
-								ModelRendererExtended.wrap(model);
+							ModelBiped previous = trackedModels.put(slot, model);
+
+							if(model != previous){
+
+								if(!models.contains(model)){ // Ignore models that are already in the list (including the layers' own defaults)
+									models.add(model);
+									lazyModels.add(model);
+									ModelRendererExtended.wrap(model);
+								}
+
+								// Some armour mods return a brand new model instance every time instead of a cached one; if the
+								// stale one weren't dropped here, the list would grow indefinitely, each new model wrapping (and
+								// leaking) a fresh set of ModelRenderers/ModelBoxes/vertices every frame (issue #916). Only models
+								// that were lazy-loaded here are ever removed though - the layers' own default models are
+								// registered up front and shared between several slots - and only once no slot is using them.
+								if(previous != null && lazyModels.contains(previous) && !isStillTracked(trackedByLayer, previous)){
+									models.remove(previous);
+									lazyModels.remove(previous);
+								}
 							}
 						}
 					}
@@ -191,6 +230,14 @@ public class PlayerAnimator {
 			}
 		}
 
+	}
+
+	/** Returns true if the given model is still the tracked armour model for any slot of any of the given armour layers. */
+	private static boolean isStillTracked(Map<LayerRenderer<? extends EntityLivingBase>, Map<EntityEquipmentSlot, ModelBiped>> trackedByLayer, ModelBiped model){
+		for(Map<EntityEquipmentSlot, ModelBiped> slots : trackedByLayer.values()){
+			if(slots.containsValue(model)) return true;
+		}
+		return false;
 	}
 
 	/** Rotates the second layer boxes of the given (wrapped) player model to match the first layer. */
