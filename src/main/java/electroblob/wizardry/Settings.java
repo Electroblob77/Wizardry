@@ -453,6 +453,8 @@ public final class Settings {
 	public boolean blinkEffect = true;
 	/** <b>[Client-only]</b> Whether to use spellcasting animations for players. */
 	public boolean spellcastingAnimations = true;
+	/** <b>[Client-only]</b> Whether to use spellcasting animations for players casting spells from scrolls. */
+	public boolean scrollSpellcastingAnimations = true;
 	/** <b>[Client-only]</b> Whether to show the spell HUD when holding a wand. */
 	public boolean showSpellHUD = true;
 	/** <b>[Client-only]</b> Whether to show the charge meter when charging up a spell. */
@@ -1598,6 +1600,12 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		spellcastingAnimations = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "scrollSpellcastingAnimations", true, "Whether to use spellcasting animations for players casting spells from scrolls. Disable this option if it conflicts with other mods that add player animations, while still allowing wand casting animations.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".scroll_spellcasting_animations");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		scrollSpellcastingAnimations = property.getBoolean();
 		propOrder.add(property.getName());
 
 		List<String> elementNames = Arrays.stream(Element.values()).map(Element::getName).collect(Collectors.toList());

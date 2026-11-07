@@ -15,6 +15,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -124,6 +125,12 @@ public class ItemScroll extends Item implements ISpellCastingItem, IWorkbenchIte
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack){
 		return CASTING_TIME;
+	}
+
+	@Override
+	public EnumAction getItemUseAction(ItemStack stack){
+		if(!Wizardry.settings.scrollSpellcastingAnimations) return EnumAction.NONE;
+		return Spell.byMetadata(stack.getItemDamage()).action;
 	}
 
 	@Override
