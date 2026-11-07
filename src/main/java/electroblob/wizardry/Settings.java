@@ -187,7 +187,7 @@ public final class Settings {
 	/** <b>[Server-only]</b> Blacklist for loot tables to inject additional mob drops into. */
 	public ResourceLocation[] mobLootTableBlacklist = toResourceLocations("entities/vex", "entities/ender_dragon",
 			"entities/wither", "entities/silverfish", "entities/endermite",
-			Wizardry.MODID + "entities/evil_wizard");
+			Wizardry.MODID + ":entities/evil_wizard");
 	/**
 	 * <b>[Server-only]</b> Whether or not players can teleport through unbreakable blocks (e.g. bedrock) using the
 	 * phase step spell.
