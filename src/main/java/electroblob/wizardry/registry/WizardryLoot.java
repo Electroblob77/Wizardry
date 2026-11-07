@@ -2,6 +2,7 @@ package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.loot.DiscoveryModeCondition;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
@@ -12,6 +13,7 @@ import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -63,6 +65,7 @@ public final class WizardryLoot {
 		// enabled in the config (see WizardryEventHandler).
 		LootFunctionManager.registerFunction(new RandomSpell.Serializer());
 		LootFunctionManager.registerFunction(new WizardSpell.Serializer());
+		LootConditionManager.registerCondition(new DiscoveryModeCondition.Serializer());
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/wizard_tower"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/obelisk"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/shrine"));
