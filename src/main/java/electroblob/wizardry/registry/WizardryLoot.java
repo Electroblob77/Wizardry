@@ -3,6 +3,7 @@ package electroblob.wizardry.registry;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.loot.DiscoveryModeCondition;
+import electroblob.wizardry.loot.EvilWizardSpellBookCondition;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
@@ -26,7 +27,7 @@ import java.util.Arrays;
 /**
  * Class responsible for registering wizardry's loot functions and loot tables. Also handles loot injection and the
  * standard weighting.
- * 
+ *
  * @author Electroblob
  * @since Wizardry 1.0
  */
@@ -57,15 +58,16 @@ public final class WizardryLoot {
 		 * 5 stages of randomness applied to them at once: a random chance for the pool, a random number of rolls for
 		 * the pool, the weighted random chance of choosing that particular entry, a random chance for that entry, and a
 		 * random stack size, and that's before you take functions into account.
-		 * 
+		 *
 		 * ...oh, and entries can be entire loot tables in themselves, allowing for potentially infinite levels of
 		 * randomness. Yeah. */
- 
+
 		// Always registers the loot tables, but only injects the additions into vanilla if the appropriate option is
 		// enabled in the config (see WizardryEventHandler).
 		LootFunctionManager.registerFunction(new RandomSpell.Serializer());
 		LootFunctionManager.registerFunction(new WizardSpell.Serializer());
 		LootConditionManager.registerCondition(new DiscoveryModeCondition.Serializer());
+		LootConditionManager.registerCondition(new EvilWizardSpellBookCondition.Serializer());
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/wizard_tower"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/obelisk"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/shrine"));

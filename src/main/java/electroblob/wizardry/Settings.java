@@ -224,6 +224,9 @@ public final class Settings {
 	public boolean wandsMustBeHeldToDecrementCooldown = false;
 	/** <b>[Server-only]</b> Whether to enable Wizardry mob loot injection. Allows an easier switch instead of blacklisting all entities. */
 	public boolean injectMobDrops = true;
+	/** <b>[Server-only]</b> Whether evil wizards can drop spell books. Evil wizards use their own dedicated loot
+	 * table rather than the generic mob loot injection, so this is separate from {@link #injectMobDrops}. */
+	public boolean evilWizardsDropSpellBooks = true;
 	/** <b>[Server-only]</b> The time in ticks after which recent spell casts expire and no longer count toward progression penalties. */
 	public int recentSpellExpiryTime = 1200;
 	/**
@@ -1133,6 +1136,13 @@ public final class Settings {
 		property.setLanguageKey("config." + Wizardry.MODID + ".inject_mob_drops");
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		injectMobDrops = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "evilWizardsDropSpellBooks", true,
+				"Whether evil wizards can drop spell books. Evil wizards use their own dedicated loot table rather than the generic mob loot injection, so this is separate from the 'Allow Wizardry Mob Loot' setting above and is not affected by the mob loot whitelist/blacklist.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizards_drop_spell_books");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		evilWizardsDropSpellBooks = property.getBoolean();
 		propOrder.add(property.getName());
 
 		property = config.get(TWEAKS_CATEGORY, "recentSpellExpiryTime", 1200,
