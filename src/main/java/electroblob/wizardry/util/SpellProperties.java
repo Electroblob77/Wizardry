@@ -190,6 +190,40 @@ public final class SpellProperties {
 		}
 	}
 
+	/** Constructs a fallback {@code SpellProperties} object populated entirely with the same default values already
+	 * used elsewhere (see {@link electroblob.wizardry.spell.Spell#getTier()} and its siblings) when a spell's
+	 * properties are not yet initialised. Used when a spell's properties could not be loaded from any JSON file, so
+	 * that every spell is still guaranteed to end up with a complete, correctly-shaped object.
+	 * <p></p>
+	 * This matters because {@link electroblob.wizardry.packet.PacketSpellProperties} writes every spell's properties
+	 * into a single shared buffer one after another, with no per-spell length prefix. If even one spell were left
+	 * with no properties at all, that spell would fail to write/read the correct number of bytes and desync every
+	 * spell that comes after it in the buffer - corrupting spell property sync for every player, on every login,
+	 * until the broken JSON file is fixed. Falling back to a dummy-but-correctly-shaped object instead keeps the
+	 * packet format intact; the broken spell simply behaves as disabled (as it already effectively did when
+	 * {@code properties} was null) until its JSON file is fixed. */
+	private SpellProperties(Spell spell){
+
+		enabledContexts = new EnumMap<>(Context.class);
+		for(Context context : Context.values()) enabledContexts.put(context, false);
+
+		baseValues = new HashMap<>();
+		for(String key : spell.getPropertyKeys()) baseValues.put(key, 0f);
+
+		tier = Tier.NOVICE;
+		element = Element.MAGIC;
+		type = SpellType.UTILITY;
+		cost = 0;
+		chargeup = 0;
+		cooldown = 0;
+	}
+
+	/** Creates a fallback {@code SpellProperties} object for the given spell, for use when its properties could not
+	 * be loaded from any JSON file. See {@link #SpellProperties(Spell)}. */
+	public static SpellProperties createFallback(Spell spell){
+		return new SpellProperties(spell);
+	}
+
 	/** Writes this SpellProperties object to the given ByteBuf so it can be sent via packets. */
 	public void write(ByteBuf buf){
 
@@ -267,7 +301,8 @@ public final class SpellProperties {
 			flag &= loadBuiltInSpellProperties(modID); // Don't short-circuit, or mods later on won't get loaded!
 		}
 
-		if(!flag) Wizardry.logger.warn("Some spell property files did not load correctly; this will likely cause problems later!");
+		if(!flag) Wizardry.logger.warn("Some spell property files did not load correctly; see the errors above for" +
+				" which spell(s) and file(s) are affected. Those spells will be disabled with fallback properties.");
 	}
 
 	// There are now three 'layers' of spell properties - in order of priority, these are:
@@ -284,7 +319,8 @@ public final class SpellProperties {
 
 		if(spellJSONDir.mkdirs()) return; // If it just got created it can't possibly have anything inside
 
-		if(!loadSpellPropertiesFromDir(spellJSONDir)) Wizardry.logger.warn("Some spell property files did not load correctly; this will likely cause problems later!");
+		if(!loadSpellPropertiesFromDir(spellJSONDir)) Wizardry.logger.warn("Some world-specific spell property files" +
+				" did not load correctly; see the errors above for which spell(s) and file(s) are affected.");
 	}
 
 	private static boolean loadConfigSpellProperties(){
@@ -363,10 +399,12 @@ public final class SpellProperties {
 						spell.setProperties(properties);
 
 					}catch(JsonParseException jsonparseexception){
-						Wizardry.logger.error("Parsing error loading spell property file for " + key, jsonparseexception);
+						Wizardry.logger.error("Parsing error loading spell property file '" + file + "' for spell "
+								+ key + " - this spell will be disabled until the file is fixed!", jsonparseexception);
 						return false;
 					}catch(IOException ioexception){
-						Wizardry.logger.error("Couldn't read spell property file for " + key, ioexception);
+						Wizardry.logger.error("Couldn't read spell property file '" + file + "' for spell " + key
+								+ " - this spell will be disabled until the file is fixed!", ioexception);
 						return false;
 					}finally{
 						IOUtils.closeQuietly(reader);
@@ -380,10 +418,12 @@ public final class SpellProperties {
 		// If a spell is missing its file, log an error
 		if(!spells.isEmpty()){
 			if(spells.size() <= 15){
-				spells.forEach(s -> Wizardry.logger.error("Spell " + s.getRegistryName() + " is missing a properties file!"));
+				spells.forEach(s -> Wizardry.logger.error("Spell " + s.getRegistryName()
+						+ " is missing a properties file! It will be disabled until one is added."));
 			}else{
 				// If there are more than 15 don't bother logging them all, chances are they're all missing
-				Wizardry.logger.error("Mod " + modID + " has " + spells.size() + " spells that are missing properties files!");
+				Wizardry.logger.error("Mod " + modID + " has " + spells.size() + " spells that are missing properties"
+						+ " files! They will be disabled until properties files are added for them.");
 			}
 		}
 
@@ -424,10 +464,12 @@ public final class SpellProperties {
 				spell.setProperties(properties);
 
 			}catch(JsonParseException jsonparseexception){
-				Wizardry.logger.error("Parsing error loading spell property file for " + key, jsonparseexception);
+				Wizardry.logger.error("Parsing error loading spell property file '" + file + "' for spell " + key
+						+ " - ignoring it and falling back to the next properties layer for this spell", jsonparseexception);
 				success = false;
 			}catch(IOException ioexception){
-				Wizardry.logger.error("Couldn't read spell property file for " + key, ioexception);
+				Wizardry.logger.error("Couldn't read spell property file '" + file + "' for spell " + key
+						+ " - ignoring it and falling back to the next properties layer for this spell", ioexception);
 				success = false;
 			}finally{
 				IOUtils.closeQuietly(reader);
