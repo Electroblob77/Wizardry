@@ -105,8 +105,10 @@ public final class WizardryLoot {
 			if (Arrays.asList(Wizardry.settings.mobLootTableWhitelist).contains(event.getName())) {
 				event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
 
+			// Note the parentheses here - without them, a loot table path containing "entity" (but not "entities")
+			// would always match regardless of the blacklist, due to operator precedence
 			} else if (!Arrays.asList(Wizardry.settings.mobLootTableBlacklist).contains(event.getName())
-					&& event.getName().getPath().contains("entities") || event.getName().getPath().contains("entity")) {
+					&& (event.getName().getPath().contains("entities") || event.getName().getPath().contains("entity"))) {
 				// Get the filename of the loot table json, for well-behaved mods this will be the entity name
 				String[] split = event.getName().getPath().split("/");
 				String entityName = split[split.length - 1];
