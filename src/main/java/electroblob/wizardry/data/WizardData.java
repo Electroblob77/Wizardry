@@ -454,6 +454,13 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** Stops casting the current spell. */
 	public void stopCastingContinuousSpell(){
 
+		if(this.isCasting()){
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Finish(Source.COMMAND, this.castCommandSpell, this.player,
+					this.castCommandModifiers, this.castCommandTick));
+			this.castCommandSpell.finishCasting(this.player.world, this.player, Double.NaN, Double.NaN, Double.NaN,
+					null, this.castCommandTick, this.castCommandModifiers);
+		}
+
 		this.castCommandSpell = Spells.none;
 		this.castCommandTick = 0;
 		this.castCommandModifiers.reset();
