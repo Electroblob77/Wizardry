@@ -188,6 +188,11 @@ public final class Settings {
 	public ResourceLocation[] mobLootTableBlacklist = toResourceLocations("entities/vex", "entities/ender_dragon",
 			"entities/wither", "entities/silverfish", "entities/endermite",
 			Wizardry.MODID + ":entities/evil_wizard");
+	/** <b>[Server-only]</b> Maps the registry names of additional, non-wizardry spell book items (e.g. from
+	 * compatible addon mods) to the weight they should be given relative to wizardry's own spell book, when
+	 * injecting spell book drops into mob loot and evil wizard drops. Empty by default, since wizardry does not
+	 * bundle knowledge of any particular addon's items. */
+	public Map<ResourceLocation, Integer> additionalSpellBookItems = new HashMap<>();
 	/**
 	 * <b>[Server-only]</b> Whether or not players can teleport through unbreakable blocks (e.g. bedrock) using the
 	 * phase step spell.
@@ -1164,6 +1169,35 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		mobLootTableBlacklist = getResourceLocationList(property);
 		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "additionalSpellBookItems", new String[0],
+				"List of additional, non-wizardry spell book items (e.g. from compatible addon mods) to include "
+				+ "alongside wizardry's own spell book when injecting spell book drops into mob loot and evil "
+				+ "wizard drops (still subject to the mob loot whitelist/blacklist and the relevant toggles above). "
+				+ "This is empty by default, since wizardry does not bundle knowledge of any particular addon's "
+				+ "items; add entries yourself if you know of a compatible item. Each entry should be an item "
+				+ "registry name, followed by a single space, then an integer weight relative to wizardry's own "
+				+ "spell book (which has a weight of 1). For example, 'someaddon:spell_book 1'. Items belonging to "
+				+ "mods that are not installed are ignored.",
+				Pattern.compile(".+ [0-9]+"));
+		property.setLanguageKey("config." + Wizardry.MODID + ".additional_spell_book_items");
+		propOrder.add(property.getName());
+		additionalSpellBookItems = new HashMap<>();
+		for(String string : property.getStringList()){
+			string = string.trim();
+			int lastSpace = string.lastIndexOf(' ');
+			if(lastSpace < 0){
+				Wizardry.logger.warn("Invalid entry in additional spell book items: {}", string);
+				continue;
+			}
+			String itemSpec = string.substring(0, lastSpace).toLowerCase(Locale.ROOT);
+			String weightStr = string.substring(lastSpace + 1);
+			try{
+				additionalSpellBookItems.put(new ResourceLocation(itemSpec), Integer.parseInt(weightStr));
+			}catch(NumberFormatException e){
+				Wizardry.logger.warn("Invalid integer in additional spell book items: {}", weightStr);
+			}
+		}
 
 		property = config.get(TWEAKS_CATEGORY, "mobSpawnDimensions", new int[]{0},
 				"List of dimension ids in which wizardry's hostile mobs can spawn.");

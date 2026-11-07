@@ -7,14 +7,17 @@ import electroblob.wizardry.loot.EvilWizardSpellBookCondition;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
 import net.minecraft.world.storage.loot.conditions.LootConditionManager;
+import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Class responsible for registering wizardry's loot functions and loot tables. Also handles loot injection and the
@@ -40,6 +44,9 @@ public final class WizardryLoot {
 			.filter(e -> e != Element.MAGIC)
 			.map(e -> new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book_" + e.getName()))
 			.toArray(ResourceLocation[]::new);
+
+	private static final ResourceLocation MOB_ADDITIONS_LOOT_TABLE = new ResourceLocation(Wizardry.MODID, "entities/mob_additions");
+	private static final ResourceLocation EVIL_WIZARD_LOOT_TABLE = new ResourceLocation(Wizardry.MODID, "entities/evil_wizard");
 
 	private WizardryLoot(){} // No instances!
 
@@ -134,6 +141,29 @@ public final class WizardryLoot {
 			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/junk_additions", 4));
 		}else if(event.getName().toString().matches("minecraft:gameplay/fishing/treasure")){
 			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/treasure_additions", 1));
+		}
+		// Addon spell book items (see Settings#additionalSpellBookItems) - these piggyback on wizardry's own spell
+		// book drop pools, so they're automatically subject to the same whitelist/blacklist and toggles
+		if(event.getName().equals(MOB_ADDITIONS_LOOT_TABLE)){
+			addAdditionalSpellBookEntries(event.getTable().getPool("wizardry"));
+		}else if(event.getName().equals(EVIL_WIZARD_LOOT_TABLE)){
+			addAdditionalSpellBookEntries(event.getTable().getPool("rare"));
+		}
+	}
+
+	/** Adds a weighted {@link LootEntryItem} to the given pool for each entry in
+	 * {@link electroblob.wizardry.Settings#additionalSpellBookItems} whose item is actually registered (i.e.
+	 * belongs to a mod that is installed); entries for items that cannot be found are silently skipped. */
+	private static void addAdditionalSpellBookEntries(LootPool pool){
+		if(pool == null) return;
+		for(Map.Entry<ResourceLocation, Integer> entry : Wizardry.settings.additionalSpellBookItems.entrySet()){
+			Item item = ForgeRegistries.ITEMS.getValue(entry.getKey());
+			if(item == null){
+				Wizardry.logger.warn("Configured additional spell book item {} could not be found, skipping (is the mod it belongs to installed?)", entry.getKey());
+				continue;
+			}
+			pool.addEntry(new LootEntryItem(item, entry.getValue(), 0, new LootFunction[0], new LootCondition[0],
+					Wizardry.MODID + "_additional_spell_book_" + entry.getKey().getPath()));
 		}
 	}
 
