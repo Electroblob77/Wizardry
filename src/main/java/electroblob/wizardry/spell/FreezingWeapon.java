@@ -1,7 +1,7 @@
 package electroblob.wizardry.spell;
 
 import electroblob.wizardry.constants.Constants;
-import electroblob.wizardry.data.WizardData;
+import electroblob.wizardry.enchantment.Imbuement;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.WizardryEnchantments;
 import electroblob.wizardry.registry.WizardryItems;
@@ -32,8 +32,7 @@ public class FreezingWeapon extends Spell {
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
 		// Won't work if the weapon already has the enchantment
-		if(WizardData.get(caster) != null
-				&& WizardData.get(caster).getImbuementDuration(WizardryEnchantments.freezing_weapon) <= 0){
+		if(!Imbuement.isActive(caster, WizardryEnchantments.freezing_weapon)){
 
 			for(ItemStack stack : InventoryUtils.getPrioritisedHotbarAndOffhand(caster)){
 
@@ -46,7 +45,7 @@ public class FreezingWeapon extends Spell {
 									: (int)((modifiers.get(SpellModifiers.POTENCY) - 1.0f)
 											/ Constants.POTENCY_INCREASE_PER_TIER + 0.5f));
 
-					WizardData.get(caster).setImbuementDuration(WizardryEnchantments.freezing_weapon,
+					Imbuement.setDuration(stack, WizardryEnchantments.freezing_weapon,
 							(int)(getProperty(EFFECT_DURATION).floatValue() * modifiers.get(WizardryItems.duration_upgrade)));
 
 					if(world.isRemote){
