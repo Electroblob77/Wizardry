@@ -1,170 +1,394 @@
 {
-	"pools": [
-		{
-			"name": "rare_artefacts",
-			"rolls": 1,
-			"entries": [
-				{
+    "pools": [
+        {
+            "name": "rare_artefacts",
+            "rolls": 1,
+            "entries": [
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_condensing",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_condensing",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_disintegration",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_disintegration",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_shattering",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_shattering",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_storm",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_storm",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_stormcloud",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_stormcloud",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_leeching",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_leeching",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_mind_control",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_mind_control",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_poison",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_poison",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_full_moon",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_full_moon",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
-					"type": "item",
-					"name": "ebwizardry:ring_evoker",
-					"weight": 1
-				},
-				{
+                {
+                    "type": "item",
+                    "name": "ebwizardry:ring_evoker",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_evoker",
+                            "bias": 0.3
+                        }
+                    ]
+                },
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_blockwrangler",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_blockwrangler",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_conjurer",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_conjurer",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:ring_defender",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:ring_defender",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_arcane_defence",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_arcane_defence",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_wisdom",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_wisdom",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_fire_cloaking",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_fire_cloaking",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_frost_warding",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_frost_warding",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_potential",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_potential",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_anchoring",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_anchoring",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_transience",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_transience",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:amulet_auto_shield",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:amulet_auto_shield",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:charm_haggler",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_haggler",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
-					"type": "item",
-					"name": "ebwizardry:charm_move_speed",
-					"weight": 1
-				},
-				{
+                {
+                    "type": "item",
+                    "name": "ebwizardry:charm_move_speed",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_move_speed",
+                            "bias": 0.3
+                        }
+                    ]
+                },
+                {
                     "type": "item",
                     "name": "ebwizardry:charm_auto_smelt",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_auto_smelt",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
+                {
                     "type": "item",
                     "name": "ebwizardry:charm_storm",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_storm",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
-					"type": "item",
-					"name": "ebwizardry:charm_undead_helmets",
-					"weight": 1
-				},
-				{
-					"type": "item",
-					"name": "ebwizardry:charm_hunger_casting",
-					"weight": 1
-				},
-				{
+                {
+                    "type": "item",
+                    "name": "ebwizardry:charm_undead_helmets",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_undead_helmets",
+                            "bias": 0.3
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:charm_hunger_casting",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_hunger_casting",
+                            "bias": 0.3
+                        }
+                    ]
+                },
+                {
                     "type": "item",
                     "name": "ebwizardry:charm_flight",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_flight",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
-					"type": "item",
-					"name": "ebwizardry:charm_abseiling",
-					"weight": 1
-				},
-				{
+                {
+                    "type": "item",
+                    "name": "ebwizardry:charm_abseiling",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_abseiling",
+                            "bias": 0.3
+                        }
+                    ]
+                },
+                {
                     "type": "item",
                     "name": "ebwizardry:charm_light",
-                    "weight": 1
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_light",
+                            "bias": 0.3
+                        }
+                    ]
                 },
-				{
-					"type": "item",
-					"name": "ebwizardry:charm_transportation",
-					"weight": 1
-				},
-				{
-					"type": "item",
-					"name": "ebwizardry:charm_mount_teleporting",
-					"weight": 1
-				}
-			]
-		}
-	]
+                {
+                    "type": "item",
+                    "name": "ebwizardry:charm_transportation",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_transportation",
+                            "bias": 0.3
+                        }
+                    ]
+                },
+                {
+                    "type": "item",
+                    "name": "ebwizardry:charm_mount_teleporting",
+                    "weight": 1,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:undiscovered_bias",
+                            "artefact": "ebwizardry:charm_mount_teleporting",
+                            "bias": 0.3
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
