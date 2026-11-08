@@ -180,7 +180,8 @@ public class PotionSlowTime extends PotionMagicEffect implements ISyncedPotion {
 
 	@SubscribeEvent
 	public static void tick(TickEvent.WorldTickEvent event){
-		if(!event.world.isRemote && event.phase == TickEvent.Phase.END) cleanUpEntities(event.world);
+		if(!event.world.isRemote && event.phase == TickEvent.Phase.END
+				&& event.world.getTotalWorldTime() % 20 == 0) cleanUpEntities(event.world);
 	}
 
 	// We still need this as well as tick events because the player hasn't moved anywhere, they just logged out
