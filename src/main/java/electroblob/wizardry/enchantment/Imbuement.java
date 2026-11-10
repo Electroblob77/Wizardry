@@ -28,7 +28,7 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
+import java.lang.reflect.Field;
 import java.util.Iterator;
 
 /**
@@ -44,6 +44,19 @@ import java.util.Iterator;
 public interface Imbuement {
 
 	// This interface has no abstract methods, these handlers are just here for the sake of keeping things organised.
+
+    static IMerchant getMerchant(ContainerMerchant container) {
+        if (container == null) return null;
+
+        try {
+            Field merchantField = ContainerMerchant.class.getDeclaredField("field_75178_e");
+            merchantField.setAccessible(true);
+            return (IMerchant) merchantField.get(container);
+        } catch (ReflectiveOperationException e) {
+            Wizardry.logger.warn("Failed to access merchant from ContainerMerchant", e);
+            return null;
+        }
+    }
 
 	@SubscribeEvent
 	public static void onLivingDropsEvent(LivingDropsEvent event){
@@ -92,13 +105,21 @@ public interface Imbuement {
 		// Note that IMerchant#getRecipes() returns a *copy* of the trade list (see ForgeEventFactory#listTradeOffers),
 		// so the villager's actual buyingList field has to be modified directly for the fix to take effect; both
 		// fields are only accessible here because of the access transformer (see accesstransformer.cfg).
-		if(event.getContainer() instanceof ContainerMerchant){
+//		if(event.getContainer() instanceof ContainerMerchant){
+//
+//			IMerchant merchant = ((ContainerMerchant)event.getContainer()).merchant;
+//
+//			if(merchant instanceof EntityVillager){
+//
+//				MerchantRecipeList recipes = ((EntityVillager)merchant).buyingList;
 
-			IMerchant merchant = ((ContainerMerchant)event.getContainer()).merchant;
+        if(event.getContainer() instanceof ContainerMerchant){
 
-			if(merchant instanceof EntityVillager){
+            IMerchant merchant = getMerchant((ContainerMerchant) event.getContainer());
 
-				MerchantRecipeList recipes = ((EntityVillager)merchant).buyingList;
+            if(merchant instanceof EntityVillager){
+
+                MerchantRecipeList recipes = ((EntityVillager) merchant).buyingList;
 
 				if(recipes != null && recipes.removeIf(recipe -> hasIllegalEnchantment(recipe.getItemToSell()))){
 					Wizardry.logger.info("Removed illegal enchanted book trade(s) from villager");
