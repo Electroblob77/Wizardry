@@ -128,10 +128,6 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	private Queue<SimpleEntry<Spell, Long>> recentSpells;
 
-	// This one is still necessary, because I can't override the equip animation for items that aren't from Wizardry.
-	// Leaving this for now because merging it into the spell data system will be more tricky
-	private Map<Imbuement, Integer> imbuementDurations;
-
 	/** Stores this player's y velocity from the previous tick; used for the velocity-based fall damage replacement. */
 	public double prevMotionY;
 
@@ -146,7 +142,6 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	public WizardData(EntityPlayer player){
 		this.player = player;
 		this.synchronisedRandom = new Random();
-		this.imbuementDurations = new HashMap<>();
 		this.spellsDiscovered = new HashSet<>();
 		// All players can recognise magic missile. This is not done using discoverSpell because that seems to cause
 		// a crash on load occasionally (probably something to do with achievements being initialised)
@@ -316,63 +311,18 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	// Imbuements
 
 	/**
-	 * Overwrites the imbuement duration associated with the given imubement for this player, or creates it if there was
-	 * none previously.
-	 * 
-	 * @throws IllegalArgumentException if the given {@link Enchantment} is not an {@link Imbuement}.
-	 */
-	public void setImbuementDuration(Enchantment enchantment, int duration){
-		// It is best to throw an exception here, because otherwise the error would either go unnoticed (if non-
-		// -imbuements were ignored) or cause a ClassCastException later (if non-imbuements were allowed to be added)
-		if(enchantment instanceof Imbuement){
-			this.imbuementDurations.put((Imbuement)enchantment, duration);
-		}else{
-			throw new IllegalArgumentException(
-					"Attempted to set an imbuement duration for something that isn't an Imbuement!");
-		}
-	}
-
-	/**
-	 * Returns the imbuement duration associated with the given imbuement for this player, or 0 if it does not exist.
-	 */
-	@SuppressWarnings("unlikely-arg-type")
-	public int getImbuementDuration(Enchantment enchantment){
-		// Need to check that i is not null, otherwise it throws an NPE when Java auto-unboxes it.
-		// What's nice here is that the map simply accepts objects as keys, so there's no need to cast or throw
-		// exceptions.
-		Integer i = this.imbuementDurations.get(enchantment);
-		// If i is null, returns 0; otherwise returns i, auto-unboxed to an int.
-		return i == null ? 0 : i;
-	}
-
-	/**
-	 * Decrements the duration for each conjured item by 1, and removes from the map any that are 0 or less or that the
-	 * player no longer has. Also deletes the item from the player's inventory if it runs out of time.
+	 * Decrements the duration of each imbuement on every item in the player's inventory (main, armour and offhand),
+	 * removing any imbuement whose duration has run out. Durations are stored directly on each item's own
+	 * enchantment NBT (see {@link Imbuement#DURATION_NBT_KEY}) rather than in a map here, so this doesn't need to
+	 * reconcile anything against previously-tracked state.
 	 */
 	private void updateImbuedItems(){
-
-		// FIXME: Iterating through the entire inventory each tick is an AWFUL way of doing this, and is super-slow!
-		//        Change the imbuement durations map to be ItemStack -> Integer and just decrement them, adding entries
-		//		  whenever an item with an imbuement enters the inventory and removing them when the time expires.
-
-		Set<Imbuement> activeImbuements = new HashSet<Imbuement>();
-
-		// For each item in the player's inventory
-		for(ItemStack stack : player.inventory.mainInventory){
-			updateImbuedItem(stack, activeImbuements);
-		}
-		for(ItemStack stack : player.inventory.armorInventory){
-			updateImbuedItem(stack, activeImbuements);
-		}
-		for(ItemStack stack : player.inventory.offHandInventory){
-			updateImbuedItem(stack, activeImbuements);
-		}
-
-		// Removes all imbuements from the map that are no longer active
-		this.imbuementDurations.keySet().retainAll(activeImbuements);
+		for(ItemStack stack : player.inventory.mainInventory) updateImbuedItem(stack);
+		for(ItemStack stack : player.inventory.armorInventory) updateImbuedItem(stack);
+		for(ItemStack stack : player.inventory.offHandInventory) updateImbuedItem(stack);
 	}
 
-	private void updateImbuedItem(ItemStack stack, Set<Imbuement> activeImbuements){
+	private void updateImbuedItem(ItemStack stack){
 
 		if(stack.isItemEnchanted()){
 
@@ -386,13 +336,11 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 				Enchantment enchantment = Enchantment.getEnchantmentByID(enchantmentTag.getShort("id"));
 				// Ignores the enchantment unless it is an imbuement
 				if(enchantment instanceof Imbuement){
-					int duration = this.getImbuementDuration(enchantment);
+					int duration = enchantmentTag.getInteger(Imbuement.DURATION_NBT_KEY);
 					// If the imbuement is still active:
 					if(duration > 0){
 						// Decrements the timer
-						this.imbuementDurations.put((Imbuement)enchantment, duration - IMBUEMENT_UPDATE_INTERVAL);
-						// Adds this imbuement to the set of imbuements that need to be kept
-						activeImbuements.add((Imbuement)enchantment);
+						enchantmentTag.setInteger(Imbuement.DURATION_NBT_KEY, duration - IMBUEMENT_UPDATE_INTERVAL);
 					}else{
 						// Otherwise, removes the enchantment from the item
 						((Imbuement) enchantment).onImbuementRemoval(stack);
@@ -582,9 +530,6 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 		NBTTagCompound properties = new NBTTagCompound();
 
-		NBTExtras.storeTagSafely(properties, "imbuements", NBTExtras.mapToNBT(this.imbuementDurations,
-				imbuement -> new NBTTagInt(Enchantment.getEnchantmentID((Enchantment)imbuement)), NBTTagInt::new));
-
 		// Mmmmmm Java 8....
 		NBTExtras.storeTagSafely(properties, "allies", NBTExtras.listToNBT(this.allies, NBTUtil::createUUIDTag));
 		NBTExtras.storeTagSafely(properties, "allyNames", NBTExtras.listToNBT(this.allyNames, NBTTagString::new));
@@ -619,9 +564,6 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	public void deserializeNBT(NBTTagCompound nbt){
 
 		if(nbt != null){
-
-			this.imbuementDurations = NBTExtras.NBTToMap(nbt.getTagList("imbuements", NBT.TAG_COMPOUND),
-					(NBTTagInt tag) -> (Imbuement)Enchantment.getEnchantmentByID(tag.getInt()), NBTTagInt::getInt);
 
 			this.allies = new HashSet<>(NBTExtras.NBTToList(nbt.getTagList("allies", NBT.TAG_COMPOUND), NBTUtil::getUUIDFromTag));
 			this.allyNames = new HashSet<>(NBTExtras.NBTToList(nbt.getTagList("allyNames", NBT.TAG_STRING), NBTTagString::getString));

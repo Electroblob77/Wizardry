@@ -5,6 +5,7 @@ import electroblob.wizardry.constants.Element;
 import electroblob.wizardry.loot.DiscoveryModeCondition;
 import electroblob.wizardry.loot.EvilWizardSpellBookCondition;
 import electroblob.wizardry.loot.RandomSpell;
+import electroblob.wizardry.loot.UndiscoveredArtefactCondition;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.Item;
@@ -75,6 +76,7 @@ public final class WizardryLoot {
 		LootFunctionManager.registerFunction(new WizardSpell.Serializer());
 		LootConditionManager.registerCondition(new DiscoveryModeCondition.Serializer());
 		LootConditionManager.registerCondition(new EvilWizardSpellBookCondition.Serializer());
+		LootConditionManager.registerCondition(new UndiscoveredArtefactCondition.Serializer());
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/wizard_tower"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/obelisk"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/shrine"));

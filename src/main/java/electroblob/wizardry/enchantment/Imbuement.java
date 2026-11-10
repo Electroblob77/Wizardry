@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
@@ -95,6 +96,66 @@ public interface Imbuement {
 
 	/** Allows executing some custom logic before this imbuement is being removed from the stack. Called when the imbuement is about to be removed. */
 	default void onImbuementRemoval(ItemStack stack){}
+
+	/** NBT key used to store an imbuement's remaining duration directly inside its own enchantment NBT tag on the
+	 * itemstack. Storing it here (rather than in a separate per-player map keyed by enchantment) means two items
+	 * carrying the same imbuement don't share/overwrite each other's duration, and the duration naturally persists
+	 * with the item wherever it goes (dropped, chested, traded) instead of only while a player's data is ticking it. */
+	String DURATION_NBT_KEY = "WizardryImbuementDuration";
+
+	/** Returns the NBT tag list on the given stack that holds its enchantments, accounting for enchanted books. */
+	static NBTTagList getEnchantmentTagList(ItemStack stack){
+		return stack.getItem() == Items.ENCHANTED_BOOK ? ItemEnchantedBook.getEnchantments(stack) : stack.getEnchantmentTagList();
+	}
+
+	/** Returns the enchantment NBT tag for the given imbuement on the given stack, or null if the stack does not
+	 * currently carry that imbuement. */
+	static NBTTagCompound getImbuementTag(ItemStack stack, Enchantment enchantment){
+		if(!stack.isItemEnchanted()) return null;
+		int id = Enchantment.getEnchantmentID(enchantment);
+		NBTTagList list = getEnchantmentTagList(stack);
+		for(int i = 0; i < list.tagCount(); i++){
+			NBTTagCompound tag = list.getCompoundTagAt(i);
+			if(tag.getShort("id") == id) return tag;
+		}
+		return null;
+	}
+
+	/** Returns the remaining duration (in ticks) of the given imbuement on the given stack, or 0 if the stack does
+	 * not currently carry it. */
+	static int getDuration(ItemStack stack, Enchantment enchantment){
+		NBTTagCompound tag = getImbuementTag(stack, enchantment);
+		return tag == null ? 0 : tag.getInteger(DURATION_NBT_KEY);
+	}
+
+	/**
+	 * Sets the remaining duration (in ticks) of the given imbuement on the given stack. The stack must already carry
+	 * the enchantment (e.g. having just been given it via {@link ItemStack#addEnchantment}).
+	 *
+	 * @throws IllegalArgumentException if the given {@link Enchantment} is not an {@link Imbuement}, or if the stack
+	 * does not currently carry it.
+	 */
+	static void setDuration(ItemStack stack, Enchantment enchantment, int duration){
+		if(!(enchantment instanceof Imbuement)){
+			throw new IllegalArgumentException("Attempted to set an imbuement duration for something that isn't an Imbuement!");
+		}
+		NBTTagCompound tag = getImbuementTag(stack, enchantment);
+		if(tag == null){
+			throw new IllegalArgumentException("Attempted to set an imbuement duration for an imbuement the stack does not have!");
+		}
+		tag.setInteger(DURATION_NBT_KEY, duration);
+	}
+
+	/**
+	 * Returns whether the given player currently has the given imbuement active on any item in their main inventory,
+	 * armour or offhand. Used to prevent casting an imbuement spell again while it is already active elsewhere.
+	 */
+	static boolean isActive(EntityPlayer player, Enchantment enchantment){
+		for(ItemStack stack : player.inventory.mainInventory) if(getDuration(stack, enchantment) > 0) return true;
+		for(ItemStack stack : player.inventory.armorInventory) if(getDuration(stack, enchantment) > 0) return true;
+		for(ItemStack stack : player.inventory.offHandInventory) if(getDuration(stack, enchantment) > 0) return true;
+		return false;
+	}
 
 	@SubscribeEvent
 	public static void onPlayerOpenContainerEvent(PlayerContainerEvent event){
