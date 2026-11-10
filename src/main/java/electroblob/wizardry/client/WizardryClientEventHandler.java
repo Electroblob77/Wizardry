@@ -14,6 +14,7 @@ import electroblob.wizardry.spell.SixthSense;
 import electroblob.wizardry.spell.SlowTime;
 import electroblob.wizardry.spell.Transience;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityDispenser;
@@ -106,21 +108,50 @@ public final class WizardryClientEventHandler {
 		}
 	}
 
+	@SubscribeEvent
+	public static void onRenderCameraSetupEvent(EntityViewRenderEvent.CameraSetup event) {
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		//Prevents the camera from flickering when trying to turn when paralysed
+		if (player.isPotionActive(WizardryPotions.paralysis)) {
+			WizardData data = WizardData.get(player);
+			if (data != null) {
+				event.setPitch(data.paralyzedRotationPitch);
+				event.setYaw(data.paralyzedRotationYaw + 180);
+			}
+		}
+	}
+
+/*	@SubscribeEvent
+	public static void onRenderLivingEvent(RenderLivingEvent event) {
+		if (event.getEntity() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer)event.getEntity();
+			if (player.isPotionActive(WizardryPotions.paralysis) && Minecraft.getMinecraft().inGameHasFocus) {
+				WizardData data = WizardData.get(player);
+				if (data != null) {
+					player.prevRotationPitch = data.paralyzedRotationPitch;
+					player.prevRotationYaw = data.paralyzedRotationYaw;
+					player.rotationPitch = data.paralyzedRotationPitch;
+					player.rotationYaw = data.paralyzedRotationYaw;
+				}
+			}
+		}
+	}*/
+
 	// Input and Controls
 	// ===============================================================================================================
 
 	@SubscribeEvent
 	public static void onMouseEvent(MouseEvent event){
-
-		// Prevents the player looking around when paralysed
-		if(Minecraft.getMinecraft().player.isPotionActive(WizardryPotions.paralysis)
-				&& Minecraft.getMinecraft().inGameHasFocus){
-			event.setCanceled(true);
-			Minecraft.getMinecraft().player.prevRotationYaw = 0;
-			Minecraft.getMinecraft().player.prevRotationPitch = 0;
-			Minecraft.getMinecraft().player.rotationYaw = 0;
-			Minecraft.getMinecraft().player.rotationPitch = 0;
-
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		// Prevents the player's model from looking around when paralysed
+		if(player.isPotionActive(WizardryPotions.paralysis) && Minecraft.getMinecraft().inGameHasFocus){
+			WizardData data = WizardData.get(player);
+			if (data != null) {
+				player.prevRotationPitch = data.paralyzedRotationPitch;
+				player.prevRotationYaw = data.paralyzedRotationYaw;
+				player.rotationPitch = data.paralyzedRotationPitch;
+				player.rotationYaw = data.paralyzedRotationYaw;
+			}
 		}
 	}
 
@@ -161,6 +192,19 @@ public final class WizardryClientEventHandler {
 				event.setCanceled(true);
 			}
 		}
+
+		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		// Prevents the player's hand from moving around when paralysed
+		if(player.isPotionActive(WizardryPotions.paralysis)){
+			WizardData data = WizardData.get(player);
+			if (data != null) {
+				player.prevRotationPitch = data.paralyzedRotationPitch;
+				player.prevRotationYaw = data.paralyzedRotationYaw;
+				player.rotationPitch = data.paralyzedRotationPitch;
+				player.rotationYaw = data.paralyzedRotationYaw;
+			}
+		}
+
 	}
 
 	@SubscribeEvent

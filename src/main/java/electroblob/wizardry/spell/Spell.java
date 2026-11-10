@@ -317,11 +317,13 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 	/** Called from the event handler when a player logs in. */
 	public static void syncProperties(EntityPlayerMP player){
 		// On the server side, send a packet to the player to synchronise their spell properties
-		// To avoid sending extra data unnecessarily, the spell properties are sent in order of spell ID
+		// Deliberately NOT sorted/indexed by networkID here - see PacketSpellProperties for why: each spell is
+		// identified by its registry name in the packet itself, so this order is only for readability/determinism
+		// and the client and server no longer need to agree on networkIDs for this to work correctly
 		List<Spell> spells = new ArrayList<>(registry.getValuesCollection());
-		spells.sort(Comparator.comparingInt(Spell::networkID));
-		WizardryPacketHandler.net.sendTo(new PacketSpellProperties.Message(spells.stream()
-				.map(s -> s.properties).toArray(SpellProperties[]::new)), player);
+		spells.sort(Comparator.comparing(s -> s.getRegistryName().toString()));
+		SpellProperties[] properties = spells.stream().map(s -> s.properties).toArray(SpellProperties[]::new);
+		WizardryPacketHandler.net.sendTo(new PacketSpellProperties.Message(spells.toArray(new Spell[0]), properties), player);
 	}
 
 	private static void clearProperties(){
@@ -1079,8 +1081,28 @@ public abstract class Spell extends IForgeRegistryEntry.Impl<Spell> implements C
 			if(event.getWorld().provider.getDimension() != 0) return; // Only do it once per save file
 			clearProperties();
 			SpellProperties.loadWorldSpecificSpellProperties(event.getWorld());
+
+			List<Spell> unloadedSpells = new ArrayList<>();
+
 			for(Spell spell : Spell.registry){
 				if(!spell.arePropertiesInitialised()) spell.setProperties(spell.globalProperties);
+				// globalProperties can itself still be null here, if the spell's built-in (or config) properties
+				// file was missing or failed to parse - see the errors logged during startup for the cause. This is
+				// the last point before spell properties get synced to clients, so from here on every single spell
+				// MUST have a full set of properties, or it will silently corrupt the sync packet for every other
+				// spell as well (see SpellProperties#createFallback for why)
+				if(!spell.arePropertiesInitialised()){
+					spell.setProperties(SpellProperties.createFallback(spell));
+					unloadedSpells.add(spell);
+				}
+			}
+
+			if(!unloadedSpells.isEmpty()){
+				Wizardry.logger.error("The following spells have no valid properties, most likely because their" +
+						" spell property JSON file is missing or could not be parsed (see the errors logged during" +
+						" startup above for the specific cause). They have been disabled and given fallback default" +
+						" properties to prevent this from breaking spell property syncing for every other spell: "
+						+ unloadedSpells.stream().map(s -> s.getRegistryName().toString()).collect(Collectors.joining(", ")));
 			}
 		}
 	}

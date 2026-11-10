@@ -135,6 +135,10 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 	/** Stores this player's y velocity from the previous tick; used for the velocity-based fall damage replacement. */
 	public double prevMotionY;
 
+	//Used to store the player's pitch and rotation when affected by the paralysis spell so they remain looking at the position during which they were paralyzed
+	public float paralyzedRotationPitch;
+	public float paralyzedRotationYaw;
+
 	public WizardData(){
 		this(null); // Nullary constructor for the registration method factory parameter
 	}
@@ -449,6 +453,13 @@ public class WizardData implements INBTSerializable<NBTTagCompound> {
 
 	/** Stops casting the current spell. */
 	public void stopCastingContinuousSpell(){
+
+		if(this.isCasting()){
+			MinecraftForge.EVENT_BUS.post(new SpellCastEvent.Finish(Source.COMMAND, this.castCommandSpell, this.player,
+					this.castCommandModifiers, this.castCommandTick));
+			this.castCommandSpell.finishCasting(this.player.world, this.player, Double.NaN, Double.NaN, Double.NaN,
+					null, this.castCommandTick, this.castCommandModifiers);
+		}
 
 		this.castCommandSpell = Spells.none;
 		this.castCommandTick = 0;

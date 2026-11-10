@@ -40,10 +40,23 @@ public class Levitation extends Spell {
 	@Override
 	public boolean cast(World world, EntityPlayer caster, EnumHand hand, int ticksInUse, SpellModifiers modifiers){
 
-		if(!Wizardry.settings.replaceVanillaFallDamage) caster.fallDistance = 0;
+		double prevMotionY = caster.motionY;
 
-		caster.motionY = caster.motionY < getProperty(SPEED).floatValue() ? caster.motionY
-				+ getProperty(ACCELERATION).floatValue() : caster.motionY;
+		float potency = modifiers.get(SpellModifiers.POTENCY);
+		float upwardVelocity = this.getProperty(SPEED).floatValue() * potency;
+		//Needs to be greater than 0.08 to counteract gravity
+		float upwardAcceleration = this.getProperty(ACCELERATION).floatValue() * potency;
+
+		//Change to min check to avoid jittery screen effects at high acceleration
+		caster.motionY = Math.min(caster.motionY + upwardAcceleration, upwardVelocity);
+
+		if (!Wizardry.settings.replaceVanillaFallDamage) {
+			if (caster.motionY < 0 && caster.motionY > prevMotionY) {
+				caster.fallDistance *= (float)(caster.motionY / prevMotionY);
+			} else if (caster.motionY >= 0) {
+				caster.fallDistance = 0;
+			}
+		}
 
 		if(world.isRemote){
 			double x = caster.posX - 0.25 + world.rand.nextDouble() * 0.5;

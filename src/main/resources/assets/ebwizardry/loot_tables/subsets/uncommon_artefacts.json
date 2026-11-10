@@ -120,6 +120,11 @@
                     "weight": 1
                 },
 				{
+                    "type": "item",
+                    "name": "ebwizardry:charm_sixth_sense",
+                    "weight": 1
+                },
+				{
 					"type": "item",
 					"name": "ebwizardry:charm_feeding",
 					"weight": 1

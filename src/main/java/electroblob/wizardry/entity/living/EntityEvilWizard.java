@@ -103,6 +103,8 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 	protected void initEntityAI(){
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
+		// Lets the wizard dig its way out if a player tries to cheaply trap it behind placed blocks.
+		this.tasks.addTask(2, new EntityAIBreakObstacle(this));
 		this.tasks.addTask(4, new EntityAIRestrictOpenDoor(this));
 		this.tasks.addTask(5, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(6, new EntityAIMoveTowardsRestriction(this, 0.6D));
@@ -346,7 +348,7 @@ public class EntityEvilWizard extends EntityMob implements ISpellCaster, IEntity
 
 		// Evil wizards occasionally drop one of their spells as a spell book, but not magic missile. This isn't in
 		// the dropRareDrop method because that would be just as rare as normal mobs; instead this is half as rare.
-		if(this.spells.size() > 0 && rand.nextInt(100) - lootingLevel < 5)
+		if(Wizardry.settings.evilWizardsDropSpellBooks && this.spells.size() > 0 && rand.nextInt(100) - lootingLevel < 5)
 			this.entityDropItem(new ItemStack(WizardryItems.spell_book, 1,
 					this.spells.get(1 + rand.nextInt(this.spells.size() - 1)).metadata()), 0);
 	}

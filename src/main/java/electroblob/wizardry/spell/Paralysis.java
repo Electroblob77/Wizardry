@@ -1,5 +1,6 @@
 package electroblob.wizardry.spell;
 
+import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.item.SpellActions;
 import electroblob.wizardry.registry.Spells;
 import electroblob.wizardry.registry.WizardryItems;
@@ -19,6 +20,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -103,7 +105,7 @@ public class Paralysis extends SpellRay {
 	
 	// See WizardryClientEventHandler for prevention of players' movement under the effects of paralysis
 	
-	@SubscribeEvent
+/*	@SubscribeEvent
 	public static void onLivingUpdateEvent(LivingUpdateEvent event){
 		// Disables entities' AI when under the effects of paralysis and re-enables it on the last update of the effect
 		// - this can't be in the potion class because it requires access to the duration and hence the actual
@@ -112,7 +114,7 @@ public class Paralysis extends SpellRay {
 			int timeLeft = event.getEntityLiving().getActivePotionEffect(WizardryPotions.paralysis).getDuration();
 			((EntityLiving)event.getEntity()).setNoAI(timeLeft > 1);
 		}
-	}
+	}*/
 	
 	@SubscribeEvent
 	public static void onLivingHurtEvent(LivingHurtEvent event){
@@ -120,6 +122,37 @@ public class Paralysis extends SpellRay {
 		if(event.getEntityLiving().isPotionActive(WizardryPotions.paralysis) && event.getEntityLiving().getHealth()
 				- event.getAmount() <= Spells.paralysis.getProperty(CRITICAL_HEALTH).floatValue()){
 			event.getEntityLiving().removePotionEffect(WizardryPotions.paralysis);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPotionAddedEvent(PotionEvent.PotionAddedEvent event) {
+		if (event.getEntityLiving() instanceof EntityPlayer) {
+			EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+			WizardData data = WizardData.get(player);
+			if (data != null) {
+				data.paralyzedRotationPitch = player.rotationPitch;
+				data.paralyzedRotationYaw = player.rotationYaw;
+			}
+		// Disables entity's AI when affected by paralysis
+		} else if (event.getEntityLiving() instanceof EntityLiving) {
+			((EntityLiving)event.getEntityLiving()).setNoAI(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPotionExpiryEvent(PotionEvent.PotionExpiryEvent event) {
+		if (event.getEntityLiving() instanceof EntityLiving) {
+			//Enables the entity's AI when paralysis expires
+			((EntityLiving)event.getEntityLiving()).setNoAI(false);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPotionRemoveEvent(PotionEvent.PotionRemoveEvent event) {
+		if (event.getEntityLiving() instanceof EntityLiving) {
+			//Enables the entity's AI when paralysis is removed
+			((EntityLiving)event.getEntityLiving()).setNoAI(false);
 		}
 	}
 

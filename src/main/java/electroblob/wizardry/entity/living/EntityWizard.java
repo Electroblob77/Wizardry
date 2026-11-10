@@ -112,6 +112,8 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 	protected void initEntityAI(){
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
+		// Lets the wizard dig its way out if a player tries to cheaply trap it behind placed blocks.
+		this.tasks.addTask(2, new EntityAIBreakObstacle(this));
 		// Why would you go to the effort of making the IMerchant interface and then have the AI classes only accept
 		// EntityVillager?
 		this.tasks.addTask(1, new EntityAITradePlayer(this));
@@ -916,7 +918,12 @@ public class EntityWizard extends EntityCreature implements INpc, IMerchant, ISp
 			if(!wizards.isEmpty()){
 				for(EntityWizard wizard : wizards){
 					if(wizard.isBlockPartOfTower(event.getPos())){
+						// Set both the revenge target and the attack target directly, rather than relying on
+						// EntityAIHurtByTarget to transfer the former to the latter on its next update. This ensures
+						// the wizard turns hostile immediately and reliably, even if the block being broken (and
+						// therefore the player breaking it) is out of the wizard's line of sight.
 						wizard.setRevengeTarget(event.getPlayer());
+						wizard.setAttackTarget(event.getPlayer());
 						WizardryAdvancementTriggers.anger_wizard.triggerFor(event.getPlayer());
 					}
 				}

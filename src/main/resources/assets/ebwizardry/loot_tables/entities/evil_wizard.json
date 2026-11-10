@@ -37,6 +37,9 @@
                     "condition": "random_chance_with_looting",
                     "chance": 0.05,
                     "looting_multiplier": 0.01
+                },
+                {
+                    "condition": "ebwizardry:evil_wizard_spell_books_enabled"
                 }
             ],
             "rolls": 1,

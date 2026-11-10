@@ -8,16 +8,20 @@ import electroblob.wizardry.spell.ImbueWeapon;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.ContainerMerchant;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.village.MerchantRecipeList;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -81,6 +85,27 @@ public interface Imbuement {
 
 	@SubscribeEvent
 	public static void onPlayerOpenContainerEvent(PlayerContainerEvent event){
+
+		// Brute-force fix to stop illegal (imbuement) enchanted books from showing up in villager trades.
+		// Villagers pick a completely random enchantment for these books (EntityVillager$ListEnchantedBookForEmeralds),
+		// bypassing isAllowedOnBooks/canApply/EnumEnchantmentType checks entirely, unlike enchanting table/anvil use.
+		// Note that IMerchant#getRecipes() returns a *copy* of the trade list (see ForgeEventFactory#listTradeOffers),
+		// so the villager's actual buyingList field has to be modified directly for the fix to take effect; both
+		// fields are only accessible here because of the access transformer (see accesstransformer.cfg).
+		if(event.getContainer() instanceof ContainerMerchant){
+
+			IMerchant merchant = ((ContainerMerchant)event.getContainer()).merchant;
+
+			if(merchant instanceof EntityVillager){
+
+				MerchantRecipeList recipes = ((EntityVillager)merchant).buyingList;
+
+				if(recipes != null && recipes.removeIf(recipe -> hasIllegalEnchantment(recipe.getItemToSell()))){
+					Wizardry.logger.info("Removed illegal enchanted book trade(s) from villager");
+				}
+			}
+		}
+
 		// Brute-force fix to stop enchanted books in dungeon chests from having imbuements on them.
 		if(event.getContainer() instanceof ContainerChest){
 			// Still not sure if it's better to set stacks in slots or modify the itemstack list directly, but I would
@@ -109,6 +134,19 @@ public interface Imbuement {
 				}
 			}
 		}
+	}
+
+	/** Returns true if the given stack is an enchanted book carrying at least one illegal (imbuement) enchantment. */
+	static boolean hasIllegalEnchantment(ItemStack stack){
+		if(stack.getItem() instanceof ItemEnchantedBook){
+			NBTTagList enchantmentList = ItemEnchantedBook.getEnchantments(stack);
+			for(int i = 0; i < enchantmentList.tagCount(); i++){
+				if(Enchantment.getEnchantmentByID(enchantmentList.getCompoundTagAt(i).getShort("id")) instanceof Imbuement){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@SubscribeEvent

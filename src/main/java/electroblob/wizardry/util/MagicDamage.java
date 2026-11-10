@@ -9,7 +9,9 @@ import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.monster.*;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.math.Vec3d;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -262,6 +264,17 @@ public class MagicDamage extends EntityDamageSource implements IElementalDamage 
 	@Override
 	public boolean isRetaliatory(){
 		return isRetaliatory;
+	}
+
+	// Caster is null when this damage source is created by a dispenser (see SpellRay and friends), in which case
+	// the vanilla implementation of this method throws an NPE when a shield-blocking target is hit - it has no null
+	// check on the damage source entity. Overriding it here to fail gracefully instead fixes that crash, and simply
+	// means dispenser-cast spells can't be blocked using the directional shield mechanic (which makes sense, since
+	// there's no entity for the shield to block 'towards').
+	@Override
+	@Nullable
+	public Vec3d getDamageLocation(){
+		return this.getImmediateSource() == null ? null : super.getDamageLocation();
 	}
 
 }

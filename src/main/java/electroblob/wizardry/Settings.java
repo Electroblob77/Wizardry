@@ -187,7 +187,12 @@ public final class Settings {
 	/** <b>[Server-only]</b> Blacklist for loot tables to inject additional mob drops into. */
 	public ResourceLocation[] mobLootTableBlacklist = toResourceLocations("entities/vex", "entities/ender_dragon",
 			"entities/wither", "entities/silverfish", "entities/endermite",
-			Wizardry.MODID + "entities/evil_wizard");
+			Wizardry.MODID + ":entities/evil_wizard");
+	/** <b>[Server-only]</b> Maps the registry names of additional, non-wizardry spell book items (e.g. from
+	 * compatible addon mods) to the weight they should be given relative to wizardry's own spell book, when
+	 * injecting spell book drops into mob loot and evil wizard drops. Empty by default, since wizardry does not
+	 * bundle knowledge of any particular addon's items. */
+	public Map<ResourceLocation, Integer> additionalSpellBookItems = new HashMap<>();
 	/**
 	 * <b>[Server-only]</b> Whether or not players can teleport through unbreakable blocks (e.g. bedrock) using the
 	 * phase step spell.
@@ -224,6 +229,9 @@ public final class Settings {
 	public boolean wandsMustBeHeldToDecrementCooldown = false;
 	/** <b>[Server-only]</b> Whether to enable Wizardry mob loot injection. Allows an easier switch instead of blacklisting all entities. */
 	public boolean injectMobDrops = true;
+	/** <b>[Server-only]</b> Whether evil wizards can drop spell books. Evil wizards use their own dedicated loot
+	 * table rather than the generic mob loot injection, so this is separate from {@link #injectMobDrops}. */
+	public boolean evilWizardsDropSpellBooks = true;
 	/** <b>[Server-only]</b> The time in ticks after which recent spell casts expire and no longer count toward progression penalties. */
 	public int recentSpellExpiryTime = 1200;
 	/**
@@ -453,6 +461,8 @@ public final class Settings {
 	public boolean blinkEffect = true;
 	/** <b>[Client-only]</b> Whether to use spellcasting animations for players. */
 	public boolean spellcastingAnimations = true;
+	/** <b>[Client-only]</b> Whether to use spellcasting animations for players casting spells from scrolls. */
+	public boolean scrollSpellcastingAnimations = true;
 	/** <b>[Client-only]</b> Whether to show the spell HUD when holding a wand. */
 	public boolean showSpellHUD = true;
 	/** <b>[Client-only]</b> Whether to show the charge meter when charging up a spell. */
@@ -1133,6 +1143,13 @@ public final class Settings {
 		injectMobDrops = property.getBoolean();
 		propOrder.add(property.getName());
 
+		property = config.get(TWEAKS_CATEGORY, "evilWizardsDropSpellBooks", true,
+				"Whether evil wizards can drop spell books. Evil wizards use their own dedicated loot table rather than the generic mob loot injection, so this is separate from the 'Allow Wizardry Mob Loot' setting above and is not affected by the mob loot whitelist/blacklist.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".evil_wizards_drop_spell_books");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		evilWizardsDropSpellBooks = property.getBoolean();
+		propOrder.add(property.getName());
+
 		property = config.get(TWEAKS_CATEGORY, "recentSpellExpiryTime", 1200,
 				"The time in ticks after which recent spell casts expire and no longer count toward progression penalties. Default is 1200 ticks (1 minute). Lower values make progression penalties shorter-lived, higher values make them last longer.",
 				60, 72000); // Between 3 seconds and 1 hour
@@ -1152,6 +1169,35 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		mobLootTableBlacklist = getResourceLocationList(property);
 		propOrder.add(property.getName());
+
+		property = config.get(TWEAKS_CATEGORY, "additionalSpellBookItems", new String[0],
+				"List of additional, non-wizardry spell book items (e.g. from compatible addon mods) to include "
+				+ "alongside wizardry's own spell book when injecting spell book drops into mob loot and evil "
+				+ "wizard drops (still subject to the mob loot whitelist/blacklist and the relevant toggles above). "
+				+ "This is empty by default, since wizardry does not bundle knowledge of any particular addon's "
+				+ "items; add entries yourself if you know of a compatible item. Each entry should be an item "
+				+ "registry name, followed by a single space, then an integer weight relative to wizardry's own "
+				+ "spell book (which has a weight of 1). For example, 'someaddon:spell_book 1'. Items belonging to "
+				+ "mods that are not installed are ignored.",
+				Pattern.compile(".+ [0-9]+"));
+		property.setLanguageKey("config." + Wizardry.MODID + ".additional_spell_book_items");
+		propOrder.add(property.getName());
+		additionalSpellBookItems = new HashMap<>();
+		for(String string : property.getStringList()){
+			string = string.trim();
+			int lastSpace = string.lastIndexOf(' ');
+			if(lastSpace < 0){
+				Wizardry.logger.warn("Invalid entry in additional spell book items: {}", string);
+				continue;
+			}
+			String itemSpec = string.substring(0, lastSpace).toLowerCase(Locale.ROOT);
+			String weightStr = string.substring(lastSpace + 1);
+			try{
+				additionalSpellBookItems.put(new ResourceLocation(itemSpec), Integer.parseInt(weightStr));
+			}catch(NumberFormatException e){
+				Wizardry.logger.warn("Invalid integer in additional spell book items: {}", weightStr);
+			}
+		}
 
 		property = config.get(TWEAKS_CATEGORY, "mobSpawnDimensions", new int[]{0},
 				"List of dimension ids in which wizardry's hostile mobs can spawn.");
@@ -1598,6 +1644,12 @@ public final class Settings {
 		property.setRequiresMcRestart(true);
 		Wizardry.proxy.setToNamedBooleanEntry(property);
 		spellcastingAnimations = property.getBoolean();
+		propOrder.add(property.getName());
+
+		property = config.get(CLIENT_CATEGORY, "scrollSpellcastingAnimations", true, "Whether to use spellcasting animations for players casting spells from scrolls. Disable this option if it conflicts with other mods that add player animations, while still allowing wand casting animations.");
+		property.setLanguageKey("config." + Wizardry.MODID + ".scroll_spellcasting_animations");
+		Wizardry.proxy.setToNamedBooleanEntry(property);
+		scrollSpellcastingAnimations = property.getBoolean();
 		propOrder.add(property.getName());
 
 		List<String> elementNames = Arrays.stream(Element.values()).map(Element::getName).collect(Collectors.toList());

@@ -10,6 +10,8 @@ import electroblob.wizardry.util.EntityUtils;
 import electroblob.wizardry.util.ParticleBuilder;
 import electroblob.wizardry.util.ParticleBuilder.Type;
 import electroblob.wizardry.util.SpellModifiers;
+import net.minecraft.block.BlockBed;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -69,8 +71,7 @@ public class GreaterTelekinesis extends SpellRay {
 		// Can't be cast by dispensers so we know caster isn't null, but just in case...
 		if(caster != null && (target instanceof EntityLivingBase || target instanceof EntityLevitatingBlock || target instanceof EntityTNTPrimed)){
 
-			if(target instanceof EntityPlayer && ((caster instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther)
-					|| ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring))){
+			if(!EntityUtils.canEntityBeMoved(caster, target)){
 
 				if(!world.isRemote && caster instanceof EntityPlayer) ((EntityPlayer)caster).sendStatusMessage(
 						new TextComponentTranslation("spell.resist", target.getName(), this.getNameForTranslationFormatted()), true);
@@ -135,6 +136,10 @@ public class GreaterTelekinesis extends SpellRay {
 		
 		if(EntityUtils.canDamageBlocks(caster, world) && !BlockUtils.isBlockUnbreakable(world, pos)
 				&& world.getBlockState(pos).getMaterial().isSolid()
+				// Doors and beds are two-block structures; picking up just one half via setBlockToAir would make the
+				// other half's own neighbour-update logic think it was broken normally and drop a duplicate item
+				&& !(world.getBlockState(pos).getBlock() instanceof BlockDoor)
+				&& !(world.getBlockState(pos).getBlock() instanceof BlockBed)
 				&& (world.getTileEntity(pos) == null || !world.getTileEntity(pos).getTileData().hasUniqueId(ArcaneLock.NBT_KEY))){
 			
 			if(!world.isRemote){

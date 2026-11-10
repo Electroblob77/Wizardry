@@ -85,6 +85,28 @@ public final class WizardryEventHandler {
 			Wizardry.settings.sync(player);
 			syncAdvancements(player, false);
 			Spell.syncProperties(player);
+			grantDisabledSpellCriteria(player);
+		}
+	}
+
+	/** Automatically grants the {@code ebwizardry:all_spells} advancement's criteria for any spells that are
+	 * disabled in the config, so that disabling a spell (e.g. to fix an exploit) does not render the advancement
+	 * permanently unobtainable. */
+	private static void grantDisabledSpellCriteria(EntityPlayerMP player){
+
+		Advancement advancement = player.getServer().getAdvancementManager()
+				.getAdvancement(new ResourceLocation(Wizardry.MODID, "all_spells"));
+
+		if(advancement == null) return;
+
+		for(Spell spell : Spell.getAllSpells()){
+
+			if(!spell.isEnabled()){
+				String criterion = spell.getRegistryName().getPath();
+				if(advancement.getCriteria().containsKey(criterion)){
+					player.getAdvancements().grantCriterion(advancement, criterion);
+				}
+			}
 		}
 	}
 

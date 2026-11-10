@@ -118,6 +118,22 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 			this.armourPieceNames.put(EntityEquipmentSlot.FEET,  armourPieceNames[3]);
 		}
 
+		public float getElementalCostReduction() {
+			return this.elementalCostReduction;
+		}
+
+		public float getCooldownReduction() {
+			return this.cooldownReduction;
+		}
+
+		public ArmorMaterial getMaterial() {
+			return this.material;
+		}
+
+		public String getName() {
+			return this.name;
+		}
+
 	}
 
 	public Element element; // Should be final, but isn't for backwards compatibility
@@ -138,6 +154,22 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 		this.element = element;
 		setCreativeTab(WizardryTabs.GEAR);
 		WizardryRecipes.addToManaFlaskCharging(this);
+	}
+
+	public float getElementalCostReduction() {
+		return this.armourClass.elementalCostReduction;
+	}
+
+	public float getCooldownReduction() {
+		return this.armourClass.cooldownReduction;
+	}
+
+	public Element getElement() {
+		return this.element;
+	}
+
+	public ArmourClass getArmourClass() {
+		return this.armourClass;
 	}
 
 	/** Should only be used by vanilla's armour damage calculations; use {@link ItemWizardArmour#setMana(ItemStack, int)}
@@ -168,6 +200,10 @@ public class ItemWizardArmour extends ItemArmor implements IWorkbenchItem, IMana
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack){
 		return DrawingUtils.mix(0xff8bfe, 0x8e2ee4, (float)getDurabilityForDisplay(stack));
+	}
+
+	public float getSageOtherCostReduction() {
+		return SAGE_OTHER_COST_REDUCTION;
 	}
 
 	@Override

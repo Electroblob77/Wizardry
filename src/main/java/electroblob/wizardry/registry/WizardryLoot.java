@@ -2,16 +2,22 @@ package electroblob.wizardry.registry;
 
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.constants.Element;
+import electroblob.wizardry.loot.DiscoveryModeCondition;
+import electroblob.wizardry.loot.EvilWizardSpellBookCondition;
 import electroblob.wizardry.loot.RandomSpell;
 import electroblob.wizardry.loot.WizardSpell;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootEntry;
+import net.minecraft.world.storage.loot.LootEntryItem;
 import net.minecraft.world.storage.loot.LootEntryTable;
 import net.minecraft.world.storage.loot.LootPool;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraft.world.storage.loot.RandomValueRange;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
+import net.minecraft.world.storage.loot.functions.LootFunction;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -20,11 +26,12 @@ import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Class responsible for registering wizardry's loot functions and loot tables. Also handles loot injection and the
  * standard weighting.
- * 
+ *
  * @author Electroblob
  * @since Wizardry 1.0
  */
@@ -37,6 +44,9 @@ public final class WizardryLoot {
 			.filter(e -> e != Element.MAGIC)
 			.map(e -> new ResourceLocation(Wizardry.MODID, "gameplay/imbuement_altar/ruined_spell_book_" + e.getName()))
 			.toArray(ResourceLocation[]::new);
+
+	private static final ResourceLocation MOB_ADDITIONS_LOOT_TABLE = new ResourceLocation(Wizardry.MODID, "entities/mob_additions");
+	private static final ResourceLocation EVIL_WIZARD_LOOT_TABLE = new ResourceLocation(Wizardry.MODID, "entities/evil_wizard");
 
 	private WizardryLoot(){} // No instances!
 
@@ -55,14 +65,16 @@ public final class WizardryLoot {
 		 * 5 stages of randomness applied to them at once: a random chance for the pool, a random number of rolls for
 		 * the pool, the weighted random chance of choosing that particular entry, a random chance for that entry, and a
 		 * random stack size, and that's before you take functions into account.
-		 * 
+		 *
 		 * ...oh, and entries can be entire loot tables in themselves, allowing for potentially infinite levels of
 		 * randomness. Yeah. */
- 
+
 		// Always registers the loot tables, but only injects the additions into vanilla if the appropriate option is
 		// enabled in the config (see WizardryEventHandler).
 		LootFunctionManager.registerFunction(new RandomSpell.Serializer());
 		LootFunctionManager.registerFunction(new WizardSpell.Serializer());
+		LootConditionManager.registerCondition(new DiscoveryModeCondition.Serializer());
+		LootConditionManager.registerCondition(new EvilWizardSpellBookCondition.Serializer());
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/wizard_tower"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/obelisk"));
 		LootTableList.register(new ResourceLocation(Wizardry.MODID, "chests/shrine"));
@@ -99,9 +111,12 @@ public final class WizardryLoot {
 			// If not, packmakers will have to sort it out themselves using the whitelist/blacklist
 			if (Arrays.asList(Wizardry.settings.mobLootTableWhitelist).contains(event.getName())) {
 				event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
+				Wizardry.logger.info("Added wizardry mob drops to loot table {} (explicitly whitelisted)", event.getName());
 
+			// Note the parentheses here - without them, a loot table path containing "entity" (but not "entities")
+			// would always match regardless of the blacklist, due to operator precedence
 			} else if (!Arrays.asList(Wizardry.settings.mobLootTableBlacklist).contains(event.getName())
-					&& event.getName().getPath().contains("entities") || event.getName().getPath().contains("entity")) {
+					&& (event.getName().getPath().contains("entities") || event.getName().getPath().contains("entity"))) {
 				// Get the filename of the loot table json, for well-behaved mods this will be the entity name
 				String[] split = event.getName().getPath().split("/");
 				String entityName = split[split.length - 1];
@@ -114,6 +129,7 @@ public final class WizardryLoot {
 
 				if (EnumCreatureType.MONSTER.getCreatureClass().isAssignableFrom(entityClass)) {
 					event.getTable().addPool(getAdditive(Wizardry.MODID + ":entities/mob_additions", Wizardry.MODID + "_additional_mob_drops"));
+					Wizardry.logger.info("Added wizardry mob drops to loot table {} (auto-detected as a hostile mob)", event.getName());
 				}
 			}
 		}
@@ -125,6 +141,29 @@ public final class WizardryLoot {
 			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/junk_additions", 4));
 		}else if(event.getName().toString().matches("minecraft:gameplay/fishing/treasure")){
 			event.getTable().getPool("main").addEntry(getAdditiveEntry(Wizardry.MODID + ":gameplay/fishing/treasure_additions", 1));
+		}
+		// Addon spell book items (see Settings#additionalSpellBookItems) - these piggyback on wizardry's own spell
+		// book drop pools, so they're automatically subject to the same whitelist/blacklist and toggles
+		if(event.getName().equals(MOB_ADDITIONS_LOOT_TABLE)){
+			addAdditionalSpellBookEntries(event.getTable().getPool("wizardry"));
+		}else if(event.getName().equals(EVIL_WIZARD_LOOT_TABLE)){
+			addAdditionalSpellBookEntries(event.getTable().getPool("rare"));
+		}
+	}
+
+	/** Adds a weighted {@link LootEntryItem} to the given pool for each entry in
+	 * {@link electroblob.wizardry.Settings#additionalSpellBookItems} whose item is actually registered (i.e.
+	 * belongs to a mod that is installed); entries for items that cannot be found are silently skipped. */
+	private static void addAdditionalSpellBookEntries(LootPool pool){
+		if(pool == null) return;
+		for(Map.Entry<ResourceLocation, Integer> entry : Wizardry.settings.additionalSpellBookItems.entrySet()){
+			Item item = ForgeRegistries.ITEMS.getValue(entry.getKey());
+			if(item == null){
+				Wizardry.logger.warn("Configured additional spell book item {} could not be found, skipping (is the mod it belongs to installed?)", entry.getKey());
+				continue;
+			}
+			pool.addEntry(new LootEntryItem(item, entry.getValue(), 0, new LootFunction[0], new LootCondition[0],
+					Wizardry.MODID + "_additional_spell_book_" + entry.getKey().getPath()));
 		}
 	}
 

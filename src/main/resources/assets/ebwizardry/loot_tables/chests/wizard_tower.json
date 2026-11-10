@@ -78,7 +78,12 @@
                 {
                     "type": "item",
                     "name": "ebwizardry:identification_scroll",
-                    "weight": 3
+                    "weight": 3,
+                    "conditions": [
+                        {
+                            "condition": "ebwizardry:discovery_mode"
+                        }
+                    ]
                 }
             ]
         }

@@ -4,7 +4,10 @@ import com.google.common.collect.Streams;
 import electroblob.wizardry.Wizardry;
 import electroblob.wizardry.data.WizardData;
 import electroblob.wizardry.entity.living.ISpellCaster;
+import electroblob.wizardry.event.IsCastingEvent;
 import electroblob.wizardry.item.ISpellCastingItem;
+import electroblob.wizardry.item.ItemArtefact;
+import electroblob.wizardry.registry.WizardryItems;
 import electroblob.wizardry.spell.Spell;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,6 +32,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nullable;
 import java.util.Comparator;
@@ -426,6 +430,12 @@ public final class EntityUtils {
 
 		if(!spell.isContinuous) return false;
 
+		IsCastingEvent event = new IsCastingEvent(caster, spell);
+		//Only need to check if it is allowed
+		if (event.getResult() == Event.Result.ALLOW) {
+			return true;
+		}
+
 		if(caster instanceof EntityPlayer){
 
 			WizardData data = WizardData.get((EntityPlayer)caster);
@@ -494,6 +504,17 @@ public final class EntityUtils {
 	 */
 	public static void playSoundAtPlayer(EntityPlayer player, SoundEvent sound, float volume, float pitch){
 		player.world.playSound(null, player.posX, player.posY, player.posZ, sound, SoundCategory.PLAYERS, volume, pitch);
+	}
+
+	public static boolean canEntityBeMoved(@Nullable Entity mover, Entity target) {
+		if (target instanceof EntityPlayer) {
+			if (mover instanceof EntityPlayer && !Wizardry.settings.playersMoveEachOther) {
+				return false;
+			} else if (ItemArtefact.isArtefactActive((EntityPlayer)target, WizardryItems.amulet_anchoring)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
