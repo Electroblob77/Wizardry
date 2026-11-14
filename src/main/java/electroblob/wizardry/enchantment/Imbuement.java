@@ -152,7 +152,7 @@ public interface Imbuement {
 		// bypassing isAllowedOnBooks/canApply/EnumEnchantmentType checks entirely, unlike enchanting table/anvil use.
 		// Note that IMerchant#getRecipes() returns a *copy* of the trade list (see ForgeEventFactory#listTradeOffers),
 		// so the villager's actual buyingList field has to be modified directly for the fix to take effect; both
-		// fields are only accessible here because of the access transformer (see accesstransformer.cfg).
+		// fields are only accessible here because of the access transformer (see ebwizardry_at.cfg).
 		if(event.getContainer() instanceof ContainerMerchant){
 
 			IMerchant merchant = ((ContainerMerchant)event.getContainer()).merchant;
